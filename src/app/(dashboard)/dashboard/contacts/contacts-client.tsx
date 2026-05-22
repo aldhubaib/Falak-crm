@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createContact, deleteContact } from "@/actions/contacts";
 import { Plus, Trash2 } from "lucide-react";
+import { AvatarUpload } from "@/components/ui/avatar-upload";
 
 type Contact = {
   id: string;
@@ -39,13 +40,17 @@ export function ContactsClient({
       </div>
 
       {creating && (
-        <form
+          <form
           action={async (formData) => {
             await createContact(formData);
             setCreating(false);
           }}
           className="mb-4 rounded-lg border border-border p-4 space-y-3"
         >
+          <div className="flex items-center gap-4 mb-1">
+            <AvatarUpload name="photo" fallback="?" size="md" />
+            <p className="text-[11px] text-muted-foreground">Upload photo</p>
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Name</label>

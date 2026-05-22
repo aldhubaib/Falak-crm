@@ -5,6 +5,7 @@ import { createCompany } from "@/actions/companies";
 import { createIndustry, deleteIndustry } from "@/actions/industries";
 import { ComboboxField } from "@/components/ui/combobox-field";
 import { ArrowLeft, Building2, Globe, Save, Plus, Trash2, StickyNote, Calendar } from "lucide-react";
+import { AvatarUpload } from "@/components/ui/avatar-upload";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -92,6 +93,12 @@ export function NewCompanyClient({ industries }: { industries: IndustryOption[] 
         }}
         className="space-y-5"
       >
+        {/* Avatar */}
+        <div className="flex items-center gap-4 mb-2">
+          <AvatarUpload name="logo" fallback="C" size="lg" />
+          <p className="text-[11px] text-muted-foreground">Click to upload company logo</p>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className={cn(errors.name && "shake")}>
             <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
