@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GitBranch, Layers, ListChecks, MessageCircle, Users, Receipt, Building2, UserPlus, Trash2 } from "lucide-react";
+import { GitBranch, Layers, ListChecks, MessageCircle, Users, Receipt, Building2, UserPlus, Trash2, ArrowRightLeft } from "lucide-react";
 
 const settingsItems = [
   {
@@ -33,8 +33,14 @@ const settingsItems = [
     icon: Users,
   },
   {
+    title: "Currencies",
+    description: "Manage currencies and exchange rates",
+    href: "/dashboard/settings/currencies",
+    icon: ArrowRightLeft,
+  },
+  {
     title: "Billing",
-    description: "Currency, tax rates, and invoice numbering",
+    description: "Tax rates and invoice numbering",
     href: "/dashboard/settings/billing",
     icon: Receipt,
   },

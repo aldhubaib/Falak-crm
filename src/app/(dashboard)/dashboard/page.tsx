@@ -49,7 +49,7 @@ export default async function DashboardPage() {
         <StatCard label="Active Deals" value={String(dealCount)} color="primary" href="/dashboard/deals" />
         <StatCard label="Projects" value={String(projectCount)} color="purple" href="/dashboard/projects" />
         <StatCard label="Pending Invoices" value={String(pendingInvoices)} color="orange" href="/dashboard/invoices" />
-        <StatCard label="Revenue" value={`${totalRevenue.toLocaleString()} ${workspace.currency}`} color="success" href="/dashboard/invoices" />
+        <StatCard label="Revenue" value={`${totalRevenue.toLocaleString()} ${workspace.baseCurrency}`} color="success" href="/dashboard/invoices" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -77,7 +77,7 @@ export default async function DashboardPage() {
                 </div>
                 <div className="text-right">
                   <p className="text-[12px] font-medium text-foreground">
-                    {Number(deal.value).toLocaleString()} {workspace.currency}
+                    {Number(deal.value).toLocaleString()} {workspace.baseCurrency}
                   </p>
                   <span
                     className="text-[10px] px-1.5 py-0.5 rounded"

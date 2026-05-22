@@ -27,6 +27,7 @@ type Deal = {
   id: string;
   title: string;
   value: unknown;
+  currency: string;
   notes: string | null;
   stage: Stage;
   pipeline: { stages: Stage[] };
@@ -69,7 +70,7 @@ export function DealDetailClient({
         <div className="flex-1">
           <h1 className="text-lg font-semibold text-foreground">{deal.title}</h1>
           <p className="text-[12px] text-muted-foreground">
-            {deal.company?.name || "No company"} • {Number(deal.value).toLocaleString()} SAR
+            {deal.company?.name || "No company"} • {Number(deal.value).toLocaleString()} {deal.currency || "KWD"}
           </p>
         </div>
         {isWon && !deal.project && (
@@ -160,7 +161,7 @@ export function DealDetailClient({
                 <option value="">Select service...</option>
                 {services.map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.name} ({s.unitPrice.toLocaleString()} SAR)
+                    {s.name} ({s.unitPrice.toLocaleString()} {deal.currency || "KWD"})
                   </option>
                 ))}
               </select>
@@ -196,7 +197,7 @@ export function DealDetailClient({
                   <div>
                     <p className="text-[12px] text-foreground">{item.service.name}</p>
                     <p className="text-[11px] text-muted-foreground">
-                      {item.quantity} × {Number(item.unitPrice).toLocaleString()} SAR
+                      {item.quantity} × {Number(item.unitPrice).toLocaleString()} {deal.currency || "KWD"}
                     </p>
                   </div>
                   {!isClosed && (
@@ -214,7 +215,7 @@ export function DealDetailClient({
               ))}
               <div className="pt-2 border-t border-border flex justify-between text-[13px] font-medium">
                 <span className="text-muted-foreground">Total</span>
-                <span className="text-foreground">{Number(deal.value).toLocaleString()} SAR</span>
+                <span className="text-foreground">{Number(deal.value).toLocaleString()} {deal.currency || "KWD"}</span>
               </div>
             </div>
           )}

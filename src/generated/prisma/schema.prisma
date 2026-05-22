@@ -10,14 +10,14 @@ datasource db {
 // ─── Workspace ─────────────────────────────────────────────────────────────────
 
 model Workspace {
-  id        String   @id @default(cuid())
-  name      String
-  slug      String   @unique
-  currency  String   @default("SAR")
-  taxRate   Decimal  @default(15) @db.Decimal(5, 2)
-  logo      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  baseCurrency String   @default("KWD")
+  taxRate      Decimal  @default(15) @db.Decimal(5, 2)
+  logo         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   members           WorkspaceMember[]
   activityLogs      ActivityLog[]
@@ -36,6 +36,39 @@ model Workspace {
   whatsappConfig    WhatsAppConfig?
   whatsappTemplates WhatsAppTemplate[]
   roles             Role[]
+  currencies        Currency[]
+  exchangeRates     ExchangeRate[]
+}
+
+// ─── Currencies & Exchange Rates ──────────────────────────────────────────────
+
+model Currency {
+  id          String   @id @default(cuid())
+  workspaceId String
+  code        String // ISO: "KWD", "SAR", "USD", "EUR"
+  name        String // "Kuwaiti Dinar", "Saudi Riyal"
+  symbol      String // "د.ك", "﷼", "$"
+  isBase      Boolean  @default(false)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, code])
+}
+
+model ExchangeRate {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  fromCurrency  String // e.g. "SAR"
+  toCurrency    String // always base currency e.g. "KWD"
+  rate          Decimal  @db.Decimal(12, 6) // 1 fromCurrency = X toCurrency
+  effectiveDate DateTime @default(now())
+  createdAt     DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, fromCurrency, toCurrency])
 }
 
 // ─── Team & Roles ──────────────────────────────────────────────────────────────
@@ -222,6 +255,8 @@ model Deal {
   contactId         String?
   title             String
   value             Decimal   @db.Decimal(12, 2)
+  currency          String    @default("KWD")
+  valueInBase       Decimal?  @db.Decimal(12, 2) // Value converted to base currency
   expectedCloseDate DateTime?
   lostReason        String?
   notes             String?
@@ -342,7 +377,8 @@ model Invoice {
   subtotal      Decimal       @db.Decimal(12, 2)
   taxAmount     Decimal       @db.Decimal(12, 2)
   total         Decimal       @db.Decimal(12, 2)
-  currency      String        @default("SAR")
+  totalInBase   Decimal?      @db.Decimal(12, 2) // Total converted to base currency
+  currency      String        @default("KWD")
   notes         String?
   dueDate       DateTime?
   sentAt        DateTime?

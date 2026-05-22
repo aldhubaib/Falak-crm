@@ -19,6 +19,16 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type Workspace = $Result.DefaultSelection<Prisma.$WorkspacePayload>
 /**
+ * Model Currency
+ * 
+ */
+export type Currency = $Result.DefaultSelection<Prisma.$CurrencyPayload>
+/**
+ * Model ExchangeRate
+ * 
+ */
+export type ExchangeRate = $Result.DefaultSelection<Prisma.$ExchangeRatePayload>
+/**
  * Model WorkspaceMember
  * 
  */
@@ -395,6 +405,26 @@ export class PrismaClient<
     * ```
     */
   get workspace(): Prisma.WorkspaceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.currency`: Exposes CRUD operations for the **Currency** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Currencies
+    * const currencies = await prisma.currency.findMany()
+    * ```
+    */
+  get currency(): Prisma.CurrencyDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.exchangeRate`: Exposes CRUD operations for the **ExchangeRate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ExchangeRates
+    * const exchangeRates = await prisma.exchangeRate.findMany()
+    * ```
+    */
+  get exchangeRate(): Prisma.ExchangeRateDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.workspaceMember`: Exposes CRUD operations for the **WorkspaceMember** model.
@@ -1060,6 +1090,8 @@ export namespace Prisma {
 
   export const ModelName: {
     Workspace: 'Workspace',
+    Currency: 'Currency',
+    ExchangeRate: 'ExchangeRate',
     WorkspaceMember: 'WorkspaceMember',
     Role: 'Role',
     ProjectCollaborator: 'ProjectCollaborator',
@@ -1098,7 +1130,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "workspace" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealItem" | "projectStatus" | "project" | "taskStatus" | "task" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef"
+      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealItem" | "projectStatus" | "project" | "taskStatus" | "task" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1173,6 +1205,154 @@ export namespace Prisma {
           count: {
             args: Prisma.WorkspaceCountArgs<ExtArgs>
             result: $Utils.Optional<WorkspaceCountAggregateOutputType> | number
+          }
+        }
+      }
+      Currency: {
+        payload: Prisma.$CurrencyPayload<ExtArgs>
+        fields: Prisma.CurrencyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CurrencyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CurrencyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CurrencyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CurrencyPayload>
+          }
+          findFirst: {
+            args: Prisma.CurrencyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CurrencyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CurrencyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CurrencyPayload>
+          }
+          findMany: {
+            args: Prisma.CurrencyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CurrencyPayload>[]
+          }
+          create: {
+            args: Prisma.CurrencyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CurrencyPayload>
+          }
+          createMany: {
+            args: Prisma.CurrencyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CurrencyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CurrencyPayload>[]
+          }
+          delete: {
+            args: Prisma.CurrencyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CurrencyPayload>
+          }
+          update: {
+            args: Prisma.CurrencyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CurrencyPayload>
+          }
+          deleteMany: {
+            args: Prisma.CurrencyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CurrencyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CurrencyUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CurrencyPayload>[]
+          }
+          upsert: {
+            args: Prisma.CurrencyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CurrencyPayload>
+          }
+          aggregate: {
+            args: Prisma.CurrencyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCurrency>
+          }
+          groupBy: {
+            args: Prisma.CurrencyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CurrencyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CurrencyCountArgs<ExtArgs>
+            result: $Utils.Optional<CurrencyCountAggregateOutputType> | number
+          }
+        }
+      }
+      ExchangeRate: {
+        payload: Prisma.$ExchangeRatePayload<ExtArgs>
+        fields: Prisma.ExchangeRateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ExchangeRateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExchangeRatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ExchangeRateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+          }
+          findFirst: {
+            args: Prisma.ExchangeRateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExchangeRatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ExchangeRateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+          }
+          findMany: {
+            args: Prisma.ExchangeRateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExchangeRatePayload>[]
+          }
+          create: {
+            args: Prisma.ExchangeRateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+          }
+          createMany: {
+            args: Prisma.ExchangeRateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ExchangeRateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExchangeRatePayload>[]
+          }
+          delete: {
+            args: Prisma.ExchangeRateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+          }
+          update: {
+            args: Prisma.ExchangeRateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+          }
+          deleteMany: {
+            args: Prisma.ExchangeRateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ExchangeRateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ExchangeRateUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExchangeRatePayload>[]
+          }
+          upsert: {
+            args: Prisma.ExchangeRateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+          }
+          aggregate: {
+            args: Prisma.ExchangeRateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateExchangeRate>
+          }
+          groupBy: {
+            args: Prisma.ExchangeRateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ExchangeRateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ExchangeRateCountArgs<ExtArgs>
+            result: $Utils.Optional<ExchangeRateCountAggregateOutputType> | number
           }
         }
       }
@@ -2987,6 +3167,8 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     workspace?: WorkspaceOmit
+    currency?: CurrencyOmit
+    exchangeRate?: ExchangeRateOmit
     workspaceMember?: WorkspaceMemberOmit
     role?: RoleOmit
     projectCollaborator?: ProjectCollaboratorOmit
@@ -3106,6 +3288,8 @@ export namespace Prisma {
     customFields: number
     whatsappTemplates: number
     roles: number
+    currencies: number
+    exchangeRates: number
   }
 
   export type WorkspaceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3125,6 +3309,8 @@ export namespace Prisma {
     customFields?: boolean | WorkspaceCountOutputTypeCountCustomFieldsArgs
     whatsappTemplates?: boolean | WorkspaceCountOutputTypeCountWhatsappTemplatesArgs
     roles?: boolean | WorkspaceCountOutputTypeCountRolesArgs
+    currencies?: boolean | WorkspaceCountOutputTypeCountCurrenciesArgs
+    exchangeRates?: boolean | WorkspaceCountOutputTypeCountExchangeRatesArgs
   }
 
   // Custom InputTypes
@@ -3248,6 +3434,20 @@ export namespace Prisma {
    */
   export type WorkspaceCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RoleWhereInput
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeCountCurrenciesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CurrencyWhereInput
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeCountExchangeRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExchangeRateWhereInput
   }
 
 
@@ -3723,7 +3923,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     slug: string | null
-    currency: string | null
+    baseCurrency: string | null
     taxRate: Decimal | null
     logo: string | null
     createdAt: Date | null
@@ -3734,7 +3934,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     slug: string | null
-    currency: string | null
+    baseCurrency: string | null
     taxRate: Decimal | null
     logo: string | null
     createdAt: Date | null
@@ -3745,7 +3945,7 @@ export namespace Prisma {
     id: number
     name: number
     slug: number
-    currency: number
+    baseCurrency: number
     taxRate: number
     logo: number
     createdAt: number
@@ -3766,7 +3966,7 @@ export namespace Prisma {
     id?: true
     name?: true
     slug?: true
-    currency?: true
+    baseCurrency?: true
     taxRate?: true
     logo?: true
     createdAt?: true
@@ -3777,7 +3977,7 @@ export namespace Prisma {
     id?: true
     name?: true
     slug?: true
-    currency?: true
+    baseCurrency?: true
     taxRate?: true
     logo?: true
     createdAt?: true
@@ -3788,7 +3988,7 @@ export namespace Prisma {
     id?: true
     name?: true
     slug?: true
-    currency?: true
+    baseCurrency?: true
     taxRate?: true
     logo?: true
     createdAt?: true
@@ -3886,7 +4086,7 @@ export namespace Prisma {
     id: string
     name: string
     slug: string
-    currency: string
+    baseCurrency: string
     taxRate: Decimal
     logo: string | null
     createdAt: Date
@@ -3916,7 +4116,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     slug?: boolean
-    currency?: boolean
+    baseCurrency?: boolean
     taxRate?: boolean
     logo?: boolean
     createdAt?: boolean
@@ -3938,6 +4138,8 @@ export namespace Prisma {
     whatsappConfig?: boolean | Workspace$whatsappConfigArgs<ExtArgs>
     whatsappTemplates?: boolean | Workspace$whatsappTemplatesArgs<ExtArgs>
     roles?: boolean | Workspace$rolesArgs<ExtArgs>
+    currencies?: boolean | Workspace$currenciesArgs<ExtArgs>
+    exchangeRates?: boolean | Workspace$exchangeRatesArgs<ExtArgs>
     _count?: boolean | WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workspace"]>
 
@@ -3945,7 +4147,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     slug?: boolean
-    currency?: boolean
+    baseCurrency?: boolean
     taxRate?: boolean
     logo?: boolean
     createdAt?: boolean
@@ -3956,7 +4158,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     slug?: boolean
-    currency?: boolean
+    baseCurrency?: boolean
     taxRate?: boolean
     logo?: boolean
     createdAt?: boolean
@@ -3967,14 +4169,14 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     slug?: boolean
-    currency?: boolean
+    baseCurrency?: boolean
     taxRate?: boolean
     logo?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type WorkspaceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "currency" | "taxRate" | "logo" | "createdAt" | "updatedAt", ExtArgs["result"]["workspace"]>
+  export type WorkspaceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "baseCurrency" | "taxRate" | "logo" | "createdAt" | "updatedAt", ExtArgs["result"]["workspace"]>
   export type WorkspaceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     members?: boolean | Workspace$membersArgs<ExtArgs>
     activityLogs?: boolean | Workspace$activityLogsArgs<ExtArgs>
@@ -3993,6 +4195,8 @@ export namespace Prisma {
     whatsappConfig?: boolean | Workspace$whatsappConfigArgs<ExtArgs>
     whatsappTemplates?: boolean | Workspace$whatsappTemplatesArgs<ExtArgs>
     roles?: boolean | Workspace$rolesArgs<ExtArgs>
+    currencies?: boolean | Workspace$currenciesArgs<ExtArgs>
+    exchangeRates?: boolean | Workspace$exchangeRatesArgs<ExtArgs>
     _count?: boolean | WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type WorkspaceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4018,12 +4222,14 @@ export namespace Prisma {
       whatsappConfig: Prisma.$WhatsAppConfigPayload<ExtArgs> | null
       whatsappTemplates: Prisma.$WhatsAppTemplatePayload<ExtArgs>[]
       roles: Prisma.$RolePayload<ExtArgs>[]
+      currencies: Prisma.$CurrencyPayload<ExtArgs>[]
+      exchangeRates: Prisma.$ExchangeRatePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
       slug: string
-      currency: string
+      baseCurrency: string
       taxRate: Prisma.Decimal
       logo: string | null
       createdAt: Date
@@ -4439,6 +4645,8 @@ export namespace Prisma {
     whatsappConfig<T extends Workspace$whatsappConfigArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$whatsappConfigArgs<ExtArgs>>): Prisma__WhatsAppConfigClient<$Result.GetResult<Prisma.$WhatsAppConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     whatsappTemplates<T extends Workspace$whatsappTemplatesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$whatsappTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WhatsAppTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roles<T extends Workspace$rolesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    currencies<T extends Workspace$currenciesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$currenciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    exchangeRates<T extends Workspace$exchangeRatesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$exchangeRatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4471,7 +4679,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Workspace", 'String'>
     readonly name: FieldRef<"Workspace", 'String'>
     readonly slug: FieldRef<"Workspace", 'String'>
-    readonly currency: FieldRef<"Workspace", 'String'>
+    readonly baseCurrency: FieldRef<"Workspace", 'String'>
     readonly taxRate: FieldRef<"Workspace", 'Decimal'>
     readonly logo: FieldRef<"Workspace", 'String'>
     readonly createdAt: FieldRef<"Workspace", 'DateTime'>
@@ -5272,6 +5480,54 @@ export namespace Prisma {
   }
 
   /**
+   * Workspace.currencies
+   */
+  export type Workspace$currenciesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Currency
+     */
+    select?: CurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Currency
+     */
+    omit?: CurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CurrencyInclude<ExtArgs> | null
+    where?: CurrencyWhereInput
+    orderBy?: CurrencyOrderByWithRelationInput | CurrencyOrderByWithRelationInput[]
+    cursor?: CurrencyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CurrencyScalarFieldEnum | CurrencyScalarFieldEnum[]
+  }
+
+  /**
+   * Workspace.exchangeRates
+   */
+  export type Workspace$exchangeRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExchangeRate
+     */
+    select?: ExchangeRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExchangeRate
+     */
+    omit?: ExchangeRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExchangeRateInclude<ExtArgs> | null
+    where?: ExchangeRateWhereInput
+    orderBy?: ExchangeRateOrderByWithRelationInput | ExchangeRateOrderByWithRelationInput[]
+    cursor?: ExchangeRateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExchangeRateScalarFieldEnum | ExchangeRateScalarFieldEnum[]
+  }
+
+  /**
    * Workspace without action
    */
   export type WorkspaceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5287,6 +5543,2231 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: WorkspaceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Currency
+   */
+
+  export type AggregateCurrency = {
+    _count: CurrencyCountAggregateOutputType | null
+    _min: CurrencyMinAggregateOutputType | null
+    _max: CurrencyMaxAggregateOutputType | null
+  }
+
+  export type CurrencyMinAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    code: string | null
+    name: string | null
+    symbol: string | null
+    isBase: boolean | null
+    active: boolean | null
+    createdAt: Date | null
+  }
+
+  export type CurrencyMaxAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    code: string | null
+    name: string | null
+    symbol: string | null
+    isBase: boolean | null
+    active: boolean | null
+    createdAt: Date | null
+  }
+
+  export type CurrencyCountAggregateOutputType = {
+    id: number
+    workspaceId: number
+    code: number
+    name: number
+    symbol: number
+    isBase: number
+    active: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type CurrencyMinAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    code?: true
+    name?: true
+    symbol?: true
+    isBase?: true
+    active?: true
+    createdAt?: true
+  }
+
+  export type CurrencyMaxAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    code?: true
+    name?: true
+    symbol?: true
+    isBase?: true
+    active?: true
+    createdAt?: true
+  }
+
+  export type CurrencyCountAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    code?: true
+    name?: true
+    symbol?: true
+    isBase?: true
+    active?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type CurrencyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Currency to aggregate.
+     */
+    where?: CurrencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Currencies to fetch.
+     */
+    orderBy?: CurrencyOrderByWithRelationInput | CurrencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CurrencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Currencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Currencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Currencies
+    **/
+    _count?: true | CurrencyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CurrencyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CurrencyMaxAggregateInputType
+  }
+
+  export type GetCurrencyAggregateType<T extends CurrencyAggregateArgs> = {
+        [P in keyof T & keyof AggregateCurrency]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCurrency[P]>
+      : GetScalarType<T[P], AggregateCurrency[P]>
+  }
+
+
+
+
+  export type CurrencyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CurrencyWhereInput
+    orderBy?: CurrencyOrderByWithAggregationInput | CurrencyOrderByWithAggregationInput[]
+    by: CurrencyScalarFieldEnum[] | CurrencyScalarFieldEnum
+    having?: CurrencyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CurrencyCountAggregateInputType | true
+    _min?: CurrencyMinAggregateInputType
+    _max?: CurrencyMaxAggregateInputType
+  }
+
+  export type CurrencyGroupByOutputType = {
+    id: string
+    workspaceId: string
+    code: string
+    name: string
+    symbol: string
+    isBase: boolean
+    active: boolean
+    createdAt: Date
+    _count: CurrencyCountAggregateOutputType | null
+    _min: CurrencyMinAggregateOutputType | null
+    _max: CurrencyMaxAggregateOutputType | null
+  }
+
+  type GetCurrencyGroupByPayload<T extends CurrencyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CurrencyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CurrencyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CurrencyGroupByOutputType[P]>
+            : GetScalarType<T[P], CurrencyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CurrencySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    code?: boolean
+    name?: boolean
+    symbol?: boolean
+    isBase?: boolean
+    active?: boolean
+    createdAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["currency"]>
+
+  export type CurrencySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    code?: boolean
+    name?: boolean
+    symbol?: boolean
+    isBase?: boolean
+    active?: boolean
+    createdAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["currency"]>
+
+  export type CurrencySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    code?: boolean
+    name?: boolean
+    symbol?: boolean
+    isBase?: boolean
+    active?: boolean
+    createdAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["currency"]>
+
+  export type CurrencySelectScalar = {
+    id?: boolean
+    workspaceId?: boolean
+    code?: boolean
+    name?: boolean
+    symbol?: boolean
+    isBase?: boolean
+    active?: boolean
+    createdAt?: boolean
+  }
+
+  export type CurrencyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "code" | "name" | "symbol" | "isBase" | "active" | "createdAt", ExtArgs["result"]["currency"]>
+  export type CurrencyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+  export type CurrencyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+  export type CurrencyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+
+  export type $CurrencyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Currency"
+    objects: {
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      workspaceId: string
+      code: string
+      name: string
+      symbol: string
+      isBase: boolean
+      active: boolean
+      createdAt: Date
+    }, ExtArgs["result"]["currency"]>
+    composites: {}
+  }
+
+  type CurrencyGetPayload<S extends boolean | null | undefined | CurrencyDefaultArgs> = $Result.GetResult<Prisma.$CurrencyPayload, S>
+
+  type CurrencyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CurrencyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CurrencyCountAggregateInputType | true
+    }
+
+  export interface CurrencyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Currency'], meta: { name: 'Currency' } }
+    /**
+     * Find zero or one Currency that matches the filter.
+     * @param {CurrencyFindUniqueArgs} args - Arguments to find a Currency
+     * @example
+     * // Get one Currency
+     * const currency = await prisma.currency.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CurrencyFindUniqueArgs>(args: SelectSubset<T, CurrencyFindUniqueArgs<ExtArgs>>): Prisma__CurrencyClient<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Currency that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CurrencyFindUniqueOrThrowArgs} args - Arguments to find a Currency
+     * @example
+     * // Get one Currency
+     * const currency = await prisma.currency.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CurrencyFindUniqueOrThrowArgs>(args: SelectSubset<T, CurrencyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CurrencyClient<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Currency that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CurrencyFindFirstArgs} args - Arguments to find a Currency
+     * @example
+     * // Get one Currency
+     * const currency = await prisma.currency.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CurrencyFindFirstArgs>(args?: SelectSubset<T, CurrencyFindFirstArgs<ExtArgs>>): Prisma__CurrencyClient<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Currency that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CurrencyFindFirstOrThrowArgs} args - Arguments to find a Currency
+     * @example
+     * // Get one Currency
+     * const currency = await prisma.currency.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CurrencyFindFirstOrThrowArgs>(args?: SelectSubset<T, CurrencyFindFirstOrThrowArgs<ExtArgs>>): Prisma__CurrencyClient<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Currencies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CurrencyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Currencies
+     * const currencies = await prisma.currency.findMany()
+     * 
+     * // Get first 10 Currencies
+     * const currencies = await prisma.currency.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const currencyWithIdOnly = await prisma.currency.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CurrencyFindManyArgs>(args?: SelectSubset<T, CurrencyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Currency.
+     * @param {CurrencyCreateArgs} args - Arguments to create a Currency.
+     * @example
+     * // Create one Currency
+     * const Currency = await prisma.currency.create({
+     *   data: {
+     *     // ... data to create a Currency
+     *   }
+     * })
+     * 
+     */
+    create<T extends CurrencyCreateArgs>(args: SelectSubset<T, CurrencyCreateArgs<ExtArgs>>): Prisma__CurrencyClient<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Currencies.
+     * @param {CurrencyCreateManyArgs} args - Arguments to create many Currencies.
+     * @example
+     * // Create many Currencies
+     * const currency = await prisma.currency.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CurrencyCreateManyArgs>(args?: SelectSubset<T, CurrencyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Currencies and returns the data saved in the database.
+     * @param {CurrencyCreateManyAndReturnArgs} args - Arguments to create many Currencies.
+     * @example
+     * // Create many Currencies
+     * const currency = await prisma.currency.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Currencies and only return the `id`
+     * const currencyWithIdOnly = await prisma.currency.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CurrencyCreateManyAndReturnArgs>(args?: SelectSubset<T, CurrencyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Currency.
+     * @param {CurrencyDeleteArgs} args - Arguments to delete one Currency.
+     * @example
+     * // Delete one Currency
+     * const Currency = await prisma.currency.delete({
+     *   where: {
+     *     // ... filter to delete one Currency
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CurrencyDeleteArgs>(args: SelectSubset<T, CurrencyDeleteArgs<ExtArgs>>): Prisma__CurrencyClient<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Currency.
+     * @param {CurrencyUpdateArgs} args - Arguments to update one Currency.
+     * @example
+     * // Update one Currency
+     * const currency = await prisma.currency.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CurrencyUpdateArgs>(args: SelectSubset<T, CurrencyUpdateArgs<ExtArgs>>): Prisma__CurrencyClient<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Currencies.
+     * @param {CurrencyDeleteManyArgs} args - Arguments to filter Currencies to delete.
+     * @example
+     * // Delete a few Currencies
+     * const { count } = await prisma.currency.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CurrencyDeleteManyArgs>(args?: SelectSubset<T, CurrencyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Currencies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CurrencyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Currencies
+     * const currency = await prisma.currency.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CurrencyUpdateManyArgs>(args: SelectSubset<T, CurrencyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Currencies and returns the data updated in the database.
+     * @param {CurrencyUpdateManyAndReturnArgs} args - Arguments to update many Currencies.
+     * @example
+     * // Update many Currencies
+     * const currency = await prisma.currency.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Currencies and only return the `id`
+     * const currencyWithIdOnly = await prisma.currency.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CurrencyUpdateManyAndReturnArgs>(args: SelectSubset<T, CurrencyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Currency.
+     * @param {CurrencyUpsertArgs} args - Arguments to update or create a Currency.
+     * @example
+     * // Update or create a Currency
+     * const currency = await prisma.currency.upsert({
+     *   create: {
+     *     // ... data to create a Currency
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Currency we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CurrencyUpsertArgs>(args: SelectSubset<T, CurrencyUpsertArgs<ExtArgs>>): Prisma__CurrencyClient<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Currencies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CurrencyCountArgs} args - Arguments to filter Currencies to count.
+     * @example
+     * // Count the number of Currencies
+     * const count = await prisma.currency.count({
+     *   where: {
+     *     // ... the filter for the Currencies we want to count
+     *   }
+     * })
+    **/
+    count<T extends CurrencyCountArgs>(
+      args?: Subset<T, CurrencyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CurrencyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Currency.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CurrencyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CurrencyAggregateArgs>(args: Subset<T, CurrencyAggregateArgs>): Prisma.PrismaPromise<GetCurrencyAggregateType<T>>
+
+    /**
+     * Group by Currency.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CurrencyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CurrencyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CurrencyGroupByArgs['orderBy'] }
+        : { orderBy?: CurrencyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CurrencyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCurrencyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Currency model
+   */
+  readonly fields: CurrencyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Currency.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CurrencyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Currency model
+   */
+  interface CurrencyFieldRefs {
+    readonly id: FieldRef<"Currency", 'String'>
+    readonly workspaceId: FieldRef<"Currency", 'String'>
+    readonly code: FieldRef<"Currency", 'String'>
+    readonly name: FieldRef<"Currency", 'String'>
+    readonly symbol: FieldRef<"Currency", 'String'>
+    readonly isBase: FieldRef<"Currency", 'Boolean'>
+    readonly active: FieldRef<"Currency", 'Boolean'>
+    readonly createdAt: FieldRef<"Currency", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Currency findUnique
+   */
+  export type CurrencyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Currency
+     */
+    select?: CurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Currency
+     */
+    omit?: CurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CurrencyInclude<ExtArgs> | null
+    /**
+     * Filter, which Currency to fetch.
+     */
+    where: CurrencyWhereUniqueInput
+  }
+
+  /**
+   * Currency findUniqueOrThrow
+   */
+  export type CurrencyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Currency
+     */
+    select?: CurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Currency
+     */
+    omit?: CurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CurrencyInclude<ExtArgs> | null
+    /**
+     * Filter, which Currency to fetch.
+     */
+    where: CurrencyWhereUniqueInput
+  }
+
+  /**
+   * Currency findFirst
+   */
+  export type CurrencyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Currency
+     */
+    select?: CurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Currency
+     */
+    omit?: CurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CurrencyInclude<ExtArgs> | null
+    /**
+     * Filter, which Currency to fetch.
+     */
+    where?: CurrencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Currencies to fetch.
+     */
+    orderBy?: CurrencyOrderByWithRelationInput | CurrencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Currencies.
+     */
+    cursor?: CurrencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Currencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Currencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Currencies.
+     */
+    distinct?: CurrencyScalarFieldEnum | CurrencyScalarFieldEnum[]
+  }
+
+  /**
+   * Currency findFirstOrThrow
+   */
+  export type CurrencyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Currency
+     */
+    select?: CurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Currency
+     */
+    omit?: CurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CurrencyInclude<ExtArgs> | null
+    /**
+     * Filter, which Currency to fetch.
+     */
+    where?: CurrencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Currencies to fetch.
+     */
+    orderBy?: CurrencyOrderByWithRelationInput | CurrencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Currencies.
+     */
+    cursor?: CurrencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Currencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Currencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Currencies.
+     */
+    distinct?: CurrencyScalarFieldEnum | CurrencyScalarFieldEnum[]
+  }
+
+  /**
+   * Currency findMany
+   */
+  export type CurrencyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Currency
+     */
+    select?: CurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Currency
+     */
+    omit?: CurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CurrencyInclude<ExtArgs> | null
+    /**
+     * Filter, which Currencies to fetch.
+     */
+    where?: CurrencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Currencies to fetch.
+     */
+    orderBy?: CurrencyOrderByWithRelationInput | CurrencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Currencies.
+     */
+    cursor?: CurrencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Currencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Currencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Currencies.
+     */
+    distinct?: CurrencyScalarFieldEnum | CurrencyScalarFieldEnum[]
+  }
+
+  /**
+   * Currency create
+   */
+  export type CurrencyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Currency
+     */
+    select?: CurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Currency
+     */
+    omit?: CurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CurrencyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Currency.
+     */
+    data: XOR<CurrencyCreateInput, CurrencyUncheckedCreateInput>
+  }
+
+  /**
+   * Currency createMany
+   */
+  export type CurrencyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Currencies.
+     */
+    data: CurrencyCreateManyInput | CurrencyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Currency createManyAndReturn
+   */
+  export type CurrencyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Currency
+     */
+    select?: CurrencySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Currency
+     */
+    omit?: CurrencyOmit<ExtArgs> | null
+    /**
+     * The data used to create many Currencies.
+     */
+    data: CurrencyCreateManyInput | CurrencyCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CurrencyIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Currency update
+   */
+  export type CurrencyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Currency
+     */
+    select?: CurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Currency
+     */
+    omit?: CurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CurrencyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Currency.
+     */
+    data: XOR<CurrencyUpdateInput, CurrencyUncheckedUpdateInput>
+    /**
+     * Choose, which Currency to update.
+     */
+    where: CurrencyWhereUniqueInput
+  }
+
+  /**
+   * Currency updateMany
+   */
+  export type CurrencyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Currencies.
+     */
+    data: XOR<CurrencyUpdateManyMutationInput, CurrencyUncheckedUpdateManyInput>
+    /**
+     * Filter which Currencies to update
+     */
+    where?: CurrencyWhereInput
+    /**
+     * Limit how many Currencies to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Currency updateManyAndReturn
+   */
+  export type CurrencyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Currency
+     */
+    select?: CurrencySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Currency
+     */
+    omit?: CurrencyOmit<ExtArgs> | null
+    /**
+     * The data used to update Currencies.
+     */
+    data: XOR<CurrencyUpdateManyMutationInput, CurrencyUncheckedUpdateManyInput>
+    /**
+     * Filter which Currencies to update
+     */
+    where?: CurrencyWhereInput
+    /**
+     * Limit how many Currencies to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CurrencyIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Currency upsert
+   */
+  export type CurrencyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Currency
+     */
+    select?: CurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Currency
+     */
+    omit?: CurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CurrencyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Currency to update in case it exists.
+     */
+    where: CurrencyWhereUniqueInput
+    /**
+     * In case the Currency found by the `where` argument doesn't exist, create a new Currency with this data.
+     */
+    create: XOR<CurrencyCreateInput, CurrencyUncheckedCreateInput>
+    /**
+     * In case the Currency was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CurrencyUpdateInput, CurrencyUncheckedUpdateInput>
+  }
+
+  /**
+   * Currency delete
+   */
+  export type CurrencyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Currency
+     */
+    select?: CurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Currency
+     */
+    omit?: CurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CurrencyInclude<ExtArgs> | null
+    /**
+     * Filter which Currency to delete.
+     */
+    where: CurrencyWhereUniqueInput
+  }
+
+  /**
+   * Currency deleteMany
+   */
+  export type CurrencyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Currencies to delete
+     */
+    where?: CurrencyWhereInput
+    /**
+     * Limit how many Currencies to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Currency without action
+   */
+  export type CurrencyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Currency
+     */
+    select?: CurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Currency
+     */
+    omit?: CurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CurrencyInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ExchangeRate
+   */
+
+  export type AggregateExchangeRate = {
+    _count: ExchangeRateCountAggregateOutputType | null
+    _avg: ExchangeRateAvgAggregateOutputType | null
+    _sum: ExchangeRateSumAggregateOutputType | null
+    _min: ExchangeRateMinAggregateOutputType | null
+    _max: ExchangeRateMaxAggregateOutputType | null
+  }
+
+  export type ExchangeRateAvgAggregateOutputType = {
+    rate: Decimal | null
+  }
+
+  export type ExchangeRateSumAggregateOutputType = {
+    rate: Decimal | null
+  }
+
+  export type ExchangeRateMinAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    fromCurrency: string | null
+    toCurrency: string | null
+    rate: Decimal | null
+    effectiveDate: Date | null
+    createdAt: Date | null
+  }
+
+  export type ExchangeRateMaxAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    fromCurrency: string | null
+    toCurrency: string | null
+    rate: Decimal | null
+    effectiveDate: Date | null
+    createdAt: Date | null
+  }
+
+  export type ExchangeRateCountAggregateOutputType = {
+    id: number
+    workspaceId: number
+    fromCurrency: number
+    toCurrency: number
+    rate: number
+    effectiveDate: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ExchangeRateAvgAggregateInputType = {
+    rate?: true
+  }
+
+  export type ExchangeRateSumAggregateInputType = {
+    rate?: true
+  }
+
+  export type ExchangeRateMinAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    fromCurrency?: true
+    toCurrency?: true
+    rate?: true
+    effectiveDate?: true
+    createdAt?: true
+  }
+
+  export type ExchangeRateMaxAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    fromCurrency?: true
+    toCurrency?: true
+    rate?: true
+    effectiveDate?: true
+    createdAt?: true
+  }
+
+  export type ExchangeRateCountAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    fromCurrency?: true
+    toCurrency?: true
+    rate?: true
+    effectiveDate?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ExchangeRateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExchangeRate to aggregate.
+     */
+    where?: ExchangeRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExchangeRates to fetch.
+     */
+    orderBy?: ExchangeRateOrderByWithRelationInput | ExchangeRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ExchangeRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExchangeRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExchangeRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ExchangeRates
+    **/
+    _count?: true | ExchangeRateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ExchangeRateAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ExchangeRateSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ExchangeRateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ExchangeRateMaxAggregateInputType
+  }
+
+  export type GetExchangeRateAggregateType<T extends ExchangeRateAggregateArgs> = {
+        [P in keyof T & keyof AggregateExchangeRate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateExchangeRate[P]>
+      : GetScalarType<T[P], AggregateExchangeRate[P]>
+  }
+
+
+
+
+  export type ExchangeRateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExchangeRateWhereInput
+    orderBy?: ExchangeRateOrderByWithAggregationInput | ExchangeRateOrderByWithAggregationInput[]
+    by: ExchangeRateScalarFieldEnum[] | ExchangeRateScalarFieldEnum
+    having?: ExchangeRateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ExchangeRateCountAggregateInputType | true
+    _avg?: ExchangeRateAvgAggregateInputType
+    _sum?: ExchangeRateSumAggregateInputType
+    _min?: ExchangeRateMinAggregateInputType
+    _max?: ExchangeRateMaxAggregateInputType
+  }
+
+  export type ExchangeRateGroupByOutputType = {
+    id: string
+    workspaceId: string
+    fromCurrency: string
+    toCurrency: string
+    rate: Decimal
+    effectiveDate: Date
+    createdAt: Date
+    _count: ExchangeRateCountAggregateOutputType | null
+    _avg: ExchangeRateAvgAggregateOutputType | null
+    _sum: ExchangeRateSumAggregateOutputType | null
+    _min: ExchangeRateMinAggregateOutputType | null
+    _max: ExchangeRateMaxAggregateOutputType | null
+  }
+
+  type GetExchangeRateGroupByPayload<T extends ExchangeRateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ExchangeRateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ExchangeRateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ExchangeRateGroupByOutputType[P]>
+            : GetScalarType<T[P], ExchangeRateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ExchangeRateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    fromCurrency?: boolean
+    toCurrency?: boolean
+    rate?: boolean
+    effectiveDate?: boolean
+    createdAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["exchangeRate"]>
+
+  export type ExchangeRateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    fromCurrency?: boolean
+    toCurrency?: boolean
+    rate?: boolean
+    effectiveDate?: boolean
+    createdAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["exchangeRate"]>
+
+  export type ExchangeRateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    fromCurrency?: boolean
+    toCurrency?: boolean
+    rate?: boolean
+    effectiveDate?: boolean
+    createdAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["exchangeRate"]>
+
+  export type ExchangeRateSelectScalar = {
+    id?: boolean
+    workspaceId?: boolean
+    fromCurrency?: boolean
+    toCurrency?: boolean
+    rate?: boolean
+    effectiveDate?: boolean
+    createdAt?: boolean
+  }
+
+  export type ExchangeRateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "fromCurrency" | "toCurrency" | "rate" | "effectiveDate" | "createdAt", ExtArgs["result"]["exchangeRate"]>
+  export type ExchangeRateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+  export type ExchangeRateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+  export type ExchangeRateIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+
+  export type $ExchangeRatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ExchangeRate"
+    objects: {
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      workspaceId: string
+      fromCurrency: string
+      toCurrency: string
+      rate: Prisma.Decimal
+      effectiveDate: Date
+      createdAt: Date
+    }, ExtArgs["result"]["exchangeRate"]>
+    composites: {}
+  }
+
+  type ExchangeRateGetPayload<S extends boolean | null | undefined | ExchangeRateDefaultArgs> = $Result.GetResult<Prisma.$ExchangeRatePayload, S>
+
+  type ExchangeRateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ExchangeRateFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ExchangeRateCountAggregateInputType | true
+    }
+
+  export interface ExchangeRateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ExchangeRate'], meta: { name: 'ExchangeRate' } }
+    /**
+     * Find zero or one ExchangeRate that matches the filter.
+     * @param {ExchangeRateFindUniqueArgs} args - Arguments to find a ExchangeRate
+     * @example
+     * // Get one ExchangeRate
+     * const exchangeRate = await prisma.exchangeRate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ExchangeRateFindUniqueArgs>(args: SelectSubset<T, ExchangeRateFindUniqueArgs<ExtArgs>>): Prisma__ExchangeRateClient<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ExchangeRate that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ExchangeRateFindUniqueOrThrowArgs} args - Arguments to find a ExchangeRate
+     * @example
+     * // Get one ExchangeRate
+     * const exchangeRate = await prisma.exchangeRate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ExchangeRateFindUniqueOrThrowArgs>(args: SelectSubset<T, ExchangeRateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ExchangeRateClient<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExchangeRate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExchangeRateFindFirstArgs} args - Arguments to find a ExchangeRate
+     * @example
+     * // Get one ExchangeRate
+     * const exchangeRate = await prisma.exchangeRate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ExchangeRateFindFirstArgs>(args?: SelectSubset<T, ExchangeRateFindFirstArgs<ExtArgs>>): Prisma__ExchangeRateClient<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExchangeRate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExchangeRateFindFirstOrThrowArgs} args - Arguments to find a ExchangeRate
+     * @example
+     * // Get one ExchangeRate
+     * const exchangeRate = await prisma.exchangeRate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ExchangeRateFindFirstOrThrowArgs>(args?: SelectSubset<T, ExchangeRateFindFirstOrThrowArgs<ExtArgs>>): Prisma__ExchangeRateClient<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ExchangeRates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExchangeRateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ExchangeRates
+     * const exchangeRates = await prisma.exchangeRate.findMany()
+     * 
+     * // Get first 10 ExchangeRates
+     * const exchangeRates = await prisma.exchangeRate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const exchangeRateWithIdOnly = await prisma.exchangeRate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ExchangeRateFindManyArgs>(args?: SelectSubset<T, ExchangeRateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ExchangeRate.
+     * @param {ExchangeRateCreateArgs} args - Arguments to create a ExchangeRate.
+     * @example
+     * // Create one ExchangeRate
+     * const ExchangeRate = await prisma.exchangeRate.create({
+     *   data: {
+     *     // ... data to create a ExchangeRate
+     *   }
+     * })
+     * 
+     */
+    create<T extends ExchangeRateCreateArgs>(args: SelectSubset<T, ExchangeRateCreateArgs<ExtArgs>>): Prisma__ExchangeRateClient<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ExchangeRates.
+     * @param {ExchangeRateCreateManyArgs} args - Arguments to create many ExchangeRates.
+     * @example
+     * // Create many ExchangeRates
+     * const exchangeRate = await prisma.exchangeRate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ExchangeRateCreateManyArgs>(args?: SelectSubset<T, ExchangeRateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ExchangeRates and returns the data saved in the database.
+     * @param {ExchangeRateCreateManyAndReturnArgs} args - Arguments to create many ExchangeRates.
+     * @example
+     * // Create many ExchangeRates
+     * const exchangeRate = await prisma.exchangeRate.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ExchangeRates and only return the `id`
+     * const exchangeRateWithIdOnly = await prisma.exchangeRate.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ExchangeRateCreateManyAndReturnArgs>(args?: SelectSubset<T, ExchangeRateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ExchangeRate.
+     * @param {ExchangeRateDeleteArgs} args - Arguments to delete one ExchangeRate.
+     * @example
+     * // Delete one ExchangeRate
+     * const ExchangeRate = await prisma.exchangeRate.delete({
+     *   where: {
+     *     // ... filter to delete one ExchangeRate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ExchangeRateDeleteArgs>(args: SelectSubset<T, ExchangeRateDeleteArgs<ExtArgs>>): Prisma__ExchangeRateClient<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ExchangeRate.
+     * @param {ExchangeRateUpdateArgs} args - Arguments to update one ExchangeRate.
+     * @example
+     * // Update one ExchangeRate
+     * const exchangeRate = await prisma.exchangeRate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ExchangeRateUpdateArgs>(args: SelectSubset<T, ExchangeRateUpdateArgs<ExtArgs>>): Prisma__ExchangeRateClient<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ExchangeRates.
+     * @param {ExchangeRateDeleteManyArgs} args - Arguments to filter ExchangeRates to delete.
+     * @example
+     * // Delete a few ExchangeRates
+     * const { count } = await prisma.exchangeRate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ExchangeRateDeleteManyArgs>(args?: SelectSubset<T, ExchangeRateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExchangeRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExchangeRateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ExchangeRates
+     * const exchangeRate = await prisma.exchangeRate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ExchangeRateUpdateManyArgs>(args: SelectSubset<T, ExchangeRateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExchangeRates and returns the data updated in the database.
+     * @param {ExchangeRateUpdateManyAndReturnArgs} args - Arguments to update many ExchangeRates.
+     * @example
+     * // Update many ExchangeRates
+     * const exchangeRate = await prisma.exchangeRate.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ExchangeRates and only return the `id`
+     * const exchangeRateWithIdOnly = await prisma.exchangeRate.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ExchangeRateUpdateManyAndReturnArgs>(args: SelectSubset<T, ExchangeRateUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ExchangeRate.
+     * @param {ExchangeRateUpsertArgs} args - Arguments to update or create a ExchangeRate.
+     * @example
+     * // Update or create a ExchangeRate
+     * const exchangeRate = await prisma.exchangeRate.upsert({
+     *   create: {
+     *     // ... data to create a ExchangeRate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ExchangeRate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ExchangeRateUpsertArgs>(args: SelectSubset<T, ExchangeRateUpsertArgs<ExtArgs>>): Prisma__ExchangeRateClient<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ExchangeRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExchangeRateCountArgs} args - Arguments to filter ExchangeRates to count.
+     * @example
+     * // Count the number of ExchangeRates
+     * const count = await prisma.exchangeRate.count({
+     *   where: {
+     *     // ... the filter for the ExchangeRates we want to count
+     *   }
+     * })
+    **/
+    count<T extends ExchangeRateCountArgs>(
+      args?: Subset<T, ExchangeRateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ExchangeRateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ExchangeRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExchangeRateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ExchangeRateAggregateArgs>(args: Subset<T, ExchangeRateAggregateArgs>): Prisma.PrismaPromise<GetExchangeRateAggregateType<T>>
+
+    /**
+     * Group by ExchangeRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExchangeRateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ExchangeRateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ExchangeRateGroupByArgs['orderBy'] }
+        : { orderBy?: ExchangeRateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ExchangeRateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetExchangeRateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ExchangeRate model
+   */
+  readonly fields: ExchangeRateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ExchangeRate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ExchangeRateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ExchangeRate model
+   */
+  interface ExchangeRateFieldRefs {
+    readonly id: FieldRef<"ExchangeRate", 'String'>
+    readonly workspaceId: FieldRef<"ExchangeRate", 'String'>
+    readonly fromCurrency: FieldRef<"ExchangeRate", 'String'>
+    readonly toCurrency: FieldRef<"ExchangeRate", 'String'>
+    readonly rate: FieldRef<"ExchangeRate", 'Decimal'>
+    readonly effectiveDate: FieldRef<"ExchangeRate", 'DateTime'>
+    readonly createdAt: FieldRef<"ExchangeRate", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ExchangeRate findUnique
+   */
+  export type ExchangeRateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExchangeRate
+     */
+    select?: ExchangeRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExchangeRate
+     */
+    omit?: ExchangeRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExchangeRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ExchangeRate to fetch.
+     */
+    where: ExchangeRateWhereUniqueInput
+  }
+
+  /**
+   * ExchangeRate findUniqueOrThrow
+   */
+  export type ExchangeRateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExchangeRate
+     */
+    select?: ExchangeRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExchangeRate
+     */
+    omit?: ExchangeRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExchangeRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ExchangeRate to fetch.
+     */
+    where: ExchangeRateWhereUniqueInput
+  }
+
+  /**
+   * ExchangeRate findFirst
+   */
+  export type ExchangeRateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExchangeRate
+     */
+    select?: ExchangeRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExchangeRate
+     */
+    omit?: ExchangeRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExchangeRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ExchangeRate to fetch.
+     */
+    where?: ExchangeRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExchangeRates to fetch.
+     */
+    orderBy?: ExchangeRateOrderByWithRelationInput | ExchangeRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExchangeRates.
+     */
+    cursor?: ExchangeRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExchangeRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExchangeRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExchangeRates.
+     */
+    distinct?: ExchangeRateScalarFieldEnum | ExchangeRateScalarFieldEnum[]
+  }
+
+  /**
+   * ExchangeRate findFirstOrThrow
+   */
+  export type ExchangeRateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExchangeRate
+     */
+    select?: ExchangeRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExchangeRate
+     */
+    omit?: ExchangeRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExchangeRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ExchangeRate to fetch.
+     */
+    where?: ExchangeRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExchangeRates to fetch.
+     */
+    orderBy?: ExchangeRateOrderByWithRelationInput | ExchangeRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExchangeRates.
+     */
+    cursor?: ExchangeRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExchangeRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExchangeRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExchangeRates.
+     */
+    distinct?: ExchangeRateScalarFieldEnum | ExchangeRateScalarFieldEnum[]
+  }
+
+  /**
+   * ExchangeRate findMany
+   */
+  export type ExchangeRateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExchangeRate
+     */
+    select?: ExchangeRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExchangeRate
+     */
+    omit?: ExchangeRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExchangeRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ExchangeRates to fetch.
+     */
+    where?: ExchangeRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExchangeRates to fetch.
+     */
+    orderBy?: ExchangeRateOrderByWithRelationInput | ExchangeRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ExchangeRates.
+     */
+    cursor?: ExchangeRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExchangeRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExchangeRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExchangeRates.
+     */
+    distinct?: ExchangeRateScalarFieldEnum | ExchangeRateScalarFieldEnum[]
+  }
+
+  /**
+   * ExchangeRate create
+   */
+  export type ExchangeRateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExchangeRate
+     */
+    select?: ExchangeRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExchangeRate
+     */
+    omit?: ExchangeRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExchangeRateInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ExchangeRate.
+     */
+    data: XOR<ExchangeRateCreateInput, ExchangeRateUncheckedCreateInput>
+  }
+
+  /**
+   * ExchangeRate createMany
+   */
+  export type ExchangeRateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ExchangeRates.
+     */
+    data: ExchangeRateCreateManyInput | ExchangeRateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ExchangeRate createManyAndReturn
+   */
+  export type ExchangeRateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExchangeRate
+     */
+    select?: ExchangeRateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExchangeRate
+     */
+    omit?: ExchangeRateOmit<ExtArgs> | null
+    /**
+     * The data used to create many ExchangeRates.
+     */
+    data: ExchangeRateCreateManyInput | ExchangeRateCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExchangeRateIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExchangeRate update
+   */
+  export type ExchangeRateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExchangeRate
+     */
+    select?: ExchangeRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExchangeRate
+     */
+    omit?: ExchangeRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExchangeRateInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ExchangeRate.
+     */
+    data: XOR<ExchangeRateUpdateInput, ExchangeRateUncheckedUpdateInput>
+    /**
+     * Choose, which ExchangeRate to update.
+     */
+    where: ExchangeRateWhereUniqueInput
+  }
+
+  /**
+   * ExchangeRate updateMany
+   */
+  export type ExchangeRateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ExchangeRates.
+     */
+    data: XOR<ExchangeRateUpdateManyMutationInput, ExchangeRateUncheckedUpdateManyInput>
+    /**
+     * Filter which ExchangeRates to update
+     */
+    where?: ExchangeRateWhereInput
+    /**
+     * Limit how many ExchangeRates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExchangeRate updateManyAndReturn
+   */
+  export type ExchangeRateUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExchangeRate
+     */
+    select?: ExchangeRateSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExchangeRate
+     */
+    omit?: ExchangeRateOmit<ExtArgs> | null
+    /**
+     * The data used to update ExchangeRates.
+     */
+    data: XOR<ExchangeRateUpdateManyMutationInput, ExchangeRateUncheckedUpdateManyInput>
+    /**
+     * Filter which ExchangeRates to update
+     */
+    where?: ExchangeRateWhereInput
+    /**
+     * Limit how many ExchangeRates to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExchangeRateIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExchangeRate upsert
+   */
+  export type ExchangeRateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExchangeRate
+     */
+    select?: ExchangeRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExchangeRate
+     */
+    omit?: ExchangeRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExchangeRateInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ExchangeRate to update in case it exists.
+     */
+    where: ExchangeRateWhereUniqueInput
+    /**
+     * In case the ExchangeRate found by the `where` argument doesn't exist, create a new ExchangeRate with this data.
+     */
+    create: XOR<ExchangeRateCreateInput, ExchangeRateUncheckedCreateInput>
+    /**
+     * In case the ExchangeRate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ExchangeRateUpdateInput, ExchangeRateUncheckedUpdateInput>
+  }
+
+  /**
+   * ExchangeRate delete
+   */
+  export type ExchangeRateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExchangeRate
+     */
+    select?: ExchangeRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExchangeRate
+     */
+    omit?: ExchangeRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExchangeRateInclude<ExtArgs> | null
+    /**
+     * Filter which ExchangeRate to delete.
+     */
+    where: ExchangeRateWhereUniqueInput
+  }
+
+  /**
+   * ExchangeRate deleteMany
+   */
+  export type ExchangeRateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExchangeRates to delete
+     */
+    where?: ExchangeRateWhereInput
+    /**
+     * Limit how many ExchangeRates to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExchangeRate without action
+   */
+  export type ExchangeRateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExchangeRate
+     */
+    select?: ExchangeRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExchangeRate
+     */
+    omit?: ExchangeRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExchangeRateInclude<ExtArgs> | null
   }
 
 
@@ -14751,10 +17232,12 @@ export namespace Prisma {
 
   export type DealAvgAggregateOutputType = {
     value: Decimal | null
+    valueInBase: Decimal | null
   }
 
   export type DealSumAggregateOutputType = {
     value: Decimal | null
+    valueInBase: Decimal | null
   }
 
   export type DealMinAggregateOutputType = {
@@ -14766,6 +17249,8 @@ export namespace Prisma {
     contactId: string | null
     title: string | null
     value: Decimal | null
+    currency: string | null
+    valueInBase: Decimal | null
     expectedCloseDate: Date | null
     lostReason: string | null
     notes: string | null
@@ -14784,6 +17269,8 @@ export namespace Prisma {
     contactId: string | null
     title: string | null
     value: Decimal | null
+    currency: string | null
+    valueInBase: Decimal | null
     expectedCloseDate: Date | null
     lostReason: string | null
     notes: string | null
@@ -14802,6 +17289,8 @@ export namespace Prisma {
     contactId: number
     title: number
     value: number
+    currency: number
+    valueInBase: number
     expectedCloseDate: number
     lostReason: number
     notes: number
@@ -14816,10 +17305,12 @@ export namespace Prisma {
 
   export type DealAvgAggregateInputType = {
     value?: true
+    valueInBase?: true
   }
 
   export type DealSumAggregateInputType = {
     value?: true
+    valueInBase?: true
   }
 
   export type DealMinAggregateInputType = {
@@ -14831,6 +17322,8 @@ export namespace Prisma {
     contactId?: true
     title?: true
     value?: true
+    currency?: true
+    valueInBase?: true
     expectedCloseDate?: true
     lostReason?: true
     notes?: true
@@ -14849,6 +17342,8 @@ export namespace Prisma {
     contactId?: true
     title?: true
     value?: true
+    currency?: true
+    valueInBase?: true
     expectedCloseDate?: true
     lostReason?: true
     notes?: true
@@ -14867,6 +17362,8 @@ export namespace Prisma {
     contactId?: true
     title?: true
     value?: true
+    currency?: true
+    valueInBase?: true
     expectedCloseDate?: true
     lostReason?: true
     notes?: true
@@ -14973,6 +17470,8 @@ export namespace Prisma {
     contactId: string | null
     title: string
     value: Decimal
+    currency: string
+    valueInBase: Decimal | null
     expectedCloseDate: Date | null
     lostReason: string | null
     notes: string | null
@@ -15011,6 +17510,8 @@ export namespace Prisma {
     contactId?: boolean
     title?: boolean
     value?: boolean
+    currency?: boolean
+    valueInBase?: boolean
     expectedCloseDate?: boolean
     lostReason?: boolean
     notes?: boolean
@@ -15038,6 +17539,8 @@ export namespace Prisma {
     contactId?: boolean
     title?: boolean
     value?: boolean
+    currency?: boolean
+    valueInBase?: boolean
     expectedCloseDate?: boolean
     lostReason?: boolean
     notes?: boolean
@@ -15062,6 +17565,8 @@ export namespace Prisma {
     contactId?: boolean
     title?: boolean
     value?: boolean
+    currency?: boolean
+    valueInBase?: boolean
     expectedCloseDate?: boolean
     lostReason?: boolean
     notes?: boolean
@@ -15086,6 +17591,8 @@ export namespace Prisma {
     contactId?: boolean
     title?: boolean
     value?: boolean
+    currency?: boolean
+    valueInBase?: boolean
     expectedCloseDate?: boolean
     lostReason?: boolean
     notes?: boolean
@@ -15096,7 +17603,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type DealOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "pipelineId" | "stageId" | "companyId" | "contactId" | "title" | "value" | "expectedCloseDate" | "lostReason" | "notes" | "customFields" | "createdAt" | "updatedAt" | "closedAt" | "deletedAt", ExtArgs["result"]["deal"]>
+  export type DealOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "pipelineId" | "stageId" | "companyId" | "contactId" | "title" | "value" | "currency" | "valueInBase" | "expectedCloseDate" | "lostReason" | "notes" | "customFields" | "createdAt" | "updatedAt" | "closedAt" | "deletedAt", ExtArgs["result"]["deal"]>
   export type DealInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     pipeline?: boolean | PipelineDefaultArgs<ExtArgs>
@@ -15142,6 +17649,8 @@ export namespace Prisma {
       contactId: string | null
       title: string
       value: Prisma.Decimal
+      currency: string
+      valueInBase: Prisma.Decimal | null
       expectedCloseDate: Date | null
       lostReason: string | null
       notes: string | null
@@ -15588,6 +18097,8 @@ export namespace Prisma {
     readonly contactId: FieldRef<"Deal", 'String'>
     readonly title: FieldRef<"Deal", 'String'>
     readonly value: FieldRef<"Deal", 'Decimal'>
+    readonly currency: FieldRef<"Deal", 'String'>
+    readonly valueInBase: FieldRef<"Deal", 'Decimal'>
     readonly expectedCloseDate: FieldRef<"Deal", 'DateTime'>
     readonly lostReason: FieldRef<"Deal", 'String'>
     readonly notes: FieldRef<"Deal", 'String'>
@@ -22147,12 +24658,14 @@ export namespace Prisma {
     subtotal: Decimal | null
     taxAmount: Decimal | null
     total: Decimal | null
+    totalInBase: Decimal | null
   }
 
   export type InvoiceSumAggregateOutputType = {
     subtotal: Decimal | null
     taxAmount: Decimal | null
     total: Decimal | null
+    totalInBase: Decimal | null
   }
 
   export type InvoiceMinAggregateOutputType = {
@@ -22165,6 +24678,7 @@ export namespace Prisma {
     subtotal: Decimal | null
     taxAmount: Decimal | null
     total: Decimal | null
+    totalInBase: Decimal | null
     currency: string | null
     notes: string | null
     dueDate: Date | null
@@ -22188,6 +24702,7 @@ export namespace Prisma {
     subtotal: Decimal | null
     taxAmount: Decimal | null
     total: Decimal | null
+    totalInBase: Decimal | null
     currency: string | null
     notes: string | null
     dueDate: Date | null
@@ -22211,6 +24726,7 @@ export namespace Prisma {
     subtotal: number
     taxAmount: number
     total: number
+    totalInBase: number
     currency: number
     notes: number
     dueDate: number
@@ -22230,12 +24746,14 @@ export namespace Prisma {
     subtotal?: true
     taxAmount?: true
     total?: true
+    totalInBase?: true
   }
 
   export type InvoiceSumAggregateInputType = {
     subtotal?: true
     taxAmount?: true
     total?: true
+    totalInBase?: true
   }
 
   export type InvoiceMinAggregateInputType = {
@@ -22248,6 +24766,7 @@ export namespace Prisma {
     subtotal?: true
     taxAmount?: true
     total?: true
+    totalInBase?: true
     currency?: true
     notes?: true
     dueDate?: true
@@ -22271,6 +24790,7 @@ export namespace Prisma {
     subtotal?: true
     taxAmount?: true
     total?: true
+    totalInBase?: true
     currency?: true
     notes?: true
     dueDate?: true
@@ -22294,6 +24814,7 @@ export namespace Prisma {
     subtotal?: true
     taxAmount?: true
     total?: true
+    totalInBase?: true
     currency?: true
     notes?: true
     dueDate?: true
@@ -22404,6 +24925,7 @@ export namespace Prisma {
     subtotal: Decimal
     taxAmount: Decimal
     total: Decimal
+    totalInBase: Decimal | null
     currency: string
     notes: string | null
     dueDate: Date | null
@@ -22446,6 +24968,7 @@ export namespace Prisma {
     subtotal?: boolean
     taxAmount?: boolean
     total?: boolean
+    totalInBase?: boolean
     currency?: boolean
     notes?: boolean
     dueDate?: boolean
@@ -22474,6 +24997,7 @@ export namespace Prisma {
     subtotal?: boolean
     taxAmount?: boolean
     total?: boolean
+    totalInBase?: boolean
     currency?: boolean
     notes?: boolean
     dueDate?: boolean
@@ -22500,6 +25024,7 @@ export namespace Prisma {
     subtotal?: boolean
     taxAmount?: boolean
     total?: boolean
+    totalInBase?: boolean
     currency?: boolean
     notes?: boolean
     dueDate?: boolean
@@ -22526,6 +25051,7 @@ export namespace Prisma {
     subtotal?: boolean
     taxAmount?: boolean
     total?: boolean
+    totalInBase?: boolean
     currency?: boolean
     notes?: boolean
     dueDate?: boolean
@@ -22539,7 +25065,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "projectId" | "contactId" | "number" | "status" | "subtotal" | "taxAmount" | "total" | "currency" | "notes" | "dueDate" | "sentAt" | "acceptedAt" | "rejectedAt" | "paidAt" | "rejectionNote" | "publicToken" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "projectId" | "contactId" | "number" | "status" | "subtotal" | "taxAmount" | "total" | "totalInBase" | "currency" | "notes" | "dueDate" | "sentAt" | "acceptedAt" | "rejectedAt" | "paidAt" | "rejectionNote" | "publicToken" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     project?: boolean | Invoice$projectArgs<ExtArgs>
@@ -22576,6 +25102,7 @@ export namespace Prisma {
       subtotal: Prisma.Decimal
       taxAmount: Prisma.Decimal
       total: Prisma.Decimal
+      totalInBase: Prisma.Decimal | null
       currency: string
       notes: string | null
       dueDate: Date | null
@@ -23023,6 +25550,7 @@ export namespace Prisma {
     readonly subtotal: FieldRef<"Invoice", 'Decimal'>
     readonly taxAmount: FieldRef<"Invoice", 'Decimal'>
     readonly total: FieldRef<"Invoice", 'Decimal'>
+    readonly totalInBase: FieldRef<"Invoice", 'Decimal'>
     readonly currency: FieldRef<"Invoice", 'String'>
     readonly notes: FieldRef<"Invoice", 'String'>
     readonly dueDate: FieldRef<"Invoice", 'DateTime'>
@@ -32507,7 +35035,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     slug: 'slug',
-    currency: 'currency',
+    baseCurrency: 'baseCurrency',
     taxRate: 'taxRate',
     logo: 'logo',
     createdAt: 'createdAt',
@@ -32515,6 +35043,33 @@ export namespace Prisma {
   };
 
   export type WorkspaceScalarFieldEnum = (typeof WorkspaceScalarFieldEnum)[keyof typeof WorkspaceScalarFieldEnum]
+
+
+  export const CurrencyScalarFieldEnum: {
+    id: 'id',
+    workspaceId: 'workspaceId',
+    code: 'code',
+    name: 'name',
+    symbol: 'symbol',
+    isBase: 'isBase',
+    active: 'active',
+    createdAt: 'createdAt'
+  };
+
+  export type CurrencyScalarFieldEnum = (typeof CurrencyScalarFieldEnum)[keyof typeof CurrencyScalarFieldEnum]
+
+
+  export const ExchangeRateScalarFieldEnum: {
+    id: 'id',
+    workspaceId: 'workspaceId',
+    fromCurrency: 'fromCurrency',
+    toCurrency: 'toCurrency',
+    rate: 'rate',
+    effectiveDate: 'effectiveDate',
+    createdAt: 'createdAt'
+  };
+
+  export type ExchangeRateScalarFieldEnum = (typeof ExchangeRateScalarFieldEnum)[keyof typeof ExchangeRateScalarFieldEnum]
 
 
   export const WorkspaceMemberScalarFieldEnum: {
@@ -32649,6 +35204,8 @@ export namespace Prisma {
     contactId: 'contactId',
     title: 'title',
     value: 'value',
+    currency: 'currency',
+    valueInBase: 'valueInBase',
     expectedCloseDate: 'expectedCloseDate',
     lostReason: 'lostReason',
     notes: 'notes',
@@ -32747,6 +35304,7 @@ export namespace Prisma {
     subtotal: 'subtotal',
     taxAmount: 'taxAmount',
     total: 'total',
+    totalInBase: 'totalInBase',
     currency: 'currency',
     notes: 'notes',
     dueDate: 'dueDate',
@@ -32973,6 +35531,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'MemberType'
    */
   export type EnumMemberTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MemberType'>
@@ -33025,13 +35590,6 @@ export namespace Prisma {
    * Reference to a field of type 'PricingType[]'
    */
   export type ListEnumPricingTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PricingType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -33157,7 +35715,7 @@ export namespace Prisma {
     id?: StringFilter<"Workspace"> | string
     name?: StringFilter<"Workspace"> | string
     slug?: StringFilter<"Workspace"> | string
-    currency?: StringFilter<"Workspace"> | string
+    baseCurrency?: StringFilter<"Workspace"> | string
     taxRate?: DecimalFilter<"Workspace"> | Decimal | DecimalJsLike | number | string
     logo?: StringNullableFilter<"Workspace"> | string | null
     createdAt?: DateTimeFilter<"Workspace"> | Date | string
@@ -33179,13 +35737,15 @@ export namespace Prisma {
     whatsappConfig?: XOR<WhatsAppConfigNullableScalarRelationFilter, WhatsAppConfigWhereInput> | null
     whatsappTemplates?: WhatsAppTemplateListRelationFilter
     roles?: RoleListRelationFilter
+    currencies?: CurrencyListRelationFilter
+    exchangeRates?: ExchangeRateListRelationFilter
   }
 
   export type WorkspaceOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
-    currency?: SortOrder
+    baseCurrency?: SortOrder
     taxRate?: SortOrder
     logo?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -33207,6 +35767,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigOrderByWithRelationInput
     whatsappTemplates?: WhatsAppTemplateOrderByRelationAggregateInput
     roles?: RoleOrderByRelationAggregateInput
+    currencies?: CurrencyOrderByRelationAggregateInput
+    exchangeRates?: ExchangeRateOrderByRelationAggregateInput
   }
 
   export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
@@ -33216,7 +35778,7 @@ export namespace Prisma {
     OR?: WorkspaceWhereInput[]
     NOT?: WorkspaceWhereInput | WorkspaceWhereInput[]
     name?: StringFilter<"Workspace"> | string
-    currency?: StringFilter<"Workspace"> | string
+    baseCurrency?: StringFilter<"Workspace"> | string
     taxRate?: DecimalFilter<"Workspace"> | Decimal | DecimalJsLike | number | string
     logo?: StringNullableFilter<"Workspace"> | string | null
     createdAt?: DateTimeFilter<"Workspace"> | Date | string
@@ -33238,13 +35800,15 @@ export namespace Prisma {
     whatsappConfig?: XOR<WhatsAppConfigNullableScalarRelationFilter, WhatsAppConfigWhereInput> | null
     whatsappTemplates?: WhatsAppTemplateListRelationFilter
     roles?: RoleListRelationFilter
+    currencies?: CurrencyListRelationFilter
+    exchangeRates?: ExchangeRateListRelationFilter
   }, "id" | "slug">
 
   export type WorkspaceOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
-    currency?: SortOrder
+    baseCurrency?: SortOrder
     taxRate?: SortOrder
     logo?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -33263,11 +35827,149 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Workspace"> | string
     name?: StringWithAggregatesFilter<"Workspace"> | string
     slug?: StringWithAggregatesFilter<"Workspace"> | string
-    currency?: StringWithAggregatesFilter<"Workspace"> | string
+    baseCurrency?: StringWithAggregatesFilter<"Workspace"> | string
     taxRate?: DecimalWithAggregatesFilter<"Workspace"> | Decimal | DecimalJsLike | number | string
     logo?: StringNullableWithAggregatesFilter<"Workspace"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Workspace"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Workspace"> | Date | string
+  }
+
+  export type CurrencyWhereInput = {
+    AND?: CurrencyWhereInput | CurrencyWhereInput[]
+    OR?: CurrencyWhereInput[]
+    NOT?: CurrencyWhereInput | CurrencyWhereInput[]
+    id?: StringFilter<"Currency"> | string
+    workspaceId?: StringFilter<"Currency"> | string
+    code?: StringFilter<"Currency"> | string
+    name?: StringFilter<"Currency"> | string
+    symbol?: StringFilter<"Currency"> | string
+    isBase?: BoolFilter<"Currency"> | boolean
+    active?: BoolFilter<"Currency"> | boolean
+    createdAt?: DateTimeFilter<"Currency"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+  }
+
+  export type CurrencyOrderByWithRelationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    symbol?: SortOrder
+    isBase?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    workspace?: WorkspaceOrderByWithRelationInput
+  }
+
+  export type CurrencyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    workspaceId_code?: CurrencyWorkspaceIdCodeCompoundUniqueInput
+    AND?: CurrencyWhereInput | CurrencyWhereInput[]
+    OR?: CurrencyWhereInput[]
+    NOT?: CurrencyWhereInput | CurrencyWhereInput[]
+    workspaceId?: StringFilter<"Currency"> | string
+    code?: StringFilter<"Currency"> | string
+    name?: StringFilter<"Currency"> | string
+    symbol?: StringFilter<"Currency"> | string
+    isBase?: BoolFilter<"Currency"> | boolean
+    active?: BoolFilter<"Currency"> | boolean
+    createdAt?: DateTimeFilter<"Currency"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+  }, "id" | "workspaceId_code">
+
+  export type CurrencyOrderByWithAggregationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    symbol?: SortOrder
+    isBase?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    _count?: CurrencyCountOrderByAggregateInput
+    _max?: CurrencyMaxOrderByAggregateInput
+    _min?: CurrencyMinOrderByAggregateInput
+  }
+
+  export type CurrencyScalarWhereWithAggregatesInput = {
+    AND?: CurrencyScalarWhereWithAggregatesInput | CurrencyScalarWhereWithAggregatesInput[]
+    OR?: CurrencyScalarWhereWithAggregatesInput[]
+    NOT?: CurrencyScalarWhereWithAggregatesInput | CurrencyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Currency"> | string
+    workspaceId?: StringWithAggregatesFilter<"Currency"> | string
+    code?: StringWithAggregatesFilter<"Currency"> | string
+    name?: StringWithAggregatesFilter<"Currency"> | string
+    symbol?: StringWithAggregatesFilter<"Currency"> | string
+    isBase?: BoolWithAggregatesFilter<"Currency"> | boolean
+    active?: BoolWithAggregatesFilter<"Currency"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Currency"> | Date | string
+  }
+
+  export type ExchangeRateWhereInput = {
+    AND?: ExchangeRateWhereInput | ExchangeRateWhereInput[]
+    OR?: ExchangeRateWhereInput[]
+    NOT?: ExchangeRateWhereInput | ExchangeRateWhereInput[]
+    id?: StringFilter<"ExchangeRate"> | string
+    workspaceId?: StringFilter<"ExchangeRate"> | string
+    fromCurrency?: StringFilter<"ExchangeRate"> | string
+    toCurrency?: StringFilter<"ExchangeRate"> | string
+    rate?: DecimalFilter<"ExchangeRate"> | Decimal | DecimalJsLike | number | string
+    effectiveDate?: DateTimeFilter<"ExchangeRate"> | Date | string
+    createdAt?: DateTimeFilter<"ExchangeRate"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+  }
+
+  export type ExchangeRateOrderByWithRelationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    fromCurrency?: SortOrder
+    toCurrency?: SortOrder
+    rate?: SortOrder
+    effectiveDate?: SortOrder
+    createdAt?: SortOrder
+    workspace?: WorkspaceOrderByWithRelationInput
+  }
+
+  export type ExchangeRateWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ExchangeRateWhereInput | ExchangeRateWhereInput[]
+    OR?: ExchangeRateWhereInput[]
+    NOT?: ExchangeRateWhereInput | ExchangeRateWhereInput[]
+    workspaceId?: StringFilter<"ExchangeRate"> | string
+    fromCurrency?: StringFilter<"ExchangeRate"> | string
+    toCurrency?: StringFilter<"ExchangeRate"> | string
+    rate?: DecimalFilter<"ExchangeRate"> | Decimal | DecimalJsLike | number | string
+    effectiveDate?: DateTimeFilter<"ExchangeRate"> | Date | string
+    createdAt?: DateTimeFilter<"ExchangeRate"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+  }, "id">
+
+  export type ExchangeRateOrderByWithAggregationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    fromCurrency?: SortOrder
+    toCurrency?: SortOrder
+    rate?: SortOrder
+    effectiveDate?: SortOrder
+    createdAt?: SortOrder
+    _count?: ExchangeRateCountOrderByAggregateInput
+    _avg?: ExchangeRateAvgOrderByAggregateInput
+    _max?: ExchangeRateMaxOrderByAggregateInput
+    _min?: ExchangeRateMinOrderByAggregateInput
+    _sum?: ExchangeRateSumOrderByAggregateInput
+  }
+
+  export type ExchangeRateScalarWhereWithAggregatesInput = {
+    AND?: ExchangeRateScalarWhereWithAggregatesInput | ExchangeRateScalarWhereWithAggregatesInput[]
+    OR?: ExchangeRateScalarWhereWithAggregatesInput[]
+    NOT?: ExchangeRateScalarWhereWithAggregatesInput | ExchangeRateScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ExchangeRate"> | string
+    workspaceId?: StringWithAggregatesFilter<"ExchangeRate"> | string
+    fromCurrency?: StringWithAggregatesFilter<"ExchangeRate"> | string
+    toCurrency?: StringWithAggregatesFilter<"ExchangeRate"> | string
+    rate?: DecimalWithAggregatesFilter<"ExchangeRate"> | Decimal | DecimalJsLike | number | string
+    effectiveDate?: DateTimeWithAggregatesFilter<"ExchangeRate"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"ExchangeRate"> | Date | string
   }
 
   export type WorkspaceMemberWhereInput = {
@@ -33950,6 +36652,8 @@ export namespace Prisma {
     contactId?: StringNullableFilter<"Deal"> | string | null
     title?: StringFilter<"Deal"> | string
     value?: DecimalFilter<"Deal"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"Deal"> | string
+    valueInBase?: DecimalNullableFilter<"Deal"> | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: DateTimeNullableFilter<"Deal"> | Date | string | null
     lostReason?: StringNullableFilter<"Deal"> | string | null
     notes?: StringNullableFilter<"Deal"> | string | null
@@ -33976,6 +36680,8 @@ export namespace Prisma {
     contactId?: SortOrderInput | SortOrder
     title?: SortOrder
     value?: SortOrder
+    currency?: SortOrder
+    valueInBase?: SortOrderInput | SortOrder
     expectedCloseDate?: SortOrderInput | SortOrder
     lostReason?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
@@ -34005,6 +36711,8 @@ export namespace Prisma {
     contactId?: StringNullableFilter<"Deal"> | string | null
     title?: StringFilter<"Deal"> | string
     value?: DecimalFilter<"Deal"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"Deal"> | string
+    valueInBase?: DecimalNullableFilter<"Deal"> | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: DateTimeNullableFilter<"Deal"> | Date | string | null
     lostReason?: StringNullableFilter<"Deal"> | string | null
     notes?: StringNullableFilter<"Deal"> | string | null
@@ -34031,6 +36739,8 @@ export namespace Prisma {
     contactId?: SortOrderInput | SortOrder
     title?: SortOrder
     value?: SortOrder
+    currency?: SortOrder
+    valueInBase?: SortOrderInput | SortOrder
     expectedCloseDate?: SortOrderInput | SortOrder
     lostReason?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
@@ -34058,6 +36768,8 @@ export namespace Prisma {
     contactId?: StringNullableWithAggregatesFilter<"Deal"> | string | null
     title?: StringWithAggregatesFilter<"Deal"> | string
     value?: DecimalWithAggregatesFilter<"Deal"> | Decimal | DecimalJsLike | number | string
+    currency?: StringWithAggregatesFilter<"Deal"> | string
+    valueInBase?: DecimalNullableWithAggregatesFilter<"Deal"> | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: DateTimeNullableWithAggregatesFilter<"Deal"> | Date | string | null
     lostReason?: StringNullableWithAggregatesFilter<"Deal"> | string | null
     notes?: StringNullableWithAggregatesFilter<"Deal"> | string | null
@@ -34502,6 +37214,7 @@ export namespace Prisma {
     subtotal?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     total?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    totalInBase?: DecimalNullableFilter<"Invoice"> | Decimal | DecimalJsLike | number | string | null
     currency?: StringFilter<"Invoice"> | string
     notes?: StringNullableFilter<"Invoice"> | string | null
     dueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
@@ -34529,6 +37242,7 @@ export namespace Prisma {
     subtotal?: SortOrder
     taxAmount?: SortOrder
     total?: SortOrder
+    totalInBase?: SortOrderInput | SortOrder
     currency?: SortOrder
     notes?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
@@ -34560,6 +37274,7 @@ export namespace Prisma {
     subtotal?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     total?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    totalInBase?: DecimalNullableFilter<"Invoice"> | Decimal | DecimalJsLike | number | string | null
     currency?: StringFilter<"Invoice"> | string
     notes?: StringNullableFilter<"Invoice"> | string | null
     dueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
@@ -34586,6 +37301,7 @@ export namespace Prisma {
     subtotal?: SortOrder
     taxAmount?: SortOrder
     total?: SortOrder
+    totalInBase?: SortOrderInput | SortOrder
     currency?: SortOrder
     notes?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
@@ -34617,6 +37333,7 @@ export namespace Prisma {
     subtotal?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     total?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    totalInBase?: DecimalNullableWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string | null
     currency?: StringWithAggregatesFilter<"Invoice"> | string
     notes?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     dueDate?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
@@ -35216,7 +37933,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -35238,13 +37955,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -35266,13 +37985,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35294,13 +38015,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35322,13 +38045,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateManyInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -35339,7 +38064,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35350,11 +38075,156 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CurrencyCreateInput = {
+    id?: string
+    code: string
+    name: string
+    symbol: string
+    isBase?: boolean
+    active?: boolean
+    createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutCurrenciesInput
+  }
+
+  export type CurrencyUncheckedCreateInput = {
+    id?: string
+    workspaceId: string
+    code: string
+    name: string
+    symbol: string
+    isBase?: boolean
+    active?: boolean
+    createdAt?: Date | string
+  }
+
+  export type CurrencyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    symbol?: StringFieldUpdateOperationsInput | string
+    isBase?: BoolFieldUpdateOperationsInput | boolean
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutCurrenciesNestedInput
+  }
+
+  export type CurrencyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    symbol?: StringFieldUpdateOperationsInput | string
+    isBase?: BoolFieldUpdateOperationsInput | boolean
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CurrencyCreateManyInput = {
+    id?: string
+    workspaceId: string
+    code: string
+    name: string
+    symbol: string
+    isBase?: boolean
+    active?: boolean
+    createdAt?: Date | string
+  }
+
+  export type CurrencyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    symbol?: StringFieldUpdateOperationsInput | string
+    isBase?: BoolFieldUpdateOperationsInput | boolean
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CurrencyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    symbol?: StringFieldUpdateOperationsInput | string
+    isBase?: BoolFieldUpdateOperationsInput | boolean
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExchangeRateCreateInput = {
+    id?: string
+    fromCurrency: string
+    toCurrency: string
+    rate: Decimal | DecimalJsLike | number | string
+    effectiveDate?: Date | string
+    createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutExchangeRatesInput
+  }
+
+  export type ExchangeRateUncheckedCreateInput = {
+    id?: string
+    workspaceId: string
+    fromCurrency: string
+    toCurrency: string
+    rate: Decimal | DecimalJsLike | number | string
+    effectiveDate?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type ExchangeRateUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromCurrency?: StringFieldUpdateOperationsInput | string
+    toCurrency?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutExchangeRatesNestedInput
+  }
+
+  export type ExchangeRateUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    fromCurrency?: StringFieldUpdateOperationsInput | string
+    toCurrency?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExchangeRateCreateManyInput = {
+    id?: string
+    workspaceId: string
+    fromCurrency: string
+    toCurrency: string
+    rate: Decimal | DecimalJsLike | number | string
+    effectiveDate?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type ExchangeRateUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromCurrency?: StringFieldUpdateOperationsInput | string
+    toCurrency?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExchangeRateUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    fromCurrency?: StringFieldUpdateOperationsInput | string
+    toCurrency?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WorkspaceMemberCreateInput = {
@@ -36096,6 +38966,8 @@ export namespace Prisma {
     id?: string
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -36122,6 +38994,8 @@ export namespace Prisma {
     contactId?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -36138,6 +39012,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36164,6 +39040,8 @@ export namespace Prisma {
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36185,6 +39063,8 @@ export namespace Prisma {
     contactId?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -36199,6 +39079,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36218,6 +39100,8 @@ export namespace Prisma {
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36663,6 +39547,7 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
     dueDate?: Date | string | null
@@ -36690,6 +39575,7 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
     dueDate?: Date | string | null
@@ -36711,6 +39597,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36738,6 +39625,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36762,6 +39650,7 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
     dueDate?: Date | string | null
@@ -36782,6 +39671,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36805,6 +39695,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37593,6 +40484,18 @@ export namespace Prisma {
     none?: RoleWhereInput
   }
 
+  export type CurrencyListRelationFilter = {
+    every?: CurrencyWhereInput
+    some?: CurrencyWhereInput
+    none?: CurrencyWhereInput
+  }
+
+  export type ExchangeRateListRelationFilter = {
+    every?: ExchangeRateWhereInput
+    some?: ExchangeRateWhereInput
+    none?: ExchangeRateWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -37662,11 +40565,19 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type CurrencyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ExchangeRateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type WorkspaceCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
-    currency?: SortOrder
+    baseCurrency?: SortOrder
     taxRate?: SortOrder
     logo?: SortOrder
     createdAt?: SortOrder
@@ -37681,7 +40592,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
-    currency?: SortOrder
+    baseCurrency?: SortOrder
     taxRate?: SortOrder
     logo?: SortOrder
     createdAt?: SortOrder
@@ -37692,7 +40603,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     slug?: SortOrder
-    currency?: SortOrder
+    baseCurrency?: SortOrder
     taxRate?: SortOrder
     logo?: SortOrder
     createdAt?: SortOrder
@@ -37769,16 +40680,105 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type EnumMemberTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.MemberType | EnumMemberTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.MemberType[] | ListEnumMemberTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.MemberType[] | ListEnumMemberTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumMemberTypeFilter<$PrismaModel> | $Enums.MemberType
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type WorkspaceScalarRelationFilter = {
     is?: WorkspaceWhereInput
     isNot?: WorkspaceWhereInput
+  }
+
+  export type CurrencyWorkspaceIdCodeCompoundUniqueInput = {
+    workspaceId: string
+    code: string
+  }
+
+  export type CurrencyCountOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    symbol?: SortOrder
+    isBase?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CurrencyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    symbol?: SortOrder
+    isBase?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CurrencyMinOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    symbol?: SortOrder
+    isBase?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type ExchangeRateCountOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    fromCurrency?: SortOrder
+    toCurrency?: SortOrder
+    rate?: SortOrder
+    effectiveDate?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ExchangeRateAvgOrderByAggregateInput = {
+    rate?: SortOrder
+  }
+
+  export type ExchangeRateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    fromCurrency?: SortOrder
+    toCurrency?: SortOrder
+    rate?: SortOrder
+    effectiveDate?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ExchangeRateMinOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    fromCurrency?: SortOrder
+    toCurrency?: SortOrder
+    rate?: SortOrder
+    effectiveDate?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ExchangeRateSumOrderByAggregateInput = {
+    rate?: SortOrder
+  }
+
+  export type EnumMemberTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MemberType | EnumMemberTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MemberType[] | ListEnumMemberTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MemberType[] | ListEnumMemberTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMemberTypeFilter<$PrismaModel> | $Enums.MemberType
   }
 
   export type RoleNullableScalarRelationFilter = {
@@ -38183,11 +41183,6 @@ export namespace Prisma {
     not?: NestedEnumPricingTypeFilter<$PrismaModel> | $Enums.PricingType
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type DealItemListRelationFilter = {
     every?: DealItemWhereInput
     some?: DealItemWhereInput
@@ -38256,14 +41251,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPricingTypeFilter<$PrismaModel>
     _max?: NestedEnumPricingTypeFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type PipelineStageListRelationFilter = {
@@ -38392,6 +41379,17 @@ export namespace Prisma {
     _max?: NestedEnumStageTypeFilter<$PrismaModel>
   }
 
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type PipelineStageScalarRelationFilter = {
     is?: PipelineStageWhereInput
     isNot?: PipelineStageWhereInput
@@ -38416,6 +41414,8 @@ export namespace Prisma {
     contactId?: SortOrder
     title?: SortOrder
     value?: SortOrder
+    currency?: SortOrder
+    valueInBase?: SortOrder
     expectedCloseDate?: SortOrder
     lostReason?: SortOrder
     notes?: SortOrder
@@ -38428,6 +41428,7 @@ export namespace Prisma {
 
   export type DealAvgOrderByAggregateInput = {
     value?: SortOrder
+    valueInBase?: SortOrder
   }
 
   export type DealMaxOrderByAggregateInput = {
@@ -38439,6 +41440,8 @@ export namespace Prisma {
     contactId?: SortOrder
     title?: SortOrder
     value?: SortOrder
+    currency?: SortOrder
+    valueInBase?: SortOrder
     expectedCloseDate?: SortOrder
     lostReason?: SortOrder
     notes?: SortOrder
@@ -38457,6 +41460,8 @@ export namespace Prisma {
     contactId?: SortOrder
     title?: SortOrder
     value?: SortOrder
+    currency?: SortOrder
+    valueInBase?: SortOrder
     expectedCloseDate?: SortOrder
     lostReason?: SortOrder
     notes?: SortOrder
@@ -38468,6 +41473,23 @@ export namespace Prisma {
 
   export type DealSumOrderByAggregateInput = {
     value?: SortOrder
+    valueInBase?: SortOrder
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type DealScalarRelationFilter = {
@@ -38665,17 +41687,6 @@ export namespace Prisma {
     order?: SortOrder
   }
 
-  export type DecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type ServiceNullableScalarRelationFilter = {
     is?: ServiceWhereInput | null
     isNot?: ServiceWhereInput | null
@@ -38752,22 +41763,6 @@ export namespace Prisma {
     order?: SortOrder
   }
 
-  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
-  }
-
   export type EnumInvoiceStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.InvoiceStatus | EnumInvoiceStatusFieldRefInput<$PrismaModel>
     in?: $Enums.InvoiceStatus[] | ListEnumInvoiceStatusFieldRefInput<$PrismaModel>
@@ -38795,6 +41790,7 @@ export namespace Prisma {
     subtotal?: SortOrder
     taxAmount?: SortOrder
     total?: SortOrder
+    totalInBase?: SortOrder
     currency?: SortOrder
     notes?: SortOrder
     dueDate?: SortOrder
@@ -38812,6 +41808,7 @@ export namespace Prisma {
     subtotal?: SortOrder
     taxAmount?: SortOrder
     total?: SortOrder
+    totalInBase?: SortOrder
   }
 
   export type InvoiceMaxOrderByAggregateInput = {
@@ -38824,6 +41821,7 @@ export namespace Prisma {
     subtotal?: SortOrder
     taxAmount?: SortOrder
     total?: SortOrder
+    totalInBase?: SortOrder
     currency?: SortOrder
     notes?: SortOrder
     dueDate?: SortOrder
@@ -38847,6 +41845,7 @@ export namespace Prisma {
     subtotal?: SortOrder
     taxAmount?: SortOrder
     total?: SortOrder
+    totalInBase?: SortOrder
     currency?: SortOrder
     notes?: SortOrder
     dueDate?: SortOrder
@@ -38864,6 +41863,7 @@ export namespace Prisma {
     subtotal?: SortOrder
     taxAmount?: SortOrder
     total?: SortOrder
+    totalInBase?: SortOrder
   }
 
   export type EnumInvoiceStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -39393,6 +42393,20 @@ export namespace Prisma {
     connect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
   }
 
+  export type CurrencyCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<CurrencyCreateWithoutWorkspaceInput, CurrencyUncheckedCreateWithoutWorkspaceInput> | CurrencyCreateWithoutWorkspaceInput[] | CurrencyUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: CurrencyCreateOrConnectWithoutWorkspaceInput | CurrencyCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: CurrencyCreateManyWorkspaceInputEnvelope
+    connect?: CurrencyWhereUniqueInput | CurrencyWhereUniqueInput[]
+  }
+
+  export type ExchangeRateCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<ExchangeRateCreateWithoutWorkspaceInput, ExchangeRateUncheckedCreateWithoutWorkspaceInput> | ExchangeRateCreateWithoutWorkspaceInput[] | ExchangeRateUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: ExchangeRateCreateOrConnectWithoutWorkspaceInput | ExchangeRateCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: ExchangeRateCreateManyWorkspaceInputEnvelope
+    connect?: ExchangeRateWhereUniqueInput | ExchangeRateWhereUniqueInput[]
+  }
+
   export type WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput = {
     create?: XOR<WorkspaceMemberCreateWithoutWorkspaceInput, WorkspaceMemberUncheckedCreateWithoutWorkspaceInput> | WorkspaceMemberCreateWithoutWorkspaceInput[] | WorkspaceMemberUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutWorkspaceInput | WorkspaceMemberCreateOrConnectWithoutWorkspaceInput[]
@@ -39509,6 +42523,20 @@ export namespace Prisma {
     connectOrCreate?: RoleCreateOrConnectWithoutWorkspaceInput | RoleCreateOrConnectWithoutWorkspaceInput[]
     createMany?: RoleCreateManyWorkspaceInputEnvelope
     connect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
+  }
+
+  export type CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<CurrencyCreateWithoutWorkspaceInput, CurrencyUncheckedCreateWithoutWorkspaceInput> | CurrencyCreateWithoutWorkspaceInput[] | CurrencyUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: CurrencyCreateOrConnectWithoutWorkspaceInput | CurrencyCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: CurrencyCreateManyWorkspaceInputEnvelope
+    connect?: CurrencyWhereUniqueInput | CurrencyWhereUniqueInput[]
+  }
+
+  export type ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<ExchangeRateCreateWithoutWorkspaceInput, ExchangeRateUncheckedCreateWithoutWorkspaceInput> | ExchangeRateCreateWithoutWorkspaceInput[] | ExchangeRateUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: ExchangeRateCreateOrConnectWithoutWorkspaceInput | ExchangeRateCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: ExchangeRateCreateManyWorkspaceInputEnvelope
+    connect?: ExchangeRateWhereUniqueInput | ExchangeRateWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -39765,6 +42793,34 @@ export namespace Prisma {
     deleteMany?: RoleScalarWhereInput | RoleScalarWhereInput[]
   }
 
+  export type CurrencyUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<CurrencyCreateWithoutWorkspaceInput, CurrencyUncheckedCreateWithoutWorkspaceInput> | CurrencyCreateWithoutWorkspaceInput[] | CurrencyUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: CurrencyCreateOrConnectWithoutWorkspaceInput | CurrencyCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: CurrencyUpsertWithWhereUniqueWithoutWorkspaceInput | CurrencyUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: CurrencyCreateManyWorkspaceInputEnvelope
+    set?: CurrencyWhereUniqueInput | CurrencyWhereUniqueInput[]
+    disconnect?: CurrencyWhereUniqueInput | CurrencyWhereUniqueInput[]
+    delete?: CurrencyWhereUniqueInput | CurrencyWhereUniqueInput[]
+    connect?: CurrencyWhereUniqueInput | CurrencyWhereUniqueInput[]
+    update?: CurrencyUpdateWithWhereUniqueWithoutWorkspaceInput | CurrencyUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: CurrencyUpdateManyWithWhereWithoutWorkspaceInput | CurrencyUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: CurrencyScalarWhereInput | CurrencyScalarWhereInput[]
+  }
+
+  export type ExchangeRateUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<ExchangeRateCreateWithoutWorkspaceInput, ExchangeRateUncheckedCreateWithoutWorkspaceInput> | ExchangeRateCreateWithoutWorkspaceInput[] | ExchangeRateUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: ExchangeRateCreateOrConnectWithoutWorkspaceInput | ExchangeRateCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: ExchangeRateUpsertWithWhereUniqueWithoutWorkspaceInput | ExchangeRateUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: ExchangeRateCreateManyWorkspaceInputEnvelope
+    set?: ExchangeRateWhereUniqueInput | ExchangeRateWhereUniqueInput[]
+    disconnect?: ExchangeRateWhereUniqueInput | ExchangeRateWhereUniqueInput[]
+    delete?: ExchangeRateWhereUniqueInput | ExchangeRateWhereUniqueInput[]
+    connect?: ExchangeRateWhereUniqueInput | ExchangeRateWhereUniqueInput[]
+    update?: ExchangeRateUpdateWithWhereUniqueWithoutWorkspaceInput | ExchangeRateUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: ExchangeRateUpdateManyWithWhereWithoutWorkspaceInput | ExchangeRateUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: ExchangeRateScalarWhereInput | ExchangeRateScalarWhereInput[]
+  }
+
   export type WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput = {
     create?: XOR<WorkspaceMemberCreateWithoutWorkspaceInput, WorkspaceMemberUncheckedCreateWithoutWorkspaceInput> | WorkspaceMemberCreateWithoutWorkspaceInput[] | WorkspaceMemberUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutWorkspaceInput | WorkspaceMemberCreateOrConnectWithoutWorkspaceInput[]
@@ -39997,6 +43053,66 @@ export namespace Prisma {
     update?: RoleUpdateWithWhereUniqueWithoutWorkspaceInput | RoleUpdateWithWhereUniqueWithoutWorkspaceInput[]
     updateMany?: RoleUpdateManyWithWhereWithoutWorkspaceInput | RoleUpdateManyWithWhereWithoutWorkspaceInput[]
     deleteMany?: RoleScalarWhereInput | RoleScalarWhereInput[]
+  }
+
+  export type CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<CurrencyCreateWithoutWorkspaceInput, CurrencyUncheckedCreateWithoutWorkspaceInput> | CurrencyCreateWithoutWorkspaceInput[] | CurrencyUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: CurrencyCreateOrConnectWithoutWorkspaceInput | CurrencyCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: CurrencyUpsertWithWhereUniqueWithoutWorkspaceInput | CurrencyUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: CurrencyCreateManyWorkspaceInputEnvelope
+    set?: CurrencyWhereUniqueInput | CurrencyWhereUniqueInput[]
+    disconnect?: CurrencyWhereUniqueInput | CurrencyWhereUniqueInput[]
+    delete?: CurrencyWhereUniqueInput | CurrencyWhereUniqueInput[]
+    connect?: CurrencyWhereUniqueInput | CurrencyWhereUniqueInput[]
+    update?: CurrencyUpdateWithWhereUniqueWithoutWorkspaceInput | CurrencyUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: CurrencyUpdateManyWithWhereWithoutWorkspaceInput | CurrencyUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: CurrencyScalarWhereInput | CurrencyScalarWhereInput[]
+  }
+
+  export type ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<ExchangeRateCreateWithoutWorkspaceInput, ExchangeRateUncheckedCreateWithoutWorkspaceInput> | ExchangeRateCreateWithoutWorkspaceInput[] | ExchangeRateUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: ExchangeRateCreateOrConnectWithoutWorkspaceInput | ExchangeRateCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: ExchangeRateUpsertWithWhereUniqueWithoutWorkspaceInput | ExchangeRateUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: ExchangeRateCreateManyWorkspaceInputEnvelope
+    set?: ExchangeRateWhereUniqueInput | ExchangeRateWhereUniqueInput[]
+    disconnect?: ExchangeRateWhereUniqueInput | ExchangeRateWhereUniqueInput[]
+    delete?: ExchangeRateWhereUniqueInput | ExchangeRateWhereUniqueInput[]
+    connect?: ExchangeRateWhereUniqueInput | ExchangeRateWhereUniqueInput[]
+    update?: ExchangeRateUpdateWithWhereUniqueWithoutWorkspaceInput | ExchangeRateUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: ExchangeRateUpdateManyWithWhereWithoutWorkspaceInput | ExchangeRateUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: ExchangeRateScalarWhereInput | ExchangeRateScalarWhereInput[]
+  }
+
+  export type WorkspaceCreateNestedOneWithoutCurrenciesInput = {
+    create?: XOR<WorkspaceCreateWithoutCurrenciesInput, WorkspaceUncheckedCreateWithoutCurrenciesInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutCurrenciesInput
+    connect?: WorkspaceWhereUniqueInput
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutCurrenciesNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutCurrenciesInput, WorkspaceUncheckedCreateWithoutCurrenciesInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutCurrenciesInput
+    upsert?: WorkspaceUpsertWithoutCurrenciesInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutCurrenciesInput, WorkspaceUpdateWithoutCurrenciesInput>, WorkspaceUncheckedUpdateWithoutCurrenciesInput>
+  }
+
+  export type WorkspaceCreateNestedOneWithoutExchangeRatesInput = {
+    create?: XOR<WorkspaceCreateWithoutExchangeRatesInput, WorkspaceUncheckedCreateWithoutExchangeRatesInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutExchangeRatesInput
+    connect?: WorkspaceWhereUniqueInput
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutExchangeRatesNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutExchangeRatesInput, WorkspaceUncheckedCreateWithoutExchangeRatesInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutExchangeRatesInput
+    upsert?: WorkspaceUpsertWithoutExchangeRatesInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutExchangeRatesInput, WorkspaceUpdateWithoutExchangeRatesInput>, WorkspaceUncheckedUpdateWithoutExchangeRatesInput>
   }
 
   export type WorkspaceCreateNestedOneWithoutMembersInput = {
@@ -40487,10 +43603,6 @@ export namespace Prisma {
     set?: $Enums.PricingType
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
   export type WorkspaceUpdateOneRequiredWithoutServicesNestedInput = {
     create?: XOR<WorkspaceCreateWithoutServicesInput, WorkspaceUncheckedCreateWithoutServicesInput>
     connectOrCreate?: WorkspaceCreateOrConnectWithoutServicesInput
@@ -40775,6 +43887,14 @@ export namespace Prisma {
     create?: XOR<ProjectCreateWithoutDealInput, ProjectUncheckedCreateWithoutDealInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutDealInput
     connect?: ProjectWhereUniqueInput
+  }
+
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
   }
 
   export type WorkspaceUpdateOneRequiredWithoutDealsNestedInput = {
@@ -41221,14 +44341,6 @@ export namespace Prisma {
     connect?: WorkspaceMemberWhereUniqueInput
   }
 
-  export type NullableDecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string | null
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
-  }
-
   export type ProjectUpdateOneRequiredWithoutTasksNestedInput = {
     create?: XOR<ProjectCreateWithoutTasksInput, ProjectUncheckedCreateWithoutTasksInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutTasksInput
@@ -41623,6 +44735,19 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedEnumMemberTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.MemberType | EnumMemberTypeFieldRefInput<$PrismaModel>
     in?: $Enums.MemberType[] | ListEnumMemberTypeFieldRefInput<$PrismaModel>
@@ -41735,11 +44860,6 @@ export namespace Prisma {
     not?: NestedEnumPricingTypeFilter<$PrismaModel> | $Enums.PricingType
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NestedEnumPricingTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.PricingType | EnumPricingTypeFieldRefInput<$PrismaModel>
     in?: $Enums.PricingType[] | ListEnumPricingTypeFieldRefInput<$PrismaModel>
@@ -41748,14 +44868,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPricingTypeFilter<$PrismaModel>
     _max?: NestedEnumPricingTypeFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumStageTypeFilter<$PrismaModel = never> = {
@@ -42182,6 +45294,8 @@ export namespace Prisma {
     id?: string
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -42206,6 +45320,8 @@ export namespace Prisma {
     contactId?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -42281,6 +45397,7 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
     dueDate?: Date | string | null
@@ -42306,6 +45423,7 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
     dueDate?: Date | string | null
@@ -42526,6 +45644,64 @@ export namespace Prisma {
 
   export type RoleCreateManyWorkspaceInputEnvelope = {
     data: RoleCreateManyWorkspaceInput | RoleCreateManyWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CurrencyCreateWithoutWorkspaceInput = {
+    id?: string
+    code: string
+    name: string
+    symbol: string
+    isBase?: boolean
+    active?: boolean
+    createdAt?: Date | string
+  }
+
+  export type CurrencyUncheckedCreateWithoutWorkspaceInput = {
+    id?: string
+    code: string
+    name: string
+    symbol: string
+    isBase?: boolean
+    active?: boolean
+    createdAt?: Date | string
+  }
+
+  export type CurrencyCreateOrConnectWithoutWorkspaceInput = {
+    where: CurrencyWhereUniqueInput
+    create: XOR<CurrencyCreateWithoutWorkspaceInput, CurrencyUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type CurrencyCreateManyWorkspaceInputEnvelope = {
+    data: CurrencyCreateManyWorkspaceInput | CurrencyCreateManyWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ExchangeRateCreateWithoutWorkspaceInput = {
+    id?: string
+    fromCurrency: string
+    toCurrency: string
+    rate: Decimal | DecimalJsLike | number | string
+    effectiveDate?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type ExchangeRateUncheckedCreateWithoutWorkspaceInput = {
+    id?: string
+    fromCurrency: string
+    toCurrency: string
+    rate: Decimal | DecimalJsLike | number | string
+    effectiveDate?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type ExchangeRateCreateOrConnectWithoutWorkspaceInput = {
+    where: ExchangeRateWhereUniqueInput
+    create: XOR<ExchangeRateCreateWithoutWorkspaceInput, ExchangeRateUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type ExchangeRateCreateManyWorkspaceInputEnvelope = {
+    data: ExchangeRateCreateManyWorkspaceInput | ExchangeRateCreateManyWorkspaceInput[]
     skipDuplicates?: boolean
   }
 
@@ -42785,6 +45961,8 @@ export namespace Prisma {
     contactId?: StringNullableFilter<"Deal"> | string | null
     title?: StringFilter<"Deal"> | string
     value?: DecimalFilter<"Deal"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"Deal"> | string
+    valueInBase?: DecimalNullableFilter<"Deal"> | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: DateTimeNullableFilter<"Deal"> | Date | string | null
     lostReason?: StringNullableFilter<"Deal"> | string | null
     notes?: StringNullableFilter<"Deal"> | string | null
@@ -42859,6 +46037,7 @@ export namespace Prisma {
     subtotal?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     total?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    totalInBase?: DecimalNullableFilter<"Invoice"> | Decimal | DecimalJsLike | number | string | null
     currency?: StringFilter<"Invoice"> | string
     notes?: StringNullableFilter<"Invoice"> | string | null
     dueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
@@ -43076,11 +46255,334 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Role"> | Date | string
   }
 
+  export type CurrencyUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: CurrencyWhereUniqueInput
+    update: XOR<CurrencyUpdateWithoutWorkspaceInput, CurrencyUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<CurrencyCreateWithoutWorkspaceInput, CurrencyUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type CurrencyUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: CurrencyWhereUniqueInput
+    data: XOR<CurrencyUpdateWithoutWorkspaceInput, CurrencyUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type CurrencyUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: CurrencyScalarWhereInput
+    data: XOR<CurrencyUpdateManyMutationInput, CurrencyUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type CurrencyScalarWhereInput = {
+    AND?: CurrencyScalarWhereInput | CurrencyScalarWhereInput[]
+    OR?: CurrencyScalarWhereInput[]
+    NOT?: CurrencyScalarWhereInput | CurrencyScalarWhereInput[]
+    id?: StringFilter<"Currency"> | string
+    workspaceId?: StringFilter<"Currency"> | string
+    code?: StringFilter<"Currency"> | string
+    name?: StringFilter<"Currency"> | string
+    symbol?: StringFilter<"Currency"> | string
+    isBase?: BoolFilter<"Currency"> | boolean
+    active?: BoolFilter<"Currency"> | boolean
+    createdAt?: DateTimeFilter<"Currency"> | Date | string
+  }
+
+  export type ExchangeRateUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: ExchangeRateWhereUniqueInput
+    update: XOR<ExchangeRateUpdateWithoutWorkspaceInput, ExchangeRateUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<ExchangeRateCreateWithoutWorkspaceInput, ExchangeRateUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type ExchangeRateUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: ExchangeRateWhereUniqueInput
+    data: XOR<ExchangeRateUpdateWithoutWorkspaceInput, ExchangeRateUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type ExchangeRateUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: ExchangeRateScalarWhereInput
+    data: XOR<ExchangeRateUpdateManyMutationInput, ExchangeRateUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type ExchangeRateScalarWhereInput = {
+    AND?: ExchangeRateScalarWhereInput | ExchangeRateScalarWhereInput[]
+    OR?: ExchangeRateScalarWhereInput[]
+    NOT?: ExchangeRateScalarWhereInput | ExchangeRateScalarWhereInput[]
+    id?: StringFilter<"ExchangeRate"> | string
+    workspaceId?: StringFilter<"ExchangeRate"> | string
+    fromCurrency?: StringFilter<"ExchangeRate"> | string
+    toCurrency?: StringFilter<"ExchangeRate"> | string
+    rate?: DecimalFilter<"ExchangeRate"> | Decimal | DecimalJsLike | number | string
+    effectiveDate?: DateTimeFilter<"ExchangeRate"> | Date | string
+    createdAt?: DateTimeFilter<"ExchangeRate"> | Date | string
+  }
+
+  export type WorkspaceCreateWithoutCurrenciesInput = {
+    id?: string
+    name: string
+    slug: string
+    baseCurrency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
+    referrals?: ReferralCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceCreateNestedManyWithoutWorkspaceInput
+    deals?: DealCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutCurrenciesInput = {
+    id?: string
+    name: string
+    slug: string
+    baseCurrency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutCurrenciesInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutCurrenciesInput, WorkspaceUncheckedCreateWithoutCurrenciesInput>
+  }
+
+  export type WorkspaceUpsertWithoutCurrenciesInput = {
+    update: XOR<WorkspaceUpdateWithoutCurrenciesInput, WorkspaceUncheckedUpdateWithoutCurrenciesInput>
+    create: XOR<WorkspaceCreateWithoutCurrenciesInput, WorkspaceUncheckedCreateWithoutCurrenciesInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutCurrenciesInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutCurrenciesInput, WorkspaceUncheckedUpdateWithoutCurrenciesInput>
+  }
+
+  export type WorkspaceUpdateWithoutCurrenciesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
+    referrals?: ReferralUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutCurrenciesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceCreateWithoutExchangeRatesInput = {
+    id?: string
+    name: string
+    slug: string
+    baseCurrency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
+    referrals?: ReferralCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceCreateNestedManyWithoutWorkspaceInput
+    deals?: DealCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutExchangeRatesInput = {
+    id?: string
+    name: string
+    slug: string
+    baseCurrency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutExchangeRatesInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutExchangeRatesInput, WorkspaceUncheckedCreateWithoutExchangeRatesInput>
+  }
+
+  export type WorkspaceUpsertWithoutExchangeRatesInput = {
+    update: XOR<WorkspaceUpdateWithoutExchangeRatesInput, WorkspaceUncheckedUpdateWithoutExchangeRatesInput>
+    create: XOR<WorkspaceCreateWithoutExchangeRatesInput, WorkspaceUncheckedCreateWithoutExchangeRatesInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutExchangeRatesInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutExchangeRatesInput, WorkspaceUncheckedUpdateWithoutExchangeRatesInput>
+  }
+
+  export type WorkspaceUpdateWithoutExchangeRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
+    referrals?: ReferralUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutExchangeRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+  }
+
   export type WorkspaceCreateWithoutMembersInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -43101,13 +46603,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutMembersInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -43128,6 +46632,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutMembersInput = {
@@ -43213,7 +46719,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43234,13 +46740,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutMembersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43261,6 +46769,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type RoleUpsertWithoutMembersInput = {
@@ -43330,7 +46840,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -43351,13 +46861,15 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutRolesInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -43378,6 +46890,8 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutRolesInput = {
@@ -43432,7 +46946,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43453,13 +46967,15 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutRolesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43480,6 +46996,8 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceMemberUpsertWithWhereUniqueWithoutRoleInput = {
@@ -43590,7 +47108,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -43611,13 +47129,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutCompaniesInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -43638,6 +47158,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutCompaniesInput = {
@@ -43701,6 +47223,8 @@ export namespace Prisma {
     id?: string
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -43725,6 +47249,8 @@ export namespace Prisma {
     contactId?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -43808,7 +47334,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43829,13 +47355,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutCompaniesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43856,6 +47384,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type ContactUpsertWithWhereUniqueWithoutCompanyInput = {
@@ -43910,7 +47440,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -43931,13 +47461,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutContactsInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -43958,6 +47490,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutContactsInput = {
@@ -44018,6 +47552,8 @@ export namespace Prisma {
     id?: string
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -44042,6 +47578,8 @@ export namespace Prisma {
     companyId?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -44071,6 +47609,7 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
     dueDate?: Date | string | null
@@ -44096,6 +47635,7 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
     dueDate?: Date | string | null
@@ -44173,7 +47713,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44194,13 +47734,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutContactsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44221,6 +47763,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type CompanyUpsertWithoutContactsInput = {
@@ -44348,7 +47892,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -44369,13 +47913,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutServicesInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -44396,6 +47942,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutServicesInput = {
@@ -44486,7 +48034,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44507,13 +48055,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutServicesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44534,6 +48084,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type DealItemUpsertWithWhereUniqueWithoutServiceInput = {
@@ -44584,7 +48136,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -44605,13 +48157,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutPipelinesInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -44632,6 +48186,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutPipelinesInput = {
@@ -44673,6 +48229,8 @@ export namespace Prisma {
     id?: string
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -44697,6 +48255,8 @@ export namespace Prisma {
     contactId?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -44734,7 +48294,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44755,13 +48315,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutPipelinesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44782,6 +48344,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type PipelineStageUpsertWithWhereUniqueWithoutPipelineInput = {
@@ -44856,6 +48420,8 @@ export namespace Prisma {
     id?: string
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -44880,6 +48446,8 @@ export namespace Prisma {
     contactId?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -44951,7 +48519,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -44972,13 +48540,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutDealsInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -44999,6 +48569,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutDealsInput = {
@@ -45232,7 +48804,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45253,13 +48825,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutDealsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45280,6 +48854,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type PipelineUpsertWithoutDealsInput = {
@@ -45517,6 +49093,8 @@ export namespace Prisma {
     id?: string
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -45542,6 +49120,8 @@ export namespace Prisma {
     contactId?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -45608,6 +49188,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45633,6 +49215,8 @@ export namespace Prisma {
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45689,7 +49273,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -45710,13 +49294,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutProjectStatusesInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -45737,6 +49323,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutProjectStatusesInput = {
@@ -45805,7 +49393,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45826,13 +49414,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutProjectStatusesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45853,6 +49443,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type ProjectUpsertWithWhereUniqueWithoutStatusInput = {
@@ -45875,7 +49467,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -45896,13 +49488,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutProjectsInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -45923,6 +49517,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutProjectsInput = {
@@ -45934,6 +49530,8 @@ export namespace Prisma {
     id?: string
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -45959,6 +49557,8 @@ export namespace Prisma {
     contactId?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -46096,6 +49696,7 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
     dueDate?: Date | string | null
@@ -46121,6 +49722,7 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
     dueDate?: Date | string | null
@@ -46186,7 +49788,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46207,13 +49809,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutProjectsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46234,6 +49838,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type DealUpsertWithoutProjectInput = {
@@ -46251,6 +49857,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46276,6 +49884,8 @@ export namespace Prisma {
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46435,7 +50045,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -46456,13 +50066,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutTaskStatusesInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -46483,6 +50095,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutTaskStatusesInput = {
@@ -46547,7 +50161,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46568,13 +50182,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutTaskStatusesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46595,6 +50211,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type TaskUpsertWithWhereUniqueWithoutStatusInput = {
@@ -46893,7 +50511,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -46914,13 +50532,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutInvoicesInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -46941,6 +50561,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutInvoicesInput = {
@@ -47077,7 +50699,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47098,13 +50720,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutInvoicesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47125,6 +50749,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type ProjectUpsertWithoutInvoicesInput = {
@@ -47262,6 +50888,7 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
     dueDate?: Date | string | null
@@ -47288,6 +50915,7 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
     dueDate?: Date | string | null
@@ -47324,6 +50952,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -47350,6 +50979,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -47367,7 +50997,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -47388,13 +51018,15 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutWhatsappConfigInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -47415,6 +51047,8 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutWhatsappConfigInput = {
@@ -47437,7 +51071,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47458,13 +51092,15 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutWhatsappConfigInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47485,13 +51121,15 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateWithoutWhatsappTemplatesInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -47512,13 +51150,15 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutWhatsappTemplatesInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -47539,6 +51179,8 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutWhatsappTemplatesInput = {
@@ -47561,7 +51203,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47582,13 +51224,15 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutWhatsappTemplatesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47609,6 +51253,8 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type ContactCreateWithoutWhatsappMessagesInput = {
@@ -47715,7 +51361,7 @@ export namespace Prisma {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -47736,13 +51382,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutActivityLogsInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -47763,6 +51411,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutActivityLogsInput = {
@@ -47785,7 +51435,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47806,13 +51456,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutActivityLogsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47833,13 +51485,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateWithoutIndustriesInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -47860,13 +51514,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutIndustriesInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -47887,6 +51543,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutIndustriesInput = {
@@ -47909,7 +51567,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47930,13 +51588,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutIndustriesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47957,13 +51617,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateWithoutReferralsInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -47984,13 +51646,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutReferralsInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -48011,6 +51675,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutReferralsInput = {
@@ -48033,7 +51699,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48054,13 +51720,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutReferralsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48081,13 +51749,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateWithoutCustomFieldsInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -48108,13 +51778,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutCustomFieldsInput = {
     id?: string
     name: string
     slug: string
-    currency?: string
+    baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
     createdAt?: Date | string
@@ -48135,6 +51807,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutCustomFieldsInput = {
@@ -48157,7 +51831,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48178,13 +51852,15 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutCustomFieldsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    currency?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48205,6 +51881,8 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceMemberCreateManyWorkspaceInput = {
@@ -48303,6 +51981,8 @@ export namespace Prisma {
     contactId?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -48337,6 +52017,7 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
     dueDate?: Date | string | null
@@ -48398,6 +52079,25 @@ export namespace Prisma {
     id?: string
     name: string
     permissions: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type CurrencyCreateManyWorkspaceInput = {
+    id?: string
+    code: string
+    name: string
+    symbol: string
+    isBase?: boolean
+    active?: boolean
+    createdAt?: Date | string
+  }
+
+  export type ExchangeRateCreateManyWorkspaceInput = {
+    id?: string
+    fromCurrency: string
+    toCurrency: string
+    rate: Decimal | DecimalJsLike | number | string
+    effectiveDate?: Date | string
     createdAt?: Date | string
   }
 
@@ -48687,6 +52387,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48711,6 +52413,8 @@ export namespace Prisma {
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48731,6 +52435,8 @@ export namespace Prisma {
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48799,6 +52505,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -48824,6 +52531,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -48847,6 +52555,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49023,6 +52732,63 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CurrencyUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    symbol?: StringFieldUpdateOperationsInput | string
+    isBase?: BoolFieldUpdateOperationsInput | boolean
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CurrencyUncheckedUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    symbol?: StringFieldUpdateOperationsInput | string
+    isBase?: BoolFieldUpdateOperationsInput | boolean
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CurrencyUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    symbol?: StringFieldUpdateOperationsInput | string
+    isBase?: BoolFieldUpdateOperationsInput | boolean
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExchangeRateUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromCurrency?: StringFieldUpdateOperationsInput | string
+    toCurrency?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExchangeRateUncheckedUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromCurrency?: StringFieldUpdateOperationsInput | string
+    toCurrency?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExchangeRateUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromCurrency?: StringFieldUpdateOperationsInput | string
+    toCurrency?: StringFieldUpdateOperationsInput | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type TaskCreateManyAssigneeInput = {
     id?: string
     projectId: string
@@ -49155,6 +52921,8 @@ export namespace Prisma {
     contactId?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -49244,6 +53012,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49268,6 +53038,8 @@ export namespace Prisma {
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49288,6 +53060,8 @@ export namespace Prisma {
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49357,6 +53131,8 @@ export namespace Prisma {
     companyId?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -49376,6 +53152,7 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
     dueDate?: Date | string | null
@@ -49407,6 +53184,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49431,6 +53210,8 @@ export namespace Prisma {
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49451,6 +53232,8 @@ export namespace Prisma {
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49468,6 +53251,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49493,6 +53277,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49516,6 +53301,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49684,6 +53470,8 @@ export namespace Prisma {
     contactId?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -49727,6 +53515,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49751,6 +53541,8 @@ export namespace Prisma {
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49771,6 +53563,8 @@ export namespace Prisma {
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49789,6 +53583,8 @@ export namespace Prisma {
     contactId?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
     lostReason?: string | null
     notes?: string | null
@@ -49803,6 +53599,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49827,6 +53625,8 @@ export namespace Prisma {
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49847,6 +53647,8 @@ export namespace Prisma {
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49980,6 +53782,7 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
     dueDate?: Date | string | null
@@ -50056,6 +53859,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -50081,6 +53885,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -50104,6 +53909,7 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

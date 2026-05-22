@@ -415,7 +415,7 @@ function DealsTable({ deals, companyId, contacts }: { deals: Deal[]; companyId: 
               />
             </div>
             <div>
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Value (SAR)</label>
+              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Value</label>
               <input
                 name="value"
                 type="number"
@@ -474,7 +474,7 @@ function DealsTable({ deals, companyId, contacts }: { deals: Deal[]; companyId: 
                     </div>
                   </td>
                   <td className="px-4 py-2.5 text-[13px] text-foreground text-right">
-                    {Number(deal.value).toLocaleString()} SAR
+                    {Number(deal.value).toLocaleString()} KWD
                   </td>
                 </tr>
               ))}

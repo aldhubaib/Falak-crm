@@ -114,7 +114,7 @@ export function ServicesClient({ services }: { services: Service[] }) {
                 </h3>
                 <p className="text-[11px] text-muted-foreground mt-0.5">
                   {service.pricingType.toLowerCase().replace("_", " ")} •{" "}
-                  {Number(service.unitPrice).toLocaleString()} SAR
+                  {Number(service.unitPrice).toLocaleString()} KWD
                   {service.unit ? ` / ${service.unit}` : ""}
                 </p>
               </div>

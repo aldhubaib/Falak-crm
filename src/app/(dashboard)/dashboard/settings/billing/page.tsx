@@ -11,11 +11,10 @@ export default async function BillingSettingsPage() {
   async function updateBilling(formData: FormData) {
     "use server";
     const ws = await requireWorkspace();
-    const currency = formData.get("currency") as string;
     const taxRate = parseFloat(formData.get("taxRate") as string);
     await db.workspace.update({
       where: { id: ws.id },
-      data: { currency, taxRate },
+      data: { taxRate },
     });
     revalidatePath("/dashboard/settings/billing");
   }
@@ -35,19 +34,14 @@ export default async function BillingSettingsPage() {
       <div className="rounded-xl border border-border bg-card p-4 max-w-md">
         <form action={updateBilling} className="space-y-4">
           <div>
-            <label className="text-[12px] text-muted-foreground block mb-1.5">Currency</label>
-            <select
-              name="currency"
-              defaultValue={workspace.currency}
-              className="w-full h-9 px-3 rounded-lg bg-input border border-border text-sm text-foreground"
-            >
-              <option value="SAR">SAR — Saudi Riyal</option>
-              <option value="USD">USD — US Dollar</option>
-              <option value="EUR">EUR — Euro</option>
-              <option value="GBP">GBP — British Pound</option>
-              <option value="AED">AED — UAE Dirham</option>
-              <option value="KWD">KWD — Kuwaiti Dinar</option>
-            </select>
+            <label className="text-[12px] text-muted-foreground block mb-1.5">Base Currency</label>
+            <p className="text-[13px] text-foreground font-medium">{workspace.baseCurrency}</p>
+            <p className="text-[11px] text-muted-foreground mt-1">
+              Manage currencies in{" "}
+              <Link href="/dashboard/settings/currencies" className="text-primary no-underline hover:underline">
+                Settings → Currencies
+              </Link>
+            </p>
           </div>
           <div>
             <label className="text-[12px] text-muted-foreground block mb-1.5">Tax Rate (%)</label>

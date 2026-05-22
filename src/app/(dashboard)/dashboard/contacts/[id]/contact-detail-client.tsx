@@ -149,7 +149,7 @@ export function ContactDetailClient({ contact }: { contact: Contact }) {
                       </div>
                     </td>
                     <td className="px-4 py-2.5 text-[13px] text-foreground text-right">
-                      {Number(deal.value).toLocaleString()} SAR
+                      {Number(deal.value).toLocaleString()} KWD
                     </td>
                   </tr>
                 ))}

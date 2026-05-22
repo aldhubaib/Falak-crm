@@ -20,6 +20,7 @@ type Deal = {
   id: string;
   title: string;
   value: unknown;
+  currency?: string;
   stageId: string;
   company: { id: string; name: string } | null;
   contact: { id: string; firstName: string; lastName: string } | null;
@@ -149,7 +150,7 @@ function DealCard({
         {deal.company?.name || "No company"}
       </div>
       <div className="text-[13px] font-semibold text-foreground">
-        {Number(deal.value).toLocaleString()} SAR
+        {Number(deal.value).toLocaleString()} {deal.currency || "KWD"}
       </div>
 
       {!isClosed && nextStage && (
@@ -247,7 +248,7 @@ function NewDealForm({
             name="value"
             type="number"
             step="0.01"
-            placeholder="Value (SAR)"
+            placeholder="Value"
             className="h-9 px-3 rounded-lg bg-input border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           />
           <ComboboxField

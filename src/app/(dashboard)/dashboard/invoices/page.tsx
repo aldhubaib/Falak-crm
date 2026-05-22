@@ -39,7 +39,7 @@ export default async function InvoicesPage() {
               </div>
               <div className="text-right">
                 <p className="text-[13px] font-semibold text-foreground">
-                  {Number(invoice.total).toLocaleString()} SAR
+                  {Number(invoice.total).toLocaleString()} {invoice.currency || "KWD"}
                 </p>
                 <InvoiceStatusBadge status={invoice.status} />
               </div>

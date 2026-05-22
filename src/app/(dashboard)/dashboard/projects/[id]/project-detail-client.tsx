@@ -27,6 +27,7 @@ type Invoice = {
   id: string;
   number: string;
   total: unknown;
+  currency: string;
   status: string;
   createdAt: Date;
 };
@@ -184,7 +185,7 @@ export function ProjectDetailClient({
                       {task.title}
                     </p>
                     <p className="text-[11px] text-muted-foreground">
-                      {task.billable && task.price ? `${Number(task.price).toLocaleString()} SAR` : "Non-billable"}
+                      {task.billable && task.price ? `${Number(task.price).toLocaleString()} KWD` : "Non-billable"}
                       {task.assignee?.name && ` • ${task.assignee.name}`}
                     </p>
                   </div>
@@ -231,7 +232,7 @@ export function ProjectDetailClient({
                     <InvoiceStatusBadge status={invoice.status} />
                   </div>
                   <p className="text-[11px] text-muted-foreground mt-0.5">
-                    {Number(invoice.total).toLocaleString()} SAR
+                    {Number(invoice.total).toLocaleString()} {invoice.currency || "KWD"}
                   </p>
                 </Link>
               ))}

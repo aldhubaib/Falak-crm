@@ -75,7 +75,7 @@ export async function createInvoiceFromProject(projectId: string, taskIds: strin
       subtotal,
       taxAmount,
       total,
-      currency: workspace.currency,
+      currency: workspace.baseCurrency,
       items: { create: items },
     },
   });

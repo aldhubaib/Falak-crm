@@ -34,6 +34,7 @@ export async function getOrCreateWorkspace() {
     data: {
       name,
       slug,
+      baseCurrency: "KWD",
       members: {
         create: {
           userId,
@@ -41,6 +42,11 @@ export async function getOrCreateWorkspace() {
           name: user?.fullName ?? undefined,
           type: "OWNER",
         },
+      },
+      currencies: {
+        create: [
+          { code: "KWD", name: "Kuwaiti Dinar", symbol: "د.ك", isBase: true },
+        ],
       },
       pipelines: {
         create: {

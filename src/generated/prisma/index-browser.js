@@ -124,11 +124,32 @@ exports.Prisma.WorkspaceScalarFieldEnum = {
   id: 'id',
   name: 'name',
   slug: 'slug',
-  currency: 'currency',
+  baseCurrency: 'baseCurrency',
   taxRate: 'taxRate',
   logo: 'logo',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CurrencyScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  code: 'code',
+  name: 'name',
+  symbol: 'symbol',
+  isBase: 'isBase',
+  active: 'active',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ExchangeRateScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  fromCurrency: 'fromCurrency',
+  toCurrency: 'toCurrency',
+  rate: 'rate',
+  effectiveDate: 'effectiveDate',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.WorkspaceMemberScalarFieldEnum = {
@@ -239,6 +260,8 @@ exports.Prisma.DealScalarFieldEnum = {
   contactId: 'contactId',
   title: 'title',
   value: 'value',
+  currency: 'currency',
+  valueInBase: 'valueInBase',
   expectedCloseDate: 'expectedCloseDate',
   lostReason: 'lostReason',
   notes: 'notes',
@@ -319,6 +342,7 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   subtotal: 'subtotal',
   taxAmount: 'taxAmount',
   total: 'total',
+  totalInBase: 'totalInBase',
   currency: 'currency',
   notes: 'notes',
   dueDate: 'dueDate',
@@ -516,6 +540,8 @@ exports.CustomFieldType = exports.$Enums.CustomFieldType = {
 
 exports.Prisma.ModelName = {
   Workspace: 'Workspace',
+  Currency: 'Currency',
+  ExchangeRate: 'ExchangeRate',
   WorkspaceMember: 'WorkspaceMember',
   Role: 'Role',
   ProjectCollaborator: 'ProjectCollaborator',
