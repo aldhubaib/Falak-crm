@@ -28,7 +28,7 @@ export function GlobalSearch() {
   const [loading, setLoading] = useState(false);
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
-  const debounceRef = useRef<NodeJS.Timeout>();
+  const debounceRef = useRef<NodeJS.Timeout>(undefined);
   const router = useRouter();
 
   const search = useCallback(async (q: string) => {
