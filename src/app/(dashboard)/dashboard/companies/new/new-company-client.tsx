@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { createCompany } from "@/actions/companies";
 import { createIndustry, deleteIndustry } from "@/actions/industries";
 import { ComboboxField } from "@/components/ui/combobox-field";
-import { ArrowLeft, Building2, Globe, Save, Plus, Trash2, StickyNote, Calendar } from "lucide-react";
+import { ArrowLeft, Building2, Globe, Save } from "lucide-react";
 import { AvatarUpload } from "@/components/ui/avatar-upload";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -19,8 +19,6 @@ const countries = [
   "Canada", "Australia", "India", "Pakistan", "Turkey",
 ];
 
-type Note = { date: string; text: string };
-
 export function NewCompanyClient({ industries }: { industries: IndustryOption[] }) {
   const router = useRouter();
   const [selectedIndustry, setSelectedIndustry] = useState("");
@@ -29,9 +27,6 @@ export function NewCompanyClient({ industries }: { industries: IndustryOption[] 
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const nameRef = useRef<HTMLInputElement>(null);
   const nameArRef = useRef<HTMLInputElement>(null);
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [newNoteDate, setNewNoteDate] = useState(new Date().toISOString().split("T")[0]);
-  const [newNoteText, setNewNoteText] = useState("");
 
   const validate = () => {
     const newErrors: Record<string, boolean> = {};
@@ -43,12 +38,6 @@ export function NewCompanyClient({ industries }: { industries: IndustryOption[] 
     return Object.keys(newErrors).length === 0;
   };
 
-  const addNote = () => {
-    if (!newNoteText.trim()) return;
-    setNotes((prev) => [...prev, { date: newNoteDate, text: newNoteText.trim() }]);
-    setNewNoteText("");
-    setNewNoteDate(new Date().toISOString().split("T")[0]);
-  };
 
   return (
     <div className="p-6">
@@ -87,17 +76,12 @@ export function NewCompanyClient({ industries }: { industries: IndustryOption[] 
           if (!validate()) return;
           formData.set("industry", selectedIndustry);
           formData.set("address", selectedCountry);
-          formData.set("notes", JSON.stringify(notes));
           const company = await createCompany(formData);
           if (company) router.push(`/dashboard/companies/${company.id}`);
         }}
         className="space-y-5"
       >
-        {/* Avatar */}
-        <div className="flex items-center gap-4 mb-2">
-          <AvatarUpload name="logo" fallback="C" size="lg" />
-          <p className="text-[11px] text-muted-foreground">Click to upload company logo</p>
-        </div>
+        <AvatarUpload name="logo" fallback="C" size="lg" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className={cn(errors.name && "shake")}>
@@ -213,78 +197,6 @@ export function NewCompanyClient({ industries }: { industries: IndustryOption[] 
         </div>
       </form>
 
-      {/* Divider */}
-      <div className="border-t border-border my-8" />
-
-      {/* Notes Section */}
-      <div>
-        <h2 className="flex items-center gap-2 text-[13px] font-medium text-foreground mb-4">
-          <StickyNote className="w-4 h-4" />
-          Notes
-        </h2>
-
-        {/* Add Note */}
-        <div className="flex items-start gap-3 mb-4">
-          <div className="shrink-0">
-            <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
-              <Calendar className="w-3 h-3" />
-              Date
-            </label>
-            <input
-              type="date"
-              value={newNoteDate}
-              onChange={(e) => setNewNoteDate(e.target.value)}
-              className="h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground focus:outline-none focus:border-ring transition-colors"
-            />
-          </div>
-          <div className="flex-1">
-            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">
-              Note
-            </label>
-            <div className="flex gap-2">
-              <input
-                value={newNoteText}
-                onChange={(e) => setNewNoteText(e.target.value)}
-                placeholder="Write a note..."
-                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addNote(); } }}
-                className="flex-1 h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
-              />
-              <button
-                type="button"
-                onClick={addNote}
-                className="h-10 px-3 rounded-lg bg-card border border-border text-[13px] text-foreground hover:bg-muted transition-colors flex items-center gap-1.5"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                Add
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Notes List */}
-        {notes.length > 0 && (
-          <div className="space-y-2">
-            {notes.map((note, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 p-3 rounded-lg bg-card border border-border group"
-              >
-                <span className="text-[11px] text-muted-foreground shrink-0 pt-0.5">
-                  {note.date}
-                </span>
-                <p className="flex-1 text-[13px] text-foreground">{note.text}</p>
-                <button
-                  type="button"
-                  onClick={() => setNotes((prev) => prev.filter((_, idx) => idx !== i))}
-                  className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
-                >
-                  <Trash2 className="w-3 h-3" />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
     </div>
   );
 }
