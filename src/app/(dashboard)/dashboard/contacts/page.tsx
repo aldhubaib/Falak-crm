@@ -1,15 +1,16 @@
-export default function ContactsPage() {
+import { getContacts } from "@/actions/contacts";
+import { getCompanies } from "@/actions/companies";
+import { ContactsClient } from "./contacts-client";
+
+export default async function ContactsPage() {
+  const [contacts, companies] = await Promise.all([
+    getContacts(),
+    getCompanies(),
+  ]);
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between h-12 mb-6">
-        <h1 className="text-lg font-semibold text-foreground">Contacts</h1>
-        <button className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:bg-primary/90 transition-colors">
-          Add Contact
-        </button>
-      </div>
-      <div className="rounded-xl border border-border bg-card p-8 text-center text-muted-foreground text-sm">
-        No contacts yet. Add contacts to your companies.
-      </div>
-    </div>
+    <ContactsClient
+      contacts={contacts}
+      companies={companies.map((c) => ({ id: c.id, name: c.name }))}
+    />
   );
 }

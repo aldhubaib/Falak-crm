@@ -1,15 +1,23 @@
-export default function DealsPage() {
+import { getPipeline } from "@/actions/deals";
+import { getCompanies } from "@/actions/companies";
+import { getContacts } from "@/actions/contacts";
+import { getServices } from "@/actions/services";
+import { DealsClient } from "./deals-client";
+
+export default async function DealsPage() {
+  const [pipeline, companies, contacts, services] = await Promise.all([
+    getPipeline(),
+    getCompanies(),
+    getContacts(),
+    getServices(),
+  ]);
+
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between h-12 mb-6">
-        <h1 className="text-lg font-semibold text-foreground">Deals</h1>
-        <button className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:bg-primary/90 transition-colors">
-          New Deal
-        </button>
-      </div>
-      <div className="rounded-xl border border-border bg-card p-8 text-center text-muted-foreground text-sm">
-        Your deal pipeline will appear here. Configure stages in Settings first.
-      </div>
-    </div>
+    <DealsClient
+      pipeline={pipeline}
+      companies={companies.map((c) => ({ id: c.id, name: c.name }))}
+      contacts={contacts.map((c) => ({ id: c.id, name: c.name }))}
+      services={services.map((s) => ({ id: s.id, name: s.name, unitPrice: Number(s.unitPrice) }))}
+    />
   );
 }

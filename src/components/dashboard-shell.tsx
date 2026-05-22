@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/sidebar";
 import { BottomTabs } from "@/components/bottom-tabs";
 import { Menu } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const DESKTOP_BREAKPOINT = 1024;
 
@@ -108,8 +109,4 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       {!isDesktop && <BottomTabs />}
     </div>
   );
-}
-
-function cn(...classes: (string | boolean | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
 }
