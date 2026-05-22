@@ -6,6 +6,7 @@ import { deleteRecord, checkCanDelete } from "@/actions/delete";
 import { type EntityType, type RelationBlock } from "@/lib/soft-delete";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useErrorStore } from "@/lib/error-store";
 
 interface ActionMenuProps {
   entityType: EntityType;
@@ -45,13 +46,19 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
     setLoading(true);
     const result = await deleteRecord(entityType, entityId);
     setLoading(false);
-    if (result.success) {
-      setConfirmOpen(false);
-      if (redirectAfterDelete) {
-        router.push(redirectAfterDelete);
-      } else {
-        router.refresh();
-      }
+    if (!result.ok) {
+      useErrorStore.getState().push(result.error);
+      return;
+    }
+    if (result.data.blocks && result.data.blocks.length > 0) {
+      setBlocks(result.data.blocks);
+      return;
+    }
+    setConfirmOpen(false);
+    if (redirectAfterDelete) {
+      router.push(redirectAfterDelete);
+    } else {
+      router.refresh();
     }
   };
 

@@ -5,6 +5,7 @@ import { moveDeal, addDealItem, removeDealItem, createProjectFromDeal } from "@/
 import { ArrowLeft, Plus, Trash2, Rocket, X, Check } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useErrorStore } from "@/lib/error-store";
 
 type Stage = {
   id: string;
@@ -72,7 +73,11 @@ export function DealDetailClient({
           </p>
         </div>
         {isWon && !deal.project && (
-          <form action={createProjectFromDeal.bind(null, deal.id)}>
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            const result = await createProjectFromDeal(deal.id);
+            if (!result.ok) useErrorStore.getState().push(result.error);
+          }}>
             <Button type="submit" size="sm">
               <Rocket className="w-3.5 h-3.5" />
               Create Project
@@ -92,8 +97,11 @@ export function DealDetailClient({
               <div key={stage.id} className="flex-1">
                 <button
                   disabled={isClosed || idx === currentIndex}
-                  onClick={() => {
-                    if (!isClosed) moveDeal(deal.id, stage.id);
+                  onClick={async () => {
+                    if (!isClosed) {
+                      const result = await moveDeal(deal.id, stage.id);
+                      if (!result.ok) useErrorStore.getState().push(result.error);
+                    }
                   }}
                   className={`w-full h-8 rounded-lg text-[11px] font-medium transition-colors flex items-center justify-center gap-1 ${
                     isCurrent
@@ -130,8 +138,11 @@ export function DealDetailClient({
 
           {showAddItem && (
             <form
-              action={async (formData) => {
-                await addDealItem(deal.id, formData);
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                const result = await addDealItem(deal.id, formData);
+                if (!result.ok) { useErrorStore.getState().push(result.error); return; }
                 setShowAddItem(false);
               }}
               className="mb-3 p-3 rounded-lg bg-muted/50 space-y-2"
@@ -189,7 +200,11 @@ export function DealDetailClient({
                     </p>
                   </div>
                   {!isClosed && (
-                    <form action={removeDealItem.bind(null, item.id, deal.id)}>
+                    <form onSubmit={async (e) => {
+                      e.preventDefault();
+                      const result = await removeDealItem(item.id, deal.id);
+                      if (!result.ok) useErrorStore.getState().push(result.error);
+                    }}>
                       <button type="submit" className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-destructive">
                         <Trash2 className="w-3 h-3" />
                       </button>

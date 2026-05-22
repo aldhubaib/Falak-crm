@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { ErrorToast } from "@/components/error-toast";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -46,6 +47,7 @@ export default function RootLayout({
       <body className="min-h-full bg-background text-foreground overscroll-none">
         <ClerkProvider appearance={{ baseTheme: dark }}>
           {children}
+          <ErrorToast />
         </ClerkProvider>
       </body>
     </html>

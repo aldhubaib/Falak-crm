@@ -5,60 +5,65 @@ import { checkDeletionBlocks, softDelete, restoreEntity, type EntityType, type R
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
+import { safeAction, type ActionResult } from "@/lib/action";
 
 export async function checkCanDelete(type: EntityType, id: string): Promise<RelationBlock[]> {
   await requireWorkspace();
   return checkDeletionBlocks(type, id);
 }
 
-export async function deleteRecord(type: EntityType, id: string): Promise<{ success: boolean; blocks?: RelationBlock[] }> {
-  const workspace = await requireWorkspace();
+export async function deleteRecord(type: EntityType, id: string): Promise<ActionResult<{ blocks?: RelationBlock[] }>> {
+  return safeAction(`Delete ${type}`, async () => {
+    await requireWorkspace();
 
-  const blocks = await checkDeletionBlocks(type, id);
-  if (blocks.length > 0) {
-    return { success: false, blocks };
-  }
+    const blocks = await checkDeletionBlocks(type, id);
+    if (blocks.length > 0) {
+      return { blocks };
+    }
 
-  await softDelete(type, id);
+    await softDelete(type, id);
 
-  let entityName: string | undefined;
-  if (type === "company") {
-    const c = await db.company.findFirst({ where: { id } });
-    entityName = c?.name;
-  } else if (type === "contact") {
-    const c = await db.contact.findFirst({ where: { id } });
-    entityName = c ? `${c.firstName} ${c.lastName}` : undefined;
-  } else if (type === "deal") {
-    const d = await db.deal.findFirst({ where: { id } });
-    entityName = d?.title;
-  } else if (type === "project") {
-    const p = await db.project.findFirst({ where: { id } });
-    entityName = p?.name;
-  }
+    let entityName: string | undefined;
+    if (type === "company") {
+      const c = await db.company.findFirst({ where: { id } });
+      entityName = c?.name;
+    } else if (type === "contact") {
+      const c = await db.contact.findFirst({ where: { id } });
+      entityName = c ? `${c.firstName} ${c.lastName}` : undefined;
+    } else if (type === "deal") {
+      const d = await db.deal.findFirst({ where: { id } });
+      entityName = d?.title;
+    } else if (type === "project") {
+      const p = await db.project.findFirst({ where: { id } });
+      entityName = p?.name;
+    }
 
-  await logActivity({
-    entityType: type,
-    entityId: id,
-    entityName,
-    action: "deleted",
-  });
+    await logActivity({
+      entityType: type,
+      entityId: id,
+      entityName,
+      action: "deleted",
+    });
 
-  revalidatePath("/dashboard");
-  return { success: true };
+    revalidatePath("/dashboard");
+    return {};
+  }, { type, id });
 }
 
-export async function restoreRecord(type: EntityType, id: string) {
-  await requireWorkspace();
-  await restoreEntity(type, id);
+export async function restoreRecord(type: EntityType, id: string): Promise<ActionResult> {
+  return safeAction(`Restore ${type}`, async () => {
+    await requireWorkspace();
+    await restoreEntity(type, id);
 
-  await logActivity({
-    entityType: type,
-    entityId: id,
-    action: "created",
-  });
+    await logActivity({
+      entityType: type,
+      entityId: id,
+      action: "created",
+    });
 
-  revalidatePath("/dashboard");
-  revalidatePath("/dashboard/settings/trash");
+    revalidatePath("/dashboard");
+    revalidatePath("/dashboard/settings/trash");
+  }, { type, id });
 }
 
 export async function getTrashItems() {

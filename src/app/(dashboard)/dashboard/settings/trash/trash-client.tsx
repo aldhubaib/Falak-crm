@@ -7,6 +7,7 @@ import { ArrowLeft, RotateCcw, Building2, User, Handshake, FolderKanban, Trash2 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useErrorStore } from "@/lib/error-store";
 
 type TrashItem = {
   id: string;
@@ -33,10 +34,16 @@ export function TrashClient({ items }: { items: TrashItem[] }) {
   const router = useRouter();
   const [restoring, setRestoring] = useState<string | null>(null);
 
+  const { push: pushError } = useErrorStore();
+
   const handleRestore = async (type: EntityType, id: string) => {
     setRestoring(id);
-    await restoreRecord(type, id);
+    const result = await restoreRecord(type, id);
     setRestoring(null);
+    if (!result.ok) {
+      pushError(result.error);
+      return;
+    }
     router.refresh();
   };
 

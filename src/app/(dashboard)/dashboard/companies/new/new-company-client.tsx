@@ -14,11 +14,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { countryOptions } from "@/lib/countries";
+import { useErrorStore } from "@/lib/error-store";
 
 type OptionItem = { id: string; name: string };
 
 export function NewCompanyClient({ industries, referrals }: { industries: OptionItem[]; referrals: OptionItem[] }) {
   const router = useRouter();
+  const { push: pushError } = useErrorStore();
   const [industryList, setIndustryList] = useState(industries);
   const [referralList, setReferralList] = useState(referrals);
   const [values, setValues] = useState<Record<string, string>>({
@@ -88,8 +90,12 @@ export function NewCompanyClient({ industries, referrals }: { industries: Option
           formData.set("address", values.country);
           formData.set("referral", values.referral);
           if (values.website) formData.set("website", values.website);
-          const company = await createCompany(formData);
-          if (company) router.push(`/dashboard/companies/${company.id}`);
+          const result = await createCompany(formData);
+          if (result.ok) {
+            router.push(`/dashboard/companies/${result.data.id}`);
+          } else {
+            pushError(result.error);
+          }
         }}
         className="space-y-5"
       >

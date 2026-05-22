@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { countryOptions } from "@/lib/countries";
+import { useErrorStore } from "@/lib/error-store";
 
 type CompanyOption = { id: string; name: string };
 
@@ -27,6 +28,7 @@ const FORM_FIELDS: FieldDef[] = [
 
 export function NewContactClient({ companies }: { companies: CompanyOption[] }) {
   const router = useRouter();
+  const { push: pushError } = useErrorStore();
   const [values, setValues] = useState<Record<string, string>>({
     firstName: "",
     middleName: "",
@@ -88,11 +90,15 @@ export function NewContactClient({ companies }: { companies: CompanyOption[] }) 
             if (v) formData.set(k, v);
           }
           const result = await createContact(formData);
-          if (result && "error" in result) {
-            setErrors({ mobile: result.error });
+          if (!result.ok) {
+            if (result.error.prismaCode === "P2002") {
+              setErrors({ mobile: "A contact with this mobile number already exists" });
+            } else {
+              pushError(result.error);
+            }
             return;
           }
-          if (result) router.push(`/dashboard/contacts/${result.id}`);
+          router.push(`/dashboard/contacts/${result.data.id}`);
         }}
         className="space-y-5"
       >

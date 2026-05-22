@@ -10,6 +10,7 @@ import { ArrowLeft, Building2, Globe, MapPin, StickyNote, Trash2, Plus, Handshak
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useErrorStore } from "@/lib/error-store";
 import Link from "next/link";
 
 type Contact = {
@@ -52,11 +53,14 @@ export function CompanyDetailClient({ company }: { company: Company }) {
   });
   const [newNoteText, setNewNoteText] = useState("");
 
+  const { push: pushError } = useErrorStore();
+
   const save = (field: string) => async (value: string) => {
     const formData = new FormData();
     formData.set("name", company.name);
     formData.set(field, value);
-    await updateCompany(company.id, formData);
+    const result = await updateCompany(company.id, formData);
+    if (!result.ok) pushError(result.error);
   };
 
   const addNote = async () => {
@@ -71,7 +75,8 @@ export function CompanyDetailClient({ company }: { company: Company }) {
     setNewNoteText("");
     const formData = new FormData();
     formData.set("notes", JSON.stringify(updated));
-    await updateCompany(company.id, formData);
+    const result = await updateCompany(company.id, formData);
+    if (!result.ok) pushError(result.error);
   };
 
   const removeNote = async (index: number) => {
@@ -79,7 +84,8 @@ export function CompanyDetailClient({ company }: { company: Company }) {
     setNotes(updated);
     const formData = new FormData();
     formData.set("notes", JSON.stringify(updated));
-    await updateCompany(company.id, formData);
+    const result = await updateCompany(company.id, formData);
+    if (!result.ok) pushError(result.error);
   };
 
   return (
@@ -220,6 +226,7 @@ export function CompanyDetailClient({ company }: { company: Company }) {
 
 function ContactsTable({ companyId, contacts }: { companyId: string; contacts: Contact[] }) {
   const router = useRouter();
+  const { push: pushError } = useErrorStore();
   const [showForm, setShowForm] = useState(false);
 
   return (
@@ -241,7 +248,8 @@ function ContactsTable({ companyId, contacts }: { companyId: string; contacts: C
             e.preventDefault();
             const formData = new FormData(e.currentTarget);
             formData.set("companyId", companyId);
-            await createContact(formData);
+            const result = await createContact(formData);
+            if (!result.ok) { pushError(result.error); return; }
             setShowForm(false);
             router.refresh();
           }}
@@ -360,6 +368,7 @@ function ContactsTable({ companyId, contacts }: { companyId: string; contacts: C
 
 function DealsTable({ deals, companyId, contacts }: { deals: Deal[]; companyId: string; contacts: Contact[] }) {
   const router = useRouter();
+  const { push: pushError } = useErrorStore();
   const [showForm, setShowForm] = useState(false);
   const [selectedContactId, setSelectedContactId] = useState("");
 
@@ -384,7 +393,8 @@ function DealsTable({ deals, companyId, contacts }: { deals: Deal[]; companyId: 
             formData.set("companyId", companyId);
             formData.set("contactId", selectedContactId);
             const { createDeal } = await import("@/actions/deals");
-            await createDeal(formData);
+            const result = await createDeal(formData);
+            if (!result.ok) { pushError(result.error); return; }
             setShowForm(false);
             setSelectedContactId("");
             router.refresh();

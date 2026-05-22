@@ -6,6 +6,7 @@ import { Plus, X, ArrowRight, Rocket } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ComboboxField } from "@/components/ui/combobox-field";
+import { useErrorStore } from "@/lib/error-store";
 
 type Stage = {
   id: string;
@@ -152,7 +153,11 @@ function DealCard({
       </div>
 
       {!isClosed && nextStage && (
-        <form action={moveDeal.bind(null, deal.id, nextStage.id)}>
+        <form onSubmit={async (e) => {
+          e.preventDefault();
+          const result = await moveDeal(deal.id, nextStage.id);
+          if (!result.ok) useErrorStore.getState().push(result.error);
+        }}>
           <button
             type="submit"
             className="w-full h-7 rounded-lg bg-muted text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors flex items-center justify-center gap-1"
@@ -164,7 +169,11 @@ function DealCard({
       )}
 
       {isWon && !deal.project && (
-        <form action={createProjectFromDeal.bind(null, deal.id)}>
+        <form onSubmit={async (e) => {
+          e.preventDefault();
+          const result = await createProjectFromDeal(deal.id);
+          if (!result.ok) useErrorStore.getState().push(result.error);
+        }}>
           <button
             type="submit"
             className="w-full h-7 rounded-lg bg-success/15 text-[11px] font-medium text-success hover:bg-success/25 transition-colors flex items-center justify-center gap-1"
@@ -211,10 +220,16 @@ function NewDealForm({
         </button>
       </div>
       <form
-        action={async (formData) => {
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.currentTarget);
           formData.set("companyId", companyId);
           formData.set("contactId", contactId);
-          await createDeal(formData);
+          const result = await createDeal(formData);
+          if (!result.ok) {
+            useErrorStore.getState().push(result.error);
+            return;
+          }
           onClose();
         }}
         className="space-y-3"
