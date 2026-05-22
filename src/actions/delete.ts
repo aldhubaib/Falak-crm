@@ -6,8 +6,6 @@ import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 
-export type { RelationBlock };
-
 export async function checkCanDelete(type: EntityType, id: string): Promise<RelationBlock[]> {
   await requireWorkspace();
   return checkDeletionBlocks(type, id);

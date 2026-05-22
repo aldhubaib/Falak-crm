@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { MoreVertical, Trash2, AlertTriangle, RotateCcw } from "lucide-react";
-import { deleteRecord, checkCanDelete, type RelationBlock } from "@/actions/delete";
-import { type EntityType } from "@/lib/soft-delete";
+import { deleteRecord, checkCanDelete } from "@/actions/delete";
+import { type EntityType, type RelationBlock } from "@/lib/soft-delete";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
