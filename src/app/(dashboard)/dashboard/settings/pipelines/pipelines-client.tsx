@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createPipeline, createStage, updateStage, deleteStage } from "@/actions/settings";
 import { ArrowLeft, Plus, Trash2, X, GripVertical } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 type Stage = {
   id: string;
@@ -33,13 +34,10 @@ export function PipelinesClient({ pipelines }: { pipelines: Pipeline[] }) {
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <h1 className="text-lg font-semibold text-foreground">Pipelines & Stages</h1>
-        <button
-          onClick={() => setShowNewPipeline(true)}
-          className="ml-auto h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:bg-primary/90 transition-colors flex items-center gap-1.5"
-        >
+        <Button onClick={() => setShowNewPipeline(true)} size="sm" className="ml-auto">
           <Plus className="w-3.5 h-3.5" />
           New Pipeline
-        </button>
+        </Button>
       </div>
 
       {showNewPipeline && (
@@ -56,8 +54,8 @@ export function PipelinesClient({ pipelines }: { pipelines: Pipeline[] }) {
             required
             className="flex-1 h-9 px-3 rounded-lg bg-input border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           />
-          <button type="submit" className="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium">Create</button>
-          <button type="button" onClick={() => setShowNewPipeline(false)} className="h-9 px-3 rounded-lg bg-muted text-muted-foreground text-[13px]">Cancel</button>
+          <Button type="submit">Create</Button>
+          <Button type="button" variant="ghost" onClick={() => setShowNewPipeline(false)}>Cancel</Button>
         </form>
       )}
 
@@ -115,7 +113,7 @@ function PipelineCard({ pipeline }: { pipeline: Pipeline }) {
             <option value="WON">Won</option>
             <option value="LOST">Lost</option>
           </select>
-          <button type="submit" className="h-8 px-3 rounded-lg bg-primary text-[11px] text-primary-foreground font-medium">Add</button>
+          <Button type="submit" size="sm">Add</Button>
           <button type="button" onClick={() => setShowAddStage(false)} className="text-muted-foreground hover:text-foreground">
             <X className="w-4 h-4" />
           </button>

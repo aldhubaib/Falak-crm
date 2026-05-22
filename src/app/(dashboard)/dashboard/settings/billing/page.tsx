@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default async function BillingSettingsPage() {
   const workspace = await requireWorkspace();
@@ -58,12 +59,9 @@ export default async function BillingSettingsPage() {
               className="w-full h-9 px-3 rounded-lg bg-input border border-border text-sm text-foreground"
             />
           </div>
-          <button
-            type="submit"
-            className="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:bg-primary/90 transition-colors"
-          >
+          <Button type="submit">
             Save Changes
-          </button>
+          </Button>
         </form>
       </div>
     </div>

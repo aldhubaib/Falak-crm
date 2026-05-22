@@ -45,7 +45,7 @@ export default async function PublicInvoicePage({ params }: Props) {
             <div>
               <p className="text-muted-foreground">Bill To</p>
               <p className="text-foreground font-medium">
-                {invoice.contact?.name}
+                {invoice.contact ? `${invoice.contact.firstName} ${invoice.contact.lastName}` : "—"}
               </p>
             </div>
             <div className="text-right">

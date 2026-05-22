@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createProjectStatus, deleteProjectStatus, createTaskStatus, deleteTaskStatus } from "@/actions/settings";
 import { ArrowLeft, Plus, Trash2, X } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 type Status = { id: string; name: string; color: string; order: number };
 
@@ -89,7 +90,7 @@ function StatusSection({
             defaultValue="#3b82f6"
             className="w-8 h-8 rounded-lg border border-border cursor-pointer"
           />
-          <button type="submit" className="h-8 px-3 rounded-lg bg-primary text-[11px] text-primary-foreground font-medium">Add</button>
+          <Button type="submit" size="sm">Add</Button>
           <button type="button" onClick={() => setShowForm(false)} className="text-muted-foreground">
             <X className="w-4 h-4" />
           </button>

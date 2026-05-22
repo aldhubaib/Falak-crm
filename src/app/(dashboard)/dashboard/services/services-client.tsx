@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createService, deleteService } from "@/actions/services";
 import { Plus, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type Service = {
   id: string;
@@ -21,13 +22,10 @@ export function ServicesClient({ services }: { services: Service[] }) {
     <div className="p-6">
       <div className="flex items-center justify-between h-12 mb-6">
         <h1 className="text-lg font-semibold text-foreground">Services</h1>
-        <button
-          onClick={() => setCreating(true)}
-          className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:bg-primary/90 transition-colors flex items-center gap-1.5"
-        >
+        <Button onClick={() => setCreating(true)} size="sm">
           <Plus className="w-3.5 h-3.5" />
           Add Service
-        </button>
+        </Button>
       </div>
 
       {creating && (
@@ -93,8 +91,8 @@ export function ServicesClient({ services }: { services: Service[] }) {
             />
           </div>
           <div className="flex items-center gap-2 pt-1">
-            <button type="submit" className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[12px] font-medium">Create</button>
-            <button type="button" onClick={() => setCreating(false)} className="h-8 px-3 rounded-lg text-[12px] text-muted-foreground hover:text-foreground">Cancel</button>
+            <Button type="submit" size="sm">Create</Button>
+            <Button type="button" variant="ghost" size="sm" onClick={() => setCreating(false)}>Cancel</Button>
           </div>
         </form>
       )}

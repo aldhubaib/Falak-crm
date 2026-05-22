@@ -4,6 +4,8 @@ import { useState } from "react";
 import { createDeal, moveDeal, createProjectFromDeal } from "@/actions/deals";
 import { Plus, X, ArrowRight, Rocket } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ComboboxField } from "@/components/ui/combobox-field";
 
 type Stage = {
   id: string;
@@ -19,7 +21,7 @@ type Deal = {
   value: unknown;
   stageId: string;
   company: { id: string; name: string } | null;
-  contact: { id: string; name: string } | null;
+  contact: { id: string; firstName: string; lastName: string } | null;
   stage: Stage;
   project?: { id: string } | null;
 };
@@ -66,13 +68,10 @@ export function DealsClient({
     <div className="p-6 h-full">
       <div className="flex items-center justify-between h-12 mb-6">
         <h1 className="text-lg font-semibold text-foreground">Deals</h1>
-        <button
-          onClick={() => setShowForm(true)}
-          className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:bg-primary/90 transition-colors flex items-center gap-1.5"
-        >
+        <Button onClick={() => setShowForm(true)} size="sm">
           <Plus className="w-3.5 h-3.5" />
           New Deal
-        </button>
+        </Button>
       </div>
 
       {showForm && (
@@ -200,6 +199,8 @@ function NewDealForm({
   onClose: () => void;
 }) {
   const firstOpenStage = pipeline.stages.find((s) => s.type === "OPEN");
+  const [companyId, setCompanyId] = useState("");
+  const [contactId, setContactId] = useState("");
 
   return (
     <div className="rounded-xl border border-border bg-card p-4 mb-4">
@@ -211,6 +212,8 @@ function NewDealForm({
       </div>
       <form
         action={async (formData) => {
+          formData.set("companyId", companyId);
+          formData.set("contactId", contactId);
           await createDeal(formData);
           onClose();
         }}
@@ -232,31 +235,26 @@ function NewDealForm({
             placeholder="Value (SAR)"
             className="h-9 px-3 rounded-lg bg-input border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           />
-          <select
-            name="companyId"
-            className="h-9 px-3 rounded-lg bg-input border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            <option value="">Company</option>
-            {companies.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
-          <select
-            name="contactId"
-            className="h-9 px-3 rounded-lg bg-input border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            <option value="">Contact</option>
-            {contacts.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
+          <ComboboxField
+            label="Company"
+            value={companyId}
+            options={companies.map((c) => ({ id: c.id, label: c.name }))}
+            placeholder="Company"
+            selectById
+            onSelect={(val) => setCompanyId(val)}
+          />
+          <ComboboxField
+            label="Contact"
+            value={contactId}
+            options={contacts.map((c) => ({ id: c.id, label: c.name }))}
+            placeholder="Contact"
+            selectById
+            onSelect={(val) => setContactId(val)}
+          />
         </div>
-        <button
-          type="submit"
-          className="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:bg-primary/90 transition-colors"
-        >
+        <Button type="submit">
           Create Deal
-        </button>
+        </Button>
       </form>
     </div>
   );

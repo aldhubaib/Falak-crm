@@ -8,14 +8,15 @@ interface ComboboxFieldProps {
   label: string;
   icon?: React.ReactNode;
   value: string;
-  options: { id: string; label: string }[];
+  options: { id: string; label: string; prefix?: string }[];
   placeholder?: string;
   onSelect: (value: string) => void | Promise<void>;
-  onCreate: (value: string) => void | Promise<void>;
+  onCreate?: (value: string) => void | Promise<void>;
   onDelete?: (id: string) => void | Promise<void>;
   name?: string;
   required?: boolean;
   error?: boolean;
+  selectById?: boolean;
 }
 
 export function ComboboxField({
@@ -30,6 +31,7 @@ export function ComboboxField({
   name,
   required,
   error,
+  selectById,
 }: ComboboxFieldProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -58,12 +60,18 @@ export function ComboboxField({
         }}
         className={cn(
           "w-full h-10 px-3 rounded-lg bg-transparent border text-[13px] text-left flex items-center justify-between transition-colors",
-          value ? "text-foreground" : "text-muted-foreground/50",
+          (value && (!selectById || options.some((o) => o.id === value))) ? "text-foreground" : "text-muted-foreground/50",
           error ? "border-destructive" : "border-border",
           open && !error && "border-ring"
         )}
       >
-        <span className="truncate">{value || placeholder || "Select..."}</span>
+        <span className="truncate flex items-center gap-1.5">
+          {(() => {
+            const selected = selectById ? options.find((o) => o.id === value) : options.find((o) => o.label === value);
+            if (selected) return <>{selected.prefix && <span>{selected.prefix}</span>}{selected.label}</>;
+            return <span>{placeholder || "Select..."}</span>;
+          })()}
+        </span>
         <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
       </button>
 
@@ -74,10 +82,10 @@ export function ComboboxField({
               ref={inputRef}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search or type to add..."
+              placeholder={onCreate ? "Search or type to add..." : "Search..."}
               className="w-full h-8 px-2.5 rounded bg-transparent text-[12px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
               onKeyDown={async (e) => {
-                if (e.key === "Enter" && search && !hasExactMatch) {
+                if (e.key === "Enter" && search && !hasExactMatch && onCreate) {
                   e.preventDefault();
                   await onCreate(search);
                   onSelect(search);
@@ -99,13 +107,14 @@ export function ComboboxField({
               >
                 <button
                   type="button"
-                  className="flex-1 text-left text-[12px] text-foreground"
+                  className="flex-1 text-left text-[12px] text-foreground flex items-center gap-1.5"
                   onClick={() => {
-                    onSelect(opt.label);
+                    onSelect(selectById ? opt.id : opt.label);
                     setSearch("");
                     setOpen(false);
                   }}
                 >
+                  {opt.prefix && <span>{opt.prefix}</span>}
                   {opt.label}
                 </button>
                 {onDelete && (
@@ -122,7 +131,7 @@ export function ComboboxField({
                 )}
               </div>
             ))}
-            {search && !hasExactMatch && (
+            {search && !hasExactMatch && onCreate && (
               <button
                 type="button"
                 className="w-full px-3 py-2 flex items-center gap-1.5 text-[12px] text-primary hover:bg-muted/50 border-t border-border"

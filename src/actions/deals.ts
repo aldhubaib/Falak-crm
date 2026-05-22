@@ -12,9 +12,10 @@ export async function getPipeline() {
     include: {
       stages: { orderBy: { order: "asc" } },
       deals: {
+        where: { deletedAt: null },
         include: {
           company: { select: { id: true, name: true } },
-          contact: { select: { id: true, name: true } },
+          contact: { select: { id: true, firstName: true, lastName: true, mobile: true } },
           stage: true,
           items: { include: { service: true } },
         },
@@ -28,10 +29,10 @@ export async function getPipeline() {
 export async function getDeals() {
   const workspace = await requireWorkspace();
   return db.deal.findMany({
-    where: { workspaceId: workspace.id },
+    where: { workspaceId: workspace.id, deletedAt: null },
     include: {
       company: { select: { id: true, name: true } },
-      contact: { select: { id: true, name: true } },
+      contact: { select: { id: true, firstName: true, lastName: true, mobile: true } },
       stage: true,
     },
     orderBy: { createdAt: "desc" },
@@ -41,7 +42,7 @@ export async function getDeals() {
 export async function getDeal(id: string) {
   const workspace = await requireWorkspace();
   return db.deal.findFirst({
-    where: { id, workspaceId: workspace.id },
+    where: { id, workspaceId: workspace.id, deletedAt: null },
     include: {
       company: true,
       contact: true,
@@ -60,8 +61,19 @@ export async function createDeal(formData: FormData) {
   const value = parseFloat(formData.get("value") as string) || 0;
   const companyId = (formData.get("companyId") as string) || undefined;
   const contactId = (formData.get("contactId") as string) || undefined;
-  const pipelineId = formData.get("pipelineId") as string;
-  const stageId = formData.get("stageId") as string;
+  let pipelineId = (formData.get("pipelineId") as string) || "";
+  let stageId = (formData.get("stageId") as string) || "";
+
+  if (!pipelineId || !stageId) {
+    const defaultPipeline = await db.pipeline.findFirst({
+      where: { workspaceId: workspace.id, isDefault: true },
+      include: { stages: { where: { type: "OPEN" }, orderBy: { order: "asc" }, take: 1 } },
+    });
+    if (defaultPipeline) {
+      pipelineId = defaultPipeline.id;
+      stageId = defaultPipeline.stages[0]?.id || "";
+    }
+  }
 
   const deal = await db.deal.create({
     data: {

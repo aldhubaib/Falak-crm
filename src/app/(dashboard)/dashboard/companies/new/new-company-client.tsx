@@ -1,43 +1,53 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { createCompany } from "@/actions/companies";
 import { createIndustry, deleteIndustry } from "@/actions/industries";
+import { createReferral, deleteReferral } from "@/actions/referrals";
 import { ComboboxField } from "@/components/ui/combobox-field";
-import { ArrowLeft, Building2, Globe, Save } from "lucide-react";
+import { FormField } from "@/components/ui/form-field";
+import { FIELD_REGISTRY, validateFields } from "@/lib/fields";
+import { ArrowLeft, Globe, Save } from "lucide-react";
 import { AvatarUpload } from "@/components/ui/avatar-upload";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { countryOptions } from "@/lib/countries";
 
-type IndustryOption = { id: string; name: string };
+type OptionItem = { id: string; name: string };
 
-const countries = [
-  "Saudi Arabia", "Kuwait", "UAE", "Bahrain", "Qatar", "Oman",
-  "Egypt", "Jordan", "Lebanon", "Iraq", "Morocco", "Tunisia",
-  "United States", "United Kingdom", "Germany", "France",
-  "Canada", "Australia", "India", "Pakistan", "Turkey",
-];
-
-export function NewCompanyClient({ industries }: { industries: IndustryOption[] }) {
+export function NewCompanyClient({ industries, referrals }: { industries: OptionItem[]; referrals: OptionItem[] }) {
   const router = useRouter();
-  const [selectedIndustry, setSelectedIndustry] = useState("");
   const [industryList, setIndustryList] = useState(industries);
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [errors, setErrors] = useState<Record<string, boolean>>({});
-  const nameRef = useRef<HTMLInputElement>(null);
-  const nameArRef = useRef<HTMLInputElement>(null);
+  const [referralList, setReferralList] = useState(referrals);
+  const [values, setValues] = useState<Record<string, string>>({
+    name: "",
+    nameAr: "",
+    industry: "",
+    country: "",
+    referral: "",
+    website: "",
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const validate = () => {
-    const newErrors: Record<string, boolean> = {};
-    if (!nameRef.current?.value.trim()) newErrors.name = true;
-    if (!nameArRef.current?.value.trim()) newErrors.nameAr = true;
-    if (!selectedIndustry) newErrors.industry = true;
-    if (!selectedCountry) newErrors.country = true;
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const setValue = (key: string, val: string) => {
+    setValues((prev) => ({ ...prev, [key]: val }));
+    if (errors[key]) setErrors((prev) => { const { [key]: _, ...rest } = prev; return rest; });
   };
 
+  const validate = () => {
+    const fieldsToValidate = [
+      FIELD_REGISTRY.companyName,
+      FIELD_REGISTRY.companyNameAr,
+      FIELD_REGISTRY.industry,
+      FIELD_REGISTRY.country,
+      FIELD_REGISTRY.referral,
+    ];
+    const errs = validateFields(fieldsToValidate, values);
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
 
   return (
     <div className="p-6">
@@ -60,22 +70,24 @@ export function NewCompanyClient({ industries }: { industries: IndustryOption[] 
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <h1 className="text-lg font-semibold text-foreground flex-1">New Company</h1>
-        <button
-          type="submit"
-          form="company-form"
-          className="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:bg-primary/90 transition-colors flex items-center gap-2"
-        >
+        <Button type="submit" form="company-form">
           <Save className="w-3.5 h-3.5" />
           Save
-        </button>
+        </Button>
       </div>
 
       <form
         id="company-form"
-        action={async (formData) => {
+        onSubmit={async (e) => {
+          e.preventDefault();
           if (!validate()) return;
-          formData.set("industry", selectedIndustry);
-          formData.set("address", selectedCountry);
+          const formData = new FormData();
+          formData.set("name", values.name);
+          formData.set("nameAr", values.nameAr);
+          formData.set("industry", values.industry);
+          formData.set("address", values.country);
+          formData.set("referral", values.referral);
+          if (values.website) formData.set("website", values.website);
           const company = await createCompany(formData);
           if (company) router.push(`/dashboard/companies/${company.id}`);
         }}
@@ -84,61 +96,20 @@ export function NewCompanyClient({ industries }: { industries: IndustryOption[] 
         <AvatarUpload name="logo" fallback="C" size="lg" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className={cn(errors.name && "shake")}>
-            <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
-              <Building2 className="w-3 h-3" />
-              Company Name
-              <span className="text-destructive">*</span>
-            </label>
-            <input
-              ref={nameRef}
-              name="name"
-              placeholder="Acme Corp"
-              onChange={() => errors.name && setErrors((e) => ({ ...e, name: false }))}
-              className={cn(
-                "w-full h-10 px-3 rounded-lg bg-transparent border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none transition-colors",
-                errors.name ? "border-destructive focus:border-destructive" : "border-border focus:border-ring"
-              )}
-            />
-            {errors.name && (
-              <p className="text-[11px] text-destructive mt-1">Company name is required</p>
-            )}
-          </div>
-          <div className={cn(errors.nameAr && "shake")}>
-            <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
-              <Building2 className="w-3 h-3" />
-              Company Name (Arabic)
-              <span className="text-destructive">*</span>
-            </label>
-            <input
-              ref={nameArRef}
-              name="nameAr"
-              placeholder="اسم الشركة"
-              dir="rtl"
-              onChange={() => errors.nameAr && setErrors((e) => ({ ...e, nameAr: false }))}
-              className={cn(
-                "w-full h-10 px-3 rounded-lg bg-transparent border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none transition-colors",
-                errors.nameAr ? "border-destructive focus:border-destructive" : "border-border focus:border-ring"
-              )}
-            />
-            {errors.nameAr && (
-              <p className="text-[11px] text-destructive mt-1">Arabic name is required</p>
-            )}
-          </div>
+          <FormField def={FIELD_REGISTRY.companyName} value={values.name} error={errors.name} onChange={(v) => setValue("name", v)} />
+          <FormField def={FIELD_REGISTRY.companyNameAr} value={values.nameAr} error={errors.nameAr} onChange={(v) => setValue("nameAr", v)} />
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className={cn(errors.industry && "shake")}>
             <ComboboxField
               label="Industry"
               required
-              value={selectedIndustry}
+              value={values.industry}
               options={industryList.map((i) => ({ id: i.id, label: i.name }))}
               placeholder="Select or add..."
-              error={errors.industry}
-              onSelect={(val) => {
-                setSelectedIndustry(val);
-                if (errors.industry) setErrors((e) => ({ ...e, industry: false }));
-              }}
+              error={!!errors.industry}
+              onSelect={(val) => setValue("industry", val)}
               onCreate={async (name) => {
                 const industry = await createIndustry(name);
                 setIndustryList((prev) => [...prev, { id: industry.id, name: industry.name }]);
@@ -146,57 +117,61 @@ export function NewCompanyClient({ industries }: { industries: IndustryOption[] 
               onDelete={async (id) => {
                 await deleteIndustry(id);
                 setIndustryList((prev) => prev.filter((i) => i.id !== id));
-                if (industryList.find((i) => i.id === id)?.name === selectedIndustry) {
-                  setSelectedIndustry("");
+                if (industryList.find((i) => i.id === id)?.name === values.industry) {
+                  setValue("industry", "");
                 }
               }}
             />
             {errors.industry && (
-              <p className="text-[11px] text-destructive mt-1">Industry is required</p>
+              <p className="text-[11px] text-destructive mt-1">{errors.industry}</p>
             )}
           </div>
           <div className={cn(errors.country && "shake")}>
-            <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
-              <Globe className="w-3 h-3" />
-              Country
-              <span className="text-destructive">*</span>
-            </label>
-            <select
-              value={selectedCountry}
-              onChange={(e) => {
-                setSelectedCountry(e.target.value);
-                if (errors.country) setErrors((er) => ({ ...er, country: false }));
-              }}
-              className={cn(
-                "w-full h-10 px-3 rounded-lg bg-transparent border text-[13px] text-foreground appearance-none focus:outline-none transition-colors cursor-pointer",
-                errors.country ? "border-destructive" : "border-border focus:border-ring"
-              )}
-            >
-              <option value="">Select country...</option>
-              {countries.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
+            <ComboboxField
+              label="Country"
+              icon={<Globe className="w-3 h-3" />}
+              required
+              value={values.country}
+              options={countryOptions()}
+              placeholder="Select country..."
+              error={!!errors.country}
+              onSelect={(val) => setValue("country", val)}
+            />
             {errors.country && (
-              <p className="text-[11px] text-destructive mt-1">Country is required</p>
+              <p className="text-[11px] text-destructive mt-1">{errors.country}</p>
             )}
           </div>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
-              <Globe className="w-3 h-3" />
-              Website
-            </label>
-            <input
-              name="website"
-              placeholder="https://"
-              className="w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
+          <div className={cn(errors.referral && "shake")}>
+            <ComboboxField
+              label="Referral"
+              required
+              value={values.referral}
+              options={referralList.map((r) => ({ id: r.id, label: r.name }))}
+              placeholder="Select or add..."
+              error={!!errors.referral}
+              onSelect={(val) => setValue("referral", val)}
+              onCreate={async (name) => {
+                const referral = await createReferral(name);
+                setReferralList((prev) => [...prev, { id: referral.id, name: referral.name }]);
+              }}
+              onDelete={async (id) => {
+                await deleteReferral(id);
+                setReferralList((prev) => prev.filter((r) => r.id !== id));
+                if (referralList.find((r) => r.id === id)?.name === values.referral) {
+                  setValue("referral", "");
+                }
+              }}
             />
+            {errors.referral && (
+              <p className="text-[11px] text-destructive mt-1">{errors.referral}</p>
+            )}
           </div>
+          <FormField def={FIELD_REGISTRY.website} value={values.website} error={errors.website} onChange={(v) => setValue("website", v)} />
         </div>
       </form>
-
     </div>
   );
 }

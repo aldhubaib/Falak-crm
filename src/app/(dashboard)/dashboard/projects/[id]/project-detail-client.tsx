@@ -5,6 +5,7 @@ import { createTask, updateTaskStatus, deleteTask, updateProjectStatus } from "@
 import { createInvoiceFromProject } from "@/actions/invoices";
 import { ArrowLeft, Plus, Trash2, X, FileText, Check } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 type TaskStatus = { id: string; name: string; color: string; order: number };
 type ProjectStatus = { id: string; name: string; color: string; order: number };
@@ -148,8 +149,8 @@ export function ProjectDetailClient({
               </div>
               <input type="hidden" name="billable" value="true" />
               <div className="flex gap-2">
-                <button type="submit" className="h-7 px-3 rounded-lg bg-primary text-[11px] text-primary-foreground font-medium">Add</button>
-                <button type="button" onClick={() => setShowAddTask(false)} className="h-7 px-3 rounded-lg bg-muted text-[11px] text-muted-foreground">Cancel</button>
+                <Button type="submit" size="sm">Add</Button>
+                <Button type="button" variant="ghost" size="sm" onClick={() => setShowAddTask(false)}>Cancel</Button>
               </div>
             </form>
           )}

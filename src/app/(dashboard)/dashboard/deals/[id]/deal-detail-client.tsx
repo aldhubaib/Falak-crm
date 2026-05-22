@@ -4,6 +4,7 @@ import { useState } from "react";
 import { moveDeal, addDealItem, removeDealItem, createProjectFromDeal } from "@/actions/deals";
 import { ArrowLeft, Plus, Trash2, Rocket, X, Check } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 type Stage = {
   id: string;
@@ -29,7 +30,7 @@ type Deal = {
   stage: Stage;
   pipeline: { stages: Stage[] };
   company: { id: string; name: string } | null;
-  contact: { id: string; name: string; whatsappNumber: string | null } | null;
+  contact: { id: string; firstName: string; lastName: string; mobile: string } | null;
   items: DealItem[];
   project: { id: string } | null;
   lostReason: string | null;
@@ -72,13 +73,10 @@ export function DealDetailClient({
         </div>
         {isWon && !deal.project && (
           <form action={createProjectFromDeal.bind(null, deal.id)}>
-            <button
-              type="submit"
-              className="h-8 px-3 rounded-lg bg-success text-success-foreground text-[13px] font-medium hover:bg-success/90 transition-colors flex items-center gap-1.5"
-            >
+            <Button type="submit" size="sm">
               <Rocket className="w-3.5 h-3.5" />
               Create Project
-            </button>
+            </Button>
           </form>
         )}
       </div>
@@ -172,12 +170,8 @@ export function DealDetailClient({
                 />
               </div>
               <div className="flex gap-2">
-                <button type="submit" className="h-7 px-3 rounded-lg bg-primary text-[11px] text-primary-foreground font-medium">
-                  Add
-                </button>
-                <button type="button" onClick={() => setShowAddItem(false)} className="h-7 px-3 rounded-lg bg-muted text-[11px] text-muted-foreground">
-                  Cancel
-                </button>
+                <Button type="submit" size="sm">Add</Button>
+                <Button type="button" variant="ghost" size="sm" onClick={() => setShowAddItem(false)}>Cancel</Button>
               </div>
             </form>
           )}
@@ -221,12 +215,12 @@ export function DealDetailClient({
             </div>
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Contact</dt>
-              <dd className="text-foreground">{deal.contact?.name || "—"}</dd>
+              <dd className="text-foreground">{deal.contact ? `${deal.contact.firstName} ${deal.contact.lastName}` : "—"}</dd>
             </div>
-            {deal.contact?.whatsappNumber && (
+            {deal.contact?.mobile && (
               <div className="flex justify-between">
-                <dt className="text-muted-foreground">WhatsApp</dt>
-                <dd className="text-foreground">{deal.contact.whatsappNumber}</dd>
+                <dt className="text-muted-foreground">Mobile</dt>
+                <dd className="text-foreground">{deal.contact.mobile}</dd>
               </div>
             )}
             <div className="flex justify-between">

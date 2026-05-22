@@ -13,6 +13,7 @@ import {
 type Activity = {
   id: string;
   userName: string | null;
+  userImage: string | null;
   entityType: string;
   entityId: string;
   entityName: string | null;
@@ -55,23 +56,28 @@ export function ActivityFeed({ activities }: { activities: Activity[] }) {
     <div className="space-y-0">
       {activities.map((activity, i) => (
         <div key={activity.id} className="flex gap-3 py-2.5">
-          {/* Icon */}
-          <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${actionColors[activity.action] || "text-muted-foreground bg-muted"}`}>
-            {actionIcons[activity.action] || <Pencil className="w-3 h-3" />}
-          </div>
+          {/* User avatar */}
+          {activity.userImage ? (
+            <img src={activity.userImage} alt="" className="w-7 h-7 rounded-full shrink-0" />
+          ) : (
+            <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-[10px] font-semibold text-muted-foreground shrink-0">
+              {(activity.userName || "?").charAt(0)}
+            </div>
+          )}
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <p className="text-[12px] text-foreground">
+            <p className="text-[13px] text-foreground leading-snug">
               <span className="font-medium">{activity.userName || "System"}</span>
               {" "}
-              <span className="text-muted-foreground">{activity.action}</span>
-              {" "}
-              <span className="font-medium">{activity.entityName || activity.entityType}</span>
-              {activity.action === "moved" && activity.changes?.stage && (
+              {activity.action === "moved" && activity.changes?.stage ? (
                 <span className="text-muted-foreground">
-                  {" "}from {String(activity.changes.stage.from)} to{" "}
+                  moved from {String(activity.changes.stage.from)} →{" "}
                   <span className="text-foreground">{String(activity.changes.stage.to)}</span>
+                </span>
+              ) : (
+                <span className="text-muted-foreground">
+                  {activity.action} this {activity.entityType}
                 </span>
               )}
               {activity.action === "updated" && activity.changes && !activity.changes.stage && (
@@ -80,7 +86,7 @@ export function ActivityFeed({ activities }: { activities: Activity[] }) {
                 </span>
               )}
             </p>
-            <p className="text-[10px] text-muted-foreground mt-0.5">
+            <p className="text-[11px] text-muted-foreground mt-0.5">
               {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}
             </p>
           </div>

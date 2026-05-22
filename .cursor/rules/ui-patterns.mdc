@@ -5,11 +5,16 @@ globs: src/**/*.tsx
 
 # UI Patterns
 
-## Save/Action Buttons
+## Buttons
+- Use the `<Button>` component from `@/components/ui/button` for ALL buttons
+- Style: pill-shaped (rounded-full), outlined (border, no fill), icon + text
+- Variants: `default` (border + text), `ghost` (transparent, for cancel/secondary), `destructive`
+- Sizes: `sm` (compact lists/forms) and `md` (headers/primary actions)
 - Always place the save/submit button in the **page header**, aligned to the right
 - Always use an **icon** alongside button text (e.g. Save icon + "Save")
 - Never place action buttons at the bottom of a form
 - Use the `form` attribute to link the header button to the form below
+- Supports `href` prop for link-buttons (renders as Next.js Link)
 
 ## Required Fields
 - Show a red asterisk (*) next to required field labels

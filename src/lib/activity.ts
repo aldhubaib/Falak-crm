@@ -24,6 +24,7 @@ export async function logActivity(params: LogParams) {
         workspaceId: workspace.id,
         userId,
         userName: user?.fullName || user?.firstName || undefined,
+        userImage: user?.imageUrl || undefined,
         entityType: params.entityType,
         entityId: params.entityId,
         entityName: params.entityName,

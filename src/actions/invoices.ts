@@ -10,7 +10,7 @@ export async function getInvoices() {
   return db.invoice.findMany({
     where: { workspaceId: workspace.id },
     include: {
-      contact: { select: { id: true, name: true } },
+      contact: { select: { id: true, firstName: true, lastName: true, mobile: true } },
       project: { select: { id: true, name: true, company: { select: { name: true } } } },
     },
     orderBy: { createdAt: "desc" },

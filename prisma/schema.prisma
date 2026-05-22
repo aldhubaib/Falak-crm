@@ -22,6 +22,7 @@ model Workspace {
   members            WorkspaceMember[]
   activityLogs       ActivityLog[]
   industries         Industry[]
+  referrals          Referral[]
   companies          Company[]
   contacts           Contact[]
   services           Service[]
@@ -97,46 +98,55 @@ enum CollaboratorStatus {
 // ─── Companies & Contacts ──────────────────────────────────────────────────────
 
 model Company {
-  id            String   @id @default(cuid())
-  workspaceId   String
-  name          String
-  industry      String?
-  phone         String?
+  id             String    @id @default(cuid())
+  workspaceId    String
+  name           String
+  nameAr         String?
+  industry       String?
+  referral       String?
+  phone          String?
   whatsappNumber String?
-  email         String?
-  website       String?
-  address       String?
-  logo          String?
-  notes         String?
-  customFields  Json?    // Stores values for user-defined custom fields
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  email          String?
+  website        String?
+  address        String?
+  logo           String?
+  notes          String?
+  customFields   Json?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
 
-  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  contacts      Contact[]
-  deals         Deal[]
-  projects      Project[]
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  contacts       Contact[]
+  deals          Deal[]
+  projects       Project[]
 }
 
 model Contact {
   id              String   @id @default(cuid())
   workspaceId     String
   companyId       String?
-  name            String
-  role            String?  // Job title / role at company
-  phone           String?
-  whatsappNumber  String?
+  firstName       String
+  middleName      String?
+  lastName        String
+  nameAr          String?
+  mobile          String
   email           String?
+  role            String?
+  country         String
   notes           String?
   customFields    Json?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
 
   workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   company         Company?  @relation(fields: [companyId], references: [id], onDelete: SetNull)
   deals           Deal[]
   invoices        Invoice[]
   whatsappMessages WhatsAppMessage[]
+
+  @@unique([workspaceId, mobile])
 }
 
 // ─── Services Catalog ──────────────────────────────────────────────────────────
@@ -216,9 +226,10 @@ model Deal {
   lostReason      String?
   notes           String?
   customFields    Json?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
   closedAt        DateTime?
+  deletedAt       DateTime?
 
   workspace       Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   pipeline        Pipeline      @relation(fields: [pipelineId], references: [id])
@@ -258,9 +269,9 @@ model ProjectStatus {
 }
 
 model Project {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   workspaceId   String
-  dealId        String?  @unique
+  dealId        String?   @unique
   companyId     String?
   contactId     String?
   statusId      String?
@@ -268,8 +279,9 @@ model Project {
   description   String?
   startDate     DateTime?
   deadline      DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
 
   workspace     Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   deal          Deal?                @relation(fields: [dealId], references: [id], onDelete: SetNull)
@@ -435,6 +447,7 @@ model ActivityLog {
   workspaceId String
   userId      String   // Clerk user ID
   userName    String?
+  userImage   String?
   entityType  String   // "company", "contact", "deal", "project", "task", "invoice", "service"
   entityId    String
   entityName  String?  // Snapshot of the entity name at time of change
@@ -452,6 +465,18 @@ model ActivityLog {
 // ─── Industries (Dynamic) ──────────────────────────────────────────────────────
 
 model Industry {
+  id          String   @id @default(cuid())
+  workspaceId String
+  name        String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, name])
+}
+
+model Referral {
   id          String   @id @default(cuid())
   workspaceId String
   name        String

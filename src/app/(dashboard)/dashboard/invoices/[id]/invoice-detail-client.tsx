@@ -3,6 +3,7 @@
 import { sendInvoice, markInvoicePaid } from "@/actions/invoices";
 import { ArrowLeft, Send, CheckCircle, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 type InvoiceItem = {
   id: string;
@@ -27,7 +28,7 @@ type Invoice = {
   acceptedAt: Date | null;
   paidAt: Date | null;
   rejectionNote: string | null;
-  contact: { name: string; whatsappNumber: string | null } | null;
+  contact: { firstName: string; lastName: string; mobile: string } | null;
   project: { name: string; company: { name: string } | null } | null;
   items: InvoiceItem[];
 };
@@ -49,30 +50,24 @@ export function InvoiceDetailClient({ invoice }: { invoice: Invoice }) {
           <h1 className="text-lg font-semibold text-foreground">{invoice.number}</h1>
           <p className="text-[12px] text-muted-foreground">
             {invoice.project?.company?.name || invoice.project?.name || "—"} •{" "}
-            {invoice.contact?.name || "No contact"}
+            {invoice.contact ? `${invoice.contact.firstName} ${invoice.contact.lastName}` : "No contact"}
           </p>
         </div>
         <div className="flex gap-2">
           {invoice.status === "DRAFT" && (
             <form action={sendInvoice.bind(null, invoice.id)}>
-              <button
-                type="submit"
-                className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:bg-primary/90 transition-colors flex items-center gap-1.5"
-              >
+              <Button type="submit" size="sm">
                 <Send className="w-3.5 h-3.5" />
                 Send Invoice
-              </button>
+              </Button>
             </form>
           )}
           {invoice.status === "ACCEPTED" && (
             <form action={markInvoicePaid.bind(null, invoice.id)}>
-              <button
-                type="submit"
-                className="h-8 px-3 rounded-lg bg-success text-success-foreground text-[13px] font-medium hover:bg-success/90 transition-colors flex items-center gap-1.5"
-              >
+              <Button type="submit" size="sm">
                 <CheckCircle className="w-3.5 h-3.5" />
                 Mark Paid
-              </button>
+              </Button>
             </form>
           )}
         </div>

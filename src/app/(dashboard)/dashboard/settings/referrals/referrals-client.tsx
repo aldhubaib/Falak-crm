@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { createIndustry, deleteIndustry } from "@/actions/industries";
-import { ArrowLeft, Plus, Trash2, X } from "lucide-react";
+import { createReferral, deleteReferral } from "@/actions/referrals";
+import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-type Industry = { id: string; name: string; order: number };
+type Referral = { id: string; name: string; order: number };
 
-export function IndustriesClient({ industries: initial }: { industries: Industry[] }) {
-  const [industries, setIndustries] = useState(initial);
+export function ReferralsClient({ referrals: initial }: { referrals: Referral[] }) {
+  const [referrals, setReferrals] = useState(initial);
   const [newName, setNewName] = useState("");
 
   return (
@@ -21,17 +21,16 @@ export function IndustriesClient({ industries: initial }: { industries: Industry
         >
           <ArrowLeft className="w-4 h-4" />
         </Link>
-        <h1 className="text-lg font-semibold text-foreground">Industries</h1>
+        <h1 className="text-lg font-semibold text-foreground">Referrals</h1>
       </div>
 
       <div className="max-w-md">
-        {/* Add new */}
         <form
           onSubmit={async (e) => {
             e.preventDefault();
             if (!newName.trim()) return;
-            const industry = await createIndustry(newName.trim());
-            setIndustries((prev) => [...prev, industry]);
+            const referral = await createReferral(newName.trim());
+            setReferrals((prev) => [...prev, referral]);
             setNewName("");
           }}
           className="flex items-center gap-2 mb-6"
@@ -39,7 +38,7 @@ export function IndustriesClient({ industries: initial }: { industries: Industry
           <input
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
-            placeholder="New industry name..."
+            placeholder="New referral source..."
             className="flex-1 h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
           />
           <Button type="submit" disabled={!newName.trim()}>
@@ -48,21 +47,20 @@ export function IndustriesClient({ industries: initial }: { industries: Industry
           </Button>
         </form>
 
-        {/* List */}
-        {industries.length === 0 ? (
-          <p className="text-[12px] text-muted-foreground">No industries yet. Add one above.</p>
+        {referrals.length === 0 ? (
+          <p className="text-[12px] text-muted-foreground">No referral sources yet. Add one above.</p>
         ) : (
           <div className="space-y-1">
-            {industries.map((industry) => (
+            {referrals.map((referral) => (
               <div
-                key={industry.id}
+                key={referral.id}
                 className="flex items-center justify-between p-3 rounded-lg hover:bg-card transition-colors group"
               >
-                <span className="text-[13px] text-foreground">{industry.name}</span>
+                <span className="text-[13px] text-foreground">{referral.name}</span>
                 <button
                   onClick={async () => {
-                    await deleteIndustry(industry.id);
-                    setIndustries((prev) => prev.filter((i) => i.id !== industry.id));
+                    await deleteReferral(referral.id);
+                    setReferrals((prev) => prev.filter((r) => r.id !== referral.id));
                   }}
                   className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100"
                 >

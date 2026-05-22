@@ -32,7 +32,7 @@ export default async function InvoicesPage() {
                     {invoice.number}
                   </h3>
                   <p className="text-[12px] text-muted-foreground mt-0.5">
-                    {invoice.contact?.name || "No contact"} •{" "}
+                    {invoice.contact ? `${invoice.contact.firstName} ${invoice.contact.lastName}` : "No contact"} •{" "}
                     {invoice.project?.company?.name || invoice.project?.name || "—"}
                   </p>
                 </div>

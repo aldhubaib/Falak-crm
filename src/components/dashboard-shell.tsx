@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/sidebar";
 import { BottomTabs } from "@/components/bottom-tabs";
+import { ActivityPanel } from "@/components/activity-panel";
+import { GlobalSearch } from "@/components/global-search";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -70,7 +72,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               Falak CRM
             </span>
           </div>
-          <div className="w-8" />
+          <div className="flex items-center gap-2">
+            <GlobalSearch />
+            <ActivityPanel />
+          </div>
         </div>
       )}
 
@@ -102,6 +107,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           isDesktop ? "rounded-l-2xl" : "pt-12 pb-16"
         )}
       >
+        {isDesktop && (
+          <div className="absolute top-4 right-5 z-50 flex items-center gap-3">
+            <GlobalSearch />
+            <ActivityPanel />
+          </div>
+        )}
         {children}
       </main>
 

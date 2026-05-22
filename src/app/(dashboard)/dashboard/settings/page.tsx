@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GitBranch, Layers, ListChecks, MessageCircle, Users, Receipt, Building2 } from "lucide-react";
+import { GitBranch, Layers, ListChecks, MessageCircle, Users, Receipt, Building2, UserPlus, Trash2 } from "lucide-react";
 
 const settingsItems = [
   {
@@ -21,6 +21,12 @@ const settingsItems = [
     icon: Building2,
   },
   {
+    title: "Referrals",
+    description: "Manage referral source options for companies",
+    href: "/dashboard/settings/referrals",
+    icon: UserPlus,
+  },
+  {
     title: "Team & Roles",
     description: "Manage team members, freelancers, and permissions",
     href: "/dashboard/settings/team",
@@ -37,6 +43,12 @@ const settingsItems = [
     description: "Connect your WhatsApp Business account",
     href: "/dashboard/settings/whatsapp",
     icon: MessageCircle,
+  },
+  {
+    title: "Trash",
+    description: "View and restore deleted records",
+    href: "/dashboard/settings/trash",
+    icon: Trash2,
   },
 ];
 

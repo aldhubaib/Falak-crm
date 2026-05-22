@@ -163,7 +163,9 @@ exports.Prisma.CompanyScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
   name: 'name',
+  nameAr: 'nameAr',
   industry: 'industry',
+  referral: 'referral',
   phone: 'phone',
   whatsappNumber: 'whatsappNumber',
   email: 'email',
@@ -173,22 +175,27 @@ exports.Prisma.CompanyScalarFieldEnum = {
   notes: 'notes',
   customFields: 'customFields',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.ContactScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
   companyId: 'companyId',
-  name: 'name',
-  role: 'role',
-  phone: 'phone',
-  whatsappNumber: 'whatsappNumber',
+  firstName: 'firstName',
+  middleName: 'middleName',
+  lastName: 'lastName',
+  nameAr: 'nameAr',
+  mobile: 'mobile',
   email: 'email',
+  role: 'role',
+  country: 'country',
   notes: 'notes',
   customFields: 'customFields',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.ServiceScalarFieldEnum = {
@@ -238,7 +245,8 @@ exports.Prisma.DealScalarFieldEnum = {
   customFields: 'customFields',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  closedAt: 'closedAt'
+  closedAt: 'closedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.DealItemScalarFieldEnum = {
@@ -271,7 +279,8 @@ exports.Prisma.ProjectScalarFieldEnum = {
   startDate: 'startDate',
   deadline: 'deadline',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.TaskStatusScalarFieldEnum = {
@@ -374,6 +383,7 @@ exports.Prisma.ActivityLogScalarFieldEnum = {
   workspaceId: 'workspaceId',
   userId: 'userId',
   userName: 'userName',
+  userImage: 'userImage',
   entityType: 'entityType',
   entityId: 'entityId',
   entityName: 'entityName',
@@ -384,6 +394,14 @@ exports.Prisma.ActivityLogScalarFieldEnum = {
 };
 
 exports.Prisma.IndustryScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  name: 'name',
+  order: 'order',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ReferralScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
   name: 'name',
@@ -519,6 +537,7 @@ exports.Prisma.ModelName = {
   WhatsAppMessage: 'WhatsAppMessage',
   ActivityLog: 'ActivityLog',
   Industry: 'Industry',
+  Referral: 'Referral',
   CustomFieldDef: 'CustomFieldDef'
 };
 

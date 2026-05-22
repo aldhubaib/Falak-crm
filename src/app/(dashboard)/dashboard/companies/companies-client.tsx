@@ -1,65 +1,80 @@
 "use client";
 
-import { Plus, Users, Handshake } from "lucide-react";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DataTable, type Column } from "@/components/ui/data-table";
 import Link from "next/link";
 
 type Company = {
   id: string;
   name: string;
+  nameAr: string | null;
   industry: string | null;
-  phone: string | null;
-  whatsappNumber: string | null;
-  email: string | null;
+  referral: string | null;
+  address: string | null;
   _count: { contacts: number; deals: number; projects: number };
 };
+
+const columns: Column<Company>[] = [
+  {
+    key: "name",
+    label: "Company",
+    sortable: true,
+    href: (row) => `/dashboard/companies/${row.id}`,
+  },
+  {
+    key: "industry",
+    label: "Industry",
+    sortable: true,
+    render: (row) => <span className="text-muted-foreground">{row.industry || "—"}</span>,
+  },
+  {
+    key: "address",
+    label: "Country",
+    sortable: true,
+    render: (row) => <span className="text-muted-foreground">{row.address || "—"}</span>,
+  },
+  {
+    key: "referral",
+    label: "Referral",
+    sortable: true,
+    render: (row) => <span className="text-muted-foreground">{row.referral || "—"}</span>,
+  },
+  {
+    key: "contacts",
+    label: "Contacts",
+    sortable: true,
+    align: "center",
+    getValue: (row) => row._count.contacts,
+    render: (row) => <span className="text-muted-foreground">{row._count.contacts}</span>,
+  },
+  {
+    key: "deals",
+    label: "Deals",
+    sortable: true,
+    align: "center",
+    getValue: (row) => row._count.deals,
+    render: (row) => <span className="text-muted-foreground">{row._count.deals}</span>,
+  },
+];
 
 export function CompaniesClient({ companies }: { companies: Company[] }) {
   return (
     <div className="p-6">
       <div className="flex items-center justify-between h-12 mb-6">
         <h1 className="text-lg font-semibold text-foreground">Companies</h1>
-        <Link
-          href="/dashboard/companies/new"
-          className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:bg-primary/90 transition-colors flex items-center gap-1.5 no-underline"
-        >
+        <Button href="/dashboard/companies/new" size="sm">
           <Plus className="w-3.5 h-3.5" />
           Add Company
-        </Link>
+        </Button>
       </div>
 
-      {companies.length === 0 ? (
-        <div className="rounded-xl border border-border p-8 text-center text-muted-foreground text-sm">
-          No companies yet. Add your first client to get started.
-        </div>
-      ) : (
-        <div className="space-y-1">
-          {companies.map((company) => (
-            <Link
-              key={company.id}
-              href={`/dashboard/companies/${company.id}`}
-              className="rounded-lg p-3 flex items-center justify-between hover:bg-card transition-colors no-underline block"
-            >
-              <div>
-                <h3 className="text-[13px] font-medium text-foreground">
-                  {company.name}
-                </h3>
-                <p className="text-[11px] text-muted-foreground mt-0.5">
-                  {company.industry || "No industry"}
-                  {company.whatsappNumber && ` • ${company.whatsappNumber}`}
-                </p>
-              </div>
-              <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Users className="w-3 h-3" /> {company._count.contacts}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Handshake className="w-3 h-3" /> {company._count.deals}
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
+      <DataTable
+        data={companies}
+        columns={columns}
+        getRowId={(row) => row.id}
+        searchPlaceholder="Search companies..."
+      />
     </div>
   );
 }
