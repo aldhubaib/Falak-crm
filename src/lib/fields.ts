@@ -54,7 +54,7 @@ export const FIELD_REGISTRY: Record<string, FieldDef> = {
     label: "الاسم بالعربي (Arabic Name)",
     placeholder: "الاسم الكامل بالعربي",
     dir: "rtl",
-    validation: { arabic: true },
+    validation: { required: true, arabic: true },
   },
   mobile: {
     key: "mobile",
