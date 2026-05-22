@@ -3,7 +3,7 @@
 import { updateContact } from "@/actions/contacts";
 import { InputField, PhoneField, EmailField } from "@/components/ui/field";
 import { ActionMenu } from "@/components/ui/action-menu";
-import { ArrowLeft, User, MapPin, Handshake } from "lucide-react";
+import { ArrowLeft, User, MapPin, Handshake, Building2 } from "lucide-react";
 import Link from "next/link";
 
 type Deal = {
@@ -96,7 +96,7 @@ export function ContactDetailClient({ contact }: { contact: Contact }) {
             onSave={save("email")}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <InputField
             label="Role"
             value={contact.role || ""}
@@ -109,6 +109,24 @@ export function ContactDetailClient({ contact }: { contact: Contact }) {
             value={contact.country}
             onSave={save("country")}
           />
+          <div>
+            <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
+              <Building2 className="w-3 h-3" />
+              Company
+            </label>
+            {contact.company ? (
+              <Link
+                href={`/dashboard/companies/${contact.company.id}`}
+                className="flex items-center h-10 px-3 rounded-lg border border-border text-[13px] text-primary hover:border-primary/50 transition-colors no-underline"
+              >
+                {contact.company.name}
+              </Link>
+            ) : (
+              <div className="flex items-center h-10 px-3 rounded-lg border border-border text-[13px] text-muted-foreground/50">
+                No company
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
