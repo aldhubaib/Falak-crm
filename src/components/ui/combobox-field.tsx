@@ -14,6 +14,8 @@ interface ComboboxFieldProps {
   onCreate: (value: string) => void | Promise<void>;
   onDelete?: (id: string) => void | Promise<void>;
   name?: string;
+  required?: boolean;
+  error?: boolean;
 }
 
 export function ComboboxField({
@@ -26,6 +28,8 @@ export function ComboboxField({
   onCreate,
   onDelete,
   name,
+  required,
+  error,
 }: ComboboxFieldProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -43,6 +47,7 @@ export function ComboboxField({
       <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
         {icon}
         {label}
+        {required && <span className="text-destructive">*</span>}
       </label>
       {name && <input type="hidden" name={name} value={value} />}
       <button
@@ -52,9 +57,10 @@ export function ComboboxField({
           setTimeout(() => inputRef.current?.focus(), 50);
         }}
         className={cn(
-          "w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-left flex items-center justify-between transition-colors",
+          "w-full h-10 px-3 rounded-lg bg-transparent border text-[13px] text-left flex items-center justify-between transition-colors",
           value ? "text-foreground" : "text-muted-foreground/50",
-          open && "border-ring"
+          error ? "border-destructive" : "border-border",
+          open && !error && "border-ring"
         )}
       >
         <span className="truncate">{value || placeholder || "Select..."}</span>
