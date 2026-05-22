@@ -103,17 +103,17 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       {/* Main content */}
       <main
         className={cn(
-          "flex-1 min-w-0 bg-background relative z-10",
+          "flex-1 min-w-0 bg-background relative z-10 flex flex-col",
           isDesktop ? "rounded-l-2xl" : "pt-12 pb-16"
         )}
       >
         {isDesktop && (
-          <div className="absolute top-4 right-5 z-50 flex items-center gap-3">
+          <div className="flex items-center justify-end gap-3 px-6 pt-4 pb-0 shrink-0">
             <GlobalSearch />
             <ActivityPanel />
           </div>
         )}
-        {children}
+        <div className="flex-1 min-h-0">{children}</div>
       </main>
 
       {/* Mobile bottom tabs */}
