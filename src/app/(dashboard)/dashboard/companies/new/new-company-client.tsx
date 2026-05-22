@@ -1,12 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import { createCompany } from "@/actions/companies";
+import { createIndustry, deleteIndustry } from "@/actions/industries";
+import { ComboboxField } from "@/components/ui/combobox-field";
 import { ArrowLeft, Building2, Globe, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export function NewCompanyClient() {
+type IndustryOption = { id: string; name: string };
+
+export function NewCompanyClient({ industries }: { industries: IndustryOption[] }) {
   const router = useRouter();
+  const [selectedIndustry, setSelectedIndustry] = useState("");
+  const [industryList, setIndustryList] = useState(industries);
 
   return (
     <div className="p-6">
@@ -22,6 +29,7 @@ export function NewCompanyClient() {
 
       <form
         action={async (formData) => {
+          formData.set("industry", selectedIndustry);
           const company = await createCompany(formData);
           if (company) router.push(`/dashboard/companies/${company.id}`);
         }}
@@ -29,7 +37,24 @@ export function NewCompanyClient() {
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field label="Company Name" icon={<Building2 className="w-3 h-3" />} name="name" placeholder="Acme Corp" required />
-          <Field label="Industry" name="industry" placeholder="e.g. Technology, Retail" />
+          <ComboboxField
+            label="Industry"
+            value={selectedIndustry}
+            options={industryList.map((i) => ({ id: i.id, label: i.name }))}
+            placeholder="Select or add..."
+            onSelect={(val) => setSelectedIndustry(val)}
+            onCreate={async (name) => {
+              const industry = await createIndustry(name);
+              setIndustryList((prev) => [...prev, { id: industry.id, name: industry.name }]);
+            }}
+            onDelete={async (id) => {
+              await deleteIndustry(id);
+              setIndustryList((prev) => prev.filter((i) => i.id !== id));
+              if (industryList.find((i) => i.id === id)?.name === selectedIndustry) {
+                setSelectedIndustry("");
+              }
+            }}
+          />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field label="Phone" icon={<Phone className="w-3 h-3" />} name="phone" placeholder="+966..." />

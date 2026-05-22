@@ -114,6 +114,11 @@ export type WhatsAppTemplate = $Result.DefaultSelection<Prisma.$WhatsAppTemplate
  */
 export type WhatsAppMessage = $Result.DefaultSelection<Prisma.$WhatsAppMessagePayload>
 /**
+ * Model Industry
+ * 
+ */
+export type Industry = $Result.DefaultSelection<Prisma.$IndustryPayload>
+/**
  * Model CustomFieldDef
  * 
  */
@@ -570,6 +575,16 @@ export class PrismaClient<
     * ```
     */
   get whatsAppMessage(): Prisma.WhatsAppMessageDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.industry`: Exposes CRUD operations for the **Industry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Industries
+    * const industries = await prisma.industry.findMany()
+    * ```
+    */
+  get industry(): Prisma.IndustryDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.customFieldDef`: Exposes CRUD operations for the **CustomFieldDef** model.
@@ -1034,6 +1049,7 @@ export namespace Prisma {
     WhatsAppConfig: 'WhatsAppConfig',
     WhatsAppTemplate: 'WhatsAppTemplate',
     WhatsAppMessage: 'WhatsAppMessage',
+    Industry: 'Industry',
     CustomFieldDef: 'CustomFieldDef'
   };
 
@@ -1050,7 +1066,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "workspace" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealItem" | "projectStatus" | "project" | "taskStatus" | "task" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "customFieldDef"
+      modelProps: "workspace" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealItem" | "projectStatus" | "project" | "taskStatus" | "task" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "industry" | "customFieldDef"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2534,6 +2550,80 @@ export namespace Prisma {
           }
         }
       }
+      Industry: {
+        payload: Prisma.$IndustryPayload<ExtArgs>
+        fields: Prisma.IndustryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IndustryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IndustryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IndustryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IndustryPayload>
+          }
+          findFirst: {
+            args: Prisma.IndustryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IndustryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IndustryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IndustryPayload>
+          }
+          findMany: {
+            args: Prisma.IndustryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IndustryPayload>[]
+          }
+          create: {
+            args: Prisma.IndustryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IndustryPayload>
+          }
+          createMany: {
+            args: Prisma.IndustryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IndustryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IndustryPayload>[]
+          }
+          delete: {
+            args: Prisma.IndustryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IndustryPayload>
+          }
+          update: {
+            args: Prisma.IndustryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IndustryPayload>
+          }
+          deleteMany: {
+            args: Prisma.IndustryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IndustryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.IndustryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IndustryPayload>[]
+          }
+          upsert: {
+            args: Prisma.IndustryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IndustryPayload>
+          }
+          aggregate: {
+            args: Prisma.IndustryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIndustry>
+          }
+          groupBy: {
+            args: Prisma.IndustryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IndustryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IndustryCountArgs<ExtArgs>
+            result: $Utils.Optional<IndustryCountAggregateOutputType> | number
+          }
+        }
+      }
       CustomFieldDef: {
         payload: Prisma.$CustomFieldDefPayload<ExtArgs>
         fields: Prisma.CustomFieldDefFieldRefs
@@ -2736,6 +2826,7 @@ export namespace Prisma {
     whatsAppConfig?: WhatsAppConfigOmit
     whatsAppTemplate?: WhatsAppTemplateOmit
     whatsAppMessage?: WhatsAppMessageOmit
+    industry?: IndustryOmit
     customFieldDef?: CustomFieldDefOmit
   }
 
@@ -2818,6 +2909,7 @@ export namespace Prisma {
 
   export type WorkspaceCountOutputType = {
     members: number
+    industries: number
     companies: number
     contacts: number
     services: number
@@ -2834,6 +2926,7 @@ export namespace Prisma {
 
   export type WorkspaceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     members?: boolean | WorkspaceCountOutputTypeCountMembersArgs
+    industries?: boolean | WorkspaceCountOutputTypeCountIndustriesArgs
     companies?: boolean | WorkspaceCountOutputTypeCountCompaniesArgs
     contacts?: boolean | WorkspaceCountOutputTypeCountContactsArgs
     services?: boolean | WorkspaceCountOutputTypeCountServicesArgs
@@ -2864,6 +2957,13 @@ export namespace Prisma {
    */
   export type WorkspaceCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WorkspaceMemberWhereInput
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeCountIndustriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IndustryWhereInput
   }
 
   /**
@@ -3622,6 +3722,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     members?: boolean | Workspace$membersArgs<ExtArgs>
+    industries?: boolean | Workspace$industriesArgs<ExtArgs>
     companies?: boolean | Workspace$companiesArgs<ExtArgs>
     contacts?: boolean | Workspace$contactsArgs<ExtArgs>
     services?: boolean | Workspace$servicesArgs<ExtArgs>
@@ -3674,6 +3775,7 @@ export namespace Prisma {
   export type WorkspaceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "currency" | "taxRate" | "logo" | "createdAt" | "updatedAt", ExtArgs["result"]["workspace"]>
   export type WorkspaceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     members?: boolean | Workspace$membersArgs<ExtArgs>
+    industries?: boolean | Workspace$industriesArgs<ExtArgs>
     companies?: boolean | Workspace$companiesArgs<ExtArgs>
     contacts?: boolean | Workspace$contactsArgs<ExtArgs>
     services?: boolean | Workspace$servicesArgs<ExtArgs>
@@ -3696,6 +3798,7 @@ export namespace Prisma {
     name: "Workspace"
     objects: {
       members: Prisma.$WorkspaceMemberPayload<ExtArgs>[]
+      industries: Prisma.$IndustryPayload<ExtArgs>[]
       companies: Prisma.$CompanyPayload<ExtArgs>[]
       contacts: Prisma.$ContactPayload<ExtArgs>[]
       services: Prisma.$ServicePayload<ExtArgs>[]
@@ -4114,6 +4217,7 @@ export namespace Prisma {
   export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     members<T extends Workspace$membersArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    industries<T extends Workspace$industriesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$industriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IndustryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     companies<T extends Workspace$companiesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$companiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     contacts<T extends Workspace$contactsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$contactsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     services<T extends Workspace$servicesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4578,6 +4682,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WorkspaceMemberScalarFieldEnum | WorkspaceMemberScalarFieldEnum[]
+  }
+
+  /**
+   * Workspace.industries
+   */
+  export type Workspace$industriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Industry
+     */
+    select?: IndustrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Industry
+     */
+    omit?: IndustryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IndustryInclude<ExtArgs> | null
+    where?: IndustryWhereInput
+    orderBy?: IndustryOrderByWithRelationInput | IndustryOrderByWithRelationInput[]
+    cursor?: IndustryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IndustryScalarFieldEnum | IndustryScalarFieldEnum[]
   }
 
   /**
@@ -27491,6 +27619,1103 @@ export namespace Prisma {
 
 
   /**
+   * Model Industry
+   */
+
+  export type AggregateIndustry = {
+    _count: IndustryCountAggregateOutputType | null
+    _avg: IndustryAvgAggregateOutputType | null
+    _sum: IndustrySumAggregateOutputType | null
+    _min: IndustryMinAggregateOutputType | null
+    _max: IndustryMaxAggregateOutputType | null
+  }
+
+  export type IndustryAvgAggregateOutputType = {
+    order: number | null
+  }
+
+  export type IndustrySumAggregateOutputType = {
+    order: number | null
+  }
+
+  export type IndustryMinAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    name: string | null
+    order: number | null
+    createdAt: Date | null
+  }
+
+  export type IndustryMaxAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    name: string | null
+    order: number | null
+    createdAt: Date | null
+  }
+
+  export type IndustryCountAggregateOutputType = {
+    id: number
+    workspaceId: number
+    name: number
+    order: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type IndustryAvgAggregateInputType = {
+    order?: true
+  }
+
+  export type IndustrySumAggregateInputType = {
+    order?: true
+  }
+
+  export type IndustryMinAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    name?: true
+    order?: true
+    createdAt?: true
+  }
+
+  export type IndustryMaxAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    name?: true
+    order?: true
+    createdAt?: true
+  }
+
+  export type IndustryCountAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    name?: true
+    order?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type IndustryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Industry to aggregate.
+     */
+    where?: IndustryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Industries to fetch.
+     */
+    orderBy?: IndustryOrderByWithRelationInput | IndustryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IndustryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Industries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Industries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Industries
+    **/
+    _count?: true | IndustryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: IndustryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: IndustrySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IndustryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IndustryMaxAggregateInputType
+  }
+
+  export type GetIndustryAggregateType<T extends IndustryAggregateArgs> = {
+        [P in keyof T & keyof AggregateIndustry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIndustry[P]>
+      : GetScalarType<T[P], AggregateIndustry[P]>
+  }
+
+
+
+
+  export type IndustryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IndustryWhereInput
+    orderBy?: IndustryOrderByWithAggregationInput | IndustryOrderByWithAggregationInput[]
+    by: IndustryScalarFieldEnum[] | IndustryScalarFieldEnum
+    having?: IndustryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IndustryCountAggregateInputType | true
+    _avg?: IndustryAvgAggregateInputType
+    _sum?: IndustrySumAggregateInputType
+    _min?: IndustryMinAggregateInputType
+    _max?: IndustryMaxAggregateInputType
+  }
+
+  export type IndustryGroupByOutputType = {
+    id: string
+    workspaceId: string
+    name: string
+    order: number
+    createdAt: Date
+    _count: IndustryCountAggregateOutputType | null
+    _avg: IndustryAvgAggregateOutputType | null
+    _sum: IndustrySumAggregateOutputType | null
+    _min: IndustryMinAggregateOutputType | null
+    _max: IndustryMaxAggregateOutputType | null
+  }
+
+  type GetIndustryGroupByPayload<T extends IndustryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IndustryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IndustryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IndustryGroupByOutputType[P]>
+            : GetScalarType<T[P], IndustryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IndustrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    name?: boolean
+    order?: boolean
+    createdAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["industry"]>
+
+  export type IndustrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    name?: boolean
+    order?: boolean
+    createdAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["industry"]>
+
+  export type IndustrySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    name?: boolean
+    order?: boolean
+    createdAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["industry"]>
+
+  export type IndustrySelectScalar = {
+    id?: boolean
+    workspaceId?: boolean
+    name?: boolean
+    order?: boolean
+    createdAt?: boolean
+  }
+
+  export type IndustryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "name" | "order" | "createdAt", ExtArgs["result"]["industry"]>
+  export type IndustryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+  export type IndustryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+  export type IndustryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+
+  export type $IndustryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Industry"
+    objects: {
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      workspaceId: string
+      name: string
+      order: number
+      createdAt: Date
+    }, ExtArgs["result"]["industry"]>
+    composites: {}
+  }
+
+  type IndustryGetPayload<S extends boolean | null | undefined | IndustryDefaultArgs> = $Result.GetResult<Prisma.$IndustryPayload, S>
+
+  type IndustryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<IndustryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: IndustryCountAggregateInputType | true
+    }
+
+  export interface IndustryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Industry'], meta: { name: 'Industry' } }
+    /**
+     * Find zero or one Industry that matches the filter.
+     * @param {IndustryFindUniqueArgs} args - Arguments to find a Industry
+     * @example
+     * // Get one Industry
+     * const industry = await prisma.industry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends IndustryFindUniqueArgs>(args: SelectSubset<T, IndustryFindUniqueArgs<ExtArgs>>): Prisma__IndustryClient<$Result.GetResult<Prisma.$IndustryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Industry that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {IndustryFindUniqueOrThrowArgs} args - Arguments to find a Industry
+     * @example
+     * // Get one Industry
+     * const industry = await prisma.industry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends IndustryFindUniqueOrThrowArgs>(args: SelectSubset<T, IndustryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IndustryClient<$Result.GetResult<Prisma.$IndustryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Industry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IndustryFindFirstArgs} args - Arguments to find a Industry
+     * @example
+     * // Get one Industry
+     * const industry = await prisma.industry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends IndustryFindFirstArgs>(args?: SelectSubset<T, IndustryFindFirstArgs<ExtArgs>>): Prisma__IndustryClient<$Result.GetResult<Prisma.$IndustryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Industry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IndustryFindFirstOrThrowArgs} args - Arguments to find a Industry
+     * @example
+     * // Get one Industry
+     * const industry = await prisma.industry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends IndustryFindFirstOrThrowArgs>(args?: SelectSubset<T, IndustryFindFirstOrThrowArgs<ExtArgs>>): Prisma__IndustryClient<$Result.GetResult<Prisma.$IndustryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Industries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IndustryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Industries
+     * const industries = await prisma.industry.findMany()
+     * 
+     * // Get first 10 Industries
+     * const industries = await prisma.industry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const industryWithIdOnly = await prisma.industry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends IndustryFindManyArgs>(args?: SelectSubset<T, IndustryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IndustryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Industry.
+     * @param {IndustryCreateArgs} args - Arguments to create a Industry.
+     * @example
+     * // Create one Industry
+     * const Industry = await prisma.industry.create({
+     *   data: {
+     *     // ... data to create a Industry
+     *   }
+     * })
+     * 
+     */
+    create<T extends IndustryCreateArgs>(args: SelectSubset<T, IndustryCreateArgs<ExtArgs>>): Prisma__IndustryClient<$Result.GetResult<Prisma.$IndustryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Industries.
+     * @param {IndustryCreateManyArgs} args - Arguments to create many Industries.
+     * @example
+     * // Create many Industries
+     * const industry = await prisma.industry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends IndustryCreateManyArgs>(args?: SelectSubset<T, IndustryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Industries and returns the data saved in the database.
+     * @param {IndustryCreateManyAndReturnArgs} args - Arguments to create many Industries.
+     * @example
+     * // Create many Industries
+     * const industry = await prisma.industry.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Industries and only return the `id`
+     * const industryWithIdOnly = await prisma.industry.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends IndustryCreateManyAndReturnArgs>(args?: SelectSubset<T, IndustryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IndustryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Industry.
+     * @param {IndustryDeleteArgs} args - Arguments to delete one Industry.
+     * @example
+     * // Delete one Industry
+     * const Industry = await prisma.industry.delete({
+     *   where: {
+     *     // ... filter to delete one Industry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends IndustryDeleteArgs>(args: SelectSubset<T, IndustryDeleteArgs<ExtArgs>>): Prisma__IndustryClient<$Result.GetResult<Prisma.$IndustryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Industry.
+     * @param {IndustryUpdateArgs} args - Arguments to update one Industry.
+     * @example
+     * // Update one Industry
+     * const industry = await prisma.industry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends IndustryUpdateArgs>(args: SelectSubset<T, IndustryUpdateArgs<ExtArgs>>): Prisma__IndustryClient<$Result.GetResult<Prisma.$IndustryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Industries.
+     * @param {IndustryDeleteManyArgs} args - Arguments to filter Industries to delete.
+     * @example
+     * // Delete a few Industries
+     * const { count } = await prisma.industry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends IndustryDeleteManyArgs>(args?: SelectSubset<T, IndustryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Industries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IndustryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Industries
+     * const industry = await prisma.industry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends IndustryUpdateManyArgs>(args: SelectSubset<T, IndustryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Industries and returns the data updated in the database.
+     * @param {IndustryUpdateManyAndReturnArgs} args - Arguments to update many Industries.
+     * @example
+     * // Update many Industries
+     * const industry = await prisma.industry.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Industries and only return the `id`
+     * const industryWithIdOnly = await prisma.industry.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends IndustryUpdateManyAndReturnArgs>(args: SelectSubset<T, IndustryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IndustryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Industry.
+     * @param {IndustryUpsertArgs} args - Arguments to update or create a Industry.
+     * @example
+     * // Update or create a Industry
+     * const industry = await prisma.industry.upsert({
+     *   create: {
+     *     // ... data to create a Industry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Industry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends IndustryUpsertArgs>(args: SelectSubset<T, IndustryUpsertArgs<ExtArgs>>): Prisma__IndustryClient<$Result.GetResult<Prisma.$IndustryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Industries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IndustryCountArgs} args - Arguments to filter Industries to count.
+     * @example
+     * // Count the number of Industries
+     * const count = await prisma.industry.count({
+     *   where: {
+     *     // ... the filter for the Industries we want to count
+     *   }
+     * })
+    **/
+    count<T extends IndustryCountArgs>(
+      args?: Subset<T, IndustryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IndustryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Industry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IndustryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IndustryAggregateArgs>(args: Subset<T, IndustryAggregateArgs>): Prisma.PrismaPromise<GetIndustryAggregateType<T>>
+
+    /**
+     * Group by Industry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IndustryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IndustryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IndustryGroupByArgs['orderBy'] }
+        : { orderBy?: IndustryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IndustryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIndustryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Industry model
+   */
+  readonly fields: IndustryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Industry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IndustryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Industry model
+   */
+  interface IndustryFieldRefs {
+    readonly id: FieldRef<"Industry", 'String'>
+    readonly workspaceId: FieldRef<"Industry", 'String'>
+    readonly name: FieldRef<"Industry", 'String'>
+    readonly order: FieldRef<"Industry", 'Int'>
+    readonly createdAt: FieldRef<"Industry", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Industry findUnique
+   */
+  export type IndustryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Industry
+     */
+    select?: IndustrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Industry
+     */
+    omit?: IndustryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IndustryInclude<ExtArgs> | null
+    /**
+     * Filter, which Industry to fetch.
+     */
+    where: IndustryWhereUniqueInput
+  }
+
+  /**
+   * Industry findUniqueOrThrow
+   */
+  export type IndustryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Industry
+     */
+    select?: IndustrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Industry
+     */
+    omit?: IndustryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IndustryInclude<ExtArgs> | null
+    /**
+     * Filter, which Industry to fetch.
+     */
+    where: IndustryWhereUniqueInput
+  }
+
+  /**
+   * Industry findFirst
+   */
+  export type IndustryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Industry
+     */
+    select?: IndustrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Industry
+     */
+    omit?: IndustryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IndustryInclude<ExtArgs> | null
+    /**
+     * Filter, which Industry to fetch.
+     */
+    where?: IndustryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Industries to fetch.
+     */
+    orderBy?: IndustryOrderByWithRelationInput | IndustryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Industries.
+     */
+    cursor?: IndustryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Industries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Industries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Industries.
+     */
+    distinct?: IndustryScalarFieldEnum | IndustryScalarFieldEnum[]
+  }
+
+  /**
+   * Industry findFirstOrThrow
+   */
+  export type IndustryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Industry
+     */
+    select?: IndustrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Industry
+     */
+    omit?: IndustryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IndustryInclude<ExtArgs> | null
+    /**
+     * Filter, which Industry to fetch.
+     */
+    where?: IndustryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Industries to fetch.
+     */
+    orderBy?: IndustryOrderByWithRelationInput | IndustryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Industries.
+     */
+    cursor?: IndustryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Industries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Industries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Industries.
+     */
+    distinct?: IndustryScalarFieldEnum | IndustryScalarFieldEnum[]
+  }
+
+  /**
+   * Industry findMany
+   */
+  export type IndustryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Industry
+     */
+    select?: IndustrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Industry
+     */
+    omit?: IndustryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IndustryInclude<ExtArgs> | null
+    /**
+     * Filter, which Industries to fetch.
+     */
+    where?: IndustryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Industries to fetch.
+     */
+    orderBy?: IndustryOrderByWithRelationInput | IndustryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Industries.
+     */
+    cursor?: IndustryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Industries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Industries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Industries.
+     */
+    distinct?: IndustryScalarFieldEnum | IndustryScalarFieldEnum[]
+  }
+
+  /**
+   * Industry create
+   */
+  export type IndustryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Industry
+     */
+    select?: IndustrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Industry
+     */
+    omit?: IndustryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IndustryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Industry.
+     */
+    data: XOR<IndustryCreateInput, IndustryUncheckedCreateInput>
+  }
+
+  /**
+   * Industry createMany
+   */
+  export type IndustryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Industries.
+     */
+    data: IndustryCreateManyInput | IndustryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Industry createManyAndReturn
+   */
+  export type IndustryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Industry
+     */
+    select?: IndustrySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Industry
+     */
+    omit?: IndustryOmit<ExtArgs> | null
+    /**
+     * The data used to create many Industries.
+     */
+    data: IndustryCreateManyInput | IndustryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IndustryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Industry update
+   */
+  export type IndustryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Industry
+     */
+    select?: IndustrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Industry
+     */
+    omit?: IndustryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IndustryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Industry.
+     */
+    data: XOR<IndustryUpdateInput, IndustryUncheckedUpdateInput>
+    /**
+     * Choose, which Industry to update.
+     */
+    where: IndustryWhereUniqueInput
+  }
+
+  /**
+   * Industry updateMany
+   */
+  export type IndustryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Industries.
+     */
+    data: XOR<IndustryUpdateManyMutationInput, IndustryUncheckedUpdateManyInput>
+    /**
+     * Filter which Industries to update
+     */
+    where?: IndustryWhereInput
+    /**
+     * Limit how many Industries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Industry updateManyAndReturn
+   */
+  export type IndustryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Industry
+     */
+    select?: IndustrySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Industry
+     */
+    omit?: IndustryOmit<ExtArgs> | null
+    /**
+     * The data used to update Industries.
+     */
+    data: XOR<IndustryUpdateManyMutationInput, IndustryUncheckedUpdateManyInput>
+    /**
+     * Filter which Industries to update
+     */
+    where?: IndustryWhereInput
+    /**
+     * Limit how many Industries to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IndustryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Industry upsert
+   */
+  export type IndustryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Industry
+     */
+    select?: IndustrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Industry
+     */
+    omit?: IndustryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IndustryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Industry to update in case it exists.
+     */
+    where: IndustryWhereUniqueInput
+    /**
+     * In case the Industry found by the `where` argument doesn't exist, create a new Industry with this data.
+     */
+    create: XOR<IndustryCreateInput, IndustryUncheckedCreateInput>
+    /**
+     * In case the Industry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IndustryUpdateInput, IndustryUncheckedUpdateInput>
+  }
+
+  /**
+   * Industry delete
+   */
+  export type IndustryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Industry
+     */
+    select?: IndustrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Industry
+     */
+    omit?: IndustryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IndustryInclude<ExtArgs> | null
+    /**
+     * Filter which Industry to delete.
+     */
+    where: IndustryWhereUniqueInput
+  }
+
+  /**
+   * Industry deleteMany
+   */
+  export type IndustryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Industries to delete
+     */
+    where?: IndustryWhereInput
+    /**
+     * Limit how many Industries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Industry without action
+   */
+  export type IndustryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Industry
+     */
+    select?: IndustrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Industry
+     */
+    omit?: IndustryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IndustryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model CustomFieldDef
    */
 
@@ -28971,6 +30196,17 @@ export namespace Prisma {
   export type WhatsAppMessageScalarFieldEnum = (typeof WhatsAppMessageScalarFieldEnum)[keyof typeof WhatsAppMessageScalarFieldEnum]
 
 
+  export const IndustryScalarFieldEnum: {
+    id: 'id',
+    workspaceId: 'workspaceId',
+    name: 'name',
+    order: 'order',
+    createdAt: 'createdAt'
+  };
+
+  export type IndustryScalarFieldEnum = (typeof IndustryScalarFieldEnum)[keyof typeof IndustryScalarFieldEnum]
+
+
   export const CustomFieldDefScalarFieldEnum: {
     id: 'id',
     workspaceId: 'workspaceId',
@@ -29273,6 +30509,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Workspace"> | Date | string
     updatedAt?: DateTimeFilter<"Workspace"> | Date | string
     members?: WorkspaceMemberListRelationFilter
+    industries?: IndustryListRelationFilter
     companies?: CompanyListRelationFilter
     contacts?: ContactListRelationFilter
     services?: ServiceListRelationFilter
@@ -29298,6 +30535,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     members?: WorkspaceMemberOrderByRelationAggregateInput
+    industries?: IndustryOrderByRelationAggregateInput
     companies?: CompanyOrderByRelationAggregateInput
     contacts?: ContactOrderByRelationAggregateInput
     services?: ServiceOrderByRelationAggregateInput
@@ -29326,6 +30564,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Workspace"> | Date | string
     updatedAt?: DateTimeFilter<"Workspace"> | Date | string
     members?: WorkspaceMemberListRelationFilter
+    industries?: IndustryListRelationFilter
     companies?: CompanyListRelationFilter
     contacts?: ContactListRelationFilter
     services?: ServiceListRelationFilter
@@ -30978,6 +32217,64 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"WhatsAppMessage"> | Date | string
   }
 
+  export type IndustryWhereInput = {
+    AND?: IndustryWhereInput | IndustryWhereInput[]
+    OR?: IndustryWhereInput[]
+    NOT?: IndustryWhereInput | IndustryWhereInput[]
+    id?: StringFilter<"Industry"> | string
+    workspaceId?: StringFilter<"Industry"> | string
+    name?: StringFilter<"Industry"> | string
+    order?: IntFilter<"Industry"> | number
+    createdAt?: DateTimeFilter<"Industry"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+  }
+
+  export type IndustryOrderByWithRelationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    name?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    workspace?: WorkspaceOrderByWithRelationInput
+  }
+
+  export type IndustryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    workspaceId_name?: IndustryWorkspaceIdNameCompoundUniqueInput
+    AND?: IndustryWhereInput | IndustryWhereInput[]
+    OR?: IndustryWhereInput[]
+    NOT?: IndustryWhereInput | IndustryWhereInput[]
+    workspaceId?: StringFilter<"Industry"> | string
+    name?: StringFilter<"Industry"> | string
+    order?: IntFilter<"Industry"> | number
+    createdAt?: DateTimeFilter<"Industry"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+  }, "id" | "workspaceId_name">
+
+  export type IndustryOrderByWithAggregationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    name?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    _count?: IndustryCountOrderByAggregateInput
+    _avg?: IndustryAvgOrderByAggregateInput
+    _max?: IndustryMaxOrderByAggregateInput
+    _min?: IndustryMinOrderByAggregateInput
+    _sum?: IndustrySumOrderByAggregateInput
+  }
+
+  export type IndustryScalarWhereWithAggregatesInput = {
+    AND?: IndustryScalarWhereWithAggregatesInput | IndustryScalarWhereWithAggregatesInput[]
+    OR?: IndustryScalarWhereWithAggregatesInput[]
+    NOT?: IndustryScalarWhereWithAggregatesInput | IndustryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Industry"> | string
+    workspaceId?: StringWithAggregatesFilter<"Industry"> | string
+    name?: StringWithAggregatesFilter<"Industry"> | string
+    order?: IntWithAggregatesFilter<"Industry"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Industry"> | Date | string
+  }
+
   export type CustomFieldDefWhereInput = {
     AND?: CustomFieldDefWhereInput | CustomFieldDefWhereInput[]
     OR?: CustomFieldDefWhereInput[]
@@ -31071,6 +32368,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactCreateNestedManyWithoutWorkspaceInput
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
@@ -31096,6 +32394,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -31121,6 +32420,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
@@ -31146,6 +32446,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -32910,6 +34211,61 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type IndustryCreateInput = {
+    id?: string
+    name: string
+    order?: number
+    createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutIndustriesInput
+  }
+
+  export type IndustryUncheckedCreateInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    order?: number
+    createdAt?: Date | string
+  }
+
+  export type IndustryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutIndustriesNestedInput
+  }
+
+  export type IndustryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IndustryCreateManyInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    order?: number
+    createdAt?: Date | string
+  }
+
+  export type IndustryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IndustryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CustomFieldDefCreateInput = {
     id?: string
     entityType: $Enums.CustomFieldEntity
@@ -33058,6 +34414,12 @@ export namespace Prisma {
     none?: WorkspaceMemberWhereInput
   }
 
+  export type IndustryListRelationFilter = {
+    every?: IndustryWhereInput
+    some?: IndustryWhereInput
+    none?: IndustryWhereInput
+  }
+
   export type CompanyListRelationFilter = {
     every?: CompanyWhereInput
     some?: CompanyWhereInput
@@ -33141,6 +34503,10 @@ export namespace Prisma {
   }
 
   export type WorkspaceMemberOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type IndustryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -34573,6 +35939,43 @@ export namespace Prisma {
     _max?: NestedEnumMessageStatusFilter<$PrismaModel>
   }
 
+  export type IndustryWorkspaceIdNameCompoundUniqueInput = {
+    workspaceId: string
+    name: string
+  }
+
+  export type IndustryCountOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    name?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type IndustryAvgOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type IndustryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    name?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type IndustryMinOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    name?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type IndustrySumOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
   export type EnumCustomFieldEntityFilter<$PrismaModel = never> = {
     equals?: $Enums.CustomFieldEntity | EnumCustomFieldEntityFieldRefInput<$PrismaModel>
     in?: $Enums.CustomFieldEntity[] | ListEnumCustomFieldEntityFieldRefInput<$PrismaModel>
@@ -34663,6 +36066,13 @@ export namespace Prisma {
     connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutWorkspaceInput | WorkspaceMemberCreateOrConnectWithoutWorkspaceInput[]
     createMany?: WorkspaceMemberCreateManyWorkspaceInputEnvelope
     connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+  }
+
+  export type IndustryCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<IndustryCreateWithoutWorkspaceInput, IndustryUncheckedCreateWithoutWorkspaceInput> | IndustryCreateWithoutWorkspaceInput[] | IndustryUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: IndustryCreateOrConnectWithoutWorkspaceInput | IndustryCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: IndustryCreateManyWorkspaceInputEnvelope
+    connect?: IndustryWhereUniqueInput | IndustryWhereUniqueInput[]
   }
 
   export type CompanyCreateNestedManyWithoutWorkspaceInput = {
@@ -34760,6 +36170,13 @@ export namespace Prisma {
     connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutWorkspaceInput | WorkspaceMemberCreateOrConnectWithoutWorkspaceInput[]
     createMany?: WorkspaceMemberCreateManyWorkspaceInputEnvelope
     connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+  }
+
+  export type IndustryUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<IndustryCreateWithoutWorkspaceInput, IndustryUncheckedCreateWithoutWorkspaceInput> | IndustryCreateWithoutWorkspaceInput[] | IndustryUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: IndustryCreateOrConnectWithoutWorkspaceInput | IndustryCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: IndustryCreateManyWorkspaceInputEnvelope
+    connect?: IndustryWhereUniqueInput | IndustryWhereUniqueInput[]
   }
 
   export type CompanyUncheckedCreateNestedManyWithoutWorkspaceInput = {
@@ -34884,6 +36301,20 @@ export namespace Prisma {
     update?: WorkspaceMemberUpdateWithWhereUniqueWithoutWorkspaceInput | WorkspaceMemberUpdateWithWhereUniqueWithoutWorkspaceInput[]
     updateMany?: WorkspaceMemberUpdateManyWithWhereWithoutWorkspaceInput | WorkspaceMemberUpdateManyWithWhereWithoutWorkspaceInput[]
     deleteMany?: WorkspaceMemberScalarWhereInput | WorkspaceMemberScalarWhereInput[]
+  }
+
+  export type IndustryUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<IndustryCreateWithoutWorkspaceInput, IndustryUncheckedCreateWithoutWorkspaceInput> | IndustryCreateWithoutWorkspaceInput[] | IndustryUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: IndustryCreateOrConnectWithoutWorkspaceInput | IndustryCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: IndustryUpsertWithWhereUniqueWithoutWorkspaceInput | IndustryUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: IndustryCreateManyWorkspaceInputEnvelope
+    set?: IndustryWhereUniqueInput | IndustryWhereUniqueInput[]
+    disconnect?: IndustryWhereUniqueInput | IndustryWhereUniqueInput[]
+    delete?: IndustryWhereUniqueInput | IndustryWhereUniqueInput[]
+    connect?: IndustryWhereUniqueInput | IndustryWhereUniqueInput[]
+    update?: IndustryUpdateWithWhereUniqueWithoutWorkspaceInput | IndustryUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: IndustryUpdateManyWithWhereWithoutWorkspaceInput | IndustryUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: IndustryScalarWhereInput | IndustryScalarWhereInput[]
   }
 
   export type CompanyUpdateManyWithoutWorkspaceNestedInput = {
@@ -35076,6 +36507,20 @@ export namespace Prisma {
     update?: WorkspaceMemberUpdateWithWhereUniqueWithoutWorkspaceInput | WorkspaceMemberUpdateWithWhereUniqueWithoutWorkspaceInput[]
     updateMany?: WorkspaceMemberUpdateManyWithWhereWithoutWorkspaceInput | WorkspaceMemberUpdateManyWithWhereWithoutWorkspaceInput[]
     deleteMany?: WorkspaceMemberScalarWhereInput | WorkspaceMemberScalarWhereInput[]
+  }
+
+  export type IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<IndustryCreateWithoutWorkspaceInput, IndustryUncheckedCreateWithoutWorkspaceInput> | IndustryCreateWithoutWorkspaceInput[] | IndustryUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: IndustryCreateOrConnectWithoutWorkspaceInput | IndustryCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: IndustryUpsertWithWhereUniqueWithoutWorkspaceInput | IndustryUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: IndustryCreateManyWorkspaceInputEnvelope
+    set?: IndustryWhereUniqueInput | IndustryWhereUniqueInput[]
+    disconnect?: IndustryWhereUniqueInput | IndustryWhereUniqueInput[]
+    delete?: IndustryWhereUniqueInput | IndustryWhereUniqueInput[]
+    connect?: IndustryWhereUniqueInput | IndustryWhereUniqueInput[]
+    update?: IndustryUpdateWithWhereUniqueWithoutWorkspaceInput | IndustryUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: IndustryUpdateManyWithWhereWithoutWorkspaceInput | IndustryUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: IndustryScalarWhereInput | IndustryScalarWhereInput[]
   }
 
   export type CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput = {
@@ -36680,6 +38125,20 @@ export namespace Prisma {
     update?: XOR<XOR<ContactUpdateToOneWithWhereWithoutWhatsappMessagesInput, ContactUpdateWithoutWhatsappMessagesInput>, ContactUncheckedUpdateWithoutWhatsappMessagesInput>
   }
 
+  export type WorkspaceCreateNestedOneWithoutIndustriesInput = {
+    create?: XOR<WorkspaceCreateWithoutIndustriesInput, WorkspaceUncheckedCreateWithoutIndustriesInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutIndustriesInput
+    connect?: WorkspaceWhereUniqueInput
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutIndustriesNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutIndustriesInput, WorkspaceUncheckedCreateWithoutIndustriesInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutIndustriesInput
+    upsert?: WorkspaceUpsertWithoutIndustriesInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutIndustriesInput, WorkspaceUpdateWithoutIndustriesInput>, WorkspaceUncheckedUpdateWithoutIndustriesInput>
+  }
+
   export type WorkspaceCreateNestedOneWithoutCustomFieldsInput = {
     create?: XOR<WorkspaceCreateWithoutCustomFieldsInput, WorkspaceUncheckedCreateWithoutCustomFieldsInput>
     connectOrCreate?: WorkspaceCreateOrConnectWithoutCustomFieldsInput
@@ -37158,6 +38617,30 @@ export namespace Prisma {
 
   export type WorkspaceMemberCreateManyWorkspaceInputEnvelope = {
     data: WorkspaceMemberCreateManyWorkspaceInput | WorkspaceMemberCreateManyWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type IndustryCreateWithoutWorkspaceInput = {
+    id?: string
+    name: string
+    order?: number
+    createdAt?: Date | string
+  }
+
+  export type IndustryUncheckedCreateWithoutWorkspaceInput = {
+    id?: string
+    name: string
+    order?: number
+    createdAt?: Date | string
+  }
+
+  export type IndustryCreateOrConnectWithoutWorkspaceInput = {
+    where: IndustryWhereUniqueInput
+    create: XOR<IndustryCreateWithoutWorkspaceInput, IndustryUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type IndustryCreateManyWorkspaceInputEnvelope = {
+    data: IndustryCreateManyWorkspaceInput | IndustryCreateManyWorkspaceInput[]
     skipDuplicates?: boolean
   }
 
@@ -37670,6 +39153,33 @@ export namespace Prisma {
     joinedAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
   }
 
+  export type IndustryUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: IndustryWhereUniqueInput
+    update: XOR<IndustryUpdateWithoutWorkspaceInput, IndustryUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<IndustryCreateWithoutWorkspaceInput, IndustryUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type IndustryUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: IndustryWhereUniqueInput
+    data: XOR<IndustryUpdateWithoutWorkspaceInput, IndustryUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type IndustryUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: IndustryScalarWhereInput
+    data: XOR<IndustryUpdateManyMutationInput, IndustryUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type IndustryScalarWhereInput = {
+    AND?: IndustryScalarWhereInput | IndustryScalarWhereInput[]
+    OR?: IndustryScalarWhereInput[]
+    NOT?: IndustryScalarWhereInput | IndustryScalarWhereInput[]
+    id?: StringFilter<"Industry"> | string
+    workspaceId?: StringFilter<"Industry"> | string
+    name?: StringFilter<"Industry"> | string
+    order?: IntFilter<"Industry"> | number
+    createdAt?: DateTimeFilter<"Industry"> | Date | string
+  }
+
   export type CompanyUpsertWithWhereUniqueWithoutWorkspaceInput = {
     where: CompanyWhereUniqueInput
     update: XOR<CompanyUpdateWithoutWorkspaceInput, CompanyUncheckedUpdateWithoutWorkspaceInput>
@@ -38099,6 +39609,7 @@ export namespace Prisma {
     logo?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactCreateNestedManyWithoutWorkspaceInput
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
@@ -38123,6 +39634,7 @@ export namespace Prisma {
     logo?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -38226,6 +39738,7 @@ export namespace Prisma {
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
@@ -38250,6 +39763,7 @@ export namespace Prisma {
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -38338,6 +39852,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactCreateNestedManyWithoutWorkspaceInput
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
@@ -38362,6 +39877,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -38434,6 +39950,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
@@ -38458,6 +39975,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -38582,6 +40100,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactCreateNestedManyWithoutWorkspaceInput
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
     deals?: DealCreateNestedManyWithoutWorkspaceInput
@@ -38606,6 +40125,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -38782,6 +40302,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
@@ -38806,6 +40327,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -38878,6 +40400,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyCreateNestedManyWithoutWorkspaceInput
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
     deals?: DealCreateNestedManyWithoutWorkspaceInput
@@ -38902,6 +40425,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -39127,6 +40651,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
@@ -39151,6 +40676,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -39290,6 +40816,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactCreateNestedManyWithoutWorkspaceInput
     deals?: DealCreateNestedManyWithoutWorkspaceInput
@@ -39314,6 +40841,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -39422,6 +40950,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
@@ -39446,6 +40975,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -39514,6 +41044,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactCreateNestedManyWithoutWorkspaceInput
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
@@ -39538,6 +41069,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -39656,6 +41188,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
@@ -39680,6 +41213,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -39865,6 +41399,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactCreateNestedManyWithoutWorkspaceInput
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
@@ -39889,6 +41424,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -40124,6 +41660,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
@@ -40148,6 +41685,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -40555,6 +42093,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactCreateNestedManyWithoutWorkspaceInput
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
@@ -40579,6 +42118,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -40663,6 +42203,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
@@ -40687,6 +42228,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -40727,6 +42269,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactCreateNestedManyWithoutWorkspaceInput
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
@@ -40751,6 +42294,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -41024,6 +42568,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
@@ -41048,6 +42593,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -41259,6 +42805,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactCreateNestedManyWithoutWorkspaceInput
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
@@ -41283,6 +42830,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -41365,6 +42913,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
@@ -41389,6 +42938,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -41701,6 +43251,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactCreateNestedManyWithoutWorkspaceInput
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
@@ -41725,6 +43276,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -41869,6 +43421,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
@@ -41893,6 +43446,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -42143,6 +43697,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactCreateNestedManyWithoutWorkspaceInput
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
@@ -42167,6 +43722,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -42207,6 +43763,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
@@ -42231,6 +43788,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -42255,6 +43813,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactCreateNestedManyWithoutWorkspaceInput
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
@@ -42279,6 +43838,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -42319,6 +43879,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
@@ -42343,6 +43904,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -42441,6 +44003,122 @@ export namespace Prisma {
     invoices?: InvoiceUncheckedUpdateManyWithoutContactNestedInput
   }
 
+  export type WorkspaceCreateWithoutIndustriesInput = {
+    id?: string
+    name: string
+    slug: string
+    currency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceCreateNestedManyWithoutWorkspaceInput
+    deals?: DealCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutIndustriesInput = {
+    id?: string
+    name: string
+    slug: string
+    currency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutIndustriesInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutIndustriesInput, WorkspaceUncheckedCreateWithoutIndustriesInput>
+  }
+
+  export type WorkspaceUpsertWithoutIndustriesInput = {
+    update: XOR<WorkspaceUpdateWithoutIndustriesInput, WorkspaceUncheckedUpdateWithoutIndustriesInput>
+    create: XOR<WorkspaceCreateWithoutIndustriesInput, WorkspaceUncheckedCreateWithoutIndustriesInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutIndustriesInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutIndustriesInput, WorkspaceUncheckedUpdateWithoutIndustriesInput>
+  }
+
+  export type WorkspaceUpdateWithoutIndustriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutIndustriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    currency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+  }
+
   export type WorkspaceCreateWithoutCustomFieldsInput = {
     id?: string
     name: string
@@ -42451,6 +44129,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactCreateNestedManyWithoutWorkspaceInput
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
@@ -42475,6 +44154,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
     companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
     contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -42515,6 +44195,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
@@ -42539,6 +44220,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
     contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -42561,6 +44243,13 @@ export namespace Prisma {
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
+  }
+
+  export type IndustryCreateManyWorkspaceInput = {
+    id?: string
+    name: string
+    order?: number
+    createdAt?: Date | string
   }
 
   export type CompanyCreateManyWorkspaceInput = {
@@ -42740,6 +44429,27 @@ export namespace Prisma {
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IndustryUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IndustryUncheckedUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IndustryUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CompanyUpdateWithoutWorkspaceInput = {

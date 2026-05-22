@@ -20,6 +20,7 @@ model Workspace {
   updatedAt DateTime @updatedAt
 
   members            WorkspaceMember[]
+  industries         Industry[]
   companies          Company[]
   contacts           Contact[]
   services           Service[]
@@ -424,6 +425,20 @@ enum MessageStatus {
   DELIVERED
   READ
   FAILED
+}
+
+// ─── Industries (Dynamic) ──────────────────────────────────────────────────────
+
+model Industry {
+  id          String   @id @default(cuid())
+  workspaceId String
+  name        String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, name])
 }
 
 // ─── Custom Fields (Dynamic) ───────────────────────────────────────────────────
