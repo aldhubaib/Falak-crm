@@ -203,5 +203,4 @@ export async function createProjectFromDeal(dealId: string) {
 
   revalidatePath("/dashboard/deals");
   revalidatePath("/dashboard/projects");
-  return project;
 }
