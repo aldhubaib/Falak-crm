@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { requireWorkspace } from "@/lib/workspace";
+import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 
 export async function getCompanies() {
@@ -49,6 +50,13 @@ export async function createCompany(formData: FormData) {
     },
   });
 
+  await logActivity({
+    entityType: "company",
+    entityId: company.id,
+    entityName: name,
+    action: "created",
+  });
+
   revalidatePath("/dashboard/companies");
   return company;
 }
@@ -56,9 +64,18 @@ export async function createCompany(formData: FormData) {
 export async function updateCompany(id: string, formData: FormData) {
   const workspace = await requireWorkspace();
 
+  const existing = await db.company.findFirst({ where: { id, workspaceId: workspace.id } });
+
   const data: Record<string, string | null> = {};
+  const changes: Record<string, { from: unknown; to: unknown }> = {};
+
   for (const [key, value] of formData.entries()) {
-    data[key] = (value as string) || null;
+    const newVal = (value as string) || null;
+    data[key] = newVal;
+    const oldVal = existing ? (existing as Record<string, unknown>)[key] : null;
+    if (oldVal !== newVal) {
+      changes[key] = { from: oldVal, to: newVal };
+    }
   }
 
   await db.company.update({
@@ -66,12 +83,31 @@ export async function updateCompany(id: string, formData: FormData) {
     data,
   });
 
+  if (Object.keys(changes).length > 0) {
+    await logActivity({
+      entityType: "company",
+      entityId: id,
+      entityName: existing?.name ?? undefined,
+      action: "updated",
+      changes,
+    });
+  }
+
   revalidatePath("/dashboard/companies");
   revalidatePath(`/dashboard/companies/${id}`);
 }
 
 export async function deleteCompany(id: string) {
   const workspace = await requireWorkspace();
+  const company = await db.company.findFirst({ where: { id, workspaceId: workspace.id } });
   await db.company.delete({ where: { id, workspaceId: workspace.id } });
+
+  await logActivity({
+    entityType: "company",
+    entityId: id,
+    entityName: company?.name ?? undefined,
+    action: "deleted",
+  });
+
   revalidatePath("/dashboard/companies");
 }

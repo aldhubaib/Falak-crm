@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { requireWorkspace } from "@/lib/workspace";
+import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 
 export async function getProjects() {
@@ -77,6 +78,7 @@ export async function createTask(projectId: string, formData: FormData) {
 }
 
 export async function updateTaskStatus(taskId: string, statusId: string, projectId: string) {
+  const task = await db.task.findUnique({ where: { id: taskId }, include: { status: true } });
   const status = await db.taskStatus.findUnique({ where: { id: statusId } });
 
   await db.task.update({
@@ -85,6 +87,15 @@ export async function updateTaskStatus(taskId: string, statusId: string, project
       statusId,
       completedAt: status?.name === "Done" ? new Date() : null,
     },
+  });
+
+  await logActivity({
+    entityType: "task",
+    entityId: taskId,
+    entityName: task?.title ?? undefined,
+    action: "updated",
+    changes: { status: { from: task?.status?.name, to: status?.name } },
+    metadata: { projectId },
   });
 
   revalidatePath(`/dashboard/projects/${projectId}`);

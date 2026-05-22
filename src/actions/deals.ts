@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { requireWorkspace } from "@/lib/workspace";
+import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 
 export async function getPipeline() {
@@ -74,6 +75,13 @@ export async function createDeal(formData: FormData) {
     },
   });
 
+  await logActivity({
+    entityType: "deal",
+    entityId: deal.id,
+    entityName: title,
+    action: "created",
+  });
+
   revalidatePath("/dashboard/deals");
   return deal;
 }
@@ -81,6 +89,7 @@ export async function createDeal(formData: FormData) {
 export async function moveDeal(id: string, stageId: string) {
   const workspace = await requireWorkspace();
 
+  const deal = await db.deal.findFirst({ where: { id, workspaceId: workspace.id }, include: { stage: true } });
   const stage = await db.pipelineStage.findUnique({ where: { id: stageId } });
 
   await db.deal.update({
@@ -89,6 +98,15 @@ export async function moveDeal(id: string, stageId: string) {
       stageId,
       closedAt: stage?.type === "WON" || stage?.type === "LOST" ? new Date() : null,
     },
+  });
+
+  await logActivity({
+    entityType: "deal",
+    entityId: id,
+    entityName: deal?.title ?? undefined,
+    action: "moved",
+    changes: { stage: { from: deal?.stage.name, to: stage?.name } },
+    metadata: { stageType: stage?.type },
   });
 
   revalidatePath("/dashboard/deals");

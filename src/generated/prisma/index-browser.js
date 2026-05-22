@@ -369,6 +369,20 @@ exports.Prisma.WhatsAppMessageScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.ActivityLogScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  userId: 'userId',
+  userName: 'userName',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  entityName: 'entityName',
+  action: 'action',
+  changes: 'changes',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.IndustryScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -503,6 +517,7 @@ exports.Prisma.ModelName = {
   WhatsAppConfig: 'WhatsAppConfig',
   WhatsAppTemplate: 'WhatsAppTemplate',
   WhatsAppMessage: 'WhatsAppMessage',
+  ActivityLog: 'ActivityLog',
   Industry: 'Industry',
   CustomFieldDef: 'CustomFieldDef'
 };

@@ -1,5 +1,7 @@
 import { db } from "@/lib/db";
 import { requireWorkspace } from "@/lib/workspace";
+import { getRecentActivity } from "@/lib/activity";
+import { ActivityFeed } from "@/components/activity-feed";
 import Link from "next/link";
 
 export default async function DashboardPage() {
@@ -26,12 +28,15 @@ export default async function DashboardPage() {
 
   const totalRevenue = paidInvoices.reduce((sum, inv) => sum + Number(inv.total), 0);
 
-  const recentDeals = await db.deal.findMany({
-    where: { workspaceId: workspace.id },
-    include: { stage: true, company: { select: { name: true } } },
-    orderBy: { createdAt: "desc" },
-    take: 5,
-  });
+  const [recentDeals, recentActivity] = await Promise.all([
+    db.deal.findMany({
+      where: { workspaceId: workspace.id },
+      include: { stage: true, company: { select: { name: true } } },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    }),
+    getRecentActivity(15),
+  ]);
 
   return (
     <div className="p-6">
@@ -47,6 +52,7 @@ export default async function DashboardPage() {
         <StatCard label="Revenue" value={`${totalRevenue.toLocaleString()} ${workspace.currency}`} color="success" href="/dashboard/invoices" />
       </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Recent Deals */}
       <div className="rounded-xl border border-border bg-card p-4">
         <div className="flex items-center justify-between mb-4">
@@ -84,6 +90,13 @@ export default async function DashboardPage() {
             ))}
           </div>
         )}
+      </div>
+
+      {/* Activity Log */}
+      <div className="rounded-xl border border-border bg-card p-4">
+        <h3 className="text-[13px] font-medium text-foreground mb-4">Activity</h3>
+        <ActivityFeed activities={recentActivity as any} />
+      </div>
       </div>
     </div>
   );

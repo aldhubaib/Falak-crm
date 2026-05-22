@@ -20,6 +20,7 @@ model Workspace {
   updatedAt DateTime @updatedAt
 
   members            WorkspaceMember[]
+  activityLogs       ActivityLog[]
   industries         Industry[]
   companies          Company[]
   contacts           Contact[]
@@ -425,6 +426,27 @@ enum MessageStatus {
   DELIVERED
   READ
   FAILED
+}
+
+// ─── Activity Log ──────────────────────────────────────────────────────────────
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  workspaceId String
+  userId      String   // Clerk user ID
+  userName    String?
+  entityType  String   // "company", "contact", "deal", "project", "task", "invoice", "service"
+  entityId    String
+  entityName  String?  // Snapshot of the entity name at time of change
+  action      String   // "created", "updated", "deleted", "moved", "sent", "accepted", "rejected", "paid"
+  changes     Json?    // { field: { from: "old", to: "new" } }
+  metadata    Json?    // Extra context (e.g. stage name for deal moves)
+  createdAt   DateTime @default(now())
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, entityType, entityId])
+  @@index([workspaceId, createdAt])
 }
 
 // ─── Industries (Dynamic) ──────────────────────────────────────────────────────

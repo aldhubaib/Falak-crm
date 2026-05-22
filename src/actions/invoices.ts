@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { requireWorkspace } from "@/lib/workspace";
+import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 
 export async function getInvoices() {
@@ -79,6 +80,14 @@ export async function createInvoiceFromProject(projectId: string, taskIds: strin
     },
   });
 
+  await logActivity({
+    entityType: "invoice",
+    entityId: invoice.id,
+    entityName: nextNumber,
+    action: "created",
+    metadata: { projectId, total: subtotal + taxAmount },
+  });
+
   revalidatePath("/dashboard/invoices");
   revalidatePath(`/dashboard/projects/${projectId}`);
   return invoice;
@@ -87,9 +96,18 @@ export async function createInvoiceFromProject(projectId: string, taskIds: strin
 export async function sendInvoice(id: string) {
   const workspace = await requireWorkspace();
 
+  const invoice = await db.invoice.findFirst({ where: { id, workspaceId: workspace.id } });
+
   await db.invoice.update({
     where: { id, workspaceId: workspace.id },
     data: { status: "SENT", sentAt: new Date() },
+  });
+
+  await logActivity({
+    entityType: "invoice",
+    entityId: id,
+    entityName: invoice?.number ?? undefined,
+    action: "sent",
   });
 
   // TODO: Send WhatsApp notification with invoice link
@@ -115,9 +133,18 @@ export async function rejectInvoice(token: string, reason?: string) {
 export async function markInvoicePaid(id: string) {
   const workspace = await requireWorkspace();
 
+  const invoice = await db.invoice.findFirst({ where: { id, workspaceId: workspace.id } });
+
   await db.invoice.update({
     where: { id, workspaceId: workspace.id },
     data: { status: "PAID", paidAt: new Date() },
+  });
+
+  await logActivity({
+    entityType: "invoice",
+    entityId: id,
+    entityName: invoice?.number ?? undefined,
+    action: "paid",
   });
 
   revalidatePath("/dashboard/invoices");

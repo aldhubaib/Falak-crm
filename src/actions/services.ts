@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { requireWorkspace } from "@/lib/workspace";
+import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { PricingType } from "@/generated/prisma";
 
@@ -22,7 +23,7 @@ export async function createService(formData: FormData) {
   const unitPrice = parseFloat(formData.get("unitPrice") as string) || 0;
   const unit = (formData.get("unit") as string) || undefined;
 
-  await db.service.create({
+  const service = await db.service.create({
     data: {
       workspaceId: workspace.id,
       name,
@@ -31,6 +32,13 @@ export async function createService(formData: FormData) {
       unitPrice,
       unit,
     },
+  });
+
+  await logActivity({
+    entityType: "service",
+    entityId: service.id,
+    entityName: name,
+    action: "created",
   });
 
   revalidatePath("/dashboard/services");
