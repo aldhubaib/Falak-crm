@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GitBranch, Layers, ListChecks, MessageCircle, Users, Receipt } from "lucide-react";
+import { GitBranch, Layers, ListChecks, MessageCircle, Users, Receipt, Building2 } from "lucide-react";
 
 const settingsItems = [
   {
@@ -13,6 +13,12 @@ const settingsItems = [
     description: "Project and task statuses",
     href: "/dashboard/settings/statuses",
     icon: ListChecks,
+  },
+  {
+    title: "Industries",
+    description: "Manage industry options for companies",
+    href: "/dashboard/settings/industries",
+    icon: Building2,
   },
   {
     title: "Team & Roles",
