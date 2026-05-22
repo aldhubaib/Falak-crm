@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { createCompany } from "@/actions/companies";
 import { createIndustry, deleteIndustry } from "@/actions/industries";
 import { ComboboxField } from "@/components/ui/combobox-field";
-import { ArrowLeft, Building2, Globe } from "lucide-react";
+import { ArrowLeft, Building2, Globe, Save } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -30,6 +30,7 @@ export function NewCompanyClient({ industries }: { industries: IndustryOption[] 
     const newErrors: Record<string, boolean> = {};
     if (!nameRef.current?.value.trim()) newErrors.name = true;
     if (!selectedIndustry) newErrors.industry = true;
+    if (!selectedCountry) newErrors.country = true;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -54,10 +55,19 @@ export function NewCompanyClient({ industries }: { industries: IndustryOption[] 
         >
           <ArrowLeft className="w-4 h-4" />
         </Link>
-        <h1 className="text-lg font-semibold text-foreground">New Company</h1>
+        <h1 className="text-lg font-semibold text-foreground flex-1">New Company</h1>
+        <button
+          type="submit"
+          form="company-form"
+          className="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:bg-primary/90 transition-colors flex items-center gap-2"
+        >
+          <Save className="w-3.5 h-3.5" />
+          Save
+        </button>
       </div>
 
       <form
+        id="company-form"
         action={async (formData) => {
           if (!validate()) return;
           formData.set("industry", selectedIndustry);
@@ -118,21 +128,31 @@ export function NewCompanyClient({ industries }: { industries: IndustryOption[] 
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
+          <div className={cn(errors.country && "shake")}>
             <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
               <Globe className="w-3 h-3" />
               Country
+              <span className="text-destructive">*</span>
             </label>
             <select
               value={selectedCountry}
-              onChange={(e) => setSelectedCountry(e.target.value)}
-              className="w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground appearance-none focus:outline-none focus:border-ring transition-colors cursor-pointer"
+              onChange={(e) => {
+                setSelectedCountry(e.target.value);
+                if (errors.country) setErrors((er) => ({ ...er, country: false }));
+              }}
+              className={cn(
+                "w-full h-10 px-3 rounded-lg bg-transparent border text-[13px] text-foreground appearance-none focus:outline-none transition-colors cursor-pointer",
+                errors.country ? "border-destructive" : "border-border focus:border-ring"
+              )}
             >
               <option value="">Select country...</option>
               {countries.map((c) => (
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>
+            {errors.country && (
+              <p className="text-[11px] text-destructive mt-1">Country is required</p>
+            )}
           </div>
           <div>
             <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
@@ -147,14 +167,6 @@ export function NewCompanyClient({ industries }: { industries: IndustryOption[] 
           </div>
         </div>
 
-        <div className="pt-2">
-          <button
-            type="submit"
-            className="h-10 px-5 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:bg-primary/90 transition-colors"
-          >
-            Create Company
-          </button>
-        </div>
       </form>
     </div>
   );
