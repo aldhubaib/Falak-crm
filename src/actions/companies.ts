@@ -56,17 +56,14 @@ export async function createCompany(formData: FormData) {
 export async function updateCompany(id: string, formData: FormData) {
   const workspace = await requireWorkspace();
 
-  const name = formData.get("name") as string;
-  const industry = (formData.get("industry") as string) || undefined;
-  const phone = (formData.get("phone") as string) || undefined;
-  const whatsappNumber = (formData.get("whatsappNumber") as string) || undefined;
-  const email = (formData.get("email") as string) || undefined;
-  const website = (formData.get("website") as string) || undefined;
-  const address = (formData.get("address") as string) || undefined;
+  const data: Record<string, string | null> = {};
+  for (const [key, value] of formData.entries()) {
+    data[key] = (value as string) || null;
+  }
 
   await db.company.update({
     where: { id, workspaceId: workspace.id },
-    data: { name, industry, phone, whatsappNumber, email, website, address },
+    data,
   });
 
   revalidatePath("/dashboard/companies");
