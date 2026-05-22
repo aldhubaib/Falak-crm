@@ -40,12 +40,13 @@ interface PhoneInputProps {
 }
 
 function parsePhone(value: string) {
+  if (!value) return { code: "", number: "" };
   for (const c of countryCodes) {
     if (value.startsWith(c.code)) {
       return { code: c.code, number: value.slice(c.code.length).trim() };
     }
   }
-  return { code: "+966", number: value.replace(/^\+/, "") };
+  return { code: "", number: value.replace(/^\+/, "") };
 }
 
 export function PhoneInput({
@@ -123,10 +124,16 @@ export function PhoneInput({
             onClick={() => setDropdownOpen(!dropdownOpen)}
             className="flex items-center gap-1 px-2.5 h-full border-r border-border text-[12px] text-foreground hover:bg-muted/30 rounded-l-lg transition-colors shrink-0"
           >
-            <span className="text-[14px]">
-              {countryCodes.find((c) => c.code === selectedCode)?.flag}
-            </span>
-            <span className="text-muted-foreground">{selectedCode}</span>
+            {selectedCode ? (
+              <>
+                <span className="text-[14px]">
+                  {countryCodes.find((c) => c.code === selectedCode)?.flag}
+                </span>
+                <span className="text-muted-foreground">{selectedCode}</span>
+              </>
+            ) : (
+              <span className="text-muted-foreground/50">Code</span>
+            )}
             <ChevronDown className="w-3 h-3 text-muted-foreground" />
           </button>
           <input
