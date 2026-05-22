@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 type Activity = {
   id: string;
   userName: string | null;
+  userImage: string | null;
   entityType: string;
   entityId: string;
   entityName: string | null;
