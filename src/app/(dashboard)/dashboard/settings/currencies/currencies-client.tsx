@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { addCurrency, removeCurrency, setExchangeRate, setBaseCurrency } from "@/actions/currencies";
 import { AVAILABLE_CURRENCIES } from "@/lib/currency";
-import { ArrowLeft, Plus, Trash2, Star, ArrowRightLeft, Check, Calendar } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Star, ArrowRightLeft, Check, Calendar, History, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,13 +20,23 @@ type CurrencyItem = {
 
 type LatestRates = Record<string, { rate: number; date: Date } | null>;
 
+type RateHistoryItem = {
+  id: string;
+  fromCurrency: string;
+  toCurrency: string;
+  rate: number;
+  effectiveDate: Date;
+};
+
 export function CurrenciesClient({
   currencies,
   latestRates,
+  rateHistory,
   baseCurrency,
 }: {
   currencies: CurrencyItem[];
   latestRates: LatestRates;
+  rateHistory: RateHistoryItem[];
   baseCurrency: string;
 }) {
   const router = useRouter();
@@ -35,6 +45,7 @@ export function CurrenciesClient({
   const [rateInputs, setRateInputs] = useState<Record<string, string>>({});
   const [dateInputs, setDateInputs] = useState<Record<string, string>>({});
   const [editingRate, setEditingRate] = useState<string | null>(null);
+  const [showHistory, setShowHistory] = useState<string | null>(null);
   const [saving, setSaving] = useState<string | null>(null);
 
   const unusedCurrencies = AVAILABLE_CURRENCIES.filter(
@@ -161,6 +172,46 @@ export function CurrenciesClient({
                     </span>
                   </div>
                 )}
+
+                {/* Rate history */}
+                {(() => {
+                  const history = rateHistory.filter((r) => r.fromCurrency === currency.code);
+                  if (history.length <= 1) return null;
+                  return (
+                    <div className="mb-3">
+                      <button
+                        onClick={() => setShowHistory(showHistory === currency.code ? null : currency.code)}
+                        className="flex items-center gap-1.5 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        <History className="w-3 h-3" />
+                        <span>{history.length} rate entries</span>
+                        <ChevronDown className={`w-3 h-3 transition-transform ${showHistory === currency.code ? "rotate-180" : ""}`} />
+                      </button>
+                      {showHistory === currency.code && (
+                        <div className="mt-2 rounded-lg border border-border bg-muted/20 overflow-hidden">
+                          <div className="grid grid-cols-3 gap-2 px-3 py-1.5 border-b border-border">
+                            <span className="text-[10px] font-medium text-muted-foreground uppercase">Rate</span>
+                            <span className="text-[10px] font-medium text-muted-foreground uppercase">Effective Date</span>
+                            <span className="text-[10px] font-medium text-muted-foreground uppercase">Status</span>
+                          </div>
+                          {history.map((entry, idx) => (
+                            <div key={entry.id} className="grid grid-cols-3 gap-2 px-3 py-2 border-b border-border last:border-0">
+                              <span className="text-[12px] text-foreground">
+                                {entry.rate} {baseCurrency}
+                              </span>
+                              <span className="text-[12px] text-muted-foreground">
+                                {new Date(entry.effectiveDate).toLocaleDateString()}
+                              </span>
+                              <span className={`text-[10px] font-medium ${idx === 0 ? "text-green-400" : "text-muted-foreground"}`}>
+                                {idx === 0 ? "Current" : "Historical"}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
 
                 {/* Add new rate button or form */}
                 {editingRate !== currency.code ? (
