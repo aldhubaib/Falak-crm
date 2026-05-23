@@ -66,8 +66,22 @@ export function DealsClient({
         </Link>
       </div>
 
+      {/* Stage Totals */}
+      <div className="flex gap-4 overflow-x-auto -mx-6 px-6 mb-4">
+        {dealsByStage.map((stage) => {
+          const total = stage.deals.reduce((sum, d) => sum + Number(d.value), 0);
+          return (
+            <div key={stage.id} className="min-w-[280px] w-[280px] flex-shrink-0">
+              <p className="text-[12px] text-muted-foreground px-1">
+                {total.toLocaleString()} <span className="text-[10px]">{stage.deals[0]?.currency || "KWD"}</span>
+              </p>
+            </div>
+          );
+        })}
+      </div>
+
       {/* Kanban Board */}
-      <div className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6" style={{ height: "calc(100vh - 160px)" }}>
+      <div className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6" style={{ height: "calc(100vh - 200px)" }}>
         {dealsByStage.map((stage) => (
           <div
             key={stage.id}
