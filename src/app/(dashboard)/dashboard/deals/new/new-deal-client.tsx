@@ -18,10 +18,12 @@ export function NewDealClient({
   pipeline,
   companies,
   contacts,
+  currency,
 }: {
   pipeline: { id: string; stages: Stage[] } | null;
   companies: { id: string; name: string }[];
   contacts: { id: string; name: string }[];
+  currency: string;
 }) {
   const router = useRouter();
   const { push: pushError } = useErrorStore();
@@ -116,7 +118,7 @@ export function NewDealClient({
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField def={FIELD_REGISTRY.dealTitle} value={values.title} error={errors.title} onChange={(v) => setValue("title", v)} />
-          <FormField def={FIELD_REGISTRY.dealValue} value={values.value} error={errors.value} onChange={(v) => setValue("value", v)} />
+          <FormField def={FIELD_REGISTRY.dealValue} value={values.value} error={errors.value} onChange={(v) => setValue("value", v)} suffix={currency} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -21,6 +21,7 @@ export type FieldDef = {
   label: string;
   placeholder?: string;
   icon?: string;
+  suffix?: string;
   dir?: "ltr" | "rtl";
   validation?: FieldValidation;
 };

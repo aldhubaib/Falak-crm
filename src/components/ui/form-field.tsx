@@ -26,9 +26,10 @@ interface FormFieldProps {
   error?: string | null;
   onChange: (value: string) => void;
   inputRef?: React.RefObject<HTMLInputElement | null>;
+  suffix?: string;
 }
 
-export function FormField({ def, value, error, onChange, inputRef }: FormFieldProps) {
+export function FormField({ def, value, error, onChange, inputRef, suffix }: FormFieldProps) {
   const hasError = !!error;
   const icon = def.icon ? ICONS[def.icon] : null;
   const isRequired = def.validation?.required;
@@ -72,6 +73,8 @@ export function FormField({ def, value, error, onChange, inputRef }: FormFieldPr
     return <CountryFormField def={def} value={value} error={error} onChange={onChange} icon={icon} />;
   }
 
+  const displaySuffix = suffix || def.suffix;
+
   // text / arabic
   return (
     <div className={cn(hasError && "shake")}>
@@ -86,15 +89,20 @@ export function FormField({ def, value, error, onChange, inputRef }: FormFieldPr
           {def.label}
           {isRequired && <span className="text-destructive">*</span>}
         </label>
-        <input
-          ref={inputRef}
-          name={def.key}
-          value={value}
-          dir={def.dir}
-          placeholder={def.placeholder}
-          onChange={(e) => onChange(e.target.value)}
-          className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
-        />
+        <div className="flex items-center gap-2">
+          <input
+            ref={inputRef}
+            name={def.key}
+            value={value}
+            dir={def.dir}
+            placeholder={def.placeholder}
+            onChange={(e) => onChange(e.target.value)}
+            className="flex-1 h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+          />
+          {displaySuffix && (
+            <span className="text-[11px] text-muted-foreground font-medium shrink-0">{displaySuffix}</span>
+          )}
+        </div>
       </div>
       {hasError && (
         <p className="text-[11px] text-destructive mt-1">{error}</p>
