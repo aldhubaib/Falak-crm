@@ -43,13 +43,26 @@ export async function removeCurrency(id: string): Promise<ActionResult> {
       where: { id, workspaceId: workspace.id },
     });
 
-    if (currency?.isBase) {
-      throw new Error("Cannot remove the base currency");
+    if (!currency) throw new Error("Currency not found");
+    if (currency.isBase) throw new Error("Cannot remove the base currency");
+
+    const dealsCount = await db.deal.count({
+      where: { workspaceId: workspace.id, currency: currency.code, deletedAt: null },
+    });
+    const invoicesCount = await db.invoice.count({
+      where: { workspaceId: workspace.id, currency: currency.code },
+    });
+
+    if (dealsCount > 0 || invoicesCount > 0) {
+      const parts: string[] = [];
+      if (dealsCount > 0) parts.push(`${dealsCount} deal${dealsCount > 1 ? "s" : ""}`);
+      if (invoicesCount > 0) parts.push(`${invoicesCount} invoice${invoicesCount > 1 ? "s" : ""}`);
+      throw new Error(`Cannot remove ${currency.code} — it is used by ${parts.join(" and ")}`);
     }
 
     await db.currency.delete({ where: { id } });
     await db.exchangeRate.deleteMany({
-      where: { workspaceId: workspace.id, fromCurrency: currency!.code },
+      where: { workspaceId: workspace.id, fromCurrency: currency.code },
     });
 
     revalidatePath("/dashboard/settings/currencies");
