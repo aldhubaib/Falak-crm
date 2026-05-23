@@ -126,6 +126,23 @@ export const FIELD_REGISTRY: Record<string, FieldDef> = {
     placeholder: "https://",
     icon: "Globe",
   },
+
+  // ─── Deal Fields ───────────────────────────────────────────
+  dealTitle: {
+    key: "title",
+    type: "text",
+    label: "Deal Title",
+    placeholder: "Deal title",
+    icon: "Handshake",
+    validation: { required: true },
+  },
+  dealValue: {
+    key: "value",
+    type: "text",
+    label: "Value",
+    placeholder: "0.00",
+    icon: "DollarSign",
+  },
 };
 
 /**
