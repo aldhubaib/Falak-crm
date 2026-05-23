@@ -67,28 +67,30 @@ export function DealsClient({
       </div>
 
       {/* Kanban Board */}
-      <div className="flex gap-3 overflow-x-auto pb-4 -mx-6 px-6">
+      <div className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6" style={{ height: "calc(100vh - 160px)" }}>
         {dealsByStage.map((stage) => (
           <div
             key={stage.id}
-            className="min-w-[260px] w-[260px] flex-shrink-0"
+            className="min-w-[280px] w-[280px] flex-shrink-0 flex flex-col"
           >
             {/* Stage Header */}
-            <div className="flex items-center gap-2 mb-3 px-1">
-              <div
-                className="w-2.5 h-2.5 rounded-full"
-                style={{ backgroundColor: stage.color }}
-              />
-              <span className="text-[12px] font-medium text-foreground">
-                {stage.name}
-              </span>
-              <span className="text-[11px] text-muted-foreground ml-auto">
-                {stage.deals.length}
-              </span>
+            <div className="rounded-t-xl overflow-hidden mb-0">
+              <div className="h-1" style={{ backgroundColor: stage.color }} />
+              <div className="flex items-center gap-2 px-3 py-2.5 bg-card border border-t-0 border-border rounded-b-none">
+                <span className="text-[12px] font-semibold text-foreground">
+                  {stage.name}
+                </span>
+                <span
+                  className="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center"
+                  style={{ backgroundColor: `${stage.color}20`, color: stage.color }}
+                >
+                  {stage.deals.length}
+                </span>
+              </div>
             </div>
 
             {/* Deal Cards */}
-            <div className="space-y-2">
+            <div className="flex-1 overflow-y-auto space-y-2 pt-2 pb-2 px-0.5 scrollbar-thin">
               {stage.deals.map((deal) => (
                 <DealCard
                   key={deal.id}
@@ -97,6 +99,11 @@ export function DealsClient({
                   currentStage={stage}
                 />
               ))}
+              {stage.deals.length === 0 && (
+                <div className="rounded-xl border border-dashed border-border/50 p-4 text-center">
+                  <p className="text-[11px] text-muted-foreground/50">No deals</p>
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -120,59 +127,68 @@ function DealCard({
   const isClosed = isWon || isLost;
 
   return (
-    <div className="rounded-xl border border-border bg-card p-3 space-y-2">
+    <div className="rounded-xl border border-border bg-card hover:border-border/80 transition-colors group">
       <Link
         href={`/dashboard/deals/${deal.id}`}
-        className="text-[13px] font-medium text-foreground no-underline hover:text-primary transition-colors block"
+        className="block p-3 no-underline"
       >
-        {deal.title}
+        <p className="text-[13px] font-medium text-foreground group-hover:text-primary transition-colors leading-tight mb-1.5">
+          {deal.title}
+        </p>
+        <p className="text-[11px] text-muted-foreground mb-2">
+          {deal.company?.name || "No company"}
+          {deal.contact && ` • ${deal.contact.firstName} ${deal.contact.lastName}`}
+        </p>
+        <p className="text-[14px] font-semibold text-foreground">
+          {Number(deal.value).toLocaleString()} <span className="text-[11px] font-normal text-muted-foreground">{deal.currency || "KWD"}</span>
+        </p>
       </Link>
-      <div className="text-[11px] text-muted-foreground">
-        {deal.company?.name || "No company"}
-      </div>
-      <div className="text-[13px] font-semibold text-foreground">
-        {Number(deal.value).toLocaleString()} {deal.currency || "KWD"}
-      </div>
 
-      {!isClosed && nextStage && (
-        <form onSubmit={async (e) => {
-          e.preventDefault();
-          const result = await moveDeal(deal.id, nextStage.id);
-          if (!result.ok) useErrorStore.getState().push(result.error);
-        }}>
-          <button
-            type="submit"
-            className="w-full h-7 rounded-lg bg-muted text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors flex items-center justify-center gap-1"
-          >
-            <ArrowRight className="w-3 h-3" />
-            Move to {nextStage.name}
-          </button>
-        </form>
-      )}
+      {(!isClosed || (isWon && !deal.project)) && (
+        <div className="px-3 pb-3 pt-0">
+          {!isClosed && nextStage && (
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const result = await moveDeal(deal.id, nextStage.id);
+              if (!result.ok) useErrorStore.getState().push(result.error);
+            }}>
+              <button
+                type="submit"
+                className="w-full h-7 rounded-lg bg-muted/50 border border-border text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center justify-center gap-1"
+              >
+                <ArrowRight className="w-3 h-3" />
+                {nextStage.name}
+              </button>
+            </form>
+          )}
 
-      {isWon && !deal.project && (
-        <form onSubmit={async (e) => {
-          e.preventDefault();
-          const result = await createProjectFromDeal(deal.id);
-          if (!result.ok) useErrorStore.getState().push(result.error);
-        }}>
-          <button
-            type="submit"
-            className="w-full h-7 rounded-lg bg-success/15 text-[11px] font-medium text-success hover:bg-success/25 transition-colors flex items-center justify-center gap-1"
-          >
-            <Rocket className="w-3 h-3" />
-            Create Project
-          </button>
-        </form>
+          {isWon && !deal.project && (
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const result = await createProjectFromDeal(deal.id);
+              if (!result.ok) useErrorStore.getState().push(result.error);
+            }}>
+              <button
+                type="submit"
+                className="w-full h-7 rounded-lg bg-green-500/10 border border-green-500/20 text-[11px] font-medium text-green-400 hover:bg-green-500/20 transition-colors flex items-center justify-center gap-1"
+              >
+                <Rocket className="w-3 h-3" />
+                Create Project
+              </button>
+            </form>
+          )}
+        </div>
       )}
 
       {isWon && deal.project && (
-        <Link
-          href={`/dashboard/projects/${deal.project.id}`}
-          className="w-full h-7 rounded-lg bg-primary/15 text-[11px] font-medium text-primary hover:bg-primary/25 transition-colors flex items-center justify-center gap-1 no-underline"
-        >
-          View Project
-        </Link>
+        <div className="px-3 pb-3 pt-0">
+          <Link
+            href={`/dashboard/projects/${deal.project.id}`}
+            className="w-full h-7 rounded-lg bg-primary/10 border border-primary/20 text-[11px] font-medium text-primary hover:bg-primary/20 transition-colors flex items-center justify-center gap-1 no-underline"
+          >
+            View Project
+          </Link>
+        </div>
       )}
     </div>
   );
