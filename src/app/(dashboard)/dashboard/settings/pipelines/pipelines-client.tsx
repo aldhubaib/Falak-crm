@@ -5,6 +5,7 @@ import { createPipeline, createStage, updateStage, deleteStage } from "@/actions
 import { ArrowLeft, Plus, Trash2, X, GripVertical } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 
 type Stage = {
   id: string;
@@ -52,7 +53,7 @@ export function PipelinesClient({ pipelines }: { pipelines: Pipeline[] }) {
             name="name"
             placeholder="Pipeline name"
             required
-            className="flex-1 h-9 px-3 rounded-lg bg-input border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            className="flex-1 h-9 px-3 rounded-lg bg-black border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
           />
           <Button type="submit">Create</Button>
           <Button type="button" variant="ghost" onClick={() => setShowNewPipeline(false)}>Cancel</Button>
@@ -100,7 +101,7 @@ function PipelineCard({ pipeline }: { pipeline: Pipeline }) {
             name="name"
             placeholder="Stage name"
             required
-            className="flex-1 h-8 px-2 rounded-lg bg-input border border-border text-[12px] text-foreground"
+            className="flex-1 h-8 px-2 rounded-lg bg-black border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
           />
           <input
             name="color"
@@ -108,11 +109,15 @@ function PipelineCard({ pipeline }: { pipeline: Pipeline }) {
             defaultValue="#3b82f6"
             className="w-8 h-8 rounded-lg border border-border cursor-pointer"
           />
-          <select name="type" className="h-8 px-2 rounded-lg bg-input border border-border text-[12px] text-foreground">
-            <option value="OPEN">Open</option>
-            <option value="WON">Won</option>
-            <option value="LOST">Lost</option>
-          </select>
+          <FormSelect
+            name="type"
+            value="OPEN"
+            options={[
+              { value: "OPEN", label: "Open" },
+              { value: "WON", label: "Won" },
+              { value: "LOST", label: "Lost" },
+            ]}
+          />
           <Button type="submit" size="sm">Add</Button>
           <button type="button" onClick={() => setShowAddStage(false)} className="text-muted-foreground hover:text-foreground">
             <X className="w-4 h-4" />

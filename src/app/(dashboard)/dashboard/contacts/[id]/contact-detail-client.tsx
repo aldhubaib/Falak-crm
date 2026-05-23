@@ -1,7 +1,7 @@
 "use client";
 
 import { updateContact } from "@/actions/contacts";
-import { InputField, PhoneField, EmailField } from "@/components/ui/field";
+import { InputField, PhoneField, EmailField, CountryField } from "@/components/ui/field";
 import { ActionMenu } from "@/components/ui/action-menu";
 import { ArrowLeft, User, MapPin, Handshake, Building2 } from "lucide-react";
 import Link from "next/link";
@@ -103,26 +103,26 @@ export function ContactDetailClient({ contact }: { contact: Contact }) {
             placeholder="Title / Position"
             onSave={save("role")}
           />
-          <InputField
+          <CountryField
             label="Country"
             icon={<MapPin className="w-3 h-3" />}
             value={contact.country}
             onSave={save("country")}
           />
-          <div>
-            <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
+          <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5">
+            <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
               <Building2 className="w-3 h-3" />
               Company
             </label>
             {contact.company ? (
               <Link
                 href={`/dashboard/companies/${contact.company.id}`}
-                className="flex items-center h-10 px-3 rounded-lg border border-border text-[13px] text-primary hover:border-primary/50 transition-colors no-underline"
+                className="flex items-center h-8 text-[13px] text-primary hover:text-primary/80 transition-colors no-underline"
               >
                 {contact.company.name}
               </Link>
             ) : (
-              <div className="flex items-center h-10 px-3 rounded-lg border border-border text-[13px] text-muted-foreground/50">
+              <div className="flex items-center h-8 text-[13px] text-muted-foreground/50">
                 No company
               </div>
             )}
@@ -132,12 +132,12 @@ export function ContactDetailClient({ contact }: { contact: Contact }) {
 
       {/* Deals Table */}
       <div className="border-t border-border my-8" />
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="flex items-center gap-2 text-[13px] font-medium text-foreground">
-            <Handshake className="w-4 h-4" />
+      <div className="rounded-lg bg-black border border-border p-4">
+        <div className="flex items-center justify-between mb-3">
+          <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+            <Handshake className="w-3 h-3" />
             Deals ({contact.deals.length})
-          </h2>
+          </label>
         </div>
 
         {contact.deals.length === 0 ? (

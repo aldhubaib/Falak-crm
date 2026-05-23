@@ -138,3 +138,19 @@ export async function getWorkspaceCurrency() {
     baseCurrency: workspace.baseCurrency,
   };
 }
+
+export async function getLatestRateForCurrency(fromCurrency: string): Promise<number | null> {
+  const workspace = await requireWorkspace();
+  if (fromCurrency === workspace.baseCurrency) return 1;
+
+  const latest = await db.exchangeRate.findFirst({
+    where: {
+      workspaceId: workspace.id,
+      fromCurrency,
+      toCurrency: workspace.baseCurrency,
+    },
+    orderBy: { effectiveDate: "desc" },
+  });
+
+  return latest ? Number(latest.rate) : null;
+}

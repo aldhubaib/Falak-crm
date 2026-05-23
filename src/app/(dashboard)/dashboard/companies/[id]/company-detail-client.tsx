@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import { updateCompany } from "@/actions/companies";
-import { createContact, deleteContact } from "@/actions/contacts";
-import { InputField } from "@/components/ui/field";
-import { PhoneInput } from "@/components/ui/phone-input";
+import { deleteContact } from "@/actions/contacts";
+import { InputField, CountryField, SelectField } from "@/components/ui/field";
 import { ActionMenu } from "@/components/ui/action-menu";
-import { ArrowLeft, Building2, Globe, MapPin, StickyNote, Trash2, Plus, Handshake, Users } from "lucide-react";
+import { AddContactForm } from "@/components/add-contact-form";
+import { AddDealForm } from "@/components/add-deal-form";
+import { ArrowLeft, Building2, Globe, MapPin, StickyNote, Trash2, Handshake, Users } from "lucide-react";
+import { getCountryFlag } from "@/lib/countries";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { useErrorStore } from "@/lib/error-store";
 import Link from "next/link";
 
@@ -46,7 +47,17 @@ type Company = {
   deals: Deal[];
 };
 
-export function CompanyDetailClient({ company }: { company: Company }) {
+type Option = { id: string; name: string };
+
+export function CompanyDetailClient({
+  company,
+  industries,
+  referrals,
+}: {
+  company: Company;
+  industries: Option[];
+  referrals: Option[];
+}) {
   const { user } = useUser();
   const [notes, setNotes] = useState<Note[]>(() => {
     try { return JSON.parse(company.notes || "[]"); } catch { return []; }
@@ -125,25 +136,26 @@ export function CompanyDetailClient({ company }: { company: Company }) {
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField
+          <SelectField
             label="Industry"
             value={company.industry || ""}
-            placeholder="e.g. Technology, Retail"
+            options={industries.map((i) => ({ value: i.name, label: i.name }))}
+            placeholder="Select industry..."
             onSave={save("industry")}
           />
-          <InputField
+          <SelectField
             label="Referral"
             value={company.referral || ""}
-            placeholder="Referral source"
+            options={referrals.map((r) => ({ value: r.name, label: r.name }))}
+            placeholder="Select referral..."
             onSave={save("referral")}
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField
+          <CountryField
             label="Country"
             icon={<MapPin className="w-3 h-3" />}
             value={company.address || ""}
-            placeholder="Country"
             onSave={save("address")}
           />
           <InputField
@@ -159,24 +171,25 @@ export function CompanyDetailClient({ company }: { company: Company }) {
       {/* Notes Section */}
       <div className="border-t border-border my-8" />
       <div>
-        <h2 className="flex items-center gap-2 text-[13px] font-medium text-foreground mb-4">
-          <StickyNote className="w-4 h-4" />
-          Notes
-        </h2>
-
-        <textarea
-          value={newNoteText}
-          onChange={(e) => setNewNoteText(e.target.value)}
-          placeholder="Write a note and press Enter..."
-          rows={3}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              addNote();
-            }
-          }}
-          className="w-full px-3 py-2.5 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors resize-none mb-4"
-        />
+        <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 mb-4 focus-within:border-ring transition-colors">
+          <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+            <StickyNote className="w-3 h-3" />
+            Notes
+          </label>
+          <textarea
+            value={newNoteText}
+            onChange={(e) => setNewNoteText(e.target.value)}
+            placeholder="Write a note and press Enter..."
+            rows={3}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                addNote();
+              }
+            }}
+            className="w-full py-1.5 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-none"
+          />
+        </div>
 
         {notes.length > 0 && (
           <div className="space-y-2">
@@ -226,125 +239,43 @@ export function CompanyDetailClient({ company }: { company: Company }) {
 
 function ContactsTable({ companyId, contacts }: { companyId: string; contacts: Contact[] }) {
   const router = useRouter();
-  const { push: pushError } = useErrorStore();
-  const [showForm, setShowForm] = useState(false);
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="flex items-center gap-2 text-[13px] font-medium text-foreground">
-          <Users className="w-4 h-4" />
+    <div className="rounded-lg bg-black border border-border p-4">
+      <div className="flex items-center justify-between mb-3">
+        <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+          <Users className="w-3 h-3" />
           Contacts ({contacts.length})
-        </h2>
-        <Button size="sm" onClick={() => setShowForm(true)}>
-          <Plus className="w-3.5 h-3.5" />
-          Add Contact
-        </Button>
+        </label>
+        <AddContactForm companyId={companyId} />
       </div>
-
-      {showForm && (
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.currentTarget);
-            formData.set("companyId", companyId);
-            const result = await createContact(formData);
-            if (!result.ok) { pushError(result.error); return; }
-            setShowForm(false);
-            router.refresh();
-          }}
-          className="mb-4 rounded-lg border border-border p-4 space-y-3"
-        >
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">
-                First Name <span className="text-destructive">*</span>
-              </label>
-              <input
-                name="firstName"
-                placeholder="First name"
-                required
-                autoFocus
-                className="w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring"
-              />
-            </div>
-            <div>
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">
-                Last Name <span className="text-destructive">*</span>
-              </label>
-              <input
-                name="lastName"
-                placeholder="Last name"
-                required
-                className="w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <PhoneInput name="mobile" label="Mobile" required />
-            <div>
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">
-                Email
-              </label>
-              <input
-                name="email"
-                type="email"
-                placeholder="name@company.com"
-                pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
-                title="Please enter a valid email address"
-                className="w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">
-                Country <span className="text-destructive">*</span>
-              </label>
-              <input
-                name="country"
-                placeholder="Country"
-                required
-                className="w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring"
-              />
-            </div>
-            <div>
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Role</label>
-              <input
-                name="role"
-                placeholder="Title"
-                className="w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring"
-              />
-            </div>
-          </div>
-          <div className="flex items-center gap-2 pt-1">
-            <Button type="submit" size="sm">Create</Button>
-            <Button type="button" variant="ghost" size="sm" onClick={() => setShowForm(false)}>Cancel</Button>
-          </div>
-        </form>
-      )}
 
       {contacts.length === 0 ? (
         <p className="text-[12px] text-muted-foreground">No contacts yet.</p>
       ) : (
         <div className="rounded-lg border border-border overflow-hidden">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="border-b border-border bg-muted/30">
-                  <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Name</th>
-                  <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Mobile</th>
-                  <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Country</th>
-                  <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Role</th>
-                  <th className="px-4 py-2.5 w-10"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {contacts.map((contact) => (
-                  <tr key={contact.id} className="border-b border-border last:border-0 group hover:bg-muted/20 transition-colors">
-                    <td className="px-4 py-2.5 text-[13px] text-foreground">{contact.firstName} {contact.lastName}</td>
-                    <td className="px-4 py-2.5 text-[13px] text-muted-foreground">{contact.mobile}</td>
-                    <td className="px-4 py-2.5 text-[13px] text-muted-foreground">{contact.country}</td>
-                    <td className="px-4 py-2.5 text-[13px] text-muted-foreground">{contact.role || "—"}</td>
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Name</th>
+                <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Mobile</th>
+                <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Country</th>
+                <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Role</th>
+                <th className="px-4 py-2.5 w-10"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {contacts.map((contact) => (
+                <tr key={contact.id} className="border-b border-border last:border-0 group hover:bg-muted/20 transition-colors">
+                  <td className="px-4 py-2.5 text-[13px] text-foreground">{contact.firstName} {contact.lastName}</td>
+                  <td className="px-4 py-2.5 text-[13px] text-muted-foreground">{contact.mobile}</td>
+                  <td className="px-4 py-2.5 text-[13px] text-muted-foreground">
+                    <span className="inline-flex items-center gap-1.5">
+                      {getCountryFlag(contact.country) && <span>{getCountryFlag(contact.country)}</span>}
+                      {contact.country}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2.5 text-[13px] text-muted-foreground">{contact.role || "—"}</td>
                   <td className="px-4 py-2.5">
                     <button
                       onClick={async () => {
@@ -367,85 +298,17 @@ function ContactsTable({ companyId, contacts }: { companyId: string; contacts: C
 }
 
 function DealsTable({ deals, companyId, contacts }: { deals: Deal[]; companyId: string; contacts: Contact[] }) {
-  const router = useRouter();
-  const { push: pushError } = useErrorStore();
-  const [showForm, setShowForm] = useState(false);
-  const [selectedContactId, setSelectedContactId] = useState("");
+  const contactOptions = contacts.map((c) => ({ id: c.id, name: `${c.firstName} ${c.lastName}` }));
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="flex items-center gap-2 text-[13px] font-medium text-foreground">
-          <Handshake className="w-4 h-4" />
+    <div className="rounded-lg bg-black border border-border p-4">
+      <div className="flex items-center justify-between mb-3">
+        <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+          <Handshake className="w-3 h-3" />
           Deals ({deals.length})
-        </h2>
-        <Button size="sm" onClick={() => setShowForm(true)}>
-          <Plus className="w-3.5 h-3.5" />
-          New Deal
-        </Button>
+        </label>
+        <AddDealForm companyId={companyId} contacts={contactOptions} />
       </div>
-
-      {showForm && (
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.currentTarget);
-            formData.set("companyId", companyId);
-            formData.set("contactId", selectedContactId);
-            const { createDeal } = await import("@/actions/deals");
-            const result = await createDeal(formData);
-            if (!result.ok) { pushError(result.error); return; }
-            setShowForm(false);
-            setSelectedContactId("");
-            router.refresh();
-          }}
-          className="mb-4 rounded-lg border border-border p-4 space-y-3"
-        >
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">
-                Title <span className="text-destructive">*</span>
-              </label>
-              <input
-                name="title"
-                placeholder="Deal title"
-                required
-                autoFocus
-                className="w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring"
-              />
-            </div>
-            <div>
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Value</label>
-              <input
-                name="value"
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                className="w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Contact</label>
-              <select
-                value={selectedContactId}
-                onChange={(e) => setSelectedContactId(e.target.value)}
-                className="w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground appearance-none focus:outline-none focus:border-ring"
-              >
-                <option value="">None</option>
-                {contacts.map((c) => (
-                  <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 pt-1">
-            <Button type="submit" size="sm">Create</Button>
-            <Button type="button" variant="ghost" size="sm" onClick={() => setShowForm(false)}>Cancel</Button>
-          </div>
-        </form>
-      )}
 
       {deals.length === 0 ? (
         <p className="text-[12px] text-muted-foreground">No deals yet.</p>

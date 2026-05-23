@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createService, deleteService } from "@/actions/services";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 
 type Service = {
   id: string;
@@ -37,57 +38,56 @@ export function ServicesClient({ services }: { services: Service[] }) {
           className="mb-4 rounded-lg border border-border p-4 space-y-3"
         >
           <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Service Name</label>
+            <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
+              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Service Name</label>
               <input
                 name="name"
                 placeholder="e.g. Social Media Management"
                 required
                 autoFocus
-                className="w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring"
+                className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
               />
             </div>
-            <div>
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Pricing Type</label>
-              <select
-                name="pricingType"
-                className="w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground appearance-none focus:outline-none focus:border-ring"
-              >
-                <option value="FIXED">Fixed Price</option>
-                <option value="MONTHLY">Monthly</option>
-                <option value="PER_UNIT">Per Unit</option>
-                <option value="HOURLY">Hourly</option>
-              </select>
-            </div>
+            <FormSelect
+              name="pricingType"
+              label="Pricing Type"
+              value="FIXED"
+              options={[
+                { value: "FIXED", label: "Fixed Price" },
+                { value: "MONTHLY", label: "Monthly" },
+                { value: "PER_UNIT", label: "Per Unit" },
+                { value: "HOURLY", label: "Hourly" },
+              ]}
+            />
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Price</label>
+            <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
+              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Price</label>
               <input
                 name="unitPrice"
                 type="number"
                 step="0.01"
                 placeholder="0.00"
                 required
-                className="w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring"
+                className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
               />
             </div>
-            <div>
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Unit</label>
+            <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
+              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Unit</label>
               <input
                 name="unit"
                 placeholder="e.g. month, piece, hour"
-                className="w-full h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring"
+                className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
               />
             </div>
           </div>
-          <div>
-            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Description</label>
+          <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
+            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Description</label>
             <textarea
               name="description"
               placeholder="What's included..."
               rows={2}
-              className="w-full px-3 py-2.5 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring resize-none"
+              className="w-full py-1.5 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-none"
             />
           </div>
           <div className="flex items-center gap-2 pt-1">

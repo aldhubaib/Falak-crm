@@ -6,7 +6,7 @@
  * component renders them consistently everywhere.
  */
 
-export type FieldType = "text" | "phone" | "email" | "arabic" | "combobox" | "textarea";
+export type FieldType = "text" | "phone" | "email" | "arabic" | "combobox" | "textarea" | "country";
 
 export type FieldValidation = {
   required?: boolean;
@@ -80,7 +80,7 @@ export const FIELD_REGISTRY: Record<string, FieldDef> = {
   },
   country: {
     key: "country",
-    type: "combobox",
+    type: "country",
     label: "Country",
     placeholder: "Select country...",
     icon: "MapPin",

@@ -92,7 +92,7 @@ export function DataTable<T>({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={searchPlaceholder}
-            className="w-full h-9 pl-9 pr-8 rounded-full border border-border bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
+            className="w-full h-9 pl-9 pr-8 rounded-full border border-border bg-black text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
           />
           {search && (
             <button

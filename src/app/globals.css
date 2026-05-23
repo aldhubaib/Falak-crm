@@ -141,6 +141,12 @@
     color-scheme: dark;
   }
 
+  input,
+  textarea,
+  select {
+    background-color: #000 !important;
+  }
+
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;

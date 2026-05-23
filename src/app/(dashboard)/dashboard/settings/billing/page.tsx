@@ -33,24 +33,24 @@ export default async function BillingSettingsPage() {
 
       <div className="rounded-xl border border-border bg-card p-4 max-w-md">
         <form action={updateBilling} className="space-y-4">
-          <div>
-            <label className="text-[12px] text-muted-foreground block mb-1.5">Base Currency</label>
-            <p className="text-[13px] text-foreground font-medium">{workspace.baseCurrency}</p>
-            <p className="text-[11px] text-muted-foreground mt-1">
+          <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5">
+            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Base Currency</label>
+            <p className="text-[13px] text-foreground font-medium h-8 flex items-center">{workspace.baseCurrency}</p>
+            <p className="text-[11px] text-muted-foreground">
               Manage currencies in{" "}
               <Link href="/dashboard/settings/currencies" className="text-primary no-underline hover:underline">
                 Settings → Currencies
               </Link>
             </p>
           </div>
-          <div>
-            <label className="text-[12px] text-muted-foreground block mb-1.5">Tax Rate (%)</label>
+          <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
+            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Tax Rate (%)</label>
             <input
               name="taxRate"
               type="number"
               step="0.01"
               defaultValue={Number(workspace.taxRate)}
-              className="w-full h-9 px-3 rounded-lg bg-input border border-border text-sm text-foreground"
+              className="w-full h-8 bg-transparent border-none text-[13px] text-foreground focus:outline-none"
             />
           </div>
           <Button type="submit">

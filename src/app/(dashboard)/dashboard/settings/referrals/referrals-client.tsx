@@ -35,12 +35,15 @@ export function ReferralsClient({ referrals: initial }: { referrals: Referral[] 
           }}
           className="flex items-center gap-2 mb-6"
         >
-          <input
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            placeholder="New referral source..."
-            className="flex-1 h-10 px-3 rounded-lg bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
-          />
+          <div className="flex-1 rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
+            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Referral Source</label>
+            <input
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              placeholder="New referral source..."
+              className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+            />
+          </div>
           <Button type="submit" disabled={!newName.trim()}>
             <Plus className="w-3.5 h-3.5" />
             Add

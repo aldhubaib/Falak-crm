@@ -256,7 +256,8 @@ model Deal {
   title           String
   value           Decimal  @db.Decimal(12, 2)
   currency        String   @default("KWD")
-  valueInBase     Decimal? @db.Decimal(12, 2) // Value converted to base currency
+  rateToBase      Decimal? @db.Decimal(12, 6) // Locked exchange rate at time of creation
+  valueInBase     Decimal? @db.Decimal(12, 2) // Value converted to base currency using locked rate
   expectedCloseDate DateTime?
   lostReason      String?
   notes           String?
@@ -377,7 +378,8 @@ model Invoice {
   subtotal      Decimal       @db.Decimal(12, 2)
   taxAmount     Decimal       @db.Decimal(12, 2)
   total         Decimal       @db.Decimal(12, 2)
-  totalInBase   Decimal?      @db.Decimal(12, 2) // Total converted to base currency
+  rateToBase    Decimal?      @db.Decimal(12, 6) // Locked exchange rate at time of creation
+  totalInBase   Decimal?      @db.Decimal(12, 2) // Total converted to base currency using locked rate
   currency      String        @default("KWD")
   notes         String?
   dueDate       DateTime?

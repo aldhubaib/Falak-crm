@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import { requireWorkspace } from "@/lib/workspace";
 import { logActivity } from "@/lib/activity";
+import { getLatestRateForCurrency } from "@/actions/currencies";
 import { revalidatePath } from "next/cache";
 
 export async function getInvoices() {
@@ -66,6 +67,10 @@ export async function createInvoiceFromProject(projectId: string, taskIds: strin
   const taxAmount = subtotal * taxRate;
   const total = subtotal + taxAmount;
 
+  const currency = workspace.baseCurrency;
+  const rateToBase = await getLatestRateForCurrency(currency);
+  const totalInBase = rateToBase != null ? total * rateToBase : null;
+
   const invoice = await db.invoice.create({
     data: {
       workspaceId: workspace.id,
@@ -75,7 +80,9 @@ export async function createInvoiceFromProject(projectId: string, taskIds: strin
       subtotal,
       taxAmount,
       total,
-      currency: workspace.baseCurrency,
+      currency,
+      rateToBase,
+      totalInBase,
       items: { create: items },
     },
   });

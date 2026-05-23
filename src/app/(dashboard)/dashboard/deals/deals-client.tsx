@@ -237,20 +237,26 @@ function NewDealForm({
       >
         <input type="hidden" name="pipelineId" value={pipeline.id} />
         <input type="hidden" name="stageId" value={firstOpenStage?.id ?? ""} />
-        <input
-          name="title"
-          placeholder="Deal title *"
-          required
-          className="w-full h-9 px-3 rounded-lg bg-input border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-        />
-        <div className="grid grid-cols-3 gap-3">
+        <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
+          <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Title <span className="text-destructive">*</span></label>
           <input
-            name="value"
-            type="number"
-            step="0.01"
-            placeholder="Value"
-            className="h-9 px-3 rounded-lg bg-input border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            name="title"
+            placeholder="Deal title"
+            required
+            className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
           />
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
+            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Value</label>
+            <input
+              name="value"
+              type="number"
+              step="0.01"
+              placeholder="0.00"
+              className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+            />
+          </div>
           <ComboboxField
             label="Company"
             value={companyId}

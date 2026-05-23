@@ -5,6 +5,7 @@ import { moveDeal, addDealItem, removeDealItem, createProjectFromDeal } from "@/
 import { ArrowLeft, Plus, Trash2, Rocket, X, Check } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 import { useErrorStore } from "@/lib/error-store";
 
 type Stage = {
@@ -148,38 +149,42 @@ export function DealDetailClient({
               }}
               className="mb-3 p-3 rounded-lg bg-muted/50 space-y-2"
             >
-              <select
+              <FormSelect
                 name="serviceId"
+                label="Service"
                 required
-                className="w-full h-8 px-2 rounded-lg bg-input border border-border text-[12px] text-foreground"
-                onChange={(e) => {
-                  const s = services.find((s) => s.id === e.target.value);
-                  const priceInput = e.target.form?.querySelector<HTMLInputElement>('[name="unitPrice"]');
+                placeholder="Select service..."
+                options={services.map((s) => ({
+                  value: s.id,
+                  label: `${s.name} (${s.unitPrice.toLocaleString()} ${deal.currency || "KWD"})`,
+                }))}
+                onChange={(val) => {
+                  const s = services.find((s) => s.id === val);
+                  const priceInput = document.querySelector<HTMLInputElement>('[name="unitPrice"]');
                   if (s && priceInput) priceInput.value = String(s.unitPrice);
                 }}
-              >
-                <option value="">Select service...</option>
-                {services.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name} ({s.unitPrice.toLocaleString()} {deal.currency || "KWD"})
-                  </option>
-                ))}
-              </select>
+              />
               <div className="grid grid-cols-2 gap-2">
-                <input
-                  name="quantity"
-                  type="number"
-                  defaultValue="1"
-                  min="1"
-                  className="h-8 px-2 rounded-lg bg-input border border-border text-[12px] text-foreground"
-                />
-                <input
-                  name="unitPrice"
-                  type="number"
-                  step="0.01"
-                  placeholder="Price"
-                  className="h-8 px-2 rounded-lg bg-input border border-border text-[12px] text-foreground"
-                />
+                <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
+                  <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Quantity</label>
+                  <input
+                    name="quantity"
+                    type="number"
+                    defaultValue="1"
+                    min="1"
+                    className="w-full h-8 bg-transparent border-none text-[13px] text-foreground focus:outline-none"
+                  />
+                </div>
+                <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
+                  <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Unit Price</label>
+                  <input
+                    name="unitPrice"
+                    type="number"
+                    step="0.01"
+                    placeholder="0.00"
+                    className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+                  />
+                </div>
               </div>
               <div className="flex gap-2">
                 <Button type="submit" size="sm">Add</Button>

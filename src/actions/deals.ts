@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import { requireWorkspace } from "@/lib/workspace";
 import { logActivity } from "@/lib/activity";
+import { getLatestRateForCurrency } from "@/actions/currencies";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
 
@@ -77,6 +78,10 @@ export async function createDeal(formData: FormData): Promise<ActionResult<{ id:
       }
     }
 
+    const currency = workspace.baseCurrency;
+    const rateToBase = await getLatestRateForCurrency(currency);
+    const valueInBase = rateToBase != null ? value * rateToBase : null;
+
     const deal = await db.deal.create({
       data: {
         workspaceId: workspace.id,
@@ -84,6 +89,9 @@ export async function createDeal(formData: FormData): Promise<ActionResult<{ id:
         stageId,
         title,
         value,
+        currency,
+        rateToBase,
+        valueInBase,
         companyId: companyId || null,
         contactId: contactId || null,
       },
@@ -145,7 +153,12 @@ export async function addDealItem(dealId: string, formData: FormData): Promise<A
       (sum, item) => sum + Number(item.unitPrice) * item.quantity,
       0
     );
-    await db.deal.update({ where: { id: dealId }, data: { value: total } });
+
+    const deal = await db.deal.findUnique({ where: { id: dealId } });
+    const lockedRate = deal?.rateToBase ? Number(deal.rateToBase) : null;
+    const valueInBase = lockedRate != null ? total * lockedRate : null;
+
+    await db.deal.update({ where: { id: dealId }, data: { value: total, valueInBase } });
 
     revalidatePath("/dashboard/deals");
     revalidatePath(`/dashboard/deals/${dealId}`);
@@ -161,7 +174,12 @@ export async function removeDealItem(itemId: string, dealId: string): Promise<Ac
       (sum, item) => sum + Number(item.unitPrice) * item.quantity,
       0
     );
-    await db.deal.update({ where: { id: dealId }, data: { value: total } });
+
+    const deal = await db.deal.findUnique({ where: { id: dealId } });
+    const lockedRate = deal?.rateToBase ? Number(deal.rateToBase) : null;
+    const valueInBase = lockedRate != null ? total * lockedRate : null;
+
+    await db.deal.update({ where: { id: dealId }, data: { value: total, valueInBase } });
 
     revalidatePath("/dashboard/deals");
     revalidatePath(`/dashboard/deals/${dealId}`);

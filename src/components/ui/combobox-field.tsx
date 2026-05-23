@@ -46,11 +46,6 @@ export function ComboboxField({
 
   return (
     <div className="relative">
-      <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
-        {icon}
-        {label}
-        {required && <span className="text-destructive">*</span>}
-      </label>
       {name && <input type="hidden" name={name} value={value} />}
       <button
         type="button"
@@ -59,20 +54,29 @@ export function ComboboxField({
           setTimeout(() => inputRef.current?.focus(), 50);
         }}
         className={cn(
-          "w-full h-10 px-3 rounded-lg bg-transparent border text-[13px] text-left flex items-center justify-between transition-colors",
-          (value && (!selectById || options.some((o) => o.id === value))) ? "text-foreground" : "text-muted-foreground/50",
+          "w-full rounded-lg bg-black border px-3 pt-2 pb-1.5 text-left transition-colors",
           error ? "border-destructive" : "border-border",
           open && !error && "border-ring"
         )}
       >
-        <span className="truncate flex items-center gap-1.5">
-          {(() => {
-            const selected = selectById ? options.find((o) => o.id === value) : options.find((o) => o.label === value);
-            if (selected) return <>{selected.prefix && <span>{selected.prefix}</span>}{selected.label}</>;
-            return <span>{placeholder || "Select..."}</span>;
-          })()}
-        </span>
-        <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+        <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider pointer-events-none">
+          {icon}
+          {label}
+          {required && <span className="text-destructive">*</span>}
+        </label>
+        <div className="flex items-center justify-between h-8">
+          <span className={cn(
+            "truncate flex items-center gap-1.5 text-[13px]",
+            (value && (!selectById || options.some((o) => o.id === value))) ? "text-foreground" : "text-muted-foreground/50"
+          )}>
+            {(() => {
+              const selected = selectById ? options.find((o) => o.id === value) : options.find((o) => o.label === value);
+              if (selected) return <>{selected.prefix && <span>{selected.prefix}</span>}{selected.label}</>;
+              return <span>{placeholder || "Select..."}</span>;
+            })()}
+          </span>
+          <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+        </div>
       </button>
 
       {open && (
@@ -83,7 +87,7 @@ export function ComboboxField({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={onCreate ? "Search or type to add..." : "Search..."}
-              className="w-full h-8 px-2.5 rounded bg-transparent text-[12px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+              className="w-full h-8 px-2.5 rounded bg-black text-[12px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
               onKeyDown={async (e) => {
                 if (e.key === "Enter" && search && !hasExactMatch && onCreate) {
                   e.preventDefault();

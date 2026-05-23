@@ -82,7 +82,7 @@ function StatusSection({
             name="name"
             placeholder="Status name"
             required
-            className="flex-1 h-8 px-2 rounded-lg bg-input border border-border text-[12px] text-foreground"
+            className="flex-1 h-8 px-2 rounded-lg bg-black border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
           />
           <input
             name="color"

@@ -37,6 +37,7 @@ interface PhoneInputProps {
   errorMessage?: string;
   onChange?: (fullNumber: string) => void;
   inputRef?: React.RefObject<HTMLInputElement | null>;
+  embedded?: boolean;
 }
 
 function parsePhone(value: string) {
@@ -59,6 +60,7 @@ export function PhoneInput({
   errorMessage,
   onChange,
   inputRef,
+  embedded,
 }: PhoneInputProps) {
   const parsed = parsePhone(value);
   const [selectedCode, setSelectedCode] = useState(parsed.code);
@@ -103,79 +105,92 @@ export function PhoneInput({
       )
     : countryCodes;
 
+  const phoneRow = (
+    <div ref={containerRef} className="relative">
+      <div className={cn(
+        "flex items-center transition-colors",
+        embedded ? "h-8" : "h-8"
+      )}>
+        <button
+          type="button"
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          className="flex items-center gap-1 px-2 h-full border-r border-border text-[12px] text-foreground hover:bg-muted/30 transition-colors shrink-0"
+        >
+          {selectedCode ? (
+            <>
+              <span className="text-[14px]">
+                {countryCodes.find((c) => c.code === selectedCode)?.flag}
+              </span>
+              <span className="text-muted-foreground">{selectedCode}</span>
+            </>
+          ) : (
+            <span className="text-muted-foreground/50">Code</span>
+          )}
+          <ChevronDown className="w-3 h-3 text-muted-foreground" />
+        </button>
+        <input
+          ref={ref}
+          value={number}
+          onChange={handleNumberChange}
+          placeholder={placeholder}
+          className="flex-1 h-full px-3 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none"
+        />
+      </div>
+      <input type="hidden" name={name} value={fullNumber} />
+
+      {dropdownOpen && (
+        <div className="absolute top-full left-0 mt-1 w-56 bg-background border border-border rounded-lg shadow-xl z-50 overflow-hidden">
+          <div className="p-2 border-b border-border">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search..."
+              autoFocus
+              className="w-full h-8 px-2 rounded bg-muted/30 border-none text-[12px] text-foreground placeholder:text-muted-foreground/50 outline-none"
+            />
+          </div>
+          <div className="max-h-48 overflow-y-auto">
+            {filtered.map((c) => (
+              <button
+                key={c.code}
+                type="button"
+                onClick={() => handleCodeSelect(c.code)}
+                className={cn(
+                  "w-full flex items-center gap-2 px-3 py-2 text-left text-[12px] hover:bg-muted/30 transition-colors",
+                  selectedCode === c.code && "bg-muted/40"
+                )}
+              >
+                <span className="text-[14px]">{c.flag}</span>
+                <span className="text-foreground">{c.name}</span>
+                <span className="text-muted-foreground ml-auto">{c.code}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  if (embedded) {
+    return phoneRow;
+  }
+
   return (
     <div>
-      {label && (
-        <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
-          <Phone className="w-3 h-3" />
-          {label}
-          {required && <span className="text-destructive">*</span>}
-        </label>
-      )}
-      <div ref={containerRef} className="relative">
-        <div
-          className={cn(
-            "flex items-center h-10 rounded-lg border transition-colors",
-            error ? "border-destructive" : "border-border focus-within:border-ring"
-          )}
-        >
-          <button
-            type="button"
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="flex items-center gap-1 px-2.5 h-full border-r border-border text-[12px] text-foreground hover:bg-muted/30 rounded-l-lg transition-colors shrink-0"
-          >
-            {selectedCode ? (
-              <>
-                <span className="text-[14px]">
-                  {countryCodes.find((c) => c.code === selectedCode)?.flag}
-                </span>
-                <span className="text-muted-foreground">{selectedCode}</span>
-              </>
-            ) : (
-              <span className="text-muted-foreground/50">Code</span>
-            )}
-            <ChevronDown className="w-3 h-3 text-muted-foreground" />
-          </button>
-          <input
-            ref={ref}
-            value={number}
-            onChange={handleNumberChange}
-            placeholder={placeholder}
-            className="flex-1 h-full px-3 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none"
-          />
-        </div>
-        <input type="hidden" name={name} value={fullNumber} />
-
-        {dropdownOpen && (
-          <div className="absolute top-full left-0 mt-1 w-56 bg-background border border-border rounded-lg shadow-xl z-50 overflow-hidden">
-            <div className="p-2 border-b border-border">
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search..."
-                autoFocus
-                className="w-full h-8 px-2 rounded bg-muted/30 border-none text-[12px] text-foreground placeholder:text-muted-foreground/50 outline-none"
-              />
-            </div>
-            <div className="max-h-48 overflow-y-auto">
-              {filtered.map((c) => (
-                <button
-                  key={c.code}
-                  type="button"
-                  onClick={() => handleCodeSelect(c.code)}
-                  className={cn(
-                    "w-full flex items-center gap-2 px-3 py-2 text-left text-[12px] hover:bg-muted/30 transition-colors",
-                    selectedCode === c.code && "bg-muted/40"
-                  )}
-                >
-                  <span className="text-[14px]">{c.flag}</span>
-                  <span className="text-foreground">{c.name}</span>
-                  <span className="text-muted-foreground ml-auto">{c.code}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+      <div
+        className={cn(
+          "rounded-lg bg-black border px-3 pt-2 pb-1.5 transition-colors focus-within:border-ring",
+          error ? "border-destructive" : "border-border"
         )}
+      >
+        {label && (
+          <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+            <Phone className="w-3 h-3" />
+            {label}
+            {required && <span className="text-destructive">*</span>}
+          </label>
+        )}
+        {phoneRow}
       </div>
       {error && errorMessage && (
         <p className="text-[11px] text-destructive mt-1">{errorMessage}</p>

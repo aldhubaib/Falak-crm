@@ -61,7 +61,7 @@ export default function SignInPage() {
                   socialButtonsBlockButtonText: "text-foreground",
                   dividerLine: "bg-border",
                   dividerText: "text-muted-foreground text-[11px]",
-                  formFieldInput: "h-11 rounded-lg border-border bg-transparent text-foreground text-[13px] focus:border-ring",
+                  formFieldInput: "h-11 rounded-lg border-border bg-black text-foreground text-[13px] focus:border-ring",
                   formFieldLabel: "text-muted-foreground text-[11px] uppercase tracking-wider font-medium",
                   formButtonPrimary: "h-11 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground text-[13px] font-medium",
                   footerAction: "hidden",

@@ -108,7 +108,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         )}
       >
         {isDesktop && (
-          <div className="flex items-center justify-end gap-3 px-6 pt-4 pb-0 shrink-0">
+          <div className="flex items-center justify-end gap-2 px-6 pt-4 pb-0 shrink-0">
             <GlobalSearch />
             <ActivityPanel />
           </div>

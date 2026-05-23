@@ -6,6 +6,7 @@ import { createInvoiceFromProject } from "@/actions/invoices";
 import { ArrowLeft, Plus, Trash2, X, FileText, Check } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 
 type TaskStatus = { id: string; name: string; color: string; order: number };
 type ProjectStatus = { id: string; name: string; color: string; order: number };
@@ -76,15 +77,12 @@ export function ProjectDetailClient({
             {project.company?.name || "No company"}
           </p>
         </div>
-        <select
+        <FormSelect
+          name="_projectStatus"
           value={project.status?.id || ""}
-          onChange={(e) => updateProjectStatus(project.id, e.target.value)}
-          className="h-8 px-2 rounded-lg bg-input border border-border text-[12px] text-foreground"
-        >
-          {projectStatuses.map((s) => (
-            <option key={s.id} value={s.id}>{s.name}</option>
-          ))}
-        </select>
+          options={projectStatuses.map((s) => ({ value: s.id, label: s.name }))}
+          onChange={(val) => updateProjectStatus(project.id, val)}
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -128,25 +126,32 @@ export function ProjectDetailClient({
               }}
               className="mb-4 p-3 rounded-lg bg-muted/50 space-y-2"
             >
-              <input
-                name="title"
-                placeholder="Task title *"
-                required
-                className="w-full h-8 px-2 rounded-lg bg-input border border-border text-[12px] text-foreground placeholder:text-muted-foreground"
-              />
+              <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
+                <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Title <span className="text-destructive">*</span></label>
+                <input
+                  name="title"
+                  placeholder="Task title"
+                  required
+                  className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+                />
+              </div>
               <div className="grid grid-cols-3 gap-2">
-                <select name="serviceId" className="h-8 px-2 rounded-lg bg-input border border-border text-[12px] text-foreground">
-                  <option value="">No service</option>
-                  {services.map((s) => (
-                    <option key={s.id} value={s.id}>{s.name}</option>
-                  ))}
-                </select>
-                <input name="price" type="number" step="0.01" placeholder="Price" className="h-8 px-2 rounded-lg bg-input border border-border text-[12px] text-foreground" />
-                <select name="statusId" className="h-8 px-2 rounded-lg bg-input border border-border text-[12px] text-foreground">
-                  {taskStatuses.map((s) => (
-                    <option key={s.id} value={s.id}>{s.name}</option>
-                  ))}
-                </select>
+                <FormSelect
+                  name="serviceId"
+                  label="Service"
+                  placeholder="No service"
+                  options={services.map((s) => ({ value: s.id, label: s.name }))}
+                />
+                <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
+                  <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Price</label>
+                  <input name="price" type="number" step="0.01" placeholder="0.00" className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none" />
+                </div>
+                <FormSelect
+                  name="statusId"
+                  label="Status"
+                  value={taskStatuses[0]?.id || ""}
+                  options={taskStatuses.map((s) => ({ value: s.id, label: s.name }))}
+                />
               </div>
               <input type="hidden" name="billable" value="true" />
               <div className="flex gap-2">
@@ -189,16 +194,12 @@ export function ProjectDetailClient({
                       {task.assignee?.name && ` • ${task.assignee.name}`}
                     </p>
                   </div>
-                  <select
+                  <FormSelect
+                    name={`taskStatus_${task.id}`}
                     value={task.status?.id || ""}
-                    onChange={(e) => updateTaskStatus(task.id, e.target.value, project.id)}
-                    className="h-6 px-1.5 rounded bg-muted border-none text-[10px] text-foreground"
-                    style={task.status ? { color: task.status.color } : undefined}
-                  >
-                    {taskStatuses.map((s) => (
-                      <option key={s.id} value={s.id}>{s.name}</option>
-                    ))}
-                  </select>
+                    options={taskStatuses.map((s) => ({ value: s.id, label: s.name }))}
+                    onChange={(val) => updateTaskStatus(task.id, val, project.id)}
+                  />
                   <form action={deleteTask.bind(null, task.id, project.id)}>
                     <button type="submit" className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity">
                       <Trash2 className="w-3 h-3" />

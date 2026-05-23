@@ -42,7 +42,7 @@ export function ActivityPanel() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+        className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-ring hover:text-foreground transition-colors"
         title="Activity Log"
       >
         <History className="w-4 h-4" />

@@ -92,11 +92,10 @@ export function GlobalSearch() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 h-8 px-3 rounded-full border border-border text-[12px] text-muted-foreground hover:border-ring hover:text-foreground transition-colors"
+        className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-ring hover:text-foreground transition-colors"
+        title="Search (⌘K)"
       >
-        <Search className="w-3.5 h-3.5" />
-        <span className="hidden sm:inline">Search...</span>
-        <kbd className="hidden sm:inline text-[10px] opacity-50 ml-2 border border-border rounded px-1 py-0.5">⌘K</kbd>
+        <Search className="w-4 h-4" />
       </button>
     );
   }
