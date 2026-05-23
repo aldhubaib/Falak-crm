@@ -113,10 +113,13 @@ export async function getLatestRates() {
 
 export async function setExchangeRate(
   fromCurrency: string,
-  rate: number
+  rate: number,
+  effectiveDate?: string
 ): Promise<ActionResult> {
   return safeAction("Set Exchange Rate", async () => {
     const workspace = await requireWorkspace();
+
+    const date = effectiveDate ? new Date(effectiveDate) : new Date();
 
     await db.exchangeRate.create({
       data: {
@@ -124,12 +127,12 @@ export async function setExchangeRate(
         fromCurrency,
         toCurrency: workspace.baseCurrency,
         rate,
-        effectiveDate: new Date(),
+        effectiveDate: date,
       },
     });
 
     revalidatePath("/dashboard/settings/currencies");
-  }, { fromCurrency, rate });
+  }, { fromCurrency, rate, effectiveDate });
 }
 
 export async function getWorkspaceCurrency() {
@@ -139,7 +142,7 @@ export async function getWorkspaceCurrency() {
   };
 }
 
-export async function getLatestRateForCurrency(fromCurrency: string): Promise<number | null> {
+export async function getLatestRateForCurrency(fromCurrency: string, asOfDate?: Date): Promise<number | null> {
   const workspace = await requireWorkspace();
   if (fromCurrency === workspace.baseCurrency) return 1;
 
@@ -148,6 +151,7 @@ export async function getLatestRateForCurrency(fromCurrency: string): Promise<nu
       workspaceId: workspace.id,
       fromCurrency,
       toCurrency: workspace.baseCurrency,
+      ...(asOfDate ? { effectiveDate: { lte: asOfDate } } : {}),
     },
     orderBy: { effectiveDate: "desc" },
   });

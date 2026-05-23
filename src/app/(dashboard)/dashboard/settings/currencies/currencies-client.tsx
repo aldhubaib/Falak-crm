@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { addCurrency, removeCurrency, setExchangeRate, setBaseCurrency } from "@/actions/currencies";
 import { AVAILABLE_CURRENCIES } from "@/lib/currency";
-import { ArrowLeft, Plus, Trash2, Star, ArrowRightLeft, Check } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Star, ArrowRightLeft, Check, Pencil, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -33,6 +33,8 @@ export function CurrenciesClient({
   const { push: pushError } = useErrorStore();
   const [showAdd, setShowAdd] = useState(false);
   const [rateInputs, setRateInputs] = useState<Record<string, string>>({});
+  const [dateInputs, setDateInputs] = useState<Record<string, string>>({});
+  const [editingRate, setEditingRate] = useState<string | null>(null);
   const [saving, setSaving] = useState<string | null>(null);
 
   const unusedCurrencies = AVAILABLE_CURRENCIES.filter(
@@ -61,12 +63,24 @@ export function CurrenciesClient({
   const handleSaveRate = async (code: string) => {
     const value = parseFloat(rateInputs[code]);
     if (isNaN(value) || value <= 0) return;
+    const effectiveDate = dateInputs[code] || undefined;
     setSaving(code);
-    const result = await setExchangeRate(code, value);
+    const result = await setExchangeRate(code, value, effectiveDate);
     setSaving(null);
     if (!result.ok) { pushError(result.error); return; }
     setRateInputs((prev) => ({ ...prev, [code]: "" }));
+    setDateInputs((prev) => ({ ...prev, [code]: "" }));
+    setEditingRate(null);
     router.refresh();
+  };
+
+  const startEditRate = (code: string) => {
+    const existing = latestRates[code];
+    if (existing) {
+      setRateInputs((prev) => ({ ...prev, [code]: String(existing.rate) }));
+    }
+    setDateInputs((prev) => ({ ...prev, [code]: new Date().toISOString().split("T")[0] }));
+    setEditingRate(code);
   };
 
   return (
@@ -147,33 +161,69 @@ export function CurrenciesClient({
                   </p>
                   {latestRates[currency.code] && (
                     <span className="text-[10px] text-muted-foreground">
-                      (set {new Date(latestRates[currency.code]!.date).toLocaleDateString()})
+                      (effective {new Date(latestRates[currency.code]!.date).toLocaleDateString()})
                     </span>
                   )}
+                  {latestRates[currency.code] && editingRate !== currency.code && (
+                    <button
+                      onClick={() => startEditRate(currency.code)}
+                      className="ml-auto w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors"
+                      title="Update rate"
+                    >
+                      <Pencil className="w-3 h-3" />
+                    </button>
+                  )}
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 flex items-center gap-2">
-                    <span className="text-[11px] text-muted-foreground whitespace-nowrap">1 {currency.code} =</span>
-                    <input
-                      type="number"
-                      step="0.000001"
-                      min="0"
-                      placeholder="Rate"
-                      value={rateInputs[currency.code] || ""}
-                      onChange={(e) => setRateInputs((prev) => ({ ...prev, [currency.code]: e.target.value }))}
-                      className="flex-1 h-8 px-3 rounded-lg border border-border bg-background text-[12px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                    <span className="text-[11px] text-muted-foreground">{baseCurrency}</span>
+
+                {(editingRate === currency.code || !latestRates[currency.code]) && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] text-muted-foreground whitespace-nowrap">1 {currency.code} =</span>
+                      <input
+                        type="number"
+                        step="0.000001"
+                        min="0"
+                        placeholder="Rate"
+                        value={rateInputs[currency.code] || ""}
+                        onChange={(e) => setRateInputs((prev) => ({ ...prev, [currency.code]: e.target.value }))}
+                        className="flex-1 h-8 px-3 rounded-lg border border-border bg-black text-[12px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
+                      />
+                      <span className="text-[11px] text-muted-foreground">{baseCurrency}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3 h-3 text-muted-foreground" />
+                      <span className="text-[11px] text-muted-foreground whitespace-nowrap">Effective as of</span>
+                      <input
+                        type="date"
+                        value={dateInputs[currency.code] || new Date().toISOString().split("T")[0]}
+                        onChange={(e) => setDateInputs((prev) => ({ ...prev, [currency.code]: e.target.value }))}
+                        className="flex-1 h-8 px-3 rounded-lg border border-border bg-black text-[12px] text-foreground focus:outline-none focus:border-ring transition-colors"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2 justify-end">
+                      {editingRate === currency.code && (
+                        <button
+                          onClick={() => {
+                            setEditingRate(null);
+                            setRateInputs((prev) => ({ ...prev, [currency.code]: "" }));
+                            setDateInputs((prev) => ({ ...prev, [currency.code]: "" }));
+                          }}
+                          className="h-8 px-3 rounded-full border border-border text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors"
+                        >
+                          Cancel
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleSaveRate(currency.code)}
+                        disabled={!rateInputs[currency.code] || saving === currency.code}
+                        className="h-8 px-3 rounded-full border border-border text-[11px] font-medium text-foreground hover:bg-muted/30 transition-colors disabled:opacity-50 flex items-center gap-1"
+                      >
+                        <Check className="w-3 h-3" />
+                        {saving === currency.code ? "Saving..." : "Save Rate"}
+                      </button>
+                    </div>
                   </div>
-                  <button
-                    onClick={() => handleSaveRate(currency.code)}
-                    disabled={!rateInputs[currency.code] || saving === currency.code}
-                    className="h-8 px-3 rounded-lg border border-border text-[11px] font-medium text-foreground hover:bg-muted/30 transition-colors disabled:opacity-50 flex items-center gap-1"
-                  >
-                    <Check className="w-3 h-3" />
-                    {saving === currency.code ? "..." : "Save"}
-                  </button>
-                </div>
+                )}
               </div>
             )}
           </div>
