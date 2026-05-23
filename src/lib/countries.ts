@@ -64,3 +64,11 @@ export function getCountryByName(name: string): Country | undefined {
     (c) => c.name.toLowerCase() === name.toLowerCase()
   );
 }
+
+export function countryOptions() {
+  return COUNTRIES.map((c) => ({
+    id: c.name,
+    label: c.name,
+    prefix: c.flag,
+  }));
+}
