@@ -133,6 +133,21 @@ export async function setExchangeRate(
     const workspace = await requireWorkspace();
 
     const date = effectiveDate ? new Date(effectiveDate) : new Date();
+    const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const endOfDay = new Date(startOfDay.getTime() + 86400000);
+
+    const existing = await db.exchangeRate.findFirst({
+      where: {
+        workspaceId: workspace.id,
+        fromCurrency,
+        toCurrency: workspace.baseCurrency,
+        effectiveDate: { gte: startOfDay, lt: endOfDay },
+      },
+    });
+
+    if (existing) {
+      throw new Error(`A rate for ${fromCurrency} already exists on ${startOfDay.toLocaleDateString()}. Choose a different date.`);
+    }
 
     await db.exchangeRate.create({
       data: {
