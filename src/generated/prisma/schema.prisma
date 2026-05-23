@@ -133,6 +133,8 @@ enum CollaboratorStatus {
 model Company {
   id             String    @id @default(cuid())
   workspaceId    String
+  ownerId        String? // Clerk user ID of record owner
+  ownerName      String?
   name           String
   nameAr         String?
   industry       String?
@@ -159,6 +161,8 @@ model Contact {
   id           String    @id @default(cuid())
   workspaceId  String
   companyId    String?
+  ownerId      String? // Clerk user ID of record owner
+  ownerName    String?
   firstName    String
   middleName   String?
   lastName     String
@@ -253,6 +257,8 @@ model Deal {
   stageId           String
   companyId         String?
   contactId         String?
+  ownerId           String? // Clerk user ID of record owner
+  ownerName         String?
   title             String
   value             Decimal   @db.Decimal(12, 2)
   currency          String    @default("KWD")
@@ -310,6 +316,8 @@ model Project {
   dealId      String?   @unique
   companyId   String?
   contactId   String?
+  ownerId     String? // Clerk user ID of record owner
+  ownerName   String?
   statusId    String?
   name        String
   description String?

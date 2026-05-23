@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createContact } from "@/actions/contacts";
 import { ComboboxField } from "@/components/ui/combobox-field";
 import { FormField } from "@/components/ui/form-field";
+import { RecordOwner } from "@/components/ui/record-owner";
 import { FIELD_REGISTRY, validateFields, type FieldDef } from "@/lib/fields";
 import { ArrowLeft, Save, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -26,7 +27,7 @@ const FORM_FIELDS: FieldDef[] = [
   FIELD_REGISTRY.country,
 ];
 
-export function NewContactClient({ companies }: { companies: CompanyOption[] }) {
+export function NewContactClient({ companies, currentUserName }: { companies: CompanyOption[]; currentUserName: string }) {
   const router = useRouter();
   const { push: pushError } = useErrorStore();
   const [values, setValues] = useState<Record<string, string>>({
@@ -102,6 +103,8 @@ export function NewContactClient({ companies }: { companies: CompanyOption[] }) 
         }}
         className="space-y-5"
       >
+        <RecordOwner ownerName={currentUserName} />
+
         {/* Name fields */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <FormField def={FIELD_REGISTRY.firstName} value={values.firstName} error={errors.firstName} onChange={(v) => setValue("firstName", v)} />

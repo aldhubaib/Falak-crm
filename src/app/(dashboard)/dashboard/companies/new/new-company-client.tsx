@@ -6,6 +6,7 @@ import { createIndustry, deleteIndustry } from "@/actions/industries";
 import { createReferral, deleteReferral } from "@/actions/referrals";
 import { ComboboxField } from "@/components/ui/combobox-field";
 import { FormField } from "@/components/ui/form-field";
+import { RecordOwner } from "@/components/ui/record-owner";
 import { FIELD_REGISTRY, validateFields } from "@/lib/fields";
 import { ArrowLeft, Globe, Save } from "lucide-react";
 import { AvatarUpload } from "@/components/ui/avatar-upload";
@@ -18,7 +19,7 @@ import { useErrorStore } from "@/lib/error-store";
 
 type OptionItem = { id: string; name: string };
 
-export function NewCompanyClient({ industries, referrals }: { industries: OptionItem[]; referrals: OptionItem[] }) {
+export function NewCompanyClient({ industries, referrals, currentUserName }: { industries: OptionItem[]; referrals: OptionItem[]; currentUserName: string }) {
   const router = useRouter();
   const { push: pushError } = useErrorStore();
   const [industryList, setIndustryList] = useState(industries);
@@ -100,6 +101,8 @@ export function NewCompanyClient({ industries, referrals }: { industries: Option
         className="space-y-5"
       >
         <AvatarUpload name="logo" fallback="C" size="lg" />
+
+        <RecordOwner ownerName={currentUserName} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField def={FIELD_REGISTRY.companyName} value={values.name} error={errors.name} onChange={(v) => setValue("name", v)} />

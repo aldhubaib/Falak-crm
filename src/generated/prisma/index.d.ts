@@ -11108,6 +11108,8 @@ export namespace Prisma {
   export type CompanyMinAggregateOutputType = {
     id: string | null
     workspaceId: string | null
+    ownerId: string | null
+    ownerName: string | null
     name: string | null
     nameAr: string | null
     industry: string | null
@@ -11127,6 +11129,8 @@ export namespace Prisma {
   export type CompanyMaxAggregateOutputType = {
     id: string | null
     workspaceId: string | null
+    ownerId: string | null
+    ownerName: string | null
     name: string | null
     nameAr: string | null
     industry: string | null
@@ -11146,6 +11150,8 @@ export namespace Prisma {
   export type CompanyCountAggregateOutputType = {
     id: number
     workspaceId: number
+    ownerId: number
+    ownerName: number
     name: number
     nameAr: number
     industry: number
@@ -11168,6 +11174,8 @@ export namespace Prisma {
   export type CompanyMinAggregateInputType = {
     id?: true
     workspaceId?: true
+    ownerId?: true
+    ownerName?: true
     name?: true
     nameAr?: true
     industry?: true
@@ -11187,6 +11195,8 @@ export namespace Prisma {
   export type CompanyMaxAggregateInputType = {
     id?: true
     workspaceId?: true
+    ownerId?: true
+    ownerName?: true
     name?: true
     nameAr?: true
     industry?: true
@@ -11206,6 +11216,8 @@ export namespace Prisma {
   export type CompanyCountAggregateInputType = {
     id?: true
     workspaceId?: true
+    ownerId?: true
+    ownerName?: true
     name?: true
     nameAr?: true
     industry?: true
@@ -11299,6 +11311,8 @@ export namespace Prisma {
   export type CompanyGroupByOutputType = {
     id: string
     workspaceId: string
+    ownerId: string | null
+    ownerName: string | null
     name: string
     nameAr: string | null
     industry: string | null
@@ -11336,6 +11350,8 @@ export namespace Prisma {
   export type CompanySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     workspaceId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     name?: boolean
     nameAr?: boolean
     industry?: boolean
@@ -11361,6 +11377,8 @@ export namespace Prisma {
   export type CompanySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     workspaceId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     name?: boolean
     nameAr?: boolean
     industry?: boolean
@@ -11382,6 +11400,8 @@ export namespace Prisma {
   export type CompanySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     workspaceId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     name?: boolean
     nameAr?: boolean
     industry?: boolean
@@ -11403,6 +11423,8 @@ export namespace Prisma {
   export type CompanySelectScalar = {
     id?: boolean
     workspaceId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     name?: boolean
     nameAr?: boolean
     industry?: boolean
@@ -11420,7 +11442,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "name" | "nameAr" | "industry" | "referral" | "phone" | "whatsappNumber" | "email" | "website" | "address" | "logo" | "notes" | "customFields" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["company"]>
+  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "ownerId" | "ownerName" | "name" | "nameAr" | "industry" | "referral" | "phone" | "whatsappNumber" | "email" | "website" | "address" | "logo" | "notes" | "customFields" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["company"]>
   export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     contacts?: boolean | Company$contactsArgs<ExtArgs>
@@ -11446,6 +11468,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       workspaceId: string
+      ownerId: string | null
+      ownerName: string | null
       name: string
       nameAr: string | null
       industry: string | null
@@ -11890,6 +11914,8 @@ export namespace Prisma {
   interface CompanyFieldRefs {
     readonly id: FieldRef<"Company", 'String'>
     readonly workspaceId: FieldRef<"Company", 'String'>
+    readonly ownerId: FieldRef<"Company", 'String'>
+    readonly ownerName: FieldRef<"Company", 'String'>
     readonly name: FieldRef<"Company", 'String'>
     readonly nameAr: FieldRef<"Company", 'String'>
     readonly industry: FieldRef<"Company", 'String'>
@@ -12410,6 +12436,8 @@ export namespace Prisma {
     id: string | null
     workspaceId: string | null
     companyId: string | null
+    ownerId: string | null
+    ownerName: string | null
     firstName: string | null
     middleName: string | null
     lastName: string | null
@@ -12428,6 +12456,8 @@ export namespace Prisma {
     id: string | null
     workspaceId: string | null
     companyId: string | null
+    ownerId: string | null
+    ownerName: string | null
     firstName: string | null
     middleName: string | null
     lastName: string | null
@@ -12446,6 +12476,8 @@ export namespace Prisma {
     id: number
     workspaceId: number
     companyId: number
+    ownerId: number
+    ownerName: number
     firstName: number
     middleName: number
     lastName: number
@@ -12467,6 +12499,8 @@ export namespace Prisma {
     id?: true
     workspaceId?: true
     companyId?: true
+    ownerId?: true
+    ownerName?: true
     firstName?: true
     middleName?: true
     lastName?: true
@@ -12485,6 +12519,8 @@ export namespace Prisma {
     id?: true
     workspaceId?: true
     companyId?: true
+    ownerId?: true
+    ownerName?: true
     firstName?: true
     middleName?: true
     lastName?: true
@@ -12503,6 +12539,8 @@ export namespace Prisma {
     id?: true
     workspaceId?: true
     companyId?: true
+    ownerId?: true
+    ownerName?: true
     firstName?: true
     middleName?: true
     lastName?: true
@@ -12595,6 +12633,8 @@ export namespace Prisma {
     id: string
     workspaceId: string
     companyId: string | null
+    ownerId: string | null
+    ownerName: string | null
     firstName: string
     middleName: string | null
     lastName: string
@@ -12631,6 +12671,8 @@ export namespace Prisma {
     id?: boolean
     workspaceId?: boolean
     companyId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     firstName?: boolean
     middleName?: boolean
     lastName?: boolean
@@ -12656,6 +12698,8 @@ export namespace Prisma {
     id?: boolean
     workspaceId?: boolean
     companyId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     firstName?: boolean
     middleName?: boolean
     lastName?: boolean
@@ -12677,6 +12721,8 @@ export namespace Prisma {
     id?: boolean
     workspaceId?: boolean
     companyId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     firstName?: boolean
     middleName?: boolean
     lastName?: boolean
@@ -12698,6 +12744,8 @@ export namespace Prisma {
     id?: boolean
     workspaceId?: boolean
     companyId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     firstName?: boolean
     middleName?: boolean
     lastName?: boolean
@@ -12713,7 +12761,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "companyId" | "firstName" | "middleName" | "lastName" | "nameAr" | "mobile" | "email" | "role" | "country" | "notes" | "customFields" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["contact"]>
+  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "companyId" | "ownerId" | "ownerName" | "firstName" | "middleName" | "lastName" | "nameAr" | "mobile" | "email" | "role" | "country" | "notes" | "customFields" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["contact"]>
   export type ContactInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     company?: boolean | Contact$companyArgs<ExtArgs>
@@ -12744,6 +12792,8 @@ export namespace Prisma {
       id: string
       workspaceId: string
       companyId: string | null
+      ownerId: string | null
+      ownerName: string | null
       firstName: string
       middleName: string | null
       lastName: string
@@ -13188,6 +13238,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Contact", 'String'>
     readonly workspaceId: FieldRef<"Contact", 'String'>
     readonly companyId: FieldRef<"Contact", 'String'>
+    readonly ownerId: FieldRef<"Contact", 'String'>
+    readonly ownerName: FieldRef<"Contact", 'String'>
     readonly firstName: FieldRef<"Contact", 'String'>
     readonly middleName: FieldRef<"Contact", 'String'>
     readonly lastName: FieldRef<"Contact", 'String'>
@@ -17249,6 +17301,8 @@ export namespace Prisma {
     stageId: string | null
     companyId: string | null
     contactId: string | null
+    ownerId: string | null
+    ownerName: string | null
     title: string | null
     value: Decimal | null
     currency: string | null
@@ -17270,6 +17324,8 @@ export namespace Prisma {
     stageId: string | null
     companyId: string | null
     contactId: string | null
+    ownerId: string | null
+    ownerName: string | null
     title: string | null
     value: Decimal | null
     currency: string | null
@@ -17291,6 +17347,8 @@ export namespace Prisma {
     stageId: number
     companyId: number
     contactId: number
+    ownerId: number
+    ownerName: number
     title: number
     value: number
     currency: number
@@ -17327,6 +17385,8 @@ export namespace Prisma {
     stageId?: true
     companyId?: true
     contactId?: true
+    ownerId?: true
+    ownerName?: true
     title?: true
     value?: true
     currency?: true
@@ -17348,6 +17408,8 @@ export namespace Prisma {
     stageId?: true
     companyId?: true
     contactId?: true
+    ownerId?: true
+    ownerName?: true
     title?: true
     value?: true
     currency?: true
@@ -17369,6 +17431,8 @@ export namespace Prisma {
     stageId?: true
     companyId?: true
     contactId?: true
+    ownerId?: true
+    ownerName?: true
     title?: true
     value?: true
     currency?: true
@@ -17478,6 +17542,8 @@ export namespace Prisma {
     stageId: string
     companyId: string | null
     contactId: string | null
+    ownerId: string | null
+    ownerName: string | null
     title: string
     value: Decimal
     currency: string
@@ -17519,6 +17585,8 @@ export namespace Prisma {
     stageId?: boolean
     companyId?: boolean
     contactId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     title?: boolean
     value?: boolean
     currency?: boolean
@@ -17549,6 +17617,8 @@ export namespace Prisma {
     stageId?: boolean
     companyId?: boolean
     contactId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     title?: boolean
     value?: boolean
     currency?: boolean
@@ -17576,6 +17646,8 @@ export namespace Prisma {
     stageId?: boolean
     companyId?: boolean
     contactId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     title?: boolean
     value?: boolean
     currency?: boolean
@@ -17603,6 +17675,8 @@ export namespace Prisma {
     stageId?: boolean
     companyId?: boolean
     contactId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     title?: boolean
     value?: boolean
     currency?: boolean
@@ -17618,7 +17692,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type DealOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "pipelineId" | "stageId" | "companyId" | "contactId" | "title" | "value" | "currency" | "rateToBase" | "valueInBase" | "expectedCloseDate" | "lostReason" | "notes" | "customFields" | "createdAt" | "updatedAt" | "closedAt" | "deletedAt", ExtArgs["result"]["deal"]>
+  export type DealOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "pipelineId" | "stageId" | "companyId" | "contactId" | "ownerId" | "ownerName" | "title" | "value" | "currency" | "rateToBase" | "valueInBase" | "expectedCloseDate" | "lostReason" | "notes" | "customFields" | "createdAt" | "updatedAt" | "closedAt" | "deletedAt", ExtArgs["result"]["deal"]>
   export type DealInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     pipeline?: boolean | PipelineDefaultArgs<ExtArgs>
@@ -17662,6 +17736,8 @@ export namespace Prisma {
       stageId: string
       companyId: string | null
       contactId: string | null
+      ownerId: string | null
+      ownerName: string | null
       title: string
       value: Prisma.Decimal
       currency: string
@@ -18111,6 +18187,8 @@ export namespace Prisma {
     readonly stageId: FieldRef<"Deal", 'String'>
     readonly companyId: FieldRef<"Deal", 'String'>
     readonly contactId: FieldRef<"Deal", 'String'>
+    readonly ownerId: FieldRef<"Deal", 'String'>
+    readonly ownerName: FieldRef<"Deal", 'String'>
     readonly title: FieldRef<"Deal", 'String'>
     readonly value: FieldRef<"Deal", 'Decimal'>
     readonly currency: FieldRef<"Deal", 'String'>
@@ -20902,6 +20980,8 @@ export namespace Prisma {
     dealId: string | null
     companyId: string | null
     contactId: string | null
+    ownerId: string | null
+    ownerName: string | null
     statusId: string | null
     name: string | null
     description: string | null
@@ -20918,6 +20998,8 @@ export namespace Prisma {
     dealId: string | null
     companyId: string | null
     contactId: string | null
+    ownerId: string | null
+    ownerName: string | null
     statusId: string | null
     name: string | null
     description: string | null
@@ -20934,6 +21016,8 @@ export namespace Prisma {
     dealId: number
     companyId: number
     contactId: number
+    ownerId: number
+    ownerName: number
     statusId: number
     name: number
     description: number
@@ -20952,6 +21036,8 @@ export namespace Prisma {
     dealId?: true
     companyId?: true
     contactId?: true
+    ownerId?: true
+    ownerName?: true
     statusId?: true
     name?: true
     description?: true
@@ -20968,6 +21054,8 @@ export namespace Prisma {
     dealId?: true
     companyId?: true
     contactId?: true
+    ownerId?: true
+    ownerName?: true
     statusId?: true
     name?: true
     description?: true
@@ -20984,6 +21072,8 @@ export namespace Prisma {
     dealId?: true
     companyId?: true
     contactId?: true
+    ownerId?: true
+    ownerName?: true
     statusId?: true
     name?: true
     description?: true
@@ -21073,6 +21163,8 @@ export namespace Prisma {
     dealId: string | null
     companyId: string | null
     contactId: string | null
+    ownerId: string | null
+    ownerName: string | null
     statusId: string | null
     name: string
     description: string | null
@@ -21106,6 +21198,8 @@ export namespace Prisma {
     dealId?: boolean
     companyId?: boolean
     contactId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     statusId?: boolean
     name?: boolean
     description?: boolean
@@ -21130,6 +21224,8 @@ export namespace Prisma {
     dealId?: boolean
     companyId?: boolean
     contactId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     statusId?: boolean
     name?: boolean
     description?: boolean
@@ -21150,6 +21246,8 @@ export namespace Prisma {
     dealId?: boolean
     companyId?: boolean
     contactId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     statusId?: boolean
     name?: boolean
     description?: boolean
@@ -21170,6 +21268,8 @@ export namespace Prisma {
     dealId?: boolean
     companyId?: boolean
     contactId?: boolean
+    ownerId?: boolean
+    ownerName?: boolean
     statusId?: boolean
     name?: boolean
     description?: boolean
@@ -21180,7 +21280,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "dealId" | "companyId" | "contactId" | "statusId" | "name" | "description" | "startDate" | "deadline" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["project"]>
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "dealId" | "companyId" | "contactId" | "ownerId" | "ownerName" | "statusId" | "name" | "description" | "startDate" | "deadline" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["project"]>
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     deal?: boolean | Project$dealArgs<ExtArgs>
@@ -21221,6 +21321,8 @@ export namespace Prisma {
       dealId: string | null
       companyId: string | null
       contactId: string | null
+      ownerId: string | null
+      ownerName: string | null
       statusId: string | null
       name: string
       description: string | null
@@ -21664,6 +21766,8 @@ export namespace Prisma {
     readonly dealId: FieldRef<"Project", 'String'>
     readonly companyId: FieldRef<"Project", 'String'>
     readonly contactId: FieldRef<"Project", 'String'>
+    readonly ownerId: FieldRef<"Project", 'String'>
+    readonly ownerName: FieldRef<"Project", 'String'>
     readonly statusId: FieldRef<"Project", 'String'>
     readonly name: FieldRef<"Project", 'String'>
     readonly description: FieldRef<"Project", 'String'>
@@ -35146,6 +35250,8 @@ export namespace Prisma {
   export const CompanyScalarFieldEnum: {
     id: 'id',
     workspaceId: 'workspaceId',
+    ownerId: 'ownerId',
+    ownerName: 'ownerName',
     name: 'name',
     nameAr: 'nameAr',
     industry: 'industry',
@@ -35170,6 +35276,8 @@ export namespace Prisma {
     id: 'id',
     workspaceId: 'workspaceId',
     companyId: 'companyId',
+    ownerId: 'ownerId',
+    ownerName: 'ownerName',
     firstName: 'firstName',
     middleName: 'middleName',
     lastName: 'lastName',
@@ -35236,6 +35344,8 @@ export namespace Prisma {
     stageId: 'stageId',
     companyId: 'companyId',
     contactId: 'contactId',
+    ownerId: 'ownerId',
+    ownerName: 'ownerName',
     title: 'title',
     value: 'value',
     currency: 'currency',
@@ -35284,6 +35394,8 @@ export namespace Prisma {
     dealId: 'dealId',
     companyId: 'companyId',
     contactId: 'contactId',
+    ownerId: 'ownerId',
+    ownerName: 'ownerName',
     statusId: 'statusId',
     name: 'name',
     description: 'description',
@@ -36210,6 +36322,8 @@ export namespace Prisma {
     NOT?: CompanyWhereInput | CompanyWhereInput[]
     id?: StringFilter<"Company"> | string
     workspaceId?: StringFilter<"Company"> | string
+    ownerId?: StringNullableFilter<"Company"> | string | null
+    ownerName?: StringNullableFilter<"Company"> | string | null
     name?: StringFilter<"Company"> | string
     nameAr?: StringNullableFilter<"Company"> | string | null
     industry?: StringNullableFilter<"Company"> | string | null
@@ -36234,6 +36348,8 @@ export namespace Prisma {
   export type CompanyOrderByWithRelationInput = {
     id?: SortOrder
     workspaceId?: SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    ownerName?: SortOrderInput | SortOrder
     name?: SortOrder
     nameAr?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
@@ -36261,6 +36377,8 @@ export namespace Prisma {
     OR?: CompanyWhereInput[]
     NOT?: CompanyWhereInput | CompanyWhereInput[]
     workspaceId?: StringFilter<"Company"> | string
+    ownerId?: StringNullableFilter<"Company"> | string | null
+    ownerName?: StringNullableFilter<"Company"> | string | null
     name?: StringFilter<"Company"> | string
     nameAr?: StringNullableFilter<"Company"> | string | null
     industry?: StringNullableFilter<"Company"> | string | null
@@ -36285,6 +36403,8 @@ export namespace Prisma {
   export type CompanyOrderByWithAggregationInput = {
     id?: SortOrder
     workspaceId?: SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    ownerName?: SortOrderInput | SortOrder
     name?: SortOrder
     nameAr?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
@@ -36311,6 +36431,8 @@ export namespace Prisma {
     NOT?: CompanyScalarWhereWithAggregatesInput | CompanyScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Company"> | string
     workspaceId?: StringWithAggregatesFilter<"Company"> | string
+    ownerId?: StringNullableWithAggregatesFilter<"Company"> | string | null
+    ownerName?: StringNullableWithAggregatesFilter<"Company"> | string | null
     name?: StringWithAggregatesFilter<"Company"> | string
     nameAr?: StringNullableWithAggregatesFilter<"Company"> | string | null
     industry?: StringNullableWithAggregatesFilter<"Company"> | string | null
@@ -36335,6 +36457,8 @@ export namespace Prisma {
     id?: StringFilter<"Contact"> | string
     workspaceId?: StringFilter<"Contact"> | string
     companyId?: StringNullableFilter<"Contact"> | string | null
+    ownerId?: StringNullableFilter<"Contact"> | string | null
+    ownerName?: StringNullableFilter<"Contact"> | string | null
     firstName?: StringFilter<"Contact"> | string
     middleName?: StringNullableFilter<"Contact"> | string | null
     lastName?: StringFilter<"Contact"> | string
@@ -36359,6 +36483,8 @@ export namespace Prisma {
     id?: SortOrder
     workspaceId?: SortOrder
     companyId?: SortOrderInput | SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    ownerName?: SortOrderInput | SortOrder
     firstName?: SortOrder
     middleName?: SortOrderInput | SortOrder
     lastName?: SortOrder
@@ -36387,6 +36513,8 @@ export namespace Prisma {
     NOT?: ContactWhereInput | ContactWhereInput[]
     workspaceId?: StringFilter<"Contact"> | string
     companyId?: StringNullableFilter<"Contact"> | string | null
+    ownerId?: StringNullableFilter<"Contact"> | string | null
+    ownerName?: StringNullableFilter<"Contact"> | string | null
     firstName?: StringFilter<"Contact"> | string
     middleName?: StringNullableFilter<"Contact"> | string | null
     lastName?: StringFilter<"Contact"> | string
@@ -36411,6 +36539,8 @@ export namespace Prisma {
     id?: SortOrder
     workspaceId?: SortOrder
     companyId?: SortOrderInput | SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    ownerName?: SortOrderInput | SortOrder
     firstName?: SortOrder
     middleName?: SortOrderInput | SortOrder
     lastName?: SortOrder
@@ -36436,6 +36566,8 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Contact"> | string
     workspaceId?: StringWithAggregatesFilter<"Contact"> | string
     companyId?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    ownerId?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    ownerName?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     firstName?: StringWithAggregatesFilter<"Contact"> | string
     middleName?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     lastName?: StringWithAggregatesFilter<"Contact"> | string
@@ -36686,6 +36818,8 @@ export namespace Prisma {
     stageId?: StringFilter<"Deal"> | string
     companyId?: StringNullableFilter<"Deal"> | string | null
     contactId?: StringNullableFilter<"Deal"> | string | null
+    ownerId?: StringNullableFilter<"Deal"> | string | null
+    ownerName?: StringNullableFilter<"Deal"> | string | null
     title?: StringFilter<"Deal"> | string
     value?: DecimalFilter<"Deal"> | Decimal | DecimalJsLike | number | string
     currency?: StringFilter<"Deal"> | string
@@ -36715,6 +36849,8 @@ export namespace Prisma {
     stageId?: SortOrder
     companyId?: SortOrderInput | SortOrder
     contactId?: SortOrderInput | SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    ownerName?: SortOrderInput | SortOrder
     title?: SortOrder
     value?: SortOrder
     currency?: SortOrder
@@ -36747,6 +36883,8 @@ export namespace Prisma {
     stageId?: StringFilter<"Deal"> | string
     companyId?: StringNullableFilter<"Deal"> | string | null
     contactId?: StringNullableFilter<"Deal"> | string | null
+    ownerId?: StringNullableFilter<"Deal"> | string | null
+    ownerName?: StringNullableFilter<"Deal"> | string | null
     title?: StringFilter<"Deal"> | string
     value?: DecimalFilter<"Deal"> | Decimal | DecimalJsLike | number | string
     currency?: StringFilter<"Deal"> | string
@@ -36776,6 +36914,8 @@ export namespace Prisma {
     stageId?: SortOrder
     companyId?: SortOrderInput | SortOrder
     contactId?: SortOrderInput | SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    ownerName?: SortOrderInput | SortOrder
     title?: SortOrder
     value?: SortOrder
     currency?: SortOrder
@@ -36806,6 +36946,8 @@ export namespace Prisma {
     stageId?: StringWithAggregatesFilter<"Deal"> | string
     companyId?: StringNullableWithAggregatesFilter<"Deal"> | string | null
     contactId?: StringNullableWithAggregatesFilter<"Deal"> | string | null
+    ownerId?: StringNullableWithAggregatesFilter<"Deal"> | string | null
+    ownerName?: StringNullableWithAggregatesFilter<"Deal"> | string | null
     title?: StringWithAggregatesFilter<"Deal"> | string
     value?: DecimalWithAggregatesFilter<"Deal"> | Decimal | DecimalJsLike | number | string
     currency?: StringWithAggregatesFilter<"Deal"> | string
@@ -36961,6 +37103,8 @@ export namespace Prisma {
     dealId?: StringNullableFilter<"Project"> | string | null
     companyId?: StringNullableFilter<"Project"> | string | null
     contactId?: StringNullableFilter<"Project"> | string | null
+    ownerId?: StringNullableFilter<"Project"> | string | null
+    ownerName?: StringNullableFilter<"Project"> | string | null
     statusId?: StringNullableFilter<"Project"> | string | null
     name?: StringFilter<"Project"> | string
     description?: StringNullableFilter<"Project"> | string | null
@@ -36984,6 +37128,8 @@ export namespace Prisma {
     dealId?: SortOrderInput | SortOrder
     companyId?: SortOrderInput | SortOrder
     contactId?: SortOrderInput | SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    ownerName?: SortOrderInput | SortOrder
     statusId?: SortOrderInput | SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
@@ -37010,6 +37156,8 @@ export namespace Prisma {
     workspaceId?: StringFilter<"Project"> | string
     companyId?: StringNullableFilter<"Project"> | string | null
     contactId?: StringNullableFilter<"Project"> | string | null
+    ownerId?: StringNullableFilter<"Project"> | string | null
+    ownerName?: StringNullableFilter<"Project"> | string | null
     statusId?: StringNullableFilter<"Project"> | string | null
     name?: StringFilter<"Project"> | string
     description?: StringNullableFilter<"Project"> | string | null
@@ -37033,6 +37181,8 @@ export namespace Prisma {
     dealId?: SortOrderInput | SortOrder
     companyId?: SortOrderInput | SortOrder
     contactId?: SortOrderInput | SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    ownerName?: SortOrderInput | SortOrder
     statusId?: SortOrderInput | SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
@@ -37055,6 +37205,8 @@ export namespace Prisma {
     dealId?: StringNullableWithAggregatesFilter<"Project"> | string | null
     companyId?: StringNullableWithAggregatesFilter<"Project"> | string | null
     contactId?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    ownerId?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    ownerName?: StringNullableWithAggregatesFilter<"Project"> | string | null
     statusId?: StringNullableWithAggregatesFilter<"Project"> | string | null
     name?: StringWithAggregatesFilter<"Project"> | string
     description?: StringNullableWithAggregatesFilter<"Project"> | string | null
@@ -38475,6 +38627,8 @@ export namespace Prisma {
 
   export type CompanyCreateInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     nameAr?: string | null
     industry?: string | null
@@ -38499,6 +38653,8 @@ export namespace Prisma {
   export type CompanyUncheckedCreateInput = {
     id?: string
     workspaceId: string
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     nameAr?: string | null
     industry?: string | null
@@ -38521,6 +38677,8 @@ export namespace Prisma {
 
   export type CompanyUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     nameAr?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38545,6 +38703,8 @@ export namespace Prisma {
   export type CompanyUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     nameAr?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38568,6 +38728,8 @@ export namespace Prisma {
   export type CompanyCreateManyInput = {
     id?: string
     workspaceId: string
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     nameAr?: string | null
     industry?: string | null
@@ -38587,6 +38749,8 @@ export namespace Prisma {
 
   export type CompanyUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     nameAr?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38607,6 +38771,8 @@ export namespace Prisma {
   export type CompanyUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     nameAr?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38626,6 +38792,8 @@ export namespace Prisma {
 
   export type ContactCreateInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -38650,6 +38818,8 @@ export namespace Prisma {
     id?: string
     workspaceId: string
     companyId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -38670,6 +38840,8 @@ export namespace Prisma {
 
   export type ContactUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -38694,6 +38866,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -38716,6 +38890,8 @@ export namespace Prisma {
     id?: string
     workspaceId: string
     companyId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -38733,6 +38909,8 @@ export namespace Prisma {
 
   export type ContactUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -38752,6 +38930,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -39010,6 +39190,8 @@ export namespace Prisma {
 
   export type DealCreateInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -39039,6 +39221,8 @@ export namespace Prisma {
     stageId: string
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -39058,6 +39242,8 @@ export namespace Prisma {
 
   export type DealUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -39087,6 +39273,8 @@ export namespace Prisma {
     stageId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -39111,6 +39299,8 @@ export namespace Prisma {
     stageId: string
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -39128,6 +39318,8 @@ export namespace Prisma {
 
   export type DealUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -39150,6 +39342,8 @@ export namespace Prisma {
     stageId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -39295,6 +39489,8 @@ export namespace Prisma {
   export type ProjectCreateInput = {
     id?: string
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     description?: string | null
     startDate?: Date | string | null
@@ -39317,6 +39513,8 @@ export namespace Prisma {
     dealId?: string | null
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     statusId?: string | null
     name: string
     description?: string | null
@@ -39333,6 +39531,8 @@ export namespace Prisma {
   export type ProjectUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -39355,6 +39555,8 @@ export namespace Prisma {
     dealId?: NullableStringFieldUpdateOperationsInput | string | null
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39374,6 +39576,8 @@ export namespace Prisma {
     dealId?: string | null
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     statusId?: string | null
     name: string
     description?: string | null
@@ -39387,6 +39591,8 @@ export namespace Prisma {
   export type ProjectUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -39402,6 +39608,8 @@ export namespace Prisma {
     dealId?: NullableStringFieldUpdateOperationsInput | string | null
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41066,6 +41274,8 @@ export namespace Prisma {
   export type CompanyCountOrderByAggregateInput = {
     id?: SortOrder
     workspaceId?: SortOrder
+    ownerId?: SortOrder
+    ownerName?: SortOrder
     name?: SortOrder
     nameAr?: SortOrder
     industry?: SortOrder
@@ -41086,6 +41296,8 @@ export namespace Prisma {
   export type CompanyMaxOrderByAggregateInput = {
     id?: SortOrder
     workspaceId?: SortOrder
+    ownerId?: SortOrder
+    ownerName?: SortOrder
     name?: SortOrder
     nameAr?: SortOrder
     industry?: SortOrder
@@ -41105,6 +41317,8 @@ export namespace Prisma {
   export type CompanyMinOrderByAggregateInput = {
     id?: SortOrder
     workspaceId?: SortOrder
+    ownerId?: SortOrder
+    ownerName?: SortOrder
     name?: SortOrder
     nameAr?: SortOrder
     industry?: SortOrder
@@ -41185,6 +41399,8 @@ export namespace Prisma {
     id?: SortOrder
     workspaceId?: SortOrder
     companyId?: SortOrder
+    ownerId?: SortOrder
+    ownerName?: SortOrder
     firstName?: SortOrder
     middleName?: SortOrder
     lastName?: SortOrder
@@ -41204,6 +41420,8 @@ export namespace Prisma {
     id?: SortOrder
     workspaceId?: SortOrder
     companyId?: SortOrder
+    ownerId?: SortOrder
+    ownerName?: SortOrder
     firstName?: SortOrder
     middleName?: SortOrder
     lastName?: SortOrder
@@ -41222,6 +41440,8 @@ export namespace Prisma {
     id?: SortOrder
     workspaceId?: SortOrder
     companyId?: SortOrder
+    ownerId?: SortOrder
+    ownerName?: SortOrder
     firstName?: SortOrder
     middleName?: SortOrder
     lastName?: SortOrder
@@ -41472,6 +41692,8 @@ export namespace Prisma {
     stageId?: SortOrder
     companyId?: SortOrder
     contactId?: SortOrder
+    ownerId?: SortOrder
+    ownerName?: SortOrder
     title?: SortOrder
     value?: SortOrder
     currency?: SortOrder
@@ -41500,6 +41722,8 @@ export namespace Prisma {
     stageId?: SortOrder
     companyId?: SortOrder
     contactId?: SortOrder
+    ownerId?: SortOrder
+    ownerName?: SortOrder
     title?: SortOrder
     value?: SortOrder
     currency?: SortOrder
@@ -41521,6 +41745,8 @@ export namespace Prisma {
     stageId?: SortOrder
     companyId?: SortOrder
     contactId?: SortOrder
+    ownerId?: SortOrder
+    ownerName?: SortOrder
     title?: SortOrder
     value?: SortOrder
     currency?: SortOrder
@@ -41670,6 +41896,8 @@ export namespace Prisma {
     dealId?: SortOrder
     companyId?: SortOrder
     contactId?: SortOrder
+    ownerId?: SortOrder
+    ownerName?: SortOrder
     statusId?: SortOrder
     name?: SortOrder
     description?: SortOrder
@@ -41686,6 +41914,8 @@ export namespace Prisma {
     dealId?: SortOrder
     companyId?: SortOrder
     contactId?: SortOrder
+    ownerId?: SortOrder
+    ownerName?: SortOrder
     statusId?: SortOrder
     name?: SortOrder
     description?: SortOrder
@@ -41702,6 +41932,8 @@ export namespace Prisma {
     dealId?: SortOrder
     companyId?: SortOrder
     contactId?: SortOrder
+    ownerId?: SortOrder
+    ownerName?: SortOrder
     statusId?: SortOrder
     name?: SortOrder
     description?: SortOrder
@@ -45216,6 +45448,8 @@ export namespace Prisma {
 
   export type CompanyCreateWithoutWorkspaceInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     nameAr?: string | null
     industry?: string | null
@@ -45238,6 +45472,8 @@ export namespace Prisma {
 
   export type CompanyUncheckedCreateWithoutWorkspaceInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     nameAr?: string | null
     industry?: string | null
@@ -45270,6 +45506,8 @@ export namespace Prisma {
 
   export type ContactCreateWithoutWorkspaceInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -45292,6 +45530,8 @@ export namespace Prisma {
   export type ContactUncheckedCreateWithoutWorkspaceInput = {
     id?: string
     companyId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -45362,6 +45602,8 @@ export namespace Prisma {
 
   export type DealCreateWithoutWorkspaceInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -45389,6 +45631,8 @@ export namespace Prisma {
     stageId: string
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -45419,6 +45663,8 @@ export namespace Prisma {
   export type ProjectCreateWithoutWorkspaceInput = {
     id?: string
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     description?: string | null
     startDate?: Date | string | null
@@ -45439,6 +45685,8 @@ export namespace Prisma {
     dealId?: string | null
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     statusId?: string | null
     name: string
     description?: string | null
@@ -45919,6 +46167,8 @@ export namespace Prisma {
     NOT?: CompanyScalarWhereInput | CompanyScalarWhereInput[]
     id?: StringFilter<"Company"> | string
     workspaceId?: StringFilter<"Company"> | string
+    ownerId?: StringNullableFilter<"Company"> | string | null
+    ownerName?: StringNullableFilter<"Company"> | string | null
     name?: StringFilter<"Company"> | string
     nameAr?: StringNullableFilter<"Company"> | string | null
     industry?: StringNullableFilter<"Company"> | string | null
@@ -45959,6 +46209,8 @@ export namespace Prisma {
     id?: StringFilter<"Contact"> | string
     workspaceId?: StringFilter<"Contact"> | string
     companyId?: StringNullableFilter<"Contact"> | string | null
+    ownerId?: StringNullableFilter<"Contact"> | string | null
+    ownerName?: StringNullableFilter<"Contact"> | string | null
     firstName?: StringFilter<"Contact"> | string
     middleName?: StringNullableFilter<"Contact"> | string | null
     lastName?: StringFilter<"Contact"> | string
@@ -46033,6 +46285,8 @@ export namespace Prisma {
     stageId?: StringFilter<"Deal"> | string
     companyId?: StringNullableFilter<"Deal"> | string | null
     contactId?: StringNullableFilter<"Deal"> | string | null
+    ownerId?: StringNullableFilter<"Deal"> | string | null
+    ownerName?: StringNullableFilter<"Deal"> | string | null
     title?: StringFilter<"Deal"> | string
     value?: DecimalFilter<"Deal"> | Decimal | DecimalJsLike | number | string
     currency?: StringFilter<"Deal"> | string
@@ -46073,6 +46327,8 @@ export namespace Prisma {
     dealId?: StringNullableFilter<"Project"> | string | null
     companyId?: StringNullableFilter<"Project"> | string | null
     contactId?: StringNullableFilter<"Project"> | string | null
+    ownerId?: StringNullableFilter<"Project"> | string | null
+    ownerName?: StringNullableFilter<"Project"> | string | null
     statusId?: StringNullableFilter<"Project"> | string | null
     name?: StringFilter<"Project"> | string
     description?: StringNullableFilter<"Project"> | string | null
@@ -47095,6 +47351,8 @@ export namespace Prisma {
   export type ProjectCreateWithoutCollaboratorsInput = {
     id?: string
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     description?: string | null
     startDate?: Date | string | null
@@ -47116,6 +47374,8 @@ export namespace Prisma {
     dealId?: string | null
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     statusId?: string | null
     name: string
     description?: string | null
@@ -47147,6 +47407,8 @@ export namespace Prisma {
   export type ProjectUpdateWithoutCollaboratorsInput = {
     id?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -47168,6 +47430,8 @@ export namespace Prisma {
     dealId?: NullableStringFieldUpdateOperationsInput | string | null
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47245,6 +47509,8 @@ export namespace Prisma {
 
   export type ContactCreateWithoutCompanyInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -47267,6 +47533,8 @@ export namespace Prisma {
   export type ContactUncheckedCreateWithoutCompanyInput = {
     id?: string
     workspaceId: string
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -47297,6 +47565,8 @@ export namespace Prisma {
 
   export type DealCreateWithoutCompanyInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -47324,6 +47594,8 @@ export namespace Prisma {
     pipelineId: string
     stageId: string
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -47354,6 +47626,8 @@ export namespace Prisma {
   export type ProjectCreateWithoutCompanyInput = {
     id?: string
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     description?: string | null
     startDate?: Date | string | null
@@ -47374,6 +47648,8 @@ export namespace Prisma {
     workspaceId: string
     dealId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     statusId?: string | null
     name: string
     description?: string | null
@@ -47579,6 +47855,8 @@ export namespace Prisma {
 
   export type CompanyCreateWithoutContactsInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     nameAr?: string | null
     industry?: string | null
@@ -47602,6 +47880,8 @@ export namespace Prisma {
   export type CompanyUncheckedCreateWithoutContactsInput = {
     id?: string
     workspaceId: string
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     nameAr?: string | null
     industry?: string | null
@@ -47628,6 +47908,8 @@ export namespace Prisma {
 
   export type DealCreateWithoutContactInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -47655,6 +47937,8 @@ export namespace Prisma {
     pipelineId: string
     stageId: string
     companyId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -47862,6 +48146,8 @@ export namespace Prisma {
 
   export type CompanyUpdateWithoutContactsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     nameAr?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47885,6 +48171,8 @@ export namespace Prisma {
   export type CompanyUncheckedUpdateWithoutContactsInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     nameAr?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48309,6 +48597,8 @@ export namespace Prisma {
 
   export type DealCreateWithoutPipelineInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -48336,6 +48626,8 @@ export namespace Prisma {
     stageId: string
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -48502,6 +48794,8 @@ export namespace Prisma {
 
   export type DealCreateWithoutStageInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -48529,6 +48823,8 @@ export namespace Prisma {
     pipelineId: string
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -48714,6 +49010,8 @@ export namespace Prisma {
 
   export type CompanyCreateWithoutDealsInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     nameAr?: string | null
     industry?: string | null
@@ -48737,6 +49035,8 @@ export namespace Prisma {
   export type CompanyUncheckedCreateWithoutDealsInput = {
     id?: string
     workspaceId: string
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     nameAr?: string | null
     industry?: string | null
@@ -48763,6 +49063,8 @@ export namespace Prisma {
 
   export type ContactCreateWithoutDealsInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -48786,6 +49088,8 @@ export namespace Prisma {
     id?: string
     workspaceId: string
     companyId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -48837,6 +49141,8 @@ export namespace Prisma {
   export type ProjectCreateWithoutDealInput = {
     id?: string
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     description?: string | null
     startDate?: Date | string | null
@@ -48857,6 +49163,8 @@ export namespace Prisma {
     workspaceId: string
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     statusId?: string | null
     name: string
     description?: string | null
@@ -49017,6 +49325,8 @@ export namespace Prisma {
 
   export type CompanyUpdateWithoutDealsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     nameAr?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49040,6 +49350,8 @@ export namespace Prisma {
   export type CompanyUncheckedUpdateWithoutDealsInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     nameAr?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49072,6 +49384,8 @@ export namespace Prisma {
 
   export type ContactUpdateWithoutDealsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -49095,6 +49409,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -49142,6 +49458,8 @@ export namespace Prisma {
   export type ProjectUpdateWithoutDealInput = {
     id?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49162,6 +49480,8 @@ export namespace Prisma {
     workspaceId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49177,6 +49497,8 @@ export namespace Prisma {
 
   export type DealCreateWithoutItemsInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -49205,6 +49527,8 @@ export namespace Prisma {
     stageId: string
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -49274,6 +49598,8 @@ export namespace Prisma {
 
   export type DealUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -49302,6 +49628,8 @@ export namespace Prisma {
     stageId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -49425,6 +49753,8 @@ export namespace Prisma {
   export type ProjectCreateWithoutStatusInput = {
     id?: string
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     description?: string | null
     startDate?: Date | string | null
@@ -49446,6 +49776,8 @@ export namespace Prisma {
     dealId?: string | null
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     description?: string | null
     startDate?: Date | string | null
@@ -49618,6 +49950,8 @@ export namespace Prisma {
 
   export type DealCreateWithoutProjectInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -49646,6 +49980,8 @@ export namespace Prisma {
     stageId: string
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -49669,6 +50005,8 @@ export namespace Prisma {
 
   export type CompanyCreateWithoutProjectsInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     nameAr?: string | null
     industry?: string | null
@@ -49692,6 +50030,8 @@ export namespace Prisma {
   export type CompanyUncheckedCreateWithoutProjectsInput = {
     id?: string
     workspaceId: string
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     nameAr?: string | null
     industry?: string | null
@@ -49949,6 +50289,8 @@ export namespace Prisma {
 
   export type DealUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -49977,6 +50319,8 @@ export namespace Prisma {
     stageId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -50006,6 +50350,8 @@ export namespace Prisma {
 
   export type CompanyUpdateWithoutProjectsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     nameAr?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50029,6 +50375,8 @@ export namespace Prisma {
   export type CompanyUncheckedUpdateWithoutProjectsInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     nameAr?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50330,6 +50678,8 @@ export namespace Prisma {
   export type ProjectCreateWithoutTasksInput = {
     id?: string
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     description?: string | null
     startDate?: Date | string | null
@@ -50351,6 +50701,8 @@ export namespace Prisma {
     dealId?: string | null
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     statusId?: string | null
     name: string
     description?: string | null
@@ -50467,6 +50819,8 @@ export namespace Prisma {
   export type ProjectUpdateWithoutTasksInput = {
     id?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -50488,6 +50842,8 @@ export namespace Prisma {
     dealId?: NullableStringFieldUpdateOperationsInput | string | null
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50669,6 +51025,8 @@ export namespace Prisma {
   export type ProjectCreateWithoutInvoicesInput = {
     id?: string
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     description?: string | null
     startDate?: Date | string | null
@@ -50690,6 +51048,8 @@ export namespace Prisma {
     dealId?: string | null
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     statusId?: string | null
     name: string
     description?: string | null
@@ -50709,6 +51069,8 @@ export namespace Prisma {
 
   export type ContactCreateWithoutInvoicesInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -50732,6 +51094,8 @@ export namespace Prisma {
     id?: string
     workspaceId: string
     companyId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -50863,6 +51227,8 @@ export namespace Prisma {
   export type ProjectUpdateWithoutInvoicesInput = {
     id?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -50884,6 +51250,8 @@ export namespace Prisma {
     dealId?: NullableStringFieldUpdateOperationsInput | string | null
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50909,6 +51277,8 @@ export namespace Prisma {
 
   export type ContactUpdateWithoutInvoicesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -50932,6 +51302,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -51359,6 +51731,8 @@ export namespace Prisma {
 
   export type ContactCreateWithoutWhatsappMessagesInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -51382,6 +51756,8 @@ export namespace Prisma {
     id?: string
     workspaceId: string
     companyId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -51417,6 +51793,8 @@ export namespace Prisma {
 
   export type ContactUpdateWithoutWhatsappMessagesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -51440,6 +51818,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -52025,6 +52405,8 @@ export namespace Prisma {
 
   export type CompanyCreateManyWorkspaceInput = {
     id?: string
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     nameAr?: string | null
     industry?: string | null
@@ -52045,6 +52427,8 @@ export namespace Prisma {
   export type ContactCreateManyWorkspaceInput = {
     id?: string
     companyId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -52079,6 +52463,8 @@ export namespace Prisma {
     stageId: string
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -52099,6 +52485,8 @@ export namespace Prisma {
     dealId?: string | null
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     statusId?: string | null
     name: string
     description?: string | null
@@ -52321,6 +52709,8 @@ export namespace Prisma {
 
   export type CompanyUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     nameAr?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52343,6 +52733,8 @@ export namespace Prisma {
 
   export type CompanyUncheckedUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     nameAr?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52365,6 +52757,8 @@ export namespace Prisma {
 
   export type CompanyUncheckedUpdateManyWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     nameAr?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52384,6 +52778,8 @@ export namespace Prisma {
 
   export type ContactUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -52406,6 +52802,8 @@ export namespace Prisma {
   export type ContactUncheckedUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -52427,6 +52825,8 @@ export namespace Prisma {
   export type ContactUncheckedUpdateManyWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -52487,6 +52887,8 @@ export namespace Prisma {
 
   export type DealUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -52514,6 +52916,8 @@ export namespace Prisma {
     stageId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -52537,6 +52941,8 @@ export namespace Prisma {
     stageId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -52555,6 +52961,8 @@ export namespace Prisma {
   export type ProjectUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -52575,6 +52983,8 @@ export namespace Prisma {
     dealId?: NullableStringFieldUpdateOperationsInput | string | null
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52593,6 +53003,8 @@ export namespace Prisma {
     dealId?: NullableStringFieldUpdateOperationsInput | string | null
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53006,6 +53418,8 @@ export namespace Prisma {
   export type ContactCreateManyCompanyInput = {
     id?: string
     workspaceId: string
+    ownerId?: string | null
+    ownerName?: string | null
     firstName: string
     middleName?: string | null
     lastName: string
@@ -53027,6 +53441,8 @@ export namespace Prisma {
     pipelineId: string
     stageId: string
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -53047,6 +53463,8 @@ export namespace Prisma {
     workspaceId: string
     dealId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     statusId?: string | null
     name: string
     description?: string | null
@@ -53059,6 +53477,8 @@ export namespace Prisma {
 
   export type ContactUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -53081,6 +53501,8 @@ export namespace Prisma {
   export type ContactUncheckedUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -53102,6 +53524,8 @@ export namespace Prisma {
   export type ContactUncheckedUpdateManyWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: StringFieldUpdateOperationsInput | string
@@ -53119,6 +53543,8 @@ export namespace Prisma {
 
   export type DealUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -53146,6 +53572,8 @@ export namespace Prisma {
     pipelineId?: StringFieldUpdateOperationsInput | string
     stageId?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -53169,6 +53597,8 @@ export namespace Prisma {
     pipelineId?: StringFieldUpdateOperationsInput | string
     stageId?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -53187,6 +53617,8 @@ export namespace Prisma {
   export type ProjectUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -53207,6 +53639,8 @@ export namespace Prisma {
     workspaceId?: StringFieldUpdateOperationsInput | string
     dealId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53225,6 +53659,8 @@ export namespace Prisma {
     workspaceId?: StringFieldUpdateOperationsInput | string
     dealId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53241,6 +53677,8 @@ export namespace Prisma {
     pipelineId: string
     stageId: string
     companyId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -53296,6 +53734,8 @@ export namespace Prisma {
 
   export type DealUpdateWithoutContactInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -53323,6 +53763,8 @@ export namespace Prisma {
     pipelineId?: StringFieldUpdateOperationsInput | string
     stageId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -53346,6 +53788,8 @@ export namespace Prisma {
     pipelineId?: StringFieldUpdateOperationsInput | string
     stageId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -53588,6 +54032,8 @@ export namespace Prisma {
     stageId: string
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -53634,6 +54080,8 @@ export namespace Prisma {
 
   export type DealUpdateWithoutPipelineInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -53661,6 +54109,8 @@ export namespace Prisma {
     stageId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -53684,6 +54134,8 @@ export namespace Prisma {
     stageId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -53705,6 +54157,8 @@ export namespace Prisma {
     pipelineId: string
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     title: string
     value: Decimal | DecimalJsLike | number | string
     currency?: string
@@ -53722,6 +54176,8 @@ export namespace Prisma {
 
   export type DealUpdateWithoutStageInput = {
     id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -53749,6 +54205,8 @@ export namespace Prisma {
     pipelineId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -53772,6 +54230,8 @@ export namespace Prisma {
     pipelineId?: StringFieldUpdateOperationsInput | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
@@ -53825,6 +54285,8 @@ export namespace Prisma {
     dealId?: string | null
     companyId?: string | null
     contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
     name: string
     description?: string | null
     startDate?: Date | string | null
@@ -53837,6 +54299,8 @@ export namespace Prisma {
   export type ProjectUpdateWithoutStatusInput = {
     id?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -53858,6 +54322,8 @@ export namespace Prisma {
     dealId?: NullableStringFieldUpdateOperationsInput | string | null
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -53876,6 +54342,8 @@ export namespace Prisma {
     dealId?: NullableStringFieldUpdateOperationsInput | string | null
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

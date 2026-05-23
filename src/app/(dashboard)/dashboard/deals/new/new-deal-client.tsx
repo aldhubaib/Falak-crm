@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createDeal } from "@/actions/deals";
 import { ComboboxField } from "@/components/ui/combobox-field";
 import { FormField } from "@/components/ui/form-field";
+import { RecordOwner } from "@/components/ui/record-owner";
 import { FIELD_REGISTRY, validateFields } from "@/lib/fields";
 import { ArrowLeft, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,11 +20,13 @@ export function NewDealClient({
   companies,
   contacts,
   currency,
+  currentUserName,
 }: {
   pipeline: { id: string; stages: Stage[] } | null;
   companies: { id: string; name: string }[];
   contacts: { id: string; name: string }[];
   currency: string;
+  currentUserName: string;
 }) {
   const router = useRouter();
   const { push: pushError } = useErrorStore();
@@ -116,6 +119,8 @@ export function NewDealClient({
         }}
         className="space-y-5"
       >
+        <RecordOwner ownerName={currentUserName} />
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField def={FIELD_REGISTRY.dealTitle} value={values.title} error={errors.title} onChange={(v) => setValue("title", v)} />
           <FormField def={FIELD_REGISTRY.dealValue} value={values.value} error={errors.value} onChange={(v) => setValue("value", v)} suffix={currency} />

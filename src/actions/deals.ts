@@ -1,5 +1,6 @@
 "use server";
 
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { requireWorkspace } from "@/lib/workspace";
 import { logActivity } from "@/lib/activity";
@@ -59,6 +60,8 @@ export async function getDeal(id: string) {
 export async function createDeal(formData: FormData): Promise<ActionResult<{ id: string }>> {
   return safeAction("Create Deal", async () => {
     const workspace = await requireWorkspace();
+    const { userId } = await auth();
+    const user = await currentUser();
 
     const title = formData.get("title") as string;
     const value = parseFloat(formData.get("value") as string) || 0;
@@ -87,6 +90,8 @@ export async function createDeal(formData: FormData): Promise<ActionResult<{ id:
         workspaceId: workspace.id,
         pipelineId,
         stageId,
+        ownerId: userId,
+        ownerName: user?.fullName || user?.firstName || undefined,
         title,
         value,
         currency,

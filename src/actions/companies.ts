@@ -1,5 +1,6 @@
 "use server";
 
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { requireWorkspace } from "@/lib/workspace";
 import { logActivity } from "@/lib/activity";
@@ -30,6 +31,8 @@ export async function getCompany(id: string) {
 export async function createCompany(formData: FormData): Promise<ActionResult<{ id: string }>> {
   return safeAction("Create Company", async () => {
     const workspace = await requireWorkspace();
+    const { userId } = await auth();
+    const user = await currentUser();
 
     const name = formData.get("name") as string;
     const nameAr = (formData.get("nameAr") as string) || undefined;
@@ -44,6 +47,8 @@ export async function createCompany(formData: FormData): Promise<ActionResult<{ 
     const company = await db.company.create({
       data: {
         workspaceId: workspace.id,
+        ownerId: userId,
+        ownerName: user?.fullName || user?.firstName || undefined,
         name,
         nameAr,
         industry,
