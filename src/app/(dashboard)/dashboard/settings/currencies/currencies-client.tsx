@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { addCurrency, removeCurrency, setExchangeRate, setBaseCurrency } from "@/actions/currencies";
 import { AVAILABLE_CURRENCIES } from "@/lib/currency";
-import { ArrowLeft, Plus, Trash2, Star, ArrowRightLeft, Check, Pencil, Calendar } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Star, ArrowRightLeft, Check, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -75,10 +75,7 @@ export function CurrenciesClient({
   };
 
   const startEditRate = (code: string) => {
-    const existing = latestRates[code];
-    if (existing) {
-      setRateInputs((prev) => ({ ...prev, [code]: String(existing.rate) }));
-    }
+    setRateInputs((prev) => ({ ...prev, [code]: "" }));
     setDateInputs((prev) => ({ ...prev, [code]: new Date().toISOString().split("T")[0] }));
     setEditingRate(code);
   };
@@ -152,31 +149,31 @@ export function CurrenciesClient({
             {/* Exchange rate section for non-base currencies */}
             {!currency.isBase && (
               <div className="mt-3 pt-3 border-t border-border">
-                <div className="flex items-center gap-2 mb-2">
-                  <ArrowRightLeft className="w-3 h-3 text-muted-foreground" />
-                  <p className="text-[11px] text-muted-foreground">
-                    1 {currency.code} = {latestRates[currency.code]
-                      ? `${latestRates[currency.code]!.rate} ${baseCurrency}`
-                      : "Not set"}
-                  </p>
-                  {latestRates[currency.code] && (
+                {/* Current rate display */}
+                {latestRates[currency.code] && (
+                  <div className="flex items-center gap-2 mb-3">
+                    <ArrowRightLeft className="w-3 h-3 text-muted-foreground" />
+                    <p className="text-[12px] text-foreground font-medium">
+                      1 {currency.code} = {latestRates[currency.code]!.rate} {baseCurrency}
+                    </p>
                     <span className="text-[10px] text-muted-foreground">
                       (effective {new Date(latestRates[currency.code]!.date).toLocaleDateString()})
                     </span>
-                  )}
-                  {latestRates[currency.code] && editingRate !== currency.code && (
-                    <button
-                      onClick={() => startEditRate(currency.code)}
-                      className="ml-auto w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors"
-                      title="Update rate"
-                    >
-                      <Pencil className="w-3 h-3" />
-                    </button>
-                  )}
-                </div>
+                  </div>
+                )}
 
-                {(editingRate === currency.code || !latestRates[currency.code]) && (
-                  <div className="space-y-2">
+                {/* Add new rate button or form */}
+                {editingRate !== currency.code ? (
+                  <button
+                    onClick={() => startEditRate(currency.code)}
+                    className="h-8 px-3 rounded-full border border-border text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors flex items-center gap-1.5"
+                  >
+                    <Plus className="w-3 h-3" />
+                    {latestRates[currency.code] ? "Add New Rate" : "Set Rate"}
+                  </button>
+                ) : (
+                  <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-2">
+                    <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">New Rate</p>
                     <div className="flex items-center gap-2">
                       <span className="text-[11px] text-muted-foreground whitespace-nowrap">1 {currency.code} =</span>
                       <input
@@ -184,6 +181,7 @@ export function CurrenciesClient({
                         step="0.000001"
                         min="0"
                         placeholder="Rate"
+                        autoFocus
                         value={rateInputs[currency.code] || ""}
                         onChange={(e) => setRateInputs((prev) => ({ ...prev, [currency.code]: e.target.value }))}
                         className="flex-1 h-8 px-3 rounded-lg border border-border bg-black text-[12px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
@@ -200,19 +198,17 @@ export function CurrenciesClient({
                         className="flex-1 h-8 px-3 rounded-lg border border-border bg-black text-[12px] text-foreground focus:outline-none focus:border-ring transition-colors"
                       />
                     </div>
-                    <div className="flex items-center gap-2 justify-end">
-                      {editingRate === currency.code && (
-                        <button
-                          onClick={() => {
-                            setEditingRate(null);
-                            setRateInputs((prev) => ({ ...prev, [currency.code]: "" }));
-                            setDateInputs((prev) => ({ ...prev, [currency.code]: "" }));
-                          }}
-                          className="h-8 px-3 rounded-full border border-border text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors"
-                        >
-                          Cancel
-                        </button>
-                      )}
+                    <div className="flex items-center gap-2 justify-end pt-1">
+                      <button
+                        onClick={() => {
+                          setEditingRate(null);
+                          setRateInputs((prev) => ({ ...prev, [currency.code]: "" }));
+                          setDateInputs((prev) => ({ ...prev, [currency.code]: "" }));
+                        }}
+                        className="h-8 px-3 rounded-full border border-border text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors"
+                      >
+                        Cancel
+                      </button>
                       <button
                         onClick={() => handleSaveRate(currency.code)}
                         disabled={!rateInputs[currency.code] || saving === currency.code}
