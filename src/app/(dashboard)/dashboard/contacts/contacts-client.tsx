@@ -71,6 +71,7 @@ export function ContactsClient({ contacts }: { contacts: Contact[] }) {
         data={contacts}
         columns={columns}
         getRowId={(row) => row.id}
+        rowHref={(row) => `/dashboard/contacts/${row.id}`}
         searchPlaceholder="Search contacts..."
       />
     </div>

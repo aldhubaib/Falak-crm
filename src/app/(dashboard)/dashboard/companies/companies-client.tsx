@@ -73,6 +73,7 @@ export function CompaniesClient({ companies }: { companies: Company[] }) {
         data={companies}
         columns={columns}
         getRowId={(row) => row.id}
+        rowHref={(row) => `/dashboard/companies/${row.id}`}
         searchPlaceholder="Search companies..."
       />
     </div>

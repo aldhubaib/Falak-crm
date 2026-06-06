@@ -21,6 +21,7 @@ interface DataTableProps<T> {
   searchable?: boolean;
   searchPlaceholder?: string;
   getRowId: (row: T) => string;
+  rowHref?: (row: T) => string;
   onRowAction?: (row: T) => React.ReactNode;
 }
 
@@ -32,6 +33,7 @@ export function DataTable<T>({
   searchable = true,
   searchPlaceholder = "Search...",
   getRowId,
+  rowHref,
   onRowAction,
 }: DataTableProps<T>) {
   const [search, setSearch] = useState("");
@@ -141,37 +143,40 @@ export function DataTable<T>({
               </tr>
             </thead>
             <tbody>
-              {sorted.map((row) => (
-                <tr key={getRowId(row)} className="border-b border-border last:border-0 hover:bg-muted/20 transition-colors group">
-                  {columns.map((col) => (
-                    <td
-                      key={col.key}
-                      className={cn(
-                        "px-4 py-2.5 text-[13px]",
-                        col.align === "right" && "text-right",
-                        col.align === "center" && "text-center"
-                      )}
-                    >
-                      {col.render ? col.render(row) : (
-                        col.href ? (
-                          <Link href={col.href(row)} className="text-foreground font-medium hover:text-primary transition-colors no-underline">
-                            {String((row as Record<string, unknown>)[col.key] ?? "—")}
-                          </Link>
-                        ) : (
-                          <span className="text-muted-foreground">
+              {sorted.map((row) => {
+                const href = rowHref?.(row);
+                const RowWrapper = href ? Link : "tr";
+                const rowProps = href
+                  ? { href, className: "table-row border-b border-border last:border-0 hover:bg-muted/20 transition-colors group cursor-pointer no-underline" }
+                  : { className: "border-b border-border last:border-0 hover:bg-muted/20 transition-colors group" };
+
+                return (
+                  // @ts-expect-error - dynamic element type
+                  <RowWrapper key={getRowId(row)} {...rowProps}>
+                    {columns.map((col) => (
+                      <td
+                        key={col.key}
+                        className={cn(
+                          "px-4 py-2.5 text-[13px]",
+                          col.align === "right" && "text-right",
+                          col.align === "center" && "text-center"
+                        )}
+                      >
+                        {col.render ? col.render(row) : (
+                          <span className={href ? "text-foreground" : "text-muted-foreground"}>
                             {String((row as Record<string, unknown>)[col.key] ?? "—")}
                           </span>
-                        )
-                      )}
-                    </td>
-                  ))}
-                  {onRowAction && (
-                    <td className="px-4 py-2.5">
-                      {onRowAction(row)}
-                    </td>
-                  )}
-                </tr>
-              ))}
+                        )}
+                      </td>
+                    ))}
+                    {onRowAction && (
+                      <td className="px-4 py-2.5" onClick={(e) => e.preventDefault()}>
+                        {onRowAction(row)}
+                      </td>
+                    )}
+                  </RowWrapper>
+                );
+              })}
             </tbody>
           </table>
         </div>
