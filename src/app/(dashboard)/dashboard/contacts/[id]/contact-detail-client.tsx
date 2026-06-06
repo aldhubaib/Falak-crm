@@ -3,6 +3,7 @@
 import { updateContact } from "@/actions/contacts";
 import { InputField, PhoneField, EmailField, CountryField, SelectField } from "@/components/ui/field";
 import { ActionMenu } from "@/components/ui/action-menu";
+import { RelatedTable, type RelatedColumn } from "@/components/ui/related-table";
 import { ArrowLeft, User, MapPin, Handshake, Building2 } from "lucide-react";
 import Link from "next/link";
 
@@ -122,50 +123,38 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
 
       {/* Deals Table */}
       <div className="border-t border-border my-8" />
-      <div className="rounded-lg bg-black border border-border p-4">
-        <div className="flex items-center justify-between mb-3">
-          <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-            <Handshake className="w-3 h-3" />
-            Deals ({contact.deals.length})
-          </label>
-        </div>
-
-        {contact.deals.length === 0 ? (
-          <p className="text-[12px] text-muted-foreground">No deals yet.</p>
-        ) : (
-          <div className="rounded-lg border border-border overflow-hidden">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="border-b border-border bg-muted/30">
-                  <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Title</th>
-                  <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Stage</th>
-                  <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider text-right">Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                {contact.deals.map((deal) => (
-                  <tr key={deal.id} className="border-b border-border last:border-0 hover:bg-muted/20 transition-colors">
-                    <td className="px-4 py-2.5">
-                      <Link href={`/dashboard/deals/${deal.id}`} className="text-[13px] text-foreground hover:text-primary transition-colors no-underline">
-                        {deal.title}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <div className="flex items-center gap-1.5">
-                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: deal.stage.color }} />
-                        <span className="text-[13px] text-muted-foreground">{deal.stage.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-2.5 text-[13px] text-foreground text-right">
-                      {Number(deal.value).toLocaleString()} KWD
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+      <RelatedTable
+        icon={<Handshake className="w-3 h-3" />}
+        title="Deals"
+        data={contact.deals}
+        getRowId={(r) => r.id}
+        rowHref={(r) => `/dashboard/deals/${r.id}`}
+        columns={contactDealColumns}
+      />
     </div>
   );
 }
+
+const contactDealColumns: RelatedColumn<{ id: string; title: string; value: unknown; stage: { name: string; color: string } }>[] = [
+  {
+    key: "title",
+    label: "Title",
+    render: (r) => <span className="text-foreground font-medium">{r.title}</span>,
+  },
+  {
+    key: "stage",
+    label: "Stage",
+    render: (r) => (
+      <span className="inline-flex items-center gap-1.5">
+        <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: r.stage.color }} />
+        {r.stage.name}
+      </span>
+    ),
+  },
+  {
+    key: "value",
+    label: "Value",
+    align: "right",
+    render: (r) => <span className="text-foreground">{Number(r.value).toLocaleString()} KWD</span>,
+  },
+];

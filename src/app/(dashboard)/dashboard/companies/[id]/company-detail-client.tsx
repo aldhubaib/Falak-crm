@@ -2,15 +2,14 @@
 
 import { useState } from "react";
 import { updateCompany } from "@/actions/companies";
-import { deleteContact } from "@/actions/contacts";
 import { InputField, CountryField, SelectField } from "@/components/ui/field";
 import { ActionMenu } from "@/components/ui/action-menu";
+import { RelatedTable, type RelatedColumn } from "@/components/ui/related-table";
 import { AddContactForm } from "@/components/add-contact-form";
 import { AddDealForm } from "@/components/add-deal-form";
 import { ArrowLeft, Building2, Globe, MapPin, StickyNote, Trash2, Handshake, Users } from "lucide-react";
 import { getCountryFlag } from "@/lib/countries";
 import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import { useErrorStore } from "@/lib/error-store";
 import Link from "next/link";
 
@@ -228,123 +227,71 @@ export function CompanyDetailClient({
 
       {/* Contacts Table */}
       <div className="border-t border-border my-8" />
-      <ContactsTable companyId={company.id} contacts={company.contacts} />
+      <RelatedTable
+        icon={<Users className="w-3 h-3" />}
+        title="Contacts"
+        data={company.contacts}
+        getRowId={(r) => r.id}
+        rowHref={(r) => `/dashboard/contacts/${r.id}`}
+        action={<AddContactForm companyId={company.id} />}
+        columns={contactColumns}
+      />
 
       {/* Deals Table */}
       <div className="border-t border-border my-8" />
-      <DealsTable deals={company.deals} companyId={company.id} contacts={company.contacts} />
+      <RelatedTable
+        icon={<Handshake className="w-3 h-3" />}
+        title="Deals"
+        data={company.deals}
+        getRowId={(r) => r.id}
+        rowHref={(r) => `/dashboard/deals/${r.id}`}
+        action={<AddDealForm companyId={company.id} contacts={company.contacts.map((c) => ({ id: c.id, name: `${c.firstName} ${c.lastName}` }))} />}
+        columns={dealColumns}
+      />
     </div>
   );
 }
 
-function ContactsTable({ companyId, contacts }: { companyId: string; contacts: Contact[] }) {
-  const router = useRouter();
+const contactColumns: RelatedColumn<Contact>[] = [
+  {
+    key: "name",
+    label: "Name",
+    render: (r) => <span className="text-foreground font-medium">{r.firstName} {r.lastName}</span>,
+  },
+  { key: "mobile", label: "Mobile" },
+  {
+    key: "country",
+    label: "Country",
+    render: (r) => (
+      <span className="inline-flex items-center gap-1.5">
+        {getCountryFlag(r.country) && <span>{getCountryFlag(r.country)}</span>}
+        {r.country}
+      </span>
+    ),
+  },
+  { key: "role", label: "Role" },
+];
 
-  return (
-    <div className="rounded-lg bg-black border border-border p-4">
-      <div className="flex items-center justify-between mb-3">
-        <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-          <Users className="w-3 h-3" />
-          Contacts ({contacts.length})
-        </label>
-        <AddContactForm companyId={companyId} />
-      </div>
-
-      {contacts.length === 0 ? (
-        <p className="text-[12px] text-muted-foreground">No contacts yet.</p>
-      ) : (
-        <div className="rounded-lg border border-border overflow-hidden">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-border bg-muted/30">
-                <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Name</th>
-                <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Mobile</th>
-                <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Country</th>
-                <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Role</th>
-                <th className="px-4 py-2.5 w-10"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {contacts.map((contact) => (
-                <tr key={contact.id} className="border-b border-border last:border-0 group hover:bg-muted/20 transition-colors">
-                  <td className="px-4 py-2.5 text-[13px] text-foreground">{contact.firstName} {contact.lastName}</td>
-                  <td className="px-4 py-2.5 text-[13px] text-muted-foreground">{contact.mobile}</td>
-                  <td className="px-4 py-2.5 text-[13px] text-muted-foreground">
-                    <span className="inline-flex items-center gap-1.5">
-                      {getCountryFlag(contact.country) && <span>{getCountryFlag(contact.country)}</span>}
-                      {contact.country}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2.5 text-[13px] text-muted-foreground">{contact.role || "—"}</td>
-                  <td className="px-4 py-2.5">
-                    <button
-                      onClick={async () => {
-                        await deleteContact(contact.id);
-                        router.refresh();
-                      }}
-                      className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function DealsTable({ deals, companyId, contacts }: { deals: Deal[]; companyId: string; contacts: Contact[] }) {
-  const contactOptions = contacts.map((c) => ({ id: c.id, name: `${c.firstName} ${c.lastName}` }));
-
-  return (
-    <div className="rounded-lg bg-black border border-border p-4">
-      <div className="flex items-center justify-between mb-3">
-        <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-          <Handshake className="w-3 h-3" />
-          Deals ({deals.length})
-        </label>
-        <AddDealForm companyId={companyId} contacts={contactOptions} />
-      </div>
-
-      {deals.length === 0 ? (
-        <p className="text-[12px] text-muted-foreground">No deals yet.</p>
-      ) : (
-        <div className="rounded-lg border border-border overflow-hidden">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-border bg-muted/30">
-                <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Title</th>
-                <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Stage</th>
-                <th className="px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider text-right">Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              {deals.map((deal) => (
-                <tr key={deal.id} className="border-b border-border last:border-0 hover:bg-muted/20 transition-colors">
-                  <td className="px-4 py-2.5">
-                    <Link href={`/dashboard/deals/${deal.id}`} className="text-[13px] text-foreground hover:text-primary transition-colors no-underline">
-                      {deal.title}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: deal.stage.color }} />
-                      <span className="text-[13px] text-muted-foreground">{deal.stage.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-2.5 text-[13px] text-foreground text-right">
-                    {Number(deal.value).toLocaleString()} KWD
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
-  );
-}
+const dealColumns: RelatedColumn<Deal>[] = [
+  {
+    key: "title",
+    label: "Title",
+    render: (r) => <span className="text-foreground font-medium">{r.title}</span>,
+  },
+  {
+    key: "stage",
+    label: "Stage",
+    render: (r) => (
+      <span className="inline-flex items-center gap-1.5">
+        <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: r.stage.color }} />
+        {r.stage.name}
+      </span>
+    ),
+  },
+  {
+    key: "value",
+    label: "Value",
+    align: "right",
+    render: (r) => <span className="text-foreground">{Number(r.value).toLocaleString()} KWD</span>,
+  },
+];

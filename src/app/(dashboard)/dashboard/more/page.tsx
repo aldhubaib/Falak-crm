@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { Building2, Users, Layers, Settings } from "lucide-react";
+import { Building2, Users, Settings } from "lucide-react";
 
 const moreItems = [
   { name: "Companies", href: "/dashboard/companies", icon: Building2 },
   { name: "Contacts", href: "/dashboard/contacts", icon: Users },
-  { name: "Services", href: "/dashboard/services", icon: Layers },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 

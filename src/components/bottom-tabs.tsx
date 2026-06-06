@@ -26,7 +26,7 @@ export function BottomTabs() {
     if (href === "/dashboard")
       return pathname === "/dashboard" || pathname === "/dashboard/";
     if (href === "/dashboard/more") {
-      return ["/dashboard/companies", "/dashboard/contacts", "/dashboard/services", "/dashboard/settings"].some(
+      return ["/dashboard/companies", "/dashboard/contacts", "/dashboard/settings"].some(
         (p) => pathname === p || pathname.startsWith(p + "/")
       );
     }

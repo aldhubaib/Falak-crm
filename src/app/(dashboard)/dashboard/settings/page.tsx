@@ -3,6 +3,12 @@ import { GitBranch, Layers, ListChecks, MessageCircle, Users, Receipt, Building2
 
 const settingsItems = [
   {
+    title: "Services",
+    description: "Manage your service catalog and pricing",
+    href: "/dashboard/settings/services",
+    icon: Layers,
+  },
+  {
     title: "Pipelines & Stages",
     description: "Configure deal pipeline stages and their order",
     href: "/dashboard/settings/pipelines",

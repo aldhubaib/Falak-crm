@@ -144,6 +144,36 @@ export const FIELD_REGISTRY: Record<string, FieldDef> = {
     placeholder: "0.00",
     icon: "DollarSign",
   },
+
+  // ─── Service Fields ─────────────────────────────────────────
+  serviceName: {
+    key: "name",
+    type: "text",
+    label: "Service Name",
+    placeholder: "e.g. Social Media Management",
+    icon: "Layers",
+    validation: { required: true },
+  },
+  servicePrice: {
+    key: "unitPrice",
+    type: "text",
+    label: "Price",
+    placeholder: "0.00",
+    icon: "DollarSign",
+    validation: { required: true },
+  },
+  serviceUnit: {
+    key: "unit",
+    type: "text",
+    label: "Unit",
+    placeholder: "e.g. month, piece, hour",
+  },
+  serviceDescription: {
+    key: "description",
+    type: "textarea",
+    label: "Description",
+    placeholder: "What's included...",
+  },
 };
 
 /**

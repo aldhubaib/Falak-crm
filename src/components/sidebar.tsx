@@ -10,7 +10,6 @@ import {
   Handshake,
   FolderKanban,
   FileText,
-  Layers,
   Settings,
   Pin,
   PinOff,
@@ -24,7 +23,6 @@ const navigation = [
   { name: "Deals", href: "/dashboard/deals", icon: Handshake },
   { name: "Projects", href: "/dashboard/projects", icon: FolderKanban },
   { name: "Invoices", href: "/dashboard/invoices", icon: FileText },
-  { name: "Services", href: "/dashboard/services", icon: Layers },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 

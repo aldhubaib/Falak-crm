@@ -131,6 +131,7 @@ export function SelectField({
   placeholder,
   onSave,
 }: SelectFieldProps) {
+  const [editing, setEditing] = useState(false);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [saving, setSaving] = useState(false);
@@ -141,6 +142,12 @@ export function SelectField({
     opt.label.toLowerCase().includes(search.toLowerCase())
   );
 
+  const startEdit = () => {
+    setEditing(true);
+    setOpen(true);
+    setTimeout(() => searchRef.current?.focus(), 50);
+  };
+
   const handleSelect = async (val: string) => {
     if (val !== value) {
       setSaving(true);
@@ -149,37 +156,43 @@ export function SelectField({
     }
     setOpen(false);
     setSearch("");
+    setEditing(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSearch("");
+    setEditing(false);
   };
 
   return (
     <div className="relative">
       <div
         className={cn(
-          "rounded-lg bg-black border px-3 pt-2 pb-1.5 transition-colors cursor-pointer group",
+          "rounded-lg bg-black border px-3 pt-2 pb-1.5 transition-colors group",
           open ? "border-ring" : "border-border",
           saving && "border-primary/50"
         )}
-        onClick={() => {
-          setOpen(!open);
-          setTimeout(() => searchRef.current?.focus(), 50);
-        }}
       >
         <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider pointer-events-none">
           {icon}
           {label}
           {saving && <Loader2 className="w-2.5 h-2.5 animate-spin text-primary" />}
         </label>
-        <div className="flex items-center h-8">
+        <div className="flex items-center h-8 cursor-pointer" onClick={startEdit}>
           <span className={cn("flex-1 text-[13px]", value ? "text-foreground" : "text-muted-foreground/50")}>
             {displayLabel || placeholder || "Select..."}
           </span>
-          <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+          {!editing && (
+            <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+          )}
+          {editing && <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />}
         </div>
       </div>
 
       {open && (
         <>
-          <div className="fixed inset-0 z-40" onClick={() => { setOpen(false); setSearch(""); }} />
+          <div className="fixed inset-0 z-40" onClick={handleClose} />
           <div className="absolute z-50 top-full mt-1 w-full rounded-lg border border-border bg-popover shadow-lg overflow-hidden">
             {options.length > 5 && (
               <div className="p-1.5">
@@ -190,7 +203,7 @@ export function SelectField({
                   placeholder="Search..."
                   className="w-full h-8 px-2.5 rounded bg-black text-[12px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
                   onKeyDown={(e) => {
-                    if (e.key === "Escape") { setOpen(false); setSearch(""); }
+                    if (e.key === "Escape") handleClose();
                     if (e.key === "Enter" && filtered.length > 0) handleSelect(filtered[0].value);
                   }}
                 />
@@ -486,6 +499,7 @@ interface CountryFieldProps extends FieldProps {
 }
 
 export function CountryField({ label, icon, value, onSave }: CountryFieldProps) {
+  const [editing, setEditing] = useState(false);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [saving, setSaving] = useState(false);
@@ -497,6 +511,12 @@ export function CountryField({ label, icon, value, onSave }: CountryFieldProps) 
     c.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const startEdit = () => {
+    setEditing(true);
+    setOpen(true);
+    setTimeout(() => searchRef.current?.focus(), 50);
+  };
+
   const handleSelect = async (name: string) => {
     if (name !== value) {
       setSaving(true);
@@ -505,38 +525,44 @@ export function CountryField({ label, icon, value, onSave }: CountryFieldProps) 
     }
     setOpen(false);
     setSearch("");
+    setEditing(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSearch("");
+    setEditing(false);
   };
 
   return (
     <div className="relative" ref={containerRef}>
       <div
         className={cn(
-          "rounded-lg bg-black border px-3 pt-2 pb-1.5 transition-colors group cursor-pointer",
+          "rounded-lg bg-black border px-3 pt-2 pb-1.5 transition-colors group",
           open ? "border-ring" : "border-border",
           saving && "border-primary/50"
         )}
-        onClick={() => {
-          setOpen(!open);
-          setTimeout(() => searchRef.current?.focus(), 50);
-        }}
       >
         <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider pointer-events-none">
           {icon || <MapPin className="w-3 h-3" />}
           {label}
           {saving && <Loader2 className="w-2.5 h-2.5 animate-spin text-primary" />}
         </label>
-        <div className="flex items-center h-8">
+        <div className="flex items-center h-8 cursor-pointer" onClick={startEdit}>
           <span className={cn("flex-1 text-[13px] flex items-center gap-2", value ? "text-foreground" : "text-muted-foreground/50")}>
             {flag && <span className="text-[16px]">{flag}</span>}
             {value || "Select country..."}
           </span>
-          <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+          {!editing && (
+            <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+          )}
+          {editing && <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />}
         </div>
       </div>
 
       {open && (
         <>
-          <div className="fixed inset-0 z-40" onClick={() => { setOpen(false); setSearch(""); }} />
+          <div className="fixed inset-0 z-40" onClick={handleClose} />
           <div className="absolute z-50 top-full mt-1 w-full rounded-lg border border-border bg-popover shadow-lg overflow-hidden">
             <div className="p-1.5">
               <input
@@ -546,7 +572,7 @@ export function CountryField({ label, icon, value, onSave }: CountryFieldProps) 
                 placeholder="Search countries..."
                 className="w-full h-8 px-2.5 rounded bg-black text-[12px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
                 onKeyDown={(e) => {
-                  if (e.key === "Escape") { setOpen(false); setSearch(""); }
+                  if (e.key === "Escape") handleClose();
                   if (e.key === "Enter" && filtered.length > 0) handleSelect(filtered[0].name);
                 }}
               />
