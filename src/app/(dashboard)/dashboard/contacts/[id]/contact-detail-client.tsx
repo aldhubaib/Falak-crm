@@ -1,7 +1,7 @@
 "use client";
 
 import { updateContact } from "@/actions/contacts";
-import { InputField, PhoneField, EmailField, CountryField } from "@/components/ui/field";
+import { InputField, PhoneField, EmailField, CountryField, SelectField } from "@/components/ui/field";
 import { ActionMenu } from "@/components/ui/action-menu";
 import { ArrowLeft, User, MapPin, Handshake, Building2 } from "lucide-react";
 import Link from "next/link";
@@ -27,7 +27,7 @@ type Contact = {
   deals: Deal[];
 };
 
-export function ContactDetailClient({ contact }: { contact: Contact }) {
+export function ContactDetailClient({ contact, companies }: { contact: Contact; companies: { id: string; name: string }[] }) {
   const save = (field: string) => async (value: string) => {
     const formData = new FormData();
     formData.set(field, value);
@@ -109,24 +109,14 @@ export function ContactDetailClient({ contact }: { contact: Contact }) {
             value={contact.country}
             onSave={save("country")}
           />
-          <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5">
-            <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-              <Building2 className="w-3 h-3" />
-              Company
-            </label>
-            {contact.company ? (
-              <Link
-                href={`/dashboard/companies/${contact.company.id}`}
-                className="flex items-center h-8 text-[13px] text-primary hover:text-primary/80 transition-colors no-underline"
-              >
-                {contact.company.name}
-              </Link>
-            ) : (
-              <div className="flex items-center h-8 text-[13px] text-muted-foreground/50">
-                No company
-              </div>
-            )}
-          </div>
+          <SelectField
+            label="Company"
+            icon={<Building2 className="w-3 h-3" />}
+            value={contact.company?.id || ""}
+            placeholder="No company"
+            options={companies.map((c) => ({ value: c.id, label: c.name }))}
+            onSave={save("companyId")}
+          />
         </div>
       </div>
 
