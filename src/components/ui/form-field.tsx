@@ -7,7 +7,7 @@ import { EmailInput } from "@/components/ui/email-input";
 import { COUNTRIES, getCountryFlag } from "@/lib/countries";
 import { cn } from "@/lib/utils";
 import {
-  User, Phone, Mail, MapPin, Building2, Globe, UserPlus, ChevronDown,
+  User, Phone, Mail, MapPin, Building2, Globe, UserPlus, ChevronDown, Layers, DollarSign, Handshake,
 } from "lucide-react";
 
 const ICONS: Record<string, React.ReactNode> = {
@@ -18,6 +18,9 @@ const ICONS: Record<string, React.ReactNode> = {
   Building2: <Building2 className="w-3 h-3" />,
   Globe: <Globe className="w-3 h-3" />,
   UserPlus: <UserPlus className="w-3 h-3" />,
+  Layers: <Layers className="w-3 h-3" />,
+  DollarSign: <DollarSign className="w-3 h-3" />,
+  Handshake: <Handshake className="w-3 h-3" />,
 };
 
 interface FormFieldProps {
@@ -75,7 +78,7 @@ export function FormField({ def, value, error, onChange, inputRef, suffix }: For
 
   const displaySuffix = suffix || def.suffix;
 
-  // text / arabic
+  // text / arabic / textarea — all use auto-expanding textarea
   return (
     <div className={cn(hasError && "shake")}>
       <div
@@ -90,14 +93,22 @@ export function FormField({ def, value, error, onChange, inputRef, suffix }: For
           {isRequired && <span className="text-destructive">*</span>}
         </label>
         <div className="flex items-center gap-2">
-          <input
-            ref={inputRef}
+          <textarea
+            ref={(el) => {
+              if (inputRef) (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = el as unknown as HTMLInputElement;
+              if (el) { el.style.height = "auto"; el.style.height = `${el.scrollHeight}px`; }
+            }}
             name={def.key}
             value={value}
             dir={def.dir}
             placeholder={def.placeholder}
-            onChange={(e) => onChange(e.target.value)}
-            className="flex-1 h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+            onChange={(e) => {
+              onChange(e.target.value);
+              e.target.style.height = "auto";
+              e.target.style.height = `${e.target.scrollHeight}px`;
+            }}
+            rows={1}
+            className="flex-1 min-h-[2rem] py-1 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-none overflow-hidden"
           />
           {displaySuffix && (
             <span className="text-[11px] text-muted-foreground font-medium shrink-0">{displaySuffix}</span>
@@ -110,6 +121,7 @@ export function FormField({ def, value, error, onChange, inputRef, suffix }: For
     </div>
   );
 }
+
 
 function CountryFormField({
   def,
