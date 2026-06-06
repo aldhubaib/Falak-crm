@@ -8,7 +8,7 @@ import { ComboboxField } from "@/components/ui/combobox-field";
 import { FormField } from "@/components/ui/form-field";
 import { RecordOwner } from "@/components/ui/record-owner";
 import { FIELD_REGISTRY, validateFields } from "@/lib/fields";
-import { ArrowLeft, Globe, Save } from "lucide-react";
+import { ArrowLeft, Globe, Save, Loader2 } from "lucide-react";
 import { AvatarUpload } from "@/components/ui/avatar-upload";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -33,6 +33,7 @@ export function NewCompanyClient({ industries, referrals, currentUserName }: { i
     website: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState(false);
 
   const setValue = (key: string, val: string) => {
     setValues((prev) => ({ ...prev, [key]: val }));
@@ -73,9 +74,9 @@ export function NewCompanyClient({ industries, referrals, currentUserName }: { i
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <h1 className="text-lg font-semibold text-foreground flex-1">New Company</h1>
-        <Button type="submit" form="company-form">
-          <Save className="w-3.5 h-3.5" />
-          Save
+        <Button type="submit" form="company-form" disabled={saving}>
+          {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+          {saving ? "Saving..." : "Save"}
         </Button>
       </div>
 
@@ -83,7 +84,8 @@ export function NewCompanyClient({ industries, referrals, currentUserName }: { i
         id="company-form"
         onSubmit={async (e) => {
           e.preventDefault();
-          if (!validate()) return;
+          if (!validate() || saving) return;
+          setSaving(true);
           const formData = new FormData();
           formData.set("name", values.name);
           formData.set("nameAr", values.nameAr);
@@ -96,6 +98,7 @@ export function NewCompanyClient({ industries, referrals, currentUserName }: { i
             router.push(`/dashboard/companies/${result.data.id}`);
           } else {
             pushError(result.error);
+            setSaving(false);
           }
         }}
         className="space-y-5"

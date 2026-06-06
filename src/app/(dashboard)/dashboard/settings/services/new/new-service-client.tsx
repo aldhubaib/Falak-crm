@@ -5,7 +5,7 @@ import { createService } from "@/actions/services";
 import { FormField } from "@/components/ui/form-field";
 import { RecordOwner } from "@/components/ui/record-owner";
 import { FIELD_REGISTRY, validateFields, type FieldDef } from "@/lib/fields";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormSelect } from "@/components/ui/form-select";
 import Link from "next/link";
@@ -36,6 +36,7 @@ export function NewServiceClient({ currentUserName }: { currentUserName: string 
     pricingType: "FIXED",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState(false);
 
   const setValue = (key: string, val: string) => {
     setValues((prev) => ({ ...prev, [key]: val }));
@@ -69,9 +70,9 @@ export function NewServiceClient({ currentUserName }: { currentUserName: string 
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <h1 className="text-lg font-semibold text-foreground flex-1">New Service</h1>
-        <Button type="submit" form="service-form">
-          <Save className="w-3.5 h-3.5" />
-          Save
+        <Button type="submit" form="service-form" disabled={saving}>
+          {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+          {saving ? "Saving..." : "Save"}
         </Button>
       </div>
 
@@ -79,7 +80,8 @@ export function NewServiceClient({ currentUserName }: { currentUserName: string 
         id="service-form"
         onSubmit={async (e) => {
           e.preventDefault();
-          if (!validate()) return;
+          if (!validate() || saving) return;
+          setSaving(true);
           const formData = new FormData();
           formData.set("name", values.name);
           formData.set("pricingType", values.pricingType);
@@ -91,6 +93,7 @@ export function NewServiceClient({ currentUserName }: { currentUserName: string 
             router.push(`/dashboard/settings/services/${result.data.id}`);
           } else {
             pushError(result.error);
+            setSaving(false);
           }
         }}
         className="space-y-5"

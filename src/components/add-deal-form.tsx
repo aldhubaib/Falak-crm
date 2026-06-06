@@ -5,7 +5,7 @@ import { createDeal } from "@/actions/deals";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useErrorStore } from "@/lib/error-store";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Loader2 } from "lucide-react";
 import { FormSelect } from "@/components/ui/form-select";
 
 interface AddDealFormProps {
@@ -20,6 +20,7 @@ export function AddDealForm({ companyId, contactId, contacts, onSuccess }: AddDe
   const { push: pushError } = useErrorStore();
   const [open, setOpen] = useState(false);
   const [selectedContactId, setSelectedContactId] = useState(contactId || "");
+  const [saving, setSaving] = useState(false);
 
   if (!open) {
     return (
@@ -34,12 +35,15 @@ export function AddDealForm({ companyId, contactId, contacts, onSuccess }: AddDe
     <form
       onSubmit={async (e) => {
         e.preventDefault();
+        if (saving) return;
+        setSaving(true);
         const formData = new FormData(e.currentTarget);
         if (companyId) formData.set("companyId", companyId);
         formData.set("contactId", selectedContactId);
         const result = await createDeal(formData);
-        if (!result.ok) { pushError(result.error); return; }
+        if (!result.ok) { pushError(result.error); setSaving(false); return; }
         setOpen(false);
+        setSaving(false);
         setSelectedContactId(contactId || "");
         onSuccess?.();
         router.refresh();
@@ -92,8 +96,11 @@ export function AddDealForm({ companyId, contactId, contacts, onSuccess }: AddDe
       )}
 
       <div className="flex items-center gap-2 pt-1">
-        <Button type="submit" size="sm">Create</Button>
-        <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)}>Cancel</Button>
+        <Button type="submit" size="sm" disabled={saving}>
+          {saving && <Loader2 className="w-3 h-3 animate-spin" />}
+          {saving ? "Creating..." : "Create"}
+        </Button>
+        <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)} disabled={saving}>Cancel</Button>
       </div>
     </form>
   );

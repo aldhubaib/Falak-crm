@@ -6,7 +6,7 @@ import { ComboboxField } from "@/components/ui/combobox-field";
 import { FormField } from "@/components/ui/form-field";
 import { RecordOwner } from "@/components/ui/record-owner";
 import { FIELD_REGISTRY, validateFields, type FieldDef } from "@/lib/fields";
-import { ArrowLeft, Save, MapPin } from "lucide-react";
+import { ArrowLeft, Save, MapPin, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -42,6 +42,7 @@ export function NewContactClient({ companies, currentUserName }: { companies: Co
     companyId: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState(false);
 
   const setValue = (key: string, val: string) => {
     setValues((prev) => ({ ...prev, [key]: val }));
@@ -75,9 +76,9 @@ export function NewContactClient({ companies, currentUserName }: { companies: Co
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <h1 className="text-lg font-semibold text-foreground flex-1">New Contact</h1>
-        <Button type="submit" form="contact-form">
-          <Save className="w-3.5 h-3.5" />
-          Save
+        <Button type="submit" form="contact-form" disabled={saving}>
+          {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+          {saving ? "Saving..." : "Save"}
         </Button>
       </div>
 
@@ -85,7 +86,8 @@ export function NewContactClient({ companies, currentUserName }: { companies: Co
         id="contact-form"
         onSubmit={async (e) => {
           e.preventDefault();
-          if (!validate()) return;
+          if (!validate() || saving) return;
+          setSaving(true);
           const formData = new FormData();
           for (const [k, v] of Object.entries(values)) {
             if (v) formData.set(k, v);
@@ -97,6 +99,7 @@ export function NewContactClient({ companies, currentUserName }: { companies: Co
             } else {
               pushError(result.error);
             }
+            setSaving(false);
             return;
           }
           router.push(`/dashboard/contacts/${result.data.id}`);

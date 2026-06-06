@@ -6,7 +6,7 @@ import { ComboboxField } from "@/components/ui/combobox-field";
 import { FormField } from "@/components/ui/form-field";
 import { RecordOwner } from "@/components/ui/record-owner";
 import { FIELD_REGISTRY, validateFields } from "@/lib/fields";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -37,6 +37,7 @@ export function NewDealClient({
   const [companyId, setCompanyId] = useState("");
   const [contactId, setContactId] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState(false);
 
   const firstOpenStage = pipeline?.stages.find((s) => s.type === "OPEN");
 
@@ -92,9 +93,9 @@ export function NewDealClient({
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <h1 className="text-lg font-semibold text-foreground flex-1">New Deal</h1>
-        <Button type="submit" form="deal-form">
-          <Save className="w-3.5 h-3.5" />
-          Save
+        <Button type="submit" form="deal-form" disabled={saving}>
+          {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+          {saving ? "Saving..." : "Save"}
         </Button>
       </div>
 
@@ -102,7 +103,8 @@ export function NewDealClient({
         id="deal-form"
         onSubmit={async (e) => {
           e.preventDefault();
-          if (!validate()) return;
+          if (!validate() || saving) return;
+          setSaving(true);
           const formData = new FormData();
           formData.set("title", values.title);
           formData.set("value", values.value || "0");
@@ -115,6 +117,7 @@ export function NewDealClient({
             router.push(`/dashboard/deals/${result.data.id}`);
           } else {
             pushError(result.error);
+            setSaving(false);
           }
         }}
         className="space-y-5"

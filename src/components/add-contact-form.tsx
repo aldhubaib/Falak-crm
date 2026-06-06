@@ -6,7 +6,7 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useErrorStore } from "@/lib/error-store";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Loader2 } from "lucide-react";
 
 interface AddContactFormProps {
   companyId?: string;
@@ -17,6 +17,7 @@ export function AddContactForm({ companyId, onSuccess }: AddContactFormProps) {
   const router = useRouter();
   const { push: pushError } = useErrorStore();
   const [open, setOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   if (!open) {
     return (
@@ -31,6 +32,8 @@ export function AddContactForm({ companyId, onSuccess }: AddContactFormProps) {
     <form
       onSubmit={async (e) => {
         e.preventDefault();
+        if (saving) return;
+        setSaving(true);
         const formData = new FormData(e.currentTarget);
         if (companyId) formData.set("companyId", companyId);
         const result = await createContact(formData);
@@ -40,9 +43,11 @@ export function AddContactForm({ companyId, onSuccess }: AddContactFormProps) {
           } else {
             pushError(result.error);
           }
+          setSaving(false);
           return;
         }
         setOpen(false);
+        setSaving(false);
         onSuccess?.();
         router.refresh();
       }}
@@ -119,8 +124,11 @@ export function AddContactForm({ companyId, onSuccess }: AddContactFormProps) {
       </div>
 
       <div className="flex items-center gap-2 pt-1">
-        <Button type="submit" size="sm">Create</Button>
-        <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)}>Cancel</Button>
+        <Button type="submit" size="sm" disabled={saving}>
+          {saving && <Loader2 className="w-3 h-3 animate-spin" />}
+          {saving ? "Creating..." : "Create"}
+        </Button>
+        <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)} disabled={saving}>Cancel</Button>
       </div>
     </form>
   );
