@@ -44,7 +44,7 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
         ],
       },
       take: 5,
-      select: { id: true, firstName: true, lastName: true, role: true, company: { select: { name: true } } },
+      select: { id: true, firstName: true, lastName: true, role: true, companies: { include: { company: { select: { name: true } } }, take: 1, orderBy: { primary: "desc" } } },
     }),
     db.deal.findMany({
       where: {
@@ -70,7 +70,7 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
     results.push({ id: c.id, type: "company", title: c.name, subtitle: c.industry, href: `/dashboard/companies/${c.id}` });
   }
   for (const c of contacts) {
-    results.push({ id: c.id, type: "contact", title: `${c.firstName} ${c.lastName}`, subtitle: c.role || c.company?.name || null, href: `/dashboard/contacts/${c.id}` });
+    results.push({ id: c.id, type: "contact", title: `${c.firstName} ${c.lastName}`, subtitle: c.role || c.companies[0]?.company.name || null, href: `/dashboard/contacts/${c.id}` });
   }
   for (const d of deals) {
     results.push({ id: d.id, type: "deal", title: d.title, subtitle: d.company?.name || null, href: `/dashboard/deals/${d.id}` });

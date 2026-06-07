@@ -13,7 +13,7 @@ type Contact = {
   email: string | null;
   role: string | null;
   country: string;
-  company: { id: string; name: string } | null;
+  companies: { company: { id: string; name: string } }[];
 };
 
 const columns: Column<Contact>[] = [
@@ -33,8 +33,12 @@ const columns: Column<Contact>[] = [
     key: "company",
     label: "Company",
     sortable: true,
-    getValue: (row) => row.company?.name || null,
-    render: (row) => <span className="text-muted-foreground">{row.company?.name || "—"}</span>,
+    getValue: (row) => row.companies[0]?.company.name || null,
+    render: (row) => (
+      <span className="text-muted-foreground">
+        {row.companies.length === 0 ? "—" : row.companies.length === 1 ? row.companies[0].company.name : `${row.companies[0].company.name} +${row.companies.length - 1}`}
+      </span>
+    ),
   },
   {
     key: "mobile",

@@ -20,17 +20,17 @@ export async function checkDeletionBlocks(
   const blocks: RelationBlock[] = [];
 
   if (type === "company") {
-    const contacts = await db.contact.findMany({
-      where: { companyId: id, deletedAt: null },
-      select: { id: true, firstName: true, lastName: true },
+    const contactLinks = await db.contactCompany.findMany({
+      where: { companyId: id, contact: { deletedAt: null } },
+      include: { contact: { select: { id: true, firstName: true, lastName: true } } },
       take: 5,
     });
-    if (contacts.length > 0) {
+    if (contactLinks.length > 0) {
       blocks.push({
         type: "contact",
         label: "Contacts",
-        count: contacts.length,
-        items: contacts.map((c) => ({ id: c.id, name: `${c.firstName} ${c.lastName}` })),
+        count: contactLinks.length,
+        items: contactLinks.map((c) => ({ id: c.contact.id, name: `${c.contact.firstName} ${c.contact.lastName}` })),
       });
     }
 

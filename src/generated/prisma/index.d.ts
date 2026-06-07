@@ -54,6 +54,11 @@ export type Company = $Result.DefaultSelection<Prisma.$CompanyPayload>
  */
 export type Contact = $Result.DefaultSelection<Prisma.$ContactPayload>
 /**
+ * Model ContactCompany
+ * 
+ */
+export type ContactCompany = $Result.DefaultSelection<Prisma.$ContactCompanyPayload>
+/**
  * Model Service
  * 
  */
@@ -475,6 +480,16 @@ export class PrismaClient<
     * ```
     */
   get contact(): Prisma.ContactDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.contactCompany`: Exposes CRUD operations for the **ContactCompany** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ContactCompanies
+    * const contactCompanies = await prisma.contactCompany.findMany()
+    * ```
+    */
+  get contactCompany(): Prisma.ContactCompanyDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.service`: Exposes CRUD operations for the **Service** model.
@@ -1097,6 +1112,7 @@ export namespace Prisma {
     ProjectCollaborator: 'ProjectCollaborator',
     Company: 'Company',
     Contact: 'Contact',
+    ContactCompany: 'ContactCompany',
     Service: 'Service',
     Pipeline: 'Pipeline',
     PipelineStage: 'PipelineStage',
@@ -1130,7 +1146,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealItem" | "projectStatus" | "project" | "taskStatus" | "task" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef"
+      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealItem" | "projectStatus" | "project" | "taskStatus" | "task" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1723,6 +1739,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ContactCountArgs<ExtArgs>
             result: $Utils.Optional<ContactCountAggregateOutputType> | number
+          }
+        }
+      }
+      ContactCompany: {
+        payload: Prisma.$ContactCompanyPayload<ExtArgs>
+        fields: Prisma.ContactCompanyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ContactCompanyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactCompanyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ContactCompanyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactCompanyPayload>
+          }
+          findFirst: {
+            args: Prisma.ContactCompanyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactCompanyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ContactCompanyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactCompanyPayload>
+          }
+          findMany: {
+            args: Prisma.ContactCompanyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactCompanyPayload>[]
+          }
+          create: {
+            args: Prisma.ContactCompanyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactCompanyPayload>
+          }
+          createMany: {
+            args: Prisma.ContactCompanyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ContactCompanyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactCompanyPayload>[]
+          }
+          delete: {
+            args: Prisma.ContactCompanyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactCompanyPayload>
+          }
+          update: {
+            args: Prisma.ContactCompanyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactCompanyPayload>
+          }
+          deleteMany: {
+            args: Prisma.ContactCompanyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ContactCompanyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ContactCompanyUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactCompanyPayload>[]
+          }
+          upsert: {
+            args: Prisma.ContactCompanyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactCompanyPayload>
+          }
+          aggregate: {
+            args: Prisma.ContactCompanyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateContactCompany>
+          }
+          groupBy: {
+            args: Prisma.ContactCompanyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ContactCompanyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ContactCompanyCountArgs<ExtArgs>
+            result: $Utils.Optional<ContactCompanyCountAggregateOutputType> | number
           }
         }
       }
@@ -3174,6 +3264,7 @@ export namespace Prisma {
     projectCollaborator?: ProjectCollaboratorOmit
     company?: CompanyOmit
     contact?: ContactOmit
+    contactCompany?: ContactCompanyOmit
     service?: ServiceOmit
     pipeline?: PipelineOmit
     pipelineStage?: PipelineStageOmit
@@ -3544,7 +3635,7 @@ export namespace Prisma {
    * CompanyCountOutputType without action
    */
   export type CompanyCountOutputTypeCountContactsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ContactWhereInput
+    where?: ContactCompanyWhereInput
   }
 
   /**
@@ -3567,12 +3658,14 @@ export namespace Prisma {
    */
 
   export type ContactCountOutputType = {
+    companies: number
     deals: number
     invoices: number
     whatsappMessages: number
   }
 
   export type ContactCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    companies?: boolean | ContactCountOutputTypeCountCompaniesArgs
     deals?: boolean | ContactCountOutputTypeCountDealsArgs
     invoices?: boolean | ContactCountOutputTypeCountInvoicesArgs
     whatsappMessages?: boolean | ContactCountOutputTypeCountWhatsappMessagesArgs
@@ -3587,6 +3680,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the ContactCountOutputType
      */
     select?: ContactCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ContactCountOutputType without action
+   */
+  export type ContactCountOutputTypeCountCompaniesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactCompanyWhereInput
   }
 
   /**
@@ -11461,7 +11561,7 @@ export namespace Prisma {
     name: "Company"
     objects: {
       workspace: Prisma.$WorkspacePayload<ExtArgs>
-      contacts: Prisma.$ContactPayload<ExtArgs>[]
+      contacts: Prisma.$ContactCompanyPayload<ExtArgs>[]
       deals: Prisma.$DealPayload<ExtArgs>[]
       projects: Prisma.$ProjectPayload<ExtArgs>[]
     }
@@ -11880,7 +11980,7 @@ export namespace Prisma {
   export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    contacts<T extends Company$contactsArgs<ExtArgs> = {}>(args?: Subset<T, Company$contactsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    contacts<T extends Company$contactsArgs<ExtArgs> = {}>(args?: Subset<T, Company$contactsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactCompanyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     deals<T extends Company$dealsArgs<ExtArgs> = {}>(args?: Subset<T, Company$dealsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     projects<T extends Company$projectsArgs<ExtArgs> = {}>(args?: Subset<T, Company$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -12336,23 +12436,23 @@ export namespace Prisma {
    */
   export type Company$contactsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Contact
+     * Select specific fields to fetch from the ContactCompany
      */
-    select?: ContactSelect<ExtArgs> | null
+    select?: ContactCompanySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Contact
+     * Omit specific fields from the ContactCompany
      */
-    omit?: ContactOmit<ExtArgs> | null
+    omit?: ContactCompanyOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ContactInclude<ExtArgs> | null
-    where?: ContactWhereInput
-    orderBy?: ContactOrderByWithRelationInput | ContactOrderByWithRelationInput[]
-    cursor?: ContactWhereUniqueInput
+    include?: ContactCompanyInclude<ExtArgs> | null
+    where?: ContactCompanyWhereInput
+    orderBy?: ContactCompanyOrderByWithRelationInput | ContactCompanyOrderByWithRelationInput[]
+    cursor?: ContactCompanyWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ContactScalarFieldEnum | ContactScalarFieldEnum[]
+    distinct?: ContactCompanyScalarFieldEnum | ContactCompanyScalarFieldEnum[]
   }
 
   /**
@@ -12435,7 +12535,6 @@ export namespace Prisma {
   export type ContactMinAggregateOutputType = {
     id: string | null
     workspaceId: string | null
-    companyId: string | null
     ownerId: string | null
     ownerName: string | null
     firstName: string | null
@@ -12455,7 +12554,6 @@ export namespace Prisma {
   export type ContactMaxAggregateOutputType = {
     id: string | null
     workspaceId: string | null
-    companyId: string | null
     ownerId: string | null
     ownerName: string | null
     firstName: string | null
@@ -12475,7 +12573,6 @@ export namespace Prisma {
   export type ContactCountAggregateOutputType = {
     id: number
     workspaceId: number
-    companyId: number
     ownerId: number
     ownerName: number
     firstName: number
@@ -12498,7 +12595,6 @@ export namespace Prisma {
   export type ContactMinAggregateInputType = {
     id?: true
     workspaceId?: true
-    companyId?: true
     ownerId?: true
     ownerName?: true
     firstName?: true
@@ -12518,7 +12614,6 @@ export namespace Prisma {
   export type ContactMaxAggregateInputType = {
     id?: true
     workspaceId?: true
-    companyId?: true
     ownerId?: true
     ownerName?: true
     firstName?: true
@@ -12538,7 +12633,6 @@ export namespace Prisma {
   export type ContactCountAggregateInputType = {
     id?: true
     workspaceId?: true
-    companyId?: true
     ownerId?: true
     ownerName?: true
     firstName?: true
@@ -12632,7 +12726,6 @@ export namespace Prisma {
   export type ContactGroupByOutputType = {
     id: string
     workspaceId: string
-    companyId: string | null
     ownerId: string | null
     ownerName: string | null
     firstName: string
@@ -12670,7 +12763,6 @@ export namespace Prisma {
   export type ContactSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     workspaceId?: boolean
-    companyId?: boolean
     ownerId?: boolean
     ownerName?: boolean
     firstName?: boolean
@@ -12687,7 +12779,7 @@ export namespace Prisma {
     updatedAt?: boolean
     deletedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
-    company?: boolean | Contact$companyArgs<ExtArgs>
+    companies?: boolean | Contact$companiesArgs<ExtArgs>
     deals?: boolean | Contact$dealsArgs<ExtArgs>
     invoices?: boolean | Contact$invoicesArgs<ExtArgs>
     whatsappMessages?: boolean | Contact$whatsappMessagesArgs<ExtArgs>
@@ -12697,7 +12789,6 @@ export namespace Prisma {
   export type ContactSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     workspaceId?: boolean
-    companyId?: boolean
     ownerId?: boolean
     ownerName?: boolean
     firstName?: boolean
@@ -12714,13 +12805,11 @@ export namespace Prisma {
     updatedAt?: boolean
     deletedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
-    company?: boolean | Contact$companyArgs<ExtArgs>
   }, ExtArgs["result"]["contact"]>
 
   export type ContactSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     workspaceId?: boolean
-    companyId?: boolean
     ownerId?: boolean
     ownerName?: boolean
     firstName?: boolean
@@ -12737,13 +12826,11 @@ export namespace Prisma {
     updatedAt?: boolean
     deletedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
-    company?: boolean | Contact$companyArgs<ExtArgs>
   }, ExtArgs["result"]["contact"]>
 
   export type ContactSelectScalar = {
     id?: boolean
     workspaceId?: boolean
-    companyId?: boolean
     ownerId?: boolean
     ownerName?: boolean
     firstName?: boolean
@@ -12761,10 +12848,10 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "companyId" | "ownerId" | "ownerName" | "firstName" | "middleName" | "lastName" | "nameAr" | "mobile" | "email" | "role" | "country" | "notes" | "customFields" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["contact"]>
+  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "ownerId" | "ownerName" | "firstName" | "middleName" | "lastName" | "nameAr" | "mobile" | "email" | "role" | "country" | "notes" | "customFields" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["contact"]>
   export type ContactInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
-    company?: boolean | Contact$companyArgs<ExtArgs>
+    companies?: boolean | Contact$companiesArgs<ExtArgs>
     deals?: boolean | Contact$dealsArgs<ExtArgs>
     invoices?: boolean | Contact$invoicesArgs<ExtArgs>
     whatsappMessages?: boolean | Contact$whatsappMessagesArgs<ExtArgs>
@@ -12772,18 +12859,16 @@ export namespace Prisma {
   }
   export type ContactIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
-    company?: boolean | Contact$companyArgs<ExtArgs>
   }
   export type ContactIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
-    company?: boolean | Contact$companyArgs<ExtArgs>
   }
 
   export type $ContactPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Contact"
     objects: {
       workspace: Prisma.$WorkspacePayload<ExtArgs>
-      company: Prisma.$CompanyPayload<ExtArgs> | null
+      companies: Prisma.$ContactCompanyPayload<ExtArgs>[]
       deals: Prisma.$DealPayload<ExtArgs>[]
       invoices: Prisma.$InvoicePayload<ExtArgs>[]
       whatsappMessages: Prisma.$WhatsAppMessagePayload<ExtArgs>[]
@@ -12791,7 +12876,6 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       workspaceId: string
-      companyId: string | null
       ownerId: string | null
       ownerName: string | null
       firstName: string
@@ -13202,7 +13286,7 @@ export namespace Prisma {
   export interface Prisma__ContactClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    company<T extends Contact$companyArgs<ExtArgs> = {}>(args?: Subset<T, Contact$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    companies<T extends Contact$companiesArgs<ExtArgs> = {}>(args?: Subset<T, Contact$companiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactCompanyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     deals<T extends Contact$dealsArgs<ExtArgs> = {}>(args?: Subset<T, Contact$dealsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     invoices<T extends Contact$invoicesArgs<ExtArgs> = {}>(args?: Subset<T, Contact$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     whatsappMessages<T extends Contact$whatsappMessagesArgs<ExtArgs> = {}>(args?: Subset<T, Contact$whatsappMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WhatsAppMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -13237,7 +13321,6 @@ export namespace Prisma {
   interface ContactFieldRefs {
     readonly id: FieldRef<"Contact", 'String'>
     readonly workspaceId: FieldRef<"Contact", 'String'>
-    readonly companyId: FieldRef<"Contact", 'String'>
     readonly ownerId: FieldRef<"Contact", 'String'>
     readonly ownerName: FieldRef<"Contact", 'String'>
     readonly firstName: FieldRef<"Contact", 'String'>
@@ -13654,22 +13737,27 @@ export namespace Prisma {
   }
 
   /**
-   * Contact.company
+   * Contact.companies
    */
-  export type Contact$companyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Contact$companiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Company
+     * Select specific fields to fetch from the ContactCompany
      */
-    select?: CompanySelect<ExtArgs> | null
+    select?: ContactCompanySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Company
+     * Omit specific fields from the ContactCompany
      */
-    omit?: CompanyOmit<ExtArgs> | null
+    omit?: ContactCompanyOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CompanyInclude<ExtArgs> | null
-    where?: CompanyWhereInput
+    include?: ContactCompanyInclude<ExtArgs> | null
+    where?: ContactCompanyWhereInput
+    orderBy?: ContactCompanyOrderByWithRelationInput | ContactCompanyOrderByWithRelationInput[]
+    cursor?: ContactCompanyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ContactCompanyScalarFieldEnum | ContactCompanyScalarFieldEnum[]
   }
 
   /**
@@ -13760,6 +13848,1090 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ContactInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ContactCompany
+   */
+
+  export type AggregateContactCompany = {
+    _count: ContactCompanyCountAggregateOutputType | null
+    _min: ContactCompanyMinAggregateOutputType | null
+    _max: ContactCompanyMaxAggregateOutputType | null
+  }
+
+  export type ContactCompanyMinAggregateOutputType = {
+    id: string | null
+    contactId: string | null
+    companyId: string | null
+    role: string | null
+    primary: boolean | null
+    createdAt: Date | null
+  }
+
+  export type ContactCompanyMaxAggregateOutputType = {
+    id: string | null
+    contactId: string | null
+    companyId: string | null
+    role: string | null
+    primary: boolean | null
+    createdAt: Date | null
+  }
+
+  export type ContactCompanyCountAggregateOutputType = {
+    id: number
+    contactId: number
+    companyId: number
+    role: number
+    primary: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ContactCompanyMinAggregateInputType = {
+    id?: true
+    contactId?: true
+    companyId?: true
+    role?: true
+    primary?: true
+    createdAt?: true
+  }
+
+  export type ContactCompanyMaxAggregateInputType = {
+    id?: true
+    contactId?: true
+    companyId?: true
+    role?: true
+    primary?: true
+    createdAt?: true
+  }
+
+  export type ContactCompanyCountAggregateInputType = {
+    id?: true
+    contactId?: true
+    companyId?: true
+    role?: true
+    primary?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ContactCompanyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContactCompany to aggregate.
+     */
+    where?: ContactCompanyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactCompanies to fetch.
+     */
+    orderBy?: ContactCompanyOrderByWithRelationInput | ContactCompanyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ContactCompanyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactCompanies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactCompanies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ContactCompanies
+    **/
+    _count?: true | ContactCompanyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ContactCompanyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ContactCompanyMaxAggregateInputType
+  }
+
+  export type GetContactCompanyAggregateType<T extends ContactCompanyAggregateArgs> = {
+        [P in keyof T & keyof AggregateContactCompany]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateContactCompany[P]>
+      : GetScalarType<T[P], AggregateContactCompany[P]>
+  }
+
+
+
+
+  export type ContactCompanyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactCompanyWhereInput
+    orderBy?: ContactCompanyOrderByWithAggregationInput | ContactCompanyOrderByWithAggregationInput[]
+    by: ContactCompanyScalarFieldEnum[] | ContactCompanyScalarFieldEnum
+    having?: ContactCompanyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ContactCompanyCountAggregateInputType | true
+    _min?: ContactCompanyMinAggregateInputType
+    _max?: ContactCompanyMaxAggregateInputType
+  }
+
+  export type ContactCompanyGroupByOutputType = {
+    id: string
+    contactId: string
+    companyId: string
+    role: string | null
+    primary: boolean
+    createdAt: Date
+    _count: ContactCompanyCountAggregateOutputType | null
+    _min: ContactCompanyMinAggregateOutputType | null
+    _max: ContactCompanyMaxAggregateOutputType | null
+  }
+
+  type GetContactCompanyGroupByPayload<T extends ContactCompanyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ContactCompanyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ContactCompanyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ContactCompanyGroupByOutputType[P]>
+            : GetScalarType<T[P], ContactCompanyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ContactCompanySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    contactId?: boolean
+    companyId?: boolean
+    role?: boolean
+    primary?: boolean
+    createdAt?: boolean
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactCompany"]>
+
+  export type ContactCompanySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    contactId?: boolean
+    companyId?: boolean
+    role?: boolean
+    primary?: boolean
+    createdAt?: boolean
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactCompany"]>
+
+  export type ContactCompanySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    contactId?: boolean
+    companyId?: boolean
+    role?: boolean
+    primary?: boolean
+    createdAt?: boolean
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contactCompany"]>
+
+  export type ContactCompanySelectScalar = {
+    id?: boolean
+    contactId?: boolean
+    companyId?: boolean
+    role?: boolean
+    primary?: boolean
+    createdAt?: boolean
+  }
+
+  export type ContactCompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "contactId" | "companyId" | "role" | "primary" | "createdAt", ExtArgs["result"]["contactCompany"]>
+  export type ContactCompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+  export type ContactCompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+  export type ContactCompanyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+
+  export type $ContactCompanyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ContactCompany"
+    objects: {
+      contact: Prisma.$ContactPayload<ExtArgs>
+      company: Prisma.$CompanyPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      contactId: string
+      companyId: string
+      role: string | null
+      primary: boolean
+      createdAt: Date
+    }, ExtArgs["result"]["contactCompany"]>
+    composites: {}
+  }
+
+  type ContactCompanyGetPayload<S extends boolean | null | undefined | ContactCompanyDefaultArgs> = $Result.GetResult<Prisma.$ContactCompanyPayload, S>
+
+  type ContactCompanyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ContactCompanyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ContactCompanyCountAggregateInputType | true
+    }
+
+  export interface ContactCompanyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ContactCompany'], meta: { name: 'ContactCompany' } }
+    /**
+     * Find zero or one ContactCompany that matches the filter.
+     * @param {ContactCompanyFindUniqueArgs} args - Arguments to find a ContactCompany
+     * @example
+     * // Get one ContactCompany
+     * const contactCompany = await prisma.contactCompany.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ContactCompanyFindUniqueArgs>(args: SelectSubset<T, ContactCompanyFindUniqueArgs<ExtArgs>>): Prisma__ContactCompanyClient<$Result.GetResult<Prisma.$ContactCompanyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ContactCompany that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ContactCompanyFindUniqueOrThrowArgs} args - Arguments to find a ContactCompany
+     * @example
+     * // Get one ContactCompany
+     * const contactCompany = await prisma.contactCompany.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ContactCompanyFindUniqueOrThrowArgs>(args: SelectSubset<T, ContactCompanyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ContactCompanyClient<$Result.GetResult<Prisma.$ContactCompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContactCompany that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactCompanyFindFirstArgs} args - Arguments to find a ContactCompany
+     * @example
+     * // Get one ContactCompany
+     * const contactCompany = await prisma.contactCompany.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ContactCompanyFindFirstArgs>(args?: SelectSubset<T, ContactCompanyFindFirstArgs<ExtArgs>>): Prisma__ContactCompanyClient<$Result.GetResult<Prisma.$ContactCompanyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContactCompany that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactCompanyFindFirstOrThrowArgs} args - Arguments to find a ContactCompany
+     * @example
+     * // Get one ContactCompany
+     * const contactCompany = await prisma.contactCompany.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ContactCompanyFindFirstOrThrowArgs>(args?: SelectSubset<T, ContactCompanyFindFirstOrThrowArgs<ExtArgs>>): Prisma__ContactCompanyClient<$Result.GetResult<Prisma.$ContactCompanyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ContactCompanies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactCompanyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ContactCompanies
+     * const contactCompanies = await prisma.contactCompany.findMany()
+     * 
+     * // Get first 10 ContactCompanies
+     * const contactCompanies = await prisma.contactCompany.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const contactCompanyWithIdOnly = await prisma.contactCompany.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ContactCompanyFindManyArgs>(args?: SelectSubset<T, ContactCompanyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactCompanyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ContactCompany.
+     * @param {ContactCompanyCreateArgs} args - Arguments to create a ContactCompany.
+     * @example
+     * // Create one ContactCompany
+     * const ContactCompany = await prisma.contactCompany.create({
+     *   data: {
+     *     // ... data to create a ContactCompany
+     *   }
+     * })
+     * 
+     */
+    create<T extends ContactCompanyCreateArgs>(args: SelectSubset<T, ContactCompanyCreateArgs<ExtArgs>>): Prisma__ContactCompanyClient<$Result.GetResult<Prisma.$ContactCompanyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ContactCompanies.
+     * @param {ContactCompanyCreateManyArgs} args - Arguments to create many ContactCompanies.
+     * @example
+     * // Create many ContactCompanies
+     * const contactCompany = await prisma.contactCompany.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ContactCompanyCreateManyArgs>(args?: SelectSubset<T, ContactCompanyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ContactCompanies and returns the data saved in the database.
+     * @param {ContactCompanyCreateManyAndReturnArgs} args - Arguments to create many ContactCompanies.
+     * @example
+     * // Create many ContactCompanies
+     * const contactCompany = await prisma.contactCompany.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ContactCompanies and only return the `id`
+     * const contactCompanyWithIdOnly = await prisma.contactCompany.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ContactCompanyCreateManyAndReturnArgs>(args?: SelectSubset<T, ContactCompanyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactCompanyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ContactCompany.
+     * @param {ContactCompanyDeleteArgs} args - Arguments to delete one ContactCompany.
+     * @example
+     * // Delete one ContactCompany
+     * const ContactCompany = await prisma.contactCompany.delete({
+     *   where: {
+     *     // ... filter to delete one ContactCompany
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ContactCompanyDeleteArgs>(args: SelectSubset<T, ContactCompanyDeleteArgs<ExtArgs>>): Prisma__ContactCompanyClient<$Result.GetResult<Prisma.$ContactCompanyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ContactCompany.
+     * @param {ContactCompanyUpdateArgs} args - Arguments to update one ContactCompany.
+     * @example
+     * // Update one ContactCompany
+     * const contactCompany = await prisma.contactCompany.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ContactCompanyUpdateArgs>(args: SelectSubset<T, ContactCompanyUpdateArgs<ExtArgs>>): Prisma__ContactCompanyClient<$Result.GetResult<Prisma.$ContactCompanyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ContactCompanies.
+     * @param {ContactCompanyDeleteManyArgs} args - Arguments to filter ContactCompanies to delete.
+     * @example
+     * // Delete a few ContactCompanies
+     * const { count } = await prisma.contactCompany.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ContactCompanyDeleteManyArgs>(args?: SelectSubset<T, ContactCompanyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContactCompanies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactCompanyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ContactCompanies
+     * const contactCompany = await prisma.contactCompany.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ContactCompanyUpdateManyArgs>(args: SelectSubset<T, ContactCompanyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContactCompanies and returns the data updated in the database.
+     * @param {ContactCompanyUpdateManyAndReturnArgs} args - Arguments to update many ContactCompanies.
+     * @example
+     * // Update many ContactCompanies
+     * const contactCompany = await prisma.contactCompany.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ContactCompanies and only return the `id`
+     * const contactCompanyWithIdOnly = await prisma.contactCompany.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ContactCompanyUpdateManyAndReturnArgs>(args: SelectSubset<T, ContactCompanyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactCompanyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ContactCompany.
+     * @param {ContactCompanyUpsertArgs} args - Arguments to update or create a ContactCompany.
+     * @example
+     * // Update or create a ContactCompany
+     * const contactCompany = await prisma.contactCompany.upsert({
+     *   create: {
+     *     // ... data to create a ContactCompany
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ContactCompany we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ContactCompanyUpsertArgs>(args: SelectSubset<T, ContactCompanyUpsertArgs<ExtArgs>>): Prisma__ContactCompanyClient<$Result.GetResult<Prisma.$ContactCompanyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ContactCompanies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactCompanyCountArgs} args - Arguments to filter ContactCompanies to count.
+     * @example
+     * // Count the number of ContactCompanies
+     * const count = await prisma.contactCompany.count({
+     *   where: {
+     *     // ... the filter for the ContactCompanies we want to count
+     *   }
+     * })
+    **/
+    count<T extends ContactCompanyCountArgs>(
+      args?: Subset<T, ContactCompanyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ContactCompanyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ContactCompany.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactCompanyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ContactCompanyAggregateArgs>(args: Subset<T, ContactCompanyAggregateArgs>): Prisma.PrismaPromise<GetContactCompanyAggregateType<T>>
+
+    /**
+     * Group by ContactCompany.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContactCompanyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ContactCompanyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ContactCompanyGroupByArgs['orderBy'] }
+        : { orderBy?: ContactCompanyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ContactCompanyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetContactCompanyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ContactCompany model
+   */
+  readonly fields: ContactCompanyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ContactCompany.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ContactCompanyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    contact<T extends ContactDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ContactDefaultArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ContactCompany model
+   */
+  interface ContactCompanyFieldRefs {
+    readonly id: FieldRef<"ContactCompany", 'String'>
+    readonly contactId: FieldRef<"ContactCompany", 'String'>
+    readonly companyId: FieldRef<"ContactCompany", 'String'>
+    readonly role: FieldRef<"ContactCompany", 'String'>
+    readonly primary: FieldRef<"ContactCompany", 'Boolean'>
+    readonly createdAt: FieldRef<"ContactCompany", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ContactCompany findUnique
+   */
+  export type ContactCompanyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactCompany
+     */
+    select?: ContactCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactCompany
+     */
+    omit?: ContactCompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactCompanyInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactCompany to fetch.
+     */
+    where: ContactCompanyWhereUniqueInput
+  }
+
+  /**
+   * ContactCompany findUniqueOrThrow
+   */
+  export type ContactCompanyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactCompany
+     */
+    select?: ContactCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactCompany
+     */
+    omit?: ContactCompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactCompanyInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactCompany to fetch.
+     */
+    where: ContactCompanyWhereUniqueInput
+  }
+
+  /**
+   * ContactCompany findFirst
+   */
+  export type ContactCompanyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactCompany
+     */
+    select?: ContactCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactCompany
+     */
+    omit?: ContactCompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactCompanyInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactCompany to fetch.
+     */
+    where?: ContactCompanyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactCompanies to fetch.
+     */
+    orderBy?: ContactCompanyOrderByWithRelationInput | ContactCompanyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContactCompanies.
+     */
+    cursor?: ContactCompanyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactCompanies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactCompanies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactCompanies.
+     */
+    distinct?: ContactCompanyScalarFieldEnum | ContactCompanyScalarFieldEnum[]
+  }
+
+  /**
+   * ContactCompany findFirstOrThrow
+   */
+  export type ContactCompanyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactCompany
+     */
+    select?: ContactCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactCompany
+     */
+    omit?: ContactCompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactCompanyInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactCompany to fetch.
+     */
+    where?: ContactCompanyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactCompanies to fetch.
+     */
+    orderBy?: ContactCompanyOrderByWithRelationInput | ContactCompanyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContactCompanies.
+     */
+    cursor?: ContactCompanyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactCompanies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactCompanies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactCompanies.
+     */
+    distinct?: ContactCompanyScalarFieldEnum | ContactCompanyScalarFieldEnum[]
+  }
+
+  /**
+   * ContactCompany findMany
+   */
+  export type ContactCompanyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactCompany
+     */
+    select?: ContactCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactCompany
+     */
+    omit?: ContactCompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactCompanyInclude<ExtArgs> | null
+    /**
+     * Filter, which ContactCompanies to fetch.
+     */
+    where?: ContactCompanyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContactCompanies to fetch.
+     */
+    orderBy?: ContactCompanyOrderByWithRelationInput | ContactCompanyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ContactCompanies.
+     */
+    cursor?: ContactCompanyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContactCompanies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContactCompanies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContactCompanies.
+     */
+    distinct?: ContactCompanyScalarFieldEnum | ContactCompanyScalarFieldEnum[]
+  }
+
+  /**
+   * ContactCompany create
+   */
+  export type ContactCompanyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactCompany
+     */
+    select?: ContactCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactCompany
+     */
+    omit?: ContactCompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactCompanyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ContactCompany.
+     */
+    data: XOR<ContactCompanyCreateInput, ContactCompanyUncheckedCreateInput>
+  }
+
+  /**
+   * ContactCompany createMany
+   */
+  export type ContactCompanyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ContactCompanies.
+     */
+    data: ContactCompanyCreateManyInput | ContactCompanyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ContactCompany createManyAndReturn
+   */
+  export type ContactCompanyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactCompany
+     */
+    select?: ContactCompanySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactCompany
+     */
+    omit?: ContactCompanyOmit<ExtArgs> | null
+    /**
+     * The data used to create many ContactCompanies.
+     */
+    data: ContactCompanyCreateManyInput | ContactCompanyCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactCompanyIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContactCompany update
+   */
+  export type ContactCompanyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactCompany
+     */
+    select?: ContactCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactCompany
+     */
+    omit?: ContactCompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactCompanyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ContactCompany.
+     */
+    data: XOR<ContactCompanyUpdateInput, ContactCompanyUncheckedUpdateInput>
+    /**
+     * Choose, which ContactCompany to update.
+     */
+    where: ContactCompanyWhereUniqueInput
+  }
+
+  /**
+   * ContactCompany updateMany
+   */
+  export type ContactCompanyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ContactCompanies.
+     */
+    data: XOR<ContactCompanyUpdateManyMutationInput, ContactCompanyUncheckedUpdateManyInput>
+    /**
+     * Filter which ContactCompanies to update
+     */
+    where?: ContactCompanyWhereInput
+    /**
+     * Limit how many ContactCompanies to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContactCompany updateManyAndReturn
+   */
+  export type ContactCompanyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactCompany
+     */
+    select?: ContactCompanySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactCompany
+     */
+    omit?: ContactCompanyOmit<ExtArgs> | null
+    /**
+     * The data used to update ContactCompanies.
+     */
+    data: XOR<ContactCompanyUpdateManyMutationInput, ContactCompanyUncheckedUpdateManyInput>
+    /**
+     * Filter which ContactCompanies to update
+     */
+    where?: ContactCompanyWhereInput
+    /**
+     * Limit how many ContactCompanies to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactCompanyIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContactCompany upsert
+   */
+  export type ContactCompanyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactCompany
+     */
+    select?: ContactCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactCompany
+     */
+    omit?: ContactCompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactCompanyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ContactCompany to update in case it exists.
+     */
+    where: ContactCompanyWhereUniqueInput
+    /**
+     * In case the ContactCompany found by the `where` argument doesn't exist, create a new ContactCompany with this data.
+     */
+    create: XOR<ContactCompanyCreateInput, ContactCompanyUncheckedCreateInput>
+    /**
+     * In case the ContactCompany was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ContactCompanyUpdateInput, ContactCompanyUncheckedUpdateInput>
+  }
+
+  /**
+   * ContactCompany delete
+   */
+  export type ContactCompanyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactCompany
+     */
+    select?: ContactCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactCompany
+     */
+    omit?: ContactCompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactCompanyInclude<ExtArgs> | null
+    /**
+     * Filter which ContactCompany to delete.
+     */
+    where: ContactCompanyWhereUniqueInput
+  }
+
+  /**
+   * ContactCompany deleteMany
+   */
+  export type ContactCompanyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContactCompanies to delete
+     */
+    where?: ContactCompanyWhereInput
+    /**
+     * Limit how many ContactCompanies to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContactCompany without action
+   */
+  export type ContactCompanyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContactCompany
+     */
+    select?: ContactCompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContactCompany
+     */
+    omit?: ContactCompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContactCompanyInclude<ExtArgs> | null
   }
 
 
@@ -35275,7 +36447,6 @@ export namespace Prisma {
   export const ContactScalarFieldEnum: {
     id: 'id',
     workspaceId: 'workspaceId',
-    companyId: 'companyId',
     ownerId: 'ownerId',
     ownerName: 'ownerName',
     firstName: 'firstName',
@@ -35294,6 +36465,18 @@ export namespace Prisma {
   };
 
   export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
+
+
+  export const ContactCompanyScalarFieldEnum: {
+    id: 'id',
+    contactId: 'contactId',
+    companyId: 'companyId',
+    role: 'role',
+    primary: 'primary',
+    createdAt: 'createdAt'
+  };
+
+  export type ContactCompanyScalarFieldEnum = (typeof ContactCompanyScalarFieldEnum)[keyof typeof ContactCompanyScalarFieldEnum]
 
 
   export const ServiceScalarFieldEnum: {
@@ -36340,7 +37523,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Company"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Company"> | Date | string | null
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
-    contacts?: ContactListRelationFilter
+    contacts?: ContactCompanyListRelationFilter
     deals?: DealListRelationFilter
     projects?: ProjectListRelationFilter
   }
@@ -36366,7 +37549,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
-    contacts?: ContactOrderByRelationAggregateInput
+    contacts?: ContactCompanyOrderByRelationAggregateInput
     deals?: DealOrderByRelationAggregateInput
     projects?: ProjectOrderByRelationAggregateInput
   }
@@ -36395,7 +37578,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Company"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Company"> | Date | string | null
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
-    contacts?: ContactListRelationFilter
+    contacts?: ContactCompanyListRelationFilter
     deals?: DealListRelationFilter
     projects?: ProjectListRelationFilter
   }, "id">
@@ -36456,7 +37639,6 @@ export namespace Prisma {
     NOT?: ContactWhereInput | ContactWhereInput[]
     id?: StringFilter<"Contact"> | string
     workspaceId?: StringFilter<"Contact"> | string
-    companyId?: StringNullableFilter<"Contact"> | string | null
     ownerId?: StringNullableFilter<"Contact"> | string | null
     ownerName?: StringNullableFilter<"Contact"> | string | null
     firstName?: StringFilter<"Contact"> | string
@@ -36473,7 +37655,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Contact"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Contact"> | Date | string | null
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
-    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+    companies?: ContactCompanyListRelationFilter
     deals?: DealListRelationFilter
     invoices?: InvoiceListRelationFilter
     whatsappMessages?: WhatsAppMessageListRelationFilter
@@ -36482,7 +37664,6 @@ export namespace Prisma {
   export type ContactOrderByWithRelationInput = {
     id?: SortOrder
     workspaceId?: SortOrder
-    companyId?: SortOrderInput | SortOrder
     ownerId?: SortOrderInput | SortOrder
     ownerName?: SortOrderInput | SortOrder
     firstName?: SortOrder
@@ -36499,7 +37680,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
-    company?: CompanyOrderByWithRelationInput
+    companies?: ContactCompanyOrderByRelationAggregateInput
     deals?: DealOrderByRelationAggregateInput
     invoices?: InvoiceOrderByRelationAggregateInput
     whatsappMessages?: WhatsAppMessageOrderByRelationAggregateInput
@@ -36512,7 +37693,6 @@ export namespace Prisma {
     OR?: ContactWhereInput[]
     NOT?: ContactWhereInput | ContactWhereInput[]
     workspaceId?: StringFilter<"Contact"> | string
-    companyId?: StringNullableFilter<"Contact"> | string | null
     ownerId?: StringNullableFilter<"Contact"> | string | null
     ownerName?: StringNullableFilter<"Contact"> | string | null
     firstName?: StringFilter<"Contact"> | string
@@ -36529,7 +37709,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Contact"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Contact"> | Date | string | null
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
-    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+    companies?: ContactCompanyListRelationFilter
     deals?: DealListRelationFilter
     invoices?: InvoiceListRelationFilter
     whatsappMessages?: WhatsAppMessageListRelationFilter
@@ -36538,7 +37718,6 @@ export namespace Prisma {
   export type ContactOrderByWithAggregationInput = {
     id?: SortOrder
     workspaceId?: SortOrder
-    companyId?: SortOrderInput | SortOrder
     ownerId?: SortOrderInput | SortOrder
     ownerName?: SortOrderInput | SortOrder
     firstName?: SortOrder
@@ -36565,7 +37744,6 @@ export namespace Prisma {
     NOT?: ContactScalarWhereWithAggregatesInput | ContactScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Contact"> | string
     workspaceId?: StringWithAggregatesFilter<"Contact"> | string
-    companyId?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     ownerId?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     ownerName?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     firstName?: StringWithAggregatesFilter<"Contact"> | string
@@ -36581,6 +37759,70 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Contact"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Contact"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Contact"> | Date | string | null
+  }
+
+  export type ContactCompanyWhereInput = {
+    AND?: ContactCompanyWhereInput | ContactCompanyWhereInput[]
+    OR?: ContactCompanyWhereInput[]
+    NOT?: ContactCompanyWhereInput | ContactCompanyWhereInput[]
+    id?: StringFilter<"ContactCompany"> | string
+    contactId?: StringFilter<"ContactCompany"> | string
+    companyId?: StringFilter<"ContactCompany"> | string
+    role?: StringNullableFilter<"ContactCompany"> | string | null
+    primary?: BoolFilter<"ContactCompany"> | boolean
+    createdAt?: DateTimeFilter<"ContactCompany"> | Date | string
+    contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+  }
+
+  export type ContactCompanyOrderByWithRelationInput = {
+    id?: SortOrder
+    contactId?: SortOrder
+    companyId?: SortOrder
+    role?: SortOrderInput | SortOrder
+    primary?: SortOrder
+    createdAt?: SortOrder
+    contact?: ContactOrderByWithRelationInput
+    company?: CompanyOrderByWithRelationInput
+  }
+
+  export type ContactCompanyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    contactId_companyId?: ContactCompanyContactIdCompanyIdCompoundUniqueInput
+    AND?: ContactCompanyWhereInput | ContactCompanyWhereInput[]
+    OR?: ContactCompanyWhereInput[]
+    NOT?: ContactCompanyWhereInput | ContactCompanyWhereInput[]
+    contactId?: StringFilter<"ContactCompany"> | string
+    companyId?: StringFilter<"ContactCompany"> | string
+    role?: StringNullableFilter<"ContactCompany"> | string | null
+    primary?: BoolFilter<"ContactCompany"> | boolean
+    createdAt?: DateTimeFilter<"ContactCompany"> | Date | string
+    contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+  }, "id" | "contactId_companyId">
+
+  export type ContactCompanyOrderByWithAggregationInput = {
+    id?: SortOrder
+    contactId?: SortOrder
+    companyId?: SortOrder
+    role?: SortOrderInput | SortOrder
+    primary?: SortOrder
+    createdAt?: SortOrder
+    _count?: ContactCompanyCountOrderByAggregateInput
+    _max?: ContactCompanyMaxOrderByAggregateInput
+    _min?: ContactCompanyMinOrderByAggregateInput
+  }
+
+  export type ContactCompanyScalarWhereWithAggregatesInput = {
+    AND?: ContactCompanyScalarWhereWithAggregatesInput | ContactCompanyScalarWhereWithAggregatesInput[]
+    OR?: ContactCompanyScalarWhereWithAggregatesInput[]
+    NOT?: ContactCompanyScalarWhereWithAggregatesInput | ContactCompanyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ContactCompany"> | string
+    contactId?: StringWithAggregatesFilter<"ContactCompany"> | string
+    companyId?: StringWithAggregatesFilter<"ContactCompany"> | string
+    role?: StringNullableWithAggregatesFilter<"ContactCompany"> | string | null
+    primary?: BoolWithAggregatesFilter<"ContactCompany"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"ContactCompany"> | Date | string
   }
 
   export type ServiceWhereInput = {
@@ -38645,7 +39887,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
-    contacts?: ContactCreateNestedManyWithoutCompanyInput
+    contacts?: ContactCompanyCreateNestedManyWithoutCompanyInput
     deals?: DealCreateNestedManyWithoutCompanyInput
     projects?: ProjectCreateNestedManyWithoutCompanyInput
   }
@@ -38670,7 +39912,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    contacts?: ContactUncheckedCreateNestedManyWithoutCompanyInput
+    contacts?: ContactCompanyUncheckedCreateNestedManyWithoutCompanyInput
     deals?: DealUncheckedCreateNestedManyWithoutCompanyInput
     projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
   }
@@ -38695,7 +39937,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
-    contacts?: ContactUpdateManyWithoutCompanyNestedInput
+    contacts?: ContactCompanyUpdateManyWithoutCompanyNestedInput
     deals?: DealUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUpdateManyWithoutCompanyNestedInput
   }
@@ -38720,7 +39962,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    contacts?: ContactUncheckedUpdateManyWithoutCompanyNestedInput
+    contacts?: ContactCompanyUncheckedUpdateManyWithoutCompanyNestedInput
     deals?: DealUncheckedUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
   }
@@ -38808,7 +40050,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     workspace: WorkspaceCreateNestedOneWithoutContactsInput
-    company?: CompanyCreateNestedOneWithoutContactsInput
+    companies?: ContactCompanyCreateNestedManyWithoutContactInput
     deals?: DealCreateNestedManyWithoutContactInput
     invoices?: InvoiceCreateNestedManyWithoutContactInput
     whatsappMessages?: WhatsAppMessageCreateNestedManyWithoutContactInput
@@ -38817,7 +40059,6 @@ export namespace Prisma {
   export type ContactUncheckedCreateInput = {
     id?: string
     workspaceId: string
-    companyId?: string | null
     ownerId?: string | null
     ownerName?: string | null
     firstName: string
@@ -38833,6 +40074,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    companies?: ContactCompanyUncheckedCreateNestedManyWithoutContactInput
     deals?: DealUncheckedCreateNestedManyWithoutContactInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutContactInput
     whatsappMessages?: WhatsAppMessageUncheckedCreateNestedManyWithoutContactInput
@@ -38856,7 +40098,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutContactsNestedInput
-    company?: CompanyUpdateOneWithoutContactsNestedInput
+    companies?: ContactCompanyUpdateManyWithoutContactNestedInput
     deals?: DealUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUpdateManyWithoutContactNestedInput
     whatsappMessages?: WhatsAppMessageUpdateManyWithoutContactNestedInput
@@ -38865,7 +40107,6 @@ export namespace Prisma {
   export type ContactUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
-    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
@@ -38881,6 +40122,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companies?: ContactCompanyUncheckedUpdateManyWithoutContactNestedInput
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutContactNestedInput
     whatsappMessages?: WhatsAppMessageUncheckedUpdateManyWithoutContactNestedInput
@@ -38889,7 +40131,6 @@ export namespace Prisma {
   export type ContactCreateManyInput = {
     id?: string
     workspaceId: string
-    companyId?: string | null
     ownerId?: string | null
     ownerName?: string | null
     firstName: string
@@ -38929,7 +40170,6 @@ export namespace Prisma {
   export type ContactUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
-    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
@@ -38945,6 +40185,67 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ContactCompanyCreateInput = {
+    id?: string
+    role?: string | null
+    primary?: boolean
+    createdAt?: Date | string
+    contact: ContactCreateNestedOneWithoutCompaniesInput
+    company: CompanyCreateNestedOneWithoutContactsInput
+  }
+
+  export type ContactCompanyUncheckedCreateInput = {
+    id?: string
+    contactId: string
+    companyId: string
+    role?: string | null
+    primary?: boolean
+    createdAt?: Date | string
+  }
+
+  export type ContactCompanyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    primary?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contact?: ContactUpdateOneRequiredWithoutCompaniesNestedInput
+    company?: CompanyUpdateOneRequiredWithoutContactsNestedInput
+  }
+
+  export type ContactCompanyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    contactId?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    primary?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactCompanyCreateManyInput = {
+    id?: string
+    contactId: string
+    companyId: string
+    role?: string | null
+    primary?: boolean
+    createdAt?: Date | string
+  }
+
+  export type ContactCompanyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    primary?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactCompanyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    contactId?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    primary?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ServiceCreateInput = {
@@ -41271,6 +42572,16 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type ContactCompanyListRelationFilter = {
+    every?: ContactCompanyWhereInput
+    some?: ContactCompanyWhereInput
+    none?: ContactCompanyWhereInput
+  }
+
+  export type ContactCompanyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type CompanyCountOrderByAggregateInput = {
     id?: SortOrder
     workspaceId?: SortOrder
@@ -41375,11 +42686,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type CompanyNullableScalarRelationFilter = {
-    is?: CompanyWhereInput | null
-    isNot?: CompanyWhereInput | null
-  }
-
   export type WhatsAppMessageListRelationFilter = {
     every?: WhatsAppMessageWhereInput
     some?: WhatsAppMessageWhereInput
@@ -41398,7 +42704,6 @@ export namespace Prisma {
   export type ContactCountOrderByAggregateInput = {
     id?: SortOrder
     workspaceId?: SortOrder
-    companyId?: SortOrder
     ownerId?: SortOrder
     ownerName?: SortOrder
     firstName?: SortOrder
@@ -41419,7 +42724,6 @@ export namespace Prisma {
   export type ContactMaxOrderByAggregateInput = {
     id?: SortOrder
     workspaceId?: SortOrder
-    companyId?: SortOrder
     ownerId?: SortOrder
     ownerName?: SortOrder
     firstName?: SortOrder
@@ -41439,7 +42743,6 @@ export namespace Prisma {
   export type ContactMinOrderByAggregateInput = {
     id?: SortOrder
     workspaceId?: SortOrder
-    companyId?: SortOrder
     ownerId?: SortOrder
     ownerName?: SortOrder
     firstName?: SortOrder
@@ -41454,6 +42757,48 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+  }
+
+  export type ContactScalarRelationFilter = {
+    is?: ContactWhereInput
+    isNot?: ContactWhereInput
+  }
+
+  export type CompanyScalarRelationFilter = {
+    is?: CompanyWhereInput
+    isNot?: CompanyWhereInput
+  }
+
+  export type ContactCompanyContactIdCompanyIdCompoundUniqueInput = {
+    contactId: string
+    companyId: string
+  }
+
+  export type ContactCompanyCountOrderByAggregateInput = {
+    id?: SortOrder
+    contactId?: SortOrder
+    companyId?: SortOrder
+    role?: SortOrder
+    primary?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ContactCompanyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    contactId?: SortOrder
+    companyId?: SortOrder
+    role?: SortOrder
+    primary?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ContactCompanyMinOrderByAggregateInput = {
+    id?: SortOrder
+    contactId?: SortOrder
+    companyId?: SortOrder
+    role?: SortOrder
+    primary?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type EnumPricingTypeFilter<$PrismaModel = never> = {
@@ -41673,6 +43018,11 @@ export namespace Prisma {
   export type PipelineStageScalarRelationFilter = {
     is?: PipelineStageWhereInput
     isNot?: PipelineStageWhereInput
+  }
+
+  export type CompanyNullableScalarRelationFilter = {
+    is?: CompanyWhereInput | null
+    isNot?: CompanyWhereInput | null
   }
 
   export type ContactNullableScalarRelationFilter = {
@@ -42305,11 +43655,6 @@ export namespace Prisma {
     in?: $Enums.MessageStatus[] | ListEnumMessageStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.MessageStatus[] | ListEnumMessageStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumMessageStatusFilter<$PrismaModel> | $Enums.MessageStatus
-  }
-
-  export type ContactScalarRelationFilter = {
-    is?: ContactWhereInput
-    isNot?: ContactWhereInput
   }
 
   export type WhatsAppMessageCountOrderByAggregateInput = {
@@ -43573,11 +44918,11 @@ export namespace Prisma {
     connect?: WorkspaceWhereUniqueInput
   }
 
-  export type ContactCreateNestedManyWithoutCompanyInput = {
-    create?: XOR<ContactCreateWithoutCompanyInput, ContactUncheckedCreateWithoutCompanyInput> | ContactCreateWithoutCompanyInput[] | ContactUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: ContactCreateOrConnectWithoutCompanyInput | ContactCreateOrConnectWithoutCompanyInput[]
-    createMany?: ContactCreateManyCompanyInputEnvelope
-    connect?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
+  export type ContactCompanyCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ContactCompanyCreateWithoutCompanyInput, ContactCompanyUncheckedCreateWithoutCompanyInput> | ContactCompanyCreateWithoutCompanyInput[] | ContactCompanyUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ContactCompanyCreateOrConnectWithoutCompanyInput | ContactCompanyCreateOrConnectWithoutCompanyInput[]
+    createMany?: ContactCompanyCreateManyCompanyInputEnvelope
+    connect?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
   }
 
   export type DealCreateNestedManyWithoutCompanyInput = {
@@ -43594,11 +44939,11 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
   }
 
-  export type ContactUncheckedCreateNestedManyWithoutCompanyInput = {
-    create?: XOR<ContactCreateWithoutCompanyInput, ContactUncheckedCreateWithoutCompanyInput> | ContactCreateWithoutCompanyInput[] | ContactUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: ContactCreateOrConnectWithoutCompanyInput | ContactCreateOrConnectWithoutCompanyInput[]
-    createMany?: ContactCreateManyCompanyInputEnvelope
-    connect?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
+  export type ContactCompanyUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ContactCompanyCreateWithoutCompanyInput, ContactCompanyUncheckedCreateWithoutCompanyInput> | ContactCompanyCreateWithoutCompanyInput[] | ContactCompanyUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ContactCompanyCreateOrConnectWithoutCompanyInput | ContactCompanyCreateOrConnectWithoutCompanyInput[]
+    createMany?: ContactCompanyCreateManyCompanyInputEnvelope
+    connect?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
   }
 
   export type DealUncheckedCreateNestedManyWithoutCompanyInput = {
@@ -43627,18 +44972,18 @@ export namespace Prisma {
     update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutCompaniesInput, WorkspaceUpdateWithoutCompaniesInput>, WorkspaceUncheckedUpdateWithoutCompaniesInput>
   }
 
-  export type ContactUpdateManyWithoutCompanyNestedInput = {
-    create?: XOR<ContactCreateWithoutCompanyInput, ContactUncheckedCreateWithoutCompanyInput> | ContactCreateWithoutCompanyInput[] | ContactUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: ContactCreateOrConnectWithoutCompanyInput | ContactCreateOrConnectWithoutCompanyInput[]
-    upsert?: ContactUpsertWithWhereUniqueWithoutCompanyInput | ContactUpsertWithWhereUniqueWithoutCompanyInput[]
-    createMany?: ContactCreateManyCompanyInputEnvelope
-    set?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
-    disconnect?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
-    delete?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
-    connect?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
-    update?: ContactUpdateWithWhereUniqueWithoutCompanyInput | ContactUpdateWithWhereUniqueWithoutCompanyInput[]
-    updateMany?: ContactUpdateManyWithWhereWithoutCompanyInput | ContactUpdateManyWithWhereWithoutCompanyInput[]
-    deleteMany?: ContactScalarWhereInput | ContactScalarWhereInput[]
+  export type ContactCompanyUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ContactCompanyCreateWithoutCompanyInput, ContactCompanyUncheckedCreateWithoutCompanyInput> | ContactCompanyCreateWithoutCompanyInput[] | ContactCompanyUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ContactCompanyCreateOrConnectWithoutCompanyInput | ContactCompanyCreateOrConnectWithoutCompanyInput[]
+    upsert?: ContactCompanyUpsertWithWhereUniqueWithoutCompanyInput | ContactCompanyUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ContactCompanyCreateManyCompanyInputEnvelope
+    set?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    disconnect?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    delete?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    connect?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    update?: ContactCompanyUpdateWithWhereUniqueWithoutCompanyInput | ContactCompanyUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ContactCompanyUpdateManyWithWhereWithoutCompanyInput | ContactCompanyUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ContactCompanyScalarWhereInput | ContactCompanyScalarWhereInput[]
   }
 
   export type DealUpdateManyWithoutCompanyNestedInput = {
@@ -43669,18 +45014,18 @@ export namespace Prisma {
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
-  export type ContactUncheckedUpdateManyWithoutCompanyNestedInput = {
-    create?: XOR<ContactCreateWithoutCompanyInput, ContactUncheckedCreateWithoutCompanyInput> | ContactCreateWithoutCompanyInput[] | ContactUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: ContactCreateOrConnectWithoutCompanyInput | ContactCreateOrConnectWithoutCompanyInput[]
-    upsert?: ContactUpsertWithWhereUniqueWithoutCompanyInput | ContactUpsertWithWhereUniqueWithoutCompanyInput[]
-    createMany?: ContactCreateManyCompanyInputEnvelope
-    set?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
-    disconnect?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
-    delete?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
-    connect?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
-    update?: ContactUpdateWithWhereUniqueWithoutCompanyInput | ContactUpdateWithWhereUniqueWithoutCompanyInput[]
-    updateMany?: ContactUpdateManyWithWhereWithoutCompanyInput | ContactUpdateManyWithWhereWithoutCompanyInput[]
-    deleteMany?: ContactScalarWhereInput | ContactScalarWhereInput[]
+  export type ContactCompanyUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ContactCompanyCreateWithoutCompanyInput, ContactCompanyUncheckedCreateWithoutCompanyInput> | ContactCompanyCreateWithoutCompanyInput[] | ContactCompanyUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ContactCompanyCreateOrConnectWithoutCompanyInput | ContactCompanyCreateOrConnectWithoutCompanyInput[]
+    upsert?: ContactCompanyUpsertWithWhereUniqueWithoutCompanyInput | ContactCompanyUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ContactCompanyCreateManyCompanyInputEnvelope
+    set?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    disconnect?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    delete?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    connect?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    update?: ContactCompanyUpdateWithWhereUniqueWithoutCompanyInput | ContactCompanyUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ContactCompanyUpdateManyWithWhereWithoutCompanyInput | ContactCompanyUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ContactCompanyScalarWhereInput | ContactCompanyScalarWhereInput[]
   }
 
   export type DealUncheckedUpdateManyWithoutCompanyNestedInput = {
@@ -43717,10 +45062,11 @@ export namespace Prisma {
     connect?: WorkspaceWhereUniqueInput
   }
 
-  export type CompanyCreateNestedOneWithoutContactsInput = {
-    create?: XOR<CompanyCreateWithoutContactsInput, CompanyUncheckedCreateWithoutContactsInput>
-    connectOrCreate?: CompanyCreateOrConnectWithoutContactsInput
-    connect?: CompanyWhereUniqueInput
+  export type ContactCompanyCreateNestedManyWithoutContactInput = {
+    create?: XOR<ContactCompanyCreateWithoutContactInput, ContactCompanyUncheckedCreateWithoutContactInput> | ContactCompanyCreateWithoutContactInput[] | ContactCompanyUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: ContactCompanyCreateOrConnectWithoutContactInput | ContactCompanyCreateOrConnectWithoutContactInput[]
+    createMany?: ContactCompanyCreateManyContactInputEnvelope
+    connect?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
   }
 
   export type DealCreateNestedManyWithoutContactInput = {
@@ -43742,6 +45088,13 @@ export namespace Prisma {
     connectOrCreate?: WhatsAppMessageCreateOrConnectWithoutContactInput | WhatsAppMessageCreateOrConnectWithoutContactInput[]
     createMany?: WhatsAppMessageCreateManyContactInputEnvelope
     connect?: WhatsAppMessageWhereUniqueInput | WhatsAppMessageWhereUniqueInput[]
+  }
+
+  export type ContactCompanyUncheckedCreateNestedManyWithoutContactInput = {
+    create?: XOR<ContactCompanyCreateWithoutContactInput, ContactCompanyUncheckedCreateWithoutContactInput> | ContactCompanyCreateWithoutContactInput[] | ContactCompanyUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: ContactCompanyCreateOrConnectWithoutContactInput | ContactCompanyCreateOrConnectWithoutContactInput[]
+    createMany?: ContactCompanyCreateManyContactInputEnvelope
+    connect?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
   }
 
   export type DealUncheckedCreateNestedManyWithoutContactInput = {
@@ -43773,14 +45126,18 @@ export namespace Prisma {
     update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutContactsInput, WorkspaceUpdateWithoutContactsInput>, WorkspaceUncheckedUpdateWithoutContactsInput>
   }
 
-  export type CompanyUpdateOneWithoutContactsNestedInput = {
-    create?: XOR<CompanyCreateWithoutContactsInput, CompanyUncheckedCreateWithoutContactsInput>
-    connectOrCreate?: CompanyCreateOrConnectWithoutContactsInput
-    upsert?: CompanyUpsertWithoutContactsInput
-    disconnect?: CompanyWhereInput | boolean
-    delete?: CompanyWhereInput | boolean
-    connect?: CompanyWhereUniqueInput
-    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutContactsInput, CompanyUpdateWithoutContactsInput>, CompanyUncheckedUpdateWithoutContactsInput>
+  export type ContactCompanyUpdateManyWithoutContactNestedInput = {
+    create?: XOR<ContactCompanyCreateWithoutContactInput, ContactCompanyUncheckedCreateWithoutContactInput> | ContactCompanyCreateWithoutContactInput[] | ContactCompanyUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: ContactCompanyCreateOrConnectWithoutContactInput | ContactCompanyCreateOrConnectWithoutContactInput[]
+    upsert?: ContactCompanyUpsertWithWhereUniqueWithoutContactInput | ContactCompanyUpsertWithWhereUniqueWithoutContactInput[]
+    createMany?: ContactCompanyCreateManyContactInputEnvelope
+    set?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    disconnect?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    delete?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    connect?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    update?: ContactCompanyUpdateWithWhereUniqueWithoutContactInput | ContactCompanyUpdateWithWhereUniqueWithoutContactInput[]
+    updateMany?: ContactCompanyUpdateManyWithWhereWithoutContactInput | ContactCompanyUpdateManyWithWhereWithoutContactInput[]
+    deleteMany?: ContactCompanyScalarWhereInput | ContactCompanyScalarWhereInput[]
   }
 
   export type DealUpdateManyWithoutContactNestedInput = {
@@ -43825,6 +45182,20 @@ export namespace Prisma {
     deleteMany?: WhatsAppMessageScalarWhereInput | WhatsAppMessageScalarWhereInput[]
   }
 
+  export type ContactCompanyUncheckedUpdateManyWithoutContactNestedInput = {
+    create?: XOR<ContactCompanyCreateWithoutContactInput, ContactCompanyUncheckedCreateWithoutContactInput> | ContactCompanyCreateWithoutContactInput[] | ContactCompanyUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: ContactCompanyCreateOrConnectWithoutContactInput | ContactCompanyCreateOrConnectWithoutContactInput[]
+    upsert?: ContactCompanyUpsertWithWhereUniqueWithoutContactInput | ContactCompanyUpsertWithWhereUniqueWithoutContactInput[]
+    createMany?: ContactCompanyCreateManyContactInputEnvelope
+    set?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    disconnect?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    delete?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    connect?: ContactCompanyWhereUniqueInput | ContactCompanyWhereUniqueInput[]
+    update?: ContactCompanyUpdateWithWhereUniqueWithoutContactInput | ContactCompanyUpdateWithWhereUniqueWithoutContactInput[]
+    updateMany?: ContactCompanyUpdateManyWithWhereWithoutContactInput | ContactCompanyUpdateManyWithWhereWithoutContactInput[]
+    deleteMany?: ContactCompanyScalarWhereInput | ContactCompanyScalarWhereInput[]
+  }
+
   export type DealUncheckedUpdateManyWithoutContactNestedInput = {
     create?: XOR<DealCreateWithoutContactInput, DealUncheckedCreateWithoutContactInput> | DealCreateWithoutContactInput[] | DealUncheckedCreateWithoutContactInput[]
     connectOrCreate?: DealCreateOrConnectWithoutContactInput | DealCreateOrConnectWithoutContactInput[]
@@ -43865,6 +45236,34 @@ export namespace Prisma {
     update?: WhatsAppMessageUpdateWithWhereUniqueWithoutContactInput | WhatsAppMessageUpdateWithWhereUniqueWithoutContactInput[]
     updateMany?: WhatsAppMessageUpdateManyWithWhereWithoutContactInput | WhatsAppMessageUpdateManyWithWhereWithoutContactInput[]
     deleteMany?: WhatsAppMessageScalarWhereInput | WhatsAppMessageScalarWhereInput[]
+  }
+
+  export type ContactCreateNestedOneWithoutCompaniesInput = {
+    create?: XOR<ContactCreateWithoutCompaniesInput, ContactUncheckedCreateWithoutCompaniesInput>
+    connectOrCreate?: ContactCreateOrConnectWithoutCompaniesInput
+    connect?: ContactWhereUniqueInput
+  }
+
+  export type CompanyCreateNestedOneWithoutContactsInput = {
+    create?: XOR<CompanyCreateWithoutContactsInput, CompanyUncheckedCreateWithoutContactsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutContactsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type ContactUpdateOneRequiredWithoutCompaniesNestedInput = {
+    create?: XOR<ContactCreateWithoutCompaniesInput, ContactUncheckedCreateWithoutCompaniesInput>
+    connectOrCreate?: ContactCreateOrConnectWithoutCompaniesInput
+    upsert?: ContactUpsertWithoutCompaniesInput
+    connect?: ContactWhereUniqueInput
+    update?: XOR<XOR<ContactUpdateToOneWithWhereWithoutCompaniesInput, ContactUpdateWithoutCompaniesInput>, ContactUncheckedUpdateWithoutCompaniesInput>
+  }
+
+  export type CompanyUpdateOneRequiredWithoutContactsNestedInput = {
+    create?: XOR<CompanyCreateWithoutContactsInput, CompanyUncheckedCreateWithoutContactsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutContactsInput
+    upsert?: CompanyUpsertWithoutContactsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutContactsInput, CompanyUpdateWithoutContactsInput>, CompanyUncheckedUpdateWithoutContactsInput>
   }
 
   export type WorkspaceCreateNestedOneWithoutServicesInput = {
@@ -45465,7 +46864,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    contacts?: ContactCreateNestedManyWithoutCompanyInput
+    contacts?: ContactCompanyCreateNestedManyWithoutCompanyInput
     deals?: DealCreateNestedManyWithoutCompanyInput
     projects?: ProjectCreateNestedManyWithoutCompanyInput
   }
@@ -45489,7 +46888,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    contacts?: ContactUncheckedCreateNestedManyWithoutCompanyInput
+    contacts?: ContactCompanyUncheckedCreateNestedManyWithoutCompanyInput
     deals?: DealUncheckedCreateNestedManyWithoutCompanyInput
     projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
   }
@@ -45521,7 +46920,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    company?: CompanyCreateNestedOneWithoutContactsInput
+    companies?: ContactCompanyCreateNestedManyWithoutContactInput
     deals?: DealCreateNestedManyWithoutContactInput
     invoices?: InvoiceCreateNestedManyWithoutContactInput
     whatsappMessages?: WhatsAppMessageCreateNestedManyWithoutContactInput
@@ -45529,7 +46928,6 @@ export namespace Prisma {
 
   export type ContactUncheckedCreateWithoutWorkspaceInput = {
     id?: string
-    companyId?: string | null
     ownerId?: string | null
     ownerName?: string | null
     firstName: string
@@ -45545,6 +46943,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    companies?: ContactCompanyUncheckedCreateNestedManyWithoutContactInput
     deals?: DealUncheckedCreateNestedManyWithoutContactInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutContactInput
     whatsappMessages?: WhatsAppMessageUncheckedCreateNestedManyWithoutContactInput
@@ -46208,7 +47607,6 @@ export namespace Prisma {
     NOT?: ContactScalarWhereInput | ContactScalarWhereInput[]
     id?: StringFilter<"Contact"> | string
     workspaceId?: StringFilter<"Contact"> | string
-    companyId?: StringNullableFilter<"Contact"> | string | null
     ownerId?: StringNullableFilter<"Contact"> | string | null
     ownerName?: StringNullableFilter<"Contact"> | string | null
     firstName?: StringFilter<"Contact"> | string
@@ -47507,59 +48905,29 @@ export namespace Prisma {
     create: XOR<WorkspaceCreateWithoutCompaniesInput, WorkspaceUncheckedCreateWithoutCompaniesInput>
   }
 
-  export type ContactCreateWithoutCompanyInput = {
+  export type ContactCompanyCreateWithoutCompanyInput = {
     id?: string
-    ownerId?: string | null
-    ownerName?: string | null
-    firstName: string
-    middleName?: string | null
-    lastName: string
-    nameAr?: string | null
-    mobile: string
-    email?: string | null
     role?: string | null
-    country: string
-    notes?: string | null
-    customFields?: NullableJsonNullValueInput | InputJsonValue
+    primary?: boolean
     createdAt?: Date | string
-    updatedAt?: Date | string
-    deletedAt?: Date | string | null
-    workspace: WorkspaceCreateNestedOneWithoutContactsInput
-    deals?: DealCreateNestedManyWithoutContactInput
-    invoices?: InvoiceCreateNestedManyWithoutContactInput
-    whatsappMessages?: WhatsAppMessageCreateNestedManyWithoutContactInput
+    contact: ContactCreateNestedOneWithoutCompaniesInput
   }
 
-  export type ContactUncheckedCreateWithoutCompanyInput = {
+  export type ContactCompanyUncheckedCreateWithoutCompanyInput = {
     id?: string
-    workspaceId: string
-    ownerId?: string | null
-    ownerName?: string | null
-    firstName: string
-    middleName?: string | null
-    lastName: string
-    nameAr?: string | null
-    mobile: string
-    email?: string | null
+    contactId: string
     role?: string | null
-    country: string
-    notes?: string | null
-    customFields?: NullableJsonNullValueInput | InputJsonValue
+    primary?: boolean
     createdAt?: Date | string
-    updatedAt?: Date | string
-    deletedAt?: Date | string | null
-    deals?: DealUncheckedCreateNestedManyWithoutContactInput
-    invoices?: InvoiceUncheckedCreateNestedManyWithoutContactInput
-    whatsappMessages?: WhatsAppMessageUncheckedCreateNestedManyWithoutContactInput
   }
 
-  export type ContactCreateOrConnectWithoutCompanyInput = {
-    where: ContactWhereUniqueInput
-    create: XOR<ContactCreateWithoutCompanyInput, ContactUncheckedCreateWithoutCompanyInput>
+  export type ContactCompanyCreateOrConnectWithoutCompanyInput = {
+    where: ContactCompanyWhereUniqueInput
+    create: XOR<ContactCompanyCreateWithoutCompanyInput, ContactCompanyUncheckedCreateWithoutCompanyInput>
   }
 
-  export type ContactCreateManyCompanyInputEnvelope = {
-    data: ContactCreateManyCompanyInput | ContactCreateManyCompanyInput[]
+  export type ContactCompanyCreateManyCompanyInputEnvelope = {
+    data: ContactCompanyCreateManyCompanyInput | ContactCompanyCreateManyCompanyInput[]
     skipDuplicates?: boolean
   }
 
@@ -47742,20 +49110,32 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
-  export type ContactUpsertWithWhereUniqueWithoutCompanyInput = {
-    where: ContactWhereUniqueInput
-    update: XOR<ContactUpdateWithoutCompanyInput, ContactUncheckedUpdateWithoutCompanyInput>
-    create: XOR<ContactCreateWithoutCompanyInput, ContactUncheckedCreateWithoutCompanyInput>
+  export type ContactCompanyUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: ContactCompanyWhereUniqueInput
+    update: XOR<ContactCompanyUpdateWithoutCompanyInput, ContactCompanyUncheckedUpdateWithoutCompanyInput>
+    create: XOR<ContactCompanyCreateWithoutCompanyInput, ContactCompanyUncheckedCreateWithoutCompanyInput>
   }
 
-  export type ContactUpdateWithWhereUniqueWithoutCompanyInput = {
-    where: ContactWhereUniqueInput
-    data: XOR<ContactUpdateWithoutCompanyInput, ContactUncheckedUpdateWithoutCompanyInput>
+  export type ContactCompanyUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: ContactCompanyWhereUniqueInput
+    data: XOR<ContactCompanyUpdateWithoutCompanyInput, ContactCompanyUncheckedUpdateWithoutCompanyInput>
   }
 
-  export type ContactUpdateManyWithWhereWithoutCompanyInput = {
-    where: ContactScalarWhereInput
-    data: XOR<ContactUpdateManyMutationInput, ContactUncheckedUpdateManyWithoutCompanyInput>
+  export type ContactCompanyUpdateManyWithWhereWithoutCompanyInput = {
+    where: ContactCompanyScalarWhereInput
+    data: XOR<ContactCompanyUpdateManyMutationInput, ContactCompanyUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type ContactCompanyScalarWhereInput = {
+    AND?: ContactCompanyScalarWhereInput | ContactCompanyScalarWhereInput[]
+    OR?: ContactCompanyScalarWhereInput[]
+    NOT?: ContactCompanyScalarWhereInput | ContactCompanyScalarWhereInput[]
+    id?: StringFilter<"ContactCompany"> | string
+    contactId?: StringFilter<"ContactCompany"> | string
+    companyId?: StringFilter<"ContactCompany"> | string
+    role?: StringNullableFilter<"ContactCompany"> | string | null
+    primary?: BoolFilter<"ContactCompany"> | boolean
+    createdAt?: DateTimeFilter<"ContactCompany"> | Date | string
   }
 
   export type DealUpsertWithWhereUniqueWithoutCompanyInput = {
@@ -47853,57 +49233,30 @@ export namespace Prisma {
     create: XOR<WorkspaceCreateWithoutContactsInput, WorkspaceUncheckedCreateWithoutContactsInput>
   }
 
-  export type CompanyCreateWithoutContactsInput = {
+  export type ContactCompanyCreateWithoutContactInput = {
     id?: string
-    ownerId?: string | null
-    ownerName?: string | null
-    name: string
-    nameAr?: string | null
-    industry?: string | null
-    referral?: string | null
-    phone?: string | null
-    whatsappNumber?: string | null
-    email?: string | null
-    website?: string | null
-    address?: string | null
-    logo?: string | null
-    notes?: string | null
-    customFields?: NullableJsonNullValueInput | InputJsonValue
+    role?: string | null
+    primary?: boolean
     createdAt?: Date | string
-    updatedAt?: Date | string
-    deletedAt?: Date | string | null
-    workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
-    deals?: DealCreateNestedManyWithoutCompanyInput
-    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    company: CompanyCreateNestedOneWithoutContactsInput
   }
 
-  export type CompanyUncheckedCreateWithoutContactsInput = {
+  export type ContactCompanyUncheckedCreateWithoutContactInput = {
     id?: string
-    workspaceId: string
-    ownerId?: string | null
-    ownerName?: string | null
-    name: string
-    nameAr?: string | null
-    industry?: string | null
-    referral?: string | null
-    phone?: string | null
-    whatsappNumber?: string | null
-    email?: string | null
-    website?: string | null
-    address?: string | null
-    logo?: string | null
-    notes?: string | null
-    customFields?: NullableJsonNullValueInput | InputJsonValue
+    companyId: string
+    role?: string | null
+    primary?: boolean
     createdAt?: Date | string
-    updatedAt?: Date | string
-    deletedAt?: Date | string | null
-    deals?: DealUncheckedCreateNestedManyWithoutCompanyInput
-    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
-  export type CompanyCreateOrConnectWithoutContactsInput = {
-    where: CompanyWhereUniqueInput
-    create: XOR<CompanyCreateWithoutContactsInput, CompanyUncheckedCreateWithoutContactsInput>
+  export type ContactCompanyCreateOrConnectWithoutContactInput = {
+    where: ContactCompanyWhereUniqueInput
+    create: XOR<ContactCompanyCreateWithoutContactInput, ContactCompanyUncheckedCreateWithoutContactInput>
+  }
+
+  export type ContactCompanyCreateManyContactInputEnvelope = {
+    data: ContactCompanyCreateManyContactInput | ContactCompanyCreateManyContactInput[]
+    skipDuplicates?: boolean
   }
 
   export type DealCreateWithoutContactInput = {
@@ -48133,63 +49486,20 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
-  export type CompanyUpsertWithoutContactsInput = {
-    update: XOR<CompanyUpdateWithoutContactsInput, CompanyUncheckedUpdateWithoutContactsInput>
-    create: XOR<CompanyCreateWithoutContactsInput, CompanyUncheckedCreateWithoutContactsInput>
-    where?: CompanyWhereInput
+  export type ContactCompanyUpsertWithWhereUniqueWithoutContactInput = {
+    where: ContactCompanyWhereUniqueInput
+    update: XOR<ContactCompanyUpdateWithoutContactInput, ContactCompanyUncheckedUpdateWithoutContactInput>
+    create: XOR<ContactCompanyCreateWithoutContactInput, ContactCompanyUncheckedCreateWithoutContactInput>
   }
 
-  export type CompanyUpdateToOneWithWhereWithoutContactsInput = {
-    where?: CompanyWhereInput
-    data: XOR<CompanyUpdateWithoutContactsInput, CompanyUncheckedUpdateWithoutContactsInput>
+  export type ContactCompanyUpdateWithWhereUniqueWithoutContactInput = {
+    where: ContactCompanyWhereUniqueInput
+    data: XOR<ContactCompanyUpdateWithoutContactInput, ContactCompanyUncheckedUpdateWithoutContactInput>
   }
 
-  export type CompanyUpdateWithoutContactsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
-    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: StringFieldUpdateOperationsInput | string
-    nameAr?: NullableStringFieldUpdateOperationsInput | string | null
-    industry?: NullableStringFieldUpdateOperationsInput | string | null
-    referral?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    logo?: NullableStringFieldUpdateOperationsInput | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    customFields?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
-    deals?: DealUpdateManyWithoutCompanyNestedInput
-    projects?: ProjectUpdateManyWithoutCompanyNestedInput
-  }
-
-  export type CompanyUncheckedUpdateWithoutContactsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    workspaceId?: StringFieldUpdateOperationsInput | string
-    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
-    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: StringFieldUpdateOperationsInput | string
-    nameAr?: NullableStringFieldUpdateOperationsInput | string | null
-    industry?: NullableStringFieldUpdateOperationsInput | string | null
-    referral?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    logo?: NullableStringFieldUpdateOperationsInput | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    customFields?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deals?: DealUncheckedUpdateManyWithoutCompanyNestedInput
-    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+  export type ContactCompanyUpdateManyWithWhereWithoutContactInput = {
+    where: ContactCompanyScalarWhereInput
+    data: XOR<ContactCompanyUpdateManyMutationInput, ContactCompanyUncheckedUpdateManyWithoutContactInput>
   }
 
   export type DealUpsertWithWhereUniqueWithoutContactInput = {
@@ -48256,6 +49566,226 @@ export namespace Prisma {
     deliveredAt?: DateTimeNullableFilter<"WhatsAppMessage"> | Date | string | null
     readAt?: DateTimeNullableFilter<"WhatsAppMessage"> | Date | string | null
     createdAt?: DateTimeFilter<"WhatsAppMessage"> | Date | string
+  }
+
+  export type ContactCreateWithoutCompaniesInput = {
+    id?: string
+    ownerId?: string | null
+    ownerName?: string | null
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    nameAr?: string | null
+    mobile: string
+    email?: string | null
+    role?: string | null
+    country: string
+    notes?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    workspace: WorkspaceCreateNestedOneWithoutContactsInput
+    deals?: DealCreateNestedManyWithoutContactInput
+    invoices?: InvoiceCreateNestedManyWithoutContactInput
+    whatsappMessages?: WhatsAppMessageCreateNestedManyWithoutContactInput
+  }
+
+  export type ContactUncheckedCreateWithoutCompaniesInput = {
+    id?: string
+    workspaceId: string
+    ownerId?: string | null
+    ownerName?: string | null
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    nameAr?: string | null
+    mobile: string
+    email?: string | null
+    role?: string | null
+    country: string
+    notes?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    deals?: DealUncheckedCreateNestedManyWithoutContactInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutContactInput
+    whatsappMessages?: WhatsAppMessageUncheckedCreateNestedManyWithoutContactInput
+  }
+
+  export type ContactCreateOrConnectWithoutCompaniesInput = {
+    where: ContactWhereUniqueInput
+    create: XOR<ContactCreateWithoutCompaniesInput, ContactUncheckedCreateWithoutCompaniesInput>
+  }
+
+  export type CompanyCreateWithoutContactsInput = {
+    id?: string
+    ownerId?: string | null
+    ownerName?: string | null
+    name: string
+    nameAr?: string | null
+    industry?: string | null
+    referral?: string | null
+    phone?: string | null
+    whatsappNumber?: string | null
+    email?: string | null
+    website?: string | null
+    address?: string | null
+    logo?: string | null
+    notes?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
+    deals?: DealCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutContactsInput = {
+    id?: string
+    workspaceId: string
+    ownerId?: string | null
+    ownerName?: string | null
+    name: string
+    nameAr?: string | null
+    industry?: string | null
+    referral?: string | null
+    phone?: string | null
+    whatsappNumber?: string | null
+    email?: string | null
+    website?: string | null
+    address?: string | null
+    logo?: string | null
+    notes?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    deals?: DealUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutContactsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutContactsInput, CompanyUncheckedCreateWithoutContactsInput>
+  }
+
+  export type ContactUpsertWithoutCompaniesInput = {
+    update: XOR<ContactUpdateWithoutCompaniesInput, ContactUncheckedUpdateWithoutCompaniesInput>
+    create: XOR<ContactCreateWithoutCompaniesInput, ContactUncheckedCreateWithoutCompaniesInput>
+    where?: ContactWhereInput
+  }
+
+  export type ContactUpdateToOneWithWhereWithoutCompaniesInput = {
+    where?: ContactWhereInput
+    data: XOR<ContactUpdateWithoutCompaniesInput, ContactUncheckedUpdateWithoutCompaniesInput>
+  }
+
+  export type ContactUpdateWithoutCompaniesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    nameAr?: NullableStringFieldUpdateOperationsInput | string | null
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspace?: WorkspaceUpdateOneRequiredWithoutContactsNestedInput
+    deals?: DealUpdateManyWithoutContactNestedInput
+    invoices?: InvoiceUpdateManyWithoutContactNestedInput
+    whatsappMessages?: WhatsAppMessageUpdateManyWithoutContactNestedInput
+  }
+
+  export type ContactUncheckedUpdateWithoutCompaniesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    nameAr?: NullableStringFieldUpdateOperationsInput | string | null
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deals?: DealUncheckedUpdateManyWithoutContactNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutContactNestedInput
+    whatsappMessages?: WhatsAppMessageUncheckedUpdateManyWithoutContactNestedInput
+  }
+
+  export type CompanyUpsertWithoutContactsInput = {
+    update: XOR<CompanyUpdateWithoutContactsInput, CompanyUncheckedUpdateWithoutContactsInput>
+    create: XOR<CompanyCreateWithoutContactsInput, CompanyUncheckedCreateWithoutContactsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutContactsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutContactsInput, CompanyUncheckedUpdateWithoutContactsInput>
+  }
+
+  export type CompanyUpdateWithoutContactsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    nameAr?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    referral?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
+    deals?: DealUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutContactsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    nameAr?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    referral?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deals?: DealUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type WorkspaceCreateWithoutServicesInput = {
@@ -49028,7 +50558,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
-    contacts?: ContactCreateNestedManyWithoutCompanyInput
+    contacts?: ContactCompanyCreateNestedManyWithoutCompanyInput
     projects?: ProjectCreateNestedManyWithoutCompanyInput
   }
 
@@ -49052,7 +50582,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    contacts?: ContactUncheckedCreateNestedManyWithoutCompanyInput
+    contacts?: ContactCompanyUncheckedCreateNestedManyWithoutCompanyInput
     projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -49079,7 +50609,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     workspace: WorkspaceCreateNestedOneWithoutContactsInput
-    company?: CompanyCreateNestedOneWithoutContactsInput
+    companies?: ContactCompanyCreateNestedManyWithoutContactInput
     invoices?: InvoiceCreateNestedManyWithoutContactInput
     whatsappMessages?: WhatsAppMessageCreateNestedManyWithoutContactInput
   }
@@ -49087,7 +50617,6 @@ export namespace Prisma {
   export type ContactUncheckedCreateWithoutDealsInput = {
     id?: string
     workspaceId: string
-    companyId?: string | null
     ownerId?: string | null
     ownerName?: string | null
     firstName: string
@@ -49103,6 +50632,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    companies?: ContactCompanyUncheckedCreateNestedManyWithoutContactInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutContactInput
     whatsappMessages?: WhatsAppMessageUncheckedCreateNestedManyWithoutContactInput
   }
@@ -49343,7 +50873,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
-    contacts?: ContactUpdateManyWithoutCompanyNestedInput
+    contacts?: ContactCompanyUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUpdateManyWithoutCompanyNestedInput
   }
 
@@ -49367,7 +50897,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    contacts?: ContactUncheckedUpdateManyWithoutCompanyNestedInput
+    contacts?: ContactCompanyUncheckedUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -49400,7 +50930,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutContactsNestedInput
-    company?: CompanyUpdateOneWithoutContactsNestedInput
+    companies?: ContactCompanyUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUpdateManyWithoutContactNestedInput
     whatsappMessages?: WhatsAppMessageUpdateManyWithoutContactNestedInput
   }
@@ -49408,7 +50938,6 @@ export namespace Prisma {
   export type ContactUncheckedUpdateWithoutDealsInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
-    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
@@ -49424,6 +50953,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companies?: ContactCompanyUncheckedUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutContactNestedInput
     whatsappMessages?: WhatsAppMessageUncheckedUpdateManyWithoutContactNestedInput
   }
@@ -50023,7 +51553,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
-    contacts?: ContactCreateNestedManyWithoutCompanyInput
+    contacts?: ContactCompanyCreateNestedManyWithoutCompanyInput
     deals?: DealCreateNestedManyWithoutCompanyInput
   }
 
@@ -50047,7 +51577,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    contacts?: ContactUncheckedCreateNestedManyWithoutCompanyInput
+    contacts?: ContactCompanyUncheckedCreateNestedManyWithoutCompanyInput
     deals?: DealUncheckedCreateNestedManyWithoutCompanyInput
   }
 
@@ -50368,7 +51898,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
-    contacts?: ContactUpdateManyWithoutCompanyNestedInput
+    contacts?: ContactCompanyUpdateManyWithoutCompanyNestedInput
     deals?: DealUpdateManyWithoutCompanyNestedInput
   }
 
@@ -50392,7 +51922,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    contacts?: ContactUncheckedUpdateManyWithoutCompanyNestedInput
+    contacts?: ContactCompanyUncheckedUpdateManyWithoutCompanyNestedInput
     deals?: DealUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -51085,7 +52615,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     workspace: WorkspaceCreateNestedOneWithoutContactsInput
-    company?: CompanyCreateNestedOneWithoutContactsInput
+    companies?: ContactCompanyCreateNestedManyWithoutContactInput
     deals?: DealCreateNestedManyWithoutContactInput
     whatsappMessages?: WhatsAppMessageCreateNestedManyWithoutContactInput
   }
@@ -51093,7 +52623,6 @@ export namespace Prisma {
   export type ContactUncheckedCreateWithoutInvoicesInput = {
     id?: string
     workspaceId: string
-    companyId?: string | null
     ownerId?: string | null
     ownerName?: string | null
     firstName: string
@@ -51109,6 +52638,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    companies?: ContactCompanyUncheckedCreateNestedManyWithoutContactInput
     deals?: DealUncheckedCreateNestedManyWithoutContactInput
     whatsappMessages?: WhatsAppMessageUncheckedCreateNestedManyWithoutContactInput
   }
@@ -51293,7 +52823,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutContactsNestedInput
-    company?: CompanyUpdateOneWithoutContactsNestedInput
+    companies?: ContactCompanyUpdateManyWithoutContactNestedInput
     deals?: DealUpdateManyWithoutContactNestedInput
     whatsappMessages?: WhatsAppMessageUpdateManyWithoutContactNestedInput
   }
@@ -51301,7 +52831,6 @@ export namespace Prisma {
   export type ContactUncheckedUpdateWithoutInvoicesInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
-    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
@@ -51317,6 +52846,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companies?: ContactCompanyUncheckedUpdateManyWithoutContactNestedInput
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
     whatsappMessages?: WhatsAppMessageUncheckedUpdateManyWithoutContactNestedInput
   }
@@ -51747,7 +53277,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     workspace: WorkspaceCreateNestedOneWithoutContactsInput
-    company?: CompanyCreateNestedOneWithoutContactsInput
+    companies?: ContactCompanyCreateNestedManyWithoutContactInput
     deals?: DealCreateNestedManyWithoutContactInput
     invoices?: InvoiceCreateNestedManyWithoutContactInput
   }
@@ -51755,7 +53285,6 @@ export namespace Prisma {
   export type ContactUncheckedCreateWithoutWhatsappMessagesInput = {
     id?: string
     workspaceId: string
-    companyId?: string | null
     ownerId?: string | null
     ownerName?: string | null
     firstName: string
@@ -51771,6 +53300,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    companies?: ContactCompanyUncheckedCreateNestedManyWithoutContactInput
     deals?: DealUncheckedCreateNestedManyWithoutContactInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutContactInput
   }
@@ -51809,7 +53339,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutContactsNestedInput
-    company?: CompanyUpdateOneWithoutContactsNestedInput
+    companies?: ContactCompanyUpdateManyWithoutContactNestedInput
     deals?: DealUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUpdateManyWithoutContactNestedInput
   }
@@ -51817,7 +53347,6 @@ export namespace Prisma {
   export type ContactUncheckedUpdateWithoutWhatsappMessagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
-    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
@@ -51833,6 +53362,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companies?: ContactCompanyUncheckedUpdateManyWithoutContactNestedInput
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutContactNestedInput
   }
@@ -52426,7 +53956,6 @@ export namespace Prisma {
 
   export type ContactCreateManyWorkspaceInput = {
     id?: string
-    companyId?: string | null
     ownerId?: string | null
     ownerName?: string | null
     firstName: string
@@ -52726,7 +54255,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    contacts?: ContactUpdateManyWithoutCompanyNestedInput
+    contacts?: ContactCompanyUpdateManyWithoutCompanyNestedInput
     deals?: DealUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUpdateManyWithoutCompanyNestedInput
   }
@@ -52750,7 +54279,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    contacts?: ContactUncheckedUpdateManyWithoutCompanyNestedInput
+    contacts?: ContactCompanyUncheckedUpdateManyWithoutCompanyNestedInput
     deals?: DealUncheckedUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
   }
@@ -52793,7 +54322,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    company?: CompanyUpdateOneWithoutContactsNestedInput
+    companies?: ContactCompanyUpdateManyWithoutContactNestedInput
     deals?: DealUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUpdateManyWithoutContactNestedInput
     whatsappMessages?: WhatsAppMessageUpdateManyWithoutContactNestedInput
@@ -52801,7 +54330,6 @@ export namespace Prisma {
 
   export type ContactUncheckedUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
-    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
@@ -52817,6 +54345,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    companies?: ContactCompanyUncheckedUpdateManyWithoutContactNestedInput
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutContactNestedInput
     whatsappMessages?: WhatsAppMessageUncheckedUpdateManyWithoutContactNestedInput
@@ -52824,7 +54353,6 @@ export namespace Prisma {
 
   export type ContactUncheckedUpdateManyWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
-    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     ownerName?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: StringFieldUpdateOperationsInput | string
@@ -53415,24 +54943,12 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ContactCreateManyCompanyInput = {
+  export type ContactCompanyCreateManyCompanyInput = {
     id?: string
-    workspaceId: string
-    ownerId?: string | null
-    ownerName?: string | null
-    firstName: string
-    middleName?: string | null
-    lastName: string
-    nameAr?: string | null
-    mobile: string
-    email?: string | null
+    contactId: string
     role?: string | null
-    country: string
-    notes?: string | null
-    customFields?: NullableJsonNullValueInput | InputJsonValue
+    primary?: boolean
     createdAt?: Date | string
-    updatedAt?: Date | string
-    deletedAt?: Date | string | null
   }
 
   export type DealCreateManyCompanyInput = {
@@ -53475,70 +54991,28 @@ export namespace Prisma {
     deletedAt?: Date | string | null
   }
 
-  export type ContactUpdateWithoutCompanyInput = {
+  export type ContactCompanyUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
-    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
-    firstName?: StringFieldUpdateOperationsInput | string
-    middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: StringFieldUpdateOperationsInput | string
-    nameAr?: NullableStringFieldUpdateOperationsInput | string | null
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    customFields?: NullableJsonNullValueInput | InputJsonValue
+    primary?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    workspace?: WorkspaceUpdateOneRequiredWithoutContactsNestedInput
-    deals?: DealUpdateManyWithoutContactNestedInput
-    invoices?: InvoiceUpdateManyWithoutContactNestedInput
-    whatsappMessages?: WhatsAppMessageUpdateManyWithoutContactNestedInput
+    contact?: ContactUpdateOneRequiredWithoutCompaniesNestedInput
   }
 
-  export type ContactUncheckedUpdateWithoutCompanyInput = {
+  export type ContactCompanyUncheckedUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    workspaceId?: StringFieldUpdateOperationsInput | string
-    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
-    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
-    firstName?: StringFieldUpdateOperationsInput | string
-    middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: StringFieldUpdateOperationsInput | string
-    nameAr?: NullableStringFieldUpdateOperationsInput | string | null
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    contactId?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    customFields?: NullableJsonNullValueInput | InputJsonValue
+    primary?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deals?: DealUncheckedUpdateManyWithoutContactNestedInput
-    invoices?: InvoiceUncheckedUpdateManyWithoutContactNestedInput
-    whatsappMessages?: WhatsAppMessageUncheckedUpdateManyWithoutContactNestedInput
   }
 
-  export type ContactUncheckedUpdateManyWithoutCompanyInput = {
+  export type ContactCompanyUncheckedUpdateManyWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    workspaceId?: StringFieldUpdateOperationsInput | string
-    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
-    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
-    firstName?: StringFieldUpdateOperationsInput | string
-    middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: StringFieldUpdateOperationsInput | string
-    nameAr?: NullableStringFieldUpdateOperationsInput | string | null
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    contactId?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    customFields?: NullableJsonNullValueInput | InputJsonValue
+    primary?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DealUpdateWithoutCompanyInput = {
@@ -53671,6 +55145,14 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type ContactCompanyCreateManyContactInput = {
+    id?: string
+    companyId: string
+    role?: string | null
+    primary?: boolean
+    createdAt?: Date | string
+  }
+
   export type DealCreateManyContactInput = {
     id?: string
     workspaceId: string
@@ -53730,6 +55212,30 @@ export namespace Prisma {
     deliveredAt?: Date | string | null
     readAt?: Date | string | null
     createdAt?: Date | string
+  }
+
+  export type ContactCompanyUpdateWithoutContactInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    primary?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutContactsNestedInput
+  }
+
+  export type ContactCompanyUncheckedUpdateWithoutContactInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    primary?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContactCompanyUncheckedUpdateManyWithoutContactInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    primary?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DealUpdateWithoutContactInput = {

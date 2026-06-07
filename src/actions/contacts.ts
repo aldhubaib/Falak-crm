@@ -11,7 +11,12 @@ export async function getContacts() {
   const workspace = await requireWorkspace();
   return db.contact.findMany({
     where: { workspaceId: workspace.id, deletedAt: null },
-    include: { company: { select: { id: true, name: true } } },
+    include: {
+      companies: {
+        include: { company: { select: { id: true, name: true } } },
+        orderBy: { primary: "desc" },
+      },
+    },
     orderBy: { createdAt: "desc" },
   });
 }
@@ -21,7 +26,10 @@ export async function getContact(id: string) {
   return db.contact.findFirst({
     where: { id, workspaceId: workspace.id, deletedAt: null },
     include: {
-      company: true,
+      companies: {
+        include: { company: { select: { id: true, name: true } } },
+        orderBy: { primary: "desc" },
+      },
       deals: { where: { deletedAt: null }, include: { stage: true } },
       invoices: true,
     },
@@ -57,7 +65,11 @@ export async function createContact(formData: FormData): Promise<ActionResult<{ 
         email,
         role,
         country,
-        companyId: companyId || null,
+        ...(companyId && {
+          companies: {
+            create: { companyId, role, primary: true },
+          },
+        }),
       },
     });
 
@@ -84,6 +96,7 @@ export async function updateContact(id: string, formData: FormData): Promise<Act
     const changes: Record<string, { from: unknown; to: unknown }> = {};
 
     for (const [key, val] of formData.entries()) {
+      if (key === "companyId") continue; // handled via ContactCompany
       data[key] = (val as string) || null;
       const oldVal = existing ? (existing as Record<string, unknown>)[key] : null;
       if (oldVal !== data[key]) {
@@ -91,10 +104,12 @@ export async function updateContact(id: string, formData: FormData): Promise<Act
       }
     }
 
-    await db.contact.update({
-      where: { id, workspaceId: workspace.id },
-      data,
-    });
+    if (Object.keys(data).length > 0) {
+      await db.contact.update({
+        where: { id, workspaceId: workspace.id },
+        data,
+      });
+    }
 
     if (Object.keys(changes).length > 0) {
       await logActivity({
@@ -109,6 +124,54 @@ export async function updateContact(id: string, formData: FormData): Promise<Act
     revalidatePath("/dashboard/contacts");
     revalidatePath(`/dashboard/contacts/${id}`);
   }, { contactId: id });
+}
+
+export async function addContactCompany(
+  contactId: string,
+  companyId: string,
+  role?: string
+): Promise<ActionResult> {
+  return safeAction("Link Contact to Company", async () => {
+    const workspace = await requireWorkspace();
+    const contact = await db.contact.findFirst({ where: { id: contactId, workspaceId: workspace.id } });
+    if (!contact) throw new Error("Contact not found");
+
+    const existingLinks = await db.contactCompany.findMany({ where: { contactId } });
+    const isPrimary = existingLinks.length === 0;
+
+    await db.contactCompany.create({
+      data: { contactId, companyId, role: role || null, primary: isPrimary },
+    });
+
+    revalidatePath(`/dashboard/contacts/${contactId}`);
+    revalidatePath("/dashboard/companies");
+  });
+}
+
+export async function removeContactCompany(contactId: string, companyId: string): Promise<ActionResult> {
+  return safeAction("Unlink Contact from Company", async () => {
+    await db.contactCompany.delete({
+      where: { contactId_companyId: { contactId, companyId } },
+    });
+
+    revalidatePath(`/dashboard/contacts/${contactId}`);
+    revalidatePath("/dashboard/companies");
+  });
+}
+
+export async function updateContactCompanyRole(
+  contactId: string,
+  companyId: string,
+  role: string
+): Promise<ActionResult> {
+  return safeAction("Update Contact Role", async () => {
+    await db.contactCompany.update({
+      where: { contactId_companyId: { contactId, companyId } },
+      data: { role: role || null },
+    });
+
+    revalidatePath(`/dashboard/contacts/${contactId}`);
+  });
 }
 
 export async function deleteContact(id: string): Promise<ActionResult> {

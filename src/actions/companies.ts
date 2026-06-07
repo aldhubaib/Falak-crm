@@ -11,7 +11,15 @@ export async function getCompanies() {
   const workspace = await requireWorkspace();
   return db.company.findMany({
     where: { workspaceId: workspace.id, deletedAt: null },
-    include: { _count: { select: { contacts: { where: { deletedAt: null } }, deals: { where: { deletedAt: null } }, projects: { where: { deletedAt: null } } } } },
+    include: {
+      _count: {
+        select: {
+          contacts: true,
+          deals: { where: { deletedAt: null } },
+          projects: { where: { deletedAt: null } },
+        },
+      },
+    },
     orderBy: { createdAt: "desc" },
   });
 }
@@ -21,7 +29,22 @@ export async function getCompany(id: string) {
   return db.company.findFirst({
     where: { id, workspaceId: workspace.id, deletedAt: null },
     include: {
-      contacts: { where: { deletedAt: null } },
+      contacts: {
+        include: {
+          contact: {
+            select: {
+              id: true,
+              firstName: true,
+              middleName: true,
+              lastName: true,
+              mobile: true,
+              email: true,
+              country: true,
+              deletedAt: true,
+            },
+          },
+        },
+      },
       deals: { where: { deletedAt: null }, include: { stage: true } },
       projects: { where: { deletedAt: null }, include: { status: true } },
     },

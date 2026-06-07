@@ -205,7 +205,6 @@ exports.Prisma.CompanyScalarFieldEnum = {
 exports.Prisma.ContactScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
-  companyId: 'companyId',
   ownerId: 'ownerId',
   ownerName: 'ownerName',
   firstName: 'firstName',
@@ -221,6 +220,15 @@ exports.Prisma.ContactScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
+};
+
+exports.Prisma.ContactCompanyScalarFieldEnum = {
+  id: 'id',
+  contactId: 'contactId',
+  companyId: 'companyId',
+  role: 'role',
+  primary: 'primary',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ServiceScalarFieldEnum = {
@@ -557,6 +565,7 @@ exports.Prisma.ModelName = {
   ProjectCollaborator: 'ProjectCollaborator',
   Company: 'Company',
   Contact: 'Contact',
+  ContactCompany: 'ContactCompany',
   Service: 'Service',
   Pipeline: 'Pipeline',
   PipelineStage: 'PipelineStage',

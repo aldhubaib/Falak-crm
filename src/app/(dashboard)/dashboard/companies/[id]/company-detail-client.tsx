@@ -13,10 +13,23 @@ import { useUser } from "@clerk/nextjs";
 import { useErrorStore } from "@/lib/error-store";
 import Link from "next/link";
 
+type ContactLink = {
+  role: string | null;
+  contact: {
+    id: string;
+    firstName: string;
+    middleName: string | null;
+    lastName: string;
+    mobile: string;
+    email: string | null;
+    country: string;
+    deletedAt: Date | null;
+  };
+};
+
 type Contact = {
   id: string;
   firstName: string;
-  middleName: string | null;
   lastName: string;
   mobile: string;
   email: string | null;
@@ -42,7 +55,7 @@ type Company = {
   website: string | null;
   address: string | null;
   notes: string | null;
-  contacts: Contact[];
+  contacts: ContactLink[];
   deals: Deal[];
 };
 
@@ -64,6 +77,18 @@ export function CompanyDetailClient({
   const [newNoteText, setNewNoteText] = useState("");
 
   const { push: pushError } = useErrorStore();
+
+  const activeContacts: Contact[] = company.contacts
+    .filter((link) => !link.contact.deletedAt)
+    .map((link) => ({
+      id: link.contact.id,
+      firstName: link.contact.firstName,
+      lastName: link.contact.lastName,
+      mobile: link.contact.mobile,
+      email: link.contact.email,
+      role: link.role,
+      country: link.contact.country,
+    }));
 
   const save = (field: string) => async (value: string) => {
     const formData = new FormData();
@@ -230,7 +255,7 @@ export function CompanyDetailClient({
       <RelatedTable
         icon={<Users className="w-3 h-3" />}
         title="Contacts"
-        data={company.contacts}
+        data={activeContacts}
         getRowId={(r) => r.id}
         rowHref={(r) => `/dashboard/contacts/${r.id}`}
         action={<AddContactForm companyId={company.id} />}
@@ -245,7 +270,7 @@ export function CompanyDetailClient({
         data={company.deals}
         getRowId={(r) => r.id}
         rowHref={(r) => `/dashboard/deals/${r.id}`}
-        action={<AddDealForm companyId={company.id} contacts={company.contacts.map((c) => ({ id: c.id, name: `${c.firstName} ${c.lastName}` }))} />}
+        action={<AddDealForm companyId={company.id} contacts={activeContacts.map((c) => ({ id: c.id, name: `${c.firstName} ${c.lastName}` }))} />}
         columns={dealColumns}
       />
     </div>

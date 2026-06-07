@@ -1,11 +1,23 @@
 "use client";
 
-import { updateContact } from "@/actions/contacts";
-import { InputField, PhoneField, EmailField, CountryField, SelectField } from "@/components/ui/field";
+import { useState } from "react";
+import { updateContact, addContactCompany, removeContactCompany } from "@/actions/contacts";
+import { InputField, PhoneField, EmailField, CountryField } from "@/components/ui/field";
 import { ActionMenu } from "@/components/ui/action-menu";
 import { RelatedTable, type RelatedColumn } from "@/components/ui/related-table";
-import { ArrowLeft, User, MapPin, Handshake, Building2 } from "lucide-react";
+import { ArrowLeft, User, MapPin, Handshake, Building2, Plus, Loader2, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useErrorStore } from "@/lib/error-store";
+
+type CompanyLink = {
+  companyId: string;
+  role: string | null;
+  primary: boolean;
+  company: { id: string; name: string };
+};
 
 type Deal = {
   id: string;
@@ -24,16 +36,74 @@ type Contact = {
   email: string | null;
   role: string | null;
   country: string;
-  company: { id: string; name: string } | null;
+  companies: CompanyLink[];
   deals: Deal[];
 };
 
 export function ContactDetailClient({ contact, companies }: { contact: Contact; companies: { id: string; name: string }[] }) {
+  const router = useRouter();
+  const { push: pushError } = useErrorStore();
+  const [showAddCompany, setShowAddCompany] = useState(false);
+  const [addingCompany, setAddingCompany] = useState(false);
+
   const save = (field: string) => async (value: string) => {
     const formData = new FormData();
     formData.set(field, value);
-    await updateContact(contact.id, formData);
+    const result = await updateContact(contact.id, formData);
+    if (!result.ok) pushError(result.error);
   };
+
+  const linkedCompanyIds = contact.companies.map((c) => c.companyId);
+  const availableCompanies = companies.filter((c) => !linkedCompanyIds.includes(c.id));
+
+  const handleAddCompany = async (formData: FormData) => {
+    const companyId = formData.get("companyId") as string;
+    const role = formData.get("role") as string;
+    if (!companyId) return;
+    setAddingCompany(true);
+    const result = await addContactCompany(contact.id, companyId, role || undefined);
+    if (!result.ok) pushError(result.error);
+    setAddingCompany(false);
+    setShowAddCompany(false);
+    router.refresh();
+  };
+
+  const handleRemoveCompany = async (companyId: string) => {
+    const result = await removeContactCompany(contact.id, companyId);
+    if (!result.ok) pushError(result.error);
+    router.refresh();
+  };
+
+  const companyColumns: RelatedColumn<CompanyLink>[] = [
+    {
+      key: "name",
+      label: "Company",
+      render: (r) => <span className="text-foreground font-medium">{r.company.name}</span>,
+    },
+    {
+      key: "role",
+      label: "Role",
+      render: (r) => <span className="text-muted-foreground">{r.role || "—"}</span>,
+    },
+    {
+      key: "primary",
+      label: "Primary",
+      render: (r) => r.primary ? <span className="text-xs text-green-400">✓</span> : <span className="text-muted-foreground">—</span>,
+    },
+    {
+      key: "actions",
+      label: "",
+      align: "right",
+      render: (r) => (
+        <button
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleRemoveCompany(r.companyId); }}
+          className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors"
+        >
+          <Trash2 className="w-3 h-3" />
+        </button>
+      ),
+    },
+  ];
 
   return (
     <div className="p-6">
@@ -97,29 +167,66 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
             onSave={save("email")}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <InputField
-            label="Role"
-            value={contact.role || ""}
-            placeholder="Title / Position"
-            onSave={save("role")}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <CountryField
             label="Country"
             icon={<MapPin className="w-3 h-3" />}
             value={contact.country}
             onSave={save("country")}
           />
-          <SelectField
-            label="Company"
-            icon={<Building2 className="w-3 h-3" />}
-            value={contact.company?.id || ""}
-            placeholder="No company"
-            options={companies.map((c) => ({ value: c.id, label: c.name }))}
-            onSave={save("companyId")}
-          />
         </div>
       </div>
+
+      {/* Companies Table */}
+      <div className="border-t border-border my-8" />
+      <RelatedTable
+        icon={<Building2 className="w-3 h-3" />}
+        title="Companies"
+        data={contact.companies}
+        getRowId={(r) => r.companyId}
+        rowHref={(r) => `/dashboard/companies/${r.company.id}`}
+        columns={companyColumns}
+        action={
+          availableCompanies.length > 0 ? (
+            <Button size="sm" onClick={() => setShowAddCompany(true)}>
+              <Plus className="w-3.5 h-3.5" />
+              Add Company
+            </Button>
+          ) : undefined
+        }
+      />
+
+      {showAddCompany && (
+        <form
+          action={handleAddCompany}
+          className="mt-3 p-4 rounded-lg border border-border bg-black space-y-3"
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <FormSelect
+              name="companyId"
+              label="Company"
+              required
+              placeholder="Select company..."
+              options={availableCompanies.map((c) => ({ value: c.id, label: c.name }))}
+            />
+            <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
+              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Role at Company</label>
+              <input
+                name="role"
+                placeholder="e.g. CEO, Consultant"
+                className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+              />
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button type="submit" size="sm" disabled={addingCompany}>
+              {addingCompany && <Loader2 className="w-3 h-3 animate-spin" />}
+              {addingCompany ? "Adding..." : "Add"}
+            </Button>
+            <Button type="button" variant="ghost" size="sm" onClick={() => setShowAddCompany(false)}>Cancel</Button>
+          </div>
+        </form>
+      )}
 
       {/* Deals Table */}
       <div className="border-t border-border my-8" />

@@ -151,8 +151,8 @@ model Company {
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
 
-  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  contacts  Contact[]
+  workspace Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  contacts  ContactCompany[]
   deals     Deal[]
   projects  Project[]
 }
@@ -160,7 +160,6 @@ model Company {
 model Contact {
   id           String    @id @default(cuid())
   workspaceId  String
-  companyId    String?
   ownerId      String? // Clerk user ID of record owner
   ownerName    String?
   firstName    String
@@ -178,12 +177,26 @@ model Contact {
   deletedAt    DateTime?
 
   workspace        Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  company          Company?          @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  companies        ContactCompany[]
   deals            Deal[]
   invoices         Invoice[]
   whatsappMessages WhatsAppMessage[]
 
   @@unique([workspaceId, mobile])
+}
+
+model ContactCompany {
+  id        String   @id @default(cuid())
+  contactId String
+  companyId String
+  role      String? // Role at this specific company
+  primary   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([contactId, companyId])
 }
 
 // ─── Services Catalog ──────────────────────────────────────────────────────────
