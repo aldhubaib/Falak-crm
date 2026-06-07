@@ -15,15 +15,24 @@ import {
   PinOff,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePermissions } from "@/components/permissions-provider";
+import { type PermissionModule } from "@/lib/permissions";
 
-const navigation = [
+type NavItem = {
+  name: string;
+  href: string;
+  icon: typeof LayoutDashboard;
+  permission?: PermissionModule;
+};
+
+const navigation: NavItem[] = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Companies", href: "/dashboard/companies", icon: Building2 },
   { name: "Contacts", href: "/dashboard/contacts", icon: Users },
-  { name: "Deals", href: "/dashboard/deals", icon: Handshake },
-  { name: "Projects", href: "/dashboard/projects", icon: FolderKanban },
-  { name: "Invoices", href: "/dashboard/invoices", icon: FileText },
-  { name: "Settings", href: "/dashboard/settings", icon: Settings },
+  { name: "Deals", href: "/dashboard/deals", icon: Handshake, permission: "deals" },
+  { name: "Projects", href: "/dashboard/projects", icon: FolderKanban, permission: "projects" },
+  { name: "Invoices", href: "/dashboard/invoices", icon: FileText, permission: "invoices" },
+  { name: "Settings", href: "/dashboard/settings", icon: Settings, permission: "settings" },
 ];
 
 interface SidebarProps {
@@ -38,12 +47,18 @@ export function Sidebar({
   onTogglePin,
 }: SidebarProps) {
   const pathname = usePathname();
+  const permissions = usePermissions();
 
   const isActive = (href: string) => {
     if (href === "/dashboard")
       return pathname === "/dashboard" || pathname === "/dashboard/";
     return pathname === href || pathname.startsWith(href + "/");
   };
+
+  const visibleNav = navigation.filter((item) => {
+    if (!item.permission) return true;
+    return permissions[item.permission] !== "none";
+  });
 
   return (
     <div
@@ -92,7 +107,7 @@ export function Sidebar({
 
       {/* Nav */}
       <nav className="flex-1 py-1.5 px-2 overflow-y-auto">
-        {navigation.map((item) => {
+        {visibleNav.map((item) => {
           const active = isActive(item.href);
 
           return (

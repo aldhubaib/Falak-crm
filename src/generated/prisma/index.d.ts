@@ -79,6 +79,11 @@ export type PipelineStage = $Result.DefaultSelection<Prisma.$PipelineStagePayloa
  */
 export type Deal = $Result.DefaultSelection<Prisma.$DealPayload>
 /**
+ * Model DealAccess
+ * 
+ */
+export type DealAccess = $Result.DefaultSelection<Prisma.$DealAccessPayload>
+/**
  * Model DealItem
  * 
  */
@@ -530,6 +535,16 @@ export class PrismaClient<
     * ```
     */
   get deal(): Prisma.DealDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.dealAccess`: Exposes CRUD operations for the **DealAccess** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DealAccesses
+    * const dealAccesses = await prisma.dealAccess.findMany()
+    * ```
+    */
+  get dealAccess(): Prisma.DealAccessDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.dealItem`: Exposes CRUD operations for the **DealItem** model.
@@ -1117,6 +1132,7 @@ export namespace Prisma {
     Pipeline: 'Pipeline',
     PipelineStage: 'PipelineStage',
     Deal: 'Deal',
+    DealAccess: 'DealAccess',
     DealItem: 'DealItem',
     ProjectStatus: 'ProjectStatus',
     Project: 'Project',
@@ -1146,7 +1162,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealItem" | "projectStatus" | "project" | "taskStatus" | "task" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef"
+      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "taskStatus" | "task" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2109,6 +2125,80 @@ export namespace Prisma {
           count: {
             args: Prisma.DealCountArgs<ExtArgs>
             result: $Utils.Optional<DealCountAggregateOutputType> | number
+          }
+        }
+      }
+      DealAccess: {
+        payload: Prisma.$DealAccessPayload<ExtArgs>
+        fields: Prisma.DealAccessFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DealAccessFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealAccessPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DealAccessFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealAccessPayload>
+          }
+          findFirst: {
+            args: Prisma.DealAccessFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealAccessPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DealAccessFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealAccessPayload>
+          }
+          findMany: {
+            args: Prisma.DealAccessFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealAccessPayload>[]
+          }
+          create: {
+            args: Prisma.DealAccessCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealAccessPayload>
+          }
+          createMany: {
+            args: Prisma.DealAccessCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DealAccessCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealAccessPayload>[]
+          }
+          delete: {
+            args: Prisma.DealAccessDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealAccessPayload>
+          }
+          update: {
+            args: Prisma.DealAccessUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealAccessPayload>
+          }
+          deleteMany: {
+            args: Prisma.DealAccessDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DealAccessUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DealAccessUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealAccessPayload>[]
+          }
+          upsert: {
+            args: Prisma.DealAccessUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealAccessPayload>
+          }
+          aggregate: {
+            args: Prisma.DealAccessAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDealAccess>
+          }
+          groupBy: {
+            args: Prisma.DealAccessGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DealAccessGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DealAccessCountArgs<ExtArgs>
+            result: $Utils.Optional<DealAccessCountAggregateOutputType> | number
           }
         }
       }
@@ -3269,6 +3359,7 @@ export namespace Prisma {
     pipeline?: PipelineOmit
     pipelineStage?: PipelineStageOmit
     deal?: DealOmit
+    dealAccess?: DealAccessOmit
     dealItem?: DealItemOmit
     projectStatus?: ProjectStatusOmit
     project?: ProjectOmit
@@ -3828,10 +3919,12 @@ export namespace Prisma {
 
   export type DealCountOutputType = {
     items: number
+    accessGrants: number
   }
 
   export type DealCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | DealCountOutputTypeCountItemsArgs
+    accessGrants?: boolean | DealCountOutputTypeCountAccessGrantsArgs
   }
 
   // Custom InputTypes
@@ -3850,6 +3943,13 @@ export namespace Prisma {
    */
   export type DealCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DealItemWhereInput
+  }
+
+  /**
+   * DealCountOutputType without action
+   */
+  export type DealCountOutputTypeCountAccessGrantsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DealAccessWhereInput
   }
 
 
@@ -18779,6 +18879,7 @@ export namespace Prisma {
     contact?: boolean | Deal$contactArgs<ExtArgs>
     items?: boolean | Deal$itemsArgs<ExtArgs>
     project?: boolean | Deal$projectArgs<ExtArgs>
+    accessGrants?: boolean | Deal$accessGrantsArgs<ExtArgs>
     _count?: boolean | DealCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["deal"]>
 
@@ -18873,6 +18974,7 @@ export namespace Prisma {
     contact?: boolean | Deal$contactArgs<ExtArgs>
     items?: boolean | Deal$itemsArgs<ExtArgs>
     project?: boolean | Deal$projectArgs<ExtArgs>
+    accessGrants?: boolean | Deal$accessGrantsArgs<ExtArgs>
     _count?: boolean | DealCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DealIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -18900,6 +19002,7 @@ export namespace Prisma {
       contact: Prisma.$ContactPayload<ExtArgs> | null
       items: Prisma.$DealItemPayload<ExtArgs>[]
       project: Prisma.$ProjectPayload<ExtArgs> | null
+      accessGrants: Prisma.$DealAccessPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -19324,6 +19427,7 @@ export namespace Prisma {
     contact<T extends Deal$contactArgs<ExtArgs> = {}>(args?: Subset<T, Deal$contactArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     items<T extends Deal$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Deal$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DealItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     project<T extends Deal$projectArgs<ExtArgs> = {}>(args?: Subset<T, Deal$projectArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    accessGrants<T extends Deal$accessGrantsArgs<ExtArgs> = {}>(args?: Subset<T, Deal$accessGrantsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DealAccessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -19856,6 +19960,30 @@ export namespace Prisma {
   }
 
   /**
+   * Deal.accessGrants
+   */
+  export type Deal$accessGrantsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealAccess
+     */
+    select?: DealAccessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealAccess
+     */
+    omit?: DealAccessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealAccessInclude<ExtArgs> | null
+    where?: DealAccessWhereInput
+    orderBy?: DealAccessOrderByWithRelationInput | DealAccessOrderByWithRelationInput[]
+    cursor?: DealAccessWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DealAccessScalarFieldEnum | DealAccessScalarFieldEnum[]
+  }
+
+  /**
    * Deal without action
    */
   export type DealDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19871,6 +19999,1104 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: DealInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DealAccess
+   */
+
+  export type AggregateDealAccess = {
+    _count: DealAccessCountAggregateOutputType | null
+    _min: DealAccessMinAggregateOutputType | null
+    _max: DealAccessMaxAggregateOutputType | null
+  }
+
+  export type DealAccessMinAggregateOutputType = {
+    id: string | null
+    dealId: string | null
+    email: string | null
+    name: string | null
+    token: string | null
+    createdAt: Date | null
+    expiresAt: Date | null
+  }
+
+  export type DealAccessMaxAggregateOutputType = {
+    id: string | null
+    dealId: string | null
+    email: string | null
+    name: string | null
+    token: string | null
+    createdAt: Date | null
+    expiresAt: Date | null
+  }
+
+  export type DealAccessCountAggregateOutputType = {
+    id: number
+    dealId: number
+    email: number
+    name: number
+    token: number
+    permissions: number
+    createdAt: number
+    expiresAt: number
+    _all: number
+  }
+
+
+  export type DealAccessMinAggregateInputType = {
+    id?: true
+    dealId?: true
+    email?: true
+    name?: true
+    token?: true
+    createdAt?: true
+    expiresAt?: true
+  }
+
+  export type DealAccessMaxAggregateInputType = {
+    id?: true
+    dealId?: true
+    email?: true
+    name?: true
+    token?: true
+    createdAt?: true
+    expiresAt?: true
+  }
+
+  export type DealAccessCountAggregateInputType = {
+    id?: true
+    dealId?: true
+    email?: true
+    name?: true
+    token?: true
+    permissions?: true
+    createdAt?: true
+    expiresAt?: true
+    _all?: true
+  }
+
+  export type DealAccessAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DealAccess to aggregate.
+     */
+    where?: DealAccessWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DealAccesses to fetch.
+     */
+    orderBy?: DealAccessOrderByWithRelationInput | DealAccessOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DealAccessWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DealAccesses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DealAccesses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DealAccesses
+    **/
+    _count?: true | DealAccessCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DealAccessMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DealAccessMaxAggregateInputType
+  }
+
+  export type GetDealAccessAggregateType<T extends DealAccessAggregateArgs> = {
+        [P in keyof T & keyof AggregateDealAccess]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDealAccess[P]>
+      : GetScalarType<T[P], AggregateDealAccess[P]>
+  }
+
+
+
+
+  export type DealAccessGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DealAccessWhereInput
+    orderBy?: DealAccessOrderByWithAggregationInput | DealAccessOrderByWithAggregationInput[]
+    by: DealAccessScalarFieldEnum[] | DealAccessScalarFieldEnum
+    having?: DealAccessScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DealAccessCountAggregateInputType | true
+    _min?: DealAccessMinAggregateInputType
+    _max?: DealAccessMaxAggregateInputType
+  }
+
+  export type DealAccessGroupByOutputType = {
+    id: string
+    dealId: string
+    email: string
+    name: string | null
+    token: string
+    permissions: JsonValue
+    createdAt: Date
+    expiresAt: Date | null
+    _count: DealAccessCountAggregateOutputType | null
+    _min: DealAccessMinAggregateOutputType | null
+    _max: DealAccessMaxAggregateOutputType | null
+  }
+
+  type GetDealAccessGroupByPayload<T extends DealAccessGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DealAccessGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DealAccessGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DealAccessGroupByOutputType[P]>
+            : GetScalarType<T[P], DealAccessGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DealAccessSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    dealId?: boolean
+    email?: boolean
+    name?: boolean
+    token?: boolean
+    permissions?: boolean
+    createdAt?: boolean
+    expiresAt?: boolean
+    deal?: boolean | DealDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dealAccess"]>
+
+  export type DealAccessSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    dealId?: boolean
+    email?: boolean
+    name?: boolean
+    token?: boolean
+    permissions?: boolean
+    createdAt?: boolean
+    expiresAt?: boolean
+    deal?: boolean | DealDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dealAccess"]>
+
+  export type DealAccessSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    dealId?: boolean
+    email?: boolean
+    name?: boolean
+    token?: boolean
+    permissions?: boolean
+    createdAt?: boolean
+    expiresAt?: boolean
+    deal?: boolean | DealDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dealAccess"]>
+
+  export type DealAccessSelectScalar = {
+    id?: boolean
+    dealId?: boolean
+    email?: boolean
+    name?: boolean
+    token?: boolean
+    permissions?: boolean
+    createdAt?: boolean
+    expiresAt?: boolean
+  }
+
+  export type DealAccessOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dealId" | "email" | "name" | "token" | "permissions" | "createdAt" | "expiresAt", ExtArgs["result"]["dealAccess"]>
+  export type DealAccessInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deal?: boolean | DealDefaultArgs<ExtArgs>
+  }
+  export type DealAccessIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deal?: boolean | DealDefaultArgs<ExtArgs>
+  }
+  export type DealAccessIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deal?: boolean | DealDefaultArgs<ExtArgs>
+  }
+
+  export type $DealAccessPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DealAccess"
+    objects: {
+      deal: Prisma.$DealPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      dealId: string
+      email: string
+      name: string | null
+      token: string
+      permissions: Prisma.JsonValue
+      createdAt: Date
+      expiresAt: Date | null
+    }, ExtArgs["result"]["dealAccess"]>
+    composites: {}
+  }
+
+  type DealAccessGetPayload<S extends boolean | null | undefined | DealAccessDefaultArgs> = $Result.GetResult<Prisma.$DealAccessPayload, S>
+
+  type DealAccessCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DealAccessFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DealAccessCountAggregateInputType | true
+    }
+
+  export interface DealAccessDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DealAccess'], meta: { name: 'DealAccess' } }
+    /**
+     * Find zero or one DealAccess that matches the filter.
+     * @param {DealAccessFindUniqueArgs} args - Arguments to find a DealAccess
+     * @example
+     * // Get one DealAccess
+     * const dealAccess = await prisma.dealAccess.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DealAccessFindUniqueArgs>(args: SelectSubset<T, DealAccessFindUniqueArgs<ExtArgs>>): Prisma__DealAccessClient<$Result.GetResult<Prisma.$DealAccessPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DealAccess that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DealAccessFindUniqueOrThrowArgs} args - Arguments to find a DealAccess
+     * @example
+     * // Get one DealAccess
+     * const dealAccess = await prisma.dealAccess.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DealAccessFindUniqueOrThrowArgs>(args: SelectSubset<T, DealAccessFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DealAccessClient<$Result.GetResult<Prisma.$DealAccessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DealAccess that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DealAccessFindFirstArgs} args - Arguments to find a DealAccess
+     * @example
+     * // Get one DealAccess
+     * const dealAccess = await prisma.dealAccess.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DealAccessFindFirstArgs>(args?: SelectSubset<T, DealAccessFindFirstArgs<ExtArgs>>): Prisma__DealAccessClient<$Result.GetResult<Prisma.$DealAccessPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DealAccess that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DealAccessFindFirstOrThrowArgs} args - Arguments to find a DealAccess
+     * @example
+     * // Get one DealAccess
+     * const dealAccess = await prisma.dealAccess.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DealAccessFindFirstOrThrowArgs>(args?: SelectSubset<T, DealAccessFindFirstOrThrowArgs<ExtArgs>>): Prisma__DealAccessClient<$Result.GetResult<Prisma.$DealAccessPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DealAccesses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DealAccessFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DealAccesses
+     * const dealAccesses = await prisma.dealAccess.findMany()
+     * 
+     * // Get first 10 DealAccesses
+     * const dealAccesses = await prisma.dealAccess.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const dealAccessWithIdOnly = await prisma.dealAccess.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DealAccessFindManyArgs>(args?: SelectSubset<T, DealAccessFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DealAccessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DealAccess.
+     * @param {DealAccessCreateArgs} args - Arguments to create a DealAccess.
+     * @example
+     * // Create one DealAccess
+     * const DealAccess = await prisma.dealAccess.create({
+     *   data: {
+     *     // ... data to create a DealAccess
+     *   }
+     * })
+     * 
+     */
+    create<T extends DealAccessCreateArgs>(args: SelectSubset<T, DealAccessCreateArgs<ExtArgs>>): Prisma__DealAccessClient<$Result.GetResult<Prisma.$DealAccessPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DealAccesses.
+     * @param {DealAccessCreateManyArgs} args - Arguments to create many DealAccesses.
+     * @example
+     * // Create many DealAccesses
+     * const dealAccess = await prisma.dealAccess.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DealAccessCreateManyArgs>(args?: SelectSubset<T, DealAccessCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DealAccesses and returns the data saved in the database.
+     * @param {DealAccessCreateManyAndReturnArgs} args - Arguments to create many DealAccesses.
+     * @example
+     * // Create many DealAccesses
+     * const dealAccess = await prisma.dealAccess.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DealAccesses and only return the `id`
+     * const dealAccessWithIdOnly = await prisma.dealAccess.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DealAccessCreateManyAndReturnArgs>(args?: SelectSubset<T, DealAccessCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DealAccessPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DealAccess.
+     * @param {DealAccessDeleteArgs} args - Arguments to delete one DealAccess.
+     * @example
+     * // Delete one DealAccess
+     * const DealAccess = await prisma.dealAccess.delete({
+     *   where: {
+     *     // ... filter to delete one DealAccess
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DealAccessDeleteArgs>(args: SelectSubset<T, DealAccessDeleteArgs<ExtArgs>>): Prisma__DealAccessClient<$Result.GetResult<Prisma.$DealAccessPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DealAccess.
+     * @param {DealAccessUpdateArgs} args - Arguments to update one DealAccess.
+     * @example
+     * // Update one DealAccess
+     * const dealAccess = await prisma.dealAccess.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DealAccessUpdateArgs>(args: SelectSubset<T, DealAccessUpdateArgs<ExtArgs>>): Prisma__DealAccessClient<$Result.GetResult<Prisma.$DealAccessPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DealAccesses.
+     * @param {DealAccessDeleteManyArgs} args - Arguments to filter DealAccesses to delete.
+     * @example
+     * // Delete a few DealAccesses
+     * const { count } = await prisma.dealAccess.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DealAccessDeleteManyArgs>(args?: SelectSubset<T, DealAccessDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DealAccesses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DealAccessUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DealAccesses
+     * const dealAccess = await prisma.dealAccess.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DealAccessUpdateManyArgs>(args: SelectSubset<T, DealAccessUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DealAccesses and returns the data updated in the database.
+     * @param {DealAccessUpdateManyAndReturnArgs} args - Arguments to update many DealAccesses.
+     * @example
+     * // Update many DealAccesses
+     * const dealAccess = await prisma.dealAccess.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DealAccesses and only return the `id`
+     * const dealAccessWithIdOnly = await prisma.dealAccess.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DealAccessUpdateManyAndReturnArgs>(args: SelectSubset<T, DealAccessUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DealAccessPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DealAccess.
+     * @param {DealAccessUpsertArgs} args - Arguments to update or create a DealAccess.
+     * @example
+     * // Update or create a DealAccess
+     * const dealAccess = await prisma.dealAccess.upsert({
+     *   create: {
+     *     // ... data to create a DealAccess
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DealAccess we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DealAccessUpsertArgs>(args: SelectSubset<T, DealAccessUpsertArgs<ExtArgs>>): Prisma__DealAccessClient<$Result.GetResult<Prisma.$DealAccessPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DealAccesses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DealAccessCountArgs} args - Arguments to filter DealAccesses to count.
+     * @example
+     * // Count the number of DealAccesses
+     * const count = await prisma.dealAccess.count({
+     *   where: {
+     *     // ... the filter for the DealAccesses we want to count
+     *   }
+     * })
+    **/
+    count<T extends DealAccessCountArgs>(
+      args?: Subset<T, DealAccessCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DealAccessCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DealAccess.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DealAccessAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DealAccessAggregateArgs>(args: Subset<T, DealAccessAggregateArgs>): Prisma.PrismaPromise<GetDealAccessAggregateType<T>>
+
+    /**
+     * Group by DealAccess.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DealAccessGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DealAccessGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DealAccessGroupByArgs['orderBy'] }
+        : { orderBy?: DealAccessGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DealAccessGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDealAccessGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DealAccess model
+   */
+  readonly fields: DealAccessFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DealAccess.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DealAccessClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    deal<T extends DealDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DealDefaultArgs<ExtArgs>>): Prisma__DealClient<$Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DealAccess model
+   */
+  interface DealAccessFieldRefs {
+    readonly id: FieldRef<"DealAccess", 'String'>
+    readonly dealId: FieldRef<"DealAccess", 'String'>
+    readonly email: FieldRef<"DealAccess", 'String'>
+    readonly name: FieldRef<"DealAccess", 'String'>
+    readonly token: FieldRef<"DealAccess", 'String'>
+    readonly permissions: FieldRef<"DealAccess", 'Json'>
+    readonly createdAt: FieldRef<"DealAccess", 'DateTime'>
+    readonly expiresAt: FieldRef<"DealAccess", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DealAccess findUnique
+   */
+  export type DealAccessFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealAccess
+     */
+    select?: DealAccessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealAccess
+     */
+    omit?: DealAccessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealAccessInclude<ExtArgs> | null
+    /**
+     * Filter, which DealAccess to fetch.
+     */
+    where: DealAccessWhereUniqueInput
+  }
+
+  /**
+   * DealAccess findUniqueOrThrow
+   */
+  export type DealAccessFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealAccess
+     */
+    select?: DealAccessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealAccess
+     */
+    omit?: DealAccessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealAccessInclude<ExtArgs> | null
+    /**
+     * Filter, which DealAccess to fetch.
+     */
+    where: DealAccessWhereUniqueInput
+  }
+
+  /**
+   * DealAccess findFirst
+   */
+  export type DealAccessFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealAccess
+     */
+    select?: DealAccessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealAccess
+     */
+    omit?: DealAccessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealAccessInclude<ExtArgs> | null
+    /**
+     * Filter, which DealAccess to fetch.
+     */
+    where?: DealAccessWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DealAccesses to fetch.
+     */
+    orderBy?: DealAccessOrderByWithRelationInput | DealAccessOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DealAccesses.
+     */
+    cursor?: DealAccessWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DealAccesses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DealAccesses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DealAccesses.
+     */
+    distinct?: DealAccessScalarFieldEnum | DealAccessScalarFieldEnum[]
+  }
+
+  /**
+   * DealAccess findFirstOrThrow
+   */
+  export type DealAccessFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealAccess
+     */
+    select?: DealAccessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealAccess
+     */
+    omit?: DealAccessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealAccessInclude<ExtArgs> | null
+    /**
+     * Filter, which DealAccess to fetch.
+     */
+    where?: DealAccessWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DealAccesses to fetch.
+     */
+    orderBy?: DealAccessOrderByWithRelationInput | DealAccessOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DealAccesses.
+     */
+    cursor?: DealAccessWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DealAccesses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DealAccesses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DealAccesses.
+     */
+    distinct?: DealAccessScalarFieldEnum | DealAccessScalarFieldEnum[]
+  }
+
+  /**
+   * DealAccess findMany
+   */
+  export type DealAccessFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealAccess
+     */
+    select?: DealAccessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealAccess
+     */
+    omit?: DealAccessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealAccessInclude<ExtArgs> | null
+    /**
+     * Filter, which DealAccesses to fetch.
+     */
+    where?: DealAccessWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DealAccesses to fetch.
+     */
+    orderBy?: DealAccessOrderByWithRelationInput | DealAccessOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DealAccesses.
+     */
+    cursor?: DealAccessWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DealAccesses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DealAccesses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DealAccesses.
+     */
+    distinct?: DealAccessScalarFieldEnum | DealAccessScalarFieldEnum[]
+  }
+
+  /**
+   * DealAccess create
+   */
+  export type DealAccessCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealAccess
+     */
+    select?: DealAccessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealAccess
+     */
+    omit?: DealAccessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealAccessInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DealAccess.
+     */
+    data: XOR<DealAccessCreateInput, DealAccessUncheckedCreateInput>
+  }
+
+  /**
+   * DealAccess createMany
+   */
+  export type DealAccessCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DealAccesses.
+     */
+    data: DealAccessCreateManyInput | DealAccessCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DealAccess createManyAndReturn
+   */
+  export type DealAccessCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealAccess
+     */
+    select?: DealAccessSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealAccess
+     */
+    omit?: DealAccessOmit<ExtArgs> | null
+    /**
+     * The data used to create many DealAccesses.
+     */
+    data: DealAccessCreateManyInput | DealAccessCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealAccessIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DealAccess update
+   */
+  export type DealAccessUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealAccess
+     */
+    select?: DealAccessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealAccess
+     */
+    omit?: DealAccessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealAccessInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DealAccess.
+     */
+    data: XOR<DealAccessUpdateInput, DealAccessUncheckedUpdateInput>
+    /**
+     * Choose, which DealAccess to update.
+     */
+    where: DealAccessWhereUniqueInput
+  }
+
+  /**
+   * DealAccess updateMany
+   */
+  export type DealAccessUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DealAccesses.
+     */
+    data: XOR<DealAccessUpdateManyMutationInput, DealAccessUncheckedUpdateManyInput>
+    /**
+     * Filter which DealAccesses to update
+     */
+    where?: DealAccessWhereInput
+    /**
+     * Limit how many DealAccesses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DealAccess updateManyAndReturn
+   */
+  export type DealAccessUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealAccess
+     */
+    select?: DealAccessSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealAccess
+     */
+    omit?: DealAccessOmit<ExtArgs> | null
+    /**
+     * The data used to update DealAccesses.
+     */
+    data: XOR<DealAccessUpdateManyMutationInput, DealAccessUncheckedUpdateManyInput>
+    /**
+     * Filter which DealAccesses to update
+     */
+    where?: DealAccessWhereInput
+    /**
+     * Limit how many DealAccesses to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealAccessIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DealAccess upsert
+   */
+  export type DealAccessUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealAccess
+     */
+    select?: DealAccessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealAccess
+     */
+    omit?: DealAccessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealAccessInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DealAccess to update in case it exists.
+     */
+    where: DealAccessWhereUniqueInput
+    /**
+     * In case the DealAccess found by the `where` argument doesn't exist, create a new DealAccess with this data.
+     */
+    create: XOR<DealAccessCreateInput, DealAccessUncheckedCreateInput>
+    /**
+     * In case the DealAccess was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DealAccessUpdateInput, DealAccessUncheckedUpdateInput>
+  }
+
+  /**
+   * DealAccess delete
+   */
+  export type DealAccessDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealAccess
+     */
+    select?: DealAccessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealAccess
+     */
+    omit?: DealAccessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealAccessInclude<ExtArgs> | null
+    /**
+     * Filter which DealAccess to delete.
+     */
+    where: DealAccessWhereUniqueInput
+  }
+
+  /**
+   * DealAccess deleteMany
+   */
+  export type DealAccessDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DealAccesses to delete
+     */
+    where?: DealAccessWhereInput
+    /**
+     * Limit how many DealAccesses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DealAccess without action
+   */
+  export type DealAccessDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealAccess
+     */
+    select?: DealAccessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealAccess
+     */
+    omit?: DealAccessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealAccessInclude<ExtArgs> | null
   }
 
 
@@ -36547,6 +37773,20 @@ export namespace Prisma {
   export type DealScalarFieldEnum = (typeof DealScalarFieldEnum)[keyof typeof DealScalarFieldEnum]
 
 
+  export const DealAccessScalarFieldEnum: {
+    id: 'id',
+    dealId: 'dealId',
+    email: 'email',
+    name: 'name',
+    token: 'token',
+    permissions: 'permissions',
+    createdAt: 'createdAt',
+    expiresAt: 'expiresAt'
+  };
+
+  export type DealAccessScalarFieldEnum = (typeof DealAccessScalarFieldEnum)[keyof typeof DealAccessScalarFieldEnum]
+
+
   export const DealItemScalarFieldEnum: {
     id: 'id',
     dealId: 'dealId',
@@ -38082,6 +39322,7 @@ export namespace Prisma {
     contact?: XOR<ContactNullableScalarRelationFilter, ContactWhereInput> | null
     items?: DealItemListRelationFilter
     project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
+    accessGrants?: DealAccessListRelationFilter
   }
 
   export type DealOrderByWithRelationInput = {
@@ -38113,6 +39354,7 @@ export namespace Prisma {
     contact?: ContactOrderByWithRelationInput
     items?: DealItemOrderByRelationAggregateInput
     project?: ProjectOrderByWithRelationInput
+    accessGrants?: DealAccessOrderByRelationAggregateInput
   }
 
   export type DealWhereUniqueInput = Prisma.AtLeast<{
@@ -38147,6 +39389,7 @@ export namespace Prisma {
     contact?: XOR<ContactNullableScalarRelationFilter, ContactWhereInput> | null
     items?: DealItemListRelationFilter
     project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
+    accessGrants?: DealAccessListRelationFilter
   }, "id">
 
   export type DealOrderByWithAggregationInput = {
@@ -38203,6 +39446,77 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Deal"> | Date | string
     closedAt?: DateTimeNullableWithAggregatesFilter<"Deal"> | Date | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Deal"> | Date | string | null
+  }
+
+  export type DealAccessWhereInput = {
+    AND?: DealAccessWhereInput | DealAccessWhereInput[]
+    OR?: DealAccessWhereInput[]
+    NOT?: DealAccessWhereInput | DealAccessWhereInput[]
+    id?: StringFilter<"DealAccess"> | string
+    dealId?: StringFilter<"DealAccess"> | string
+    email?: StringFilter<"DealAccess"> | string
+    name?: StringNullableFilter<"DealAccess"> | string | null
+    token?: StringFilter<"DealAccess"> | string
+    permissions?: JsonFilter<"DealAccess">
+    createdAt?: DateTimeFilter<"DealAccess"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"DealAccess"> | Date | string | null
+    deal?: XOR<DealScalarRelationFilter, DealWhereInput>
+  }
+
+  export type DealAccessOrderByWithRelationInput = {
+    id?: SortOrder
+    dealId?: SortOrder
+    email?: SortOrder
+    name?: SortOrderInput | SortOrder
+    token?: SortOrder
+    permissions?: SortOrder
+    createdAt?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    deal?: DealOrderByWithRelationInput
+  }
+
+  export type DealAccessWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    token?: string
+    dealId_email?: DealAccessDealIdEmailCompoundUniqueInput
+    AND?: DealAccessWhereInput | DealAccessWhereInput[]
+    OR?: DealAccessWhereInput[]
+    NOT?: DealAccessWhereInput | DealAccessWhereInput[]
+    dealId?: StringFilter<"DealAccess"> | string
+    email?: StringFilter<"DealAccess"> | string
+    name?: StringNullableFilter<"DealAccess"> | string | null
+    permissions?: JsonFilter<"DealAccess">
+    createdAt?: DateTimeFilter<"DealAccess"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"DealAccess"> | Date | string | null
+    deal?: XOR<DealScalarRelationFilter, DealWhereInput>
+  }, "id" | "token" | "dealId_email">
+
+  export type DealAccessOrderByWithAggregationInput = {
+    id?: SortOrder
+    dealId?: SortOrder
+    email?: SortOrder
+    name?: SortOrderInput | SortOrder
+    token?: SortOrder
+    permissions?: SortOrder
+    createdAt?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    _count?: DealAccessCountOrderByAggregateInput
+    _max?: DealAccessMaxOrderByAggregateInput
+    _min?: DealAccessMinOrderByAggregateInput
+  }
+
+  export type DealAccessScalarWhereWithAggregatesInput = {
+    AND?: DealAccessScalarWhereWithAggregatesInput | DealAccessScalarWhereWithAggregatesInput[]
+    OR?: DealAccessScalarWhereWithAggregatesInput[]
+    NOT?: DealAccessScalarWhereWithAggregatesInput | DealAccessScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DealAccess"> | string
+    dealId?: StringWithAggregatesFilter<"DealAccess"> | string
+    email?: StringWithAggregatesFilter<"DealAccess"> | string
+    name?: StringNullableWithAggregatesFilter<"DealAccess"> | string | null
+    token?: StringWithAggregatesFilter<"DealAccess"> | string
+    permissions?: JsonWithAggregatesFilter<"DealAccess">
+    createdAt?: DateTimeWithAggregatesFilter<"DealAccess"> | Date | string
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"DealAccess"> | Date | string | null
   }
 
   export type DealItemWhereInput = {
@@ -40513,6 +41827,7 @@ export namespace Prisma {
     contact?: ContactCreateNestedOneWithoutDealsInput
     items?: DealItemCreateNestedManyWithoutDealInput
     project?: ProjectCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateInput = {
@@ -40539,6 +41854,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealUpdateInput = {
@@ -40565,6 +41881,7 @@ export namespace Prisma {
     contact?: ContactUpdateOneWithoutDealsNestedInput
     items?: DealItemUpdateManyWithoutDealNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateInput = {
@@ -40591,6 +41908,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealCreateManyInput = {
@@ -40658,6 +41976,82 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DealAccessCreateInput = {
+    id?: string
+    email: string
+    name?: string | null
+    token?: string
+    permissions: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    expiresAt?: Date | string | null
+    deal: DealCreateNestedOneWithoutAccessGrantsInput
+  }
+
+  export type DealAccessUncheckedCreateInput = {
+    id?: string
+    dealId: string
+    email: string
+    name?: string | null
+    token?: string
+    permissions: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    expiresAt?: Date | string | null
+  }
+
+  export type DealAccessUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    permissions?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deal?: DealUpdateOneRequiredWithoutAccessGrantsNestedInput
+  }
+
+  export type DealAccessUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dealId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    permissions?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DealAccessCreateManyInput = {
+    id?: string
+    dealId: string
+    email: string
+    name?: string | null
+    token?: string
+    permissions: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    expiresAt?: Date | string | null
+  }
+
+  export type DealAccessUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    permissions?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DealAccessUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dealId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    permissions?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DealItemCreateInput = {
@@ -43035,6 +44429,16 @@ export namespace Prisma {
     isNot?: ProjectWhereInput | null
   }
 
+  export type DealAccessListRelationFilter = {
+    every?: DealAccessWhereInput
+    some?: DealAccessWhereInput
+    none?: DealAccessWhereInput
+  }
+
+  export type DealAccessOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type DealCountOrderByAggregateInput = {
     id?: SortOrder
     workspaceId?: SortOrder
@@ -43136,6 +44540,42 @@ export namespace Prisma {
   export type DealScalarRelationFilter = {
     is?: DealWhereInput
     isNot?: DealWhereInput
+  }
+
+  export type DealAccessDealIdEmailCompoundUniqueInput = {
+    dealId: string
+    email: string
+  }
+
+  export type DealAccessCountOrderByAggregateInput = {
+    id?: SortOrder
+    dealId?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    token?: SortOrder
+    permissions?: SortOrder
+    createdAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type DealAccessMaxOrderByAggregateInput = {
+    id?: SortOrder
+    dealId?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    token?: SortOrder
+    createdAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type DealAccessMinOrderByAggregateInput = {
+    id?: SortOrder
+    dealId?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    token?: SortOrder
+    createdAt?: SortOrder
+    expiresAt?: SortOrder
   }
 
   export type ServiceScalarRelationFilter = {
@@ -45577,6 +47017,13 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput
   }
 
+  export type DealAccessCreateNestedManyWithoutDealInput = {
+    create?: XOR<DealAccessCreateWithoutDealInput, DealAccessUncheckedCreateWithoutDealInput> | DealAccessCreateWithoutDealInput[] | DealAccessUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: DealAccessCreateOrConnectWithoutDealInput | DealAccessCreateOrConnectWithoutDealInput[]
+    createMany?: DealAccessCreateManyDealInputEnvelope
+    connect?: DealAccessWhereUniqueInput | DealAccessWhereUniqueInput[]
+  }
+
   export type DealItemUncheckedCreateNestedManyWithoutDealInput = {
     create?: XOR<DealItemCreateWithoutDealInput, DealItemUncheckedCreateWithoutDealInput> | DealItemCreateWithoutDealInput[] | DealItemUncheckedCreateWithoutDealInput[]
     connectOrCreate?: DealItemCreateOrConnectWithoutDealInput | DealItemCreateOrConnectWithoutDealInput[]
@@ -45588,6 +47035,13 @@ export namespace Prisma {
     create?: XOR<ProjectCreateWithoutDealInput, ProjectUncheckedCreateWithoutDealInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutDealInput
     connect?: ProjectWhereUniqueInput
+  }
+
+  export type DealAccessUncheckedCreateNestedManyWithoutDealInput = {
+    create?: XOR<DealAccessCreateWithoutDealInput, DealAccessUncheckedCreateWithoutDealInput> | DealAccessCreateWithoutDealInput[] | DealAccessUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: DealAccessCreateOrConnectWithoutDealInput | DealAccessCreateOrConnectWithoutDealInput[]
+    createMany?: DealAccessCreateManyDealInputEnvelope
+    connect?: DealAccessWhereUniqueInput | DealAccessWhereUniqueInput[]
   }
 
   export type NullableDecimalFieldUpdateOperationsInput = {
@@ -45666,6 +47120,20 @@ export namespace Prisma {
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutDealInput, ProjectUpdateWithoutDealInput>, ProjectUncheckedUpdateWithoutDealInput>
   }
 
+  export type DealAccessUpdateManyWithoutDealNestedInput = {
+    create?: XOR<DealAccessCreateWithoutDealInput, DealAccessUncheckedCreateWithoutDealInput> | DealAccessCreateWithoutDealInput[] | DealAccessUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: DealAccessCreateOrConnectWithoutDealInput | DealAccessCreateOrConnectWithoutDealInput[]
+    upsert?: DealAccessUpsertWithWhereUniqueWithoutDealInput | DealAccessUpsertWithWhereUniqueWithoutDealInput[]
+    createMany?: DealAccessCreateManyDealInputEnvelope
+    set?: DealAccessWhereUniqueInput | DealAccessWhereUniqueInput[]
+    disconnect?: DealAccessWhereUniqueInput | DealAccessWhereUniqueInput[]
+    delete?: DealAccessWhereUniqueInput | DealAccessWhereUniqueInput[]
+    connect?: DealAccessWhereUniqueInput | DealAccessWhereUniqueInput[]
+    update?: DealAccessUpdateWithWhereUniqueWithoutDealInput | DealAccessUpdateWithWhereUniqueWithoutDealInput[]
+    updateMany?: DealAccessUpdateManyWithWhereWithoutDealInput | DealAccessUpdateManyWithWhereWithoutDealInput[]
+    deleteMany?: DealAccessScalarWhereInput | DealAccessScalarWhereInput[]
+  }
+
   export type DealItemUncheckedUpdateManyWithoutDealNestedInput = {
     create?: XOR<DealItemCreateWithoutDealInput, DealItemUncheckedCreateWithoutDealInput> | DealItemCreateWithoutDealInput[] | DealItemUncheckedCreateWithoutDealInput[]
     connectOrCreate?: DealItemCreateOrConnectWithoutDealInput | DealItemCreateOrConnectWithoutDealInput[]
@@ -45688,6 +47156,34 @@ export namespace Prisma {
     delete?: ProjectWhereInput | boolean
     connect?: ProjectWhereUniqueInput
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutDealInput, ProjectUpdateWithoutDealInput>, ProjectUncheckedUpdateWithoutDealInput>
+  }
+
+  export type DealAccessUncheckedUpdateManyWithoutDealNestedInput = {
+    create?: XOR<DealAccessCreateWithoutDealInput, DealAccessUncheckedCreateWithoutDealInput> | DealAccessCreateWithoutDealInput[] | DealAccessUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: DealAccessCreateOrConnectWithoutDealInput | DealAccessCreateOrConnectWithoutDealInput[]
+    upsert?: DealAccessUpsertWithWhereUniqueWithoutDealInput | DealAccessUpsertWithWhereUniqueWithoutDealInput[]
+    createMany?: DealAccessCreateManyDealInputEnvelope
+    set?: DealAccessWhereUniqueInput | DealAccessWhereUniqueInput[]
+    disconnect?: DealAccessWhereUniqueInput | DealAccessWhereUniqueInput[]
+    delete?: DealAccessWhereUniqueInput | DealAccessWhereUniqueInput[]
+    connect?: DealAccessWhereUniqueInput | DealAccessWhereUniqueInput[]
+    update?: DealAccessUpdateWithWhereUniqueWithoutDealInput | DealAccessUpdateWithWhereUniqueWithoutDealInput[]
+    updateMany?: DealAccessUpdateManyWithWhereWithoutDealInput | DealAccessUpdateManyWithWhereWithoutDealInput[]
+    deleteMany?: DealAccessScalarWhereInput | DealAccessScalarWhereInput[]
+  }
+
+  export type DealCreateNestedOneWithoutAccessGrantsInput = {
+    create?: XOR<DealCreateWithoutAccessGrantsInput, DealUncheckedCreateWithoutAccessGrantsInput>
+    connectOrCreate?: DealCreateOrConnectWithoutAccessGrantsInput
+    connect?: DealWhereUniqueInput
+  }
+
+  export type DealUpdateOneRequiredWithoutAccessGrantsNestedInput = {
+    create?: XOR<DealCreateWithoutAccessGrantsInput, DealUncheckedCreateWithoutAccessGrantsInput>
+    connectOrCreate?: DealCreateOrConnectWithoutAccessGrantsInput
+    upsert?: DealUpsertWithoutAccessGrantsInput
+    connect?: DealWhereUniqueInput
+    update?: XOR<XOR<DealUpdateToOneWithWhereWithoutAccessGrantsInput, DealUpdateWithoutAccessGrantsInput>, DealUncheckedUpdateWithoutAccessGrantsInput>
   }
 
   export type DealCreateNestedOneWithoutItemsInput = {
@@ -47022,6 +48518,7 @@ export namespace Prisma {
     contact?: ContactCreateNestedOneWithoutDealsInput
     items?: DealItemCreateNestedManyWithoutDealInput
     project?: ProjectCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutWorkspaceInput = {
@@ -47047,6 +48544,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutWorkspaceInput = {
@@ -48954,6 +50452,7 @@ export namespace Prisma {
     contact?: ContactCreateNestedOneWithoutDealsInput
     items?: DealItemCreateNestedManyWithoutDealInput
     project?: ProjectCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutCompanyInput = {
@@ -48979,6 +50478,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutCompanyInput = {
@@ -49282,6 +50782,7 @@ export namespace Prisma {
     company?: CompanyCreateNestedOneWithoutDealsInput
     items?: DealItemCreateNestedManyWithoutDealInput
     project?: ProjectCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutContactInput = {
@@ -49307,6 +50808,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutContactInput = {
@@ -50148,6 +51650,7 @@ export namespace Prisma {
     contact?: ContactCreateNestedOneWithoutDealsInput
     items?: DealItemCreateNestedManyWithoutDealInput
     project?: ProjectCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutPipelineInput = {
@@ -50173,6 +51676,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutPipelineInput = {
@@ -50345,6 +51849,7 @@ export namespace Prisma {
     contact?: ContactCreateNestedOneWithoutDealsInput
     items?: DealItemCreateNestedManyWithoutDealInput
     project?: ProjectCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutStageInput = {
@@ -50370,6 +51875,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutStageInput = {
@@ -50713,6 +52219,36 @@ export namespace Prisma {
     create: XOR<ProjectCreateWithoutDealInput, ProjectUncheckedCreateWithoutDealInput>
   }
 
+  export type DealAccessCreateWithoutDealInput = {
+    id?: string
+    email: string
+    name?: string | null
+    token?: string
+    permissions: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    expiresAt?: Date | string | null
+  }
+
+  export type DealAccessUncheckedCreateWithoutDealInput = {
+    id?: string
+    email: string
+    name?: string | null
+    token?: string
+    permissions: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    expiresAt?: Date | string | null
+  }
+
+  export type DealAccessCreateOrConnectWithoutDealInput = {
+    where: DealAccessWhereUniqueInput
+    create: XOR<DealAccessCreateWithoutDealInput, DealAccessUncheckedCreateWithoutDealInput>
+  }
+
+  export type DealAccessCreateManyDealInputEnvelope = {
+    data: DealAccessCreateManyDealInput | DealAccessCreateManyDealInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WorkspaceUpsertWithoutDealsInput = {
     update: XOR<WorkspaceUpdateWithoutDealsInput, WorkspaceUncheckedUpdateWithoutDealsInput>
     create: XOR<WorkspaceCreateWithoutDealsInput, WorkspaceUncheckedCreateWithoutDealsInput>
@@ -51025,6 +52561,156 @@ export namespace Prisma {
     collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
   }
 
+  export type DealAccessUpsertWithWhereUniqueWithoutDealInput = {
+    where: DealAccessWhereUniqueInput
+    update: XOR<DealAccessUpdateWithoutDealInput, DealAccessUncheckedUpdateWithoutDealInput>
+    create: XOR<DealAccessCreateWithoutDealInput, DealAccessUncheckedCreateWithoutDealInput>
+  }
+
+  export type DealAccessUpdateWithWhereUniqueWithoutDealInput = {
+    where: DealAccessWhereUniqueInput
+    data: XOR<DealAccessUpdateWithoutDealInput, DealAccessUncheckedUpdateWithoutDealInput>
+  }
+
+  export type DealAccessUpdateManyWithWhereWithoutDealInput = {
+    where: DealAccessScalarWhereInput
+    data: XOR<DealAccessUpdateManyMutationInput, DealAccessUncheckedUpdateManyWithoutDealInput>
+  }
+
+  export type DealAccessScalarWhereInput = {
+    AND?: DealAccessScalarWhereInput | DealAccessScalarWhereInput[]
+    OR?: DealAccessScalarWhereInput[]
+    NOT?: DealAccessScalarWhereInput | DealAccessScalarWhereInput[]
+    id?: StringFilter<"DealAccess"> | string
+    dealId?: StringFilter<"DealAccess"> | string
+    email?: StringFilter<"DealAccess"> | string
+    name?: StringNullableFilter<"DealAccess"> | string | null
+    token?: StringFilter<"DealAccess"> | string
+    permissions?: JsonFilter<"DealAccess">
+    createdAt?: DateTimeFilter<"DealAccess"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"DealAccess"> | Date | string | null
+  }
+
+  export type DealCreateWithoutAccessGrantsInput = {
+    id?: string
+    ownerId?: string | null
+    ownerName?: string | null
+    title: string
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    rateToBase?: Decimal | DecimalJsLike | number | string | null
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
+    expectedCloseDate?: Date | string | null
+    lostReason?: string | null
+    notes?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    closedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    workspace: WorkspaceCreateNestedOneWithoutDealsInput
+    pipeline: PipelineCreateNestedOneWithoutDealsInput
+    stage: PipelineStageCreateNestedOneWithoutDealsInput
+    company?: CompanyCreateNestedOneWithoutDealsInput
+    contact?: ContactCreateNestedOneWithoutDealsInput
+    items?: DealItemCreateNestedManyWithoutDealInput
+    project?: ProjectCreateNestedOneWithoutDealInput
+  }
+
+  export type DealUncheckedCreateWithoutAccessGrantsInput = {
+    id?: string
+    workspaceId: string
+    pipelineId: string
+    stageId: string
+    companyId?: string | null
+    contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
+    title: string
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    rateToBase?: Decimal | DecimalJsLike | number | string | null
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
+    expectedCloseDate?: Date | string | null
+    lostReason?: string | null
+    notes?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    closedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    items?: DealItemUncheckedCreateNestedManyWithoutDealInput
+    project?: ProjectUncheckedCreateNestedOneWithoutDealInput
+  }
+
+  export type DealCreateOrConnectWithoutAccessGrantsInput = {
+    where: DealWhereUniqueInput
+    create: XOR<DealCreateWithoutAccessGrantsInput, DealUncheckedCreateWithoutAccessGrantsInput>
+  }
+
+  export type DealUpsertWithoutAccessGrantsInput = {
+    update: XOR<DealUpdateWithoutAccessGrantsInput, DealUncheckedUpdateWithoutAccessGrantsInput>
+    create: XOR<DealCreateWithoutAccessGrantsInput, DealUncheckedCreateWithoutAccessGrantsInput>
+    where?: DealWhereInput
+  }
+
+  export type DealUpdateToOneWithWhereWithoutAccessGrantsInput = {
+    where?: DealWhereInput
+    data: XOR<DealUpdateWithoutAccessGrantsInput, DealUncheckedUpdateWithoutAccessGrantsInput>
+  }
+
+  export type DealUpdateWithoutAccessGrantsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspace?: WorkspaceUpdateOneRequiredWithoutDealsNestedInput
+    pipeline?: PipelineUpdateOneRequiredWithoutDealsNestedInput
+    stage?: PipelineStageUpdateOneRequiredWithoutDealsNestedInput
+    company?: CompanyUpdateOneWithoutDealsNestedInput
+    contact?: ContactUpdateOneWithoutDealsNestedInput
+    items?: DealItemUpdateManyWithoutDealNestedInput
+    project?: ProjectUpdateOneWithoutDealNestedInput
+  }
+
+  export type DealUncheckedUpdateWithoutAccessGrantsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    pipelineId?: StringFieldUpdateOperationsInput | string
+    stageId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
+    project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
+  }
+
   export type DealCreateWithoutItemsInput = {
     id?: string
     ownerId?: string | null
@@ -51048,6 +52734,7 @@ export namespace Prisma {
     company?: CompanyCreateNestedOneWithoutDealsInput
     contact?: ContactCreateNestedOneWithoutDealsInput
     project?: ProjectCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutItemsInput = {
@@ -51073,6 +52760,7 @@ export namespace Prisma {
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutItemsInput = {
@@ -51149,6 +52837,7 @@ export namespace Prisma {
     company?: CompanyUpdateOneWithoutDealsNestedInput
     contact?: ContactUpdateOneWithoutDealsNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutItemsInput = {
@@ -51174,6 +52863,7 @@ export namespace Prisma {
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type ServiceUpsertWithoutDealItemsInput = {
@@ -51501,6 +53191,7 @@ export namespace Prisma {
     company?: CompanyCreateNestedOneWithoutDealsInput
     contact?: ContactCreateNestedOneWithoutDealsInput
     items?: DealItemCreateNestedManyWithoutDealInput
+    accessGrants?: DealAccessCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutProjectInput = {
@@ -51526,6 +53217,7 @@ export namespace Prisma {
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
+    accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutProjectInput = {
@@ -51840,6 +53532,7 @@ export namespace Prisma {
     company?: CompanyUpdateOneWithoutDealsNestedInput
     contact?: ContactUpdateOneWithoutDealsNestedInput
     items?: DealItemUpdateManyWithoutDealNestedInput
+    accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutProjectInput = {
@@ -51865,6 +53558,7 @@ export namespace Prisma {
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
+    accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type CompanyUpsertWithoutProjectsInput = {
@@ -54436,6 +56130,7 @@ export namespace Prisma {
     contact?: ContactUpdateOneWithoutDealsNestedInput
     items?: DealItemUpdateManyWithoutDealNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutWorkspaceInput = {
@@ -54461,6 +56156,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -55038,6 +56734,7 @@ export namespace Prisma {
     contact?: ContactUpdateOneWithoutDealsNestedInput
     items?: DealItemUpdateManyWithoutDealNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutCompanyInput = {
@@ -55063,6 +56760,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateManyWithoutCompanyInput = {
@@ -55261,6 +56959,7 @@ export namespace Prisma {
     company?: CompanyUpdateOneWithoutDealsNestedInput
     items?: DealItemUpdateManyWithoutDealNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutContactInput = {
@@ -55286,6 +56985,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateManyWithoutContactInput = {
@@ -55607,6 +57307,7 @@ export namespace Prisma {
     contact?: ContactUpdateOneWithoutDealsNestedInput
     items?: DealItemUpdateManyWithoutDealNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutPipelineInput = {
@@ -55632,6 +57333,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateManyWithoutPipelineInput = {
@@ -55703,6 +57405,7 @@ export namespace Prisma {
     contact?: ContactUpdateOneWithoutDealsNestedInput
     items?: DealItemUpdateManyWithoutDealNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutStageInput = {
@@ -55728,6 +57431,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateManyWithoutStageInput = {
@@ -55761,6 +57465,16 @@ export namespace Prisma {
     description?: string | null
   }
 
+  export type DealAccessCreateManyDealInput = {
+    id?: string
+    email: string
+    name?: string | null
+    token?: string
+    permissions: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    expiresAt?: Date | string | null
+  }
+
   export type DealItemUpdateWithoutDealInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
@@ -55783,6 +57497,36 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DealAccessUpdateWithoutDealInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    permissions?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DealAccessUncheckedUpdateWithoutDealInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    permissions?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DealAccessUncheckedUpdateManyWithoutDealInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: StringFieldUpdateOperationsInput | string
+    permissions?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectCreateManyStatusInput = {

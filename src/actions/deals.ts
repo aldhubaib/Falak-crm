@@ -2,7 +2,8 @@
 
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
-import { requireWorkspace } from "@/lib/workspace";
+import { requireWorkspace, requireWorkspaceWithMember } from "@/lib/workspace";
+import { canEdit } from "@/lib/permissions";
 import { logActivity } from "@/lib/activity";
 import { getLatestRateForCurrency } from "@/actions/currencies";
 import { revalidatePath } from "next/cache";
@@ -42,6 +43,30 @@ export async function getDeals() {
   });
 }
 
+export async function getDealsInDelivery() {
+  const workspace = await requireWorkspace();
+  return db.deal.findMany({
+    where: {
+      workspaceId: workspace.id,
+      deletedAt: null,
+      stage: { type: "WON" },
+      project: { isNot: null },
+    },
+    include: {
+      company: { select: { id: true, name: true } },
+      stage: true,
+      project: {
+        include: {
+          status: true,
+          _count: { select: { tasks: true, invoices: true } },
+          tasks: { select: { id: true, completedAt: true } },
+        },
+      },
+    },
+    orderBy: { updatedAt: "desc" },
+  });
+}
+
 export async function getDeal(id: string) {
   const workspace = await requireWorkspace();
   return db.deal.findFirst({
@@ -52,14 +77,25 @@ export async function getDeal(id: string) {
       stage: true,
       pipeline: { include: { stages: { orderBy: { order: "asc" } } } },
       items: { include: { service: true } },
-      project: true,
+      project: {
+        include: {
+          status: true,
+          tasks: {
+            include: { status: true, service: true, assignee: true },
+            orderBy: { order: "asc" },
+          },
+          invoices: { orderBy: { createdAt: "desc" } },
+        },
+      },
+      accessGrants: { orderBy: { createdAt: "desc" } },
     },
   });
 }
 
 export async function createDeal(formData: FormData): Promise<ActionResult<{ id: string }>> {
   return safeAction("Create Deal", async () => {
-    const workspace = await requireWorkspace();
+    const { workspace, member } = await requireWorkspaceWithMember();
+    if (!canEdit(member, "deals")) throw new Error("Permission denied");
     const { userId } = await auth();
     const user = await currentUser();
 
@@ -116,7 +152,8 @@ export async function createDeal(formData: FormData): Promise<ActionResult<{ id:
 
 export async function moveDeal(id: string, stageId: string): Promise<ActionResult> {
   return safeAction("Move Deal", async () => {
-    const workspace = await requireWorkspace();
+    const { workspace, member } = await requireWorkspaceWithMember();
+    if (!canEdit(member, "pipeline")) throw new Error("Permission denied");
 
     const deal = await db.deal.findFirst({ where: { id, workspaceId: workspace.id }, include: { stage: true } });
     const stage = await db.pipelineStage.findUnique({ where: { id: stageId } });
@@ -144,6 +181,9 @@ export async function moveDeal(id: string, stageId: string): Promise<ActionResul
 
 export async function addDealItem(dealId: string, formData: FormData): Promise<ActionResult> {
   return safeAction("Add Deal Item", async () => {
+    const { member } = await requireWorkspaceWithMember();
+    if (!canEdit(member, "deals")) throw new Error("Permission denied");
+
     const serviceId = formData.get("serviceId") as string;
     const quantity = parseInt(formData.get("quantity") as string) || 1;
     const unitPrice = parseFloat(formData.get("unitPrice") as string) || 0;
@@ -172,6 +212,9 @@ export async function addDealItem(dealId: string, formData: FormData): Promise<A
 
 export async function removeDealItem(itemId: string, dealId: string): Promise<ActionResult> {
   return safeAction("Remove Deal Item", async () => {
+    const { member } = await requireWorkspaceWithMember();
+    if (!canEdit(member, "deals")) throw new Error("Permission denied");
+
     await db.dealItem.delete({ where: { id: itemId } });
 
     const items = await db.dealItem.findMany({ where: { dealId } });
@@ -193,7 +236,8 @@ export async function removeDealItem(itemId: string, dealId: string): Promise<Ac
 
 export async function createProjectFromDeal(dealId: string): Promise<ActionResult> {
   return safeAction("Create Project from Deal", async () => {
-    const workspace = await requireWorkspace();
+    const { workspace, member } = await requireWorkspaceWithMember();
+    if (!canEdit(member, "projects")) throw new Error("Permission denied");
 
     const deal = await db.deal.findFirst({
       where: { id: dealId, workspaceId: workspace.id },

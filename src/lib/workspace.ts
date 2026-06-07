@@ -1,5 +1,6 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
+import { DEFAULT_PERMISSIONS, ROLE_PRESETS, type MemberWithPermissions, type Permissions } from "@/lib/permissions";
 
 export async function getWorkspace() {
   const { userId } = await auth();
@@ -80,6 +81,12 @@ export async function getOrCreateWorkspace() {
           { name: "Done", order: 4, color: "#22c55e" },
         ],
       },
+      roles: {
+        create: Object.values(ROLE_PRESETS).map((preset) => ({
+          name: preset.name,
+          permissions: JSON.parse(JSON.stringify(preset.permissions)),
+        })),
+      },
     },
   });
 
@@ -90,4 +97,37 @@ export async function requireWorkspace() {
   const workspace = await getOrCreateWorkspace();
   if (!workspace) throw new Error("No workspace found");
   return workspace;
+}
+
+export async function requireWorkspaceWithMember(): Promise<{
+  workspace: NonNullable<Awaited<ReturnType<typeof getOrCreateWorkspace>>>;
+  member: MemberWithPermissions;
+}> {
+  const workspace = await requireWorkspace();
+  const { userId } = await auth();
+  if (!userId) throw new Error("Not authenticated");
+
+  const dbMember = await db.workspaceMember.findFirst({
+    where: { workspaceId: workspace.id, userId },
+    include: { role: true },
+  });
+
+  if (!dbMember) throw new Error("Not a workspace member");
+
+  const rolePermissions = dbMember.role?.permissions as unknown as Permissions | null;
+
+  const permissions: Permissions =
+    dbMember.type === "OWNER"
+      ? DEFAULT_PERMISSIONS
+      : rolePermissions ?? DEFAULT_PERMISSIONS;
+
+  const member: MemberWithPermissions = {
+    id: dbMember.id,
+    userId: dbMember.userId,
+    type: dbMember.type,
+    workspaceId: dbMember.workspaceId,
+    permissions,
+  };
+
+  return { workspace, member };
 }

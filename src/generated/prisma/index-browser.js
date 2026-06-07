@@ -287,6 +287,17 @@ exports.Prisma.DealScalarFieldEnum = {
   deletedAt: 'deletedAt'
 };
 
+exports.Prisma.DealAccessScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  email: 'email',
+  name: 'name',
+  token: 'token',
+  permissions: 'permissions',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
+};
+
 exports.Prisma.DealItemScalarFieldEnum = {
   id: 'id',
   dealId: 'dealId',
@@ -570,6 +581,7 @@ exports.Prisma.ModelName = {
   Pipeline: 'Pipeline',
   PipelineStage: 'PipelineStage',
   Deal: 'Deal',
+  DealAccess: 'DealAccess',
   DealItem: 'DealItem',
   ProjectStatus: 'ProjectStatus',
   Project: 'Project',

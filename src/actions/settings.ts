@@ -1,7 +1,8 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { requireWorkspace } from "@/lib/workspace";
+import { requireWorkspace, requireWorkspaceWithMember } from "@/lib/workspace";
+import { canEdit, ROLE_PRESETS } from "@/lib/permissions";
 import { revalidatePath } from "next/cache";
 import { StageType } from "@/generated/prisma";
 
@@ -152,4 +153,32 @@ export async function createTaskStatus(formData: FormData) {
 export async function deleteTaskStatus(id: string) {
   await db.taskStatus.delete({ where: { id } });
   revalidatePath("/dashboard/settings/statuses");
+}
+
+// ─── Roles ────────────────────────────────────────────────────────────────────
+
+export async function seedDefaultRoles() {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "team")) throw new Error("Permission denied");
+
+  const existingRoles = await db.role.findMany({
+    where: { workspaceId: workspace.id },
+  });
+
+  const existingNames = new Set(existingRoles.map((r) => r.name));
+  const toCreate = Object.values(ROLE_PRESETS).filter(
+    (preset) => !existingNames.has(preset.name)
+  );
+
+  if (toCreate.length === 0) return;
+
+  await db.role.createMany({
+    data: toCreate.map((preset) => ({
+      workspaceId: workspace.id,
+      name: preset.name,
+      permissions: JSON.parse(JSON.stringify(preset.permissions)),
+    })),
+  });
+
+  revalidatePath("/dashboard/settings/team");
 }

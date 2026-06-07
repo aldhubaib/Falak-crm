@@ -10,17 +10,27 @@ import {
   Menu,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePermissions } from "@/components/permissions-provider";
+import { type PermissionModule } from "@/lib/permissions";
 
-const tabs = [
+type TabItem = {
+  name: string;
+  href: string;
+  icon: typeof LayoutDashboard;
+  permission?: PermissionModule;
+};
+
+const tabs: TabItem[] = [
   { name: "Home", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Deals", href: "/dashboard/deals", icon: Handshake },
-  { name: "Projects", href: "/dashboard/projects", icon: FolderKanban },
-  { name: "Invoices", href: "/dashboard/invoices", icon: FileText },
+  { name: "Deals", href: "/dashboard/deals", icon: Handshake, permission: "deals" },
+  { name: "Projects", href: "/dashboard/projects", icon: FolderKanban, permission: "projects" },
+  { name: "Invoices", href: "/dashboard/invoices", icon: FileText, permission: "invoices" },
   { name: "More", href: "/dashboard/more", icon: Menu },
 ];
 
 export function BottomTabs() {
   const pathname = usePathname();
+  const permissions = usePermissions();
 
   const isActive = (href: string) => {
     if (href === "/dashboard")
@@ -33,9 +43,14 @@ export function BottomTabs() {
     return pathname === href || pathname.startsWith(href + "/");
   };
 
+  const visibleTabs = tabs.filter((tab) => {
+    if (!tab.permission) return true;
+    return permissions[tab.permission] !== "none";
+  });
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 h-16 bg-sidebar border-t border-sidebar-border flex items-center justify-around px-2 z-[100] pb-[env(safe-area-inset-bottom)]">
-      {tabs.map((tab) => {
+      {visibleTabs.map((tab) => {
         const active = isActive(tab.href);
         return (
           <Link

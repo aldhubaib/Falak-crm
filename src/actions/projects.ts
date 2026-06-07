@@ -1,7 +1,8 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { requireWorkspace } from "@/lib/workspace";
+import { requireWorkspace, requireWorkspaceWithMember } from "@/lib/workspace";
+import { canEdit } from "@/lib/permissions";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 
@@ -36,17 +37,23 @@ export async function getProject(id: string) {
   });
 }
 
-export async function updateProjectStatus(id: string, statusId: string) {
-  const workspace = await requireWorkspace();
+export async function updateProjectStatus(id: string, statusId: string, dealId?: string) {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
   await db.project.update({
     where: { id, workspaceId: workspace.id },
     data: { statusId },
   });
   revalidatePath("/dashboard/projects");
   revalidatePath(`/dashboard/projects/${id}`);
+  if (dealId) revalidatePath(`/dashboard/deals/${dealId}`);
 }
 
-export async function createTask(projectId: string, formData: FormData) {
+export async function createTask(projectId: string, formData: FormData, dealId?: string) {
+  const { member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
   const title = formData.get("title") as string;
   const description = (formData.get("description") as string) || undefined;
   const serviceId = (formData.get("serviceId") as string) || undefined;
@@ -75,9 +82,13 @@ export async function createTask(projectId: string, formData: FormData) {
   });
 
   revalidatePath(`/dashboard/projects/${projectId}`);
+  if (dealId) revalidatePath(`/dashboard/deals/${dealId}`);
 }
 
-export async function updateTaskStatus(taskId: string, statusId: string, projectId: string) {
+export async function updateTaskStatus(taskId: string, statusId: string, projectId: string, dealId?: string) {
+  const { member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
   const task = await db.task.findUnique({ where: { id: taskId }, include: { status: true } });
   const status = await db.taskStatus.findUnique({ where: { id: statusId } });
 
@@ -99,9 +110,14 @@ export async function updateTaskStatus(taskId: string, statusId: string, project
   });
 
   revalidatePath(`/dashboard/projects/${projectId}`);
+  if (dealId) revalidatePath(`/dashboard/deals/${dealId}`);
 }
 
-export async function deleteTask(taskId: string, projectId: string) {
+export async function deleteTask(taskId: string, projectId: string, dealId?: string) {
+  const { member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
   await db.task.delete({ where: { id: taskId } });
   revalidatePath(`/dashboard/projects/${projectId}`);
+  if (dealId) revalidatePath(`/dashboard/deals/${dealId}`);
 }

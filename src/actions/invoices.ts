@@ -1,7 +1,8 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { requireWorkspace } from "@/lib/workspace";
+import { requireWorkspace, requireWorkspaceWithMember } from "@/lib/workspace";
+import { canEdit } from "@/lib/permissions";
 import { logActivity } from "@/lib/activity";
 import { getLatestRateForCurrency } from "@/actions/currencies";
 import { revalidatePath } from "next/cache";
@@ -12,7 +13,14 @@ export async function getInvoices() {
     where: { workspaceId: workspace.id },
     include: {
       contact: { select: { id: true, firstName: true, lastName: true, mobile: true } },
-      project: { select: { id: true, name: true, company: { select: { name: true } } } },
+      project: {
+        select: {
+          id: true,
+          name: true,
+          company: { select: { name: true } },
+          deal: { select: { id: true, title: true } },
+        },
+      },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -30,8 +38,9 @@ export async function getInvoice(id: string) {
   });
 }
 
-export async function createInvoiceFromProject(projectId: string, taskIds: string[]) {
-  const workspace = await requireWorkspace();
+export async function createInvoiceFromProject(projectId: string, taskIds: string[], dealId?: string) {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "invoices")) throw new Error("Permission denied");
 
   const project = await db.project.findFirst({
     where: { id: projectId, workspaceId: workspace.id },
@@ -97,11 +106,13 @@ export async function createInvoiceFromProject(projectId: string, taskIds: strin
 
   revalidatePath("/dashboard/invoices");
   revalidatePath(`/dashboard/projects/${projectId}`);
+  if (dealId) revalidatePath(`/dashboard/deals/${dealId}`);
   return invoice;
 }
 
 export async function sendInvoice(id: string) {
-  const workspace = await requireWorkspace();
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "invoices")) throw new Error("Permission denied");
 
   const invoice = await db.invoice.findFirst({ where: { id, workspaceId: workspace.id } });
 
@@ -138,7 +149,8 @@ export async function rejectInvoice(token: string, reason?: string) {
 }
 
 export async function markInvoicePaid(id: string) {
-  const workspace = await requireWorkspace();
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "invoices")) throw new Error("Permission denied");
 
   const invoice = await db.invoice.findFirst({ where: { id, workspaceId: workspace.id } });
 

@@ -286,13 +286,29 @@ model Deal {
   closedAt          DateTime?
   deletedAt         DateTime?
 
-  workspace Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  pipeline  Pipeline      @relation(fields: [pipelineId], references: [id])
-  stage     PipelineStage @relation(fields: [stageId], references: [id])
-  company   Company?      @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  contact   Contact?      @relation(fields: [contactId], references: [id], onDelete: SetNull)
-  items     DealItem[]
-  project   Project?
+  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  pipeline     Pipeline      @relation(fields: [pipelineId], references: [id])
+  stage        PipelineStage @relation(fields: [stageId], references: [id])
+  company      Company?      @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  contact      Contact?      @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  items        DealItem[]
+  project      Project?
+  accessGrants DealAccess[]
+}
+
+model DealAccess {
+  id          String    @id @default(cuid())
+  dealId      String
+  email       String
+  name        String?
+  token       String    @unique @default(cuid())
+  permissions Json // { project: true, invoices: true, tasks: true }
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+
+  deal Deal @relation(fields: [dealId], references: [id], onDelete: Cascade)
+
+  @@unique([dealId, email])
 }
 
 model DealItem {

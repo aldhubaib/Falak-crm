@@ -1,6 +1,6 @@
 import { getInvoices } from "@/actions/invoices";
 import Link from "next/link";
-import { FileText } from "lucide-react";
+import { FileText, Handshake } from "lucide-react";
 
 export default async function InvoicesPage() {
   const invoices = await getInvoices();
@@ -13,38 +13,48 @@ export default async function InvoicesPage() {
 
       {invoices.length === 0 ? (
         <div className="rounded-xl border border-border bg-card p-8 text-center text-muted-foreground text-sm">
-          No invoices yet. Create invoices from completed project tasks.
+          No invoices yet. Create invoices from completed project tasks inside a deal.
         </div>
       ) : (
         <div className="space-y-2">
-          {invoices.map((invoice) => (
-            <Link
-              key={invoice.id}
-              href={`/dashboard/invoices/${invoice.id}`}
-              className="rounded-xl border border-border bg-card p-4 flex items-center justify-between hover:border-primary/30 transition-colors no-underline block"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-orange/15 flex items-center justify-center">
-                  <FileText className="w-4 h-4 text-orange" />
+          {invoices.map((invoice) => {
+            const dealId = invoice.project?.deal?.id;
+            const dealTitle = invoice.project?.deal?.title;
+
+            return (
+              <Link
+                key={invoice.id}
+                href={`/dashboard/invoices/${invoice.id}`}
+                className="rounded-xl border border-border bg-card p-4 flex items-center justify-between hover:border-primary/30 transition-colors no-underline block"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-orange/15 flex items-center justify-center">
+                    <FileText className="w-4 h-4 text-orange" />
+                  </div>
+                  <div>
+                    <h3 className="text-[13px] font-medium text-foreground">
+                      {invoice.number}
+                    </h3>
+                    <p className="text-[12px] text-muted-foreground mt-0.5">
+                      {invoice.contact ? `${invoice.contact.firstName} ${invoice.contact.lastName}` : "No contact"}
+                      {dealTitle && (
+                        <span className="inline-flex items-center gap-1 ml-2">
+                          <Handshake className="w-3 h-3" />
+                          {dealTitle}
+                        </span>
+                      )}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-[13px] font-medium text-foreground">
-                    {invoice.number}
-                  </h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">
-                    {invoice.contact ? `${invoice.contact.firstName} ${invoice.contact.lastName}` : "No contact"} •{" "}
-                    {invoice.project?.company?.name || invoice.project?.name || "—"}
+                <div className="text-right">
+                  <p className="text-[13px] font-semibold text-foreground">
+                    {Number(invoice.total).toLocaleString()} {invoice.currency || "KWD"}
                   </p>
+                  <InvoiceStatusBadge status={invoice.status} />
                 </div>
-              </div>
-              <div className="text-right">
-                <p className="text-[13px] font-semibold text-foreground">
-                  {Number(invoice.total).toLocaleString()} {invoice.currency || "KWD"}
-                </p>
-                <InvoiceStatusBadge status={invoice.status} />
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>
