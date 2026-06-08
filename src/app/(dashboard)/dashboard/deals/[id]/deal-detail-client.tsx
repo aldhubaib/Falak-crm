@@ -336,93 +336,166 @@ function ServicesSection({
   isClosed: boolean;
   canEdit: boolean;
 }) {
-  const [showAddItem, setShowAddItem] = useState(false);
+  const [addingRow, setAddingRow] = useState(false);
+  const [newQty, setNewQty] = useState("1");
+  const [newRate, setNewRate] = useState("");
   const canAdd = !isClosed && canEditServices;
+  const currency = deal.currency || "KWD";
+
+  const subtotal = deal.items.reduce(
+    (sum, item) => sum + Number(item.unitPrice) * item.quantity,
+    0
+  );
 
   return (
-    <Section
-      title="Services"
-      count={deal.items.length}
-      actions={canAdd ? (
-        <button
-          onClick={() => setShowAddItem(true)}
-          className="text-[11px] text-primary hover:text-primary/80 flex items-center gap-1"
-        >
-          <Plus className="w-3 h-3" /> Add
-        </button>
-      ) : undefined}
-    >
-      {showAddItem && (
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.currentTarget);
-            const result = await addDealItem(deal.id, formData);
-            if (!result.ok) { useErrorStore.getState().push(result.error); return; }
-            setShowAddItem(false);
-          }}
-          className="mb-3 p-3 rounded-lg bg-muted/50 space-y-2"
-        >
-          <FormSelect
-            name="serviceId"
-            label="Service"
-            required
-            placeholder="Select service..."
-            options={services.map((s) => ({
-              value: s.id,
-              label: `${s.name} (${s.unitPrice.toLocaleString()} ${deal.currency || "KWD"})`,
-            }))}
-            onChange={(val) => {
-              const s = services.find((sv) => sv.id === val);
-              const priceInput = document.querySelector<HTMLInputElement>('[name="unitPrice"]');
-              if (s && priceInput) priceInput.value = String(s.unitPrice);
+    <Section title="Item Table" count={deal.items.length}>
+      {/* Table header */}
+      <div className="border border-border rounded-lg overflow-hidden">
+        <div className="grid grid-cols-[1fr_90px_110px_110px_36px] gap-0 bg-muted/50 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+          <div className="px-3 py-2.5">Item Details</div>
+          <div className="px-3 py-2.5 text-right">Quantity</div>
+          <div className="px-3 py-2.5 text-right">Rate</div>
+          <div className="px-3 py-2.5 text-right">Amount</div>
+          <div className="px-3 py-2.5" />
+        </div>
+
+        {/* Existing rows */}
+        {deal.items.map((item) => {
+          const amount = Number(item.unitPrice) * item.quantity;
+          return (
+            <div
+              key={item.id}
+              className="grid grid-cols-[1fr_90px_110px_110px_36px] gap-0 border-t border-border items-center group"
+            >
+              <div className="px-3 py-2.5">
+                <p className="text-[13px] text-foreground">{item.service.name}</p>
+              </div>
+              <div className="px-3 py-2.5 text-right text-[13px] text-foreground tabular-nums">
+                {item.quantity}
+              </div>
+              <div className="px-3 py-2.5 text-right text-[13px] text-foreground tabular-nums">
+                {Number(item.unitPrice).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              </div>
+              <div className="px-3 py-2.5 text-right text-[13px] text-foreground font-medium tabular-nums">
+                {amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              </div>
+              <div className="px-1 py-2.5 flex justify-center">
+                {canAdd && (
+                  <form onSubmit={async (e) => {
+                    e.preventDefault();
+                    const result = await removeDealItem(item.id, deal.id);
+                    if (!result.ok) useErrorStore.getState().push(result.error);
+                  }}>
+                    <button type="submit" className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity">
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+          );
+        })}
+
+        {/* New row form - inline */}
+        {addingRow && (
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
+              const result = await addDealItem(deal.id, formData);
+              if (!result.ok) { useErrorStore.getState().push(result.error); return; }
+              setAddingRow(false);
+              setNewQty("1");
+              setNewRate("");
             }}
-          />
-          <div className="grid grid-cols-2 gap-2">
-            <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Quantity</label>
-              <input name="quantity" type="number" defaultValue="1" min="1" className="w-full h-8 bg-transparent border-none text-[13px] text-foreground focus:outline-none" />
+            className="grid grid-cols-[1fr_90px_110px_110px_36px] gap-0 border-t border-border border-dashed items-center bg-muted/30"
+          >
+            <div className="px-2 py-1.5">
+              <FormSelect
+                name="serviceId"
+                placeholder="Select service..."
+                required
+                options={services.map((s) => ({
+                  value: s.id,
+                  label: s.name,
+                }))}
+                onChange={(val) => {
+                  const s = services.find((sv) => sv.id === val);
+                  if (s) setNewRate(String(s.unitPrice));
+                }}
+              />
             </div>
-            <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Unit Price</label>
-              <input name="unitPrice" type="number" step="0.01" placeholder="0.00" className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none" />
+            <div className="px-1 py-1.5">
+              <input
+                name="quantity"
+                type="number"
+                min="1"
+                value={newQty}
+                onChange={(e) => setNewQty(e.target.value)}
+                className="w-full h-8 rounded-md bg-background border border-border px-2 text-[13px] text-foreground text-right tabular-nums focus:outline-none focus:border-ring"
+              />
             </div>
+            <div className="px-1 py-1.5">
+              <input
+                name="unitPrice"
+                type="number"
+                step="0.01"
+                value={newRate}
+                onChange={(e) => setNewRate(e.target.value)}
+                placeholder="0.00"
+                className="w-full h-8 rounded-md bg-background border border-border px-2 text-[13px] text-foreground text-right tabular-nums placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring"
+              />
+            </div>
+            <div className="px-3 py-1.5 text-right text-[13px] text-muted-foreground tabular-nums">
+              {((parseFloat(newQty) || 0) * (parseFloat(newRate) || 0)).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            </div>
+            <div className="px-1 py-1.5 flex justify-center">
+              <button type="button" onClick={() => { setAddingRow(false); setNewQty("1"); setNewRate(""); }} className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-foreground">
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+            <div className="col-span-5 px-3 pb-2">
+              <Button type="submit" size="sm"><Plus className="w-3.5 h-3.5" /> Add</Button>
+            </div>
+          </form>
+        )}
+
+        {/* Empty state inside table */}
+        {deal.items.length === 0 && !addingRow && (
+          <div className="px-3 py-6 text-center text-[12px] text-muted-foreground border-t border-border">
+            No items yet — add a service to get started.
           </div>
-          <div className="flex gap-2">
-            <Button type="submit" size="sm"><Plus className="w-3.5 h-3.5" /> Add</Button>
-            <Button type="button" variant="ghost" size="sm" onClick={() => setShowAddItem(false)}>Cancel</Button>
-          </div>
-        </form>
+        )}
+      </div>
+
+      {/* Add Row button */}
+      {canAdd && !addingRow && (
+        <div className="mt-3">
+          <button
+            onClick={() => setAddingRow(true)}
+            className="text-[12px] font-medium text-primary hover:text-primary/80 flex items-center gap-1"
+          >
+            <Plus className="w-3.5 h-3.5" /> Add New Row
+          </button>
+        </div>
       )}
 
-      {deal.items.length === 0 ? (
-        <p className="text-[12px] text-muted-foreground">No services added yet</p>
-      ) : (
-        <div className="space-y-2">
-          {deal.items.map((item) => (
-            <div key={item.id} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
-              <div>
-                <p className="text-[12px] text-foreground">{item.service.name}</p>
-                <p className="text-[11px] text-muted-foreground">
-                  {item.quantity} × {Number(item.unitPrice).toLocaleString()} {deal.currency || "KWD"}
-                </p>
-              </div>
-              {canAdd && (
-                <form onSubmit={async (e) => {
-                  e.preventDefault();
-                  const result = await removeDealItem(item.id, deal.id);
-                  if (!result.ok) useErrorStore.getState().push(result.error);
-                }}>
-                  <button type="submit" className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-destructive">
-                    <Trash2 className="w-3 h-3" />
-                  </button>
-                </form>
-              )}
+      {/* Totals */}
+      {deal.items.length > 0 && (
+        <div className="mt-4 flex justify-end">
+          <div className="w-[280px] space-y-2">
+            <div className="flex justify-between text-[13px]">
+              <span className="text-muted-foreground">Sub Total</span>
+              <span className="text-foreground tabular-nums">
+                {subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              </span>
             </div>
-          ))}
-          <div className="pt-2 border-t border-border flex justify-between text-[13px] font-medium">
-            <span className="text-muted-foreground">Total</span>
-            <span className="text-foreground">{Number(deal.value).toLocaleString()} {deal.currency || "KWD"}</span>
+            <div className="flex justify-between text-[13px] font-semibold pt-2 border-t border-border">
+              <span className="text-foreground">Total ({currency})</span>
+              <span className="text-foreground tabular-nums">
+                {subtotal.toLocaleString(undefined, { minimumFractionDigits: 3 })}
+              </span>
+            </div>
           </div>
         </div>
       )}

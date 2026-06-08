@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { Sidebar } from "@/components/sidebar";
 import { BottomTabs } from "@/components/bottom-tabs";
 import { ActivityPanel } from "@/components/activity-panel";
@@ -8,13 +9,35 @@ import { GlobalSearch } from "@/components/global-search";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+const PAGE_TITLES: Record<string, string> = {
+  "/dashboard": "Dashboard",
+  "/dashboard/companies": "Companies",
+  "/dashboard/contacts": "Contacts",
+  "/dashboard/deals": "Deals",
+  "/dashboard/projects": "Projects",
+  "/dashboard/invoices": "Invoices",
+  "/dashboard/settings": "Settings",
+};
+
+function getPageTitle(pathname: string): string {
+  if (PAGE_TITLES[pathname]) return PAGE_TITLES[pathname];
+  const segments = pathname.split("/").filter(Boolean);
+  for (let i = segments.length; i >= 2; i--) {
+    const prefix = "/" + segments.slice(0, i).join("/");
+    if (PAGE_TITLES[prefix]) return PAGE_TITLES[prefix];
+  }
+  return "Dashboard";
+}
+
 const DESKTOP_BREAKPOINT = 1024;
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [pinned, setPinned] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
+  const pageTitle = getPageTitle(pathname);
 
   useEffect(() => {
     const handleResize = () =>
@@ -64,14 +87,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           >
             <Menu className="w-4 h-4" />
           </button>
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-primary/15 flex items-center justify-center text-[9px] font-semibold text-primary">
-              F
-            </div>
-            <span className="font-semibold text-[13px] text-foreground">
-              Falak CRM
-            </span>
-          </div>
+          <span className="font-semibold text-[13px] text-foreground">
+            {pageTitle}
+          </span>
           <div className="flex items-center gap-2">
             <GlobalSearch />
             <ActivityPanel />
@@ -108,9 +126,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         )}
       >
         {isDesktop && (
-          <div className="flex items-center justify-end gap-2 px-6 pt-4 pb-0 shrink-0">
-            <GlobalSearch />
-            <ActivityPanel />
+          <div className="flex items-center justify-between px-6 pt-4 pb-0 shrink-0">
+            <h1 className="text-[15px] font-semibold text-foreground">{pageTitle}</h1>
+            <div className="flex items-center gap-2">
+              <GlobalSearch />
+              <ActivityPanel />
+            </div>
           </div>
         )}
         <div className="flex-1 min-h-0">{children}</div>
