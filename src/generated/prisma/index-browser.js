@@ -475,6 +475,23 @@ exports.Prisma.CustomFieldDefScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.AttachmentScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  name: 'name',
+  sizeBytes: 'sizeBytes',
+  contentType: 'contentType',
+  r2Key: 'r2Key',
+  status: 'status',
+  uploadId: 'uploadId',
+  totalParts: 'totalParts',
+  uploadedParts: 'uploadedParts',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -595,7 +612,8 @@ exports.Prisma.ModelName = {
   ActivityLog: 'ActivityLog',
   Industry: 'Industry',
   Referral: 'Referral',
-  CustomFieldDef: 'CustomFieldDef'
+  CustomFieldDef: 'CustomFieldDef',
+  Attachment: 'Attachment'
 };
 
 /**

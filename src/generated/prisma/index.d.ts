@@ -153,6 +153,11 @@ export type Referral = $Result.DefaultSelection<Prisma.$ReferralPayload>
  * 
  */
 export type CustomFieldDef = $Result.DefaultSelection<Prisma.$CustomFieldDefPayload>
+/**
+ * Model Attachment
+ * 
+ */
+export type Attachment = $Result.DefaultSelection<Prisma.$AttachmentPayload>
 
 /**
  * Enums
@@ -685,6 +690,16 @@ export class PrismaClient<
     * ```
     */
   get customFieldDef(): Prisma.CustomFieldDefDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.attachment`: Exposes CRUD operations for the **Attachment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Attachments
+    * const attachments = await prisma.attachment.findMany()
+    * ```
+    */
+  get attachment(): Prisma.AttachmentDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1146,7 +1161,8 @@ export namespace Prisma {
     ActivityLog: 'ActivityLog',
     Industry: 'Industry',
     Referral: 'Referral',
-    CustomFieldDef: 'CustomFieldDef'
+    CustomFieldDef: 'CustomFieldDef',
+    Attachment: 'Attachment'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1162,7 +1178,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "taskStatus" | "task" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef"
+      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "taskStatus" | "task" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3238,6 +3254,80 @@ export namespace Prisma {
           }
         }
       }
+      Attachment: {
+        payload: Prisma.$AttachmentPayload<ExtArgs>
+        fields: Prisma.AttachmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AttachmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AttachmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>
+          }
+          findFirst: {
+            args: Prisma.AttachmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AttachmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>
+          }
+          findMany: {
+            args: Prisma.AttachmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>[]
+          }
+          create: {
+            args: Prisma.AttachmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>
+          }
+          createMany: {
+            args: Prisma.AttachmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AttachmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>[]
+          }
+          delete: {
+            args: Prisma.AttachmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>
+          }
+          update: {
+            args: Prisma.AttachmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.AttachmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AttachmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AttachmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.AttachmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>
+          }
+          aggregate: {
+            args: Prisma.AttachmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAttachment>
+          }
+          groupBy: {
+            args: Prisma.AttachmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AttachmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AttachmentCountArgs<ExtArgs>
+            result: $Utils.Optional<AttachmentCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3374,6 +3464,7 @@ export namespace Prisma {
     industry?: IndustryOmit
     referral?: ReferralOmit
     customFieldDef?: CustomFieldDefOmit
+    attachment?: AttachmentOmit
   }
 
   /* Types for Logging */
@@ -3472,6 +3563,7 @@ export namespace Prisma {
     roles: number
     currencies: number
     exchangeRates: number
+    attachments: number
   }
 
   export type WorkspaceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3493,6 +3585,7 @@ export namespace Prisma {
     roles?: boolean | WorkspaceCountOutputTypeCountRolesArgs
     currencies?: boolean | WorkspaceCountOutputTypeCountCurrenciesArgs
     exchangeRates?: boolean | WorkspaceCountOutputTypeCountExchangeRatesArgs
+    attachments?: boolean | WorkspaceCountOutputTypeCountAttachmentsArgs
   }
 
   // Custom InputTypes
@@ -3630,6 +3723,13 @@ export namespace Prisma {
    */
   export type WorkspaceCountOutputTypeCountExchangeRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExchangeRateWhereInput
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeCountAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttachmentWhereInput
   }
 
 
@@ -4340,6 +4440,7 @@ export namespace Prisma {
     roles?: boolean | Workspace$rolesArgs<ExtArgs>
     currencies?: boolean | Workspace$currenciesArgs<ExtArgs>
     exchangeRates?: boolean | Workspace$exchangeRatesArgs<ExtArgs>
+    attachments?: boolean | Workspace$attachmentsArgs<ExtArgs>
     _count?: boolean | WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workspace"]>
 
@@ -4397,6 +4498,7 @@ export namespace Prisma {
     roles?: boolean | Workspace$rolesArgs<ExtArgs>
     currencies?: boolean | Workspace$currenciesArgs<ExtArgs>
     exchangeRates?: boolean | Workspace$exchangeRatesArgs<ExtArgs>
+    attachments?: boolean | Workspace$attachmentsArgs<ExtArgs>
     _count?: boolean | WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type WorkspaceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4424,6 +4526,7 @@ export namespace Prisma {
       roles: Prisma.$RolePayload<ExtArgs>[]
       currencies: Prisma.$CurrencyPayload<ExtArgs>[]
       exchangeRates: Prisma.$ExchangeRatePayload<ExtArgs>[]
+      attachments: Prisma.$AttachmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4847,6 +4950,7 @@ export namespace Prisma {
     roles<T extends Workspace$rolesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     currencies<T extends Workspace$currenciesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$currenciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     exchangeRates<T extends Workspace$exchangeRatesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$exchangeRatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    attachments<T extends Workspace$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5725,6 +5829,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ExchangeRateScalarFieldEnum | ExchangeRateScalarFieldEnum[]
+  }
+
+  /**
+   * Workspace.attachments
+   */
+  export type Workspace$attachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    where?: AttachmentWhereInput
+    orderBy?: AttachmentOrderByWithRelationInput | AttachmentOrderByWithRelationInput[]
+    cursor?: AttachmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttachmentScalarFieldEnum | AttachmentScalarFieldEnum[]
   }
 
   /**
@@ -37554,6 +37682,1220 @@ export namespace Prisma {
 
 
   /**
+   * Model Attachment
+   */
+
+  export type AggregateAttachment = {
+    _count: AttachmentCountAggregateOutputType | null
+    _avg: AttachmentAvgAggregateOutputType | null
+    _sum: AttachmentSumAggregateOutputType | null
+    _min: AttachmentMinAggregateOutputType | null
+    _max: AttachmentMaxAggregateOutputType | null
+  }
+
+  export type AttachmentAvgAggregateOutputType = {
+    sizeBytes: number | null
+    totalParts: number | null
+  }
+
+  export type AttachmentSumAggregateOutputType = {
+    sizeBytes: number | null
+    totalParts: number | null
+  }
+
+  export type AttachmentMinAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    entityType: string | null
+    entityId: string | null
+    name: string | null
+    sizeBytes: number | null
+    contentType: string | null
+    r2Key: string | null
+    status: string | null
+    uploadId: string | null
+    totalParts: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AttachmentMaxAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    entityType: string | null
+    entityId: string | null
+    name: string | null
+    sizeBytes: number | null
+    contentType: string | null
+    r2Key: string | null
+    status: string | null
+    uploadId: string | null
+    totalParts: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AttachmentCountAggregateOutputType = {
+    id: number
+    workspaceId: number
+    entityType: number
+    entityId: number
+    name: number
+    sizeBytes: number
+    contentType: number
+    r2Key: number
+    status: number
+    uploadId: number
+    totalParts: number
+    uploadedParts: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AttachmentAvgAggregateInputType = {
+    sizeBytes?: true
+    totalParts?: true
+  }
+
+  export type AttachmentSumAggregateInputType = {
+    sizeBytes?: true
+    totalParts?: true
+  }
+
+  export type AttachmentMinAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    entityType?: true
+    entityId?: true
+    name?: true
+    sizeBytes?: true
+    contentType?: true
+    r2Key?: true
+    status?: true
+    uploadId?: true
+    totalParts?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AttachmentMaxAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    entityType?: true
+    entityId?: true
+    name?: true
+    sizeBytes?: true
+    contentType?: true
+    r2Key?: true
+    status?: true
+    uploadId?: true
+    totalParts?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AttachmentCountAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    entityType?: true
+    entityId?: true
+    name?: true
+    sizeBytes?: true
+    contentType?: true
+    r2Key?: true
+    status?: true
+    uploadId?: true
+    totalParts?: true
+    uploadedParts?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AttachmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Attachment to aggregate.
+     */
+    where?: AttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attachments to fetch.
+     */
+    orderBy?: AttachmentOrderByWithRelationInput | AttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Attachments
+    **/
+    _count?: true | AttachmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AttachmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AttachmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AttachmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AttachmentMaxAggregateInputType
+  }
+
+  export type GetAttachmentAggregateType<T extends AttachmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateAttachment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAttachment[P]>
+      : GetScalarType<T[P], AggregateAttachment[P]>
+  }
+
+
+
+
+  export type AttachmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttachmentWhereInput
+    orderBy?: AttachmentOrderByWithAggregationInput | AttachmentOrderByWithAggregationInput[]
+    by: AttachmentScalarFieldEnum[] | AttachmentScalarFieldEnum
+    having?: AttachmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AttachmentCountAggregateInputType | true
+    _avg?: AttachmentAvgAggregateInputType
+    _sum?: AttachmentSumAggregateInputType
+    _min?: AttachmentMinAggregateInputType
+    _max?: AttachmentMaxAggregateInputType
+  }
+
+  export type AttachmentGroupByOutputType = {
+    id: string
+    workspaceId: string
+    entityType: string
+    entityId: string
+    name: string
+    sizeBytes: number | null
+    contentType: string | null
+    r2Key: string | null
+    status: string
+    uploadId: string | null
+    totalParts: number
+    uploadedParts: JsonValue
+    createdAt: Date
+    updatedAt: Date
+    _count: AttachmentCountAggregateOutputType | null
+    _avg: AttachmentAvgAggregateOutputType | null
+    _sum: AttachmentSumAggregateOutputType | null
+    _min: AttachmentMinAggregateOutputType | null
+    _max: AttachmentMaxAggregateOutputType | null
+  }
+
+  type GetAttachmentGroupByPayload<T extends AttachmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AttachmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AttachmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AttachmentGroupByOutputType[P]>
+            : GetScalarType<T[P], AttachmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AttachmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    name?: boolean
+    sizeBytes?: boolean
+    contentType?: boolean
+    r2Key?: boolean
+    status?: boolean
+    uploadId?: boolean
+    totalParts?: boolean
+    uploadedParts?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["attachment"]>
+
+  export type AttachmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    name?: boolean
+    sizeBytes?: boolean
+    contentType?: boolean
+    r2Key?: boolean
+    status?: boolean
+    uploadId?: boolean
+    totalParts?: boolean
+    uploadedParts?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["attachment"]>
+
+  export type AttachmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    name?: boolean
+    sizeBytes?: boolean
+    contentType?: boolean
+    r2Key?: boolean
+    status?: boolean
+    uploadId?: boolean
+    totalParts?: boolean
+    uploadedParts?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["attachment"]>
+
+  export type AttachmentSelectScalar = {
+    id?: boolean
+    workspaceId?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    name?: boolean
+    sizeBytes?: boolean
+    contentType?: boolean
+    r2Key?: boolean
+    status?: boolean
+    uploadId?: boolean
+    totalParts?: boolean
+    uploadedParts?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AttachmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "entityType" | "entityId" | "name" | "sizeBytes" | "contentType" | "r2Key" | "status" | "uploadId" | "totalParts" | "uploadedParts" | "createdAt" | "updatedAt", ExtArgs["result"]["attachment"]>
+  export type AttachmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+  export type AttachmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+  export type AttachmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+
+  export type $AttachmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Attachment"
+    objects: {
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      workspaceId: string
+      entityType: string
+      entityId: string
+      name: string
+      sizeBytes: number | null
+      contentType: string | null
+      r2Key: string | null
+      status: string
+      uploadId: string | null
+      totalParts: number
+      uploadedParts: Prisma.JsonValue
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["attachment"]>
+    composites: {}
+  }
+
+  type AttachmentGetPayload<S extends boolean | null | undefined | AttachmentDefaultArgs> = $Result.GetResult<Prisma.$AttachmentPayload, S>
+
+  type AttachmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AttachmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AttachmentCountAggregateInputType | true
+    }
+
+  export interface AttachmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Attachment'], meta: { name: 'Attachment' } }
+    /**
+     * Find zero or one Attachment that matches the filter.
+     * @param {AttachmentFindUniqueArgs} args - Arguments to find a Attachment
+     * @example
+     * // Get one Attachment
+     * const attachment = await prisma.attachment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AttachmentFindUniqueArgs>(args: SelectSubset<T, AttachmentFindUniqueArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Attachment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AttachmentFindUniqueOrThrowArgs} args - Arguments to find a Attachment
+     * @example
+     * // Get one Attachment
+     * const attachment = await prisma.attachment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AttachmentFindUniqueOrThrowArgs>(args: SelectSubset<T, AttachmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Attachment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttachmentFindFirstArgs} args - Arguments to find a Attachment
+     * @example
+     * // Get one Attachment
+     * const attachment = await prisma.attachment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AttachmentFindFirstArgs>(args?: SelectSubset<T, AttachmentFindFirstArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Attachment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttachmentFindFirstOrThrowArgs} args - Arguments to find a Attachment
+     * @example
+     * // Get one Attachment
+     * const attachment = await prisma.attachment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AttachmentFindFirstOrThrowArgs>(args?: SelectSubset<T, AttachmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Attachments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttachmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Attachments
+     * const attachments = await prisma.attachment.findMany()
+     * 
+     * // Get first 10 Attachments
+     * const attachments = await prisma.attachment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const attachmentWithIdOnly = await prisma.attachment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AttachmentFindManyArgs>(args?: SelectSubset<T, AttachmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Attachment.
+     * @param {AttachmentCreateArgs} args - Arguments to create a Attachment.
+     * @example
+     * // Create one Attachment
+     * const Attachment = await prisma.attachment.create({
+     *   data: {
+     *     // ... data to create a Attachment
+     *   }
+     * })
+     * 
+     */
+    create<T extends AttachmentCreateArgs>(args: SelectSubset<T, AttachmentCreateArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Attachments.
+     * @param {AttachmentCreateManyArgs} args - Arguments to create many Attachments.
+     * @example
+     * // Create many Attachments
+     * const attachment = await prisma.attachment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AttachmentCreateManyArgs>(args?: SelectSubset<T, AttachmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Attachments and returns the data saved in the database.
+     * @param {AttachmentCreateManyAndReturnArgs} args - Arguments to create many Attachments.
+     * @example
+     * // Create many Attachments
+     * const attachment = await prisma.attachment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Attachments and only return the `id`
+     * const attachmentWithIdOnly = await prisma.attachment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AttachmentCreateManyAndReturnArgs>(args?: SelectSubset<T, AttachmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Attachment.
+     * @param {AttachmentDeleteArgs} args - Arguments to delete one Attachment.
+     * @example
+     * // Delete one Attachment
+     * const Attachment = await prisma.attachment.delete({
+     *   where: {
+     *     // ... filter to delete one Attachment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AttachmentDeleteArgs>(args: SelectSubset<T, AttachmentDeleteArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Attachment.
+     * @param {AttachmentUpdateArgs} args - Arguments to update one Attachment.
+     * @example
+     * // Update one Attachment
+     * const attachment = await prisma.attachment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AttachmentUpdateArgs>(args: SelectSubset<T, AttachmentUpdateArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Attachments.
+     * @param {AttachmentDeleteManyArgs} args - Arguments to filter Attachments to delete.
+     * @example
+     * // Delete a few Attachments
+     * const { count } = await prisma.attachment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AttachmentDeleteManyArgs>(args?: SelectSubset<T, AttachmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Attachments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttachmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Attachments
+     * const attachment = await prisma.attachment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AttachmentUpdateManyArgs>(args: SelectSubset<T, AttachmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Attachments and returns the data updated in the database.
+     * @param {AttachmentUpdateManyAndReturnArgs} args - Arguments to update many Attachments.
+     * @example
+     * // Update many Attachments
+     * const attachment = await prisma.attachment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Attachments and only return the `id`
+     * const attachmentWithIdOnly = await prisma.attachment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AttachmentUpdateManyAndReturnArgs>(args: SelectSubset<T, AttachmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Attachment.
+     * @param {AttachmentUpsertArgs} args - Arguments to update or create a Attachment.
+     * @example
+     * // Update or create a Attachment
+     * const attachment = await prisma.attachment.upsert({
+     *   create: {
+     *     // ... data to create a Attachment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Attachment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AttachmentUpsertArgs>(args: SelectSubset<T, AttachmentUpsertArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Attachments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttachmentCountArgs} args - Arguments to filter Attachments to count.
+     * @example
+     * // Count the number of Attachments
+     * const count = await prisma.attachment.count({
+     *   where: {
+     *     // ... the filter for the Attachments we want to count
+     *   }
+     * })
+    **/
+    count<T extends AttachmentCountArgs>(
+      args?: Subset<T, AttachmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AttachmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Attachment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttachmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AttachmentAggregateArgs>(args: Subset<T, AttachmentAggregateArgs>): Prisma.PrismaPromise<GetAttachmentAggregateType<T>>
+
+    /**
+     * Group by Attachment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttachmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AttachmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AttachmentGroupByArgs['orderBy'] }
+        : { orderBy?: AttachmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AttachmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAttachmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Attachment model
+   */
+  readonly fields: AttachmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Attachment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AttachmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Attachment model
+   */
+  interface AttachmentFieldRefs {
+    readonly id: FieldRef<"Attachment", 'String'>
+    readonly workspaceId: FieldRef<"Attachment", 'String'>
+    readonly entityType: FieldRef<"Attachment", 'String'>
+    readonly entityId: FieldRef<"Attachment", 'String'>
+    readonly name: FieldRef<"Attachment", 'String'>
+    readonly sizeBytes: FieldRef<"Attachment", 'Int'>
+    readonly contentType: FieldRef<"Attachment", 'String'>
+    readonly r2Key: FieldRef<"Attachment", 'String'>
+    readonly status: FieldRef<"Attachment", 'String'>
+    readonly uploadId: FieldRef<"Attachment", 'String'>
+    readonly totalParts: FieldRef<"Attachment", 'Int'>
+    readonly uploadedParts: FieldRef<"Attachment", 'Json'>
+    readonly createdAt: FieldRef<"Attachment", 'DateTime'>
+    readonly updatedAt: FieldRef<"Attachment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Attachment findUnique
+   */
+  export type AttachmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Attachment to fetch.
+     */
+    where: AttachmentWhereUniqueInput
+  }
+
+  /**
+   * Attachment findUniqueOrThrow
+   */
+  export type AttachmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Attachment to fetch.
+     */
+    where: AttachmentWhereUniqueInput
+  }
+
+  /**
+   * Attachment findFirst
+   */
+  export type AttachmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Attachment to fetch.
+     */
+    where?: AttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attachments to fetch.
+     */
+    orderBy?: AttachmentOrderByWithRelationInput | AttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Attachments.
+     */
+    cursor?: AttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Attachments.
+     */
+    distinct?: AttachmentScalarFieldEnum | AttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * Attachment findFirstOrThrow
+   */
+  export type AttachmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Attachment to fetch.
+     */
+    where?: AttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attachments to fetch.
+     */
+    orderBy?: AttachmentOrderByWithRelationInput | AttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Attachments.
+     */
+    cursor?: AttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Attachments.
+     */
+    distinct?: AttachmentScalarFieldEnum | AttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * Attachment findMany
+   */
+  export type AttachmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Attachments to fetch.
+     */
+    where?: AttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attachments to fetch.
+     */
+    orderBy?: AttachmentOrderByWithRelationInput | AttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Attachments.
+     */
+    cursor?: AttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Attachments.
+     */
+    distinct?: AttachmentScalarFieldEnum | AttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * Attachment create
+   */
+  export type AttachmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Attachment.
+     */
+    data: XOR<AttachmentCreateInput, AttachmentUncheckedCreateInput>
+  }
+
+  /**
+   * Attachment createMany
+   */
+  export type AttachmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Attachments.
+     */
+    data: AttachmentCreateManyInput | AttachmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Attachment createManyAndReturn
+   */
+  export type AttachmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many Attachments.
+     */
+    data: AttachmentCreateManyInput | AttachmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Attachment update
+   */
+  export type AttachmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Attachment.
+     */
+    data: XOR<AttachmentUpdateInput, AttachmentUncheckedUpdateInput>
+    /**
+     * Choose, which Attachment to update.
+     */
+    where: AttachmentWhereUniqueInput
+  }
+
+  /**
+   * Attachment updateMany
+   */
+  export type AttachmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Attachments.
+     */
+    data: XOR<AttachmentUpdateManyMutationInput, AttachmentUncheckedUpdateManyInput>
+    /**
+     * Filter which Attachments to update
+     */
+    where?: AttachmentWhereInput
+    /**
+     * Limit how many Attachments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Attachment updateManyAndReturn
+   */
+  export type AttachmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * The data used to update Attachments.
+     */
+    data: XOR<AttachmentUpdateManyMutationInput, AttachmentUncheckedUpdateManyInput>
+    /**
+     * Filter which Attachments to update
+     */
+    where?: AttachmentWhereInput
+    /**
+     * Limit how many Attachments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Attachment upsert
+   */
+  export type AttachmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Attachment to update in case it exists.
+     */
+    where: AttachmentWhereUniqueInput
+    /**
+     * In case the Attachment found by the `where` argument doesn't exist, create a new Attachment with this data.
+     */
+    create: XOR<AttachmentCreateInput, AttachmentUncheckedCreateInput>
+    /**
+     * In case the Attachment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AttachmentUpdateInput, AttachmentUncheckedUpdateInput>
+  }
+
+  /**
+   * Attachment delete
+   */
+  export type AttachmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * Filter which Attachment to delete.
+     */
+    where: AttachmentWhereUniqueInput
+  }
+
+  /**
+   * Attachment deleteMany
+   */
+  export type AttachmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Attachments to delete
+     */
+    where?: AttachmentWhereInput
+    /**
+     * Limit how many Attachments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Attachment without action
+   */
+  export type AttachmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -38006,6 +39348,26 @@ export namespace Prisma {
   export type CustomFieldDefScalarFieldEnum = (typeof CustomFieldDefScalarFieldEnum)[keyof typeof CustomFieldDefScalarFieldEnum]
 
 
+  export const AttachmentScalarFieldEnum: {
+    id: 'id',
+    workspaceId: 'workspaceId',
+    entityType: 'entityType',
+    entityId: 'entityId',
+    name: 'name',
+    sizeBytes: 'sizeBytes',
+    contentType: 'contentType',
+    r2Key: 'r2Key',
+    status: 'status',
+    uploadId: 'uploadId',
+    totalParts: 'totalParts',
+    uploadedParts: 'uploadedParts',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AttachmentScalarFieldEnum = (typeof AttachmentScalarFieldEnum)[keyof typeof AttachmentScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -38310,6 +39672,7 @@ export namespace Prisma {
     roles?: RoleListRelationFilter
     currencies?: CurrencyListRelationFilter
     exchangeRates?: ExchangeRateListRelationFilter
+    attachments?: AttachmentListRelationFilter
   }
 
   export type WorkspaceOrderByWithRelationInput = {
@@ -38340,6 +39703,7 @@ export namespace Prisma {
     roles?: RoleOrderByRelationAggregateInput
     currencies?: CurrencyOrderByRelationAggregateInput
     exchangeRates?: ExchangeRateOrderByRelationAggregateInput
+    attachments?: AttachmentOrderByRelationAggregateInput
   }
 
   export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
@@ -38373,6 +39737,7 @@ export namespace Prisma {
     roles?: RoleListRelationFilter
     currencies?: CurrencyListRelationFilter
     exchangeRates?: ExchangeRateListRelationFilter
+    attachments?: AttachmentListRelationFilter
   }, "id" | "slug">
 
   export type WorkspaceOrderByWithAggregationInput = {
@@ -40683,6 +42048,108 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"CustomFieldDef"> | Date | string
   }
 
+  export type AttachmentWhereInput = {
+    AND?: AttachmentWhereInput | AttachmentWhereInput[]
+    OR?: AttachmentWhereInput[]
+    NOT?: AttachmentWhereInput | AttachmentWhereInput[]
+    id?: StringFilter<"Attachment"> | string
+    workspaceId?: StringFilter<"Attachment"> | string
+    entityType?: StringFilter<"Attachment"> | string
+    entityId?: StringFilter<"Attachment"> | string
+    name?: StringFilter<"Attachment"> | string
+    sizeBytes?: IntNullableFilter<"Attachment"> | number | null
+    contentType?: StringNullableFilter<"Attachment"> | string | null
+    r2Key?: StringNullableFilter<"Attachment"> | string | null
+    status?: StringFilter<"Attachment"> | string
+    uploadId?: StringNullableFilter<"Attachment"> | string | null
+    totalParts?: IntFilter<"Attachment"> | number
+    uploadedParts?: JsonFilter<"Attachment">
+    createdAt?: DateTimeFilter<"Attachment"> | Date | string
+    updatedAt?: DateTimeFilter<"Attachment"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+  }
+
+  export type AttachmentOrderByWithRelationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    name?: SortOrder
+    sizeBytes?: SortOrderInput | SortOrder
+    contentType?: SortOrderInput | SortOrder
+    r2Key?: SortOrderInput | SortOrder
+    status?: SortOrder
+    uploadId?: SortOrderInput | SortOrder
+    totalParts?: SortOrder
+    uploadedParts?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    workspace?: WorkspaceOrderByWithRelationInput
+  }
+
+  export type AttachmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AttachmentWhereInput | AttachmentWhereInput[]
+    OR?: AttachmentWhereInput[]
+    NOT?: AttachmentWhereInput | AttachmentWhereInput[]
+    workspaceId?: StringFilter<"Attachment"> | string
+    entityType?: StringFilter<"Attachment"> | string
+    entityId?: StringFilter<"Attachment"> | string
+    name?: StringFilter<"Attachment"> | string
+    sizeBytes?: IntNullableFilter<"Attachment"> | number | null
+    contentType?: StringNullableFilter<"Attachment"> | string | null
+    r2Key?: StringNullableFilter<"Attachment"> | string | null
+    status?: StringFilter<"Attachment"> | string
+    uploadId?: StringNullableFilter<"Attachment"> | string | null
+    totalParts?: IntFilter<"Attachment"> | number
+    uploadedParts?: JsonFilter<"Attachment">
+    createdAt?: DateTimeFilter<"Attachment"> | Date | string
+    updatedAt?: DateTimeFilter<"Attachment"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+  }, "id">
+
+  export type AttachmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    name?: SortOrder
+    sizeBytes?: SortOrderInput | SortOrder
+    contentType?: SortOrderInput | SortOrder
+    r2Key?: SortOrderInput | SortOrder
+    status?: SortOrder
+    uploadId?: SortOrderInput | SortOrder
+    totalParts?: SortOrder
+    uploadedParts?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AttachmentCountOrderByAggregateInput
+    _avg?: AttachmentAvgOrderByAggregateInput
+    _max?: AttachmentMaxOrderByAggregateInput
+    _min?: AttachmentMinOrderByAggregateInput
+    _sum?: AttachmentSumOrderByAggregateInput
+  }
+
+  export type AttachmentScalarWhereWithAggregatesInput = {
+    AND?: AttachmentScalarWhereWithAggregatesInput | AttachmentScalarWhereWithAggregatesInput[]
+    OR?: AttachmentScalarWhereWithAggregatesInput[]
+    NOT?: AttachmentScalarWhereWithAggregatesInput | AttachmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Attachment"> | string
+    workspaceId?: StringWithAggregatesFilter<"Attachment"> | string
+    entityType?: StringWithAggregatesFilter<"Attachment"> | string
+    entityId?: StringWithAggregatesFilter<"Attachment"> | string
+    name?: StringWithAggregatesFilter<"Attachment"> | string
+    sizeBytes?: IntNullableWithAggregatesFilter<"Attachment"> | number | null
+    contentType?: StringNullableWithAggregatesFilter<"Attachment"> | string | null
+    r2Key?: StringNullableWithAggregatesFilter<"Attachment"> | string | null
+    status?: StringWithAggregatesFilter<"Attachment"> | string
+    uploadId?: StringNullableWithAggregatesFilter<"Attachment"> | string | null
+    totalParts?: IntWithAggregatesFilter<"Attachment"> | number
+    uploadedParts?: JsonWithAggregatesFilter<"Attachment">
+    createdAt?: DateTimeWithAggregatesFilter<"Attachment"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Attachment"> | Date | string
+  }
+
   export type WorkspaceCreateInput = {
     id?: string
     name: string
@@ -40711,6 +42178,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateInput = {
@@ -40741,6 +42209,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUpdateInput = {
@@ -40771,6 +42240,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateInput = {
@@ -40801,6 +42271,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateManyInput = {
@@ -43294,6 +44765,124 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AttachmentCreateInput = {
+    id?: string
+    entityType: string
+    entityId: string
+    name: string
+    sizeBytes?: number | null
+    contentType?: string | null
+    r2Key?: string | null
+    status?: string
+    uploadId?: string | null
+    totalParts?: number
+    uploadedParts?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutAttachmentsInput
+  }
+
+  export type AttachmentUncheckedCreateInput = {
+    id?: string
+    workspaceId: string
+    entityType: string
+    entityId: string
+    name: string
+    sizeBytes?: number | null
+    contentType?: string | null
+    r2Key?: string | null
+    status?: string
+    uploadId?: string | null
+    totalParts?: number
+    uploadedParts?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttachmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    contentType?: NullableStringFieldUpdateOperationsInput | string | null
+    r2Key?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    uploadId?: NullableStringFieldUpdateOperationsInput | string | null
+    totalParts?: IntFieldUpdateOperationsInput | number
+    uploadedParts?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutAttachmentsNestedInput
+  }
+
+  export type AttachmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    contentType?: NullableStringFieldUpdateOperationsInput | string | null
+    r2Key?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    uploadId?: NullableStringFieldUpdateOperationsInput | string | null
+    totalParts?: IntFieldUpdateOperationsInput | number
+    uploadedParts?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttachmentCreateManyInput = {
+    id?: string
+    workspaceId: string
+    entityType: string
+    entityId: string
+    name: string
+    sizeBytes?: number | null
+    contentType?: string | null
+    r2Key?: string | null
+    status?: string
+    uploadId?: string | null
+    totalParts?: number
+    uploadedParts?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttachmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    contentType?: NullableStringFieldUpdateOperationsInput | string | null
+    r2Key?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    uploadId?: NullableStringFieldUpdateOperationsInput | string | null
+    totalParts?: IntFieldUpdateOperationsInput | number
+    uploadedParts?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttachmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    contentType?: NullableStringFieldUpdateOperationsInput | string | null
+    r2Key?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    uploadId?: NullableStringFieldUpdateOperationsInput | string | null
+    totalParts?: IntFieldUpdateOperationsInput | number
+    uploadedParts?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -43459,6 +45048,12 @@ export namespace Prisma {
     none?: ExchangeRateWhereInput
   }
 
+  export type AttachmentListRelationFilter = {
+    every?: AttachmentWhereInput
+    some?: AttachmentWhereInput
+    none?: AttachmentWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -43533,6 +45128,10 @@ export namespace Prisma {
   }
 
   export type ExchangeRateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AttachmentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -45362,6 +46961,92 @@ export namespace Prisma {
     _max?: NestedEnumCustomFieldTypeFilter<$PrismaModel>
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type AttachmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    name?: SortOrder
+    sizeBytes?: SortOrder
+    contentType?: SortOrder
+    r2Key?: SortOrder
+    status?: SortOrder
+    uploadId?: SortOrder
+    totalParts?: SortOrder
+    uploadedParts?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttachmentAvgOrderByAggregateInput = {
+    sizeBytes?: SortOrder
+    totalParts?: SortOrder
+  }
+
+  export type AttachmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    name?: SortOrder
+    sizeBytes?: SortOrder
+    contentType?: SortOrder
+    r2Key?: SortOrder
+    status?: SortOrder
+    uploadId?: SortOrder
+    totalParts?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttachmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    name?: SortOrder
+    sizeBytes?: SortOrder
+    contentType?: SortOrder
+    r2Key?: SortOrder
+    status?: SortOrder
+    uploadId?: SortOrder
+    totalParts?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttachmentSumOrderByAggregateInput = {
+    sizeBytes?: SortOrder
+    totalParts?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
   export type WorkspaceMemberCreateNestedManyWithoutWorkspaceInput = {
     create?: XOR<WorkspaceMemberCreateWithoutWorkspaceInput, WorkspaceMemberUncheckedCreateWithoutWorkspaceInput> | WorkspaceMemberCreateWithoutWorkspaceInput[] | WorkspaceMemberUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutWorkspaceInput | WorkspaceMemberCreateOrConnectWithoutWorkspaceInput[]
@@ -45494,6 +47179,13 @@ export namespace Prisma {
     connect?: ExchangeRateWhereUniqueInput | ExchangeRateWhereUniqueInput[]
   }
 
+  export type AttachmentCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<AttachmentCreateWithoutWorkspaceInput, AttachmentUncheckedCreateWithoutWorkspaceInput> | AttachmentCreateWithoutWorkspaceInput[] | AttachmentUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutWorkspaceInput | AttachmentCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: AttachmentCreateManyWorkspaceInputEnvelope
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+  }
+
   export type WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput = {
     create?: XOR<WorkspaceMemberCreateWithoutWorkspaceInput, WorkspaceMemberUncheckedCreateWithoutWorkspaceInput> | WorkspaceMemberCreateWithoutWorkspaceInput[] | WorkspaceMemberUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutWorkspaceInput | WorkspaceMemberCreateOrConnectWithoutWorkspaceInput[]
@@ -45624,6 +47316,13 @@ export namespace Prisma {
     connectOrCreate?: ExchangeRateCreateOrConnectWithoutWorkspaceInput | ExchangeRateCreateOrConnectWithoutWorkspaceInput[]
     createMany?: ExchangeRateCreateManyWorkspaceInputEnvelope
     connect?: ExchangeRateWhereUniqueInput | ExchangeRateWhereUniqueInput[]
+  }
+
+  export type AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<AttachmentCreateWithoutWorkspaceInput, AttachmentUncheckedCreateWithoutWorkspaceInput> | AttachmentCreateWithoutWorkspaceInput[] | AttachmentUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutWorkspaceInput | AttachmentCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: AttachmentCreateManyWorkspaceInputEnvelope
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -45908,6 +47607,20 @@ export namespace Prisma {
     deleteMany?: ExchangeRateScalarWhereInput | ExchangeRateScalarWhereInput[]
   }
 
+  export type AttachmentUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<AttachmentCreateWithoutWorkspaceInput, AttachmentUncheckedCreateWithoutWorkspaceInput> | AttachmentCreateWithoutWorkspaceInput[] | AttachmentUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutWorkspaceInput | AttachmentCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: AttachmentUpsertWithWhereUniqueWithoutWorkspaceInput | AttachmentUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: AttachmentCreateManyWorkspaceInputEnvelope
+    set?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    disconnect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    delete?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    update?: AttachmentUpdateWithWhereUniqueWithoutWorkspaceInput | AttachmentUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: AttachmentUpdateManyWithWhereWithoutWorkspaceInput | AttachmentUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+  }
+
   export type WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput = {
     create?: XOR<WorkspaceMemberCreateWithoutWorkspaceInput, WorkspaceMemberUncheckedCreateWithoutWorkspaceInput> | WorkspaceMemberCreateWithoutWorkspaceInput[] | WorkspaceMemberUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutWorkspaceInput | WorkspaceMemberCreateOrConnectWithoutWorkspaceInput[]
@@ -46168,6 +47881,20 @@ export namespace Prisma {
     update?: ExchangeRateUpdateWithWhereUniqueWithoutWorkspaceInput | ExchangeRateUpdateWithWhereUniqueWithoutWorkspaceInput[]
     updateMany?: ExchangeRateUpdateManyWithWhereWithoutWorkspaceInput | ExchangeRateUpdateManyWithWhereWithoutWorkspaceInput[]
     deleteMany?: ExchangeRateScalarWhereInput | ExchangeRateScalarWhereInput[]
+  }
+
+  export type AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<AttachmentCreateWithoutWorkspaceInput, AttachmentUncheckedCreateWithoutWorkspaceInput> | AttachmentCreateWithoutWorkspaceInput[] | AttachmentUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutWorkspaceInput | AttachmentCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: AttachmentUpsertWithWhereUniqueWithoutWorkspaceInput | AttachmentUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: AttachmentCreateManyWorkspaceInputEnvelope
+    set?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    disconnect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    delete?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    update?: AttachmentUpdateWithWhereUniqueWithoutWorkspaceInput | AttachmentUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: AttachmentUpdateManyWithWhereWithoutWorkspaceInput | AttachmentUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
   }
 
   export type WorkspaceCreateNestedOneWithoutCurrenciesInput = {
@@ -47796,6 +49523,28 @@ export namespace Prisma {
     update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutCustomFieldsInput, WorkspaceUpdateWithoutCustomFieldsInput>, WorkspaceUncheckedUpdateWithoutCustomFieldsInput>
   }
 
+  export type WorkspaceCreateNestedOneWithoutAttachmentsInput = {
+    create?: XOR<WorkspaceCreateWithoutAttachmentsInput, WorkspaceUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutAttachmentsInput
+    connect?: WorkspaceWhereUniqueInput
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutAttachmentsNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutAttachmentsInput, WorkspaceUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutAttachmentsInput
+    upsert?: WorkspaceUpsertWithoutAttachmentsInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutAttachmentsInput, WorkspaceUpdateWithoutAttachmentsInput>, WorkspaceUncheckedUpdateWithoutAttachmentsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -48221,6 +49970,33 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCustomFieldTypeFilter<$PrismaModel>
     _max?: NestedEnumCustomFieldTypeFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type WorkspaceMemberCreateWithoutWorkspaceInput = {
@@ -48924,6 +50700,48 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AttachmentCreateWithoutWorkspaceInput = {
+    id?: string
+    entityType: string
+    entityId: string
+    name: string
+    sizeBytes?: number | null
+    contentType?: string | null
+    r2Key?: string | null
+    status?: string
+    uploadId?: string | null
+    totalParts?: number
+    uploadedParts?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttachmentUncheckedCreateWithoutWorkspaceInput = {
+    id?: string
+    entityType: string
+    entityId: string
+    name: string
+    sizeBytes?: number | null
+    contentType?: string | null
+    r2Key?: string | null
+    status?: string
+    uploadId?: string | null
+    totalParts?: number
+    uploadedParts?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttachmentCreateOrConnectWithoutWorkspaceInput = {
+    where: AttachmentWhereUniqueInput
+    create: XOR<AttachmentCreateWithoutWorkspaceInput, AttachmentUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type AttachmentCreateManyWorkspaceInputEnvelope = {
+    data: AttachmentCreateManyWorkspaceInput | AttachmentCreateManyWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WorkspaceMemberUpsertWithWhereUniqueWithoutWorkspaceInput = {
     where: WorkspaceMemberWhereUniqueInput
     update: XOR<WorkspaceMemberUpdateWithoutWorkspaceInput, WorkspaceMemberUncheckedUpdateWithoutWorkspaceInput>
@@ -49542,6 +51360,42 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ExchangeRate"> | Date | string
   }
 
+  export type AttachmentUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: AttachmentWhereUniqueInput
+    update: XOR<AttachmentUpdateWithoutWorkspaceInput, AttachmentUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<AttachmentCreateWithoutWorkspaceInput, AttachmentUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type AttachmentUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: AttachmentWhereUniqueInput
+    data: XOR<AttachmentUpdateWithoutWorkspaceInput, AttachmentUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type AttachmentUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: AttachmentScalarWhereInput
+    data: XOR<AttachmentUpdateManyMutationInput, AttachmentUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type AttachmentScalarWhereInput = {
+    AND?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+    OR?: AttachmentScalarWhereInput[]
+    NOT?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+    id?: StringFilter<"Attachment"> | string
+    workspaceId?: StringFilter<"Attachment"> | string
+    entityType?: StringFilter<"Attachment"> | string
+    entityId?: StringFilter<"Attachment"> | string
+    name?: StringFilter<"Attachment"> | string
+    sizeBytes?: IntNullableFilter<"Attachment"> | number | null
+    contentType?: StringNullableFilter<"Attachment"> | string | null
+    r2Key?: StringNullableFilter<"Attachment"> | string | null
+    status?: StringFilter<"Attachment"> | string
+    uploadId?: StringNullableFilter<"Attachment"> | string | null
+    totalParts?: IntFilter<"Attachment"> | number
+    uploadedParts?: JsonFilter<"Attachment">
+    createdAt?: DateTimeFilter<"Attachment"> | Date | string
+    updatedAt?: DateTimeFilter<"Attachment"> | Date | string
+  }
+
   export type WorkspaceCreateWithoutCurrenciesInput = {
     id?: string
     name: string
@@ -49569,6 +51423,7 @@ export namespace Prisma {
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutCurrenciesInput = {
@@ -49598,6 +51453,7 @@ export namespace Prisma {
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutCurrenciesInput = {
@@ -49643,6 +51499,7 @@ export namespace Prisma {
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutCurrenciesInput = {
@@ -49672,6 +51529,7 @@ export namespace Prisma {
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateWithoutExchangeRatesInput = {
@@ -49701,6 +51559,7 @@ export namespace Prisma {
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutExchangeRatesInput = {
@@ -49730,6 +51589,7 @@ export namespace Prisma {
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutExchangeRatesInput = {
@@ -49775,6 +51635,7 @@ export namespace Prisma {
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutExchangeRatesInput = {
@@ -49804,6 +51665,7 @@ export namespace Prisma {
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateWithoutMembersInput = {
@@ -49833,6 +51695,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutMembersInput = {
@@ -49862,6 +51725,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutMembersInput = {
@@ -49970,6 +51834,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutMembersInput = {
@@ -49999,6 +51864,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type RoleUpsertWithoutMembersInput = {
@@ -50091,6 +51957,7 @@ export namespace Prisma {
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutRolesInput = {
@@ -50120,6 +51987,7 @@ export namespace Prisma {
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutRolesInput = {
@@ -50197,6 +52065,7 @@ export namespace Prisma {
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutRolesInput = {
@@ -50226,6 +52095,7 @@ export namespace Prisma {
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceMemberUpsertWithWhereUniqueWithoutRoleInput = {
@@ -50367,6 +52237,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutCompaniesInput = {
@@ -50396,6 +52267,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutCompaniesInput = {
@@ -50579,6 +52451,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutCompaniesInput = {
@@ -50608,6 +52481,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type ContactCompanyUpsertWithWhereUniqueWithoutCompanyInput = {
@@ -50697,6 +52571,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutContactsInput = {
@@ -50726,6 +52601,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutContactsInput = {
@@ -50957,6 +52833,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutContactsInput = {
@@ -50986,6 +52863,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type ContactCompanyUpsertWithWhereUniqueWithoutContactInput = {
@@ -51317,6 +53195,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutServicesInput = {
@@ -51346,6 +53225,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutServicesInput = {
@@ -51459,6 +53339,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutServicesInput = {
@@ -51488,6 +53369,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type DealItemUpsertWithWhereUniqueWithoutServiceInput = {
@@ -51561,6 +53443,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutPipelinesInput = {
@@ -51590,6 +53473,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutPipelinesInput = {
@@ -51727,6 +53611,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutPipelinesInput = {
@@ -51756,6 +53641,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type PipelineStageUpsertWithWhereUniqueWithoutPipelineInput = {
@@ -51960,6 +53846,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutDealsInput = {
@@ -51989,6 +53876,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutDealsInput = {
@@ -52287,6 +54175,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutDealsInput = {
@@ -52316,6 +54205,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type PipelineUpsertWithoutDealsInput = {
@@ -52934,6 +54824,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutProjectStatusesInput = {
@@ -52963,6 +54854,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutProjectStatusesInput = {
@@ -53058,6 +54950,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutProjectStatusesInput = {
@@ -53087,6 +54980,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type ProjectUpsertWithWhereUniqueWithoutStatusInput = {
@@ -53132,6 +55026,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutProjectsInput = {
@@ -53161,6 +55056,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutProjectsInput = {
@@ -53467,6 +55363,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutProjectsInput = {
@@ -53496,6 +55393,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type DealUpsertWithoutProjectInput = {
@@ -53736,6 +55634,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutTaskStatusesInput = {
@@ -53765,6 +55664,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutTaskStatusesInput = {
@@ -53852,6 +55752,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutTaskStatusesInput = {
@@ -53881,6 +55782,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type TaskUpsertWithWhereUniqueWithoutStatusInput = {
@@ -54210,6 +56112,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutInvoicesInput = {
@@ -54239,6 +56142,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutInvoicesInput = {
@@ -54406,6 +56310,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutInvoicesInput = {
@@ -54435,6 +56340,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type ProjectUpsertWithoutInvoicesInput = {
@@ -54716,6 +56622,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutWhatsappConfigInput = {
@@ -54745,6 +56652,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutWhatsappConfigInput = {
@@ -54790,6 +56698,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutWhatsappConfigInput = {
@@ -54819,6 +56728,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateWithoutWhatsappTemplatesInput = {
@@ -54848,6 +56758,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutWhatsappTemplatesInput = {
@@ -54877,6 +56788,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutWhatsappTemplatesInput = {
@@ -54922,6 +56834,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutWhatsappTemplatesInput = {
@@ -54951,6 +56864,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type ContactCreateWithoutWhatsappMessagesInput = {
@@ -55088,6 +57002,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutActivityLogsInput = {
@@ -55117,6 +57032,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutActivityLogsInput = {
@@ -55162,6 +57078,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutActivityLogsInput = {
@@ -55191,6 +57108,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateWithoutIndustriesInput = {
@@ -55220,6 +57138,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutIndustriesInput = {
@@ -55249,6 +57168,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutIndustriesInput = {
@@ -55294,6 +57214,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutIndustriesInput = {
@@ -55323,6 +57244,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateWithoutReferralsInput = {
@@ -55352,6 +57274,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutReferralsInput = {
@@ -55381,6 +57304,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutReferralsInput = {
@@ -55426,6 +57350,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutReferralsInput = {
@@ -55455,6 +57380,7 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateWithoutCustomFieldsInput = {
@@ -55484,6 +57410,7 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutCustomFieldsInput = {
@@ -55513,6 +57440,7 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutCustomFieldsInput = {
@@ -55558,6 +57486,7 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutCustomFieldsInput = {
@@ -55582,6 +57511,143 @@ export namespace Prisma {
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceCreateWithoutAttachmentsInput = {
+    id?: string
+    name: string
+    slug: string
+    baseCurrency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
+    referrals?: ReferralCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceCreateNestedManyWithoutWorkspaceInput
+    deals?: DealCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutAttachmentsInput = {
+    id?: string
+    name: string
+    slug: string
+    baseCurrency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutAttachmentsInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutAttachmentsInput, WorkspaceUncheckedCreateWithoutAttachmentsInput>
+  }
+
+  export type WorkspaceUpsertWithoutAttachmentsInput = {
+    update: XOR<WorkspaceUpdateWithoutAttachmentsInput, WorkspaceUncheckedUpdateWithoutAttachmentsInput>
+    create: XOR<WorkspaceCreateWithoutAttachmentsInput, WorkspaceUncheckedCreateWithoutAttachmentsInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutAttachmentsInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutAttachmentsInput, WorkspaceUncheckedUpdateWithoutAttachmentsInput>
+  }
+
+  export type WorkspaceUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
+    referrals?: ReferralUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -55812,6 +57878,22 @@ export namespace Prisma {
     rate: Decimal | DecimalJsLike | number | string
     effectiveDate?: Date | string
     createdAt?: Date | string
+  }
+
+  export type AttachmentCreateManyWorkspaceInput = {
+    id?: string
+    entityType: string
+    entityId: string
+    name: string
+    sizeBytes?: number | null
+    contentType?: string | null
+    r2Key?: string | null
+    status?: string
+    uploadId?: string | null
+    totalParts?: number
+    uploadedParts?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type WorkspaceMemberUpdateWithoutWorkspaceInput = {
@@ -56531,6 +58613,54 @@ export namespace Prisma {
     rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     effectiveDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttachmentUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    contentType?: NullableStringFieldUpdateOperationsInput | string | null
+    r2Key?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    uploadId?: NullableStringFieldUpdateOperationsInput | string | null
+    totalParts?: IntFieldUpdateOperationsInput | number
+    uploadedParts?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttachmentUncheckedUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    contentType?: NullableStringFieldUpdateOperationsInput | string | null
+    r2Key?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    uploadId?: NullableStringFieldUpdateOperationsInput | string | null
+    totalParts?: IntFieldUpdateOperationsInput | number
+    uploadedParts?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttachmentUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    contentType?: NullableStringFieldUpdateOperationsInput | string | null
+    r2Key?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    uploadId?: NullableStringFieldUpdateOperationsInput | string | null
+    totalParts?: IntFieldUpdateOperationsInput | number
+    uploadedParts?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskCreateManyAssigneeInput = {

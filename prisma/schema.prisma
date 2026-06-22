@@ -38,6 +38,7 @@ model Workspace {
   roles              Role[]
   currencies         Currency[]
   exchangeRates      ExchangeRate[]
+  attachments        Attachment[]
 }
 
 // ─── Currencies & Exchange Rates ──────────────────────────────────────────────
@@ -580,6 +581,30 @@ model CustomFieldDef {
   workspace   Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   @@unique([workspaceId, entityType, name])
+}
+
+// ─── Attachments (R2 File Storage) ──────────────────────────────────────────
+
+model Attachment {
+  id            String    @id @default(cuid())
+  workspaceId   String
+  entityType    String    // "company", "contact", "deal", "project", "invoice", "task", "logo"
+  entityId      String    // ID of the parent record
+  name          String
+  sizeBytes     Int?
+  contentType   String?
+  r2Key         String?
+  status        String    @default("uploading") // uploading | uploaded | failed
+  uploadId      String?   // R2 multipart upload ID
+  totalParts    Int       @default(1)
+  uploadedParts Json      @default("[]")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, entityType, entityId])
+  @@index([r2Key])
 }
 
 enum CustomFieldEntity {
