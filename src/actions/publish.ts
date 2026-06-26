@@ -231,6 +231,65 @@ export async function getAllScheduledItems(projectId: string | null) {
   });
 }
 
+export async function getPublishPageData(projectId: string | null, month: number, year: number) {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canView(member, "publish")) throw new Error("Permission denied");
+
+  const startDate = new Date(year, month, 1);
+  const endDate = new Date(year, month + 1, 0, 23, 59, 59);
+
+  const scheduleInclude = {
+    project: { select: { id: true, name: true } },
+    task: {
+      select: {
+        id: true,
+        title: true,
+        taskNumber: true,
+        checklistItems: {
+          where: { phase: "delivery" as const },
+          orderBy: { order: "asc" as const },
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            attachmentId: true,
+            textValue: true,
+            allowedFormats: true,
+            templateItem: {
+              select: {
+                template: { select: { name: true, icon: true, color: true } },
+              },
+            },
+          },
+        },
+      },
+    },
+    scheduler: { select: { id: true, name: true, email: true } },
+  } as const;
+
+  const [schedule, allItems] = await Promise.all([
+    db.publishItem.findMany({
+      where: {
+        workspaceId: workspace.id,
+        ...(projectId ? { projectId } : {}),
+        scheduledDate: { gte: startDate, lte: endDate },
+      },
+      include: scheduleInclude,
+      orderBy: { scheduledDate: "asc" },
+    }),
+    db.publishItem.findMany({
+      where: {
+        workspaceId: workspace.id,
+        ...(projectId ? { projectId } : {}),
+      },
+      include: scheduleInclude,
+      orderBy: { scheduledDate: "asc" },
+    }),
+  ]);
+
+  return { schedule, allItems };
+}
+
 export async function rescheduleTask(publishItemId: string, newDate: string) {
   const { workspace, member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "publish")) throw new Error("Permission denied");

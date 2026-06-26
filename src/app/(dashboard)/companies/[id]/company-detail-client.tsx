@@ -223,7 +223,7 @@ export function CompanyDetailClient({
                 className="flex items-start gap-3 p-3 rounded-lg bg-card border border-border group"
               >
                 {note.userImage ? (
-                  <img src={note.userImage} alt="" className="w-6 h-6 rounded-full shrink-0" />
+                  <img src={note.userImage} alt="" loading="lazy" className="w-6 h-6 rounded-full shrink-0" />
                 ) : (
                   <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center text-[10px] font-semibold text-primary shrink-0">
                     {(note.userName || "?").charAt(0)}

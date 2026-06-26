@@ -105,20 +105,25 @@ export async function getLatestRates() {
   const workspace = await requireWorkspace();
   const currencies = await db.currency.findMany({
     where: { workspaceId: workspace.id, isBase: false, active: true },
+    select: { code: true },
+  });
+
+  const codes = currencies.map((c) => c.code);
+  if (codes.length === 0) return {} as Record<string, { rate: number; date: Date } | null>;
+
+  const allRates = await db.exchangeRate.findMany({
+    where: {
+      workspaceId: workspace.id,
+      fromCurrency: { in: codes },
+      toCurrency: workspace.baseCurrency,
+    },
+    orderBy: { effectiveDate: "desc" },
   });
 
   const rates: Record<string, { rate: number; date: Date } | null> = {};
-
-  for (const curr of currencies) {
-    const latest = await db.exchangeRate.findFirst({
-      where: {
-        workspaceId: workspace.id,
-        fromCurrency: curr.code,
-        toCurrency: workspace.baseCurrency,
-      },
-      orderBy: { effectiveDate: "desc" },
-    });
-    rates[curr.code] = latest ? { rate: Number(latest.rate), date: latest.effectiveDate } : null;
+  for (const code of codes) {
+    const latest = allRates.find((r) => r.fromCurrency === code);
+    rates[code] = latest ? { rate: Number(latest.rate), date: latest.effectiveDate } : null;
   }
 
   return rates;
@@ -170,8 +175,8 @@ export async function getWorkspaceCurrency() {
   };
 }
 
-export async function getLatestRateForCurrency(fromCurrency: string, asOfDate?: Date): Promise<number | null> {
-  const workspace = await requireWorkspace();
+export async function getLatestRateForCurrency(fromCurrency: string, asOfDate?: Date, workspaceOverride?: { id: string; baseCurrency: string }): Promise<number | null> {
+  const workspace = workspaceOverride ?? await requireWorkspace();
   if (fromCurrency === workspace.baseCurrency) return 1;
 
   const latest = await db.exchangeRate.findFirst({

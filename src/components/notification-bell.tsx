@@ -46,8 +46,26 @@ export function NotificationBell() {
 
   useEffect(() => {
     fetchCount();
-    const interval = setInterval(fetchCount, POLL_INTERVAL);
-    return () => clearInterval(interval);
+    let interval: ReturnType<typeof setInterval> | null = null;
+
+    const start = () => {
+      if (!interval) interval = setInterval(fetchCount, POLL_INTERVAL);
+    };
+    const stop = () => {
+      if (interval) { clearInterval(interval); interval = null; }
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") { fetchCount(); start(); }
+      else stop();
+    };
+
+    if (document.visibilityState === "visible") start();
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      stop();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
   }, [fetchCount]);
 
   useEffect(() => {

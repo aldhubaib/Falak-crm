@@ -59,7 +59,7 @@ export function AvatarUpload({
         )}
       >
         {preview ? (
-          <img src={preview} alt="Avatar" className="w-full h-full object-cover" />
+          <img src={preview} alt="Avatar" loading="lazy" className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full bg-primary/15 flex items-center justify-center text-primary font-semibold text-lg">
             {fallback}

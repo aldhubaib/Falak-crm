@@ -11,9 +11,18 @@ export async function getContacts() {
   const workspace = await requireWorkspace();
   return db.contact.findMany({
     where: { workspaceId: workspace.id, deletedAt: null },
-    include: {
+    select: {
+      id: true,
+      firstName: true,
+      middleName: true,
+      lastName: true,
+      mobile: true,
+      email: true,
+      country: true,
+      role: true,
+      createdAt: true,
       companies: {
-        include: { company: { select: { id: true, name: true } } },
+        select: { company: { select: { id: true, name: true } }, primary: true, role: true },
         orderBy: { primary: "desc" },
       },
     },

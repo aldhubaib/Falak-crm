@@ -12,7 +12,7 @@ import { deleteObject } from "@/lib/storage";
 export async function getProjects() {
   const workspace = await requireWorkspace();
   return db.project.findMany({
-    where: { workspaceId: workspace.id },
+    where: { workspaceId: workspace.id, deletedAt: null },
     select: {
       id: true,
       name: true,
@@ -53,7 +53,10 @@ export async function getProject(id: string) {
         },
         orderBy: { order: "asc" },
       },
-      invoices: { orderBy: { createdAt: "desc" } },
+      invoices: {
+        select: { id: true, number: true, status: true, total: true, currency: true, createdAt: true },
+        orderBy: { createdAt: "desc" },
+      },
       collaborators: true,
       projectTemplates: {
         include: {

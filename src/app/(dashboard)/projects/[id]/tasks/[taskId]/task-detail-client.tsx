@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { updateTask, deleteTask, setChecklistItemAttachment, removeChecklistItemAttachment, saveChecklistItemText, syncTaskTemplates, createFullTask } from "@/actions/projects";
 import { ArrowLeft, Trash2, Save, Loader2, Paperclip, CheckCircle2, AlertCircle, ChevronDown, Download } from "lucide-react";
 import { TaskComments } from "@/components/task-comments";
@@ -140,18 +140,18 @@ export function TaskDetailClient({
   const selectedTemplate = isNew && newTemplateId
     ? availableTemplates.find((t) => t.id === newTemplateId)
     : null;
-  const newModeItems = selectedTemplate?.items.filter((item) => {
+  const newModeItems = useMemo(() => selectedTemplate?.items.filter((item) => {
     if ((item.phase || "create") !== "create") return false;
     if (!item.visibleFromStageId) return true;
     const visibleFromOrder = taskStatuses.find((s) => s.id === item.visibleFromStageId)?.order ?? 0;
     return currentStageOrder >= visibleFromOrder;
-  }) ?? [];
+  }) ?? [], [selectedTemplate, taskStatuses, currentStageOrder]);
 
-  const visibleItems = checklistItems.filter((item) => {
+  const visibleItems = useMemo(() => checklistItems.filter((item) => {
     if (!item.visibleFromStageId) return true;
     const visibleFromOrder = taskStatuses.find((s) => s.id === item.visibleFromStageId)?.order ?? 0;
     return currentStageOrder >= visibleFromOrder;
-  });
+  }), [checklistItems, taskStatuses, currentStageOrder]);
 
   const [localCompletions, setLocalCompletions] = useState<Record<string, boolean>>(() => {
     const map: Record<string, boolean> = {};
@@ -169,7 +169,7 @@ export function TaskDetailClient({
   };
 
   const totalCount = visibleItems.length;
-  const mandatoryItems = visibleItems.filter((i) => i.mandatory);
+  const mandatoryItems = useMemo(() => visibleItems.filter((i) => i.mandatory), [visibleItems]);
   const allMandatoryFilled = mandatoryItems.every((i) => localCompletions[i.id]);
   const titleValid = title.trim().length > 0 && title.trim() !== "Untitled Task";
   const hasTemplates = !!activeTemplateId;
@@ -955,7 +955,7 @@ function FilePreview({ file }: { file: File }) {
   if (file.type.startsWith("image/")) {
     return (
       <div className="p-2 flex justify-center bg-black/20">
-        <img src={url} alt={file.name} className="max-h-48 rounded-lg object-contain" />
+        <img src={url} alt={file.name} loading="lazy" className="max-h-48 rounded-lg object-contain" />
       </div>
     );
   }
@@ -1272,7 +1272,7 @@ function ChecklistItemRow({
               <div className="rounded-xl border border-green-500/30 bg-green-500/5 overflow-hidden">
                 {previewUrl && fileCategory === "image" && (
                   <div className="p-2 flex justify-center bg-black/20">
-                    <img src={previewUrl} alt={displayName} className="max-h-48 rounded-lg object-contain" />
+                    <img src={previewUrl} alt={displayName} loading="lazy" className="max-h-48 rounded-lg object-contain" />
                   </div>
                 )}
                 {previewUrl && fileCategory === "audio" && (

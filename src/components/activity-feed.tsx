@@ -58,7 +58,7 @@ export function ActivityFeed({ activities }: { activities: Activity[] }) {
         <div key={activity.id} className="flex gap-3 py-2.5">
           {/* User avatar */}
           {activity.userImage ? (
-            <img src={activity.userImage} alt="" className="w-7 h-7 rounded-full shrink-0" />
+            <img src={activity.userImage} alt="" loading="lazy" className="w-7 h-7 rounded-full shrink-0" />
           ) : (
             <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-[10px] font-semibold text-muted-foreground shrink-0">
               {(activity.userName || "?").charAt(0)}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo, memo } from "react";
 import { moveDeal, createProjectFromDeal } from "@/actions/deals";
 import { Plus, ArrowRight, Rocket } from "lucide-react";
 import Link from "next/link";
@@ -49,10 +50,10 @@ export function DealsClient({
     );
   }
 
-  const dealsByStage = pipeline.stages.map((stage) => ({
+  const dealsByStage = useMemo(() => pipeline.stages.map((stage) => ({
     ...stage,
     deals: pipeline.deals.filter((d) => d.stageId === stage.id),
-  }));
+  })), [pipeline.stages, pipeline.deals]);
 
   return (
     <div className="p-6 h-full">
@@ -126,7 +127,7 @@ export function DealsClient({
   );
 }
 
-function DealCard({
+const DealCard = memo(function DealCard({
   deal,
   stages,
   currentStage,
@@ -206,5 +207,5 @@ function DealCard({
       )}
     </div>
   );
-}
+});
 

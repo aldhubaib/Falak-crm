@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, type DragEvent } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback, memo, type DragEvent } from "react";
 import { updateTaskStatus, getStageGateBlockers } from "@/actions/projects";
 import { createInvoiceFromProject } from "@/actions/invoices";
 import { addTaskComment } from "@/actions/comments";
@@ -176,7 +176,7 @@ function ProjectThumbnail({ thumbnailId, name }: { thumbnailId: string | null; n
   }, [thumbnailId]);
 
   if (url) {
-    return <img src={url} alt={name} className="w-8 h-8 rounded-lg object-cover" />;
+    return <img src={url} alt={name} loading="lazy" className="w-8 h-8 rounded-lg object-cover" />;
   }
 
   const initials = name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
@@ -224,16 +224,38 @@ function KanbanBoard({
 
   const [optimisticMoves, setOptimisticMoves] = useState<Record<string, string>>({});
 
-  const sorted = [...taskStatuses].filter((s) => s.name.toLowerCase() !== "published").sort((a, b) => a.order - b.order);
+  const sorted = useMemo(
+    () => [...taskStatuses].filter((s) => s.name.toLowerCase() !== "published").sort((a, b) => a.order - b.order),
+    [taskStatuses]
+  );
 
-  const tasksWithOptimistic = project.tasks.map((t) => {
-    const overrideStatusId = optimisticMoves[t.id];
-    if (!overrideStatusId || overrideStatusId === t.status?.id) return t;
-    const newStatus = taskStatuses.find((s) => s.id === overrideStatusId);
-    return newStatus ? { ...t, status: newStatus } : t;
-  });
+  const tasksWithOptimistic = useMemo(
+    () => project.tasks.map((t) => {
+      const overrideStatusId = optimisticMoves[t.id];
+      if (!overrideStatusId || overrideStatusId === t.status?.id) return t;
+      const newStatus = taskStatuses.find((s) => s.id === overrideStatusId);
+      return newStatus ? { ...t, status: newStatus } : t;
+    }),
+    [project.tasks, optimisticMoves, taskStatuses]
+  );
 
-  const moveTask = (taskId: string, statusId: string) => {
+  const tasksByStatus = useMemo(() => {
+    const map = new Map<string, Task[]>();
+    for (const s of sorted) map.set(s.id, []);
+    map.set("__none__", []);
+    for (const t of tasksWithOptimistic) {
+      const key = t.status?.id ?? "__none__";
+      const arr = map.get(key);
+      if (arr) arr.push(t);
+      else map.set(key, [t]);
+    }
+    for (const [key, arr] of map) {
+      map.set(key, arr.sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0)));
+    }
+    return map;
+  }, [sorted, tasksWithOptimistic]);
+
+  const moveTask = useCallback((taskId: string, statusId: string) => {
     setOptimisticMoves((prev) => ({ ...prev, [taskId]: statusId }));
 
     updateTaskStatus(taskId, statusId, project.id)
@@ -245,32 +267,32 @@ function KanbanBoard({
           return next;
         });
       });
-  };
+  }, [project.id, router]);
 
-  const handleDragStart = (e: DragEvent, taskId: string) => {
+  const handleDragStart = useCallback((e: DragEvent, taskId: string) => {
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/plain", taskId);
     const el = e.currentTarget as HTMLElement;
     const rect = el.getBoundingClientRect();
     e.dataTransfer.setDragImage(el, e.clientX - rect.left, e.clientY - rect.top);
     setDraggingTaskId(taskId);
-  };
+  }, []);
 
-  const handleDragOver = (e: DragEvent, statusId: string) => {
+  const handleDragOver = useCallback((e: DragEvent, statusId: string) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
     setDragOverColumn(statusId);
-  };
+  }, []);
 
-  const handleDragLeave = (e: DragEvent) => {
+  const handleDragLeave = useCallback((e: DragEvent) => {
     const target = e.currentTarget as HTMLElement;
     const related = e.relatedTarget as HTMLElement | null;
     if (!related || !target.contains(related)) {
       setDragOverColumn(null);
     }
-  };
+  }, []);
 
-  const handleDrop = async (e: DragEvent, statusId: string) => {
+  const handleDrop = useCallback(async (e: DragEvent, statusId: string) => {
     e.preventDefault();
     setDragOverColumn(null);
     setDraggingTaskId(null);
@@ -350,18 +372,18 @@ function KanbanBoard({
     }
 
     moveTask(taskId, statusId);
-  };
+  }, [canEdit, canEditProject, taskPermissions, tasksWithOptimistic, sorted, moveTask]);
 
-  const handleDragEnd = () => {
+  const handleDragEnd = useCallback(() => {
     setDraggingTaskId(null);
     setDragOverColumn(null);
-  };
+  }, []);
 
-  const handleConfirmMove = () => {
+  const handleConfirmMove = useCallback(() => {
     if (!confirmModal) return;
     moveTask(confirmModal.taskId, confirmModal.statusId);
     setConfirmModal(null);
-  };
+  }, [confirmModal, moveTask]);
 
   const handleDeclineSubmit = async (comment: string, file?: File) => {
     if (!declineModal) return;
@@ -451,14 +473,12 @@ function KanbanBoard({
         </div>
       )}
 
-      <div className="grid gap-3 pb-2" style={{ gridTemplateColumns: `repeat(${sorted.length + (tasksWithOptimistic.some((t) => !t.status) ? 1 : 0)}, 1fr)` }}>
-        {sorted.map((status, idx) => {
-          const tasks = tasksWithOptimistic.filter((t) => t.status?.id === status.id).sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
-          return (
+      <div className="grid gap-3 pb-2" style={{ gridTemplateColumns: `repeat(${sorted.length + ((tasksByStatus.get("__none__")?.length ?? 0) > 0 ? 1 : 0)}, 1fr)` }}>
+        {sorted.map((status, idx) => (
             <KanbanColumn
               key={status.id}
               status={status}
-              tasks={tasks}
+              tasks={tasksByStatus.get(status.id) ?? []}
               projectId={project.id}
               canEdit={canEdit}
               onAddTask={idx === 0 && (canEditProject || !taskPermissions || taskPermissions.stages?.[status.id]?.create) ? () => {
@@ -473,13 +493,12 @@ function KanbanBoard({
               onDragEnd={handleDragEnd}
               gateError={gateError}
             />
-          );
-        })}
+        ))}
 
-        {tasksWithOptimistic.some((t) => !t.status) && (
+        {(tasksByStatus.get("__none__")?.length ?? 0) > 0 && (
           <KanbanColumn
             status={{ id: "__none__", name: "No Status", color: "#6b7280", order: 999 }}
-            tasks={tasksWithOptimistic.filter((t) => !t.status)}
+            tasks={tasksByStatus.get("__none__") ?? []}
             projectId={project.id}
             canEdit={canEdit}
             draggingTaskId={draggingTaskId}
@@ -604,7 +623,7 @@ function DeclineTaskModal({
   );
 }
 
-function KanbanColumn({
+const KanbanColumn = memo(function KanbanColumn({
   status,
   tasks,
   projectId,
@@ -680,9 +699,9 @@ function KanbanColumn({
       </div>
     </div>
   );
-}
+});
 
-function TaskCard({
+const TaskCard = memo(function TaskCard({
   task,
   projectId,
   canEdit,
@@ -758,7 +777,7 @@ function TaskCard({
       </div>
     </div>
   );
-}
+});
 
 function AssigneeAvatar({ name }: { name: string | null }) {
   const initials = name

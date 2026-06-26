@@ -12,7 +12,16 @@ export async function getInvoices() {
   const workspace = await requireWorkspace();
   return db.invoice.findMany({
     where: { workspaceId: workspace.id },
-    include: {
+    select: {
+      id: true,
+      number: true,
+      status: true,
+      total: true,
+      currency: true,
+      createdAt: true,
+      dueDate: true,
+      sentAt: true,
+      paidAt: true,
       contact: { select: { id: true, firstName: true, lastName: true, mobile: true } },
       project: {
         select: {

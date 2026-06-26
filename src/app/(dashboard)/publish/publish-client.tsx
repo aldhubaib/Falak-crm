@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -117,19 +117,19 @@ export function PublishClient({ projects }: { projects: Project[] }) {
   const loadSchedule = useCallback(async () => {
     setLoading(true);
     const data = await getPublishSchedule(selectedProjectId, currentMonth, currentYear);
-    setSchedule(JSON.parse(JSON.stringify(data)));
+    setSchedule(data as unknown as ScheduledItem[]);
     setLoading(false);
   }, [selectedProjectId, currentMonth, currentYear]);
 
   const loadAllItems = useCallback(async () => {
     const data = await getAllScheduledItems(selectedProjectId);
-    setAllItems(JSON.parse(JSON.stringify(data)));
+    setAllItems(data as unknown as ScheduledItem[]);
   }, [selectedProjectId]);
 
   const loadDeliveryTasks = useCallback(async () => {
     if (!selectedProjectId) { setDeliveryTasks([]); return; }
     const data = await getDeliveryTasks(selectedProjectId);
-    setDeliveryTasks(JSON.parse(JSON.stringify(data)));
+    setDeliveryTasks(data as unknown as DeliveryTask[]);
   }, [selectedProjectId]);
 
   useEffect(() => { loadSchedule(); }, [loadSchedule]);
@@ -160,13 +160,41 @@ export function PublishClient({ projects }: { projects: Project[] }) {
     return d.toISOString().split("T")[0];
   };
 
-  const getItemsForDate = (dateStr: string) => {
-    const source = viewMode === "schedule" ? allItems : schedule;
-    return source.filter((item) => item.scheduledDate.split("T")[0] === dateStr);
-  };
+  const scheduleByDate = useMemo(() => {
+    const map = new Map<string, ScheduledItem[]>();
+    for (const item of schedule) {
+      const ds = String(item.scheduledDate).split("T")[0];
+      const arr = map.get(ds);
+      if (arr) arr.push(item);
+      else map.set(ds, [item]);
+    }
+    return map;
+  }, [schedule]);
 
-  const unscheduledTasks = deliveryTasks.filter((t) => !t.publishItem);
-  const scheduledTasks = deliveryTasks.filter((t) => t.publishItem);
+  const allItemsByDate = useMemo(() => {
+    const map = new Map<string, ScheduledItem[]>();
+    for (const item of allItems) {
+      const ds = String(item.scheduledDate).split("T")[0];
+      const arr = map.get(ds);
+      if (arr) arr.push(item);
+      else map.set(ds, [item]);
+    }
+    return map;
+  }, [allItems]);
+
+  const getItemsForDate = useCallback((dateStr: string) => {
+    const source = viewMode === "schedule" ? allItemsByDate : scheduleByDate;
+    return source.get(dateStr) ?? [];
+  }, [viewMode, allItemsByDate, scheduleByDate]);
+
+  const unscheduledTasks = useMemo(() => deliveryTasks.filter((t) => !t.publishItem), [deliveryTasks]);
+  const scheduledTasks = useMemo(() => deliveryTasks.filter((t) => t.publishItem), [deliveryTasks]);
+
+  const stats = useMemo(() => ({
+    scheduled: allItems.filter((s) => !s.published).length,
+    published: allItems.filter((s) => s.published).length,
+    queued: unscheduledTasks.length,
+  }), [allItems, unscheduledTasks]);
 
   const handleDrop = async (dateStr: string) => {
     if (!dragTask || !selectedProjectId) return;
@@ -369,13 +397,13 @@ export function PublishClient({ projects }: { projects: Project[] }) {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-4 text-[11px] mr-2">
               <span className="text-muted-foreground">
-                <span className="text-foreground font-medium">{allItems.filter((s) => !s.published).length}</span> scheduled
+                <span className="text-foreground font-medium">{stats.scheduled}</span> scheduled
               </span>
               <span className="text-muted-foreground">
-                <span className="text-green-400 font-medium">{allItems.filter((s) => s.published).length}</span> published
+                <span className="text-green-400 font-medium">{stats.published}</span> published
               </span>
               <span className="text-muted-foreground">
-                <span className="text-amber-400 font-medium">{unscheduledTasks.length}</span> queued
+                <span className="text-amber-400 font-medium">{stats.queued}</span> queued
               </span>
             </div>
 
@@ -785,7 +813,7 @@ function DeliveryFilePreview({ file }: { file: ScheduledDeliveryFile }) {
 
       {url && category === "image" && (
         <div className="px-3 pb-2">
-          <img src={url} alt={file.name} className="w-full max-h-52 rounded-lg object-contain bg-black/30" />
+          <img src={url} alt={file.name} loading="lazy" className="w-full max-h-52 rounded-lg object-contain bg-black/30" />
         </div>
       )}
 

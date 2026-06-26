@@ -11,7 +11,16 @@ export async function getCompanies() {
   const workspace = await requireWorkspace();
   return db.company.findMany({
     where: { workspaceId: workspace.id, deletedAt: null },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      nameAr: true,
+      industry: true,
+      referral: true,
+      address: true,
+      phone: true,
+      email: true,
+      createdAt: true,
       _count: {
         select: {
           contacts: true,

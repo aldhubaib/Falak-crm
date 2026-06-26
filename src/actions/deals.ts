@@ -17,13 +17,39 @@ export async function getPipeline() {
       stages: { orderBy: { order: "asc" } },
       deals: {
         where: { deletedAt: null },
-        include: {
+        select: {
+          id: true,
+          title: true,
+          value: true,
+          currency: true,
+          stageId: true,
+          companyId: true,
+          contactId: true,
+          ownerId: true,
+          ownerName: true,
+          createdAt: true,
+          expectedCloseDate: true,
           company: { select: { id: true, name: true } },
           contact: { select: { id: true, firstName: true, lastName: true, mobile: true } },
           stage: true,
-          items: { include: { service: true } },
         },
         orderBy: { createdAt: "desc" },
+      },
+    },
+  });
+  return pipeline;
+}
+
+export async function getPipelineStages() {
+  const workspace = await requireWorkspace();
+  const pipeline = await db.pipeline.findFirst({
+    where: { workspaceId: workspace.id, isDefault: true },
+    select: {
+      id: true,
+      name: true,
+      stages: {
+        select: { id: true, name: true, order: true, color: true, type: true },
+        orderBy: { order: "asc" },
       },
     },
   });
@@ -34,7 +60,15 @@ export async function getDeals() {
   const workspace = await requireWorkspace();
   return db.deal.findMany({
     where: { workspaceId: workspace.id, deletedAt: null },
-    include: {
+    select: {
+      id: true,
+      title: true,
+      value: true,
+      currency: true,
+      stageId: true,
+      createdAt: true,
+      expectedCloseDate: true,
+      ownerName: true,
       company: { select: { id: true, name: true } },
       contact: { select: { id: true, firstName: true, lastName: true, mobile: true } },
       stage: true,

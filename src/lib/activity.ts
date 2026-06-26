@@ -9,11 +9,12 @@ type LogParams = {
   action: string;
   changes?: Record<string, { from: unknown; to: unknown }>;
   metadata?: Record<string, unknown>;
+  workspaceId?: string;
 };
 
 export async function logActivity(params: LogParams) {
   try {
-    const workspace = await requireWorkspace();
+    const workspaceId = params.workspaceId ?? (await requireWorkspace()).id;
     const { userId } = await auth();
     const user = await currentUser();
 
@@ -21,7 +22,7 @@ export async function logActivity(params: LogParams) {
 
     await db.activityLog.create({
       data: {
-        workspaceId: workspace.id,
+        workspaceId,
         userId,
         userName: user?.fullName || user?.firstName || undefined,
         userImage: user?.imageUrl || undefined,

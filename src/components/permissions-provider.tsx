@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { type Permissions } from "@/lib/permissions";
 
 const DEFAULT_PERMISSIONS: Permissions = {
@@ -22,8 +22,19 @@ export function PermissionsProvider({
   permissions: Permissions;
   children: ReactNode;
 }) {
+  const stable = useMemo(() => permissions, [
+    permissions.deals,
+    permissions.pipeline,
+    permissions.projects,
+    permissions.invoices,
+    permissions.publish,
+    permissions.settings,
+    permissions.team,
+    permissions.taskPermissions,
+  ]);
+
   return (
-    <PermissionsContext.Provider value={permissions}>
+    <PermissionsContext.Provider value={stable}>
       {children}
     </PermissionsContext.Provider>
   );

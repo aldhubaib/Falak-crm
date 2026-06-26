@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { assignRole, inviteMember, removeMember, createRole, updateRole, deleteRole, startTestRole, stopTestRole } from "@/actions/team";
 import { seedDefaultRoles } from "@/actions/settings";
 import { Button } from "@/components/ui/button";
@@ -54,8 +54,9 @@ export function TeamClient({
   const [showInvite, setShowInvite] = useState(false);
   const [editingRoleId, setEditingRoleId] = useState<string | null>(null);
 
-  const sortedStatuses = [...taskStatuses].sort((a, b) => a.order - b.order);
+  const sortedStatuses = useMemo(() => [...taskStatuses].sort((a, b) => a.order - b.order), [taskStatuses]);
   const testingRole = testingRoleId ? roles.find((r) => r.id === testingRoleId) : null;
+  const roleOptions = useMemo(() => roles.map((r) => ({ value: r.id, label: r.name })), [roles]);
 
   return (
     <div className="space-y-6">
@@ -126,7 +127,7 @@ export function TeamClient({
                 name="roleId"
                 label="Role"
                 placeholder="No role"
-                options={roles.map((r) => ({ value: r.id, label: r.name }))}
+                options={roleOptions}
               />
               <FormSelect
                 name="type"
@@ -166,7 +167,7 @@ export function TeamClient({
                     name={`role_${member.id}`}
                     value={member.roleId || ""}
                     placeholder="No role"
-                    options={roles.map((r) => ({ value: r.id, label: r.name }))}
+                    options={roleOptions}
                     onChange={async (val) => {
                       const result = await assignRole(member.id, val || null);
                       if (!result.ok) useErrorStore.getState().push(result.error);

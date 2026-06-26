@@ -1,9 +1,10 @@
+import { cache } from "react";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 import { DEFAULT_PERMISSIONS, ROLE_PRESETS, type MemberWithPermissions, type Permissions } from "@/lib/permissions";
 
-export async function getWorkspace() {
+export const getWorkspace = cache(async () => {
   const { userId } = await auth();
   if (!userId) return null;
 
@@ -13,9 +14,9 @@ export async function getWorkspace() {
   });
 
   return member?.workspace ?? null;
-}
+});
 
-export async function getOrCreateWorkspace() {
+export const getOrCreateWorkspace = cache(async () => {
   const { userId } = await auth();
   if (!userId) return null;
 
@@ -93,18 +94,15 @@ export async function getOrCreateWorkspace() {
   });
 
   return workspace;
-}
+});
 
-export async function requireWorkspace() {
+export const requireWorkspace = cache(async () => {
   const workspace = await getOrCreateWorkspace();
   if (!workspace) throw new Error("No workspace found");
   return workspace;
-}
+});
 
-export async function requireWorkspaceWithMember(): Promise<{
-  workspace: NonNullable<Awaited<ReturnType<typeof getOrCreateWorkspace>>>;
-  member: MemberWithPermissions;
-}> {
+export const requireWorkspaceWithMember = cache(async () => {
   const workspace = await requireWorkspace();
   const { userId } = await auth();
   if (!userId) throw new Error("Not authenticated");
@@ -143,4 +141,4 @@ export async function requireWorkspaceWithMember(): Promise<{
   };
 
   return { workspace, member };
-}
+});

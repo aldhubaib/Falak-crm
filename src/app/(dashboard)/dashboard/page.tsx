@@ -7,26 +7,27 @@ import Link from "next/link";
 export default async function DashboardPage() {
   const workspace = await requireWorkspace();
 
-  const [dealCount, projectCount, pendingInvoices, paidInvoices] = await Promise.all([
+  const [dealCount, projectCount, pendingInvoices, revenueAgg] = await Promise.all([
     db.deal.count({
       where: {
         workspaceId: workspace.id,
         stage: { type: "OPEN" },
+        deletedAt: null,
       },
     }),
     db.project.count({
-      where: { workspaceId: workspace.id },
+      where: { workspaceId: workspace.id, deletedAt: null },
     }),
     db.invoice.count({
       where: { workspaceId: workspace.id, status: { in: ["SENT", "ACCEPTED"] } },
     }),
-    db.invoice.findMany({
+    db.invoice.aggregate({
       where: { workspaceId: workspace.id, status: "PAID" },
-      select: { total: true },
+      _sum: { total: true },
     }),
   ]);
 
-  const totalRevenue = paidInvoices.reduce((sum, inv) => sum + Number(inv.total), 0);
+  const totalRevenue = Number(revenueAgg._sum.total ?? 0);
 
   const [recentDeals, recentActivity] = await Promise.all([
     db.deal.findMany({
