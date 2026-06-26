@@ -628,7 +628,7 @@ function KanbanColumn({
   isDragOver: boolean;
   onDragStart: (e: DragEvent, taskId: string) => void;
   onDragOver: (e: DragEvent, statusId: string) => void;
-  onDragLeave: () => void;
+  onDragLeave: (e: DragEvent) => void;
   onDrop: (e: DragEvent, statusId: string) => void;
   onDragEnd: () => void;
   gateError: { taskId: string; message: string } | null;

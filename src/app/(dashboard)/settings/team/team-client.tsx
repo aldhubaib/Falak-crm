@@ -32,7 +32,7 @@ type Member = {
 function getTaskPermissions(role: Role): TaskPermissions {
   const perms = role.permissions as Record<string, unknown> | null;
   if (perms?.taskPermissions) return perms.taskPermissions as TaskPermissions;
-  return { deleteTasks: false, stages: {} };
+  return { stages: {} };
 }
 
 function getStagePermission(tp: TaskPermissions, stageId: string): StagePermission {

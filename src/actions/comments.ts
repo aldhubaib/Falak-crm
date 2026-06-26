@@ -20,7 +20,7 @@ export async function addTaskComment(
   taskId: string,
   body: string,
   projectId: string
-): Promise<ActionResult> {
+): Promise<ActionResult<string>> {
   return safeAction("Add Comment", async () => {
     const { member } = await requireWorkspaceWithMember();
 
@@ -44,7 +44,11 @@ export async function addTaskComment(
     });
 
     if (mentionedIds.length > 0) {
-      const authorName = member.name || member.email;
+      const authorMember = await db.workspaceMember.findUnique({
+        where: { id: member.id },
+        select: { name: true, email: true },
+      });
+      const authorName = authorMember?.name || authorMember?.email || "Someone";
       const plainBody = body.replace(MENTION_RE, "@$1");
       const preview = plainBody.length > 80 ? plainBody.slice(0, 80) + "…" : plainBody;
 

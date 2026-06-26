@@ -264,7 +264,7 @@ export async function deleteTask(taskId: string, projectId: string, dealId?: str
       select: { id: true, r2Key: true },
     });
 
-    await Promise.all(attachments.map((a) => deleteObject(a.r2Key)));
+    await Promise.all(attachments.filter((a) => a.r2Key).map((a) => deleteObject(a.r2Key!)));
     await db.attachment.deleteMany({ where: { id: { in: attachmentIds } } });
   }
 
@@ -531,7 +531,7 @@ export async function syncTaskTemplates(taskId: string, templateIds: string[], p
         where: { id: { in: attachmentIds } },
         select: { id: true, r2Key: true },
       });
-      await Promise.all(attachments.map((a) => deleteObject(a.r2Key)));
+      await Promise.all(attachments.filter((a) => a.r2Key).map((a) => deleteObject(a.r2Key!)));
       await db.attachment.deleteMany({ where: { id: { in: attachmentIds } } });
     }
     await db.taskChecklistItem.deleteMany({

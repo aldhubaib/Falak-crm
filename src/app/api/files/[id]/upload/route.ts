@@ -18,9 +18,9 @@ export async function PUT(
   }
 
   const body = await request.arrayBuffer();
-  const contentType = request.headers.get("content-type") || attachment.contentType;
+  const contentType = request.headers.get("content-type") || attachment.contentType || "application/octet-stream";
 
-  await uploadBytes(Buffer.from(body), attachment.r2Key, contentType);
+  await uploadBytes(Buffer.from(body), attachment.r2Key ?? id, contentType);
 
   return NextResponse.json({ ok: true });
 }

@@ -125,7 +125,8 @@ export async function abortMultipartUpload(
 export async function getObject(key: string): Promise<ArrayBuffer | null> {
   const res = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: key }));
   if (!res.Body) return null;
-  return res.Body.transformToByteArray();
+  const bytes = await res.Body.transformToByteArray();
+  return bytes.buffer as ArrayBuffer;
 }
 
 export async function deleteObject(key: string): Promise<void> {
