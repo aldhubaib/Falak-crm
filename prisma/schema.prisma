@@ -544,6 +544,7 @@ model Task {
   order        Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
 
   project        Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
   service        Service?           @relation(fields: [serviceId], references: [id], onDelete: SetNull)
@@ -555,6 +556,7 @@ model Task {
 
   @@index([projectId, statusId])
   @@index([projectId, order])
+  @@index([projectId, deletedAt])
 }
 
 // ─── Comments ─────────────────────────────────────────────────────────────────

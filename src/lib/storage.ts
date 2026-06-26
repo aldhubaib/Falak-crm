@@ -18,7 +18,7 @@ const BUCKET = process.env.R2_BUCKET_NAME || "falak-crm";
 
 const PRESIGNED_EXPIRY = 3600; // 1 hour
 const PART_SIZE = 10 * 1024 * 1024; // 10 MB
-const MULTIPART_THRESHOLD = 100 * 1024 * 1024; // 100 MB
+const MULTIPART_THRESHOLD = 20 * 1024 * 1024; // 20 MB
 
 const s3 = new S3Client({
   region: "auto",

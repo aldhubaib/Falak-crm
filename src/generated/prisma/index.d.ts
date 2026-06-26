@@ -34784,6 +34784,7 @@ export namespace Prisma {
     order: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type TaskMaxAggregateOutputType = {
@@ -34803,6 +34804,7 @@ export namespace Prisma {
     order: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type TaskCountAggregateOutputType = {
@@ -34822,6 +34824,7 @@ export namespace Prisma {
     order: number
     createdAt: number
     updatedAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -34857,6 +34860,7 @@ export namespace Prisma {
     order?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type TaskMaxAggregateInputType = {
@@ -34876,6 +34880,7 @@ export namespace Prisma {
     order?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type TaskCountAggregateInputType = {
@@ -34895,6 +34900,7 @@ export namespace Prisma {
     order?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -35001,6 +35007,7 @@ export namespace Prisma {
     order: number
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     _count: TaskCountAggregateOutputType | null
     _avg: TaskAvgAggregateOutputType | null
     _sum: TaskSumAggregateOutputType | null
@@ -35039,6 +35046,7 @@ export namespace Prisma {
     order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
     status?: boolean | Task$statusArgs<ExtArgs>
@@ -35066,6 +35074,7 @@ export namespace Prisma {
     order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
     status?: boolean | Task$statusArgs<ExtArgs>
@@ -35089,6 +35098,7 @@ export namespace Prisma {
     order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
     status?: boolean | Task$statusArgs<ExtArgs>
@@ -35112,9 +35122,10 @@ export namespace Prisma {
     order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }
 
-  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "taskNumber" | "serviceId" | "statusId" | "assigneeId" | "title" | "description" | "billable" | "price" | "priority" | "dueDate" | "completedAt" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "taskNumber" | "serviceId" | "statusId" | "assigneeId" | "title" | "description" | "billable" | "price" | "priority" | "dueDate" | "completedAt" | "order" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
@@ -35166,6 +35177,7 @@ export namespace Prisma {
       order: number
       createdAt: Date
       updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["task"]>
     composites: {}
   }
@@ -35612,6 +35624,7 @@ export namespace Prisma {
     readonly order: FieldRef<"Task", 'Int'>
     readonly createdAt: FieldRef<"Task", 'DateTime'>
     readonly updatedAt: FieldRef<"Task", 'DateTime'>
+    readonly deletedAt: FieldRef<"Task", 'DateTime'>
   }
     
 
@@ -52594,7 +52607,8 @@ export namespace Prisma {
     completedAt: 'completedAt',
     order: 'order',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
@@ -55246,6 +55260,7 @@ export namespace Prisma {
     order?: IntFilter<"Task"> | number
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     service?: XOR<ServiceNullableScalarRelationFilter, ServiceWhereInput> | null
     status?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
@@ -55272,6 +55287,7 @@ export namespace Prisma {
     order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     project?: ProjectOrderByWithRelationInput
     service?: ServiceOrderByWithRelationInput
     status?: TaskStatusOrderByWithRelationInput
@@ -55301,6 +55317,7 @@ export namespace Prisma {
     order?: IntFilter<"Task"> | number
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     service?: XOR<ServiceNullableScalarRelationFilter, ServiceWhereInput> | null
     status?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
@@ -55327,6 +55344,7 @@ export namespace Prisma {
     order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: TaskCountOrderByAggregateInput
     _avg?: TaskAvgOrderByAggregateInput
     _max?: TaskMaxOrderByAggregateInput
@@ -55354,6 +55372,7 @@ export namespace Prisma {
     order?: IntWithAggregatesFilter<"Task"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
   }
 
   export type TaskCommentWhereInput = {
@@ -58815,6 +58834,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
@@ -58841,6 +58861,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
@@ -58859,6 +58880,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
@@ -58885,6 +58907,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
@@ -58907,6 +58930,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type TaskUpdateManyMutationInput = {
@@ -58922,6 +58946,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type TaskUncheckedUpdateManyInput = {
@@ -58941,6 +58966,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type TaskCommentCreateInput = {
@@ -62069,6 +62095,7 @@ export namespace Prisma {
     order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type TaskAvgOrderByAggregateInput = {
@@ -62095,6 +62122,7 @@ export namespace Prisma {
     order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type TaskMinOrderByAggregateInput = {
@@ -62114,6 +62142,7 @@ export namespace Prisma {
     order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type TaskSumOrderByAggregateInput = {
@@ -68929,6 +68958,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
@@ -68953,6 +68983,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
@@ -69220,6 +69251,7 @@ export namespace Prisma {
     order?: IntFilter<"Task"> | number
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
   }
 
   export type TaskCommentUpsertWithWhereUniqueWithoutAuthorInput = {
@@ -70749,6 +70781,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
@@ -70773,6 +70806,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
@@ -72799,6 +72833,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
@@ -72823,6 +72858,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
@@ -74614,6 +74650,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
@@ -74639,6 +74676,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
   }
@@ -74711,6 +74749,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
@@ -74736,6 +74775,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
   }
@@ -74867,6 +74907,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
@@ -74891,6 +74932,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
@@ -75648,6 +75690,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
@@ -75673,6 +75716,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
   }
@@ -75761,6 +75805,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
@@ -75786,6 +75831,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
   }
@@ -77854,6 +77900,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
@@ -77879,6 +77926,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
   }
@@ -78087,6 +78135,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
@@ -78112,6 +78161,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
   }
@@ -79317,6 +79367,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type TaskCommentCreateManyAuthorInput = {
@@ -79368,6 +79419,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
@@ -79392,6 +79444,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
@@ -79413,6 +79466,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type TaskCommentUpdateWithoutAuthorInput = {
@@ -80123,6 +80177,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type DealItemUpdateWithoutServiceInput = {
@@ -80162,6 +80217,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
@@ -80186,6 +80242,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
@@ -80207,6 +80264,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type PipelineStageCreateManyPipelineInput = {
@@ -80641,6 +80699,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type InvoiceCreateManyProjectInput = {
@@ -80724,6 +80783,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
@@ -80748,6 +80808,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
@@ -80769,6 +80830,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type InvoiceUpdateWithoutProjectInput = {
@@ -81247,6 +81309,7 @@ export namespace Prisma {
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type ChecklistTemplateItemCreateManyVisibleFromStageInput = {
@@ -81294,6 +81357,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
@@ -81318,6 +81382,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
@@ -81339,6 +81404,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ChecklistTemplateItemUpdateWithoutVisibleFromStageInput = {

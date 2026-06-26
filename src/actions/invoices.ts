@@ -59,7 +59,7 @@ export async function createInvoiceFromProject(projectId: string, taskIds: strin
   if (!project) throw new Error("Project not found");
 
   const tasks = await db.task.findMany({
-    where: { id: { in: taskIds }, projectId, billable: true },
+    where: { id: { in: taskIds }, projectId, billable: true, deletedAt: null },
     include: { service: true },
   });
 

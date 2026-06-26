@@ -441,7 +441,8 @@ exports.Prisma.TaskScalarFieldEnum = {
   completedAt: 'completedAt',
   order: 'order',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.TaskCommentScalarFieldEnum = {

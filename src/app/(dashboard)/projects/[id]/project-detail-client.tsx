@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo, useCallback, memo, type DragEvent
 import { updateTaskStatus, getStageGateBlockers } from "@/actions/projects";
 import { createInvoiceFromProject } from "@/actions/invoices";
 import { addTaskComment } from "@/actions/comments";
-import { ArrowLeft, Plus, FileText, AlertTriangle, Settings, GripVertical, ChevronRight, Undo2, Paperclip, X, Loader2, LayoutGrid, FolderOpen, Upload, Trash2, Download, MoreHorizontal, FolderPlus, Pencil, FolderInput } from "lucide-react";
+import { ArrowLeft, Plus, FileText, AlertTriangle, Settings, GripVertical, ChevronRight, Undo2, Paperclip, X, Loader2, LayoutGrid, FolderOpen, Upload, Trash2, Download, MoreHorizontal, FolderPlus, Pencil, FolderInput, BarChart3, CheckCircle2, Clock, ListChecks, CalendarDays, Building2, Users } from "lucide-react";
 import { getProjectAssets, createFolder, deleteFolder, renameFolder, deleteAsset, renameAsset, getFolderBreadcrumbs, moveAsset, moveFolder } from "@/actions/assets";
 import { uploadManager } from "@/lib/upload-manager";
 import { HeaderActions } from "@/components/header-actions";
@@ -79,12 +79,12 @@ export function ProjectDetailClient({
   const canEditProject = permissions.projects === "full";
   const hasTaskPermissions = !!permissions.taskPermissions?.stages && Object.keys(permissions.taskPermissions.stages).length > 0;
   const canInteractWithTasks = canEditProject || hasTaskPermissions;
-  const [activeTab, setActiveTab] = useState<"board" | "assets">("board");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "board" | "assets">("dashboard");
 
   return (
     <div className="flex flex-col min-h-full">
       {/* Header */}
-      <div className="flex items-center gap-3 px-6 h-12 border-b border-border/50 shrink-0">
+      <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 h-12 border-b border-border/50 shrink-0">
         <Link
           href="/projects"
           className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors shrink-0"
@@ -111,9 +111,10 @@ export function ProjectDetailClient({
       </div>
 
       {/* Tabs */}
-      <div className="px-6 pt-3">
+      <div className="px-4 sm:px-6 pt-3">
         <div className="inline-flex items-center rounded-xl bg-muted/30 border border-border p-1">
           {([
+            { id: "dashboard" as const, label: "Dashboard", icon: <BarChart3 className="w-3.5 h-3.5" /> },
             { id: "board" as const, label: "Board", icon: <LayoutGrid className="w-3.5 h-3.5" /> },
             { id: "assets" as const, label: "Assets", icon: <Paperclip className="w-3.5 h-3.5" /> },
           ]).map((tab) => (
@@ -134,9 +135,15 @@ export function ProjectDetailClient({
       </div>
 
       {/* Tab content */}
+      {activeTab === "dashboard" && (
+        <div className="px-4 sm:px-6 pt-4 pb-6">
+          <ProjectDashboard project={project} taskStatuses={taskStatuses} />
+        </div>
+      )}
+
       {activeTab === "board" && (
         <>
-          <div className="px-6 pt-4">
+          <div className="px-4 sm:px-6 pt-4">
             <KanbanBoard
               project={project}
               taskStatuses={taskStatuses}
@@ -146,7 +153,7 @@ export function ProjectDetailClient({
             />
           </div>
           {project.invoices.length > 0 && permissions.invoices !== "none" && (
-            <div className="px-6">
+            <div className="px-4 sm:px-6">
               <InvoicesSection project={project} />
             </div>
           )}
@@ -154,7 +161,7 @@ export function ProjectDetailClient({
       )}
 
       {activeTab === "assets" && (
-        <div className="px-6 pt-4 flex-1">
+        <div className="px-4 sm:px-6 pt-4 flex-1">
           <AssetsPanel projectId={project.id} canEdit={canEditProject} />
         </div>
       )}
@@ -188,6 +195,224 @@ function ProjectThumbnail({ thumbnailId, name }: { thumbnailId: string | null; n
 }
 
 /* ─── Kanban Board ──────────────────────────────────────────────────────────── */
+
+function ProjectDashboard({ project, taskStatuses }: { project: Project; taskStatuses: TaskStatus[] }) {
+  const totalTasks = project.tasks.length;
+  const completedTasks = project.tasks.filter((t) => {
+    const name = t.status?.name?.toLowerCase() || "";
+    return name.includes("completed") || name.includes("published");
+  }).length;
+  const inProgressTasks = project.tasks.filter((t) => {
+    const name = t.status?.name?.toLowerCase() || "";
+    return name.includes("progress");
+  }).length;
+  const overallProgress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+  const totalInvoiced = project.invoices.reduce((sum, inv) => sum + Number(inv.total || 0), 0);
+  const paidInvoices = project.invoices.filter((i) => i.status === "PAID");
+  const totalPaid = paidInvoices.reduce((sum, inv) => sum + Number(inv.total || 0), 0);
+  const pendingInvoices = project.invoices.filter((i) => i.status === "SENT" || i.status === "ACCEPTED");
+  const totalPending = pendingInvoices.reduce((sum, inv) => sum + Number(inv.total || 0), 0);
+
+  const tasksByStatus = useMemo(() => {
+    const map = new Map<string, { name: string; color: string; count: number }>();
+    for (const s of taskStatuses) map.set(s.id, { name: s.name, color: s.color, count: 0 });
+    for (const t of project.tasks) {
+      if (t.status) {
+        const entry = map.get(t.status.id);
+        if (entry) entry.count++;
+      }
+    }
+    return Array.from(map.values()).filter((s) => s.count > 0);
+  }, [project.tasks, taskStatuses]);
+
+  const assigneeCounts = useMemo(() => {
+    const map = new Map<string, { name: string; count: number; completed: number }>();
+    for (const t of project.tasks) {
+      const key = t.assignee?.email || "__unassigned__";
+      const name = t.assignee?.name || t.assignee?.email || "Unassigned";
+      if (!map.has(key)) map.set(key, { name, count: 0, completed: 0 });
+      const entry = map.get(key)!;
+      entry.count++;
+      const sName = t.status?.name?.toLowerCase() || "";
+      if (sName.includes("completed") || sName.includes("published")) entry.completed++;
+    }
+    return Array.from(map.values()).sort((a, b) => b.count - a.count);
+  }, [project.tasks]);
+
+  const totalChecklist = project.tasks.reduce((sum, t) => sum + t.checklistItems.length, 0);
+  const completedChecklist = project.tasks.reduce((sum, t) => sum + t.checklistItems.filter((c) => c.completed).length, 0);
+  const checklistProgress = totalChecklist > 0 ? Math.round((completedChecklist / totalChecklist) * 100) : 0;
+
+  const daysUntilDeadline = project.deadline
+    ? Math.ceil((new Date(project.deadline).getTime() - Date.now()) / 86400000)
+    : null;
+
+  return (
+    <div className="space-y-5">
+      {/* Top stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="rounded-xl border border-border bg-card p-4">
+          <div className="flex items-center gap-2 text-muted-foreground mb-2">
+            <ListChecks className="w-4 h-4" />
+            <span className="text-[11px] font-medium uppercase tracking-wider">Tasks</span>
+          </div>
+          <p className="text-2xl font-bold text-foreground">{completedTasks}<span className="text-muted-foreground text-[14px] font-normal">/{totalTasks}</span></p>
+          <div className="mt-2 h-1.5 rounded-full bg-muted overflow-hidden">
+            <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${overallProgress}%` }} />
+          </div>
+          <p className="text-[10px] text-muted-foreground mt-1">{overallProgress}% complete</p>
+        </div>
+
+        <div className="rounded-xl border border-border bg-card p-4">
+          <div className="flex items-center gap-2 text-muted-foreground mb-2">
+            <Clock className="w-4 h-4" />
+            <span className="text-[11px] font-medium uppercase tracking-wider">In Progress</span>
+          </div>
+          <p className="text-2xl font-bold text-primary">{inProgressTasks}</p>
+          <p className="text-[10px] text-muted-foreground mt-1">
+            {totalTasks - completedTasks - inProgressTasks} remaining
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-border bg-card p-4">
+          <div className="flex items-center gap-2 text-muted-foreground mb-2">
+            <CheckCircle2 className="w-4 h-4" />
+            <span className="text-[11px] font-medium uppercase tracking-wider">Checklist</span>
+          </div>
+          <p className="text-2xl font-bold text-foreground">{completedChecklist}<span className="text-muted-foreground text-[14px] font-normal">/{totalChecklist}</span></p>
+          <div className="mt-2 h-1.5 rounded-full bg-muted overflow-hidden">
+            <div className="h-full rounded-full bg-green-500 transition-all" style={{ width: `${checklistProgress}%` }} />
+          </div>
+          <p className="text-[10px] text-muted-foreground mt-1">{checklistProgress}% items done</p>
+        </div>
+
+        <div className="rounded-xl border border-border bg-card p-4">
+          <div className="flex items-center gap-2 text-muted-foreground mb-2">
+            <CalendarDays className="w-4 h-4" />
+            <span className="text-[11px] font-medium uppercase tracking-wider">Deadline</span>
+          </div>
+          {project.deadline ? (
+            <>
+              <p className={`text-2xl font-bold ${daysUntilDeadline! < 0 ? "text-red-400" : daysUntilDeadline! <= 7 ? "text-amber-400" : "text-foreground"}`}>
+                {daysUntilDeadline! < 0 ? `${Math.abs(daysUntilDeadline!)}d overdue` : `${daysUntilDeadline}d`}
+              </p>
+              <p className="text-[10px] text-muted-foreground mt-1">
+                {new Date(project.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+              </p>
+            </>
+          ) : (
+            <p className="text-[14px] text-muted-foreground mt-2">Not set</p>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        {/* Project Info */}
+        <div className="rounded-xl border border-border bg-card p-4">
+          <h3 className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Project Info</h3>
+          <div className="space-y-2.5">
+            {project.status && (
+              <div className="flex items-center justify-between">
+                <span className="text-[12px] text-muted-foreground">Status</span>
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-medium" style={{ backgroundColor: `${project.status.color}20`, color: project.status.color }}>
+                  {project.status.name}
+                </span>
+              </div>
+            )}
+            {project.company && (
+              <div className="flex items-center justify-between">
+                <span className="text-[12px] text-muted-foreground">Client</span>
+                <Link href={`/companies/${project.company.id}`} className="text-[12px] text-primary hover:underline no-underline flex items-center gap-1">
+                  <Building2 className="w-3 h-3" />
+                  {project.company.name}
+                </Link>
+              </div>
+            )}
+            {project.startDate && (
+              <div className="flex items-center justify-between">
+                <span className="text-[12px] text-muted-foreground">Start Date</span>
+                <span className="text-[12px] text-foreground">
+                  {new Date(project.startDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                </span>
+              </div>
+            )}
+            <div className="flex items-center justify-between">
+              <span className="text-[12px] text-muted-foreground">Type</span>
+              <span className="text-[12px] text-foreground capitalize">{project.type}</span>
+            </div>
+            {project.description && (
+              <div className="pt-2 border-t border-border/30">
+                <p className="text-[11px] text-muted-foreground/80 leading-relaxed">{project.description}</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Tasks by Status */}
+        <div className="rounded-xl border border-border bg-card p-4">
+          <h3 className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Tasks by Status</h3>
+          <div className="space-y-2">
+            {tasksByStatus.map((s) => (
+              <div key={s.name} className="flex items-center gap-3">
+                <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: s.color }} />
+                <span className="text-[12px] text-foreground flex-1">{s.name}</span>
+                <span className="text-[12px] font-semibold text-foreground">{s.count}</span>
+                <div className="w-16 h-1.5 rounded-full bg-muted overflow-hidden">
+                  <div className="h-full rounded-full transition-all" style={{ width: `${totalTasks > 0 ? (s.count / totalTasks) * 100 : 0}%`, backgroundColor: s.color }} />
+                </div>
+              </div>
+            ))}
+            {tasksByStatus.length === 0 && (
+              <p className="text-[12px] text-muted-foreground/60 text-center py-4">No tasks yet</p>
+            )}
+          </div>
+        </div>
+
+        {/* Team */}
+        <div className="rounded-xl border border-border bg-card p-4">
+          <h3 className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Team</h3>
+          <div className="space-y-2">
+            {assigneeCounts.map((a) => (
+              <div key={a.name} className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center text-[9px] font-semibold text-primary shrink-0">
+                  {a.name.charAt(0).toUpperCase()}
+                </div>
+                <span className="text-[12px] text-foreground flex-1 truncate">{a.name}</span>
+                <span className="text-[11px] text-green-400">{a.completed}</span>
+                <span className="text-[11px] text-muted-foreground">/ {a.count}</span>
+              </div>
+            ))}
+            {assigneeCounts.length === 0 && (
+              <p className="text-[12px] text-muted-foreground/60 text-center py-4">No team members assigned</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Invoices */}
+      {project.invoices.length > 0 && (
+        <div className="rounded-xl border border-border bg-card p-4">
+          <h3 className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Financials</h3>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <p className="text-[11px] text-muted-foreground">Total Invoiced</p>
+              <p className="text-[16px] font-bold text-foreground mt-0.5">{totalInvoiced.toLocaleString()}</p>
+            </div>
+            <div>
+              <p className="text-[11px] text-muted-foreground">Paid</p>
+              <p className="text-[16px] font-bold text-green-400 mt-0.5">{totalPaid.toLocaleString()}</p>
+            </div>
+            <div>
+              <p className="text-[11px] text-muted-foreground">Pending</p>
+              <p className="text-[16px] font-bold text-amber-400 mt-0.5">{totalPending.toLocaleString()}</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function KanbanBoard({
   project,
@@ -473,7 +698,7 @@ function KanbanBoard({
         </div>
       )}
 
-      <div className="grid gap-3 pb-2" style={{ gridTemplateColumns: `repeat(${sorted.length + ((tasksByStatus.get("__none__")?.length ?? 0) > 0 ? 1 : 0)}, 1fr)` }}>
+      <div className="flex flex-col md:flex-row gap-3 pb-2 md:overflow-x-auto">
         {sorted.map((status, idx) => (
             <KanbanColumn
               key={status.id}
@@ -653,12 +878,12 @@ const KanbanColumn = memo(function KanbanColumn({
   gateError: { taskId: string; message: string } | null;
 }) {
   return (
-    <div className="min-w-0">
+    <div className="w-full md:min-w-[220px] md:flex-1">
       <div className="flex items-center justify-between mb-2 px-1">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: status.color }} />
-          <h3 className="text-[12px] font-semibold text-foreground uppercase tracking-wider">{status.name}</h3>
-          <span className="text-[11px] text-muted-foreground">{tasks.length}</span>
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: status.color }} />
+          <h3 className="text-[12px] font-semibold text-foreground uppercase tracking-wider truncate">{status.name}</h3>
+          <span className="text-[11px] text-muted-foreground shrink-0">{tasks.length}</span>
         </div>
         {canEdit && onAddTask && (
           <button
@@ -671,7 +896,7 @@ const KanbanColumn = memo(function KanbanColumn({
       </div>
 
       <div
-        className={`space-y-2 min-h-[100px] rounded-lg p-2 transition-colors ${
+        className={`space-y-2 min-h-[60px] md:min-h-[100px] rounded-lg p-2 transition-colors ${
           isDragOver ? "bg-primary/10 ring-1 ring-primary/30" : "bg-muted/30"
         }`}
         onDragOver={(e) => onDragOver(e, status.id)}
@@ -738,7 +963,7 @@ const TaskCard = memo(function TaskCard({
       onDragStart={(e) => onDragStart(e, task.id)}
       onDragEnd={onDragEnd}
       onClick={() => router.push(`/projects/${projectId}/tasks/${task.id}`)}
-      className={`rounded-xl border bg-card p-4 group transition-all cursor-pointer min-h-[120px] flex flex-col ${
+      className={`rounded-xl border bg-card p-3 md:p-4 group transition-all cursor-pointer md:min-h-[120px] flex flex-col ${
         isDragging ? "opacity-40 scale-95" : "hover:border-primary/30"
       } ${hasGateError ? "border-destructive/40" : "border-border"}`}
     >
@@ -864,6 +1089,7 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
   const [contextMenu, setContextMenu] = useState<{ type: "folder" | "asset"; id: string; name: string } | null>(null);
   const [renaming, setRenaming] = useState<{ id: string; name: string } | null>(null);
   const [moveTarget, setMoveTarget] = useState<{ type: "folder" | "asset"; id: string; name: string } | null>(null);
+  const [previewAsset, setPreviewAsset] = useState<Asset | null>(null);
   const [dragOverFolderId, setDragOverFolderId] = useState<string | null>(null);
   const [panelDragOver, setPanelDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -1155,7 +1381,8 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
               key={asset.id}
               draggable={canEdit}
               onDragStart={(e) => { e.dataTransfer.setData("type", "asset"); e.dataTransfer.setData("id", asset.id); }}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted/30 group transition-colors cursor-grab"
+              onClick={() => setPreviewAsset(asset)}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted/30 group transition-colors cursor-pointer"
             >
               <span className="text-[16px] shrink-0">{getFileIcon(asset.contentType)}</span>
               {renaming?.id === asset.id ? (
@@ -1171,7 +1398,7 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
                 <span className="flex-1 text-[13px] text-foreground truncate">{asset.name}</span>
               )}
               <span className="text-[11px] text-muted-foreground/50 shrink-0">{formatSize(asset.fileSize)}</span>
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0" onClick={(e) => e.stopPropagation()}>
                 <ItemMenu
                   onRename={() => { setRenaming({ id: asset.id, name: asset.name }); setContextMenu({ type: "asset", id: asset.id, name: asset.name }); }}
                   onDelete={() => handleDeleteAsset(asset.id)}
@@ -1191,6 +1418,15 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
         </div>
       )}
 
+      {previewAsset && (
+        <FilePreviewModal
+          asset={previewAsset}
+          assets={assets}
+          onNavigate={setPreviewAsset}
+          onClose={() => setPreviewAsset(null)}
+        />
+      )}
+
       {moveTarget && (
         <MoveModal
           projectId={projectId}
@@ -1202,6 +1438,164 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
           onMoved={loadData}
         />
       )}
+    </div>
+  );
+}
+
+function FilePreviewModal({
+  asset,
+  assets,
+  onNavigate,
+  onClose,
+}: {
+  asset: Asset;
+  assets: Asset[];
+  onNavigate: (a: Asset) => void;
+  onClose: () => void;
+}) {
+  const [url, setUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const currentIndex = assets.findIndex((a) => a.id === asset.id);
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex < assets.length - 1;
+
+  useEffect(() => {
+    setUrl(null);
+    setLoading(true);
+    const parts = asset.r2Key.split("/");
+    const fileId = parts[parts.length - 1]?.replace(/\.[^.]+$/, "") || asset.r2Key;
+    let cancelled = false;
+    fetch(`/api/files/${fileId}/download-url`)
+      .then((r) => r.json())
+      .then((data) => { if (!cancelled && data.url) setUrl(data.url); })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [asset.r2Key]);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft" && hasPrev) onNavigate(assets[currentIndex - 1]);
+      if (e.key === "ArrowRight" && hasNext) onNavigate(assets[currentIndex + 1]);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [currentIndex, hasPrev, hasNext]);
+
+  const isImage = asset.contentType.startsWith("image/");
+  const isVideo = asset.contentType.startsWith("video/");
+  const isAudio = asset.contentType.startsWith("audio/");
+  const isPdf = asset.contentType.includes("pdf");
+
+  const handleDownload = () => {
+    if (!url) return;
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = asset.name;
+    a.target = "_blank";
+    a.click();
+  };
+
+  return (
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
+
+      <div className="relative z-10 flex flex-col max-w-[90vw] max-h-[90vh] w-full">
+        {/* Top bar */}
+        <div className="flex items-center justify-between px-4 py-3 shrink-0">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="text-[14px] font-medium text-white truncate">{asset.name}</span>
+            <span className="text-[11px] text-white/40 shrink-0">
+              {asset.fileSize < 1024 * 1024
+                ? `${(asset.fileSize / 1024).toFixed(1)} KB`
+                : `${(asset.fileSize / (1024 * 1024)).toFixed(1)} MB`}
+            </span>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={handleDownload}
+              disabled={!url}
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30"
+              title="Download"
+            >
+              <Download className="w-4 h-4" />
+            </button>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 flex items-center justify-center min-h-0 px-12 pb-4 relative">
+          {/* Prev button */}
+          {hasPrev && (
+            <button
+              onClick={() => onNavigate(assets[currentIndex - 1])}
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors z-10"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+          )}
+
+          {/* Next button */}
+          {hasNext && (
+            <button
+              onClick={() => onNavigate(assets[currentIndex + 1])}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors z-10"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          )}
+
+          {loading ? (
+            <Loader2 className="w-8 h-8 animate-spin text-white/40" />
+          ) : !url ? (
+            <p className="text-white/40 text-[13px]">Unable to load preview</p>
+          ) : isImage ? (
+            <img src={url} alt={asset.name} className="max-w-full max-h-[80vh] object-contain rounded-lg select-none" draggable={false} />
+          ) : isVideo ? (
+            <video controls autoPlay className="max-w-full max-h-[80vh] rounded-lg" src={url}>
+              Your browser does not support video.
+            </video>
+          ) : isAudio ? (
+            <div className="w-full max-w-lg bg-white/5 rounded-xl p-8 flex flex-col items-center gap-4">
+              <span className="text-[40px]">🎵</span>
+              <p className="text-white/80 text-[13px] font-medium">{asset.name}</p>
+              <audio controls autoPlay className="w-full" src={url}>
+                Your browser does not support audio.
+              </audio>
+            </div>
+          ) : isPdf ? (
+            <iframe src={url} className="w-full h-[80vh] rounded-lg bg-white" title={asset.name} />
+          ) : (
+            <div className="flex flex-col items-center gap-4 text-center">
+              <span className="text-[48px]">📎</span>
+              <p className="text-white/80 text-[14px] font-medium">{asset.name}</p>
+              <p className="text-white/40 text-[12px]">Preview not available for this file type</p>
+              <button
+                onClick={handleDownload}
+                className="mt-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:bg-primary/90 transition-colors flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Download File
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Counter */}
+        {assets.length > 1 && (
+          <div className="text-center pb-3">
+            <span className="text-[11px] text-white/30">{currentIndex + 1} / {assets.length}</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -24,14 +24,16 @@ export async function getPublishableProjects() {
   });
 }
 
-export async function getDeliveryTasks(projectId: string) {
+export async function getDeliveryTasks(projectId: string | null) {
   const { workspace, member } = await requireWorkspaceWithMember();
   if (!canView(member, "publish")) throw new Error("Permission denied");
 
-  const project = await db.project.findFirst({
-    where: { id: projectId, workspaceId: workspace.id, requirePublishing: true },
-  });
-  if (!project) throw new Error("Project not found or publishing not required");
+  if (projectId) {
+    const project = await db.project.findFirst({
+      where: { id: projectId, workspaceId: workspace.id, requirePublishing: true },
+    });
+    if (!project) throw new Error("Project not found or publishing not required");
+  }
 
   const statuses = await db.taskStatus.findMany({
     where: { workspaceId: workspace.id },
@@ -46,7 +48,8 @@ export async function getDeliveryTasks(projectId: string) {
 
   return db.task.findMany({
     where: {
-      projectId,
+      ...(projectId ? { projectId } : { project: { workspaceId: workspace.id, requirePublishing: true } }),
+      deletedAt: null,
       statusId: { in: completedIds },
       checklistItems: {
         some: {
@@ -59,6 +62,7 @@ export async function getDeliveryTasks(projectId: string) {
       },
     },
     include: {
+      project: { select: { id: true, name: true, thumbnailId: true } },
       checklistItems: {
         where: { phase: "delivery" },
         orderBy: { order: "asc" },
@@ -96,12 +100,13 @@ export async function getPublishSchedule(projectId: string | null, month: number
       scheduledDate: { gte: startDate, lte: endDate },
     },
     include: {
-      project: { select: { id: true, name: true } },
+      project: { select: { id: true, name: true, thumbnailId: true } },
       task: {
         select: {
           id: true,
           title: true,
           taskNumber: true,
+          completedAt: true,
           checklistItems: {
             where: { phase: "delivery" },
             orderBy: { order: "asc" },
@@ -200,12 +205,13 @@ export async function getAllScheduledItems(projectId: string | null) {
       ...(projectId ? { projectId } : {}),
     },
     include: {
-      project: { select: { id: true, name: true } },
+      project: { select: { id: true, name: true, thumbnailId: true } },
       task: {
         select: {
           id: true,
           title: true,
           taskNumber: true,
+          completedAt: true,
           checklistItems: {
             where: { phase: "delivery" },
             orderBy: { order: "asc" },
@@ -239,12 +245,13 @@ export async function getPublishPageData(projectId: string | null, month: number
   const endDate = new Date(year, month + 1, 0, 23, 59, 59);
 
   const scheduleInclude = {
-    project: { select: { id: true, name: true } },
+    project: { select: { id: true, name: true, thumbnailId: true } },
     task: {
       select: {
         id: true,
         title: true,
         taskNumber: true,
+        completedAt: true,
         checklistItems: {
           where: { phase: "delivery" as const },
           orderBy: { order: "asc" as const },

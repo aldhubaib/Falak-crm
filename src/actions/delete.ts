@@ -1,7 +1,7 @@
 "use server";
 
 import { requireWorkspace } from "@/lib/workspace";
-import { checkDeletionBlocks, softDelete, restoreEntity, type EntityType, type RelationBlock } from "@/lib/soft-delete";
+import { checkDeletionBlocks, softDelete, restoreEntity, permanentDelete, type EntityType, type RelationBlock } from "@/lib/soft-delete";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
@@ -16,9 +16,11 @@ export async function deleteRecord(type: EntityType, id: string): Promise<Action
   return safeAction(`Delete ${type}`, async () => {
     await requireWorkspace();
 
-    const blocks = await checkDeletionBlocks(type, id);
-    if (blocks.length > 0) {
-      return { blocks };
+    if (type !== "task") {
+      const blocks = await checkDeletionBlocks(type, id);
+      if (blocks.length > 0) {
+        return { blocks };
+      }
     }
 
     await softDelete(type, id);
@@ -36,6 +38,9 @@ export async function deleteRecord(type: EntityType, id: string): Promise<Action
     } else if (type === "project") {
       const p = await db.project.findFirst({ where: { id } });
       entityName = p?.name;
+    } else if (type === "task") {
+      const t = await db.task.findFirst({ where: { id } });
+      entityName = t?.title;
     }
 
     await logActivity({
@@ -66,10 +71,32 @@ export async function restoreRecord(type: EntityType, id: string): Promise<Actio
   }, { type, id });
 }
 
+export async function permanentDeleteRecord(type: EntityType, id: string): Promise<ActionResult> {
+  return safeAction(`Permanently delete ${type}`, async () => {
+    await requireWorkspace();
+    await permanentDelete(type, id);
+    revalidatePath("/settings/trash");
+  }, { type, id });
+}
+
+export async function emptyTrash(): Promise<ActionResult> {
+  return safeAction("Empty trash", async () => {
+    const workspace = await requireWorkspace();
+
+    const items = await getTrashItems();
+    for (const item of items) {
+      await permanentDelete(item.type, item.id);
+    }
+
+    revalidatePath("/settings/trash");
+    revalidatePath("/dashboard");
+  });
+}
+
 export async function getTrashItems() {
   const workspace = await requireWorkspace();
 
-  const [companies, contacts, deals, projects] = await Promise.all([
+  const [companies, contacts, deals, projects, tasks] = await Promise.all([
     db.company.findMany({
       where: { workspaceId: workspace.id, deletedAt: { not: null } },
       select: { id: true, name: true, deletedAt: true },
@@ -90,6 +117,11 @@ export async function getTrashItems() {
       select: { id: true, name: true, deletedAt: true },
       orderBy: { deletedAt: "desc" },
     }),
+    db.task.findMany({
+      where: { project: { workspaceId: workspace.id }, deletedAt: { not: null } },
+      select: { id: true, title: true, deletedAt: true, project: { select: { name: true } } },
+      orderBy: { deletedAt: "desc" },
+    }),
   ]);
 
   return [
@@ -97,5 +129,6 @@ export async function getTrashItems() {
     ...contacts.map((c) => ({ id: c.id, type: "contact" as EntityType, name: `${c.firstName} ${c.lastName}`, deletedAt: c.deletedAt! })),
     ...deals.map((d) => ({ id: d.id, type: "deal" as EntityType, name: d.title, deletedAt: d.deletedAt! })),
     ...projects.map((p) => ({ id: p.id, type: "project" as EntityType, name: p.name, deletedAt: p.deletedAt! })),
+    ...tasks.map((t) => ({ id: t.id, type: "task" as EntityType, name: `${t.title} (${t.project.name})`, deletedAt: t.deletedAt! })),
   ].sort((a, b) => b.deletedAt.getTime() - a.deletedAt.getTime());
 }

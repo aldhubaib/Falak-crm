@@ -10,6 +10,88 @@ import { Button } from "@/components/ui/button";
 import { usePermissions } from "@/components/permissions-provider";
 import { useRouter } from "next/navigation";
 
+async function uploadFileDirect(
+  file: File,
+  entityType: string,
+  entityId: string
+): Promise<string | null> {
+  const contentType = file.type || "application/octet-stream";
+  const createRes = await fetch("/api/files", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: file.name,
+      sizeBytes: file.size,
+      contentType,
+      entityType,
+      entityId,
+    }),
+  });
+  const data = await createRes.json();
+  if (!createRes.ok) return null;
+
+  if (data.uploadUrl) {
+    try {
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("PUT", data.uploadUrl);
+        xhr.setRequestHeader("Content-Type", contentType);
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            const etag = xhr.getResponseHeader("ETag") || '"single"';
+            fetch(`/api/files/${data.id}/parts/1`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ etag }),
+            }).catch(() => {});
+            resolve();
+          } else {
+            reject(new Error(`Upload failed: ${xhr.status}`));
+          }
+        };
+        xhr.onerror = () => reject(new Error("Network error"));
+        xhr.send(file);
+      });
+    } catch {
+      await fetch(`/api/files/${data.id}/upload`, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": contentType },
+      });
+    }
+  } else if (data.parts && data.parts.length > 0) {
+    const partSize = data.partSize || 10 * 1024 * 1024;
+    for (const part of data.parts as { number: number; url: string }[]) {
+      const start = (part.number - 1) * partSize;
+      const end = Math.min(part.number * partSize, file.size);
+      const blob = file.slice(start, end);
+      await new Promise<void>((resolve, reject) => {
+        const pxhr = new XMLHttpRequest();
+        pxhr.open("PUT", part.url);
+        pxhr.setRequestHeader("Content-Type", contentType);
+        pxhr.onload = () => {
+          if (pxhr.status >= 200 && pxhr.status < 300) {
+            const etag = pxhr.getResponseHeader("ETag") || `"part-${part.number}"`;
+            fetch(`/api/files/${data.id}/parts/${part.number}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ etag }),
+            }).catch(() => {});
+            resolve();
+          } else {
+            reject(new Error(`Part ${part.number} failed: ${pxhr.status}`));
+          }
+        };
+        pxhr.onerror = () => reject(new Error(`Part ${part.number}: network error`));
+        pxhr.send(blob);
+      });
+    }
+  }
+
+  await fetch(`/api/files/${data.id}/complete`, { method: "POST" });
+  return data.id;
+}
+
 type ChecklistItem = {
   id: string;
   name: string;
@@ -258,32 +340,16 @@ export function TaskDetailClient({
             const taskRes = await fetch(`/api/tasks/${result.data.id}/checklist-items`);
             const items: { id: string; templateItemId: string }[] = await taskRes.json();
 
-            for (const [templateItemId, file] of Object.entries(pendingFiles)) {
-              const checklistItem = items.find((i) => i.templateItemId === templateItemId);
-              if (!checklistItem) continue;
-
-              const createRes = await fetch("/api/files", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  name: file.name,
-                  sizeBytes: file.size,
-                  contentType: file.type,
-                  entityType: "checklist_item",
-                  entityId: checklistItem.id,
-                }),
-              });
-              const fileData = await createRes.json();
-              if (!createRes.ok) continue;
-
-              await fetch(`/api/files/${fileData.id}/upload`, {
-                method: "PUT",
-                body: file,
-                headers: { "Content-Type": file.type },
-              });
-              await fetch(`/api/files/${fileData.id}/complete`, { method: "POST" });
-              await setChecklistItemAttachment(checklistItem.id, fileData.id, projectId);
-            }
+            await Promise.all(
+              Object.entries(pendingFiles).map(async ([templateItemId, file]) => {
+                const checklistItem = items.find((i) => i.templateItemId === templateItemId);
+                if (!checklistItem) return;
+                const attachmentId = await uploadFileDirect(file, "checklist_item", checklistItem.id);
+                if (attachmentId) {
+                  await setChecklistItemAttachment(checklistItem.id, attachmentId, projectId);
+                }
+              })
+            );
           }
           router.replace(`/projects/${projectId}/tasks/${result.data.id}`);
         }
@@ -1145,31 +1211,13 @@ function ChecklistItemRow({
   const handleFileUpload = useCallback(async (file: File) => {
     setUploading(true);
     try {
-      const res = await fetch("/api/files", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: file.name,
-          sizeBytes: file.size,
-          contentType: file.type,
-          entityType: "checklist_item",
-          entityId: item.id,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      const attachmentId = await uploadFileDirect(file, "checklist_item", item.id);
+      if (!attachmentId) throw new Error("Upload failed");
 
-      await fetch(`/api/files/${data.id}/upload`, {
-        method: "PUT",
-        body: file,
-        headers: { "Content-Type": file.type },
-      });
-
-      await fetch(`/api/files/${data.id}/complete`, { method: "POST" });
-      await setChecklistItemAttachment(item.id, data.id, projectId);
+      await setChecklistItemAttachment(item.id, attachmentId, projectId);
       setUploadedFileName(file.name);
 
-      const dlRes = await fetch(`/api/files/${data.id}/download-url`);
+      const dlRes = await fetch(`/api/files/${attachmentId}/download-url`);
       const dlData = await dlRes.json();
       if (dlData.url) setPreviewUrl(dlData.url);
 

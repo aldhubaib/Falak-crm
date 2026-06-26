@@ -1,0 +1,30 @@
+---
+description: Always verify responsiveness when implementing or changing UI
+globs: src/**/*.tsx,src/**/*.css
+alwaysApply: false
+---
+
+# Responsive Design
+
+Whenever you implement or change any UI/design, you MUST verify responsiveness
+BEFORE reporting the task as done. Do not finish a UI change without this check,
+so we avoid back-and-forth fixes.
+
+## Rules
+- Mobile-first: write base styles for small screens, then layer `sm:` `md:` `lg:` `xl:`.
+- Grids/flex must reflow, never overflow. Prefer `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`.
+- Avoid fixed pixel widths that break mobile. Use `w-full`, `max-w-*`, and `min-w-0`.
+- Long text must wrap or truncate (`truncate`, `break-words`).
+- Touch targets ≥ 40px on mobile.
+
+## Example
+```tsx
+// ❌ BAD: fixed grid, breaks on phones
+<div className="grid grid-cols-5 gap-4">
+
+// ✅ GOOD: reflows across breakpoints
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+```
+
+When reporting the change, state which breakpoints you accounted for
+(e.g. ~375px phone, ~768px tablet, ≥1280px desktop).

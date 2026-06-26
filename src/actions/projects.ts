@@ -36,6 +36,7 @@ export async function getProject(id: string) {
       status: true,
       deal: true,
       tasks: {
+        where: { deletedAt: null },
         include: {
           status: true,
           service: true,
@@ -252,26 +253,11 @@ export async function deleteTask(taskId: string, projectId: string, dealId?: str
   const { member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");
 
-  const checklistItems = await db.taskChecklistItem.findMany({
-    where: { taskId },
-    select: { attachmentId: true },
+  await db.task.update({
+    where: { id: taskId },
+    data: { deletedAt: new Date() },
   });
 
-  const attachmentIds = checklistItems
-    .map((ci) => ci.attachmentId)
-    .filter((id): id is string => !!id);
-
-  if (attachmentIds.length > 0) {
-    const attachments = await db.attachment.findMany({
-      where: { id: { in: attachmentIds } },
-      select: { id: true, r2Key: true },
-    });
-
-    await Promise.all(attachments.filter((a) => a.r2Key).map((a) => deleteObject(a.r2Key!)));
-    await db.attachment.deleteMany({ where: { id: { in: attachmentIds } } });
-  }
-
-  await db.task.delete({ where: { id: taskId } });
   revalidatePath(`/projects/${projectId}`);
   if (dealId) revalidatePath(`/deals/${dealId}`);
 }
@@ -330,7 +316,7 @@ export async function createProject(formData: FormData): Promise<ActionResult<{ 
 export async function getTask(taskId: string) {
   const workspace = await requireWorkspace();
   const task = await db.task.findFirst({
-    where: { id: taskId, project: { workspaceId: workspace.id } },
+    where: { id: taskId, deletedAt: null, project: { workspaceId: workspace.id } },
     include: {
       status: true,
       service: true,

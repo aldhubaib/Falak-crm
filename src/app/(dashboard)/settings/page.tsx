@@ -1,96 +1,114 @@
 import Link from "next/link";
-import { GitBranch, Layers, ListChecks, ClipboardCheck, MessageCircle, Users, Receipt, Building2, UserPlus, Trash2, ArrowRightLeft } from "lucide-react";
+import {
+  GitBranch,
+  Layers,
+  ListChecks,
+  ClipboardCheck,
+  MessageCircle,
+  Users,
+  Receipt,
+  Building2,
+  UserPlus,
+  Trash2,
+  ArrowRightLeft,
+  Settings,
+  FolderKanban,
+  Handshake,
+  FileText,
+  Plug,
+} from "lucide-react";
 
-const settingsItems = [
+type SettingsLink = {
+  title: string;
+  href: string;
+};
+
+type SettingsCategory = {
+  name: string;
+  icon: typeof Settings;
+  color: string;
+  links: SettingsLink[];
+};
+
+const generalSettings: SettingsCategory[] = [
   {
-    title: "Services",
-    description: "Manage your service catalog and pricing",
-    href: "/settings/services",
-    icon: Layers,
+    name: "General",
+    icon: Settings,
+    color: "text-primary",
+    links: [
+      { title: "Team & Roles", href: "/settings/team" },
+      { title: "Trash", href: "/settings/trash" },
+    ],
   },
   {
-    title: "Pipelines & Stages",
-    description: "Configure deal pipeline stages and their order",
-    href: "/settings/pipelines",
-    icon: GitBranch,
+    name: "CRM",
+    icon: Handshake,
+    color: "text-purple",
+    links: [
+      { title: "Pipelines & Stages", href: "/settings/pipelines" },
+      { title: "Industries", href: "/settings/industries" },
+      { title: "Referrals", href: "/settings/referrals" },
+    ],
   },
   {
-    title: "Statuses",
-    description: "Project and task statuses",
-    href: "/settings/statuses",
-    icon: ListChecks,
+    name: "Projects",
+    icon: FolderKanban,
+    color: "text-success",
+    links: [
+      { title: "Statuses", href: "/settings/statuses" },
+      { title: "Checklists", href: "/settings/checklists" },
+    ],
   },
   {
-    title: "Checklists",
-    description: "Task checklist templates with role-based items and stage gates",
-    href: "/settings/checklists",
-    icon: ClipboardCheck,
+    name: "Billing & Finance",
+    icon: FileText,
+    color: "text-orange",
+    links: [
+      { title: "Services", href: "/settings/services" },
+      { title: "Currencies", href: "/settings/currencies" },
+      { title: "Billing", href: "/settings/billing" },
+    ],
   },
   {
-    title: "Industries",
-    description: "Manage industry options for companies",
-    href: "/settings/industries",
-    icon: Building2,
-  },
-  {
-    title: "Referrals",
-    description: "Manage referral source options for companies",
-    href: "/settings/referrals",
-    icon: UserPlus,
-  },
-  {
-    title: "Team & Roles",
-    description: "Manage team members, freelancers, and permissions",
-    href: "/settings/team",
-    icon: Users,
-  },
-  {
-    title: "Currencies",
-    description: "Manage currencies and exchange rates",
-    href: "/settings/currencies",
-    icon: ArrowRightLeft,
-  },
-  {
-    title: "Billing",
-    description: "Tax rates and invoice numbering",
-    href: "/settings/billing",
-    icon: Receipt,
-  },
-  {
-    title: "WhatsApp",
-    description: "Connect your WhatsApp Business account",
-    href: "/settings/whatsapp",
-    icon: MessageCircle,
-  },
-  {
-    title: "Trash",
-    description: "View and restore deleted records",
-    href: "/settings/trash",
-    icon: Trash2,
+    name: "Integrations",
+    icon: Plug,
+    color: "text-cyan",
+    links: [
+      { title: "WhatsApp", href: "/settings/whatsapp" },
+    ],
   },
 ];
 
 export default function SettingsPage() {
   return (
-    <div className="p-6">
-      <div className="space-y-2">
-        {settingsItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="rounded-xl border border-border bg-card p-4 flex items-center gap-4 hover:border-primary/30 transition-colors no-underline block"
+    <div className="p-6 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        {generalSettings.map((category) => (
+          <div
+            key={category.name}
+            className="rounded-xl border border-border bg-card p-4 flex flex-col"
           >
-            <div className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center">
-              <item.icon className="w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
+            <div className="flex items-center gap-2 mb-3 pb-3 border-b border-border">
+              <category.icon
+                className={`w-4 h-4 ${category.color}`}
+                strokeWidth={1.5}
+              />
+              <h3 className={`text-[13px] font-semibold ${category.color}`}>
+                {category.name}
+              </h3>
             </div>
-            <div className="flex-1">
-              <h3 className="text-[13px] font-medium text-foreground">{item.title}</h3>
-              <p className="text-[12px] text-muted-foreground mt-0.5">{item.description}</p>
+            <div className="space-y-0.5">
+              {category.links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="block px-2 py-1.5 text-[13px] text-muted-foreground hover:text-foreground transition-colors no-underline rounded-md hover:bg-muted/40"
+                >
+                  {link.title}
+                </Link>
+              ))}
             </div>
-            <svg className="w-4 h-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-            </svg>
-          </Link>
+          </div>
         ))}
       </div>
     </div>

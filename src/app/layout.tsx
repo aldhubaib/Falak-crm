@@ -45,7 +45,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
     >
       <body className="min-h-full bg-background text-foreground overscroll-none">
-        <ClerkProvider appearance={{ baseTheme: dark }}>
+        <ClerkProvider
+          afterSignOutUrl="/sign-in"
+          appearance={{ baseTheme: dark }}
+        >
           {children}
           <ErrorToast />
         </ClerkProvider>

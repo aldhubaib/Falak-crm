@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
+import { deleteObject } from "@/lib/storage";
 
-export type EntityType = "company" | "contact" | "deal" | "project";
+export type EntityType = "company" | "contact" | "deal" | "project" | "task";
 
 export type RelationBlock = {
   type: EntityType;
@@ -9,10 +10,6 @@ export type RelationBlock = {
   items: { id: string; name: string }[];
 };
 
-/**
- * Check what relations would block deletion of an entity.
- * Returns an array of blocking relations (empty means safe to delete).
- */
 export async function checkDeletionBlocks(
   type: EntityType,
   id: string
@@ -127,9 +124,6 @@ export async function checkDeletionBlocks(
   return blocks;
 }
 
-/**
- * Soft delete an entity (set deletedAt).
- */
 export async function softDelete(type: EntityType, id: string) {
   const now = new Date();
 
@@ -146,12 +140,12 @@ export async function softDelete(type: EntityType, id: string) {
     case "project":
       await db.project.update({ where: { id }, data: { deletedAt: now } });
       break;
+    case "task":
+      await db.task.update({ where: { id }, data: { deletedAt: now } });
+      break;
   }
 }
 
-/**
- * Restore a soft-deleted entity.
- */
 export async function restoreEntity(type: EntityType, id: string) {
   switch (type) {
     case "company":
@@ -166,5 +160,50 @@ export async function restoreEntity(type: EntityType, id: string) {
     case "project":
       await db.project.update({ where: { id }, data: { deletedAt: null } });
       break;
+    case "task":
+      await db.task.update({ where: { id }, data: { deletedAt: null } });
+      break;
+  }
+}
+
+export async function permanentDelete(type: EntityType, id: string) {
+  switch (type) {
+    case "company":
+      await db.company.delete({ where: { id } });
+      break;
+    case "contact":
+      await db.contact.delete({ where: { id } });
+      break;
+    case "deal":
+      await db.deal.delete({ where: { id } });
+      break;
+    case "project": {
+      const assets = await db.projectAsset.findMany({
+        where: { projectId: id },
+        select: { r2Key: true },
+      });
+      await Promise.all(assets.filter((a) => a.r2Key).map((a) => deleteObject(a.r2Key)));
+      await db.project.delete({ where: { id } });
+      break;
+    }
+    case "task": {
+      const checklistItems = await db.taskChecklistItem.findMany({
+        where: { taskId: id },
+        select: { attachmentId: true },
+      });
+      const attachmentIds = checklistItems
+        .map((ci) => ci.attachmentId)
+        .filter((aid): aid is string => !!aid);
+      if (attachmentIds.length > 0) {
+        const attachments = await db.attachment.findMany({
+          where: { id: { in: attachmentIds } },
+          select: { r2Key: true },
+        });
+        await Promise.all(attachments.filter((a) => a.r2Key).map((a) => deleteObject(a.r2Key!)));
+        await db.attachment.deleteMany({ where: { id: { in: attachmentIds } } });
+      }
+      await db.task.delete({ where: { id } });
+      break;
+    }
   }
 }

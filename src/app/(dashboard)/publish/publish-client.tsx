@@ -16,6 +16,7 @@ import {
   CheckCircle2,
   Paperclip,
   Download,
+  FolderKanban,
 } from "lucide-react";
 import {
   getPublishSchedule,
@@ -46,11 +47,12 @@ type ScheduledItem = {
   published: boolean;
   publishedAt: string | null;
   notes: string | null;
-  project: { id: string; name: string };
+  project: { id: string; name: string; thumbnailId: string | null };
   task: {
     id: string;
     title: string;
     taskNumber: number;
+    completedAt: string | null;
     checklistItems: ScheduledDeliveryFile[];
   };
   scheduler: { id: string; name: string | null; email: string };
@@ -60,6 +62,8 @@ type DeliveryTask = {
   id: string;
   title: string;
   taskNumber: number;
+  completedAt: string | null;
+  project?: { id: string; name: string; thumbnailId: string | null };
   checklistItems: DeliveryFile[];
   publishItem: { id: string; scheduledDate: string } | null;
 };
@@ -83,16 +87,44 @@ function getFileIcon(type: string, formats: string | null) {
   return <FileText className="w-3 h-3" />;
 }
 
+function ProjectAvatar({ thumbnailId, name, size = "sm" }: { thumbnailId: string | null; name: string; size?: "sm" | "md" }) {
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (!thumbnailId) return;
+    let cancelled = false;
+    fetch(`/api/files/${thumbnailId}/download-url`)
+      .then((r) => r.json())
+      .then((data) => { if (!cancelled && data.url) setUrl(data.url); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [thumbnailId]);
+
+  const s = size === "md" ? "w-7 h-7" : "w-5 h-5";
+  const textSize = size === "md" ? "text-[10px]" : "text-[8px]";
+
+  if (url) {
+    return <img src={url} alt={name} className={`${s} rounded object-cover shrink-0`} loading="lazy" />;
+  }
+
+  const initials = name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
+  return (
+    <div className={`${s} rounded bg-primary/15 flex items-center justify-center ${textSize} font-semibold text-primary shrink-0`}>
+      {initials}
+    </div>
+  );
+}
+
 export function PublishClient({ projects }: { projects: Project[] }) {
   const now = new Date();
   const [currentMonth, setCurrentMonth] = useState(now.getMonth());
   const [currentYear, setCurrentYear] = useState(now.getFullYear());
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(projects[0]?.id || null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [schedule, setSchedule] = useState<ScheduledItem[]>([]);
   const [allItems, setAllItems] = useState<ScheduledItem[]>([]);
   const [deliveryTasks, setDeliveryTasks] = useState<DeliveryTask[]>([]);
   const [loading, setLoading] = useState(true);
   const [dragTask, setDragTask] = useState<DeliveryTask | null>(null);
+  const [dragProjectId, setDragProjectId] = useState<string | null>(null);
   const [dragOverDate, setDragOverDate] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"month" | "week" | "schedule">(() => {
@@ -127,7 +159,6 @@ export function PublishClient({ projects }: { projects: Project[] }) {
   }, [selectedProjectId]);
 
   const loadDeliveryTasks = useCallback(async () => {
-    if (!selectedProjectId) { setDeliveryTasks([]); return; }
     const data = await getDeliveryTasks(selectedProjectId);
     setDeliveryTasks(data as unknown as DeliveryTask[]);
   }, [selectedProjectId]);
@@ -155,15 +186,24 @@ export function PublishClient({ projects }: { projects: Project[] }) {
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
 
-  const getDateStr = (day: number) => {
-    const d = new Date(currentYear, currentMonth, day);
-    return d.toISOString().split("T")[0];
+  const toLocalDateStr = (d: Date) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
   };
+
+  const getDateStr = (day: number) => {
+    return toLocalDateStr(new Date(currentYear, currentMonth, day));
+  };
+
+  const toDateKey = (value: ScheduledItem["scheduledDate"]) =>
+    toLocalDateStr(new Date(value));
 
   const scheduleByDate = useMemo(() => {
     const map = new Map<string, ScheduledItem[]>();
     for (const item of schedule) {
-      const ds = String(item.scheduledDate).split("T")[0];
+      const ds = toDateKey(item.scheduledDate);
       const arr = map.get(ds);
       if (arr) arr.push(item);
       else map.set(ds, [item]);
@@ -174,7 +214,7 @@ export function PublishClient({ projects }: { projects: Project[] }) {
   const allItemsByDate = useMemo(() => {
     const map = new Map<string, ScheduledItem[]>();
     for (const item of allItems) {
-      const ds = String(item.scheduledDate).split("T")[0];
+      const ds = toDateKey(item.scheduledDate);
       const arr = map.get(ds);
       if (arr) arr.push(item);
       else map.set(ds, [item]);
@@ -183,7 +223,7 @@ export function PublishClient({ projects }: { projects: Project[] }) {
   }, [allItems]);
 
   const getItemsForDate = useCallback((dateStr: string) => {
-    const source = viewMode === "schedule" ? allItemsByDate : scheduleByDate;
+    const source = viewMode === "month" ? scheduleByDate : allItemsByDate;
     return source.get(dateStr) ?? [];
   }, [viewMode, allItemsByDate, scheduleByDate]);
 
@@ -197,13 +237,16 @@ export function PublishClient({ projects }: { projects: Project[] }) {
   }), [allItems, unscheduledTasks]);
 
   const handleDrop = async (dateStr: string) => {
-    if (!dragTask || !selectedProjectId) return;
+    if (!dragTask) return;
+    const projectForDrag = dragProjectId || dragTask.project?.id || selectedProjectId;
+    if (!projectForDrag) return;
     setDragOverDate(null);
     setDragTask(null);
+    setDragProjectId(null);
 
     await scheduleTask({
       taskId: dragTask.id,
-      projectId: selectedProjectId,
+      projectId: projectForDrag,
       scheduledDate: dateStr,
     });
     loadSchedule();
@@ -225,16 +268,17 @@ export function PublishClient({ projects }: { projects: Project[] }) {
     loadAllItems();
   };
 
-  const todayStr = now.toISOString().split("T")[0];
+  const todayStr = toLocalDateStr(now);
 
-  const getTemplateInfo = (task: DeliveryTask | ScheduledItem["task"]) => {
-    const first = task.checklistItems[0]?.templateItem?.template;
-    return first || null;
-  };
+  const projectMap = useMemo(() => {
+    const m = new Map<string, Project>();
+    for (const p of projects) m.set(p.id, p);
+    return m;
+  }, [projects]);
 
   return (
     <div className="flex h-[calc(100vh-48px)]">
-      {/* Left sidebar — unscheduled delivery tasks */}
+      {/* Left sidebar — delivery queue */}
       <div className="w-[300px] border-r border-border flex flex-col shrink-0 bg-card/30">
         <div className="px-4 py-3 border-b border-border">
           <h2 className="text-[13px] font-semibold text-foreground flex items-center gap-2">
@@ -250,6 +294,7 @@ export function PublishClient({ projects }: { projects: Project[] }) {
             onChange={(e) => setSelectedProjectId(e.target.value || null)}
             className="w-full h-8 px-2 rounded-lg bg-black border border-border text-[12px] text-foreground focus:outline-none focus:border-ring"
           >
+            <option value="">All Projects</option>
             {projects.map((p) => (
               <option key={p.id} value={p.id}>{p.name}</option>
             ))}
@@ -259,7 +304,7 @@ export function PublishClient({ projects }: { projects: Project[] }) {
         <div className="flex-1 overflow-y-auto px-2 py-2 space-y-1.5">
           {unscheduledTasks.length === 0 && scheduledTasks.length === 0 ? (
             <p className="text-[12px] text-muted-foreground text-center py-8">
-              {selectedProjectId ? "No deliveries ready" : "Select a project"}
+              No deliveries ready
             </p>
           ) : (
             <>
@@ -269,21 +314,29 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                     Unscheduled ({unscheduledTasks.length})
                   </p>
                   {unscheduledTasks.map((task) => {
-                    const tmpl = getTemplateInfo(task);
+                    const tmpl = task.checklistItems[0]?.templateItem?.template;
+                    const tp = task.project || (selectedProjectId ? projectMap.get(selectedProjectId) : null);
                     return (
                       <div
                         key={task.id}
                         draggable
-                        onDragStart={() => setDragTask(task)}
-                        onDragEnd={() => { setDragTask(null); setDragOverDate(null); }}
-                        className="px-3 py-3 rounded-xl bg-black/40 border border-border/50 cursor-grab hover:border-primary/30 hover:bg-primary/5 transition-colors group"
+                        onDragStart={() => { setDragTask(task); setDragProjectId(tp?.id || null); }}
+                        onDragEnd={() => { setDragTask(null); setDragOverDate(null); setDragProjectId(null); }}
+                        className="px-3 py-2.5 rounded-xl bg-black/40 border border-border/50 cursor-grab hover:border-primary/30 hover:bg-primary/5 transition-colors group"
                       >
-                        <div className="flex items-start gap-2">
-                          <GripVertical className="w-3.5 h-3.5 text-muted-foreground/30 mt-0.5 shrink-0 group-hover:text-muted-foreground" />
+                        <div className="flex items-center gap-2.5">
+                          <GripVertical className="w-3 h-3 text-muted-foreground/30 shrink-0 group-hover:text-muted-foreground" />
+                          {tp && (
+                            <ProjectAvatar
+                              thumbnailId={tp.thumbnailId ?? null}
+                              name={tp.name ?? ""}
+                              size="md"
+                            />
+                          )}
                           <div className="flex-1 min-w-0">
                             {tmpl && (
                               <span
-                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium border mb-1.5"
+                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium border mb-1"
                                 style={{
                                   borderColor: `${tmpl.color || "#3b82f6"}40`,
                                   color: tmpl.color || "#3b82f6",
@@ -293,17 +346,7 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                                 {tmpl.icon} {tmpl.name}
                               </span>
                             )}
-                            <p className="text-[12px] font-medium text-foreground">
-                              <span className="text-muted-foreground">#{task.taskNumber}</span> {task.title}
-                            </p>
-                            <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                              {task.checklistItems.map((item) => (
-                                <span key={item.id} className="inline-flex items-center gap-1 text-[10px] text-muted-foreground">
-                                  {getFileIcon(item.type, item.allowedFormats)}
-                                  <span className="truncate max-w-[120px]">{item.name}</span>
-                                </span>
-                              ))}
-                            </div>
+                            <p className="text-[12px] font-medium text-foreground truncate">{task.title}</p>
                           </div>
                         </div>
                       </div>
@@ -318,38 +361,41 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                     Scheduled ({scheduledTasks.length})
                   </p>
                   {scheduledTasks.map((task) => {
-                    const tmpl = getTemplateInfo(task);
                     const schedDate = task.publishItem ? new Date(task.publishItem.scheduledDate) : null;
+                    const deliveredDate = task.completedAt ? new Date(task.completedAt) : null;
+                    const tp = task.project || (selectedProjectId ? projectMap.get(selectedProjectId) : null);
                     return (
                       <div
                         key={task.id}
-                        className="px-3 py-3 rounded-xl bg-black/20 border border-border/30 opacity-70 hover:opacity-100 transition-all"
+                        className="rounded-xl bg-black/20 border border-border/30 opacity-70 hover:opacity-100 transition-all overflow-hidden"
                       >
-                        <div className="flex items-start gap-2">
-                          <Clock className="w-3.5 h-3.5 text-primary/50 mt-0.5 shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            {tmpl && (
-                              <span
-                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium border mb-1.5"
-                                style={{
-                                  borderColor: `${tmpl.color || "#3b82f6"}40`,
-                                  color: tmpl.color || "#3b82f6",
-                                  backgroundColor: `${tmpl.color || "#3b82f6"}10`,
-                                }}
-                              >
-                                {tmpl.icon} {tmpl.name}
-                              </span>
-                            )}
-                            <p className="text-[12px] font-medium text-foreground">
-                              <span className="text-muted-foreground">#{task.taskNumber}</span> {task.title}
-                            </p>
-                            {schedDate && (
-                              <p className="text-[10px] text-primary/70 mt-1 flex items-center gap-1">
-                                <Calendar className="w-3 h-3" />
-                                {schedDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        <div className="flex items-center gap-2.5 px-3 pt-2.5 pb-2">
+                          {tp && (
+                            <ProjectAvatar
+                              thumbnailId={tp.thumbnailId ?? null}
+                              name={tp.name ?? ""}
+                              size="md"
+                            />
+                          )}
+                          <p className="text-[12px] font-medium text-foreground truncate flex-1 min-w-0">{task.title}</p>
+                        </div>
+                        <div className="flex border-t border-border/20">
+                          {deliveredDate && (
+                            <div className="flex-1 px-3 py-1.5 border-r border-border/20">
+                              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Delivered</p>
+                              <p className="text-[11px] text-green-400 font-medium mt-0.5">
+                                {deliveredDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                               </p>
-                            )}
-                          </div>
+                            </div>
+                          )}
+                          {schedDate && (
+                            <div className="flex-1 px-3 py-1.5">
+                              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Publish</p>
+                              <p className="text-[11px] text-primary font-medium mt-0.5">
+                                {schedDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     );
@@ -395,7 +441,7 @@ export function PublishClient({ projects }: { projects: Project[] }) {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-4 text-[11px] mr-2">
+            <div className="flex items-center gap-4 text-[11px]">
               <span className="text-muted-foreground">
                 <span className="text-foreground font-medium">{stats.scheduled}</span> scheduled
               </span>
@@ -407,7 +453,6 @@ export function PublishClient({ projects }: { projects: Project[] }) {
               </span>
             </div>
 
-            {/* View selector */}
             <select
               value={viewMode}
               onChange={(e) => changeView(e.target.value as "month" | "week" | "schedule")}
@@ -459,7 +504,7 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                         </div>
                         <div className="space-y-0.5">
                           {dayItems.slice(0, 3).map((item) => (
-                            <SchedulePill key={item.id} item={item} onClick={() => setSelectedDate(dateStr)} />
+                            <CalendarCard key={item.id} item={item} onClick={() => setSelectedDate(dateStr)} compact />
                           ))}
                           {dayItems.length > 3 && <p className="text-[9px] text-muted-foreground text-center">+{dayItems.length - 3} more</p>}
                         </div>
@@ -475,8 +520,9 @@ export function PublishClient({ projects }: { projects: Project[] }) {
         {/* WEEK VIEW */}
         {viewMode === "week" && (() => {
           const weekDays = Array.from({ length: 7 }, (_, i) => {
-            const d = new Date(weekStart.getTime() + i * 86400000);
-            return { date: d, dateStr: d.toISOString().split("T")[0], dayName: DAYS[d.getDay()], dayNum: d.getDate(), monthName: MONTHS[d.getMonth()] };
+            const d = new Date(weekStart);
+            d.setDate(weekStart.getDate() + i);
+            return { date: d, dateStr: toLocalDateStr(d), dayName: DAYS[d.getDay()], dayNum: d.getDate() };
           });
           return (
             <>
@@ -500,44 +546,9 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                       onDragLeave={() => setDragOverDate(null)}
                       onDrop={(e) => { e.preventDefault(); handleDrop(wd.dateStr); }}
                     >
-                      {dayItems.map((item) => {
-                        const tmpl = getTemplateInfo(item.task);
-                        return (
-                          <div
-                            key={item.id}
-                            onClick={() => setSelectedDate(wd.dateStr)}
-                            className={`rounded-xl border p-2.5 cursor-pointer transition-colors ${
-                              item.published
-                                ? "bg-green-500/5 border-green-500/20 hover:bg-green-500/10"
-                                : "bg-black/30 border-border/50 hover:border-primary/30"
-                            }`}
-                          >
-                            {tmpl && (
-                              <span
-                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[8px] font-medium border mb-1"
-                                style={{
-                                  borderColor: `${tmpl.color || "#3b82f6"}40`,
-                                  color: tmpl.color || "#3b82f6",
-                                  backgroundColor: `${tmpl.color || "#3b82f6"}10`,
-                                }}
-                              >
-                                {tmpl.icon} {tmpl.name}
-                              </span>
-                            )}
-                            <p className="text-[11px] font-medium text-foreground truncate">
-                              {item.task.title}
-                            </p>
-                            <div className="flex items-center gap-1.5 mt-1">
-                              {item.task.checklistItems.slice(0, 3).map((ci) => (
-                                <span key={ci.id} className="text-muted-foreground/50">
-                                  {getFileIcon(ci.type, ci.allowedFormats)}
-                                </span>
-                              ))}
-                              {item.published && <CheckCircle2 className="w-3 h-3 text-green-400 ml-auto" />}
-                            </div>
-                          </div>
-                        );
-                      })}
+                      {dayItems.map((item) => (
+                        <CalendarCard key={item.id} item={item} onClick={() => setSelectedDate(wd.dateStr)} />
+                      ))}
                       {dayItems.length === 0 && (
                         <p className="text-[10px] text-muted-foreground/30 text-center pt-4">—</p>
                       )}
@@ -553,10 +564,12 @@ export function PublishClient({ projects }: { projects: Project[] }) {
         {viewMode === "schedule" && (
           <div className="flex-1 overflow-y-auto">
             {(() => {
-              const sorted = [...allItems].sort((a, b) => a.scheduledDate.localeCompare(b.scheduledDate));
+              const sorted = [...allItems].sort(
+                (a, b) => new Date(a.scheduledDate).getTime() - new Date(b.scheduledDate).getTime()
+              );
               const grouped: Record<string, ScheduledItem[]> = {};
               for (const item of sorted) {
-                const dateStr = item.scheduledDate.split("T")[0];
+                const dateStr = toDateKey(item.scheduledDate);
                 if (!grouped[dateStr]) grouped[dateStr] = [];
                 grouped[dateStr].push(item);
               }
@@ -582,50 +595,42 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                       </div>
                     </div>
                     <div className="space-y-1 px-4 pb-3">
-                      {grouped[dateStr].map((item) => {
-                        const tmpl = getTemplateInfo(item.task);
-                        return (
-                          <div
-                            key={item.id}
-                            onClick={() => setSelectedDate(dateStr)}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-colors ${
-                              item.published ? "hover:bg-green-500/5" : "hover:bg-muted/20"
-                            }`}
-                          >
-                            <div className={`w-2 h-2 rounded-full shrink-0 ${item.published ? "bg-green-400" : "bg-primary"}`} />
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2">
-                                {tmpl && (
-                                  <span
-                                    className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[8px] font-medium border shrink-0"
-                                    style={{
-                                      borderColor: `${tmpl.color || "#3b82f6"}40`,
-                                      color: tmpl.color || "#3b82f6",
-                                      backgroundColor: `${tmpl.color || "#3b82f6"}10`,
-                                    }}
-                                  >
-                                    {tmpl.icon} {tmpl.name}
-                                  </span>
-                                )}
-                                <span className="text-[12px] font-medium text-foreground truncate">
-                                  {item.task.title}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2 shrink-0">
-                              {item.published ? (
-                                <span className="flex items-center gap-1 text-[10px] text-green-400 font-medium">
-                                  <CheckCircle2 className="w-3.5 h-3.5" /> Published
-                                </span>
-                              ) : (
-                                <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                                  <Clock className="w-3.5 h-3.5" /> Scheduled
+                      {grouped[dateStr].map((item) => (
+                        <div
+                          key={item.id}
+                          onClick={() => setSelectedDate(dateStr)}
+                          className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-colors ${
+                            item.published ? "hover:bg-green-500/5" : "hover:bg-muted/20"
+                          }`}
+                        >
+                          <ProjectAvatar thumbnailId={item.project.thumbnailId} name={item.project.name} size="md" />
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[12px] font-medium text-foreground truncate block">
+                              {item.task.title}
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] text-muted-foreground">{item.project.name}</span>
+                              {item.task.completedAt && (
+                                <span className="text-[10px] text-green-400/60 flex items-center gap-0.5">
+                                  <CheckCircle2 className="w-2.5 h-2.5" />
+                                  Delivered {new Date(item.task.completedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                                 </span>
                               )}
                             </div>
                           </div>
-                        );
-                      })}
+                          <div className="flex items-center gap-2 shrink-0">
+                            {item.published ? (
+                              <span className="flex items-center gap-1 text-[10px] text-green-400 font-medium">
+                                <CheckCircle2 className="w-3.5 h-3.5" /> Published
+                              </span>
+                            ) : (
+                              <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                                <Clock className="w-3.5 h-3.5" /> Scheduled
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 );
@@ -640,7 +645,6 @@ export function PublishClient({ projects }: { projects: Project[] }) {
         <DetailPanel
           selectedDate={selectedDate}
           items={getItemsForDate(selectedDate)}
-          getTemplateInfo={getTemplateInfo}
           onTogglePublished={handleTogglePublished}
           onUnschedule={handleUnschedule}
           onClose={() => setSelectedDate(null)}
@@ -650,19 +654,22 @@ export function PublishClient({ projects }: { projects: Project[] }) {
   );
 }
 
-function SchedulePill({ item, onClick }: { item: ScheduledItem; onClick: () => void }) {
+function CalendarCard({ item, onClick, compact }: { item: ScheduledItem; onClick: () => void; compact?: boolean }) {
   return (
     <div
-      className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] truncate cursor-pointer transition-colors ${
+      className={`flex items-center gap-1.5 px-1.5 py-1 rounded cursor-pointer transition-colors ${
         item.published
-          ? "bg-green-500/10 text-green-400 border border-green-500/20"
-          : "bg-primary/10 text-primary border border-primary/20"
+          ? "bg-green-500/10 border border-green-500/20 hover:bg-green-500/15"
+          : "bg-primary/10 border border-primary/20 hover:bg-primary/15"
       }`}
-      title={`#${item.task.taskNumber} ${item.task.title}`}
+      title={`${item.project.name} — ${item.task.title}`}
       onClick={(e) => { e.stopPropagation(); onClick(); }}
     >
-      {item.published ? <CheckCircle2 className="w-2.5 h-2.5 shrink-0" /> : <Clock className="w-2.5 h-2.5 shrink-0" />}
-      <span className="truncate">{item.task.title}</span>
+      <ProjectAvatar thumbnailId={item.project.thumbnailId} name={item.project.name} />
+      <span className={`truncate font-medium ${compact ? "text-[9px]" : "text-[10px]"} ${item.published ? "text-green-400" : "text-primary"}`}>
+        {item.task.title}
+      </span>
+      {item.published && !compact && <CheckCircle2 className="w-2.5 h-2.5 text-green-400 shrink-0 ml-auto" />}
     </div>
   );
 }
@@ -670,14 +677,12 @@ function SchedulePill({ item, onClick }: { item: ScheduledItem; onClick: () => v
 function DetailPanel({
   selectedDate,
   items,
-  getTemplateInfo,
   onTogglePublished,
   onUnschedule,
   onClose,
 }: {
   selectedDate: string;
   items: ScheduledItem[];
-  getTemplateInfo: (task: ScheduledItem["task"]) => { name: string; icon: string | null; color: string | null } | null;
   onTogglePublished: (item: ScheduledItem) => void;
   onUnschedule: (id: string) => void;
   onClose: () => void;
@@ -700,63 +705,56 @@ function DetailPanel({
         {items.length === 0 ? (
           <p className="text-[12px] text-muted-foreground text-center py-8">No deliveries for this day</p>
         ) : (
-          items.map((item) => {
-            const tmpl = getTemplateInfo(item.task);
-            return (
-              <div key={item.id} className="rounded-xl border border-border bg-black/40 overflow-hidden">
-                <div className="px-3 pt-3 pb-2">
-                  {tmpl && (
-                    <span
-                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium border mb-1.5"
-                      style={{
-                        borderColor: `${tmpl.color || "#3b82f6"}40`,
-                        color: tmpl.color || "#3b82f6",
-                        backgroundColor: `${tmpl.color || "#3b82f6"}10`,
-                      }}
-                    >
-                      {tmpl.icon} {tmpl.name}
-                    </span>
+          items.map((item) => (
+            <div key={item.id} className="rounded-xl border border-border bg-black/40 overflow-hidden">
+              <div className="px-3 pt-3 pb-2 flex items-start gap-2.5">
+                <ProjectAvatar thumbnailId={item.project.thumbnailId} name={item.project.name} size="md" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] text-muted-foreground">{item.project.name}</p>
+                  <p className="text-[13px] font-medium text-foreground truncate">{item.task.title}</p>
+                  {item.task.completedAt && (
+                    <p className="text-[10px] text-green-400/70 mt-0.5 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" />
+                      Delivered {new Date(item.task.completedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                    </p>
                   )}
-                  <p className="text-[13px] font-medium text-foreground">
-                    <span className="text-muted-foreground">#{item.task.taskNumber}</span> {item.task.title}
-                  </p>
-                </div>
-
-                <div className="border-t border-border/30">
-                  {item.task.checklistItems.map((ci) => (
-                    <DeliveryFilePreview key={ci.id} file={ci} />
-                  ))}
-                </div>
-
-                {item.notes && (
-                  <div className="px-3 py-2 border-t border-border/30">
-                    <p className="text-[11px] text-muted-foreground/70 italic border-l-2 border-border pl-2">{item.notes}</p>
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between px-3 py-2.5 border-t border-border/30 bg-black/20">
-                  <button
-                    onClick={() => onTogglePublished(item)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
-                      item.published
-                        ? "text-green-400 bg-green-500/10 hover:bg-green-500/20"
-                        : "text-muted-foreground hover:text-primary hover:bg-primary/10"
-                    }`}
-                  >
-                    {item.published ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Check className="w-3.5 h-3.5" />}
-                    {item.published ? "Published" : "Mark Published"}
-                  </button>
-                  <button
-                    onClick={() => onUnschedule(item.id)}
-                    className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-colors"
-                  >
-                    <X className="w-3 h-3" />
-                    Remove
-                  </button>
                 </div>
               </div>
-            );
-          })
+
+              <div className="border-t border-border/30">
+                {item.task.checklistItems.map((ci) => (
+                  <DeliveryFilePreview key={ci.id} file={ci} />
+                ))}
+              </div>
+
+              {item.notes && (
+                <div className="px-3 py-2 border-t border-border/30">
+                  <p className="text-[11px] text-muted-foreground/70 italic border-l-2 border-border pl-2">{item.notes}</p>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between px-3 py-2.5 border-t border-border/30 bg-black/20">
+                <button
+                  onClick={() => onTogglePublished(item)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
+                    item.published
+                      ? "text-green-400 bg-green-500/10 hover:bg-green-500/20"
+                      : "text-muted-foreground hover:text-primary hover:bg-primary/10"
+                  }`}
+                >
+                  {item.published ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Check className="w-3.5 h-3.5" />}
+                  {item.published ? "Published" : "Mark Published"}
+                </button>
+                <button
+                  onClick={() => onUnschedule(item.id)}
+                  className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))
         )}
       </div>
     </div>
@@ -783,7 +781,6 @@ function DeliveryFilePreview({ file }: { file: ScheduledDeliveryFile }) {
 
   return (
     <div className="border-b border-border/20 last:border-0">
-      {/* File label */}
       <div className="flex items-center gap-2 px-3 py-2">
         <span className="text-muted-foreground">
           {getFileIcon(file.type, file.allowedFormats)}
@@ -804,7 +801,6 @@ function DeliveryFilePreview({ file }: { file: ScheduledDeliveryFile }) {
         )}
       </div>
 
-      {/* Preview area */}
       {loading && (
         <div className="px-3 pb-2">
           <div className="h-24 rounded-lg bg-muted/20 animate-pulse" />
