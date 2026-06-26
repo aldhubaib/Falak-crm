@@ -193,7 +193,7 @@ export function SelectField({
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={handleClose} />
-          <div className="absolute z-50 top-full mt-1 w-full rounded-lg border border-border bg-popover shadow-lg overflow-hidden">
+          <div className="absolute z-50 top-full mt-1 w-full rounded-lg border border-border bg-black shadow-lg overflow-hidden">
             {options.length > 5 && (
               <div className="p-1.5">
                 <input
@@ -563,7 +563,7 @@ export function CountryField({ label, icon, value, onSave }: CountryFieldProps) 
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={handleClose} />
-          <div className="absolute z-50 top-full mt-1 w-full rounded-lg border border-border bg-popover shadow-lg overflow-hidden">
+          <div className="absolute z-50 top-full mt-1 w-full rounded-lg border border-border bg-black shadow-lg overflow-hidden">
             <div className="p-1.5">
               <input
                 ref={searchRef}

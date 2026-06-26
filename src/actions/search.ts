@@ -67,16 +67,16 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
   ]);
 
   for (const c of companies) {
-    results.push({ id: c.id, type: "company", title: c.name, subtitle: c.industry, href: `/dashboard/companies/${c.id}` });
+    results.push({ id: c.id, type: "company", title: c.name, subtitle: c.industry, href: `/companies/${c.id}` });
   }
   for (const c of contacts) {
-    results.push({ id: c.id, type: "contact", title: `${c.firstName} ${c.lastName}`, subtitle: c.role || c.companies[0]?.company.name || null, href: `/dashboard/contacts/${c.id}` });
+    results.push({ id: c.id, type: "contact", title: `${c.firstName} ${c.lastName}`, subtitle: c.role || c.companies[0]?.company.name || null, href: `/contacts/${c.id}` });
   }
   for (const d of deals) {
-    results.push({ id: d.id, type: "deal", title: d.title, subtitle: d.company?.name || null, href: `/dashboard/deals/${d.id}` });
+    results.push({ id: d.id, type: "deal", title: d.title, subtitle: d.company?.name || null, href: `/deals/${d.id}` });
   }
   for (const p of projects) {
-    results.push({ id: p.id, type: "project", title: p.name, subtitle: p.company?.name || null, href: `/dashboard/projects/${p.id}` });
+    results.push({ id: p.id, type: "project", title: p.name, subtitle: p.company?.name || null, href: `/projects/${p.id}` });
   }
 
   return results;

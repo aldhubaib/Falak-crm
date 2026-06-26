@@ -107,7 +107,7 @@ export function GlobalSearch() {
         onClick={() => { setOpen(false); setQuery(""); setResults([]); }}
       />
       <div className="fixed top-[15%] left-1/2 -translate-x-1/2 w-full max-w-lg z-50">
-        <div className="mx-4 bg-background border border-border rounded-xl shadow-2xl overflow-hidden">
+        <div className="mx-4 bg-black border border-border rounded-xl shadow-2xl overflow-hidden">
           <div className="flex items-center px-4 h-12 border-b border-border">
             <Search className="w-4 h-4 text-muted-foreground mr-3 shrink-0" />
             <input

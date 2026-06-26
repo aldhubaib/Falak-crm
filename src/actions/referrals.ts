@@ -28,7 +28,7 @@ export async function createReferral(name: string) {
     },
   });
 
-  revalidatePath("/dashboard/companies");
+  revalidatePath("/companies");
   return referral;
 }
 
@@ -37,5 +37,5 @@ export async function deleteReferral(id: string) {
   await db.referral.delete({
     where: { id, workspaceId: workspace.id },
   });
-  revalidatePath("/dashboard/companies");
+  revalidatePath("/companies");
 }

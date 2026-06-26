@@ -6,17 +6,24 @@ import { Sidebar } from "@/components/sidebar";
 import { BottomTabs } from "@/components/bottom-tabs";
 import { ActivityPanel } from "@/components/activity-panel";
 import { GlobalSearch } from "@/components/global-search";
+import { NotificationBell } from "@/components/notification-bell";
+import { TestRoleBanner } from "@/components/test-role-banner";
+import { UploadIndicator } from "@/components/upload-indicator";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const PAGE_TITLES: Record<string, string> = {
   "/dashboard": "Dashboard",
-  "/dashboard/companies": "Companies",
-  "/dashboard/contacts": "Contacts",
-  "/dashboard/deals": "Deals",
-  "/dashboard/projects": "Projects",
-  "/dashboard/invoices": "Invoices",
-  "/dashboard/settings": "Settings",
+  "/companies": "Companies",
+  "/contacts": "Contacts",
+  "/deals": "Deals",
+  "/projects": "Projects",
+  "/invoices": "Invoices",
+  "/settings": "Settings",
+  "/settings/team": "Team & Roles",
+  "/settings/billing": "Billing",
+  "/settings/whatsapp": "WhatsApp",
+  "/settings/checklists": "Checklists",
 };
 
 function getPageTitle(pathname: string): string {
@@ -26,7 +33,14 @@ function getPageTitle(pathname: string): string {
     const prefix = "/" + segments.slice(0, i).join("/");
     if (PAGE_TITLES[prefix]) return PAGE_TITLES[prefix];
   }
-  return "Dashboard";
+  return "";
+}
+
+function hasOwnHeader(pathname: string): boolean {
+  const segments = pathname.split("/").filter(Boolean);
+  if (segments[0] === "projects" && segments.length >= 2) return true;
+  if (segments[0] === "deals" && segments.length >= 2) return true;
+  return false;
 }
 
 const DESKTOP_BREAKPOINT = 1024;
@@ -88,10 +102,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <Menu className="w-4 h-4" />
           </button>
           <span className="font-semibold text-[13px] text-foreground">
-            {pageTitle}
+            {pageTitle || "Dashboard"}
           </span>
           <div className="flex items-center gap-2">
             <GlobalSearch />
+            <NotificationBell />
             <ActivityPanel />
           </div>
         </div>
@@ -125,20 +140,25 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           isDesktop ? "rounded-l-2xl" : "pt-12 pb-16"
         )}
       >
-        {isDesktop && (
-          <div className="flex items-center justify-between px-6 pt-4 pb-0 shrink-0">
+        <TestRoleBanner />
+        {/* Top bar — only on pages without their own header */}
+        {isDesktop && !hasOwnHeader(pathname) && (
+          <div className="flex items-center justify-between px-6 h-12 shrink-0 border-b border-border/50">
             <h1 className="text-[15px] font-semibold text-foreground">{pageTitle}</h1>
             <div className="flex items-center gap-2">
               <GlobalSearch />
+              <NotificationBell />
               <ActivityPanel />
             </div>
           </div>
         )}
-        <div className="flex-1 min-h-0">{children}</div>
+        <div className="flex-1 min-h-0 overflow-y-auto">{children}</div>
       </main>
 
       {/* Mobile bottom tabs */}
       {!isDesktop && <BottomTabs />}
+
+      <UploadIndicator />
     </div>
   );
 }

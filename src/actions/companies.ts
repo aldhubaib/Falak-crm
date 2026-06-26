@@ -91,7 +91,7 @@ export async function createCompany(formData: FormData): Promise<ActionResult<{ 
       action: "created",
     });
 
-    revalidatePath("/dashboard/companies");
+    revalidatePath("/companies");
     return { id: company.id };
   }, { formFields: Object.fromEntries(formData) });
 }
@@ -129,8 +129,8 @@ export async function updateCompany(id: string, formData: FormData): Promise<Act
       });
     }
 
-    revalidatePath("/dashboard/companies");
-    revalidatePath(`/dashboard/companies/${id}`);
+    revalidatePath("/companies");
+    revalidatePath(`/companies/${id}`);
   }, { companyId: id });
 }
 
@@ -147,6 +147,6 @@ export async function deleteCompany(id: string): Promise<ActionResult> {
       action: "deleted",
     });
 
-    revalidatePath("/dashboard/companies");
+    revalidatePath("/companies");
   }, { companyId: id });
 }

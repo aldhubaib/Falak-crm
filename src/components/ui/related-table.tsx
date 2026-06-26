@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 export type RelatedColumn<T> = {
@@ -31,6 +31,8 @@ export function RelatedTable<T>({
   action,
   emptyMessage = "No data yet.",
 }: RelatedTableProps<T>) {
+  const router = useRouter();
+
   return (
     <div className="rounded-lg bg-black border border-border p-4">
       <div className="flex items-center justify-between mb-3">
@@ -65,14 +67,15 @@ export function RelatedTable<T>({
             <tbody>
               {data.map((row) => {
                 const href = rowHref?.(row);
-                const Row = href ? Link : "tr";
-                const rowClass = "border-b border-border last:border-0 hover:bg-muted/20 transition-colors cursor-pointer";
 
                 return (
-                  // @ts-expect-error - dynamic element
-                  <Row
+                  <tr
                     key={getRowId(row)}
-                    {...(href ? { href, className: `table-row ${rowClass} no-underline` } : { className: rowClass })}
+                    className={cn(
+                      "border-b border-border last:border-0 hover:bg-muted/20 transition-colors",
+                      href && "cursor-pointer"
+                    )}
+                    onClick={href ? () => router.push(href) : undefined}
                   >
                     {columns.map((col) => (
                       <td
@@ -90,7 +93,7 @@ export function RelatedTable<T>({
                         )}
                       </td>
                     ))}
-                  </Row>
+                  </tr>
                 );
               })}
             </tbody>

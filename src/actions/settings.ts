@@ -34,7 +34,7 @@ export async function createPipeline(formData: FormData) {
     },
   });
 
-  revalidatePath("/dashboard/settings/pipelines");
+  revalidatePath("/settings/pipelines");
 }
 
 export async function createStage(pipelineId: string, formData: FormData) {
@@ -57,7 +57,7 @@ export async function createStage(pipelineId: string, formData: FormData) {
     },
   });
 
-  revalidatePath("/dashboard/settings/pipelines");
+  revalidatePath("/settings/pipelines");
 }
 
 export async function updateStage(id: string, formData: FormData) {
@@ -70,12 +70,12 @@ export async function updateStage(id: string, formData: FormData) {
     data: { name, color, type },
   });
 
-  revalidatePath("/dashboard/settings/pipelines");
+  revalidatePath("/settings/pipelines");
 }
 
 export async function deleteStage(id: string) {
   await db.pipelineStage.delete({ where: { id } });
-  revalidatePath("/dashboard/settings/pipelines");
+  revalidatePath("/settings/pipelines");
 }
 
 export async function reorderStages(pipelineId: string, stageIds: string[]) {
@@ -88,7 +88,7 @@ export async function reorderStages(pipelineId: string, stageIds: string[]) {
     )
   );
 
-  revalidatePath("/dashboard/settings/pipelines");
+  revalidatePath("/settings/pipelines");
 }
 
 // ─── Project Statuses ──────────────────────────────────────────────────────────
@@ -115,12 +115,12 @@ export async function createProjectStatus(formData: FormData) {
     data: { workspaceId: workspace.id, name, color, order: (last?.order ?? 0) + 1 },
   });
 
-  revalidatePath("/dashboard/settings/statuses");
+  revalidatePath("/settings/statuses");
 }
 
 export async function deleteProjectStatus(id: string) {
   await db.projectStatus.delete({ where: { id } });
-  revalidatePath("/dashboard/settings/statuses");
+  revalidatePath("/settings/statuses");
 }
 
 // ─── Task Statuses ─────────────────────────────────────────────────────────────
@@ -147,12 +147,154 @@ export async function createTaskStatus(formData: FormData) {
     data: { workspaceId: workspace.id, name, color, order: (last?.order ?? 0) + 1 },
   });
 
-  revalidatePath("/dashboard/settings/statuses");
+  revalidatePath("/settings/statuses");
 }
 
 export async function deleteTaskStatus(id: string) {
   await db.taskStatus.delete({ where: { id } });
-  revalidatePath("/dashboard/settings/statuses");
+  revalidatePath("/settings/statuses");
+}
+
+// ─── Checklist Templates ────────────────────────────────────────────────────────
+
+export async function getChecklistTemplates() {
+  const workspace = await requireWorkspace();
+  return db.checklistTemplate.findMany({
+    where: { workspaceId: workspace.id },
+    include: {
+      items: {
+        orderBy: { order: "asc" },
+        include: { visibleFromStage: true, requiredBeforeStage: true },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function createChecklistTemplate(formData: FormData) {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
+  const name = formData.get("name") as string;
+  if (!name?.trim()) throw new Error("Template name is required");
+  const description = (formData.get("description") as string) || undefined;
+
+  await db.checklistTemplate.create({
+    data: {
+      workspaceId: workspace.id,
+      name: name.trim(),
+      description,
+    },
+  });
+
+  revalidatePath("/settings/checklists");
+}
+
+export async function updateChecklistTemplate(id: string, data: { name?: string; icon?: string | null; color?: string | null }) {
+  const { member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  await db.checklistTemplate.update({ where: { id }, data });
+  revalidatePath("/settings/checklists");
+}
+
+export async function deleteChecklistTemplate(id: string) {
+  await db.checklistTemplate.delete({ where: { id } });
+  revalidatePath("/settings/checklists");
+}
+
+export async function addChecklistTemplateItem(templateId: string, formData: FormData) {
+  const { member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
+  const name = formData.get("name") as string;
+  if (!name?.trim()) throw new Error("Item name is required");
+
+  const type = (formData.get("type") as string) || "text";
+  const role = (formData.get("role") as string) || "any";
+  const allowedFileTypes = (formData.get("allowedFileTypes") as string)?.trim() || null;
+  const allowedFormats = (formData.get("allowedFormats") as string)?.trim() || null;
+  const aspectRatio = (formData.get("aspectRatio") as string)?.trim() || null;
+  const visibleFromStageId = (formData.get("visibleFromStageId") as string) || null;
+  const requiredBeforeStageId = (formData.get("requiredBeforeStageId") as string) || null;
+  const mandatory = formData.get("mandatory") === "true";
+  const phase = (formData.get("phase") as string) || "create";
+  const options = (formData.get("options") as string)?.trim() || null;
+
+  const last = await db.checklistTemplateItem.findFirst({
+    where: { templateId },
+    orderBy: { order: "desc" },
+  });
+
+  await db.checklistTemplateItem.create({
+    data: {
+      templateId,
+      name: name.trim(),
+      type,
+      role,
+      options,
+      allowedFileTypes,
+      allowedFormats,
+      aspectRatio,
+      mandatory,
+      phase,
+      visibleFromStageId,
+      requiredBeforeStageId,
+      order: (last?.order ?? 0) + 1,
+    },
+  });
+
+  revalidatePath("/settings/checklists");
+}
+
+export async function deleteChecklistTemplateItem(id: string) {
+  await db.checklistTemplateItem.delete({ where: { id } });
+  revalidatePath("/settings/checklists");
+}
+
+export async function updateChecklistTemplateItem(
+  id: string,
+  data: { name?: string; type?: string; role?: string; options?: string | null; allowedFileTypes?: string | null; allowedFormats?: string | null; aspectRatio?: string | null; mandatory?: boolean; phase?: string; visibleFromStageId?: string | null; requiredBeforeStageId?: string | null }
+) {
+  const { member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
+  const { visibleFromStageId, requiredBeforeStageId, ...rest } = data;
+
+  const prismaData: Record<string, unknown> = { ...rest };
+
+  if (visibleFromStageId !== undefined) {
+    prismaData.visibleFromStage = visibleFromStageId
+      ? { connect: { id: visibleFromStageId } }
+      : { disconnect: true };
+  }
+  if (requiredBeforeStageId !== undefined) {
+    prismaData.requiredBeforeStage = requiredBeforeStageId
+      ? { connect: { id: requiredBeforeStageId } }
+      : { disconnect: true };
+  }
+
+  await db.checklistTemplateItem.update({ where: { id }, data: prismaData });
+
+  const syncFields: Record<string, unknown> = {};
+  if (data.name !== undefined) syncFields.name = data.name;
+  if (data.type !== undefined) syncFields.type = data.type;
+  if (data.options !== undefined) syncFields.options = data.options;
+  if (data.allowedFileTypes !== undefined) syncFields.allowedFileTypes = data.allowedFileTypes;
+  if (data.allowedFormats !== undefined) syncFields.allowedFormats = data.allowedFormats;
+  if (data.aspectRatio !== undefined) syncFields.aspectRatio = data.aspectRatio;
+  if (data.mandatory !== undefined) syncFields.mandatory = data.mandatory;
+  if (data.phase !== undefined) syncFields.phase = data.phase;
+  if (visibleFromStageId !== undefined) syncFields.visibleFromStageId = visibleFromStageId;
+  if (requiredBeforeStageId !== undefined) syncFields.requiredBeforeStageId = requiredBeforeStageId;
+
+  if (Object.keys(syncFields).length > 0) {
+    await db.taskChecklistItem.updateMany({
+      where: { templateItemId: id },
+      data: syncFields,
+    });
+  }
+
+  revalidatePath("/settings/checklists");
 }
 
 // ─── Roles ────────────────────────────────────────────────────────────────────
@@ -180,5 +322,5 @@ export async function seedDefaultRoles() {
     })),
   });
 
-  revalidatePath("/dashboard/settings/team");
+  revalidatePath("/settings/team");
 }

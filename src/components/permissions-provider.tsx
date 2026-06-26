@@ -8,6 +8,7 @@ const DEFAULT_PERMISSIONS: Permissions = {
   pipeline: "full",
   projects: "full",
   invoices: "full",
+  publish: "full",
   settings: "full",
   team: "full",
 };

@@ -73,7 +73,7 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
         </button>
 
         {open && (
-          <div className="absolute right-0 top-full mt-1 w-44 rounded-lg border border-border bg-popover shadow-lg overflow-hidden z-50">
+          <div className="absolute right-0 top-full mt-1 w-44 rounded-lg border border-border bg-black shadow-lg overflow-hidden z-50">
             <button
               onClick={handleDeleteClick}
               disabled={loading}

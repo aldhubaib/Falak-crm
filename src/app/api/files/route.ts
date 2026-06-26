@@ -19,16 +19,25 @@ export async function POST(request: NextRequest) {
   const workspace = await requireWorkspace();
   const body = await request.json();
 
-  const { name, sizeBytes, contentType, entityType, entityId } = body as {
+  const { name, sizeBytes, entityType, entityId } = body as {
     name: string;
     sizeBytes: number;
-    contentType: string;
+    contentType?: string;
     entityType: string;
     entityId: string;
   };
+  const contentType = body.contentType || "application/octet-stream";
 
-  if (!name || !sizeBytes || !contentType || !entityType || !entityId) {
-    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+  const missing: string[] = [];
+  if (!name) missing.push("name");
+  if (sizeBytes == null || sizeBytes <= 0) missing.push("sizeBytes");
+  if (!entityType) missing.push("entityType");
+  if (!entityId) missing.push("entityId");
+  if (missing.length > 0) {
+    return NextResponse.json(
+      { error: `Missing required fields: ${missing.join(", ")}` },
+      { status: 400 }
+    );
   }
 
   const r2Key = generateR2Key(entityType, name);

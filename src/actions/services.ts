@@ -11,7 +11,7 @@ export async function getServices() {
   const workspace = await requireWorkspace();
   return db.service.findMany({
     where: { workspaceId: workspace.id },
-    orderBy: { createdAt: "desc" },
+    orderBy: { name: "asc" },
   });
 }
 
@@ -50,7 +50,7 @@ export async function createService(formData: FormData): Promise<ActionResult<{ 
       action: "created",
     });
 
-    revalidatePath("/dashboard/settings/services");
+    revalidatePath("/settings/services");
     return { id: service.id };
   });
 }
@@ -73,8 +73,8 @@ export async function updateService(id: string, formData: FormData): Promise<Act
       data,
     });
 
-    revalidatePath("/dashboard/settings/services");
-    revalidatePath(`/dashboard/settings/services/${id}`);
+    revalidatePath("/settings/services");
+    revalidatePath(`/settings/services/${id}`);
   });
 }
 
@@ -85,5 +85,5 @@ export async function deleteService(id: string) {
     where: { id, workspaceId: workspace.id },
   });
 
-  revalidatePath("/dashboard/settings/services");
+  revalidatePath("/settings/services");
 }

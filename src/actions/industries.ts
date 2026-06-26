@@ -28,7 +28,7 @@ export async function createIndustry(name: string) {
     },
   });
 
-  revalidatePath("/dashboard/companies");
+  revalidatePath("/companies");
   return industry;
 }
 
@@ -37,5 +37,5 @@ export async function deleteIndustry(id: string) {
   await db.industry.delete({
     where: { id, workspaceId: workspace.id },
   });
-  revalidatePath("/dashboard/companies");
+  revalidatePath("/companies");
 }

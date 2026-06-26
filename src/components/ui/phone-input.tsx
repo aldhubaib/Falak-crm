@@ -139,7 +139,7 @@ export function PhoneInput({
       <input type="hidden" name={name} value={fullNumber} />
 
       {dropdownOpen && (
-        <div className="absolute top-full left-0 mt-1 w-56 bg-background border border-border rounded-lg shadow-xl z-50 overflow-hidden">
+        <div className="absolute top-full left-0 mt-1 w-56 bg-black border border-border rounded-lg shadow-xl z-50 overflow-hidden">
           <div className="p-2 border-b border-border">
             <input
               value={search}

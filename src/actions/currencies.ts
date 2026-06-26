@@ -31,7 +31,7 @@ export async function addCurrency(code: string, name: string, symbol: string): P
       },
     });
 
-    revalidatePath("/dashboard/settings/currencies");
+    revalidatePath("/settings/currencies");
     return { id: currency.id };
   }, { code, name, symbol });
 }
@@ -65,7 +65,7 @@ export async function removeCurrency(id: string): Promise<ActionResult> {
       where: { workspaceId: workspace.id, fromCurrency: currency.code },
     });
 
-    revalidatePath("/dashboard/settings/currencies");
+    revalidatePath("/settings/currencies");
   }, { currencyId: id });
 }
 
@@ -88,7 +88,7 @@ export async function setBaseCurrency(code: string): Promise<ActionResult> {
       data: { baseCurrency: code },
     });
 
-    revalidatePath("/dashboard/settings/currencies");
+    revalidatePath("/settings/currencies");
     revalidatePath("/dashboard");
   }, { code });
 }
@@ -159,7 +159,7 @@ export async function setExchangeRate(
       },
     });
 
-    revalidatePath("/dashboard/settings/currencies");
+    revalidatePath("/settings/currencies");
   }, { fromCurrency, rate, effectiveDate });
 }
 

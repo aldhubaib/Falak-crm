@@ -6,6 +6,7 @@ import { canEdit } from "@/lib/permissions";
 import { logActivity } from "@/lib/activity";
 import { getLatestRateForCurrency } from "@/actions/currencies";
 import { revalidatePath } from "next/cache";
+import { safeAction, type ActionResult } from "@/lib/action";
 
 export async function getInvoices() {
   const workspace = await requireWorkspace();
@@ -104,10 +105,70 @@ export async function createInvoiceFromProject(projectId: string, taskIds: strin
     metadata: { projectId, total: subtotal + taxAmount },
   });
 
-  revalidatePath("/dashboard/invoices");
-  revalidatePath(`/dashboard/projects/${projectId}`);
-  if (dealId) revalidatePath(`/dashboard/deals/${dealId}`);
+  revalidatePath("/invoices");
+  revalidatePath(`/projects/${projectId}`);
+  if (dealId) revalidatePath(`/deals/${dealId}`);
   return invoice;
+}
+
+export async function createInvoice(formData: FormData): Promise<ActionResult<{ id: string }>> {
+  return safeAction("Create Invoice", async () => {
+    const { workspace, member } = await requireWorkspaceWithMember();
+    if (!canEdit(member, "invoices")) throw new Error("Permission denied");
+
+    const projectId = (formData.get("projectId") as string) || undefined;
+    const contactId = (formData.get("contactId") as string) || undefined;
+    const description = (formData.get("description") as string) || "Item";
+    const quantity = parseInt(formData.get("quantity") as string) || 1;
+    const unitPrice = parseFloat(formData.get("unitPrice") as string) || 0;
+    const total = quantity * unitPrice;
+
+    const lastInvoice = await db.invoice.findFirst({
+      where: { workspaceId: workspace.id },
+      orderBy: { createdAt: "desc" },
+    });
+
+    const nextNumber = lastInvoice
+      ? `INV-${String(parseInt(lastInvoice.number.replace("INV-", "")) + 1).padStart(3, "0")}`
+      : "INV-001";
+
+    const currency = workspace.baseCurrency;
+    const rateToBase = await getLatestRateForCurrency(currency);
+    const taxRate = Number(workspace.taxRate) / 100;
+    const taxAmount = total * taxRate;
+    const grandTotal = total + taxAmount;
+    const totalInBase = rateToBase != null ? grandTotal * rateToBase : null;
+
+    const invoice = await db.invoice.create({
+      data: {
+        workspaceId: workspace.id,
+        projectId: projectId || null,
+        contactId: contactId || null,
+        number: nextNumber,
+        subtotal: total,
+        taxAmount,
+        total: grandTotal,
+        currency,
+        rateToBase,
+        totalInBase,
+        items: {
+          create: [{ description, quantity, unitPrice, total }],
+        },
+      },
+    });
+
+    await logActivity({
+      entityType: "invoice",
+      entityId: invoice.id,
+      entityName: nextNumber,
+      action: "created",
+      metadata: { total: grandTotal },
+    });
+
+    revalidatePath("/invoices");
+    if (projectId) revalidatePath(`/projects/${projectId}`);
+    return { id: invoice.id };
+  }, { formFields: Object.fromEntries(formData) });
 }
 
 export async function sendInvoice(id: string) {
@@ -130,8 +191,8 @@ export async function sendInvoice(id: string) {
 
   // TODO: Send WhatsApp notification with invoice link
 
-  revalidatePath("/dashboard/invoices");
-  revalidatePath(`/dashboard/invoices/${id}`);
+  revalidatePath("/invoices");
+  revalidatePath(`/invoices/${id}`);
 }
 
 export async function acceptInvoice(token: string) {
@@ -166,5 +227,5 @@ export async function markInvoicePaid(id: string) {
     action: "paid",
   });
 
-  revalidatePath("/dashboard/invoices");
+  revalidatePath("/invoices");
 }

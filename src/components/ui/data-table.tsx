@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowUpDown, ArrowUp, ArrowDown, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 
 export type Column<T> = {
   key: string;
@@ -85,6 +85,8 @@ export function DataTable<T>({
     });
   }, [filtered, sortKey, sortDir, columns]);
 
+  const router = useRouter();
+
   return (
     <div>
       {searchable && (
@@ -145,14 +147,16 @@ export function DataTable<T>({
             <tbody>
               {sorted.map((row) => {
                 const href = rowHref?.(row);
-                const RowWrapper = href ? Link : "tr";
-                const rowProps = href
-                  ? { href, className: "table-row border-b border-border last:border-0 hover:bg-muted/20 transition-colors group cursor-pointer no-underline" }
-                  : { className: "border-b border-border last:border-0 hover:bg-muted/20 transition-colors group" };
 
                 return (
-                  // @ts-expect-error - dynamic element type
-                  <RowWrapper key={getRowId(row)} {...rowProps}>
+                  <tr
+                    key={getRowId(row)}
+                    className={cn(
+                      "border-b border-border last:border-0 hover:bg-muted/20 transition-colors group",
+                      href && "cursor-pointer"
+                    )}
+                    onClick={href ? () => router.push(href) : undefined}
+                  >
                     {columns.map((col) => (
                       <td
                         key={col.key}
@@ -170,11 +174,11 @@ export function DataTable<T>({
                       </td>
                     ))}
                     {onRowAction && (
-                      <td className="px-4 py-2.5" onClick={(e) => e.preventDefault()}>
+                      <td className="px-4 py-2.5" onClick={(e) => e.stopPropagation()}>
                         {onRowAction(row)}
                       </td>
                     )}
-                  </RowWrapper>
+                  </tr>
                 );
               })}
             </tbody>

@@ -62,7 +62,7 @@ export async function restoreRecord(type: EntityType, id: string): Promise<Actio
     });
 
     revalidatePath("/dashboard");
-    revalidatePath("/dashboard/settings/trash");
+    revalidatePath("/settings/trash");
   }, { type, id });
 }
 

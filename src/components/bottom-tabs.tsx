@@ -22,10 +22,10 @@ type TabItem = {
 
 const tabs: TabItem[] = [
   { name: "Home", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Deals", href: "/dashboard/deals", icon: Handshake, permission: "deals" },
-  { name: "Projects", href: "/dashboard/projects", icon: FolderKanban, permission: "projects" },
-  { name: "Invoices", href: "/dashboard/invoices", icon: FileText, permission: "invoices" },
-  { name: "More", href: "/dashboard/more", icon: Menu },
+  { name: "Deals", href: "/deals", icon: Handshake, permission: "deals" },
+  { name: "Projects", href: "/projects", icon: FolderKanban, permission: "projects" },
+  { name: "Invoices", href: "/invoices", icon: FileText, permission: "invoices" },
+  { name: "More", href: "/more", icon: Menu },
 ];
 
 export function BottomTabs() {
@@ -35,8 +35,8 @@ export function BottomTabs() {
   const isActive = (href: string) => {
     if (href === "/dashboard")
       return pathname === "/dashboard" || pathname === "/dashboard/";
-    if (href === "/dashboard/more") {
-      return ["/dashboard/companies", "/dashboard/contacts", "/dashboard/settings"].some(
+    if (href === "/more") {
+      return ["/companies", "/contacts", "/settings"].some(
         (p) => pathname === p || pathname.startsWith(p + "/")
       );
     }

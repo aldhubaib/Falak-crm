@@ -10,6 +10,7 @@ import {
   Handshake,
   FolderKanban,
   FileText,
+  CalendarDays,
   Settings,
   Pin,
   PinOff,
@@ -27,12 +28,13 @@ type NavItem = {
 
 const navigation: NavItem[] = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Companies", href: "/dashboard/companies", icon: Building2 },
-  { name: "Contacts", href: "/dashboard/contacts", icon: Users },
-  { name: "Deals", href: "/dashboard/deals", icon: Handshake, permission: "deals" },
-  { name: "Projects", href: "/dashboard/projects", icon: FolderKanban, permission: "projects" },
-  { name: "Invoices", href: "/dashboard/invoices", icon: FileText, permission: "invoices" },
-  { name: "Settings", href: "/dashboard/settings", icon: Settings, permission: "settings" },
+  { name: "Companies", href: "/companies", icon: Building2 },
+  { name: "Contacts", href: "/contacts", icon: Users },
+  { name: "Deals", href: "/deals", icon: Handshake, permission: "deals" },
+  { name: "Projects", href: "/projects", icon: FolderKanban, permission: "projects" },
+  { name: "Invoices", href: "/invoices", icon: FileText, permission: "invoices" },
+  { name: "Publish", href: "/publish", icon: CalendarDays, permission: "publish" },
+  { name: "Settings", href: "/settings", icon: Settings, permission: "settings" },
 ];
 
 interface SidebarProps {

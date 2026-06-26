@@ -278,6 +278,8 @@ exports.Prisma.DealScalarFieldEnum = {
   rateToBase: 'rateToBase',
   valueInBase: 'valueInBase',
   expectedCloseDate: 'expectedCloseDate',
+  discountType: 'discountType',
+  discountValue: 'discountValue',
   lostReason: 'lostReason',
   notes: 'notes',
   customFields: 'customFields',
@@ -326,12 +328,92 @@ exports.Prisma.ProjectScalarFieldEnum = {
   ownerName: 'ownerName',
   statusId: 'statusId',
   name: 'name',
+  type: 'type',
+  thumbnailId: 'thumbnailId',
   description: 'description',
+  requirePublishing: 'requirePublishing',
   startDate: 'startDate',
   deadline: 'deadline',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
+};
+
+exports.Prisma.ProjectFolderScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  parentId: 'parentId',
+  name: 'name',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ProjectAssetScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  folderId: 'folderId',
+  name: 'name',
+  fileSize: 'fileSize',
+  contentType: 'contentType',
+  r2Key: 'r2Key',
+  uploadedBy: 'uploadedBy',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ChecklistTemplateScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  name: 'name',
+  icon: 'icon',
+  color: 'color',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ChecklistTemplateItemScalarFieldEnum = {
+  id: 'id',
+  templateId: 'templateId',
+  name: 'name',
+  type: 'type',
+  role: 'role',
+  options: 'options',
+  allowedFileTypes: 'allowedFileTypes',
+  allowedFormats: 'allowedFormats',
+  aspectRatio: 'aspectRatio',
+  mandatory: 'mandatory',
+  phase: 'phase',
+  visibleFromStageId: 'visibleFromStageId',
+  requiredBeforeStageId: 'requiredBeforeStageId',
+  order: 'order'
+};
+
+exports.Prisma.ProjectTemplateScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  templateId: 'templateId'
+};
+
+exports.Prisma.TaskChecklistItemScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  templateItemId: 'templateItemId',
+  name: 'name',
+  type: 'type',
+  role: 'role',
+  options: 'options',
+  allowedFileTypes: 'allowedFileTypes',
+  allowedFormats: 'allowedFormats',
+  aspectRatio: 'aspectRatio',
+  mandatory: 'mandatory',
+  phase: 'phase',
+  visibleFromStageId: 'visibleFromStageId',
+  requiredBeforeStageId: 'requiredBeforeStageId',
+  completed: 'completed',
+  attachmentId: 'attachmentId',
+  textValue: 'textValue',
+  completedAt: 'completedAt',
+  completedBy: 'completedBy',
+  order: 'order'
 };
 
 exports.Prisma.TaskStatusScalarFieldEnum = {
@@ -346,6 +428,7 @@ exports.Prisma.TaskStatusScalarFieldEnum = {
 exports.Prisma.TaskScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
+  taskNumber: 'taskNumber',
   serviceId: 'serviceId',
   statusId: 'statusId',
   assigneeId: 'assigneeId',
@@ -353,11 +436,38 @@ exports.Prisma.TaskScalarFieldEnum = {
   description: 'description',
   billable: 'billable',
   price: 'price',
+  priority: 'priority',
   dueDate: 'dueDate',
   completedAt: 'completedAt',
   order: 'order',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TaskCommentScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  authorId: 'authorId',
+  body: 'body',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommentMentionScalarFieldEnum = {
+  id: 'id',
+  commentId: 'commentId',
+  memberId: 'memberId'
+};
+
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  recipientId: 'recipientId',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  linkUrl: 'linkUrl',
+  read: 'read',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.InvoiceScalarFieldEnum = {
@@ -492,6 +602,20 @@ exports.Prisma.AttachmentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.PublishItemScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  projectId: 'projectId',
+  taskId: 'taskId',
+  scheduledDate: 'scheduledDate',
+  scheduledBy: 'scheduledBy',
+  published: 'published',
+  publishedAt: 'publishedAt',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -602,8 +726,17 @@ exports.Prisma.ModelName = {
   DealItem: 'DealItem',
   ProjectStatus: 'ProjectStatus',
   Project: 'Project',
+  ProjectFolder: 'ProjectFolder',
+  ProjectAsset: 'ProjectAsset',
+  ChecklistTemplate: 'ChecklistTemplate',
+  ChecklistTemplateItem: 'ChecklistTemplateItem',
+  ProjectTemplate: 'ProjectTemplate',
+  TaskChecklistItem: 'TaskChecklistItem',
   TaskStatus: 'TaskStatus',
   Task: 'Task',
+  TaskComment: 'TaskComment',
+  CommentMention: 'CommentMention',
+  Notification: 'Notification',
   Invoice: 'Invoice',
   InvoiceItem: 'InvoiceItem',
   WhatsAppConfig: 'WhatsAppConfig',
@@ -613,7 +746,8 @@ exports.Prisma.ModelName = {
   Industry: 'Industry',
   Referral: 'Referral',
   CustomFieldDef: 'CustomFieldDef',
-  Attachment: 'Attachment'
+  Attachment: 'Attachment',
+  PublishItem: 'PublishItem'
 };
 
 /**

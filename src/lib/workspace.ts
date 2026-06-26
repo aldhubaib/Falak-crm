@@ -1,4 +1,5 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 import { DEFAULT_PERMISSIONS, ROLE_PRESETS, type MemberWithPermissions, type Permissions } from "@/lib/permissions";
 
@@ -75,10 +76,11 @@ export async function getOrCreateWorkspace() {
       },
       taskStatuses: {
         create: [
-          { name: "To Do", order: 1, color: "#6b7280" },
+          { name: "Todo", order: 1, color: "#6b7280" },
           { name: "In Progress", order: 2, color: "#3b82f6" },
           { name: "Review", order: 3, color: "#f59e0b" },
-          { name: "Done", order: 4, color: "#22c55e" },
+          { name: "Completed", order: 4, color: "#22c55e" },
+          { name: "Published", order: 5, color: "#8b5cf6" },
         ],
       },
       roles: {
@@ -116,10 +118,21 @@ export async function requireWorkspaceWithMember(): Promise<{
 
   const rolePermissions = dbMember.role?.permissions as unknown as Permissions | null;
 
-  const permissions: Permissions =
+  let permissions: Permissions =
     dbMember.type === "OWNER"
       ? DEFAULT_PERMISSIONS
       : rolePermissions ?? DEFAULT_PERMISSIONS;
+
+  const cookieStore = await cookies();
+  const testRoleCookie = cookieStore.get("test_role_id")?.value;
+  if (testRoleCookie && dbMember.type === "OWNER") {
+    const testRole = await db.role.findFirst({
+      where: { id: testRoleCookie, workspaceId: workspace.id },
+    });
+    if (testRole) {
+      permissions = (testRole.permissions as unknown as Permissions) ?? DEFAULT_PERMISSIONS;
+    }
+  }
 
   const member: MemberWithPermissions = {
     id: dbMember.id,

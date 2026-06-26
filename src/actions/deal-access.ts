@@ -70,7 +70,7 @@ export async function shareDealWithClient(
       },
     });
 
-    revalidatePath(`/dashboard/deals/${dealId}`);
+    revalidatePath(`/deals/${dealId}`);
     return { token: access.token };
   }, { dealId });
 }
@@ -86,7 +86,7 @@ export async function revokeDealAccess(accessId: string, dealId: string): Promis
     if (!deal) throw new Error("Deal not found");
 
     await db.dealAccess.delete({ where: { id: accessId } });
-    revalidatePath(`/dashboard/deals/${dealId}`);
+    revalidatePath(`/deals/${dealId}`);
   }, { accessId, dealId });
 }
 

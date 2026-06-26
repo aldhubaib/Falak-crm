@@ -43,30 +43,6 @@ export async function getDeals() {
   });
 }
 
-export async function getDealsInDelivery() {
-  const workspace = await requireWorkspace();
-  return db.deal.findMany({
-    where: {
-      workspaceId: workspace.id,
-      deletedAt: null,
-      stage: { type: "WON" },
-      project: { isNot: null },
-    },
-    include: {
-      company: { select: { id: true, name: true } },
-      stage: true,
-      project: {
-        include: {
-          status: true,
-          _count: { select: { tasks: true, invoices: true } },
-          tasks: { select: { id: true, completedAt: true } },
-        },
-      },
-    },
-    orderBy: { updatedAt: "desc" },
-  });
-}
-
 export async function getDeal(id: string) {
   const workspace = await requireWorkspace();
   return db.deal.findFirst({
@@ -77,17 +53,7 @@ export async function getDeal(id: string) {
       stage: true,
       pipeline: { include: { stages: { orderBy: { order: "asc" } } } },
       items: { include: { service: true } },
-      project: {
-        include: {
-          status: true,
-          tasks: {
-            include: { status: true, service: true, assignee: true },
-            orderBy: { order: "asc" },
-          },
-          invoices: { orderBy: { createdAt: "desc" } },
-        },
-      },
-      accessGrants: { orderBy: { createdAt: "desc" } },
+      project: { select: { id: true } },
     },
   });
 }
@@ -145,7 +111,7 @@ export async function createDeal(formData: FormData): Promise<ActionResult<{ id:
       action: "created",
     });
 
-    revalidatePath("/dashboard/deals");
+    revalidatePath("/deals");
     return { id: deal.id };
   }, { formFields: Object.fromEntries(formData) });
 }
@@ -175,7 +141,7 @@ export async function moveDeal(id: string, stageId: string): Promise<ActionResul
       metadata: { stageType: stage?.type },
     });
 
-    revalidatePath("/dashboard/deals");
+    revalidatePath("/deals");
   }, { dealId: id, stageId });
 }
 
@@ -185,9 +151,14 @@ export async function addDealItem(dealId: string, formData: FormData): Promise<A
     if (!canEdit(member, "deals")) throw new Error("Permission denied");
 
     const serviceId = formData.get("serviceId") as string;
+    if (!serviceId) throw new Error("Please select a service");
+
     const quantity = parseInt(formData.get("quantity") as string) || 1;
     const unitPrice = parseFloat(formData.get("unitPrice") as string) || 0;
     const description = (formData.get("description") as string) || undefined;
+
+    const service = await db.service.findUnique({ where: { id: serviceId } });
+    if (!service) throw new Error("Service not found");
 
     await db.dealItem.create({
       data: { dealId, serviceId, quantity, unitPrice, description },
@@ -205,8 +176,27 @@ export async function addDealItem(dealId: string, formData: FormData): Promise<A
 
     await db.deal.update({ where: { id: dealId }, data: { value: total, valueInBase } });
 
-    revalidatePath("/dashboard/deals");
-    revalidatePath(`/dashboard/deals/${dealId}`);
+    revalidatePath("/deals");
+    revalidatePath(`/deals/${dealId}`);
+  }, { dealId });
+}
+
+export async function updateDealDiscount(
+  dealId: string,
+  discountType: string,
+  discountValue: number
+): Promise<ActionResult> {
+  return safeAction("Update Discount", async () => {
+    const { member } = await requireWorkspaceWithMember();
+    if (!canEdit(member, "deals")) throw new Error("Permission denied");
+
+    await db.deal.update({
+      where: { id: dealId },
+      data: { discountType, discountValue },
+    });
+
+    revalidatePath("/deals");
+    revalidatePath(`/deals/${dealId}`);
   }, { dealId });
 }
 
@@ -229,12 +219,12 @@ export async function removeDealItem(itemId: string, dealId: string): Promise<Ac
 
     await db.deal.update({ where: { id: dealId }, data: { value: total, valueInBase } });
 
-    revalidatePath("/dashboard/deals");
-    revalidatePath(`/dashboard/deals/${dealId}`);
+    revalidatePath("/deals");
+    revalidatePath(`/deals/${dealId}`);
   }, { itemId, dealId });
 }
 
-export async function createProjectFromDeal(dealId: string): Promise<ActionResult> {
+export async function createProjectFromDeal(dealId: string): Promise<ActionResult<{ projectId: string }>> {
   return safeAction("Create Project from Deal", async () => {
     const { workspace, member } = await requireWorkspaceWithMember();
     if (!canEdit(member, "projects")) throw new Error("Permission denied");
@@ -256,7 +246,7 @@ export async function createProjectFromDeal(dealId: string): Promise<ActionResul
       orderBy: { order: "asc" },
     });
 
-    await db.project.create({
+    const project = await db.project.create({
       data: {
         workspaceId: workspace.id,
         dealId: deal.id,
@@ -277,7 +267,8 @@ export async function createProjectFromDeal(dealId: string): Promise<ActionResul
       },
     });
 
-    revalidatePath("/dashboard/deals");
-    revalidatePath("/dashboard/projects");
+    revalidatePath("/deals");
+    revalidatePath("/projects");
+    return { projectId: project.id };
   }, { dealId });
 }

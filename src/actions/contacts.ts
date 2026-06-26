@@ -80,8 +80,8 @@ export async function createContact(formData: FormData): Promise<ActionResult<{ 
       action: "created",
     });
 
-    revalidatePath("/dashboard/contacts");
-    revalidatePath("/dashboard/companies");
+    revalidatePath("/contacts");
+    revalidatePath("/companies");
     return { id: contact.id };
   }, { formFields: Object.fromEntries(formData) });
 }
@@ -121,8 +121,8 @@ export async function updateContact(id: string, formData: FormData): Promise<Act
       });
     }
 
-    revalidatePath("/dashboard/contacts");
-    revalidatePath(`/dashboard/contacts/${id}`);
+    revalidatePath("/contacts");
+    revalidatePath(`/contacts/${id}`);
   }, { contactId: id });
 }
 
@@ -143,8 +143,8 @@ export async function addContactCompany(
       data: { contactId, companyId, role: role || null, primary: isPrimary },
     });
 
-    revalidatePath(`/dashboard/contacts/${contactId}`);
-    revalidatePath("/dashboard/companies");
+    revalidatePath(`/contacts/${contactId}`);
+    revalidatePath("/companies");
   });
 }
 
@@ -154,8 +154,8 @@ export async function removeContactCompany(contactId: string, companyId: string)
       where: { contactId_companyId: { contactId, companyId } },
     });
 
-    revalidatePath(`/dashboard/contacts/${contactId}`);
-    revalidatePath("/dashboard/companies");
+    revalidatePath(`/contacts/${contactId}`);
+    revalidatePath("/companies");
   });
 }
 
@@ -170,7 +170,25 @@ export async function updateContactCompanyRole(
       data: { role: role || null },
     });
 
-    revalidatePath(`/dashboard/contacts/${contactId}`);
+    revalidatePath(`/contacts/${contactId}`);
+  });
+}
+
+export async function setContactPrimaryCompany(
+  contactId: string,
+  companyId: string
+): Promise<ActionResult> {
+  return safeAction("Set Primary Company", async () => {
+    await db.contactCompany.updateMany({
+      where: { contactId },
+      data: { primary: false },
+    });
+    await db.contactCompany.update({
+      where: { contactId_companyId: { contactId, companyId } },
+      data: { primary: true },
+    });
+
+    revalidatePath(`/contacts/${contactId}`);
   });
 }
 
@@ -187,7 +205,7 @@ export async function deleteContact(id: string): Promise<ActionResult> {
       action: "deleted",
     });
 
-    revalidatePath("/dashboard/contacts");
-    revalidatePath("/dashboard/companies");
+    revalidatePath("/contacts");
+    revalidatePath("/companies");
   }, { contactId: id });
 }

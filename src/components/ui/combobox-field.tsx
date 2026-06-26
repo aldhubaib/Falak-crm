@@ -80,7 +80,7 @@ export function ComboboxField({
       </button>
 
       {open && (
-        <div className="absolute z-50 top-full mt-1 w-full rounded-lg border border-border bg-popover shadow-lg overflow-hidden">
+        <div className="absolute z-50 top-full mt-1 w-full rounded-lg border border-border bg-black shadow-lg overflow-hidden">
           <div className="p-1.5">
             <input
               ref={inputRef}

@@ -12,5 +12,5 @@ export default async function PortalPage({ params }: Props) {
 
   if (!data) notFound();
 
-  return <PortalClient data={data} />;
+  return <PortalClient data={JSON.parse(JSON.stringify(data))} />;
 }
