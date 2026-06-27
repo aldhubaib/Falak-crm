@@ -4734,10 +4734,12 @@ export namespace Prisma {
 
   export type RoleCountOutputType = {
     members: number
+    taskStatuses: number
   }
 
   export type RoleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     members?: boolean | RoleCountOutputTypeCountMembersArgs
+    taskStatuses?: boolean | RoleCountOutputTypeCountTaskStatusesArgs
   }
 
   // Custom InputTypes
@@ -4756,6 +4758,13 @@ export namespace Prisma {
    */
   export type RoleCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WorkspaceMemberWhereInput
+  }
+
+  /**
+   * RoleCountOutputType without action
+   */
+  export type RoleCountOutputTypeCountTaskStatusesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskStatusWhereInput
   }
 
 
@@ -10788,6 +10797,7 @@ export namespace Prisma {
     createdAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     members?: boolean | Role$membersArgs<ExtArgs>
+    taskStatuses?: boolean | Role$taskStatusesArgs<ExtArgs>
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["role"]>
 
@@ -10821,6 +10831,7 @@ export namespace Prisma {
   export type RoleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     members?: boolean | Role$membersArgs<ExtArgs>
+    taskStatuses?: boolean | Role$taskStatusesArgs<ExtArgs>
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type RoleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10835,6 +10846,7 @@ export namespace Prisma {
     objects: {
       workspace: Prisma.$WorkspacePayload<ExtArgs>
       members: Prisma.$WorkspaceMemberPayload<ExtArgs>[]
+      taskStatuses: Prisma.$TaskStatusPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11238,6 +11250,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     members<T extends Role$membersArgs<ExtArgs> = {}>(args?: Subset<T, Role$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    taskStatuses<T extends Role$taskStatusesArgs<ExtArgs> = {}>(args?: Subset<T, Role$taskStatusesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11694,6 +11707,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WorkspaceMemberScalarFieldEnum | WorkspaceMemberScalarFieldEnum[]
+  }
+
+  /**
+   * Role.taskStatuses
+   */
+  export type Role$taskStatusesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatus
+     */
+    select?: TaskStatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatus
+     */
+    omit?: TaskStatusOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusInclude<ExtArgs> | null
+    where?: TaskStatusWhereInput
+    orderBy?: TaskStatusOrderByWithRelationInput | TaskStatusOrderByWithRelationInput[]
+    cursor?: TaskStatusWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskStatusScalarFieldEnum | TaskStatusScalarFieldEnum[]
   }
 
   /**
@@ -33571,6 +33608,7 @@ export namespace Prisma {
     name: string | null
     order: number | null
     color: string | null
+    assignToRoleId: string | null
     createdAt: Date | null
   }
 
@@ -33580,6 +33618,7 @@ export namespace Prisma {
     name: string | null
     order: number | null
     color: string | null
+    assignToRoleId: string | null
     createdAt: Date | null
   }
 
@@ -33589,6 +33628,7 @@ export namespace Prisma {
     name: number
     order: number
     color: number
+    assignToRoleId: number
     createdAt: number
     _all: number
   }
@@ -33608,6 +33648,7 @@ export namespace Prisma {
     name?: true
     order?: true
     color?: true
+    assignToRoleId?: true
     createdAt?: true
   }
 
@@ -33617,6 +33658,7 @@ export namespace Prisma {
     name?: true
     order?: true
     color?: true
+    assignToRoleId?: true
     createdAt?: true
   }
 
@@ -33626,6 +33668,7 @@ export namespace Prisma {
     name?: true
     order?: true
     color?: true
+    assignToRoleId?: true
     createdAt?: true
     _all?: true
   }
@@ -33722,6 +33765,7 @@ export namespace Prisma {
     name: string
     order: number
     color: string
+    assignToRoleId: string | null
     createdAt: Date
     _count: TaskStatusCountAggregateOutputType | null
     _avg: TaskStatusAvgAggregateOutputType | null
@@ -33750,8 +33794,10 @@ export namespace Prisma {
     name?: boolean
     order?: boolean
     color?: boolean
+    assignToRoleId?: boolean
     createdAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    assignToRole?: boolean | TaskStatus$assignToRoleArgs<ExtArgs>
     tasks?: boolean | TaskStatus$tasksArgs<ExtArgs>
     visibleFromItems?: boolean | TaskStatus$visibleFromItemsArgs<ExtArgs>
     requiredBeforeItems?: boolean | TaskStatus$requiredBeforeItemsArgs<ExtArgs>
@@ -33764,8 +33810,10 @@ export namespace Prisma {
     name?: boolean
     order?: boolean
     color?: boolean
+    assignToRoleId?: boolean
     createdAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    assignToRole?: boolean | TaskStatus$assignToRoleArgs<ExtArgs>
   }, ExtArgs["result"]["taskStatus"]>
 
   export type TaskStatusSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -33774,8 +33822,10 @@ export namespace Prisma {
     name?: boolean
     order?: boolean
     color?: boolean
+    assignToRoleId?: boolean
     createdAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    assignToRole?: boolean | TaskStatus$assignToRoleArgs<ExtArgs>
   }, ExtArgs["result"]["taskStatus"]>
 
   export type TaskStatusSelectScalar = {
@@ -33784,12 +33834,14 @@ export namespace Prisma {
     name?: boolean
     order?: boolean
     color?: boolean
+    assignToRoleId?: boolean
     createdAt?: boolean
   }
 
-  export type TaskStatusOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "name" | "order" | "color" | "createdAt", ExtArgs["result"]["taskStatus"]>
+  export type TaskStatusOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "name" | "order" | "color" | "assignToRoleId" | "createdAt", ExtArgs["result"]["taskStatus"]>
   export type TaskStatusInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    assignToRole?: boolean | TaskStatus$assignToRoleArgs<ExtArgs>
     tasks?: boolean | TaskStatus$tasksArgs<ExtArgs>
     visibleFromItems?: boolean | TaskStatus$visibleFromItemsArgs<ExtArgs>
     requiredBeforeItems?: boolean | TaskStatus$requiredBeforeItemsArgs<ExtArgs>
@@ -33797,15 +33849,18 @@ export namespace Prisma {
   }
   export type TaskStatusIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    assignToRole?: boolean | TaskStatus$assignToRoleArgs<ExtArgs>
   }
   export type TaskStatusIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    assignToRole?: boolean | TaskStatus$assignToRoleArgs<ExtArgs>
   }
 
   export type $TaskStatusPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "TaskStatus"
     objects: {
       workspace: Prisma.$WorkspacePayload<ExtArgs>
+      assignToRole: Prisma.$RolePayload<ExtArgs> | null
       tasks: Prisma.$TaskPayload<ExtArgs>[]
       visibleFromItems: Prisma.$ChecklistTemplateItemPayload<ExtArgs>[]
       requiredBeforeItems: Prisma.$ChecklistTemplateItemPayload<ExtArgs>[]
@@ -33816,6 +33871,7 @@ export namespace Prisma {
       name: string
       order: number
       color: string
+      assignToRoleId: string | null
       createdAt: Date
     }, ExtArgs["result"]["taskStatus"]>
     composites: {}
@@ -34212,6 +34268,7 @@ export namespace Prisma {
   export interface Prisma__TaskStatusClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    assignToRole<T extends TaskStatus$assignToRoleArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$assignToRoleArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     tasks<T extends TaskStatus$tasksArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     visibleFromItems<T extends TaskStatus$visibleFromItemsArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$visibleFromItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     requiredBeforeItems<T extends TaskStatus$requiredBeforeItemsArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$requiredBeforeItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -34249,6 +34306,7 @@ export namespace Prisma {
     readonly name: FieldRef<"TaskStatus", 'String'>
     readonly order: FieldRef<"TaskStatus", 'Int'>
     readonly color: FieldRef<"TaskStatus", 'String'>
+    readonly assignToRoleId: FieldRef<"TaskStatus", 'String'>
     readonly createdAt: FieldRef<"TaskStatus", 'DateTime'>
   }
     
@@ -34651,6 +34709,25 @@ export namespace Prisma {
   }
 
   /**
+   * TaskStatus.assignToRole
+   */
+  export type TaskStatus$assignToRoleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Role
+     */
+    omit?: RoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleInclude<ExtArgs> | null
+    where?: RoleWhereInput
+  }
+
+  /**
    * TaskStatus.tasks
    */
   export type TaskStatus$tasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -34821,6 +34898,7 @@ export namespace Prisma {
     priority: number
     dueDate: number
     completedAt: number
+    assignmentHistory: number
     order: number
     createdAt: number
     updatedAt: number
@@ -34897,6 +34975,7 @@ export namespace Prisma {
     priority?: true
     dueDate?: true
     completedAt?: true
+    assignmentHistory?: true
     order?: true
     createdAt?: true
     updatedAt?: true
@@ -35004,6 +35083,7 @@ export namespace Prisma {
     priority: number | null
     dueDate: Date | null
     completedAt: Date | null
+    assignmentHistory: JsonValue | null
     order: number
     createdAt: Date
     updatedAt: Date
@@ -35043,6 +35123,7 @@ export namespace Prisma {
     priority?: boolean
     dueDate?: boolean
     completedAt?: boolean
+    assignmentHistory?: boolean
     order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -35071,6 +35152,7 @@ export namespace Prisma {
     priority?: boolean
     dueDate?: boolean
     completedAt?: boolean
+    assignmentHistory?: boolean
     order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -35095,6 +35177,7 @@ export namespace Prisma {
     priority?: boolean
     dueDate?: boolean
     completedAt?: boolean
+    assignmentHistory?: boolean
     order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -35119,13 +35202,14 @@ export namespace Prisma {
     priority?: boolean
     dueDate?: boolean
     completedAt?: boolean
+    assignmentHistory?: boolean
     order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
   }
 
-  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "taskNumber" | "serviceId" | "statusId" | "assigneeId" | "title" | "description" | "billable" | "price" | "priority" | "dueDate" | "completedAt" | "order" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["task"]>
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "taskNumber" | "serviceId" | "statusId" | "assigneeId" | "title" | "description" | "billable" | "price" | "priority" | "dueDate" | "completedAt" | "assignmentHistory" | "order" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
@@ -35174,6 +35258,7 @@ export namespace Prisma {
       priority: number | null
       dueDate: Date | null
       completedAt: Date | null
+      assignmentHistory: Prisma.JsonValue | null
       order: number
       createdAt: Date
       updatedAt: Date
@@ -35621,6 +35706,7 @@ export namespace Prisma {
     readonly priority: FieldRef<"Task", 'Int'>
     readonly dueDate: FieldRef<"Task", 'DateTime'>
     readonly completedAt: FieldRef<"Task", 'DateTime'>
+    readonly assignmentHistory: FieldRef<"Task", 'Json'>
     readonly order: FieldRef<"Task", 'Int'>
     readonly createdAt: FieldRef<"Task", 'DateTime'>
     readonly updatedAt: FieldRef<"Task", 'DateTime'>
@@ -52585,6 +52671,7 @@ export namespace Prisma {
     name: 'name',
     order: 'order',
     color: 'color',
+    assignToRoleId: 'assignToRoleId',
     createdAt: 'createdAt'
   };
 
@@ -52605,6 +52692,7 @@ export namespace Prisma {
     priority: 'priority',
     dueDate: 'dueDate',
     completedAt: 'completedAt',
+    assignmentHistory: 'assignmentHistory',
     order: 'order',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -53474,6 +53562,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Role"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     members?: WorkspaceMemberListRelationFilter
+    taskStatuses?: TaskStatusListRelationFilter
   }
 
   export type RoleOrderByWithRelationInput = {
@@ -53484,6 +53573,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
     members?: WorkspaceMemberOrderByRelationAggregateInput
+    taskStatuses?: TaskStatusOrderByRelationAggregateInput
   }
 
   export type RoleWhereUniqueInput = Prisma.AtLeast<{
@@ -53498,6 +53588,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Role"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     members?: WorkspaceMemberListRelationFilter
+    taskStatuses?: TaskStatusListRelationFilter
   }, "id" | "workspaceId_name">
 
   export type RoleOrderByWithAggregationInput = {
@@ -55177,8 +55268,10 @@ export namespace Prisma {
     name?: StringFilter<"TaskStatus"> | string
     order?: IntFilter<"TaskStatus"> | number
     color?: StringFilter<"TaskStatus"> | string
+    assignToRoleId?: StringNullableFilter<"TaskStatus"> | string | null
     createdAt?: DateTimeFilter<"TaskStatus"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    assignToRole?: XOR<RoleNullableScalarRelationFilter, RoleWhereInput> | null
     tasks?: TaskListRelationFilter
     visibleFromItems?: ChecklistTemplateItemListRelationFilter
     requiredBeforeItems?: ChecklistTemplateItemListRelationFilter
@@ -55190,8 +55283,10 @@ export namespace Prisma {
     name?: SortOrder
     order?: SortOrder
     color?: SortOrder
+    assignToRoleId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
+    assignToRole?: RoleOrderByWithRelationInput
     tasks?: TaskOrderByRelationAggregateInput
     visibleFromItems?: ChecklistTemplateItemOrderByRelationAggregateInput
     requiredBeforeItems?: ChecklistTemplateItemOrderByRelationAggregateInput
@@ -55207,8 +55302,10 @@ export namespace Prisma {
     name?: StringFilter<"TaskStatus"> | string
     order?: IntFilter<"TaskStatus"> | number
     color?: StringFilter<"TaskStatus"> | string
+    assignToRoleId?: StringNullableFilter<"TaskStatus"> | string | null
     createdAt?: DateTimeFilter<"TaskStatus"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    assignToRole?: XOR<RoleNullableScalarRelationFilter, RoleWhereInput> | null
     tasks?: TaskListRelationFilter
     visibleFromItems?: ChecklistTemplateItemListRelationFilter
     requiredBeforeItems?: ChecklistTemplateItemListRelationFilter
@@ -55220,6 +55317,7 @@ export namespace Prisma {
     name?: SortOrder
     order?: SortOrder
     color?: SortOrder
+    assignToRoleId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: TaskStatusCountOrderByAggregateInput
     _avg?: TaskStatusAvgOrderByAggregateInput
@@ -55237,6 +55335,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"TaskStatus"> | string
     order?: IntWithAggregatesFilter<"TaskStatus"> | number
     color?: StringWithAggregatesFilter<"TaskStatus"> | string
+    assignToRoleId?: StringNullableWithAggregatesFilter<"TaskStatus"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"TaskStatus"> | Date | string
   }
 
@@ -55257,6 +55356,7 @@ export namespace Prisma {
     priority?: IntNullableFilter<"Task"> | number | null
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
+    assignmentHistory?: JsonNullableFilter<"Task">
     order?: IntFilter<"Task"> | number
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
@@ -55284,6 +55384,7 @@ export namespace Prisma {
     priority?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
+    assignmentHistory?: SortOrderInput | SortOrder
     order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -55314,6 +55415,7 @@ export namespace Prisma {
     priority?: IntNullableFilter<"Task"> | number | null
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
+    assignmentHistory?: JsonNullableFilter<"Task">
     order?: IntFilter<"Task"> | number
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
@@ -55341,6 +55443,7 @@ export namespace Prisma {
     priority?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
+    assignmentHistory?: SortOrderInput | SortOrder
     order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -55369,6 +55472,7 @@ export namespace Prisma {
     priority?: IntNullableWithAggregatesFilter<"Task"> | number | null
     dueDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
+    assignmentHistory?: JsonNullableWithAggregatesFilter<"Task">
     order?: IntWithAggregatesFilter<"Task"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
@@ -56901,6 +57005,7 @@ export namespace Prisma {
     createdAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutRolesInput
     members?: WorkspaceMemberCreateNestedManyWithoutRoleInput
+    taskStatuses?: TaskStatusCreateNestedManyWithoutAssignToRoleInput
   }
 
   export type RoleUncheckedCreateInput = {
@@ -56910,6 +57015,7 @@ export namespace Prisma {
     permissions: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutRoleInput
+    taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutAssignToRoleInput
   }
 
   export type RoleUpdateInput = {
@@ -56919,6 +57025,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutRolesNestedInput
     members?: WorkspaceMemberUpdateManyWithoutRoleNestedInput
+    taskStatuses?: TaskStatusUpdateManyWithoutAssignToRoleNestedInput
   }
 
   export type RoleUncheckedUpdateInput = {
@@ -56928,6 +57035,7 @@ export namespace Prisma {
     permissions?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutRoleNestedInput
+    taskStatuses?: TaskStatusUncheckedUpdateManyWithoutAssignToRoleNestedInput
   }
 
   export type RoleCreateManyInput = {
@@ -58754,6 +58862,7 @@ export namespace Prisma {
     color?: string
     createdAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutTaskStatusesInput
+    assignToRole?: RoleCreateNestedOneWithoutTaskStatusesInput
     tasks?: TaskCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
@@ -58765,6 +58874,7 @@ export namespace Prisma {
     name: string
     order: number
     color?: string
+    assignToRoleId?: string | null
     createdAt?: Date | string
     tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
@@ -58778,6 +58888,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutTaskStatusesNestedInput
+    assignToRole?: RoleUpdateOneWithoutTaskStatusesNestedInput
     tasks?: TaskUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
@@ -58789,6 +58900,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
     color?: StringFieldUpdateOperationsInput | string
+    assignToRoleId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
@@ -58801,6 +58913,7 @@ export namespace Prisma {
     name: string
     order: number
     color?: string
+    assignToRoleId?: string | null
     createdAt?: Date | string
   }
 
@@ -58818,6 +58931,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
     color?: StringFieldUpdateOperationsInput | string
+    assignToRoleId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -58831,6 +58945,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -58858,6 +58973,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -58877,6 +58993,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -58904,6 +59021,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -58927,6 +59045,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -58943,6 +59062,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -58963,6 +59083,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -62023,6 +62144,7 @@ export namespace Prisma {
     name?: SortOrder
     order?: SortOrder
     color?: SortOrder
+    assignToRoleId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -62036,6 +62158,7 @@ export namespace Prisma {
     name?: SortOrder
     order?: SortOrder
     color?: SortOrder
+    assignToRoleId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -62045,6 +62168,7 @@ export namespace Prisma {
     name?: SortOrder
     order?: SortOrder
     color?: SortOrder
+    assignToRoleId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -62092,6 +62216,7 @@ export namespace Prisma {
     priority?: SortOrder
     dueDate?: SortOrder
     completedAt?: SortOrder
+    assignmentHistory?: SortOrder
     order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -64097,11 +64222,25 @@ export namespace Prisma {
     connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
   }
 
+  export type TaskStatusCreateNestedManyWithoutAssignToRoleInput = {
+    create?: XOR<TaskStatusCreateWithoutAssignToRoleInput, TaskStatusUncheckedCreateWithoutAssignToRoleInput> | TaskStatusCreateWithoutAssignToRoleInput[] | TaskStatusUncheckedCreateWithoutAssignToRoleInput[]
+    connectOrCreate?: TaskStatusCreateOrConnectWithoutAssignToRoleInput | TaskStatusCreateOrConnectWithoutAssignToRoleInput[]
+    createMany?: TaskStatusCreateManyAssignToRoleInputEnvelope
+    connect?: TaskStatusWhereUniqueInput | TaskStatusWhereUniqueInput[]
+  }
+
   export type WorkspaceMemberUncheckedCreateNestedManyWithoutRoleInput = {
     create?: XOR<WorkspaceMemberCreateWithoutRoleInput, WorkspaceMemberUncheckedCreateWithoutRoleInput> | WorkspaceMemberCreateWithoutRoleInput[] | WorkspaceMemberUncheckedCreateWithoutRoleInput[]
     connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutRoleInput | WorkspaceMemberCreateOrConnectWithoutRoleInput[]
     createMany?: WorkspaceMemberCreateManyRoleInputEnvelope
     connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+  }
+
+  export type TaskStatusUncheckedCreateNestedManyWithoutAssignToRoleInput = {
+    create?: XOR<TaskStatusCreateWithoutAssignToRoleInput, TaskStatusUncheckedCreateWithoutAssignToRoleInput> | TaskStatusCreateWithoutAssignToRoleInput[] | TaskStatusUncheckedCreateWithoutAssignToRoleInput[]
+    connectOrCreate?: TaskStatusCreateOrConnectWithoutAssignToRoleInput | TaskStatusCreateOrConnectWithoutAssignToRoleInput[]
+    createMany?: TaskStatusCreateManyAssignToRoleInputEnvelope
+    connect?: TaskStatusWhereUniqueInput | TaskStatusWhereUniqueInput[]
   }
 
   export type WorkspaceUpdateOneRequiredWithoutRolesNestedInput = {
@@ -64126,6 +64265,20 @@ export namespace Prisma {
     deleteMany?: WorkspaceMemberScalarWhereInput | WorkspaceMemberScalarWhereInput[]
   }
 
+  export type TaskStatusUpdateManyWithoutAssignToRoleNestedInput = {
+    create?: XOR<TaskStatusCreateWithoutAssignToRoleInput, TaskStatusUncheckedCreateWithoutAssignToRoleInput> | TaskStatusCreateWithoutAssignToRoleInput[] | TaskStatusUncheckedCreateWithoutAssignToRoleInput[]
+    connectOrCreate?: TaskStatusCreateOrConnectWithoutAssignToRoleInput | TaskStatusCreateOrConnectWithoutAssignToRoleInput[]
+    upsert?: TaskStatusUpsertWithWhereUniqueWithoutAssignToRoleInput | TaskStatusUpsertWithWhereUniqueWithoutAssignToRoleInput[]
+    createMany?: TaskStatusCreateManyAssignToRoleInputEnvelope
+    set?: TaskStatusWhereUniqueInput | TaskStatusWhereUniqueInput[]
+    disconnect?: TaskStatusWhereUniqueInput | TaskStatusWhereUniqueInput[]
+    delete?: TaskStatusWhereUniqueInput | TaskStatusWhereUniqueInput[]
+    connect?: TaskStatusWhereUniqueInput | TaskStatusWhereUniqueInput[]
+    update?: TaskStatusUpdateWithWhereUniqueWithoutAssignToRoleInput | TaskStatusUpdateWithWhereUniqueWithoutAssignToRoleInput[]
+    updateMany?: TaskStatusUpdateManyWithWhereWithoutAssignToRoleInput | TaskStatusUpdateManyWithWhereWithoutAssignToRoleInput[]
+    deleteMany?: TaskStatusScalarWhereInput | TaskStatusScalarWhereInput[]
+  }
+
   export type WorkspaceMemberUncheckedUpdateManyWithoutRoleNestedInput = {
     create?: XOR<WorkspaceMemberCreateWithoutRoleInput, WorkspaceMemberUncheckedCreateWithoutRoleInput> | WorkspaceMemberCreateWithoutRoleInput[] | WorkspaceMemberUncheckedCreateWithoutRoleInput[]
     connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutRoleInput | WorkspaceMemberCreateOrConnectWithoutRoleInput[]
@@ -64138,6 +64291,20 @@ export namespace Prisma {
     update?: WorkspaceMemberUpdateWithWhereUniqueWithoutRoleInput | WorkspaceMemberUpdateWithWhereUniqueWithoutRoleInput[]
     updateMany?: WorkspaceMemberUpdateManyWithWhereWithoutRoleInput | WorkspaceMemberUpdateManyWithWhereWithoutRoleInput[]
     deleteMany?: WorkspaceMemberScalarWhereInput | WorkspaceMemberScalarWhereInput[]
+  }
+
+  export type TaskStatusUncheckedUpdateManyWithoutAssignToRoleNestedInput = {
+    create?: XOR<TaskStatusCreateWithoutAssignToRoleInput, TaskStatusUncheckedCreateWithoutAssignToRoleInput> | TaskStatusCreateWithoutAssignToRoleInput[] | TaskStatusUncheckedCreateWithoutAssignToRoleInput[]
+    connectOrCreate?: TaskStatusCreateOrConnectWithoutAssignToRoleInput | TaskStatusCreateOrConnectWithoutAssignToRoleInput[]
+    upsert?: TaskStatusUpsertWithWhereUniqueWithoutAssignToRoleInput | TaskStatusUpsertWithWhereUniqueWithoutAssignToRoleInput[]
+    createMany?: TaskStatusCreateManyAssignToRoleInputEnvelope
+    set?: TaskStatusWhereUniqueInput | TaskStatusWhereUniqueInput[]
+    disconnect?: TaskStatusWhereUniqueInput | TaskStatusWhereUniqueInput[]
+    delete?: TaskStatusWhereUniqueInput | TaskStatusWhereUniqueInput[]
+    connect?: TaskStatusWhereUniqueInput | TaskStatusWhereUniqueInput[]
+    update?: TaskStatusUpdateWithWhereUniqueWithoutAssignToRoleInput | TaskStatusUpdateWithWhereUniqueWithoutAssignToRoleInput[]
+    updateMany?: TaskStatusUpdateManyWithWhereWithoutAssignToRoleInput | TaskStatusUpdateManyWithWhereWithoutAssignToRoleInput[]
+    deleteMany?: TaskStatusScalarWhereInput | TaskStatusScalarWhereInput[]
   }
 
   export type ProjectCreateNestedOneWithoutCollaboratorsInput = {
@@ -65826,6 +65993,12 @@ export namespace Prisma {
     connect?: WorkspaceWhereUniqueInput
   }
 
+  export type RoleCreateNestedOneWithoutTaskStatusesInput = {
+    create?: XOR<RoleCreateWithoutTaskStatusesInput, RoleUncheckedCreateWithoutTaskStatusesInput>
+    connectOrCreate?: RoleCreateOrConnectWithoutTaskStatusesInput
+    connect?: RoleWhereUniqueInput
+  }
+
   export type TaskCreateNestedManyWithoutStatusInput = {
     create?: XOR<TaskCreateWithoutStatusInput, TaskUncheckedCreateWithoutStatusInput> | TaskCreateWithoutStatusInput[] | TaskUncheckedCreateWithoutStatusInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutStatusInput | TaskCreateOrConnectWithoutStatusInput[]
@@ -65874,6 +66047,16 @@ export namespace Prisma {
     upsert?: WorkspaceUpsertWithoutTaskStatusesInput
     connect?: WorkspaceWhereUniqueInput
     update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutTaskStatusesInput, WorkspaceUpdateWithoutTaskStatusesInput>, WorkspaceUncheckedUpdateWithoutTaskStatusesInput>
+  }
+
+  export type RoleUpdateOneWithoutTaskStatusesNestedInput = {
+    create?: XOR<RoleCreateWithoutTaskStatusesInput, RoleUncheckedCreateWithoutTaskStatusesInput>
+    connectOrCreate?: RoleCreateOrConnectWithoutTaskStatusesInput
+    upsert?: RoleUpsertWithoutTaskStatusesInput
+    disconnect?: RoleWhereInput | boolean
+    delete?: RoleWhereInput | boolean
+    connect?: RoleWhereUniqueInput
+    update?: XOR<XOR<RoleUpdateToOneWithWhereWithoutTaskStatusesInput, RoleUpdateWithoutTaskStatusesInput>, RoleUncheckedUpdateWithoutTaskStatusesInput>
   }
 
   export type TaskUpdateManyWithoutStatusNestedInput = {
@@ -67534,6 +67717,7 @@ export namespace Prisma {
     order: number
     color?: string
     createdAt?: Date | string
+    assignToRole?: RoleCreateNestedOneWithoutTaskStatusesInput
     tasks?: TaskCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
@@ -67544,6 +67728,7 @@ export namespace Prisma {
     name: string
     order: number
     color?: string
+    assignToRoleId?: string | null
     createdAt?: Date | string
     tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
@@ -67655,6 +67840,7 @@ export namespace Prisma {
     permissions: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutRoleInput
+    taskStatuses?: TaskStatusCreateNestedManyWithoutAssignToRoleInput
   }
 
   export type RoleUncheckedCreateWithoutWorkspaceInput = {
@@ -67663,6 +67849,7 @@ export namespace Prisma {
     permissions: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutRoleInput
+    taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutAssignToRoleInput
   }
 
   export type RoleCreateOrConnectWithoutWorkspaceInput = {
@@ -68285,6 +68472,7 @@ export namespace Prisma {
     name?: StringFilter<"TaskStatus"> | string
     order?: IntFilter<"TaskStatus"> | number
     color?: StringFilter<"TaskStatus"> | string
+    assignToRoleId?: StringNullableFilter<"TaskStatus"> | string | null
     createdAt?: DateTimeFilter<"TaskStatus"> | Date | string
   }
 
@@ -68930,6 +69118,7 @@ export namespace Prisma {
     permissions: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutRolesInput
+    taskStatuses?: TaskStatusCreateNestedManyWithoutAssignToRoleInput
   }
 
   export type RoleUncheckedCreateWithoutMembersInput = {
@@ -68938,6 +69127,7 @@ export namespace Prisma {
     name: string
     permissions: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutAssignToRoleInput
   }
 
   export type RoleCreateOrConnectWithoutMembersInput = {
@@ -68955,6 +69145,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68980,6 +69171,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -69205,6 +69397,7 @@ export namespace Prisma {
     permissions?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutRolesNestedInput
+    taskStatuses?: TaskStatusUpdateManyWithoutAssignToRoleNestedInput
   }
 
   export type RoleUncheckedUpdateWithoutMembersInput = {
@@ -69213,6 +69406,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     permissions?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    taskStatuses?: TaskStatusUncheckedUpdateManyWithoutAssignToRoleNestedInput
   }
 
   export type TaskUpsertWithWhereUniqueWithoutAssigneeInput = {
@@ -69248,6 +69442,7 @@ export namespace Prisma {
     priority?: IntNullableFilter<"Task"> | number | null
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
+    assignmentHistory?: JsonNullableFilter<"Task">
     order?: IntFilter<"Task"> | number
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
@@ -69462,6 +69657,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TaskStatusCreateWithoutAssignToRoleInput = {
+    id?: string
+    name: string
+    order: number
+    color?: string
+    createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutTaskStatusesInput
+    tasks?: TaskCreateNestedManyWithoutStatusInput
+    visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
+    requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
+  }
+
+  export type TaskStatusUncheckedCreateWithoutAssignToRoleInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    order: number
+    color?: string
+    createdAt?: Date | string
+    tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
+    visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
+    requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
+  }
+
+  export type TaskStatusCreateOrConnectWithoutAssignToRoleInput = {
+    where: TaskStatusWhereUniqueInput
+    create: XOR<TaskStatusCreateWithoutAssignToRoleInput, TaskStatusUncheckedCreateWithoutAssignToRoleInput>
+  }
+
+  export type TaskStatusCreateManyAssignToRoleInputEnvelope = {
+    data: TaskStatusCreateManyAssignToRoleInput | TaskStatusCreateManyAssignToRoleInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WorkspaceUpsertWithoutRolesInput = {
     update: XOR<WorkspaceUpdateWithoutRolesInput, WorkspaceUncheckedUpdateWithoutRolesInput>
     create: XOR<WorkspaceCreateWithoutRolesInput, WorkspaceUncheckedCreateWithoutRolesInput>
@@ -69551,6 +69780,22 @@ export namespace Prisma {
   export type WorkspaceMemberUpdateManyWithWhereWithoutRoleInput = {
     where: WorkspaceMemberScalarWhereInput
     data: XOR<WorkspaceMemberUpdateManyMutationInput, WorkspaceMemberUncheckedUpdateManyWithoutRoleInput>
+  }
+
+  export type TaskStatusUpsertWithWhereUniqueWithoutAssignToRoleInput = {
+    where: TaskStatusWhereUniqueInput
+    update: XOR<TaskStatusUpdateWithoutAssignToRoleInput, TaskStatusUncheckedUpdateWithoutAssignToRoleInput>
+    create: XOR<TaskStatusCreateWithoutAssignToRoleInput, TaskStatusUncheckedCreateWithoutAssignToRoleInput>
+  }
+
+  export type TaskStatusUpdateWithWhereUniqueWithoutAssignToRoleInput = {
+    where: TaskStatusWhereUniqueInput
+    data: XOR<TaskStatusUpdateWithoutAssignToRoleInput, TaskStatusUncheckedUpdateWithoutAssignToRoleInput>
+  }
+
+  export type TaskStatusUpdateManyWithWhereWithoutAssignToRoleInput = {
+    where: TaskStatusScalarWhereInput
+    data: XOR<TaskStatusUpdateManyMutationInput, TaskStatusUncheckedUpdateManyWithoutAssignToRoleInput>
   }
 
   export type ProjectCreateWithoutCollaboratorsInput = {
@@ -70778,6 +71023,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -70803,6 +71049,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -72830,6 +73077,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -72855,6 +73103,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -74205,6 +74454,7 @@ export namespace Prisma {
     color?: string
     createdAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutTaskStatusesInput
+    assignToRole?: RoleCreateNestedOneWithoutTaskStatusesInput
     tasks?: TaskCreateNestedManyWithoutStatusInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
   }
@@ -74215,6 +74465,7 @@ export namespace Prisma {
     name: string
     order: number
     color?: string
+    assignToRoleId?: string | null
     createdAt?: Date | string
     tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
@@ -74232,6 +74483,7 @@ export namespace Prisma {
     color?: string
     createdAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutTaskStatusesInput
+    assignToRole?: RoleCreateNestedOneWithoutTaskStatusesInput
     tasks?: TaskCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
   }
@@ -74242,6 +74494,7 @@ export namespace Prisma {
     name: string
     order: number
     color?: string
+    assignToRoleId?: string | null
     createdAt?: Date | string
     tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
@@ -74359,6 +74612,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutTaskStatusesNestedInput
+    assignToRole?: RoleUpdateOneWithoutTaskStatusesNestedInput
     tasks?: TaskUpdateManyWithoutStatusNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
   }
@@ -74369,6 +74623,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
     color?: StringFieldUpdateOperationsInput | string
+    assignToRoleId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
@@ -74392,6 +74647,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutTaskStatusesNestedInput
+    assignToRole?: RoleUpdateOneWithoutTaskStatusesNestedInput
     tasks?: TaskUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
   }
@@ -74402,6 +74658,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
     color?: StringFieldUpdateOperationsInput | string
+    assignToRoleId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
@@ -74647,6 +74904,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -74673,6 +74931,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -74746,6 +75005,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -74772,6 +75032,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -74894,6 +75155,29 @@ export namespace Prisma {
     create: XOR<WorkspaceCreateWithoutTaskStatusesInput, WorkspaceUncheckedCreateWithoutTaskStatusesInput>
   }
 
+  export type RoleCreateWithoutTaskStatusesInput = {
+    id?: string
+    name: string
+    permissions: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutRolesInput
+    members?: WorkspaceMemberCreateNestedManyWithoutRoleInput
+  }
+
+  export type RoleUncheckedCreateWithoutTaskStatusesInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    permissions: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutRoleInput
+  }
+
+  export type RoleCreateOrConnectWithoutTaskStatusesInput = {
+    where: RoleWhereUniqueInput
+    create: XOR<RoleCreateWithoutTaskStatusesInput, RoleUncheckedCreateWithoutTaskStatusesInput>
+  }
+
   export type TaskCreateWithoutStatusInput = {
     id?: string
     taskNumber?: number
@@ -74904,6 +75188,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -74929,6 +75214,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -75111,6 +75397,35 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
+  export type RoleUpsertWithoutTaskStatusesInput = {
+    update: XOR<RoleUpdateWithoutTaskStatusesInput, RoleUncheckedUpdateWithoutTaskStatusesInput>
+    create: XOR<RoleCreateWithoutTaskStatusesInput, RoleUncheckedCreateWithoutTaskStatusesInput>
+    where?: RoleWhereInput
+  }
+
+  export type RoleUpdateToOneWithWhereWithoutTaskStatusesInput = {
+    where?: RoleWhereInput
+    data: XOR<RoleUpdateWithoutTaskStatusesInput, RoleUncheckedUpdateWithoutTaskStatusesInput>
+  }
+
+  export type RoleUpdateWithoutTaskStatusesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    permissions?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutRolesNestedInput
+    members?: WorkspaceMemberUpdateManyWithoutRoleNestedInput
+  }
+
+  export type RoleUncheckedUpdateWithoutTaskStatusesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    permissions?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutRoleNestedInput
+  }
+
   export type TaskUpsertWithWhereUniqueWithoutStatusInput = {
     where: TaskWhereUniqueInput
     update: XOR<TaskUpdateWithoutStatusInput, TaskUncheckedUpdateWithoutStatusInput>
@@ -75260,6 +75575,7 @@ export namespace Prisma {
     color?: string
     createdAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutTaskStatusesInput
+    assignToRole?: RoleCreateNestedOneWithoutTaskStatusesInput
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
   }
@@ -75270,6 +75586,7 @@ export namespace Prisma {
     name: string
     order: number
     color?: string
+    assignToRoleId?: string | null
     createdAt?: Date | string
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
@@ -75552,6 +75869,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutTaskStatusesNestedInput
+    assignToRole?: RoleUpdateOneWithoutTaskStatusesNestedInput
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
   }
@@ -75562,6 +75880,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
     color?: StringFieldUpdateOperationsInput | string
+    assignToRoleId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
@@ -75687,6 +76006,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -75713,6 +76033,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -75802,6 +76123,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -75828,6 +76150,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -77897,6 +78220,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -77923,6 +78247,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -78132,6 +78457,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -78158,6 +78484,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -78387,6 +78714,7 @@ export namespace Prisma {
     name: string
     order: number
     color?: string
+    assignToRoleId?: string | null
     createdAt?: Date | string
   }
 
@@ -79063,6 +79391,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignToRole?: RoleUpdateOneWithoutTaskStatusesNestedInput
     tasks?: TaskUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
@@ -79073,6 +79402,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
     color?: StringFieldUpdateOperationsInput | string
+    assignToRoleId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
@@ -79084,6 +79414,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
     color?: StringFieldUpdateOperationsInput | string
+    assignToRoleId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -79156,6 +79487,7 @@ export namespace Prisma {
     permissions?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutRoleNestedInput
+    taskStatuses?: TaskStatusUpdateManyWithoutAssignToRoleNestedInput
   }
 
   export type RoleUncheckedUpdateWithoutWorkspaceInput = {
@@ -79164,6 +79496,7 @@ export namespace Prisma {
     permissions?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutRoleNestedInput
+    taskStatuses?: TaskStatusUncheckedUpdateManyWithoutAssignToRoleNestedInput
   }
 
   export type RoleUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -79364,6 +79697,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -79416,6 +79750,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -79441,6 +79776,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -79463,6 +79799,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -79589,6 +79926,15 @@ export namespace Prisma {
     joinedAt?: Date | string
   }
 
+  export type TaskStatusCreateManyAssignToRoleInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    order: number
+    color?: string
+    createdAt?: Date | string
+  }
+
   export type WorkspaceMemberUpdateWithoutRoleInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -79627,6 +79973,39 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskStatusUpdateWithoutAssignToRoleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutTaskStatusesNestedInput
+    tasks?: TaskUpdateManyWithoutStatusNestedInput
+    visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
+    requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
+  }
+
+  export type TaskStatusUncheckedUpdateWithoutAssignToRoleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
+    visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
+    requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
+  }
+
+  export type TaskStatusUncheckedUpdateManyWithoutAssignToRoleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ContactCompanyCreateManyCompanyInput = {
@@ -80174,6 +80553,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -80214,6 +80594,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80239,6 +80620,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80261,6 +80643,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80696,6 +81079,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -80780,6 +81164,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80805,6 +81190,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80827,6 +81213,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -81306,6 +81693,7 @@ export namespace Prisma {
     priority?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81354,6 +81742,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -81379,6 +81768,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -81401,6 +81791,7 @@ export namespace Prisma {
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -240,6 +240,10 @@ export function TaskDetailClient({
     for (const item of checklistItems) {
       if (item.type === "file_upload") map[item.id] = !!item.attachmentId;
       else if (item.type === "textarea") map[item.id] = !!item.textValue?.trim();
+      else if (item.type === "mention" || item.type === "copyright") {
+        const parsed = (() => { try { return JSON.parse(item.textValue || "{}"); } catch { return {}; } })();
+        map[item.id] = parsed.enabled === true ? !!parsed.text : true;
+      }
       else map[item.id] = item.completed;
     }
     return map;
@@ -259,6 +263,12 @@ export function TaskDetailClient({
   const newModeMandatoryItems = newModeItems.filter((i) => i.mandatory);
   const allNewMandatoryFilled = newModeMandatoryItems.every((i) => {
     if (i.type === "file_upload") return !!pendingFiles[i.id];
+    if (i.type === "mention" || i.type === "copyright") {
+      const raw = newAnswers[i.id];
+      if (!raw) return true;
+      const parsed = (() => { try { return JSON.parse(raw); } catch { return {}; } })();
+      return parsed.enabled ? !!parsed.text : true;
+    }
     return !!newAnswers[i.id]?.trim();
   });
 
@@ -274,8 +284,16 @@ export function TaskDetailClient({
     if (isNew) {
       if (!hasTemplates) missingFields.push("Template selection");
       for (const item of newModeMandatoryItems) {
-        if (item.type === "file_upload" ? !pendingFiles[item.id] : !newAnswers[item.id]?.trim()) {
-          missingFields.push(item.name);
+        if (item.type === "file_upload") {
+          if (!pendingFiles[item.id]) missingFields.push(item.name);
+        } else if (item.type === "mention" || item.type === "copyright") {
+          const raw = newAnswers[item.id];
+          if (raw) {
+            const parsed = (() => { try { return JSON.parse(raw); } catch { return {}; } })();
+            if (parsed.enabled && !parsed.text) missingFields.push(item.name);
+          }
+        } else {
+          if (!newAnswers[item.id]?.trim()) missingFields.push(item.name);
         }
       }
     } else {

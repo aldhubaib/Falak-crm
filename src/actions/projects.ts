@@ -215,7 +215,7 @@ export async function createTask(projectId: string, formData: FormData, dealId?:
 }
 
 export async function updateTaskStatus(taskId: string, statusId: string, projectId: string, dealId?: string) {
-  const { member } = await requireWorkspaceWithMember();
+  const { workspace, member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");
 
   const blockers = await getStageGateBlockers(taskId, statusId);
@@ -225,14 +225,46 @@ export async function updateTaskStatus(taskId: string, statusId: string, project
   }
 
   const task = await db.task.findUnique({ where: { id: taskId }, include: { status: true } });
-  const status = await db.taskStatus.findUnique({ where: { id: statusId } });
+  const targetStatus = await db.taskStatus.findUnique({
+    where: { id: statusId },
+    include: { assignToRole: { include: { members: true } } },
+  });
+
+  const allStatuses = await db.taskStatus.findMany({
+    where: { workspaceId: workspace.id },
+    orderBy: { order: "asc" },
+  });
+
+  const fromOrder = task?.status ? allStatuses.find((s) => s.id === task.status!.id)?.order ?? 0 : 0;
+  const toOrder = allStatuses.find((s) => s.id === statusId)?.order ?? 0;
+  const isForward = toOrder > fromOrder;
+
+  const history: Record<string, string> = (task?.assignmentHistory as Record<string, string>) ?? {};
+
+  let newAssigneeId: string = member.id;
+
+  if (isForward) {
+    if (task?.statusId && task.assigneeId) {
+      history[task.statusId] = task.assigneeId;
+    }
+
+    if (targetStatus?.assignToRole?.members?.length) {
+      newAssigneeId = targetStatus.assignToRole.members[0].id;
+    }
+  } else {
+    const previousAssignee = history[statusId];
+    if (previousAssignee) {
+      newAssigneeId = previousAssignee;
+    }
+  }
 
   await db.task.update({
     where: { id: taskId },
     data: {
       statusId,
-      assigneeId: member.id,
-      completedAt: status?.name === "Completed" || status?.name === "Published" ? new Date() : null,
+      assigneeId: newAssigneeId,
+      assignmentHistory: history,
+      completedAt: targetStatus?.name === "Completed" || targetStatus?.name === "Published" ? new Date() : null,
     },
   });
 
@@ -241,12 +273,32 @@ export async function updateTaskStatus(taskId: string, statusId: string, project
     entityId: taskId,
     entityName: task?.title ?? undefined,
     action: "updated",
-    changes: { status: { from: task?.status?.name, to: status?.name } },
+    changes: { status: { from: task?.status?.name, to: targetStatus?.name } },
     metadata: { projectId },
   });
 
   revalidatePath(`/projects/${projectId}`);
   if (dealId) revalidatePath(`/deals/${dealId}`);
+}
+
+export async function assignTaskToMe(taskId: string, projectId: string) {
+  const { member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
+  const task = await db.task.findUnique({ where: { id: taskId } });
+  if (!task) throw new Error("Task not found");
+
+  const history: Record<string, string> = (task.assignmentHistory as Record<string, string>) ?? {};
+  if (task.statusId) {
+    history[task.statusId] = member.id;
+  }
+
+  await db.task.update({
+    where: { id: taskId },
+    data: { assigneeId: member.id, assignmentHistory: history },
+  });
+
+  revalidatePath(`/projects/${projectId}`);
 }
 
 export async function deleteTask(taskId: string, projectId: string, dealId?: string) {
@@ -594,7 +646,12 @@ export async function getStageGateBlockers(taskId: string, targetStatusId: strin
   const blockers: { itemName: string; role: string }[] = [];
 
   for (const ci of task.checklistItems) {
-    if (ci.completed) continue;
+    let isComplete = ci.completed;
+    if (!isComplete && (ci.type === "mention" || ci.type === "copyright")) {
+      const parsed = (() => { try { return JSON.parse(ci.textValue || "{}"); } catch { return {}; } })();
+      isComplete = parsed.enabled === true ? !!parsed.text : true;
+    }
+    if (isComplete) continue;
 
     const gateStageId = ci.templateItem?.requiredBeforeStageId;
     if (!gateStageId) continue;

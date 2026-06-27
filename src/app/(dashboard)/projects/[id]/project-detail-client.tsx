@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback, memo, type DragEvent } from "react";
-import { updateTaskStatus, getStageGateBlockers } from "@/actions/projects";
+import { updateTaskStatus, getStageGateBlockers, assignTaskToMe } from "@/actions/projects";
 import { createInvoiceFromProject } from "@/actions/invoices";
 import { addTaskComment } from "@/actions/comments";
-import { ArrowLeft, Plus, FileText, AlertTriangle, Settings, GripVertical, ChevronRight, Undo2, Paperclip, X, Loader2, LayoutGrid, FolderOpen, Upload, Trash2, Download, MoreHorizontal, FolderPlus, Pencil, FolderInput, BarChart3, CheckCircle2, Clock, ListChecks, CalendarDays, Building2, Users } from "lucide-react";
+import { ArrowLeft, Plus, FileText, AlertTriangle, Settings, GripVertical, ChevronRight, Undo2, Paperclip, X, Loader2, LayoutGrid, FolderOpen, Upload, Trash2, Download, MoreHorizontal, FolderPlus, Pencil, FolderInput, BarChart3, CheckCircle2, Clock, ListChecks, CalendarDays, Building2, Users, UserCheck } from "lucide-react";
 import { getProjectAssets, createFolder, deleteFolder, renameFolder, deleteAsset, renameAsset, getFolderBreadcrumbs, moveAsset, moveFolder } from "@/actions/assets";
 import { uploadManager } from "@/lib/upload-manager";
 import { HeaderActions } from "@/components/header-actions";
@@ -79,7 +79,7 @@ export function ProjectDetailClient({
   const canEditProject = permissions.projects === "full";
   const hasTaskPermissions = !!permissions.taskPermissions?.stages && Object.keys(permissions.taskPermissions.stages).length > 0;
   const canInteractWithTasks = canEditProject || hasTaskPermissions;
-  const [activeTab, setActiveTab] = useState<"dashboard" | "board" | "assets">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "board" | "assets">("board");
 
   return (
     <div className="flex flex-col min-h-full">
@@ -114,9 +114,9 @@ export function ProjectDetailClient({
       <div className="px-4 sm:px-6 pt-3">
         <div className="inline-flex items-center rounded-xl bg-muted/30 border border-border p-1">
           {([
-            { id: "dashboard" as const, label: "Dashboard", icon: <BarChart3 className="w-3.5 h-3.5" /> },
             { id: "board" as const, label: "Board", icon: <LayoutGrid className="w-3.5 h-3.5" /> },
             { id: "assets" as const, label: "Assets", icon: <Paperclip className="w-3.5 h-3.5" /> },
+            { id: "dashboard" as const, label: "Dashboard", icon: <BarChart3 className="w-3.5 h-3.5" /> },
           ]).map((tab) => (
             <button
               key={tab.id}
@@ -944,6 +944,7 @@ const TaskCard = memo(function TaskCard({
   hasGateError: boolean;
 }) {
   const router = useRouter();
+  const [assigning, setAssigning] = useState(false);
 
   const tplData = (() => {
     const tpl = task.checklistItems.find((i) => i.templateItem)?.templateItem?.template;
@@ -956,6 +957,15 @@ const TaskCard = memo(function TaskCard({
     : p <= 6 ? "bg-amber-500/20 text-amber-400 ring-amber-500/30"
     : "bg-red-500/20 text-red-400 ring-red-500/30"
     : "";
+
+  const handleAssignToMe = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setAssigning(true);
+    try {
+      await assignTaskToMe(task.id, projectId);
+    } catch {}
+    setAssigning(false);
+  };
 
   return (
     <div
@@ -996,6 +1006,16 @@ const TaskCard = memo(function TaskCard({
           </span>
         )}
         <div className="flex-1" />
+        {canEdit && (
+          <button
+            onClick={handleAssignToMe}
+            disabled={assigning}
+            className="w-7 h-7 rounded-full flex items-center justify-center text-muted-foreground/40 hover:text-primary hover:bg-primary/10 transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-50 shrink-0"
+            title="Assign to me"
+          >
+            <UserCheck className="w-3.5 h-3.5" />
+          </button>
+        )}
         {task.assignee && (
           <AssigneeAvatar name={task.assignee.name} />
         )}
