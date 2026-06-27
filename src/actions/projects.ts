@@ -225,10 +225,7 @@ export async function updateTaskStatus(taskId: string, statusId: string, project
   }
 
   const task = await db.task.findUnique({ where: { id: taskId }, include: { status: true } });
-  const targetStatus = await db.taskStatus.findUnique({
-    where: { id: statusId },
-    include: { assignToRole: { include: { members: true } } },
-  });
+  const targetStatus = await db.taskStatus.findUnique({ where: { id: statusId } });
 
   const allStatuses = await db.taskStatus.findMany({
     where: { workspaceId: workspace.id },
@@ -248,8 +245,19 @@ export async function updateTaskStatus(taskId: string, statusId: string, project
       history[task.statusId] = task.assigneeId;
     }
 
-    if (targetStatus?.assignToRole?.members?.length) {
-      newAssigneeId = targetStatus.assignToRole.members[0].id;
+    const roles = await db.role.findMany({
+      where: { workspaceId: workspace.id },
+      include: { members: true },
+    });
+
+    const autoAssignRole = roles.find((role) => {
+      const perms = (role.permissions as Record<string, unknown>) ?? {};
+      const tp = (perms.taskPermissions as { stages: Record<string, { autoAssign?: boolean }> }) ?? { stages: {} };
+      return tp.stages?.[statusId]?.autoAssign === true;
+    });
+
+    if (autoAssignRole?.members?.length) {
+      newAssigneeId = autoAssignRole.members[0].id;
     }
   } else {
     const previousAssignee = history[statusId];

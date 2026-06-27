@@ -1,22 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { createProjectStatus, deleteProjectStatus, createTaskStatus, deleteTaskStatus, updateTaskStatusRole } from "@/actions/settings";
-import { ArrowLeft, Plus, Trash2, X, UserCheck } from "lucide-react";
+import { createProjectStatus, deleteProjectStatus, createTaskStatus, deleteTaskStatus } from "@/actions/settings";
+import { ArrowLeft, Plus, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-type Status = { id: string; name: string; color: string; order: number; assignToRole?: { id: string; name: string } | null };
-type Role = { id: string; name: string };
+type Status = { id: string; name: string; color: string; order: number };
 
 export function StatusesClient({
   projectStatuses,
   taskStatuses,
-  roles,
 }: {
   projectStatuses: Status[];
   taskStatuses: Status[];
-  roles: Role[];
 }) {
   return (
     <div className="p-6">
@@ -37,9 +34,9 @@ export function StatusesClient({
           createAction={createProjectStatus}
           deleteAction={deleteProjectStatus}
         />
-        <TaskStatusSection
+        <StatusSection
+          title="Task Statuses"
           statuses={taskStatuses}
-          roles={roles}
           createAction={createTaskStatus}
           deleteAction={deleteTaskStatus}
         />
@@ -122,114 +119,6 @@ function StatusSection({
           </div>
         ))}
       </div>
-    </div>
-  );
-}
-
-function TaskStatusSection({
-  statuses,
-  roles,
-  createAction,
-  deleteAction,
-}: {
-  statuses: Status[];
-  roles: Role[];
-  createAction: (formData: FormData) => Promise<void>;
-  deleteAction: (id: string) => Promise<void>;
-}) {
-  const [showForm, setShowForm] = useState(false);
-
-  const handleRoleChange = async (statusId: string, roleId: string) => {
-    await updateTaskStatusRole(statusId, roleId || null);
-  };
-
-  return (
-    <div className="rounded-xl border border-border bg-card p-4">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-[14px] font-medium text-foreground">Task Statuses</h3>
-        <button
-          onClick={() => setShowForm(true)}
-          className="text-[11px] text-primary hover:text-primary/80 flex items-center gap-1"
-        >
-          <Plus className="w-3 h-3" /> Add
-        </button>
-      </div>
-
-      {showForm && (
-        <form
-          action={async (formData) => {
-            await createAction(formData);
-            setShowForm(false);
-          }}
-          className="mb-3 p-3 rounded-lg bg-muted/50 flex items-center gap-2"
-        >
-          <input
-            name="name"
-            placeholder="Status name"
-            required
-            className="flex-1 h-8 px-2 rounded-lg bg-black border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
-          />
-          <input
-            name="color"
-            type="color"
-            defaultValue="#3b82f6"
-            className="w-8 h-8 rounded-lg border border-border cursor-pointer"
-          />
-          <Button type="submit" size="sm">Add</Button>
-          <button type="button" onClick={() => setShowForm(false)} className="text-muted-foreground">
-            <X className="w-4 h-4" />
-          </button>
-        </form>
-      )}
-
-      <div className="space-y-1">
-        {statuses.map((status, idx) => (
-          <div
-            key={status.id}
-            className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors group"
-          >
-            <div
-              className="w-3 h-3 rounded-full shrink-0"
-              style={{ backgroundColor: status.color }}
-            />
-            <span className="text-[13px] text-foreground flex-1 min-w-0">{status.name}</span>
-            {idx === 0 ? (
-              <span className="text-[10px] text-muted-foreground/50 shrink-0 px-1">Dragger</span>
-            ) : (
-              <select
-                defaultValue={status.assignToRole?.id || ""}
-                onChange={(e) => handleRoleChange(status.id, e.target.value)}
-                className="h-7 px-2 rounded-lg bg-black border border-border text-[11px] text-foreground focus:outline-none focus:border-ring transition-colors shrink-0"
-                title="Auto-assign to role on forward"
-              >
-                <option value="">Dragger</option>
-                {roles.map((r) => (
-                  <option key={r.id} value={r.id}>{r.name}</option>
-                ))}
-              </select>
-            )}
-            <form action={deleteAction.bind(null, status.id)}>
-              <button
-                type="submit"
-                className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <Trash2 className="w-3 h-3" />
-              </button>
-            </form>
-          </div>
-        ))}
-      </div>
-
-      {statuses.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-border/30">
-          <div className="flex items-start gap-2">
-            <UserCheck className="w-3.5 h-3.5 text-muted-foreground/50 mt-0.5 shrink-0" />
-            <p className="text-[10px] text-muted-foreground/50 leading-relaxed">
-              <strong>Dragger</strong> = assigns to whoever moves the task. Choose a role to auto-assign when a task enters that status. Rollbacks always restore the previous assignee.
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -422,7 +422,6 @@ exports.Prisma.TaskStatusScalarFieldEnum = {
   name: 'name',
   order: 'order',
   color: 'color',
-  assignToRoleId: 'assignToRoleId',
   createdAt: 'createdAt'
 };
 

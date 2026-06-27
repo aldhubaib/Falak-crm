@@ -6,6 +6,7 @@ export interface StagePermission {
   forward: boolean;
   rollback: boolean;
   delete: boolean;
+  autoAssign: boolean;
 }
 
 export interface TaskPermissions {

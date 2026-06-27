@@ -36,7 +36,7 @@ function getTaskPermissions(role: Role): TaskPermissions {
 }
 
 function getStagePermission(tp: TaskPermissions, stageId: string): StagePermission {
-  return tp.stages[stageId] || { create: false, modify: false, forward: false, rollback: false, delete: false };
+  return tp.stages[stageId] || { create: false, modify: false, forward: false, rollback: false, delete: false, autoAssign: false };
 }
 
 export function TeamClient({
@@ -420,6 +420,7 @@ function RoleEditor({
                 <th className="text-center text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Forward</th>
                 <th className="text-center text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Rollback</th>
                 <th className="text-center text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Delete</th>
+                <th className="text-center text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-[80px]">Auto-Assign</th>
               </tr>
             </thead>
             <tbody>
@@ -454,6 +455,9 @@ function RoleEditor({
                     <td className="text-center px-3 py-2.5">
                       <StageCheckbox checked={sp.delete} onChange={() => toggleStage(status.id, "delete")} />
                     </td>
+                    <td className="text-center px-3 py-2.5">
+                      <StageCheckbox checked={sp.autoAssign ?? false} onChange={() => toggleStage(status.id, "autoAssign")} />
+                    </td>
                   </tr>
                 );
               })}
@@ -461,7 +465,7 @@ function RoleEditor({
           </table>
         </div>
         <p className="text-[10px] text-muted-foreground/50 mt-2">
-          Create = can create tasks in this stage. Modify = can edit tasks in this stage. Forward/Rollback = can move tasks to next/previous stage. Delete = can delete tasks in this stage.
+          Create = can create tasks in this stage. Modify = can edit tasks in this stage. Forward/Rollback = can move tasks to next/previous stage. Delete = can delete tasks in this stage. Auto-Assign = task is automatically assigned to this role when it enters this stage.
         </p>
       </div>
 

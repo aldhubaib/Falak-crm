@@ -111,9 +111,8 @@ model Role {
   permissions Json // { deals: "full", invoices: "view", ... }
   createdAt   DateTime @default(now())
 
-  workspace    Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  members      WorkspaceMember[]
-  taskStatuses TaskStatus[]
+  workspace Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  members   WorkspaceMember[]
 
   @@unique([workspaceId, name])
 }
@@ -513,16 +512,14 @@ model TaskChecklistItem {
 // ─── Tasks ─────────────────────────────────────────────────────────────────────
 
 model TaskStatus {
-  id             String   @id @default(cuid())
-  workspaceId    String
-  name           String
-  order          Int
-  color          String   @default("#3b82f6")
-  assignToRoleId String?
-  createdAt      DateTime @default(now())
+  id          String   @id @default(cuid())
+  workspaceId String
+  name        String
+  order       Int
+  color       String   @default("#3b82f6")
+  createdAt   DateTime @default(now())
 
   workspace           Workspace               @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  assignToRole        Role?                   @relation(fields: [assignToRoleId], references: [id], onDelete: SetNull)
   tasks               Task[]
   visibleFromItems    ChecklistTemplateItem[] @relation("VisibleFromStage")
   requiredBeforeItems ChecklistTemplateItem[] @relation("RequiredBeforeStage")

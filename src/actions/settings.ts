@@ -129,7 +129,6 @@ export async function getTaskStatuses() {
   const workspace = await requireWorkspace();
   return db.taskStatus.findMany({
     where: { workspaceId: workspace.id },
-    include: { assignToRole: { select: { id: true, name: true } } },
     orderBy: { order: "asc" },
   });
 }
@@ -153,14 +152,6 @@ export async function createTaskStatus(formData: FormData) {
 
 export async function deleteTaskStatus(id: string) {
   await db.taskStatus.delete({ where: { id } });
-  revalidatePath("/settings/statuses");
-}
-
-export async function updateTaskStatusRole(statusId: string, roleId: string | null) {
-  await db.taskStatus.update({
-    where: { id: statusId },
-    data: { assignToRoleId: roleId },
-  });
   revalidatePath("/settings/statuses");
 }
 
