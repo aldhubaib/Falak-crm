@@ -11,12 +11,11 @@ import {
   FileText,
   Check,
   X,
-  GripVertical,
   Clock,
+  Inbox,
   CheckCircle2,
   Paperclip,
   Download,
-  FolderKanban,
 } from "lucide-react";
 import {
   getPublishSchedule,
@@ -123,9 +122,6 @@ export function PublishClient({ projects }: { projects: Project[] }) {
   const [allItems, setAllItems] = useState<ScheduledItem[]>([]);
   const [deliveryTasks, setDeliveryTasks] = useState<DeliveryTask[]>([]);
   const [loading, setLoading] = useState(true);
-  const [dragTask, setDragTask] = useState<DeliveryTask | null>(null);
-  const [dragProjectId, setDragProjectId] = useState<string | null>(null);
-  const [dragOverDate, setDragOverDate] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"month" | "week" | "schedule">(() => {
     if (typeof window !== "undefined") {
@@ -228,31 +224,12 @@ export function PublishClient({ projects }: { projects: Project[] }) {
   }, [viewMode, allItemsByDate, scheduleByDate]);
 
   const unscheduledTasks = useMemo(() => deliveryTasks.filter((t) => !t.publishItem), [deliveryTasks]);
-  const scheduledTasks = useMemo(() => deliveryTasks.filter((t) => t.publishItem), [deliveryTasks]);
 
   const stats = useMemo(() => ({
     scheduled: allItems.filter((s) => !s.published).length,
     published: allItems.filter((s) => s.published).length,
     queued: unscheduledTasks.length,
   }), [allItems, unscheduledTasks]);
-
-  const handleDrop = async (dateStr: string) => {
-    if (!dragTask) return;
-    const projectForDrag = dragProjectId || dragTask.project?.id || selectedProjectId;
-    if (!projectForDrag) return;
-    setDragOverDate(null);
-    setDragTask(null);
-    setDragProjectId(null);
-
-    await scheduleTask({
-      taskId: dragTask.id,
-      projectId: projectForDrag,
-      scheduledDate: dateStr,
-    });
-    loadSchedule();
-    loadAllItems();
-    loadDeliveryTasks();
-  };
 
   const handleScheduleTask = async (task: DeliveryTask, dateStr: string) => {
     const projectId = task.project?.id || selectedProjectId;
@@ -286,317 +263,11 @@ export function PublishClient({ projects }: { projects: Project[] }) {
 
   const todayStr = toLocalDateStr(now);
 
-  const projectMap = useMemo(() => {
-    const m = new Map<string, Project>();
-    for (const p of projects) m.set(p.id, p);
-    return m;
-  }, [projects]);
-
-  const [mobileTab, setMobileTab] = useState<"calendar" | "queue">("calendar");
-  const [showMobileDetail, setShowMobileDetail] = useState(false);
-
-  const handleDateSelect = (dateStr: string) => {
-    setSelectedDate(dateStr);
-    setShowMobileDetail(true);
-  };
 
   return (
-    <div className="flex flex-col lg:flex-row h-full lg:h-[calc(100vh-48px)]">
-      {/* Left sidebar — delivery queue (desktop) */}
-      <div className="hidden lg:flex w-[300px] border-r border-border flex-col shrink-0 bg-card/30">
-        <div className="px-4 py-3 border-b border-border">
-          <h2 className="text-[13px] font-semibold text-foreground flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-primary" />
-            Delivery Queue
-          </h2>
-          <p className="text-[11px] text-muted-foreground mt-0.5">Drag tasks to the calendar to schedule</p>
-        </div>
-
-        <div className="px-3 py-2 border-b border-border">
-          <select
-            value={selectedProjectId || ""}
-            onChange={(e) => setSelectedProjectId(e.target.value || null)}
-            className="w-full h-8 px-2 rounded-lg bg-black border border-border text-[12px] text-foreground focus:outline-none focus:border-ring"
-          >
-            <option value="">All Projects</option>
-            {projects.map((p) => (
-              <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex-1 overflow-y-auto px-2 py-2 space-y-1.5">
-          {unscheduledTasks.length === 0 && scheduledTasks.length === 0 ? (
-            <p className="text-[12px] text-muted-foreground text-center py-8">
-              No deliveries ready
-            </p>
-          ) : (
-            <>
-              {unscheduledTasks.length > 0 && (
-                <>
-                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-1 pt-1">
-                    Unscheduled ({unscheduledTasks.length})
-                  </p>
-                  {unscheduledTasks.map((task) => {
-                    const tmpl = task.checklistItems[0]?.templateItem?.template;
-                    const tp = task.project || (selectedProjectId ? projectMap.get(selectedProjectId) : null);
-                    return (
-                      <div
-                        key={task.id}
-                        draggable
-                        onDragStart={() => { setDragTask(task); setDragProjectId(tp?.id || null); }}
-                        onDragEnd={() => { setDragTask(null); setDragOverDate(null); setDragProjectId(null); }}
-                        className="px-3 py-2.5 rounded-xl bg-black/40 border border-border/50 cursor-grab hover:border-primary/30 hover:bg-primary/5 transition-colors group"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <GripVertical className="w-3 h-3 text-muted-foreground/30 shrink-0 group-hover:text-muted-foreground" />
-                          {tp && (
-                            <ProjectAvatar
-                              thumbnailId={tp.thumbnailId ?? null}
-                              name={tp.name ?? ""}
-                              size="md"
-                            />
-                          )}
-                          <div className="flex-1 min-w-0">
-                            {tmpl && (
-                              <span
-                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium border mb-1"
-                                style={{
-                                  borderColor: `${tmpl.color || "#3b82f6"}40`,
-                                  color: tmpl.color || "#3b82f6",
-                                  backgroundColor: `${tmpl.color || "#3b82f6"}10`,
-                                }}
-                              >
-                                {tmpl.icon} {tmpl.name}
-                              </span>
-                            )}
-                            <p className="text-[12px] font-medium text-foreground truncate">{task.title}</p>
-                          </div>
-                          <label className="shrink-0 flex items-center gap-1 px-2 py-1.5 rounded-lg bg-primary/10 text-primary text-[11px] font-medium cursor-pointer hover:bg-primary/20 transition-colors">
-                            <Calendar className="w-3 h-3" />
-                            <span className="hidden xl:inline">Schedule</span>
-                            <input
-                              type="date"
-                              className="sr-only"
-                              onChange={(e) => {
-                                if (e.target.value) handleScheduleTask(task, e.target.value);
-                              }}
-                            />
-                          </label>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </>
-              )}
-
-              {scheduledTasks.length > 0 && (
-                <>
-                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-1 pt-3">
-                    Scheduled ({scheduledTasks.length})
-                  </p>
-                  {scheduledTasks.map((task) => {
-                    const schedDate = task.publishItem ? new Date(task.publishItem.scheduledDate) : null;
-                    const deliveredDate = task.completedAt ? new Date(task.completedAt) : null;
-                    const tp = task.project || (selectedProjectId ? projectMap.get(selectedProjectId) : null);
-                    return (
-                      <div
-                        key={task.id}
-                        className="rounded-xl bg-black/20 border border-border/30 hover:border-border/60 transition-all overflow-hidden"
-                      >
-                        <div className="flex items-center gap-2.5 px-3 pt-2.5 pb-2">
-                          {tp && (
-                            <ProjectAvatar
-                              thumbnailId={tp.thumbnailId ?? null}
-                              name={tp.name ?? ""}
-                              size="md"
-                            />
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <p className="text-[12px] font-medium text-foreground truncate">{task.title}</p>
-                            <div className="flex items-center gap-2 mt-0.5 text-[10px]">
-                              {deliveredDate && (
-                                <span className="text-green-400">
-                                  Delivered {deliveredDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                                </span>
-                              )}
-                              {schedDate && (
-                                <span className="text-primary">
-                                  Publish {schedDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center border-t border-border/20">
-                          <button
-                            onClick={() => task.publishItem && handleUnschedule(task.publishItem.id)}
-                            className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-[10px] font-medium text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-colors"
-                          >
-                            <X className="w-3 h-3" />
-                            Unschedule
-                          </button>
-                          <div className="w-px h-4 bg-border/30" />
-                          <label className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-[10px] font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer">
-                            <Calendar className="w-3 h-3" />
-                            Reschedule
-                            <input
-                              type="date"
-                              className="sr-only"
-                              defaultValue={task.publishItem ? toLocalDateStr(new Date(task.publishItem.scheduledDate)) : ""}
-                              onChange={(e) => {
-                                if (e.target.value && task.publishItem) {
-                                  const projectId = tp?.id || selectedProjectId;
-                                  if (projectId) handleReschedule(task.publishItem.id, task.id, projectId, e.target.value);
-                                }
-                              }}
-                            />
-                          </label>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Mobile tabs */}
-      <div className="lg:hidden flex items-center border-b border-border bg-card/30">
-        <button
-          onClick={() => setMobileTab("calendar")}
-          className={`flex-1 py-2.5 text-[12px] font-medium text-center transition-colors ${mobileTab === "calendar" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
-        >
-          Calendar
-        </button>
-        <button
-          onClick={() => setMobileTab("queue")}
-          className={`flex-1 py-2.5 text-[12px] font-medium text-center transition-colors relative ${mobileTab === "queue" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
-        >
-          Queue
-          {unscheduledTasks.length > 0 && (
-            <span className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-500/20 text-amber-400 text-[9px] font-bold">
-              {unscheduledTasks.length}
-            </span>
-          )}
-        </button>
-      </div>
-
-      {/* Mobile queue view */}
-      {mobileTab === "queue" && (
-        <div className="lg:hidden flex-1 overflow-y-auto">
-          <div className="px-3 py-2 border-b border-border">
-            <select
-              value={selectedProjectId || ""}
-              onChange={(e) => setSelectedProjectId(e.target.value || null)}
-              className="w-full h-8 px-2 rounded-lg bg-black border border-border text-[12px] text-foreground focus:outline-none focus:border-ring"
-            >
-              <option value="">All Projects</option>
-              {projects.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-              ))}
-            </select>
-          </div>
-          <div className="px-3 py-2 space-y-1.5">
-            {unscheduledTasks.length === 0 && scheduledTasks.length === 0 ? (
-              <p className="text-[12px] text-muted-foreground text-center py-8">No deliveries ready</p>
-            ) : (
-              <>
-                {unscheduledTasks.length > 0 && (
-                  <>
-                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-1 pt-1">Unscheduled ({unscheduledTasks.length})</p>
-                    {unscheduledTasks.map((task) => {
-                      const tmpl = task.checklistItems[0]?.templateItem?.template;
-                      const tp = task.project || (selectedProjectId ? projectMap.get(selectedProjectId) : null);
-                      return (
-                        <div key={task.id} className="px-3 py-2.5 rounded-xl bg-black/40 border border-border/50">
-                          <div className="flex items-center gap-2.5">
-                            {tp && <ProjectAvatar thumbnailId={tp.thumbnailId ?? null} name={tp.name ?? ""} size="md" />}
-                            <div className="flex-1 min-w-0">
-                              {tmpl && (
-                                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium border mb-1"
-                                  style={{ borderColor: `${tmpl.color || "#3b82f6"}40`, color: tmpl.color || "#3b82f6", backgroundColor: `${tmpl.color || "#3b82f6"}10` }}>
-                                  {tmpl.icon} {tmpl.name}
-                                </span>
-                              )}
-                              <p className="text-[12px] font-medium text-foreground truncate">{task.title}</p>
-                            </div>
-                            <label className="shrink-0 flex items-center gap-1 px-2 py-1.5 rounded-lg bg-primary/10 text-primary text-[11px] font-medium cursor-pointer hover:bg-primary/20 transition-colors">
-                              <Calendar className="w-3 h-3" />
-                              Schedule
-                              <input
-                                type="date"
-                                className="sr-only"
-                                onChange={(e) => {
-                                  if (e.target.value) handleScheduleTask(task, e.target.value);
-                                }}
-                              />
-                            </label>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </>
-                )}
-                {scheduledTasks.length > 0 && (
-                  <>
-                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-1 pt-3">Scheduled ({scheduledTasks.length})</p>
-                    {scheduledTasks.map((task) => {
-                      const schedDate = task.publishItem ? new Date(task.publishItem.scheduledDate) : null;
-                      const tp = task.project || (selectedProjectId ? projectMap.get(selectedProjectId) : null);
-                      return (
-                        <div key={task.id} className="rounded-xl bg-black/20 border border-border/30 overflow-hidden">
-                          <div className="flex items-center gap-2.5 px-3 py-2.5">
-                            {tp && <ProjectAvatar thumbnailId={tp.thumbnailId ?? null} name={tp.name ?? ""} size="md" />}
-                            <div className="flex-1 min-w-0">
-                              <p className="text-[12px] font-medium text-foreground truncate">{task.title}</p>
-                              {schedDate && (
-                                <p className="text-[10px] text-primary mt-0.5">
-                                  Publish {schedDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex items-center border-t border-border/20">
-                            <button
-                              onClick={() => task.publishItem && handleUnschedule(task.publishItem.id)}
-                              className="flex-1 flex items-center justify-center gap-1 px-2 py-2 text-[11px] font-medium text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-colors"
-                            >
-                              <X className="w-3 h-3" />
-                              Unschedule
-                            </button>
-                            <div className="w-px h-4 bg-border/30" />
-                            <label className="flex-1 flex items-center justify-center gap-1 px-2 py-2 text-[11px] font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer">
-                              <Calendar className="w-3 h-3" />
-                              Reschedule
-                              <input
-                                type="date"
-                                className="sr-only"
-                                defaultValue={task.publishItem ? toLocalDateStr(new Date(task.publishItem.scheduledDate)) : ""}
-                                onChange={(e) => {
-                                  if (e.target.value && task.publishItem) {
-                                    const projectId = tp?.id || selectedProjectId;
-                                    if (projectId) handleReschedule(task.publishItem.id, task.id, projectId, e.target.value);
-                                  }
-                                }}
-                              />
-                            </label>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Main content */}
-      <div className={`flex-1 flex flex-col min-w-0 ${mobileTab !== "calendar" ? "hidden lg:flex" : ""}`}>
+    <div className="flex flex-col h-full">
+      {/* Main content — full width calendar */}
+      <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
         <div className="flex items-center justify-between px-3 lg:px-6 py-2 lg:py-3 border-b border-border">
           <div className="flex items-center gap-2 lg:gap-4">
@@ -629,7 +300,7 @@ export function PublishClient({ projects }: { projects: Project[] }) {
           </div>
 
           <div className="flex items-center gap-2 lg:gap-3">
-            <div className="hidden lg:flex items-center gap-4 text-[11px]">
+            <div className="hidden md:flex items-center gap-4 text-[11px]">
               <span className="text-muted-foreground">
                 <span className="text-foreground font-medium">{stats.scheduled}</span> scheduled
               </span>
@@ -640,6 +311,18 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                 <span className="text-amber-400 font-medium">{stats.queued}</span> queued
               </span>
             </div>
+
+            <select
+              value={selectedProjectId || ""}
+              onChange={(e) => setSelectedProjectId(e.target.value || null)}
+              className="h-7 lg:h-8 px-2 pr-6 rounded-lg bg-black border border-border text-[11px] lg:text-[12px] font-medium text-foreground focus:outline-none focus:border-ring transition-colors appearance-none cursor-pointer"
+              style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 6px center" }}
+            >
+              <option value="">All Projects</option>
+              {projects.map((p) => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
 
             <select
               value={viewMode}
@@ -671,16 +354,12 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                 const dateStr = isCurrentMonth ? getDateStr(day) : "";
                 const dayItems = isCurrentMonth ? getItemsForDate(dateStr) : [];
                 const isToday = dateStr === todayStr;
-                const isDragOver = dateStr === dragOverDate;
                 return (
                   <div
                     key={i}
-                    className={`border-b border-r border-border/30 p-1 min-h-[100px] transition-colors ${
-                      !isCurrentMonth ? "bg-black/20" : isDragOver ? "bg-primary/10" : "hover:bg-muted/10"
+                    className={`border-b border-r border-border/30 p-1 min-h-[80px] lg:min-h-[100px] transition-colors cursor-pointer ${
+                      !isCurrentMonth ? "bg-black/20" : selectedDate === dateStr ? "bg-primary/10 ring-1 ring-primary/30" : "hover:bg-muted/10"
                     }`}
-                    onDragOver={(e) => { if (isCurrentMonth && dragTask) { e.preventDefault(); setDragOverDate(dateStr); } }}
-                    onDragLeave={() => setDragOverDate(null)}
-                    onDrop={(e) => { e.preventDefault(); if (isCurrentMonth) handleDrop(dateStr); }}
                     onClick={() => isCurrentMonth && setSelectedDate(selectedDate === dateStr ? null : dateStr)}
                   >
                     {isCurrentMonth && (
@@ -725,14 +404,11 @@ export function PublishClient({ projects }: { projects: Project[] }) {
               <div className="flex-1 grid grid-cols-7 overflow-y-auto">
                 {weekDays.map((wd) => {
                   const dayItems = getItemsForDate(wd.dateStr);
-                  const isDragOver = wd.dateStr === dragOverDate;
                   return (
                     <div
                       key={wd.dateStr}
-                      className={`border-r border-border/30 p-2 space-y-2 transition-colors ${isDragOver ? "bg-primary/10" : ""} ${wd.dateStr === todayStr ? "bg-primary/5" : ""}`}
-                      onDragOver={(e) => { if (dragTask) { e.preventDefault(); setDragOverDate(wd.dateStr); } }}
-                      onDragLeave={() => setDragOverDate(null)}
-                      onDrop={(e) => { e.preventDefault(); handleDrop(wd.dateStr); }}
+                      className={`border-r border-border/30 p-2 space-y-2 transition-colors cursor-pointer ${selectedDate === wd.dateStr ? "bg-primary/10 ring-1 ring-primary/30" : wd.dateStr === todayStr ? "bg-primary/5" : "hover:bg-muted/10"}`}
+                      onClick={() => setSelectedDate(selectedDate === wd.dateStr ? null : wd.dateStr)}
                     >
                       {dayItems.map((item) => (
                         <CalendarCard key={item.id} item={item} onClick={() => setSelectedDate(wd.dateStr)} />
@@ -828,35 +504,20 @@ export function PublishClient({ projects }: { projects: Project[] }) {
         )}
       </div>
 
-      {/* Right detail panel — desktop inline */}
+      {/* Date panel — full-screen overlay */}
       {selectedDate && (
-        <div className="hidden lg:block">
-          <DetailPanel
-            selectedDate={selectedDate}
-            items={getItemsForDate(selectedDate)}
-            onTogglePublished={handleTogglePublished}
-            onUnschedule={handleUnschedule}
-            onReschedule={handleReschedule}
-            onClose={() => setSelectedDate(null)}
-          />
-        </div>
-      )}
-
-      {/* Right detail panel — mobile modal */}
-      {selectedDate && (
-        <div className="lg:hidden fixed inset-0 z-[500] flex flex-col">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setSelectedDate(null)} />
-          <div className="relative mt-auto max-h-[80vh] bg-background border-t border-border rounded-t-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom duration-200">
-            <DetailPanel
-              selectedDate={selectedDate}
-              items={getItemsForDate(selectedDate)}
-              onTogglePublished={handleTogglePublished}
-              onUnschedule={handleUnschedule}
-              onReschedule={handleReschedule}
-              onClose={() => setSelectedDate(null)}
-            />
-          </div>
-        </div>
+        <DatePanel
+          selectedDate={selectedDate}
+          scheduledItems={getItemsForDate(selectedDate)}
+          unscheduledTasks={unscheduledTasks}
+          projects={projects}
+          selectedProjectId={selectedProjectId}
+          onSchedule={handleScheduleTask}
+          onTogglePublished={handleTogglePublished}
+          onUnschedule={handleUnschedule}
+          onReschedule={handleReschedule}
+          onClose={() => setSelectedDate(null)}
+        />
       )}
     </div>
   );
@@ -882,104 +543,228 @@ function CalendarCard({ item, onClick, compact }: { item: ScheduledItem; onClick
   );
 }
 
-function DetailPanel({
+function DatePanel({
   selectedDate,
-  items,
+  scheduledItems,
+  unscheduledTasks,
+  projects,
+  selectedProjectId,
+  onSchedule,
   onTogglePublished,
   onUnschedule,
   onReschedule,
   onClose,
 }: {
   selectedDate: string;
-  items: ScheduledItem[];
+  scheduledItems: ScheduledItem[];
+  unscheduledTasks: DeliveryTask[];
+  projects: Project[];
+  selectedProjectId: string | null;
+  onSchedule: (task: DeliveryTask, dateStr: string) => void;
   onTogglePublished: (item: ScheduledItem) => void;
   onUnschedule: (id: string) => void;
   onReschedule: (itemId: string, taskId: string, projectId: string, dateStr: string) => void;
   onClose: () => void;
 }) {
+  const [tab, setTab] = useState<"unscheduled" | "scheduled">(
+    unscheduledTasks.length > 0 ? "unscheduled" : "scheduled"
+  );
+  const d = new Date(selectedDate + "T00:00:00");
+
+  const scheduledByProject = useMemo(() => {
+    const map = new Map<string, { project: ScheduledItem["project"]; items: ScheduledItem[] }>();
+    for (const item of scheduledItems) {
+      const existing = map.get(item.project.id);
+      if (existing) existing.items.push(item);
+      else map.set(item.project.id, { project: item.project, items: [item] });
+    }
+    return Array.from(map.values());
+  }, [scheduledItems]);
+
+  const unscheduledByProject = useMemo(() => {
+    const map = new Map<string, { project: Project; tasks: DeliveryTask[] }>();
+    for (const task of unscheduledTasks) {
+      const proj = task.project || projects.find((p) => p.id === selectedProjectId);
+      if (!proj) continue;
+      const existing = map.get(proj.id);
+      if (existing) existing.tasks.push(task);
+      else map.set(proj.id, { project: proj, tasks: [task] });
+    }
+    return Array.from(map.values());
+  }, [unscheduledTasks, projects, selectedProjectId]);
+
   return (
-    <div className="w-full lg:w-[380px] border-l border-border flex flex-col shrink-0 bg-card/30">
-      <div className="px-4 py-3 border-b border-border flex items-center justify-between">
-        <div>
-          <h3 className="text-[13px] font-semibold text-foreground">
-            {new Date(selectedDate + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })}
-          </h3>
-          <p className="text-[11px] text-muted-foreground">{items.length} deliveries</p>
-        </div>
-        <button onClick={onClose} className="w-6 h-6 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
-          <X className="w-3.5 h-3.5" />
-        </button>
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-3">
-        {items.length === 0 ? (
-          <p className="text-[12px] text-muted-foreground text-center py-8">No deliveries for this day</p>
-        ) : (
-          items.map((item) => (
-            <div key={item.id} className="rounded-xl border border-border bg-black/40 overflow-hidden">
-              <div className="px-3 pt-3 pb-2 flex items-start gap-2.5">
-                <ProjectAvatar thumbnailId={item.project.thumbnailId} name={item.project.name} size="md" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-[10px] text-muted-foreground">{item.project.name}</p>
-                  <p className="text-[13px] font-medium text-foreground truncate">{item.task.title}</p>
-                  {item.task.completedAt && (
-                    <p className="text-[10px] text-green-400/70 mt-0.5 flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3" />
-                      Delivered {new Date(item.task.completedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="border-t border-border/30">
-                {item.task.checklistItems.map((ci) => (
-                  <DeliveryFilePreview key={ci.id} file={ci} />
-                ))}
-              </div>
-
-              {item.notes && (
-                <div className="px-3 py-2 border-t border-border/30">
-                  <p className="text-[11px] text-muted-foreground/70 italic border-l-2 border-border pl-2">{item.notes}</p>
-                </div>
-              )}
-
-              <div className="flex items-center justify-between px-3 py-2.5 border-t border-border/30 bg-black/20 gap-1">
-                <button
-                  onClick={() => onTogglePublished(item)}
-                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
-                    item.published
-                      ? "text-green-400 bg-green-500/10 hover:bg-green-500/20"
-                      : "text-muted-foreground hover:text-primary hover:bg-primary/10"
-                  }`}
-                >
-                  {item.published ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Check className="w-3.5 h-3.5" />}
-                  {item.published ? "Published" : "Mark Published"}
-                </button>
-                <label className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer">
-                  <Calendar className="w-3 h-3" />
-                  Reschedule
-                  <input
-                    type="date"
-                    className="sr-only"
-                    defaultValue={selectedDate}
-                    onChange={(e) => {
-                      if (e.target.value && e.target.value !== selectedDate) {
-                        onReschedule(item.id, item.task.id, item.project.id, e.target.value);
-                      }
-                    }}
-                  />
-                </label>
-                <button
-                  onClick={() => onUnschedule(item.id)}
-                  className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-colors"
-                >
-                  <X className="w-3 h-3" />
-                  Remove
-                </button>
-              </div>
+    <div className="fixed inset-0 z-[500] flex items-end lg:items-center justify-center">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full lg:w-[480px] max-h-[85vh] lg:max-h-[80vh] bg-background border border-border rounded-t-2xl lg:rounded-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom lg:zoom-in-95 duration-200">
+        {/* Header */}
+        <div className="px-4 py-3 border-b border-border">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                {d.toLocaleDateString("en-US", { weekday: "short" })}, {d.toLocaleDateString("en-US", { month: "long" })}
+              </p>
+              <h3 className="text-[18px] font-bold text-foreground">
+                {d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+              </h3>
+              <p className="text-[11px] text-muted-foreground mt-0.5">
+                Pick from the queue to schedule, or browse what&apos;s already scheduled.
+              </p>
             </div>
-          ))
-        )}
+            <button onClick={onClose} className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Tabs */}
+          <div className="flex items-center gap-2 mt-3">
+            <button
+              onClick={() => setTab("unscheduled")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium transition-colors ${
+                tab === "unscheduled" ? "bg-primary text-white" : "bg-muted/30 text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Inbox className="w-3.5 h-3.5" />
+              {unscheduledTasks.length}
+            </button>
+            <button
+              onClick={() => setTab("scheduled")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium transition-colors ${
+                tab === "scheduled" ? "bg-primary text-white" : "bg-muted/30 text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              {scheduledItems.length}
+            </button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
+          {tab === "unscheduled" && (
+            <>
+              {unscheduledByProject.length === 0 ? (
+                <p className="text-[12px] text-muted-foreground text-center py-8">No unscheduled deliveries</p>
+              ) : (
+                unscheduledByProject.map(({ project, tasks }) => (
+                  <div key={project.id}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <ProjectAvatar thumbnailId={project.thumbnailId} name={project.name} size="sm" />
+                      <p className="text-[11px] font-semibold text-muted-foreground">{project.name} ({tasks.length})</p>
+                    </div>
+                    <div className="space-y-1.5">
+                      {tasks.map((task) => (
+                        <div key={task.id} className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-black/40 border border-border/50">
+                          <ProjectAvatar thumbnailId={project.thumbnailId} name={project.name} size="md" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[12px] font-medium text-foreground truncate">{task.title}</p>
+                            {task.completedAt && (
+                              <p className="text-[10px] text-green-400/70 flex items-center gap-1 mt-0.5">
+                                <CheckCircle2 className="w-2.5 h-2.5" />
+                                Delivered {new Date(task.completedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                              </p>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => onSchedule(task, selectedDate)}
+                            className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                            title="Schedule to this date"
+                          >
+                            <Calendar className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
+            </>
+          )}
+
+          {tab === "scheduled" && (
+            <>
+              {scheduledByProject.length === 0 ? (
+                <p className="text-[12px] text-muted-foreground text-center py-8">No deliveries scheduled for this day</p>
+              ) : (
+                scheduledByProject.map(({ project, items }) => (
+                  <div key={project.id}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <ProjectAvatar thumbnailId={project.thumbnailId} name={project.name} size="sm" />
+                      <p className="text-[11px] font-semibold text-muted-foreground">{project.name} ({items.length})</p>
+                    </div>
+                    <div className="space-y-2">
+                      {items.map((item) => (
+                        <div key={item.id} className="rounded-xl border border-border bg-black/40 overflow-hidden">
+                          <div className="px-3 pt-3 pb-2 flex items-start gap-2.5">
+                            <ProjectAvatar thumbnailId={item.project.thumbnailId} name={item.project.name} size="md" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[13px] font-medium text-foreground truncate">{item.task.title}</p>
+                              <div className="flex items-center gap-3 mt-1 text-[10px]">
+                                {item.task.completedAt && (
+                                  <span className="text-green-400/70 flex items-center gap-1">
+                                    <CheckCircle2 className="w-2.5 h-2.5" />
+                                    Delivered {new Date(item.task.completedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                                  </span>
+                                )}
+                                <span className="text-primary flex items-center gap-1">
+                                  <Calendar className="w-2.5 h-2.5" />
+                                  Publish {new Date(item.scheduledDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="border-t border-border/30">
+                            {item.task.checklistItems.map((ci) => (
+                              <DeliveryFilePreview key={ci.id} file={ci} />
+                            ))}
+                          </div>
+
+                          <div className="flex items-center border-t border-border/30 bg-black/20">
+                            <button
+                              onClick={() => onTogglePublished(item)}
+                              className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2 text-[11px] font-medium transition-colors ${
+                                item.published
+                                  ? "text-green-400 hover:bg-green-500/10"
+                                  : "text-muted-foreground hover:text-primary hover:bg-primary/10"
+                              }`}
+                            >
+                              {item.published ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Check className="w-3.5 h-3.5" />}
+                              {item.published ? "Published" : "Publish"}
+                            </button>
+                            <div className="w-px h-4 bg-border/30" />
+                            <label className="flex-1 flex items-center justify-center gap-1 px-2 py-2 text-[11px] font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer">
+                              <Calendar className="w-3 h-3" />
+                              Reschedule
+                              <input
+                                type="date"
+                                className="sr-only"
+                                defaultValue={selectedDate}
+                                onChange={(e) => {
+                                  if (e.target.value && e.target.value !== selectedDate) {
+                                    onReschedule(item.id, item.task.id, item.project.id, e.target.value);
+                                  }
+                                }}
+                              />
+                            </label>
+                            <div className="w-px h-4 bg-border/30" />
+                            <button
+                              onClick={() => onUnschedule(item.id)}
+                              className="flex-1 flex items-center justify-center gap-1 px-2 py-2 text-[11px] font-medium text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                            >
+                              <X className="w-3 h-3" />
+                              Unschedule
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
