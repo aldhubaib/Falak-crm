@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
-import { updateTask, deleteTask, setChecklistItemAttachment, removeChecklistItemAttachment, saveChecklistItemText, syncTaskTemplates, createFullTask } from "@/actions/projects";
-import { ArrowLeft, Trash2, Save, Loader2, Paperclip, CheckCircle2, AlertCircle, ChevronDown, Download } from "lucide-react";
+import { updateTask, deleteTask, setChecklistItemAttachment, removeChecklistItemAttachment, saveChecklistItemText, syncTaskTemplates, createFullTask, getTaskHistory } from "@/actions/projects";
+import { formatDistanceToNow } from "date-fns";
+import { ArrowLeft, Trash2, Save, Loader2, Paperclip, CheckCircle2, AlertCircle, ChevronDown, Download, History, X } from "lucide-react";
 import { TaskComments } from "@/components/task-comments";
 import { HeaderActions } from "@/components/header-actions";
 import Link from "next/link";
@@ -441,6 +442,7 @@ export function TaskDetailClient({
             )}
           </div>
         )}
+        {!isNew && <TaskHistoryButton taskId={task.id} />}
         <HeaderActions />
       </div>
 
@@ -1767,6 +1769,125 @@ function MentionCopyrightField({
             ref={(el) => { if (el) { el.style.height = "auto"; el.style.height = el.scrollHeight + "px"; } }}
           />
         )
+      )}
+    </div>
+  );
+}
+
+type ActivityEntry = {
+  id: string;
+  userName: string | null;
+  userImage: string | null;
+  action: string;
+  changes: Record<string, { from: unknown; to: unknown }> | null;
+  createdAt: Date;
+};
+
+function TaskHistoryButton({ taskId }: { taskId: string }) {
+  const [open, setOpen] = useState(false);
+  const [entries, setEntries] = useState<ActivityEntry[]>([]);
+  const [loading, setLoading] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    setLoading(true);
+    getTaskHistory(taskId).then((data) => {
+      setEntries(data.map((e) => ({
+        ...e,
+        changes: e.changes as ActivityEntry["changes"],
+        createdAt: new Date(e.createdAt),
+      })));
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, [open, taskId]);
+
+  useEffect(() => {
+    if (!open) return;
+    const handle = (e: MouseEvent) => {
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handle);
+    return () => document.removeEventListener("mousedown", handle);
+  }, [open]);
+
+  const describeAction = (entry: ActivityEntry) => {
+    const who = entry.userName || "Someone";
+    const changes = entry.changes;
+
+    if (entry.action === "created") return `${who} created this task`;
+    if (entry.action === "deleted") return `${who} deleted this task`;
+
+    if (changes) {
+      const parts: string[] = [];
+      for (const [field, { from, to }] of Object.entries(changes)) {
+        if (field === "status") {
+          parts.push(`moved from ${from || "—"} → ${to || "—"}`);
+        } else if (field === "assignee") {
+          parts.push(`reassigned from ${from || "unassigned"} → ${to || "unassigned"}`);
+        } else {
+          parts.push(`changed ${field}`);
+        }
+      }
+      if (parts.length > 0) return `${who} ${parts.join(", ")}`;
+    }
+
+    return `${who} updated this task`;
+  };
+
+  return (
+    <div className="relative" ref={panelRef}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+        title="Task history"
+      >
+        <History className="w-4 h-4" />
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-96 bg-black border border-border rounded-xl shadow-xl overflow-hidden z-[200]">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+            <h3 className="text-[13px] font-semibold text-foreground">Task History</h3>
+            <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="max-h-[400px] overflow-y-auto">
+            {loading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+              </div>
+            ) : entries.length === 0 ? (
+              <div className="py-8 text-center">
+                <History className="w-8 h-8 mx-auto text-muted-foreground/20 mb-2" />
+                <p className="text-[12px] text-muted-foreground/60">No activity recorded yet</p>
+              </div>
+            ) : (
+              <div className="py-2">
+                {entries.map((entry, idx) => (
+                  <div key={entry.id} className="relative flex gap-3 px-4 py-2.5">
+                    {idx < entries.length - 1 && (
+                      <div className="absolute left-[27px] top-[34px] bottom-0 w-px bg-border/50" />
+                    )}
+                    <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center text-[9px] font-bold text-primary shrink-0 mt-0.5 z-10">
+                      {(entry.userName || "?").charAt(0).toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[12px] text-foreground leading-snug">
+                        {describeAction(entry)}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground/50 mt-0.5">
+                        {formatDistanceToNow(entry.createdAt, { addSuffix: true })}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );

@@ -703,3 +703,12 @@ export async function getStageGateBlockers(taskId: string, targetStatusId: strin
 
   return blockers;
 }
+
+export async function getTaskHistory(taskId: string) {
+  const workspace = await requireWorkspace();
+  return db.activityLog.findMany({
+    where: { workspaceId: workspace.id, entityType: "task", entityId: taskId },
+    orderBy: { createdAt: "desc" },
+    take: 50,
+  });
+}
