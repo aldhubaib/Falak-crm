@@ -117,6 +117,7 @@ export async function createFullTask(data: {
         priority: data.priority,
         assigneeId: member.id,
         order: (lastTask?.order ?? 0) + 1,
+        stageEnteredAt: new Date(),
       },
     });
 
@@ -267,14 +268,23 @@ export async function updateTaskStatus(taskId: string, statusId: string, project
     }
   }
 
+  const timings: Record<string, number> = (task?.stageTimings as Record<string, number>) ?? {};
+  const now = new Date();
+  if (task?.statusId && task.stageEnteredAt) {
+    const elapsed = now.getTime() - new Date(task.stageEnteredAt).getTime();
+    timings[task.statusId] = (timings[task.statusId] ?? 0) + elapsed;
+  }
+
   await db.task.update({
     where: { id: taskId },
     data: {
       statusId,
       assigneeId: newAssigneeId,
       assignmentHistory: history,
+      stageTimings: timings,
+      stageEnteredAt: now,
       rejectionCount: !isForward ? { increment: 1 } : undefined,
-      completedAt: targetStatus?.name === "Completed" || targetStatus?.name === "Published" ? new Date() : null,
+      completedAt: targetStatus?.name === "Completed" || targetStatus?.name === "Published" ? now : null,
     },
   });
 

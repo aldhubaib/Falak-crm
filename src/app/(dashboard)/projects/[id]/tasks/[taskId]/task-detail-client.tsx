@@ -125,6 +125,8 @@ type Task = {
   price: unknown;
   priority: number | null;
   completedAt: Date | null;
+  stageTimings: unknown;
+  stageEnteredAt: Date | string | null;
   status: { id: string; name: string; color: string } | null;
   service: { name: string } | null;
   assignee: { id: string; name: string | null; email: string } | null;
@@ -492,6 +494,52 @@ export function TaskDetailClient({
               <h1 className="text-xl font-semibold text-foreground">{task?.title}</h1>
             )
           )}
+
+          {!isNew && task && (() => {
+            const timings = (task.stageTimings ?? {}) as Record<string, number>;
+            const enteredAt = task.stageEnteredAt ? new Date(task.stageEnteredAt).getTime() : null;
+            const now = Date.now();
+            const currentStageMs = task.status?.id && enteredAt
+              ? (timings[task.status.id] ?? 0) + (now - enteredAt)
+              : 0;
+            const totalMs = Object.values(timings).reduce((sum, v) => sum + v, 0)
+              + (enteredAt ? now - enteredAt : 0);
+            if (totalMs < 60_000) return null;
+
+            const fmtDur = (ms: number) => {
+              if (ms < 60_000) return "<1m";
+              const m = Math.floor(ms / 60_000);
+              const d = Math.floor(m / 1440);
+              const h = Math.floor((m % 1440) / 60);
+              const min = m % 60;
+              if (d > 0) return h > 0 ? `${d}d ${h}h` : `${d}d`;
+              if (h > 0) return min > 0 ? `${h}h ${min}m` : `${h}h`;
+              return `${min}m`;
+            };
+
+            const stageBreakdown = taskStatuses
+              .filter((s) => timings[s.id] || (s.id === task.status?.id && enteredAt))
+              .map((s) => {
+                let ms = timings[s.id] ?? 0;
+                if (s.id === task.status?.id && enteredAt) ms += now - enteredAt;
+                return { name: s.name, color: s.color, ms };
+              })
+              .filter((s) => s.ms > 0);
+
+            return (
+              <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground/60">
+                {stageBreakdown.map((s) => (
+                  <span key={s.name} className="inline-flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: s.color }} />
+                    {s.name}: <span className="text-foreground/60 font-medium">{fmtDur(s.ms)}</span>
+                  </span>
+                ))}
+                <span className="inline-flex items-center gap-1 text-foreground/50 font-medium">
+                  Total: {fmtDur(totalMs)}
+                </span>
+              </div>
+            );
+          })()}
 
           {/* Priority — only after a template is selected */}
           {hasTemplates && (

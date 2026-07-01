@@ -440,6 +440,8 @@ exports.Prisma.TaskScalarFieldEnum = {
   dueDate: 'dueDate',
   completedAt: 'completedAt',
   assignmentHistory: 'assignmentHistory',
+  stageTimings: 'stageTimings',
+  stageEnteredAt: 'stageEnteredAt',
   rejectionCount: 'rejectionCount',
   order: 'order',
   createdAt: 'createdAt',

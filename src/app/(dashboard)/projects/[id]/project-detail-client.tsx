@@ -17,6 +17,17 @@ import type { TaskPermissions } from "@/lib/permissions";
 type TaskStatus = { id: string; name: string; color: string; order: number };
 type ProjectStatus = { id: string; name: string; color: string; order: number };
 
+function formatDuration(ms: number): string {
+  if (ms < 60_000) return "<1m";
+  const totalMinutes = Math.floor(ms / 60_000);
+  const days = Math.floor(totalMinutes / 1440);
+  const hours = Math.floor((totalMinutes % 1440) / 60);
+  const minutes = totalMinutes % 60;
+  if (days > 0) return hours > 0 ? `${days}d ${hours}h` : `${days}d`;
+  if (hours > 0) return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+  return `${minutes}m`;
+}
+
 type ChecklistItem = {
   id: string;
   name: string;
@@ -38,6 +49,8 @@ type Task = {
   priority: number | null;
   completedAt: Date | null;
   rejectionCount: number;
+  stageTimings: unknown;
+  stageEnteredAt: Date | string | null;
   status: TaskStatus | null;
   service: { name: string } | null;
   assignee: { name: string | null; email: string } | null;
@@ -994,10 +1007,35 @@ const TaskCard = memo(function TaskCard({
         </div>
       )}
 
-      <p className="text-[13px] font-medium leading-snug mb-3 text-foreground">
+      <p className="text-[13px] font-medium leading-snug mb-2 text-foreground">
         {task.taskNumber > 0 && <span className="text-muted-foreground/50 mr-1.5">#{task.taskNumber}</span>}
         {task.title}
       </p>
+
+      {(() => {
+        const timings = (task.stageTimings ?? {}) as Record<string, number>;
+        const enteredAt = task.stageEnteredAt ? new Date(task.stageEnteredAt).getTime() : null;
+        const currentStageMs = task.status?.id && enteredAt
+          ? (timings[task.status.id] ?? 0) + (Date.now() - enteredAt)
+          : 0;
+        const totalMs = Object.values(timings).reduce((sum, v) => sum + v, 0)
+          + (enteredAt ? Date.now() - enteredAt : 0);
+        if (totalMs < 60_000) return null;
+        return (
+          <div className="flex items-center gap-3 mb-2 text-[10px] text-muted-foreground/60">
+            {currentStageMs > 0 && (
+              <span className="inline-flex items-center gap-1" title="Time in current stage">
+                <Clock className="w-3 h-3" />
+                {formatDuration(currentStageMs)}
+              </span>
+            )}
+            <span className="inline-flex items-center gap-1" title="Total time">
+              <span className="font-medium">Σ</span>
+              {formatDuration(totalMs)}
+            </span>
+          </div>
+        );
+      })()}
 
       <div className="flex-1" />
       <div className="flex items-center gap-1.5">

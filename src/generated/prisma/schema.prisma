@@ -543,6 +543,8 @@ model Task {
   dueDate           DateTime?
   completedAt       DateTime?
   assignmentHistory Json?
+  stageTimings      Json?
+  stageEnteredAt    DateTime?
   rejectionCount    Int       @default(0)
   order             Int       @default(0)
   createdAt         DateTime  @default(now())

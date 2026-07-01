@@ -34911,6 +34911,7 @@ export namespace Prisma {
     priority: number | null
     dueDate: Date | null
     completedAt: Date | null
+    stageEnteredAt: Date | null
     rejectionCount: number | null
     order: number | null
     createdAt: Date | null
@@ -34932,6 +34933,7 @@ export namespace Prisma {
     priority: number | null
     dueDate: Date | null
     completedAt: Date | null
+    stageEnteredAt: Date | null
     rejectionCount: number | null
     order: number | null
     createdAt: Date | null
@@ -34954,6 +34956,8 @@ export namespace Prisma {
     dueDate: number
     completedAt: number
     assignmentHistory: number
+    stageTimings: number
+    stageEnteredAt: number
     rejectionCount: number
     order: number
     createdAt: number
@@ -34993,6 +34997,7 @@ export namespace Prisma {
     priority?: true
     dueDate?: true
     completedAt?: true
+    stageEnteredAt?: true
     rejectionCount?: true
     order?: true
     createdAt?: true
@@ -35014,6 +35019,7 @@ export namespace Prisma {
     priority?: true
     dueDate?: true
     completedAt?: true
+    stageEnteredAt?: true
     rejectionCount?: true
     order?: true
     createdAt?: true
@@ -35036,6 +35042,8 @@ export namespace Prisma {
     dueDate?: true
     completedAt?: true
     assignmentHistory?: true
+    stageTimings?: true
+    stageEnteredAt?: true
     rejectionCount?: true
     order?: true
     createdAt?: true
@@ -35145,6 +35153,8 @@ export namespace Prisma {
     dueDate: Date | null
     completedAt: Date | null
     assignmentHistory: JsonValue | null
+    stageTimings: JsonValue | null
+    stageEnteredAt: Date | null
     rejectionCount: number
     order: number
     createdAt: Date
@@ -35186,6 +35196,8 @@ export namespace Prisma {
     dueDate?: boolean
     completedAt?: boolean
     assignmentHistory?: boolean
+    stageTimings?: boolean
+    stageEnteredAt?: boolean
     rejectionCount?: boolean
     order?: boolean
     createdAt?: boolean
@@ -35216,6 +35228,8 @@ export namespace Prisma {
     dueDate?: boolean
     completedAt?: boolean
     assignmentHistory?: boolean
+    stageTimings?: boolean
+    stageEnteredAt?: boolean
     rejectionCount?: boolean
     order?: boolean
     createdAt?: boolean
@@ -35242,6 +35256,8 @@ export namespace Prisma {
     dueDate?: boolean
     completedAt?: boolean
     assignmentHistory?: boolean
+    stageTimings?: boolean
+    stageEnteredAt?: boolean
     rejectionCount?: boolean
     order?: boolean
     createdAt?: boolean
@@ -35268,6 +35284,8 @@ export namespace Prisma {
     dueDate?: boolean
     completedAt?: boolean
     assignmentHistory?: boolean
+    stageTimings?: boolean
+    stageEnteredAt?: boolean
     rejectionCount?: boolean
     order?: boolean
     createdAt?: boolean
@@ -35275,7 +35293,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "taskNumber" | "serviceId" | "statusId" | "assigneeId" | "title" | "description" | "billable" | "price" | "priority" | "dueDate" | "completedAt" | "assignmentHistory" | "rejectionCount" | "order" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["task"]>
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "taskNumber" | "serviceId" | "statusId" | "assigneeId" | "title" | "description" | "billable" | "price" | "priority" | "dueDate" | "completedAt" | "assignmentHistory" | "stageTimings" | "stageEnteredAt" | "rejectionCount" | "order" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
@@ -35325,6 +35343,8 @@ export namespace Prisma {
       dueDate: Date | null
       completedAt: Date | null
       assignmentHistory: Prisma.JsonValue | null
+      stageTimings: Prisma.JsonValue | null
+      stageEnteredAt: Date | null
       rejectionCount: number
       order: number
       createdAt: Date
@@ -35774,6 +35794,8 @@ export namespace Prisma {
     readonly dueDate: FieldRef<"Task", 'DateTime'>
     readonly completedAt: FieldRef<"Task", 'DateTime'>
     readonly assignmentHistory: FieldRef<"Task", 'Json'>
+    readonly stageTimings: FieldRef<"Task", 'Json'>
+    readonly stageEnteredAt: FieldRef<"Task", 'DateTime'>
     readonly rejectionCount: FieldRef<"Task", 'Int'>
     readonly order: FieldRef<"Task", 'Int'>
     readonly createdAt: FieldRef<"Task", 'DateTime'>
@@ -53836,6 +53858,8 @@ export namespace Prisma {
     dueDate: 'dueDate',
     completedAt: 'completedAt',
     assignmentHistory: 'assignmentHistory',
+    stageTimings: 'stageTimings',
+    stageEnteredAt: 'stageEnteredAt',
     rejectionCount: 'rejectionCount',
     order: 'order',
     createdAt: 'createdAt',
@@ -56505,6 +56529,8 @@ export namespace Prisma {
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     assignmentHistory?: JsonNullableFilter<"Task">
+    stageTimings?: JsonNullableFilter<"Task">
+    stageEnteredAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     rejectionCount?: IntFilter<"Task"> | number
     order?: IntFilter<"Task"> | number
     createdAt?: DateTimeFilter<"Task"> | Date | string
@@ -56534,6 +56560,8 @@ export namespace Prisma {
     dueDate?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
     assignmentHistory?: SortOrderInput | SortOrder
+    stageTimings?: SortOrderInput | SortOrder
+    stageEnteredAt?: SortOrderInput | SortOrder
     rejectionCount?: SortOrder
     order?: SortOrder
     createdAt?: SortOrder
@@ -56566,6 +56594,8 @@ export namespace Prisma {
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     assignmentHistory?: JsonNullableFilter<"Task">
+    stageTimings?: JsonNullableFilter<"Task">
+    stageEnteredAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     rejectionCount?: IntFilter<"Task"> | number
     order?: IntFilter<"Task"> | number
     createdAt?: DateTimeFilter<"Task"> | Date | string
@@ -56595,6 +56625,8 @@ export namespace Prisma {
     dueDate?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
     assignmentHistory?: SortOrderInput | SortOrder
+    stageTimings?: SortOrderInput | SortOrder
+    stageEnteredAt?: SortOrderInput | SortOrder
     rejectionCount?: SortOrder
     order?: SortOrder
     createdAt?: SortOrder
@@ -56625,6 +56657,8 @@ export namespace Prisma {
     dueDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     assignmentHistory?: JsonNullableWithAggregatesFilter<"Task">
+    stageTimings?: JsonNullableWithAggregatesFilter<"Task">
+    stageEnteredAt?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     rejectionCount?: IntWithAggregatesFilter<"Task"> | number
     order?: IntWithAggregatesFilter<"Task"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
@@ -60153,6 +60187,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -60182,6 +60218,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -60203,6 +60241,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60232,6 +60272,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60257,6 +60299,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -60275,6 +60319,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60297,6 +60343,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -63500,6 +63548,8 @@ export namespace Prisma {
     dueDate?: SortOrder
     completedAt?: SortOrder
     assignmentHistory?: SortOrder
+    stageTimings?: SortOrder
+    stageEnteredAt?: SortOrder
     rejectionCount?: SortOrder
     order?: SortOrder
     createdAt?: SortOrder
@@ -63529,6 +63579,7 @@ export namespace Prisma {
     priority?: SortOrder
     dueDate?: SortOrder
     completedAt?: SortOrder
+    stageEnteredAt?: SortOrder
     rejectionCount?: SortOrder
     order?: SortOrder
     createdAt?: SortOrder
@@ -63550,6 +63601,7 @@ export namespace Prisma {
     priority?: SortOrder
     dueDate?: SortOrder
     completedAt?: SortOrder
+    stageEnteredAt?: SortOrder
     rejectionCount?: SortOrder
     order?: SortOrder
     createdAt?: SortOrder
@@ -70454,6 +70506,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -70481,6 +70535,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -70777,6 +70833,8 @@ export namespace Prisma {
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     assignmentHistory?: JsonNullableFilter<"Task">
+    stageTimings?: JsonNullableFilter<"Task">
+    stageEnteredAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     rejectionCount?: IntFilter<"Task"> | number
     order?: IntFilter<"Task"> | number
     createdAt?: DateTimeFilter<"Task"> | Date | string
@@ -72339,6 +72397,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -72366,6 +72426,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -74395,6 +74457,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -74422,6 +74486,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -76216,6 +76282,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -76244,6 +76312,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -76319,6 +76389,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -76347,6 +76419,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -76481,6 +76555,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -76508,6 +76584,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -77272,6 +77350,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -77300,6 +77380,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -77393,6 +77475,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -77421,6 +77505,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -79582,6 +79668,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -79610,6 +79698,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -79823,6 +79913,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -79851,6 +79943,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -81063,6 +81157,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -81125,6 +81221,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -81152,6 +81250,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -81176,6 +81276,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -81915,6 +82017,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -81957,6 +82061,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -81984,6 +82090,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -82008,6 +82116,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -82445,6 +82555,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -82531,6 +82643,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -82558,6 +82672,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -82582,6 +82698,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -83063,6 +83181,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
     rejectionCount?: number
     order?: number
     createdAt?: Date | string
@@ -83113,6 +83233,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -83140,6 +83262,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -83164,6 +83288,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionCount?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
