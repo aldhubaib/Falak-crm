@@ -10,9 +10,9 @@
   --font-mono: "JetBrains Mono", monospace;
   --font-heading: "Inter", system-ui, sans-serif;
 
-  /* Responsive font sizes — use as text-body, text-secondary, etc. */
+  /* Responsive font sizes — use as text-body, text-sub, etc. */
   --font-size-body: var(--text-body);
-  --font-size-secondary: var(--text-secondary);
+  --font-size-sub: var(--text-secondary);
   --font-size-label: var(--text-label);
   --font-size-button: var(--text-button);
   --font-size-heading: var(--text-heading);

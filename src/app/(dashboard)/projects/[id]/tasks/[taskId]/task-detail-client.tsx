@@ -416,7 +416,7 @@ export function TaskDetailClient({
                 {saving ? "Creating..." : "Create"}
               </Button>
             ) : (
-              <span className="flex items-center gap-1.5 text-secondary px-3 py-1.5">
+              <span className="flex items-center gap-1.5 text-sub px-3 py-1.5">
                 {saving ? (
                   <>
                     <Loader2 className="w-icon-sm h-icon-sm animate-spin text-muted-foreground" />
@@ -455,7 +455,7 @@ export function TaskDetailClient({
             <p className="text-body text-red-400 font-medium">Please fill in the required fields:</p>
             <ul className="mt-1 space-y-0.5">
               {missingFields.map((f) => (
-                <li key={f} className="text-secondary text-red-400/80">• {f}</li>
+                <li key={f} className="text-sub text-red-400/80">• {f}</li>
               ))}
             </ul>
           </div>
@@ -480,7 +480,7 @@ export function TaskDetailClient({
           {hasTemplates && (
             canEdit ? (
               <>
-                <label className="text-secondary font-medium text-muted-foreground -mb-6 block">
+                <label className="text-sub font-medium text-muted-foreground -mb-6 block">
                   {availableTemplates.find((t) => t.id === activeTemplateId)?.name} Name
                 </label>
                 <input
@@ -527,7 +527,7 @@ export function TaskDetailClient({
               .filter((s) => s.ms > 0);
 
             return (
-              <div className="flex flex-wrap items-center gap-3 text-secondary text-muted-foreground/60">
+              <div className="flex flex-wrap items-center gap-3 text-sub text-muted-foreground/60">
                 {stageBreakdown.map((s) => (
                   <span key={s.name} className="inline-flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: s.color }} />
@@ -544,7 +544,7 @@ export function TaskDetailClient({
           {/* Priority — only after a template is selected */}
           {hasTemplates && (
             <div>
-              <label className="text-secondary font-medium text-muted-foreground mb-2 block">Priority</label>
+              <label className="text-sub font-medium text-muted-foreground mb-2 block">Priority</label>
               <div className="flex gap-1.5">
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
                   <button
@@ -566,7 +566,7 @@ export function TaskDetailClient({
                 ))}
               </div>
               {!priority && (
-                <p className="text-secondary text-muted-foreground/50 mt-1.5">No priority selected</p>
+                <p className="text-sub text-muted-foreground/50 mt-1.5">No priority selected</p>
               )}
             </div>
           )}
@@ -574,7 +574,7 @@ export function TaskDetailClient({
           {/* Fields — new mode */}
           {isNew && newModeItems.length > 0 && (
             <div className="space-y-6">
-              <label className="text-secondary font-medium text-muted-foreground block">
+              <label className="text-sub font-medium text-muted-foreground block">
                 {selectedTemplate?.name} Questions
               </label>
               <div className="space-y-5">
@@ -609,7 +609,7 @@ export function TaskDetailClient({
                 return (
                   <div key={phase}>
                     <div className="flex items-center gap-2 mb-3">
-                      <h3 className={`text-secondary font-semibold uppercase tracking-wider ${
+                      <h3 className={`text-sub font-semibold uppercase tracking-wider ${
                         phase === "create" ? "text-primary" : "text-amber-400"
                       }`}>
                         {phase === "create" ? "Create" : "Delivery"}
@@ -690,7 +690,7 @@ function NewModeField({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2 px-1">
-        <span className="text-secondary text-muted-foreground/50">{index}.</span>
+        <span className="text-sub text-muted-foreground/50">{index}.</span>
         <span className="text-body font-medium text-foreground flex-1">{item.name}</span>
         {item.mandatory && (
           <span className="text-label text-red-400">*</span>
@@ -841,7 +841,7 @@ function NewModeField({
             {fileError && (
               <div className="flex items-start gap-2 rounded-xl px-3 py-2 bg-red-500/10 border border-red-500/20">
                 <AlertCircle className="w-icon-sm h-icon-sm text-red-400 mt-0.5 shrink-0" />
-                <span className="text-secondary text-red-400">{fileError}</span>
+                <span className="text-sub text-red-400">{fileError}</span>
               </div>
             )}
             {pendingFile ? (
@@ -849,11 +849,11 @@ function NewModeField({
                 <FilePreview file={pendingFile} />
                 <div className="flex items-center gap-3 px-4 py-3">
                   <CheckCircle2 className="w-icon-md h-icon-md text-green-400 shrink-0" />
-                  <span className="text-secondary text-green-400 font-medium flex-1 truncate">{pendingFile.name}</span>
+                  <span className="text-sub text-green-400 font-medium flex-1 truncate">{pendingFile.name}</span>
                   <button
                     type="button"
                     onClick={() => { onFileSelect?.(null); setFileError(null); }}
-                    className="text-secondary text-muted-foreground hover:text-foreground"
+                    className="text-sub text-muted-foreground hover:text-foreground"
                   >
                     Remove
                   </button>
@@ -883,14 +883,14 @@ function NewModeField({
                     <div className="w-full px-6">
                       <FilePlaceholder category={cat} />
                     </div>
-                    <span className="text-secondary text-muted-foreground/50">
+                    <span className="text-sub text-muted-foreground/50">
                       {dragOver ? "Drop file here" : `Drop ${cat} file or click to attach`}
                     </span>
                   </>
                 ) : (
                   <>
                     <Paperclip className={`w-icon-md h-icon-md shrink-0 ${dragOver ? "text-primary" : "text-muted-foreground/40"}`} />
-                    <span className="text-secondary text-muted-foreground/60">
+                    <span className="text-sub text-muted-foreground/60">
                       {dragOver ? "Drop file here" : "Drop file or click to attach"}
                     </span>
                   </>
@@ -932,7 +932,7 @@ function TemplateTabs({
 }) {
   return (
     <div>
-      <label className="text-secondary font-medium text-muted-foreground mb-3 block">Type</label>
+      <label className="text-sub font-medium text-muted-foreground mb-3 block">Type</label>
       <div className="flex flex-wrap gap-2">
         {templates.map((t) => {
           const isActive = activeId === t.id;
@@ -1036,7 +1036,7 @@ function EmptyAudioPlaceholder() {
         <line x1="12" y1="17" x2="12" y2="21" />
         <line x1="8" y1="21" x2="16" y2="21" />
       </svg>
-      <span className="text-secondary text-muted-foreground/40">Audio</span>
+      <span className="text-sub text-muted-foreground/40">Audio</span>
     </div>
   );
 }
@@ -1050,7 +1050,7 @@ function EmptyVideoPlaceholder() {
         <circle cx="15" cy="22" r="4" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.4" />
         <path d="M13.5 22l1.5 1.5 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.4" />
       </svg>
-      <span className="text-secondary text-muted-foreground/40">Video</span>
+      <span className="text-sub text-muted-foreground/40">Video</span>
     </div>
   );
 }
@@ -1063,7 +1063,7 @@ function EmptyImagePlaceholder() {
         <circle cx="16" cy="18" r="3" fill="currentColor" opacity="0.4" />
         <path d="M6 30l10-8 6 5 8-6 12 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.5" />
       </svg>
-      <span className="text-secondary text-muted-foreground/40">Image</span>
+      <span className="text-sub text-muted-foreground/40">Image</span>
     </div>
   );
 }
@@ -1375,14 +1375,14 @@ function ChecklistItemRow({
             {typeError && (
               <div className="flex items-center gap-2 rounded-lg px-3 py-2 bg-red-500/10 border border-red-500/20">
                 <AlertCircle className="w-icon-sm h-icon-sm text-red-400 shrink-0" />
-                <span className="text-secondary text-red-400">{typeError}</span>
+                <span className="text-sub text-red-400">{typeError}</span>
               </div>
             )}
 
             {uploading ? (
               <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-4 py-3">
                 <Loader2 className="w-icon-md h-icon-md text-primary animate-spin shrink-0" />
-                <span className="text-secondary text-muted-foreground">Uploading...</span>
+                <span className="text-sub text-muted-foreground">Uploading...</span>
               </div>
             ) : hasFile ? (
               <div className="rounded-xl border border-green-500/30 bg-green-500/5 overflow-hidden">
@@ -1409,7 +1409,7 @@ function ChecklistItemRow({
 
                 <div className="flex items-center gap-3 px-4 py-3">
                   <CheckCircle2 className="w-icon-md h-icon-md text-green-400 shrink-0" />
-                  <span className="text-secondary text-green-400 font-medium flex-1 min-w-0 truncate">{displayName}</span>
+                  <span className="text-sub text-green-400 font-medium flex-1 min-w-0 truncate">{displayName}</span>
                   <div className="flex items-center gap-3 shrink-0">
                     {previewUrl && (
                       <a
@@ -1427,7 +1427,7 @@ function ChecklistItemRow({
                       <>
                         <button
                           onClick={() => fileInputRef.current?.click()}
-                          className="text-secondary text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+                          className="text-sub text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
                         >
                           Replace
                         </button>
@@ -1471,14 +1471,14 @@ function ChecklistItemRow({
                     <div className="w-full px-6">
                       <FilePlaceholder category={cat} />
                     </div>
-                    <span className="text-secondary text-muted-foreground/50">
+                    <span className="text-sub text-muted-foreground/50">
                       {dragOver ? "Drop file here" : `Drop ${cat} file or click to attach`}
                     </span>
                   </>
                 ) : (
                   <>
                     <Paperclip className={`w-icon-md h-icon-md shrink-0 ${dragOver ? "text-primary" : "text-muted-foreground/40"}`} />
-                    <span className="text-secondary text-muted-foreground/60">
+                    <span className="text-sub text-muted-foreground/60">
                       {dragOver ? "Drop file here" : "Drop file or click to attach"}
                     </span>
                   </>
@@ -1910,7 +1910,7 @@ function TaskHistoryButton({ taskId }: { taskId: string }) {
             ) : entries.length === 0 ? (
               <div className="py-8 text-center">
                 <History className="w-8 h-8 mx-auto text-muted-foreground/20 mb-2" />
-                <p className="text-secondary text-muted-foreground/60">No activity recorded yet</p>
+                <p className="text-sub text-muted-foreground/60">No activity recorded yet</p>
               </div>
             ) : (
               <div className="py-2">
@@ -1923,7 +1923,7 @@ function TaskHistoryButton({ taskId }: { taskId: string }) {
                       {(entry.userName || "?").charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-secondary text-foreground leading-snug">
+                      <p className="text-sub text-foreground leading-snug">
                         {describeAction(entry)}
                       </p>
                       <p className="text-label text-muted-foreground/50 mt-0.5">

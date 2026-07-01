@@ -40,7 +40,7 @@ export default async function InvoicesPage() {
                     <h3 className="text-body font-medium text-foreground">
                       {invoice.number}
                     </h3>
-                    <p className="text-secondary text-muted-foreground mt-0.5">
+                    <p className="text-sub text-muted-foreground mt-0.5">
                       {invoice.contact ? `${invoice.contact.firstName} ${invoice.contact.lastName}` : "No contact"}
                       {projectName && (
                         <span className="inline-flex items-center gap-1 ml-2">

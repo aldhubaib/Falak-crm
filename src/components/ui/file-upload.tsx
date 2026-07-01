@@ -70,7 +70,7 @@ export function FileUpload({
           <p className="text-body text-foreground font-medium">
             {dragOver ? "Drop files here" : "Drop files or click to upload"}
           </p>
-          <p className="text-secondary text-muted-foreground mt-0.5">
+          <p className="text-sub text-muted-foreground mt-0.5">
             Up to {maxSizeMB} MB per file
           </p>
         </div>
@@ -129,7 +129,7 @@ function UploadRow({
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-secondary text-foreground truncate">{entry.name}</p>
+        <p className="text-sub text-foreground truncate">{entry.name}</p>
         <div className="flex items-center gap-2 mt-1">
           {!isDone && !isError && (
             <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">

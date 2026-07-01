@@ -77,7 +77,7 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
             <button
               onClick={handleDeleteClick}
               disabled={loading}
-              className="w-full flex items-center gap-2 px-3 min-h-touch text-secondary text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50"
+              className="w-full flex items-center gap-2 px-3 min-h-touch text-sub text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50"
             >
               <Trash2 className="w-icon-sm h-icon-sm" />
               Delete
@@ -100,7 +100,7 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
                     </div>
                     <div>
                       <h3 className="text-body font-semibold text-foreground">Cannot Delete</h3>
-                      <p className="text-secondary text-muted-foreground">
+                      <p className="text-sub text-muted-foreground">
                         &quot;{entityName}&quot; has related records that must be removed first.
                       </p>
                     </div>
@@ -114,12 +114,12 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
                         </p>
                         <ul className="space-y-1">
                           {block.items.map((item) => (
-                            <li key={item.id} className="text-secondary text-foreground">
+                            <li key={item.id} className="text-sub text-foreground">
                               • {item.name}
                             </li>
                           ))}
                           {block.count > block.items.length && (
-                            <li className="text-secondary text-muted-foreground">
+                            <li className="text-sub text-muted-foreground">
                               ...and {block.count - block.items.length} more
                             </li>
                           )}
@@ -145,7 +145,7 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
                     </div>
                     <div>
                       <h3 className="text-body font-semibold text-foreground">Delete {entityType}?</h3>
-                      <p className="text-secondary text-muted-foreground">
+                      <p className="text-sub text-muted-foreground">
                         &quot;{entityName}&quot; will be moved to trash. You can restore it later from Settings.
                       </p>
                     </div>

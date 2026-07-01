@@ -110,7 +110,7 @@ export function DataTable<T>({
       )}
 
       {sorted.length === 0 ? (
-        <p className="text-secondary text-muted-foreground py-4 text-center">
+        <p className="text-sub text-muted-foreground py-4 text-center">
           {search ? "No results found." : "No data yet."}
         </p>
       ) : (
@@ -187,7 +187,7 @@ export function DataTable<T>({
       )}
 
       {searchable && sorted.length > 0 && (
-        <p className="text-secondary text-muted-foreground mt-2">
+        <p className="text-sub text-muted-foreground mt-2">
           {sorted.length} {sorted.length === 1 ? "result" : "results"}
           {search && ` for "${search}"`}
         </p>

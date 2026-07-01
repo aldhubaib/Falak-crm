@@ -201,7 +201,7 @@ export function TaskComments({
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-secondary font-medium text-foreground">
+                  <span className="text-sub font-medium text-foreground">
                     {comment.author.name || comment.author.email}
                   </span>
                   <span className="text-label text-muted-foreground/60">
@@ -239,7 +239,7 @@ export function TaskComments({
                   </span>
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="truncate font-medium text-secondary">{m.name || m.email}</div>
+                  <div className="truncate font-medium text-sub">{m.name || m.email}</div>
                   {m.name && <div className="truncate text-label text-muted-foreground/60">{m.email}</div>}
                 </div>
               </button>

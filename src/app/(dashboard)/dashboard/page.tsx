@@ -55,12 +55,12 @@ export default async function DashboardPage() {
       <div className="rounded-xl border border-border bg-card p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-body font-medium text-foreground">Recent Deals</h3>
-          <Link href="/deals" className="text-secondary text-primary no-underline hover:text-primary/80">
+          <Link href="/deals" className="text-sub text-primary no-underline hover:text-primary/80">
             View all
           </Link>
         </div>
         {recentDeals.length === 0 ? (
-          <p className="text-secondary text-muted-foreground">No deals yet. Create your first deal to get started.</p>
+          <p className="text-sub text-muted-foreground">No deals yet. Create your first deal to get started.</p>
         ) : (
           <div className="space-y-2">
             {recentDeals.map((deal) => (
@@ -71,10 +71,10 @@ export default async function DashboardPage() {
               >
                 <div>
                   <p className="text-body text-foreground">{deal.title}</p>
-                  <p className="text-secondary text-muted-foreground">{deal.company?.name || "No company"}</p>
+                  <p className="text-sub text-muted-foreground">{deal.company?.name || "No company"}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-secondary font-medium text-foreground">
+                  <p className="text-sub font-medium text-foreground">
                     {Number(deal.value).toLocaleString()} {workspace.baseCurrency}
                   </p>
                   <span
@@ -123,7 +123,7 @@ function StatCard({
       href={href}
       className="rounded-xl border border-border bg-card p-4 hover:border-primary/30 transition-colors no-underline block"
     >
-      <p className="text-secondary text-muted-foreground mb-1">{label}</p>
+      <p className="text-sub text-muted-foreground mb-1">{label}</p>
       <p className={`text-xl font-semibold ${colorClasses[color]}`}>{value}</p>
     </Link>
   );

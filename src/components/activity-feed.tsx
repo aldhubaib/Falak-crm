@@ -48,7 +48,7 @@ const actionColors: Record<string, string> = {
 export function ActivityFeed({ activities }: { activities: Activity[] }) {
   if (activities.length === 0) {
     return (
-      <p className="text-secondary text-muted-foreground">No activity yet</p>
+      <p className="text-sub text-muted-foreground">No activity yet</p>
     );
   }
 
@@ -86,7 +86,7 @@ export function ActivityFeed({ activities }: { activities: Activity[] }) {
                 </span>
               )}
             </p>
-            <p className="text-secondary text-muted-foreground mt-0.5">
+            <p className="text-sub text-muted-foreground mt-0.5">
               {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}
             </p>
           </div>

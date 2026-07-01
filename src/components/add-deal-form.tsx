@@ -51,7 +51,7 @@ export function AddDealForm({ companyId, contactId, contacts, onSuccess }: AddDe
       className="rounded-lg border border-border p-4 space-y-3"
     >
       <div className="flex items-center justify-between mb-1">
-        <p className="text-secondary font-medium text-foreground">New Deal</p>
+        <p className="text-sub font-medium text-foreground">New Deal</p>
         <button type="button" onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground">
           <X className="w-4 h-4" />
         </button>

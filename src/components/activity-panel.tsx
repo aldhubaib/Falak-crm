@@ -78,7 +78,7 @@ export function ActivityPanel() {
 
         <div className="flex-1 overflow-y-auto px-5 py-4">
           {loading && activities.length === 0 ? (
-            <p className="text-secondary text-muted-foreground">Loading...</p>
+            <p className="text-sub text-muted-foreground">Loading...</p>
           ) : (
             <ActivityFeed activities={activities} />
           )}

@@ -114,7 +114,7 @@ export function PhoneInput({
         <button
           type="button"
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center gap-1 px-2 h-full border-r border-border text-secondary text-foreground hover:bg-muted/30 transition-colors shrink-0"
+          className="flex items-center gap-1 px-2 h-full border-r border-border text-sub text-foreground hover:bg-muted/30 transition-colors shrink-0"
         >
           {selectedCode ? (
             <>
@@ -146,7 +146,7 @@ export function PhoneInput({
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search..."
               autoFocus
-              className="w-full h-input px-2 rounded bg-muted/30 border-none text-secondary text-foreground placeholder:text-muted-foreground/50 outline-none"
+              className="w-full h-input px-2 rounded bg-muted/30 border-none text-sub text-foreground placeholder:text-muted-foreground/50 outline-none"
             />
           </div>
           <div className="max-h-48 overflow-y-auto">
@@ -156,7 +156,7 @@ export function PhoneInput({
                 type="button"
                 onClick={() => handleCodeSelect(c.code)}
                   className={cn(
-                  "w-full flex items-center gap-2 px-3 min-h-touch text-left text-secondary hover:bg-muted/30 transition-colors",
+                  "w-full flex items-center gap-2 px-3 min-h-touch text-left text-sub hover:bg-muted/30 transition-colors",
                   selectedCode === c.code && "bg-muted/40"
                 )}
               >
@@ -193,7 +193,7 @@ export function PhoneInput({
         {phoneRow}
       </div>
       {error && errorMessage && (
-        <p className="text-secondary text-destructive mt-1">{errorMessage}</p>
+        <p className="text-sub text-destructive mt-1">{errorMessage}</p>
       )}
     </div>
   );

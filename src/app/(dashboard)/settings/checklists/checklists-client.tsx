@@ -117,7 +117,7 @@ export function ChecklistsClient({
         >
           <ArrowLeft className="w-icon-sm h-icon-sm" />
         </Link>
-        <p className="text-secondary text-muted-foreground">These questions apply to all projects. Changes here affect every project immediately.</p>
+        <p className="text-sub text-muted-foreground">These questions apply to all projects. Changes here affect every project immediately.</p>
       </div>
 
       {/* Template tabs */}
@@ -192,7 +192,7 @@ export function ChecklistsClient({
             ) : (
               <button
                 onClick={() => { setNameValue(activeTemplate.name); setEditingName(true); }}
-                className="text-secondary text-muted-foreground hover:text-foreground flex items-center gap-1"
+                className="text-sub text-muted-foreground hover:text-foreground flex items-center gap-1"
               >
                 <Pencil className="w-icon-sm h-icon-sm" /> Rename
               </button>
@@ -204,7 +204,7 @@ export function ChecklistsClient({
                 setActiveTabId(templates.filter((t) => t.id !== activeTemplate.id)[0]?.id ?? null);
               }
             }}>
-              <button type="submit" className="text-secondary text-muted-foreground hover:text-destructive flex items-center gap-1">
+              <button type="submit" className="text-sub text-muted-foreground hover:text-destructive flex items-center gap-1">
                 <Trash2 className="w-icon-sm h-icon-sm" /> Delete type
               </button>
             </form>
@@ -222,7 +222,7 @@ export function ChecklistsClient({
             return (
               <div key={phase} className="mb-6">
                 <div className="flex items-center gap-2 mb-3">
-                  <h3 className={`text-secondary font-semibold uppercase tracking-wider ${
+                  <h3 className={`text-sub font-semibold uppercase tracking-wider ${
                     phase === "create" ? "text-primary" : "text-amber-400"
                   }`}>
                     {phase === "create" ? "Create" : "Delivery"}
@@ -238,7 +238,7 @@ export function ChecklistsClient({
                     );
                   })}
                   {phaseItems.length === 0 && (
-                    <p className="text-secondary text-muted-foreground/40 py-3 text-center">No fields in this group yet</p>
+                    <p className="text-sub text-muted-foreground/40 py-3 text-center">No fields in this group yet</p>
                   )}
                 </div>
               </div>
@@ -330,7 +330,7 @@ function TemplateAppearance({ template }: { template: Template }) {
       {/* Preview */}
       <div className="flex-1 flex items-center justify-end">
         <span
-          className="inline-flex items-center gap-1.5 text-secondary font-medium rounded-md px-2 py-1 border"
+          className="inline-flex items-center gap-1.5 text-sub font-medium rounded-md px-2 py-1 border"
           style={{
             color: template.color || "#22d3ee",
             backgroundColor: `${template.color || "#22d3ee"}10`,
@@ -369,7 +369,7 @@ function QuestionRow({
   return (
     <div className="flex items-center gap-3 p-3 rounded-xl border border-border bg-card hover:bg-card/80 transition-colors group">
       <GripVertical className="w-icon-sm h-icon-sm text-muted-foreground/30 shrink-0 cursor-grab" />
-      <span className="text-secondary text-muted-foreground/50 w-6">{index}.</span>
+      <span className="text-sub text-muted-foreground/50 w-6">{index}.</span>
       <div className="flex-1 min-w-0">
         <span className="text-body text-foreground">{item.name}</span>
         {item.type === "select" && item.options && (
@@ -510,7 +510,7 @@ function EditQuestionForm({
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="w-full h-input px-2 rounded-lg bg-black border border-border text-secondary text-foreground focus:outline-none focus:border-ring transition-colors"
+            className="w-full h-input px-2 rounded-lg bg-black border border-border text-sub text-foreground focus:outline-none focus:border-ring transition-colors"
           >
             <option value="text">Text</option>
             <option value="textarea">Text Area</option>
@@ -532,7 +532,7 @@ function EditQuestionForm({
           <select
             value={visibleFromId}
             onChange={(e) => setVisibleFromId(e.target.value)}
-            className="w-full h-input px-2 rounded-lg bg-black border border-border text-secondary text-foreground focus:outline-none focus:border-ring transition-colors"
+            className="w-full h-input px-2 rounded-lg bg-black border border-border text-sub text-foreground focus:outline-none focus:border-ring transition-colors"
           >
             <option value="">Always</option>
             {taskStatuses.map((s) => (
@@ -546,7 +546,7 @@ function EditQuestionForm({
           <select
             value={gateId}
             onChange={(e) => setGateId(e.target.value)}
-            className="w-full h-input px-2 rounded-lg bg-black border border-border text-secondary text-foreground focus:outline-none focus:border-ring transition-colors"
+            className="w-full h-input px-2 rounded-lg bg-black border border-border text-sub text-foreground focus:outline-none focus:border-ring transition-colors"
           >
             <option value="">No gate</option>
             {taskStatuses.map((s) => (
@@ -567,7 +567,7 @@ function EditQuestionForm({
                   key={fmt}
                   type="button"
                   onClick={() => setAllowedFormats(selected ? allowedFormats.filter((f) => f !== fmt) : [...allowedFormats, fmt])}
-                  className={`px-2.5 py-1 rounded-lg text-secondary font-medium border transition-colors ${
+                  className={`px-2.5 py-1 rounded-lg text-sub font-medium border transition-colors ${
                     selected
                       ? "bg-primary/15 text-primary border-primary/30"
                       : "bg-black text-muted-foreground border-border hover:text-foreground hover:border-border/80"
@@ -597,7 +597,7 @@ function EditQuestionForm({
           <select
             value={aspectRatio}
             onChange={(e) => setAspectRatio(e.target.value)}
-            className="w-full h-input px-2 rounded-lg bg-black border border-border text-secondary text-foreground focus:outline-none focus:border-ring transition-colors"
+            className="w-full h-input px-2 rounded-lg bg-black border border-border text-sub text-foreground focus:outline-none focus:border-ring transition-colors"
           >
             <option value="">Any</option>
             {ASPECT_RATIOS.map((ar) => (
@@ -608,7 +608,7 @@ function EditQuestionForm({
       )}
 
       <div className="flex items-center gap-4">
-        <label className="flex items-center gap-2 text-secondary text-foreground cursor-pointer">
+        <label className="flex items-center gap-2 text-sub text-foreground cursor-pointer">
           <input type="checkbox" checked={mandatory} onChange={(e) => setMandatory(e.target.checked)} className="rounded" />
           Mandatory
         </label>
@@ -618,7 +618,7 @@ function EditQuestionForm({
               key={p}
               type="button"
               onClick={() => setPhase(p)}
-              className={`px-3 py-1 text-secondary font-medium transition-colors ${
+              className={`px-3 py-1 text-sub font-medium transition-colors ${
                 phase === p
                   ? p === "create" ? "bg-primary/15 text-primary" : "bg-amber-500/15 text-amber-400"
                   : "bg-black text-muted-foreground hover:text-foreground"
@@ -635,7 +635,7 @@ function EditQuestionForm({
       )}
 
       <div className="flex items-center gap-2 justify-end">
-        <button type="button" onClick={onClose} className="text-secondary text-muted-foreground hover:text-foreground px-3 py-1.5">
+        <button type="button" onClick={onClose} className="text-sub text-muted-foreground hover:text-foreground px-3 py-1.5">
           Cancel
         </button>
         <Button size="sm" onClick={handleSave} disabled={saving}>
@@ -701,7 +701,7 @@ function AddQuestionForm({
           name="type"
           value={type}
           onChange={(e) => setType(e.target.value)}
-          className="h-input px-2 rounded-lg bg-black border border-border text-secondary text-foreground focus:outline-none focus:border-ring transition-colors"
+          className="h-input px-2 rounded-lg bg-black border border-border text-sub text-foreground focus:outline-none focus:border-ring transition-colors"
         >
           <option value="text">Text</option>
           <option value="textarea">Text Area</option>
@@ -722,7 +722,7 @@ function AddQuestionForm({
               key={p}
               type="button"
               onClick={() => setPhase(p)}
-              className={`px-3 min-h-touch text-secondary font-medium transition-colors ${
+              className={`px-3 min-h-touch text-sub font-medium transition-colors ${
                 phase === p
                   ? p === "create" ? "bg-primary/15 text-primary" : "bg-amber-500/15 text-amber-400"
                   : "bg-black text-muted-foreground hover:text-foreground"
@@ -749,7 +749,7 @@ function AddQuestionForm({
                   key={fmt}
                   type="button"
                   onClick={() => setAllowedFormats(selected ? allowedFormats.filter((f) => f !== fmt) : [...allowedFormats, fmt])}
-                  className={`px-2.5 py-1 rounded-lg text-secondary font-medium border transition-colors ${
+                  className={`px-2.5 py-1 rounded-lg text-sub font-medium border transition-colors ${
                     selected
                       ? "bg-primary/15 text-primary border-primary/30"
                       : "bg-black text-muted-foreground border-border hover:text-foreground hover:border-border/80"
@@ -779,7 +779,7 @@ function AddQuestionForm({
           <select
             value={aspectRatio}
             onChange={(e) => setAspectRatio(e.target.value)}
-            className="w-full h-input px-2 rounded-lg bg-black border border-border text-secondary text-foreground focus:outline-none focus:border-ring transition-colors"
+            className="w-full h-input px-2 rounded-lg bg-black border border-border text-sub text-foreground focus:outline-none focus:border-ring transition-colors"
           >
             <option value="">Any</option>
             {ASPECT_RATIOS.map((ar) => (
@@ -790,11 +790,11 @@ function AddQuestionForm({
       )}
 
       <div className="flex items-center gap-4">
-        <label className="flex items-center gap-2 text-secondary text-foreground cursor-pointer">
+        <label className="flex items-center gap-2 text-sub text-foreground cursor-pointer">
           <input type="checkbox" checked={mandatory} onChange={(e) => setMandatory(e.target.checked)} className="rounded" />
           Mandatory
         </label>
-        <label className="flex items-center gap-2 text-secondary text-foreground cursor-pointer">
+        <label className="flex items-center gap-2 text-sub text-foreground cursor-pointer">
           <input type="checkbox" checked={!!gateId} onChange={(e) => setGateId(e.target.checked ? taskStatuses[1]?.id || "" : "")} className="rounded" />
           Required before transition
         </label>
@@ -804,7 +804,7 @@ function AddQuestionForm({
             name="requiredBeforeStageId"
             value={gateId}
             onChange={(e) => setGateId(e.target.value)}
-            className="h-input px-2 rounded-lg bg-black border border-border text-secondary text-foreground focus:outline-none focus:border-ring transition-colors"
+            className="h-input px-2 rounded-lg bg-black border border-border text-sub text-foreground focus:outline-none focus:border-ring transition-colors"
           >
             {taskStatuses.map((s) => (
               <option key={s.id} value={s.id}>{s.name}</option>
@@ -843,7 +843,7 @@ function OptionsEditor({
       <label className="text-label font-medium text-muted-foreground uppercase tracking-wider block mb-1">Dropdown Options</label>
       <div className="flex flex-wrap gap-1.5 mb-2">
         {options.map((opt, i) => (
-          <span key={i} className="inline-flex items-center gap-1 text-secondary bg-muted px-2 py-0.5 rounded-lg text-foreground">
+          <span key={i} className="inline-flex items-center gap-1 text-sub bg-muted px-2 py-0.5 rounded-lg text-foreground">
             {opt}
             <button type="button" onClick={() => onChange(options.filter((_, j) => j !== i))} className="text-muted-foreground hover:text-foreground">
               <X className="w-2.5 h-2.5" />
@@ -857,9 +857,9 @@ function OptionsEditor({
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addOption(); } }}
           placeholder="Add option..."
-          className="flex-1 h-input px-3 rounded-lg bg-black border border-border text-secondary text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
+          className="flex-1 h-input px-3 rounded-lg bg-black border border-border text-sub text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
         />
-        <button type="button" onClick={addOption} className="text-secondary text-primary hover:text-primary/80 px-2">
+        <button type="button" onClick={addOption} className="text-sub text-primary hover:text-primary/80 px-2">
           Add
         </button>
       </div>

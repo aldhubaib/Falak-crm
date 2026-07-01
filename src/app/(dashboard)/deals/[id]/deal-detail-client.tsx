@@ -81,7 +81,7 @@ export function DealDetailClient({
         {deal.project ? (
           <Link
             href={`/projects/${deal.project.id}`}
-            className="min-h-touch px-2.5 rounded-lg bg-purple/15 text-secondary font-medium text-purple hover:bg-purple/25 transition-colors flex items-center gap-1.5 no-underline shrink-0"
+            className="min-h-touch px-2.5 rounded-lg bg-purple/15 text-sub font-medium text-purple hover:bg-purple/25 transition-colors flex items-center gap-1.5 no-underline shrink-0"
           >
             View Project
           </Link>
@@ -122,7 +122,7 @@ export function DealDetailClient({
                         if (!result.ok) useErrorStore.getState().push(result.error);
                       }
                     }}
-                    className={`w-full min-h-touch rounded-lg text-secondary font-medium transition-colors flex items-center justify-center gap-1 ${
+                    className={`w-full min-h-touch rounded-lg text-sub font-medium transition-colors flex items-center justify-center gap-1 ${
                       isCurrent
                         ? "text-white"
                         : isPast
@@ -291,7 +291,7 @@ function ItemRow({ item, dealId, canEdit }: { item: DealItem; dealId: string; ca
       <div className="px-3 py-2.5">
         <p className="text-body text-foreground font-medium">{item.service.name}</p>
         {item.description && (
-          <p className="text-secondary text-muted-foreground mt-0.5">{item.description}</p>
+          <p className="text-sub text-muted-foreground mt-0.5">{item.description}</p>
         )}
       </div>
       <div className="px-3 py-2.5 text-right text-body text-foreground tabular-nums">
@@ -389,13 +389,13 @@ function NewItemRow({
                     className="w-full px-3 py-2.5 text-left hover:bg-muted/30 transition-colors"
                   >
                     <p className="text-body text-foreground font-medium">{s.name}</p>
-                    <p className="text-secondary text-muted-foreground">
+                    <p className="text-sub text-muted-foreground">
                       Rate: {currency}{s.unitPrice.toLocaleString(undefined, { minimumFractionDigits: 3 })}
                     </p>
                   </button>
                 ))}
                 {filtered.length === 0 && (
-                  <p className="px-3 py-3 text-secondary text-muted-foreground">No items found.</p>
+                  <p className="px-3 py-3 text-sub text-muted-foreground">No items found.</p>
                 )}
               </div>
             </div>
@@ -455,13 +455,13 @@ function DiscountAndTotals({
                   onChange={(e) => setDiscValue(e.target.value)}
                   onBlur={() => saveDiscount(discType, discValue)}
                   onKeyDown={(e) => { if (e.key === "Enter") saveDiscount(discType, discValue); }}
-                  className="w-14 h-input px-2 text-secondary text-foreground bg-background text-right tabular-nums focus:outline-none"
+                  className="w-14 h-input px-2 text-sub text-foreground bg-background text-right tabular-nums focus:outline-none"
                 />
                 <div className="relative">
                   <button
                     type="button"
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="h-input px-2 text-secondary text-muted-foreground bg-muted/50 border-l border-border hover:bg-muted transition-colors flex items-center gap-0.5"
+                    className="h-input px-2 text-sub text-muted-foreground bg-muted/50 border-l border-border hover:bg-muted transition-colors flex items-center gap-0.5"
                   >
                     {discType === "percent" ? "%" : currency}
                     <ChevronDown className="w-2.5 h-2.5" />
@@ -473,14 +473,14 @@ function DiscountAndTotals({
                         <button
                           type="button"
                           onClick={() => { setDiscType("percent"); setDropdownOpen(false); saveDiscount("percent", discValue); }}
-                          className={`w-full px-3 min-h-touch text-secondary text-left hover:bg-muted/30 transition-colors flex items-center ${discType === "percent" ? "text-primary bg-primary/10" : "text-foreground"}`}
+                          className={`w-full px-3 min-h-touch text-sub text-left hover:bg-muted/30 transition-colors flex items-center ${discType === "percent" ? "text-primary bg-primary/10" : "text-foreground"}`}
                         >
                           %
                         </button>
                         <button
                           type="button"
                           onClick={() => { setDiscType("fixed"); setDropdownOpen(false); saveDiscount("fixed", discValue); }}
-                          className={`w-full px-3 min-h-touch text-secondary text-left hover:bg-muted/30 transition-colors flex items-center ${discType === "fixed" ? "text-primary bg-primary/10" : "text-foreground"}`}
+                          className={`w-full px-3 min-h-touch text-sub text-left hover:bg-muted/30 transition-colors flex items-center ${discType === "fixed" ? "text-primary bg-primary/10" : "text-foreground"}`}
                         >
                           {currency}
                         </button>

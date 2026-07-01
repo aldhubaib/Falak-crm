@@ -68,14 +68,14 @@ export function TeamClient({
             <p className="text-body text-amber-400 font-medium">
               Testing role: <span className="text-foreground">{testingRole.name}</span>
             </p>
-            <p className="text-secondary text-amber-400/60">You are seeing the app as this role would. Navigate around to test permissions.</p>
+            <p className="text-sub text-amber-400/60">You are seeing the app as this role would. Navigate around to test permissions.</p>
           </div>
           <button
             onClick={async () => {
               await stopTestRole();
               router.refresh();
             }}
-            className="flex items-center gap-1.5 text-secondary font-medium text-amber-400 bg-amber-500/15 hover:bg-amber-500/25 px-3 py-1.5 rounded-lg transition-colors shrink-0"
+            className="flex items-center gap-1.5 text-sub font-medium text-amber-400 bg-amber-500/15 hover:bg-amber-500/25 px-3 py-1.5 rounded-lg transition-colors shrink-0"
           >
             <Square className="w-icon-sm h-icon-sm" />
             Stop Testing
@@ -149,12 +149,12 @@ export function TeamClient({
         <div className="space-y-1">
           {members.map((member) => (
             <div key={member.id} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 group">
-              <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center text-secondary font-semibold text-primary shrink-0">
+              <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center text-sub font-semibold text-primary shrink-0">
                 {(member.name || member.email).charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-body text-foreground truncate">{member.name || member.email}</p>
-                <p className="text-secondary text-muted-foreground">{member.email}</p>
+                <p className="text-sub text-muted-foreground">{member.email}</p>
               </div>
 
               {member.type === "OWNER" ? (
@@ -236,7 +236,7 @@ export function TeamClient({
                           await stopTestRole();
                           router.refresh();
                         }}
-                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-secondary font-medium text-amber-400 bg-amber-500/15 hover:bg-amber-500/25 transition-colors"
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-sub font-medium text-amber-400 bg-amber-500/15 hover:bg-amber-500/25 transition-colors"
                       >
                         <Square className="w-icon-sm h-icon-sm" />
                         Stop
@@ -248,7 +248,7 @@ export function TeamClient({
                           if (result.ok) router.refresh();
                           else useErrorStore.getState().push(result.error);
                         }}
-                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-secondary font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-sub font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
                         title={`Test as ${role.name}`}
                       >
                         <Play className="w-icon-sm h-icon-sm" />
@@ -370,15 +370,15 @@ function RoleEditor({
 
       {/* Module Access */}
       <div>
-        <h4 className="text-secondary font-medium text-muted-foreground uppercase tracking-wider mb-3">Module Access</h4>
+        <h4 className="text-sub font-medium text-muted-foreground uppercase tracking-wider mb-3">Module Access</h4>
         <div className="rounded-xl border border-border overflow-hidden">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left text-secondary font-medium text-muted-foreground px-4 py-2.5">Module</th>
-                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[80px]">None</th>
-                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[80px]">View</th>
-                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[80px]">Full</th>
+                <th className="text-left text-sub font-medium text-muted-foreground px-4 py-2.5">Module</th>
+                <th className="text-center text-sub font-medium text-muted-foreground px-3 py-2.5 w-[80px]">None</th>
+                <th className="text-center text-sub font-medium text-muted-foreground px-3 py-2.5 w-[80px]">View</th>
+                <th className="text-center text-sub font-medium text-muted-foreground px-3 py-2.5 w-[80px]">Full</th>
               </tr>
             </thead>
             <tbody>
@@ -409,18 +409,18 @@ function RoleEditor({
 
       {/* Stage permissions table */}
       <div>
-        <h4 className="text-secondary font-medium text-muted-foreground uppercase tracking-wider mb-3">Task Stage Permissions</h4>
+        <h4 className="text-sub font-medium text-muted-foreground uppercase tracking-wider mb-3">Task Stage Permissions</h4>
         <div className="rounded-xl border border-border overflow-hidden">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left text-secondary font-medium text-muted-foreground px-4 py-2.5">Stage</th>
-                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Create</th>
-                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Modify</th>
-                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Forward</th>
-                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Rollback</th>
-                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Delete</th>
-                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[80px]">Auto-Assign</th>
+                <th className="text-left text-sub font-medium text-muted-foreground px-4 py-2.5">Stage</th>
+                <th className="text-center text-sub font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Create</th>
+                <th className="text-center text-sub font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Modify</th>
+                <th className="text-center text-sub font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Forward</th>
+                <th className="text-center text-sub font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Rollback</th>
+                <th className="text-center text-sub font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Delete</th>
+                <th className="text-center text-sub font-medium text-muted-foreground px-3 py-2.5 w-[80px]">Auto-Assign</th>
               </tr>
             </thead>
             <tbody>
@@ -440,14 +440,14 @@ function RoleEditor({
                     </td>
                     <td className="text-center px-3 py-2.5">
                       {isLast ? (
-                        <span className="text-secondary text-muted-foreground/30">—</span>
+                        <span className="text-sub text-muted-foreground/30">—</span>
                       ) : (
                         <StageCheckbox checked={sp.forward} onChange={() => toggleStage(status.id, "forward")} />
                       )}
                     </td>
                     <td className="text-center px-3 py-2.5">
                       {isFirst ? (
-                        <span className="text-secondary text-muted-foreground/30">—</span>
+                        <span className="text-sub text-muted-foreground/30">—</span>
                       ) : (
                         <StageCheckbox checked={sp.rollback} onChange={() => toggleStage(status.id, "rollback")} />
                       )}

@@ -86,7 +86,7 @@ export function FormSelect({
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search..."
-                  className="w-full h-input px-2.5 rounded bg-black text-secondary text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+                  className="w-full h-input px-2.5 rounded bg-black text-sub text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
                   onKeyDown={(e) => {
                     if (e.key === "Escape") { setOpen(false); setSearch(""); }
                     if (e.key === "Enter" && filtered.length > 0) handleSelect(filtered[0].value);
@@ -100,7 +100,7 @@ export function FormSelect({
                   type="button"
                   onClick={() => handleSelect("")}
                   className={cn(
-                    "w-full px-3 min-h-touch text-left text-secondary text-muted-foreground/50 hover:bg-muted/30 transition-colors flex items-center",
+                    "w-full px-3 min-h-touch text-left text-sub text-muted-foreground/50 hover:bg-muted/30 transition-colors flex items-center",
                     !currentValue && "bg-muted/40"
                   )}
                 >
@@ -113,7 +113,7 @@ export function FormSelect({
                   type="button"
                   onClick={() => handleSelect(opt.value)}
                   className={cn(
-                    "w-full px-3 min-h-touch text-left text-secondary text-foreground hover:bg-muted/30 transition-colors flex items-center",
+                    "w-full px-3 min-h-touch text-left text-sub text-foreground hover:bg-muted/30 transition-colors flex items-center",
                     currentValue === opt.value && "bg-muted/40"
                   )}
                 >
@@ -121,7 +121,7 @@ export function FormSelect({
                 </button>
               ))}
               {filtered.length === 0 && (
-                <p className="px-3 py-2 text-secondary text-muted-foreground">No results</p>
+                <p className="px-3 py-2 text-sub text-muted-foreground">No results</p>
               )}
             </div>
           </div>

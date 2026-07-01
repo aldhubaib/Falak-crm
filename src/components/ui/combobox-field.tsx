@@ -87,7 +87,7 @@ export function ComboboxField({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={onCreate ? "Search or type to add..." : "Search..."}
-              className="w-full h-input px-2.5 rounded bg-black text-secondary text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+              className="w-full h-input px-2.5 rounded bg-black text-sub text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
               onKeyDown={async (e) => {
                 if (e.key === "Enter" && search && !hasExactMatch && onCreate) {
                   e.preventDefault();
@@ -102,7 +102,7 @@ export function ComboboxField({
           </div>
           <div className="max-h-[200px] overflow-y-auto border-t border-border">
             {filtered.length === 0 && !search && (
-              <p className="px-3 py-2 text-secondary text-muted-foreground">No options yet</p>
+              <p className="px-3 py-2 text-sub text-muted-foreground">No options yet</p>
             )}
             {filtered.map((opt) => (
               <div
@@ -111,7 +111,7 @@ export function ComboboxField({
               >
                 <button
                   type="button"
-                  className="flex-1 text-left text-secondary text-foreground flex items-center gap-1.5 min-h-touch"
+                  className="flex-1 text-left text-sub text-foreground flex items-center gap-1.5 min-h-touch"
                   onClick={() => {
                     onSelect(selectById ? opt.id : opt.label);
                     setSearch("");
@@ -138,7 +138,7 @@ export function ComboboxField({
             {search && !hasExactMatch && onCreate && (
               <button
                 type="button"
-                className="w-full px-3 min-h-touch flex items-center gap-1.5 text-secondary text-primary hover:bg-muted/50 border-t border-border"
+                className="w-full px-3 min-h-touch flex items-center gap-1.5 text-sub text-primary hover:bg-muted/50 border-t border-border"
                 onClick={async () => {
                   await onCreate(search);
                   onSelect(search);

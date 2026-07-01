@@ -44,7 +44,7 @@ export function RelatedTable<T>({
       </div>
 
       {data.length === 0 ? (
-        <p className="text-secondary text-muted-foreground">{emptyMessage}</p>
+        <p className="text-sub text-muted-foreground">{emptyMessage}</p>
       ) : (
         <div className="rounded-lg border border-border overflow-hidden">
           <table className="w-full text-left">

@@ -134,10 +134,10 @@ export function GlobalSearch() {
           {(results.length > 0 || loading || (query.length >= 2 && !loading && results.length === 0)) && (
             <div className="max-h-[50vh] overflow-y-auto py-2">
               {loading && (
-                <p className="text-secondary text-muted-foreground px-4 py-3">Searching...</p>
+                <p className="text-sub text-muted-foreground px-4 py-3">Searching...</p>
               )}
               {!loading && query.length >= 2 && results.length === 0 && (
-                <p className="text-secondary text-muted-foreground px-4 py-3">No results found.</p>
+                <p className="text-sub text-muted-foreground px-4 py-3">No results found.</p>
               )}
               {results.map((result, i) => {
                 const Icon = typeIcons[result.type];
@@ -154,7 +154,7 @@ export function GlobalSearch() {
                     <div className="flex-1 min-w-0">
                       <p className="text-body text-foreground truncate">{result.title}</p>
                       {result.subtitle && (
-                        <p className="text-secondary text-muted-foreground truncate">{result.subtitle}</p>
+                        <p className="text-sub text-muted-foreground truncate">{result.subtitle}</p>
                       )}
                     </div>
                     <span className="text-label text-muted-foreground/70 uppercase shrink-0">{typeLabels[result.type]}</span>

@@ -135,7 +135,7 @@ export function ProjectDetailClient({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-secondary font-medium transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sub font-medium transition-colors ${
                 activeTab === tab.id
                   ? "bg-card text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
@@ -203,7 +203,7 @@ function ProjectThumbnail({ thumbnailId, name }: { thumbnailId: string | null; n
   const initials = name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
   return (
     <div className="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
-      <span className="text-secondary font-bold text-primary">{initials}</span>
+      <span className="text-sub font-bold text-primary">{initials}</span>
     </div>
   );
 }
@@ -269,7 +269,7 @@ function ProjectDashboard({ project, taskStatuses }: { project: Project; taskSta
         <div className="rounded-xl border border-border bg-card p-4">
           <div className="flex items-center gap-2 text-muted-foreground mb-2">
             <ListChecks className="w-icon-md h-icon-md" />
-            <span className="text-secondary font-medium uppercase tracking-wider">Tasks</span>
+            <span className="text-sub font-medium uppercase tracking-wider">Tasks</span>
           </div>
           <p className="text-2xl font-bold text-foreground">{completedTasks}<span className="text-muted-foreground text-body font-normal">/{totalTasks}</span></p>
           <div className="mt-2 h-1.5 rounded-full bg-muted overflow-hidden">
@@ -281,7 +281,7 @@ function ProjectDashboard({ project, taskStatuses }: { project: Project; taskSta
         <div className="rounded-xl border border-border bg-card p-4">
           <div className="flex items-center gap-2 text-muted-foreground mb-2">
             <Clock className="w-icon-md h-icon-md" />
-            <span className="text-secondary font-medium uppercase tracking-wider">In Progress</span>
+            <span className="text-sub font-medium uppercase tracking-wider">In Progress</span>
           </div>
           <p className="text-2xl font-bold text-primary">{inProgressTasks}</p>
           <p className="text-label text-muted-foreground mt-1">
@@ -292,7 +292,7 @@ function ProjectDashboard({ project, taskStatuses }: { project: Project; taskSta
         <div className="rounded-xl border border-border bg-card p-4">
           <div className="flex items-center gap-2 text-muted-foreground mb-2">
             <CheckCircle2 className="w-icon-md h-icon-md" />
-            <span className="text-secondary font-medium uppercase tracking-wider">Checklist</span>
+            <span className="text-sub font-medium uppercase tracking-wider">Checklist</span>
           </div>
           <p className="text-2xl font-bold text-foreground">{completedChecklist}<span className="text-muted-foreground text-body font-normal">/{totalChecklist}</span></p>
           <div className="mt-2 h-1.5 rounded-full bg-muted overflow-hidden">
@@ -304,7 +304,7 @@ function ProjectDashboard({ project, taskStatuses }: { project: Project; taskSta
         <div className="rounded-xl border border-border bg-card p-4">
           <div className="flex items-center gap-2 text-muted-foreground mb-2">
             <CalendarDays className="w-icon-md h-icon-md" />
-            <span className="text-secondary font-medium uppercase tracking-wider">Deadline</span>
+            <span className="text-sub font-medium uppercase tracking-wider">Deadline</span>
           </div>
           {project.deadline ? (
             <>
@@ -324,20 +324,20 @@ function ProjectDashboard({ project, taskStatuses }: { project: Project; taskSta
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Project Info */}
         <div className="rounded-xl border border-border bg-card p-4">
-          <h3 className="text-secondary font-semibold text-muted-foreground uppercase tracking-wider mb-3">Project Info</h3>
+          <h3 className="text-sub font-semibold text-muted-foreground uppercase tracking-wider mb-3">Project Info</h3>
           <div className="space-y-2.5">
             {project.status && (
               <div className="flex items-center justify-between">
-                <span className="text-secondary text-muted-foreground">Status</span>
-                <span className="px-2 py-0.5 rounded-full text-secondary font-medium" style={{ backgroundColor: `${project.status.color}20`, color: project.status.color }}>
+                <span className="text-sub text-muted-foreground">Status</span>
+                <span className="px-2 py-0.5 rounded-full text-sub font-medium" style={{ backgroundColor: `${project.status.color}20`, color: project.status.color }}>
                   {project.status.name}
                 </span>
               </div>
             )}
             {project.company && (
               <div className="flex items-center justify-between">
-                <span className="text-secondary text-muted-foreground">Client</span>
-                <Link href={`/companies/${project.company.id}`} className="text-secondary text-primary hover:underline no-underline flex items-center gap-1">
+                <span className="text-sub text-muted-foreground">Client</span>
+                <Link href={`/companies/${project.company.id}`} className="text-sub text-primary hover:underline no-underline flex items-center gap-1">
                   <Building2 className="w-icon-sm h-icon-sm" />
                   {project.company.name}
                 </Link>
@@ -345,19 +345,19 @@ function ProjectDashboard({ project, taskStatuses }: { project: Project; taskSta
             )}
             {project.startDate && (
               <div className="flex items-center justify-between">
-                <span className="text-secondary text-muted-foreground">Start Date</span>
-                <span className="text-secondary text-foreground">
+                <span className="text-sub text-muted-foreground">Start Date</span>
+                <span className="text-sub text-foreground">
                   {new Date(project.startDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                 </span>
               </div>
             )}
             <div className="flex items-center justify-between">
-              <span className="text-secondary text-muted-foreground">Type</span>
-              <span className="text-secondary text-foreground capitalize">{project.type}</span>
+              <span className="text-sub text-muted-foreground">Type</span>
+              <span className="text-sub text-foreground capitalize">{project.type}</span>
             </div>
             {project.description && (
               <div className="pt-2 border-t border-border/30">
-                <p className="text-secondary text-muted-foreground/80 leading-relaxed">{project.description}</p>
+                <p className="text-sub text-muted-foreground/80 leading-relaxed">{project.description}</p>
               </div>
             )}
           </div>
@@ -365,40 +365,40 @@ function ProjectDashboard({ project, taskStatuses }: { project: Project; taskSta
 
         {/* Tasks by Status */}
         <div className="rounded-xl border border-border bg-card p-4">
-          <h3 className="text-secondary font-semibold text-muted-foreground uppercase tracking-wider mb-3">Tasks by Status</h3>
+          <h3 className="text-sub font-semibold text-muted-foreground uppercase tracking-wider mb-3">Tasks by Status</h3>
           <div className="space-y-2">
             {tasksByStatus.map((s) => (
               <div key={s.name} className="flex items-center gap-3">
                 <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: s.color }} />
-                <span className="text-secondary text-foreground flex-1">{s.name}</span>
-                <span className="text-secondary font-semibold text-foreground">{s.count}</span>
+                <span className="text-sub text-foreground flex-1">{s.name}</span>
+                <span className="text-sub font-semibold text-foreground">{s.count}</span>
                 <div className="w-16 h-1.5 rounded-full bg-muted overflow-hidden">
                   <div className="h-full rounded-full transition-all" style={{ width: `${totalTasks > 0 ? (s.count / totalTasks) * 100 : 0}%`, backgroundColor: s.color }} />
                 </div>
               </div>
             ))}
             {tasksByStatus.length === 0 && (
-              <p className="text-secondary text-muted-foreground/60 text-center py-4">No tasks yet</p>
+              <p className="text-sub text-muted-foreground/60 text-center py-4">No tasks yet</p>
             )}
           </div>
         </div>
 
         {/* Team */}
         <div className="rounded-xl border border-border bg-card p-4">
-          <h3 className="text-secondary font-semibold text-muted-foreground uppercase tracking-wider mb-3">Team</h3>
+          <h3 className="text-sub font-semibold text-muted-foreground uppercase tracking-wider mb-3">Team</h3>
           <div className="space-y-2">
             {assigneeCounts.map((a) => (
               <div key={a.name} className="flex items-center gap-3">
                 <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center text-label font-semibold text-primary shrink-0">
                   {a.name.charAt(0).toUpperCase()}
                 </div>
-                <span className="text-secondary text-foreground flex-1 truncate">{a.name}</span>
-                <span className="text-secondary text-green-400">{a.completed}</span>
-                <span className="text-secondary text-muted-foreground">/ {a.count}</span>
+                <span className="text-sub text-foreground flex-1 truncate">{a.name}</span>
+                <span className="text-sub text-green-400">{a.completed}</span>
+                <span className="text-sub text-muted-foreground">/ {a.count}</span>
               </div>
             ))}
             {assigneeCounts.length === 0 && (
-              <p className="text-secondary text-muted-foreground/60 text-center py-4">No team members assigned</p>
+              <p className="text-sub text-muted-foreground/60 text-center py-4">No team members assigned</p>
             )}
           </div>
         </div>
@@ -407,18 +407,18 @@ function ProjectDashboard({ project, taskStatuses }: { project: Project; taskSta
       {/* Invoices */}
       {project.invoices.length > 0 && (
         <div className="rounded-xl border border-border bg-card p-4">
-          <h3 className="text-secondary font-semibold text-muted-foreground uppercase tracking-wider mb-3">Financials</h3>
+          <h3 className="text-sub font-semibold text-muted-foreground uppercase tracking-wider mb-3">Financials</h3>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <p className="text-secondary text-muted-foreground">Total Invoiced</p>
+              <p className="text-sub text-muted-foreground">Total Invoiced</p>
               <p className="text-subheading font-bold text-foreground mt-0.5">{totalInvoiced.toLocaleString()}</p>
             </div>
             <div>
-              <p className="text-secondary text-muted-foreground">Paid</p>
+              <p className="text-sub text-muted-foreground">Paid</p>
               <p className="text-subheading font-bold text-green-400 mt-0.5">{totalPaid.toLocaleString()}</p>
             </div>
             <div>
-              <p className="text-secondary text-muted-foreground">Pending</p>
+              <p className="text-sub text-muted-foreground">Pending</p>
               <p className="text-subheading font-bold text-amber-400 mt-0.5">{totalPending.toLocaleString()}</p>
             </div>
           </div>
@@ -787,12 +787,12 @@ function DeclineTaskModal({
           </div>
           <div>
             <h3 className="text-lg font-semibold text-foreground">Decline Task</h3>
-            <p className="text-secondary text-muted-foreground">Return this task from {fromName} back to {toName}</p>
+            <p className="text-sub text-muted-foreground">Return this task from {fromName} back to {toName}</p>
           </div>
         </div>
 
         <div>
-          <label className="text-secondary font-medium text-muted-foreground mb-1.5 block">
+          <label className="text-sub font-medium text-muted-foreground mb-1.5 block">
             Reason for declining <span className="text-red-400">*</span>
           </label>
           <textarea
@@ -803,7 +803,7 @@ function DeclineTaskModal({
             className="w-full text-body text-foreground bg-transparent border border-border rounded-xl px-4 py-3 focus:outline-none focus:border-ring transition-colors placeholder:text-muted-foreground/40 resize-none"
             autoFocus
           />
-          <p className="text-secondary text-muted-foreground/50 mt-1">A comment is required when declining a task</p>
+          <p className="text-sub text-muted-foreground/50 mt-1">A comment is required when declining a task</p>
         </div>
 
         <div>
@@ -818,7 +818,7 @@ function DeclineTaskModal({
             }}
           />
           {file ? (
-            <div className="flex items-center gap-2 text-secondary text-foreground bg-muted/30 rounded-lg px-3 py-2">
+            <div className="flex items-center gap-2 text-sub text-foreground bg-muted/30 rounded-lg px-3 py-2">
               <Paperclip className="w-icon-sm h-icon-sm text-muted-foreground shrink-0" />
               <span className="flex-1 truncate">{file.name}</span>
               <button onClick={() => setFile(null)} className="text-muted-foreground hover:text-foreground">
@@ -828,7 +828,7 @@ function DeclineTaskModal({
           ) : (
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="flex items-center gap-2 text-secondary text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-2 text-sub text-muted-foreground hover:text-foreground transition-colors"
             >
               <Paperclip className="w-icon-sm h-icon-sm" />
               Attach files
@@ -896,8 +896,8 @@ const KanbanColumn = memo(function KanbanColumn({
       <div className="flex items-center justify-between mb-2 px-1">
         <div className="flex items-center gap-2 min-w-0">
           <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: status.color }} />
-          <h3 className="text-secondary font-semibold text-foreground uppercase tracking-wider truncate">{status.name}</h3>
-          <span className="text-secondary text-muted-foreground shrink-0">{tasks.length}</span>
+          <h3 className="text-sub font-semibold text-foreground uppercase tracking-wider truncate">{status.name}</h3>
+          <span className="text-sub text-muted-foreground shrink-0">{tasks.length}</span>
         </div>
         {canEdit && onAddTask && (
           <button
@@ -932,7 +932,7 @@ const KanbanColumn = memo(function KanbanColumn({
 
         {tasks.length === 0 && (
           <div className="py-6 text-center">
-            <p className="text-secondary text-muted-foreground/50">No tasks</p>
+            <p className="text-sub text-muted-foreground/50">No tasks</p>
           </div>
         )}
       </div>
@@ -1001,7 +1001,7 @@ const TaskCard = memo(function TaskCard({
               borderColor: `${tplData.color || "#22d3ee"}30`,
             }}
           >
-            {tplData.icon && <span className="text-secondary">{tplData.icon}</span>}
+            {tplData.icon && <span className="text-sub">{tplData.icon}</span>}
             {tplData.name}
           </span>
         </div>
@@ -1104,12 +1104,12 @@ function InvoicesSection({ project }: { project: Project }) {
                 <FileText className="w-icon-sm h-icon-sm text-orange" />
               </div>
               <div>
-                <p className="text-secondary font-medium text-foreground">{invoice.number}</p>
-                <p className="text-secondary text-muted-foreground">{new Date(invoice.createdAt).toLocaleDateString()}</p>
+                <p className="text-sub font-medium text-foreground">{invoice.number}</p>
+                <p className="text-sub text-muted-foreground">{new Date(invoice.createdAt).toLocaleDateString()}</p>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-secondary font-semibold text-foreground">
+              <p className="text-sub font-semibold text-foreground">
                 {Number(invoice.total).toLocaleString()} {invoice.currency || "KWD"}
               </p>
               <InvoiceStatusBadge status={invoice.status} />
@@ -1282,7 +1282,7 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
       {/* Toolbar */}
       <div className="flex items-center gap-3">
         {/* Breadcrumbs */}
-        <div className="flex items-center gap-1 text-secondary flex-1 min-w-0">
+        <div className="flex items-center gap-1 text-sub flex-1 min-w-0">
           <button
             onClick={() => setCurrentFolderId(null)}
             onDragOver={(e) => { if (currentFolderId) { e.preventDefault(); e.stopPropagation(); } }}
@@ -1333,14 +1333,14 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setShowNewFolder(true)}
-              className="min-h-touch px-3 rounded-lg border border-border bg-card text-secondary text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors"
+              className="min-h-touch px-3 rounded-lg border border-border bg-card text-sub text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors"
             >
               <FolderPlus className="w-icon-sm h-icon-sm" />
               New Folder
             </button>
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="min-h-touch px-3 rounded-lg bg-primary text-primary-foreground text-secondary font-medium flex items-center gap-1.5 hover:bg-primary/90 transition-colors"
+              className="min-h-touch px-3 rounded-lg bg-primary text-primary-foreground text-sub font-medium flex items-center gap-1.5 hover:bg-primary/90 transition-colors"
             >
               <Upload className="w-icon-sm h-icon-sm" />
               Upload
@@ -1361,7 +1361,7 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
             autoFocus
             className="h-input flex-1 px-3 rounded-lg bg-black border border-border text-body text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-ring transition-colors"
           />
-          <button onClick={handleCreateFolder} className="min-h-touch px-3 rounded-lg bg-primary text-primary-foreground text-secondary font-medium">Create</button>
+          <button onClick={handleCreateFolder} className="min-h-touch px-3 rounded-lg bg-primary text-primary-foreground text-sub font-medium">Create</button>
           <button onClick={() => setShowNewFolder(false)} className="text-muted-foreground hover:text-foreground"><X className="w-icon-md h-icon-md" /></button>
         </div>
       )}
@@ -1377,7 +1377,7 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
         >
           <FolderOpen className="w-10 h-10 text-muted-foreground/30 mb-3" />
           <p className="text-body text-muted-foreground/60">No files yet</p>
-          <p className="text-secondary text-muted-foreground/40 mt-1">Drop files or click to upload</p>
+          <p className="text-sub text-muted-foreground/40 mt-1">Drop files or click to upload</p>
         </div>
       ) : (
         <div className="space-y-1">
@@ -1420,7 +1420,7 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
               ) : (
                 <span className="flex-1 text-body text-foreground truncate">{folder.name}</span>
               )}
-              <span className="text-secondary text-muted-foreground/50">
+              <span className="text-sub text-muted-foreground/50">
                 {folder._count.assets + folder._count.children} items
               </span>
               <div className="opacity-100 [@media(pointer:fine)]:opacity-0 [@media(pointer:fine)]:group-hover:opacity-100 transition-opacity shrink-0" onClick={(e) => e.stopPropagation()}>
@@ -1462,7 +1462,7 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
               ) : (
                 <span className="flex-1 text-body text-foreground truncate">{asset.name}</span>
               )}
-              <span className="text-secondary text-muted-foreground/50 shrink-0">{formatSize(asset.fileSize)}</span>
+              <span className="text-sub text-muted-foreground/50 shrink-0">{formatSize(asset.fileSize)}</span>
               <div className="opacity-100 [@media(pointer:fine)]:opacity-0 [@media(pointer:fine)]:group-hover:opacity-100 transition-opacity shrink-0" onClick={(e) => e.stopPropagation()}>
                 <ItemMenu
                   onRename={() => { setRenaming({ id: asset.id, name: asset.name }); setContextMenu({ type: "asset", id: asset.id, name: asset.name }); }}
@@ -1572,7 +1572,7 @@ function FilePreviewModal({
         <div className="flex items-center justify-between px-4 py-3 shrink-0">
           <div className="flex items-center gap-3 min-w-0">
             <span className="text-body font-medium text-white truncate">{asset.name}</span>
-            <span className="text-secondary text-white/40 shrink-0">
+            <span className="text-sub text-white/40 shrink-0">
               {asset.fileSize < 1024 * 1024
                 ? `${(asset.fileSize / 1024).toFixed(1)} KB`
                 : `${(asset.fileSize / (1024 * 1024)).toFixed(1)} MB`}
@@ -1642,7 +1642,7 @@ function FilePreviewModal({
             <div className="flex flex-col items-center gap-4 text-center">
               <span className="text-[48px]">📎</span>
               <p className="text-white/80 text-body font-medium">{asset.name}</p>
-              <p className="text-white/40 text-secondary">Preview not available for this file type</p>
+              <p className="text-white/40 text-sub">Preview not available for this file type</p>
               <button
                 onClick={handleDownload}
                 className="mt-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-body font-medium hover:bg-primary/90 transition-colors flex items-center gap-2"
@@ -1657,7 +1657,7 @@ function FilePreviewModal({
         {/* Counter */}
         {assets.length > 1 && (
           <div className="text-center pb-3">
-            <span className="text-secondary text-white/30">{currentIndex + 1} / {assets.length}</span>
+            <span className="text-sub text-white/30">{currentIndex + 1} / {assets.length}</span>
           </div>
         )}
       </div>
@@ -1702,7 +1702,7 @@ function ItemMenu({
         <div className="absolute right-0 top-8 z-30 w-40 rounded-xl bg-black border border-border shadow-xl py-1 overflow-hidden">
           <button
             onClick={() => { setOpen(false); onDownload(); }}
-            className="w-full flex items-center gap-2 px-3 py-2 text-secondary text-foreground hover:bg-muted/40 transition-colors"
+            className="w-full flex items-center gap-2 px-3 py-2 text-sub text-foreground hover:bg-muted/40 transition-colors"
           >
             <Download className="w-icon-sm h-icon-sm" />
             Download
@@ -1711,14 +1711,14 @@ function ItemMenu({
             <>
               <button
                 onClick={() => { setOpen(false); onMove?.(); }}
-                className="w-full flex items-center gap-2 px-3 py-2 text-secondary text-foreground hover:bg-muted/40 transition-colors"
+                className="w-full flex items-center gap-2 px-3 py-2 text-sub text-foreground hover:bg-muted/40 transition-colors"
               >
                 <FolderInput className="w-icon-sm h-icon-sm" />
                 Move to...
               </button>
               <button
                 onClick={() => { setOpen(false); onRename(); }}
-                className="w-full flex items-center gap-2 px-3 py-2 text-secondary text-foreground hover:bg-muted/40 transition-colors"
+                className="w-full flex items-center gap-2 px-3 py-2 text-sub text-foreground hover:bg-muted/40 transition-colors"
               >
                 <Pencil className="w-icon-sm h-icon-sm" />
                 Rename
@@ -1726,7 +1726,7 @@ function ItemMenu({
               <div className="border-t border-border my-1" />
               <button
                 onClick={() => { setOpen(false); onDelete(); }}
-                className="w-full flex items-center gap-2 px-3 py-2 text-secondary text-red-400 hover:bg-red-500/10 transition-colors"
+                className="w-full flex items-center gap-2 px-3 py-2 text-sub text-red-400 hover:bg-red-500/10 transition-colors"
               >
                 <Trash2 className="w-icon-sm h-icon-sm" />
                 Delete
@@ -1795,10 +1795,10 @@ function MoveModal({
       <div className="w-[400px] max-h-[500px] rounded-2xl bg-black border border-border shadow-2xl flex flex-col" onClick={(e) => e.stopPropagation()}>
         <div className="px-4 py-3 border-b border-border">
           <h3 className="text-body font-semibold text-foreground">Move &quot;{itemName}&quot;</h3>
-          <p className="text-secondary text-muted-foreground mt-0.5">Select destination folder</p>
+          <p className="text-sub text-muted-foreground mt-0.5">Select destination folder</p>
         </div>
 
-        <div className="px-4 py-2 border-b border-border flex items-center gap-1 text-secondary min-h-[36px]">
+        <div className="px-4 py-2 border-b border-border flex items-center gap-1 text-sub min-h-[36px]">
           <button
             onClick={() => setBrowseFolderId(null)}
             className={`px-1.5 py-0.5 rounded transition-colors ${!browseFolderId ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
@@ -1824,7 +1824,7 @@ function MoveModal({
               <Loader2 className="w-icon-lg h-icon-lg animate-spin text-muted-foreground" />
             </div>
           ) : browseFolders.length === 0 ? (
-            <p className="text-center py-8 text-secondary text-muted-foreground">No subfolders</p>
+            <p className="text-center py-8 text-sub text-muted-foreground">No subfolders</p>
           ) : (
             browseFolders.map((folder) => (
               <button
@@ -1840,17 +1840,17 @@ function MoveModal({
         </div>
 
         <div className="px-4 py-3 border-t border-border flex items-center justify-between">
-          <p className="text-secondary text-muted-foreground truncate max-w-[180px]">
+          <p className="text-sub text-muted-foreground truncate max-w-[180px]">
             Move to: <span className="text-foreground font-medium">{breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1].name : "Root"}</span>
           </p>
           <div className="flex items-center gap-2">
-            <button onClick={onClose} className="px-3 py-1.5 text-secondary text-muted-foreground hover:text-foreground transition-colors rounded-lg">
+            <button onClick={onClose} className="px-3 py-1.5 text-sub text-muted-foreground hover:text-foreground transition-colors rounded-lg">
               Cancel
             </button>
             <button
               onClick={handleMove}
               disabled={moving}
-              className="px-4 py-1.5 text-secondary font-medium text-white bg-primary rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors flex items-center gap-1.5"
+              className="px-4 py-1.5 text-sub font-medium text-white bg-primary rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors flex items-center gap-1.5"
             >
               {moving && <Loader2 className="w-icon-sm h-icon-sm animate-spin" />}
               Move here

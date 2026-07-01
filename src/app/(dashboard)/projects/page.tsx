@@ -41,9 +41,9 @@ export default async function ProjectsPage() {
                   {project.name}
                 </h3>
                 {project.description && (
-                  <p className="text-secondary text-muted-foreground mt-0.5 line-clamp-2">{project.description}</p>
+                  <p className="text-sub text-muted-foreground mt-0.5 line-clamp-2">{project.description}</p>
                 )}
-                <p className="text-secondary text-muted-foreground mt-1 truncate">
+                <p className="text-sub text-muted-foreground mt-1 truncate">
                   {project._count.tasks} tasks • {project._count.invoices} invoices
                 </p>
                 {project.status && (

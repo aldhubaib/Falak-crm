@@ -78,7 +78,7 @@ export function EmailInput({
         />
       </div>
       {hasError && (
-        <p className="text-secondary text-destructive mt-1">
+        <p className="text-sub text-destructive mt-1">
           {externalErrorMessage || "Please enter a valid email address"}
         </p>
       )}

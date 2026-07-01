@@ -68,7 +68,7 @@ export function AttachmentList({
             <FileIcon className="w-4 h-4 text-muted-foreground" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-secondary text-foreground truncate">{att.name}</p>
+            <p className="text-sub text-foreground truncate">{att.name}</p>
             <p className="text-label text-muted-foreground">
               {att.sizeBytes ? formatBytes(att.sizeBytes) : "—"} •{" "}
               {new Date(att.createdAt).toLocaleDateString()}

@@ -73,7 +73,7 @@ export function DealsClient({
           const total = stage.deals.reduce((sum, d) => sum + Number(d.value), 0);
           return (
             <div key={stage.id} className="min-w-[280px] w-[280px] flex-shrink-0">
-              <p className="text-secondary text-muted-foreground px-1">
+              <p className="text-sub text-muted-foreground px-1">
                 {total.toLocaleString()} <span className="text-label">{stage.deals[0]?.currency || "KWD"}</span>
               </p>
             </div>
@@ -92,7 +92,7 @@ export function DealsClient({
             <div className="rounded-t-xl overflow-hidden mb-0">
               <div className="h-1" style={{ backgroundColor: stage.color }} />
               <div className="flex items-center gap-2 px-3 py-2.5 bg-card border border-t-0 border-border rounded-b-none">
-                <span className="text-secondary font-semibold text-foreground">
+                <span className="text-sub font-semibold text-foreground">
                   {stage.name}
                 </span>
                 <span
@@ -116,7 +116,7 @@ export function DealsClient({
               ))}
               {stage.deals.length === 0 && (
                 <div className="rounded-xl border border-dashed border-border/50 p-4 text-center">
-                  <p className="text-secondary text-muted-foreground/50">No deals</p>
+                  <p className="text-sub text-muted-foreground/50">No deals</p>
                 </div>
               )}
             </div>
@@ -150,12 +150,12 @@ const DealCard = memo(function DealCard({
         <p className="text-body font-medium text-foreground group-hover:text-primary transition-colors leading-tight mb-1.5">
           {deal.title}
         </p>
-        <p className="text-secondary text-muted-foreground mb-2">
+        <p className="text-sub text-muted-foreground mb-2">
           {deal.company?.name || "No company"}
           {deal.contact && ` • ${deal.contact.firstName} ${deal.contact.lastName}`}
         </p>
         <p className="text-subheading font-semibold text-foreground">
-          {Number(deal.value).toLocaleString()} <span className="text-secondary font-normal text-muted-foreground">{deal.currency || "KWD"}</span>
+          {Number(deal.value).toLocaleString()} <span className="text-sub font-normal text-muted-foreground">{deal.currency || "KWD"}</span>
         </p>
       </Link>
 
@@ -169,7 +169,7 @@ const DealCard = memo(function DealCard({
             }}>
               <button
                 type="submit"
-                className="w-full min-h-touch rounded-lg bg-muted/50 border border-border text-secondary font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center justify-center gap-1"
+                className="w-full min-h-touch rounded-lg bg-muted/50 border border-border text-sub font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center justify-center gap-1"
               >
                 <ArrowRight className="w-icon-sm h-icon-sm" />
                 {nextStage.name}
@@ -185,7 +185,7 @@ const DealCard = memo(function DealCard({
             }}>
               <button
                 type="submit"
-                className="w-full min-h-touch rounded-lg bg-green-500/10 border border-green-500/20 text-secondary font-medium text-green-400 hover:bg-green-500/20 transition-colors flex items-center justify-center gap-1"
+                className="w-full min-h-touch rounded-lg bg-green-500/10 border border-green-500/20 text-sub font-medium text-green-400 hover:bg-green-500/20 transition-colors flex items-center justify-center gap-1"
               >
                 <Rocket className="w-icon-sm h-icon-sm" />
                 Create Project
@@ -199,7 +199,7 @@ const DealCard = memo(function DealCard({
         <div className="px-3 pb-3 pt-0">
           <Link
             href={`/projects/${deal.project.id}`}
-            className="w-full min-h-touch rounded-lg bg-primary/10 border border-primary/20 text-secondary font-medium text-primary hover:bg-primary/20 transition-colors flex items-center justify-center gap-1 no-underline"
+            className="w-full min-h-touch rounded-lg bg-primary/10 border border-primary/20 text-sub font-medium text-primary hover:bg-primary/20 transition-colors flex items-center justify-center gap-1 no-underline"
           >
             View Project
           </Link>

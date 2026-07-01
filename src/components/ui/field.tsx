@@ -201,7 +201,7 @@ export function SelectField({
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search..."
-                  className="w-full h-input px-2.5 rounded bg-black text-secondary text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+                  className="w-full h-input px-2.5 rounded bg-black text-sub text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
                   onKeyDown={(e) => {
                     if (e.key === "Escape") handleClose();
                     if (e.key === "Enter" && filtered.length > 0) handleSelect(filtered[0].value);
@@ -215,7 +215,7 @@ export function SelectField({
                   type="button"
                   onClick={() => handleSelect("")}
                   className={cn(
-                    "w-full px-3 min-h-touch text-left text-secondary text-muted-foreground/50 hover:bg-muted/30 transition-colors flex items-center",
+                    "w-full px-3 min-h-touch text-left text-sub text-muted-foreground/50 hover:bg-muted/30 transition-colors flex items-center",
                     !value && "bg-muted/40"
                   )}
                 >
@@ -228,7 +228,7 @@ export function SelectField({
                   type="button"
                   onClick={() => handleSelect(opt.value)}
                   className={cn(
-                    "w-full px-3 min-h-touch text-left text-secondary text-foreground hover:bg-muted/30 transition-colors flex items-center",
+                    "w-full px-3 min-h-touch text-left text-sub text-foreground hover:bg-muted/30 transition-colors flex items-center",
                     value === opt.value && "bg-muted/40"
                   )}
                 >
@@ -236,7 +236,7 @@ export function SelectField({
                 </button>
               ))}
               {filtered.length === 0 && (
-                <p className="px-3 py-2 text-secondary text-muted-foreground">No results</p>
+                <p className="px-3 py-2 text-sub text-muted-foreground">No results</p>
               )}
             </div>
           </div>
@@ -487,7 +487,7 @@ export function EmailField({ label, icon, value, placeholder, onSave }: EmailFie
         )}
       </div>
       {formatError && (
-        <p className="text-secondary text-destructive mt-1">Please enter a valid email</p>
+        <p className="text-sub text-destructive mt-1">Please enter a valid email</p>
       )}
     </div>
   );
@@ -570,7 +570,7 @@ export function CountryField({ label, icon, value, onSave }: CountryFieldProps) 
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search countries..."
-                className="w-full h-input px-2.5 rounded bg-black text-secondary text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+                className="w-full h-input px-2.5 rounded bg-black text-sub text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
                 onKeyDown={(e) => {
                   if (e.key === "Escape") handleClose();
                   if (e.key === "Enter" && filtered.length > 0) handleSelect(filtered[0].name);
@@ -584,7 +584,7 @@ export function CountryField({ label, icon, value, onSave }: CountryFieldProps) 
                   type="button"
                   onClick={() => handleSelect(c.name)}
                   className={cn(
-                    "w-full flex items-center gap-2 px-3 min-h-touch text-left text-secondary hover:bg-muted/30 transition-colors",
+                    "w-full flex items-center gap-2 px-3 min-h-touch text-left text-sub hover:bg-muted/30 transition-colors",
                     value === c.name && "bg-muted/40"
                   )}
                 >
@@ -593,7 +593,7 @@ export function CountryField({ label, icon, value, onSave }: CountryFieldProps) 
                 </button>
               ))}
               {filtered.length === 0 && (
-                <p className="px-3 py-2 text-secondary text-muted-foreground">No countries found</p>
+                <p className="px-3 py-2 text-sub text-muted-foreground">No countries found</p>
               )}
             </div>
           </div>

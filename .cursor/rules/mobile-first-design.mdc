@@ -27,7 +27,7 @@ token-based classes or the CSS variables.
 ```tsx
 // ✅ GOOD — uses tokens, auto-adapts to device
 <button className="text-body min-h-touch px-card">Save</button>
-<p className="text-secondary">Subtitle</p>
+<p className="text-sub">Subtitle</p>
 <span className="text-label">LABEL</span>
 
 // ❌ BAD — hardcoded, too small on mobile
@@ -41,7 +41,7 @@ token-based classes or the CSS variables.
 | Token | Mobile (touch) | Desktop (mouse) | Tailwind class |
 |-------|---------------|-----------------|----------------|
 | `--text-body` | 16px | 14px | `text-body` |
-| `--text-secondary` | 14px | 12px | `text-secondary` |
+| `--text-sub` | 14px | 12px | `text-sub` |
 | `--text-label` | 12px | 10px | `text-label` |
 | `--text-button` | 14px | 12px | `text-button` |
 | `--text-heading` | 20px | 18px | `text-heading` |
@@ -104,7 +104,7 @@ The icon can be small visually, but the tappable area must be large:
 | Page heading | 20px | 18px | `text-heading` | `font-bold` |
 | Card/section title | 16px | 14px | `text-subheading` | `font-semibold` |
 | Body / primary text | 16px | 14px | `text-body` | `font-medium` |
-| Secondary text | 14px | 12px | `text-secondary` | `font-normal` |
+| Secondary text | 14px | 12px | `text-sub` | `font-normal` |
 | Button text | 14px | 12px | `text-button` | `font-medium` |
 | Labels / captions | 12px | 10px | `text-label` | `font-medium` |
 | Badges / status | 12px | 10px | `text-label` | `font-semibold` |
@@ -232,7 +232,7 @@ Always use **Lucide** icons. Size them with tokens:
   {/* Header */}
   <div className="px-card py-card">
     <h3 className="text-subheading font-semibold text-foreground">Title</h3>
-    <p className="text-secondary text-muted-foreground mt-1">Description</p>
+    <p className="text-sub text-muted-foreground mt-1">Description</p>
   </div>
 
   {/* Content */}
@@ -258,7 +258,7 @@ Always use **Lucide** icons. Size them with tokens:
   <Avatar className="w-icon-btn h-icon-btn" />
   <div className="flex-1 min-w-0">
     <p className="text-body font-medium text-foreground truncate">Item title</p>
-    <p className="text-secondary text-muted-foreground">Subtitle</p>
+    <p className="text-sub text-muted-foreground">Subtitle</p>
   </div>
   <ChevronRight className="w-icon-sm h-icon-sm text-muted-foreground/50 shrink-0" />
 </div>

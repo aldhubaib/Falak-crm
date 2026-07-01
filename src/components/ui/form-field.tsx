@@ -111,12 +111,12 @@ export function FormField({ def, value, error, onChange, inputRef, suffix }: For
             className="flex-1 min-h-[2rem] py-1 bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-none overflow-hidden"
           />
           {displaySuffix && (
-            <span className="text-secondary text-muted-foreground font-medium shrink-0">{displaySuffix}</span>
+            <span className="text-sub text-muted-foreground font-medium shrink-0">{displaySuffix}</span>
           )}
         </div>
       </div>
       {hasError && (
-        <p className="text-secondary text-destructive mt-1">{error}</p>
+        <p className="text-sub text-destructive mt-1">{error}</p>
       )}
     </div>
   );
@@ -186,7 +186,7 @@ function CountryFormField({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search countries..."
-                className="w-full h-input px-2.5 rounded bg-black text-secondary text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+                className="w-full h-input px-2.5 rounded bg-black text-sub text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
                 onKeyDown={(e) => {
                   if (e.key === "Escape") { setOpen(false); setSearch(""); }
                   if (e.key === "Enter" && filtered.length > 0) {
@@ -208,7 +208,7 @@ function CountryFormField({
                     setSearch("");
                   }}
                   className={cn(
-                    "w-full flex items-center gap-2 px-3 min-h-touch text-left text-secondary hover:bg-muted/30 transition-colors",
+                    "w-full flex items-center gap-2 px-3 min-h-touch text-left text-sub hover:bg-muted/30 transition-colors",
                     value === c.name && "bg-muted/40"
                   )}
                 >
@@ -217,7 +217,7 @@ function CountryFormField({
                 </button>
               ))}
               {filtered.length === 0 && (
-                <p className="px-3 py-2 text-secondary text-muted-foreground">No countries found</p>
+                <p className="px-3 py-2 text-sub text-muted-foreground">No countries found</p>
               )}
             </div>
           </div>
@@ -225,7 +225,7 @@ function CountryFormField({
       )}
 
       {hasError && (
-        <p className="text-secondary text-destructive mt-1">{error}</p>
+        <p className="text-sub text-destructive mt-1">{error}</p>
       )}
     </div>
   );

@@ -129,7 +129,7 @@ export function NotificationBell() {
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllRead}
-                className="text-secondary text-primary hover:text-primary/80 transition-colors flex items-center gap-1 min-h-touch"
+                className="text-sub text-primary hover:text-primary/80 transition-colors flex items-center gap-1 min-h-touch"
               >
                 <CheckCheck className="w-icon-sm h-icon-sm" />
                 Mark all read
@@ -145,7 +145,7 @@ export function NotificationBell() {
             ) : notifications.length === 0 ? (
               <div className="py-8 text-center">
                 <Bell className="w-8 h-8 mx-auto text-muted-foreground/20 mb-2" />
-                <p className="text-secondary text-muted-foreground/60">No notifications yet</p>
+                <p className="text-sub text-muted-foreground/60">No notifications yet</p>
               </div>
             ) : (
               notifications.map((n) => (
@@ -164,11 +164,11 @@ export function NotificationBell() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className={`text-secondary leading-snug ${!n.read ? "text-foreground font-medium" : "text-foreground/70"}`}>
+                    <p className={`text-sub leading-snug ${!n.read ? "text-foreground font-medium" : "text-foreground/70"}`}>
                       {n.title}
                     </p>
                     {n.body && (
-                      <p className="text-secondary text-muted-foreground/60 mt-0.5 truncate">{n.body}</p>
+                      <p className="text-sub text-muted-foreground/60 mt-0.5 truncate">{n.body}</p>
                     )}
                     <p className="text-label text-muted-foreground/40 mt-1">
                       {formatDistanceToNow(n.createdAt, { addSuffix: true })}

@@ -52,7 +52,7 @@ export function UploadIndicator() {
         )}
 
         <div className="flex-1 min-w-0">
-          <p className="text-secondary font-medium text-foreground">
+          <p className="text-sub font-medium text-foreground">
             {activeCount > 0
               ? `Uploading ${activeCount} file${activeCount > 1 ? "s" : ""}...`
               : errorCount > 0
@@ -86,7 +86,7 @@ export function UploadIndicator() {
       {expanded && (
         <div className="border-t border-border max-h-60 overflow-y-auto">
           {items.map((item) => (
-            <div key={item.id} className="flex items-center gap-3 px-4 py-2 text-secondary">
+            <div key={item.id} className="flex items-center gap-3 px-4 py-2 text-sub">
               {item.status === "done" ? (
                 <CheckCircle2 className="w-icon-sm h-icon-sm text-green-400 shrink-0" />
               ) : item.status === "error" ? (
@@ -123,7 +123,7 @@ export function UploadIndicator() {
         <div className="border-t border-border px-4 py-2 flex items-center justify-end">
           <button
             onClick={() => uploadManager.retryAll()}
-            className="flex items-center gap-1.5 text-secondary font-medium text-primary hover:text-primary/80 transition-colors min-h-touch"
+            className="flex items-center gap-1.5 text-sub font-medium text-primary hover:text-primary/80 transition-colors min-h-touch"
           >
             <RotateCcw className="w-icon-sm h-icon-sm" />
             Retry all failed ({errorCount})
