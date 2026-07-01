@@ -93,7 +93,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       )}
 
       {/* Mobile header */}
-      {!isDesktop && (
+      {!isDesktop && !hasOwnHeader(pathname) && (
         <div className="fixed top-0 left-0 right-0 h-12 flex items-center justify-between px-4 border-b border-border bg-background z-[100]">
           <button
             onClick={() => setDrawerOpen(true)}
@@ -137,7 +137,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <main
         className={cn(
           "flex-1 min-w-0 bg-background relative z-10 flex flex-col",
-          isDesktop ? "rounded-l-2xl" : "pt-12 pb-16"
+          isDesktop ? "rounded-l-2xl" : hasOwnHeader(pathname) ? "pb-16" : "pt-12 pb-16"
         )}
       >
         <TestRoleBanner />
