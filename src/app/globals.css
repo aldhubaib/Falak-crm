@@ -9,6 +9,27 @@
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
   --font-heading: "Inter", system-ui, sans-serif;
+
+  /* Responsive font sizes — use as text-body, text-secondary, etc. */
+  --font-size-body: var(--text-body);
+  --font-size-secondary: var(--text-secondary);
+  --font-size-label: var(--text-label);
+  --font-size-button: var(--text-button);
+  --font-size-heading: var(--text-heading);
+  --font-size-subheading: var(--text-subheading);
+
+  /* Responsive sizing — use as min-h-touch, w-icon-btn, h-input, etc. */
+  --spacing-touch: var(--size-touch);
+  --spacing-touch-lg: var(--size-touch-lg);
+  --spacing-icon-btn: var(--size-icon-btn);
+  --spacing-input: var(--size-input);
+  --spacing-list-item: var(--size-list-item);
+  --spacing-icon-sm: var(--size-icon-sm);
+  --spacing-icon-md: var(--size-icon-md);
+  --spacing-icon-lg: var(--size-icon-lg);
+  --spacing-card: var(--space-card);
+  --spacing-card-sm: var(--space-card-sm);
+  --spacing-section: var(--space-section);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -51,6 +72,63 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ──────────────────────────────────────────────
+   Mobile-First Design Tokens
+   Base = touch devices (phones, tablets)
+   Override = desktop with mouse (pointer: fine)
+   ────────────────────────────────────────────── */
+:root {
+  /* Typography */
+  --text-body: 16px;
+  --text-secondary: 14px;
+  --text-label: 12px;
+  --text-button: 14px;
+  --text-heading: 20px;
+  --text-subheading: 16px;
+
+  /* Touch targets */
+  --size-touch: 44px;
+  --size-touch-lg: 48px;
+  --size-icon-btn: 40px;
+  --size-input: 48px;
+  --size-list-item: 48px;
+
+  /* Icons */
+  --size-icon-sm: 18px;
+  --size-icon-md: 20px;
+  --size-icon-lg: 24px;
+
+  /* Spacing */
+  --space-card: 16px;
+  --space-card-sm: 12px;
+  --space-section: 24px;
+}
+
+@media (pointer: fine) {
+  :root {
+    --text-body: 14px;
+    --text-secondary: 12px;
+    --text-label: 10px;
+    --text-button: 12px;
+    --text-heading: 18px;
+    --text-subheading: 14px;
+
+    --size-touch: 32px;
+    --size-touch-lg: 36px;
+    --size-icon-btn: 28px;
+    --size-input: 36px;
+    --size-list-item: 36px;
+
+    --size-icon-sm: 14px;
+    --size-icon-md: 16px;
+    --size-icon-lg: 20px;
+
+    --space-card: 12px;
+    --space-card-sm: 8px;
+    --space-section: 16px;
+  }
 }
 
 :root {

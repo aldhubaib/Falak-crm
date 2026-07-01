@@ -12,18 +12,26 @@ so we avoid back-and-forth fixes.
 
 ## Rules
 - Mobile-first: write base styles for small screens, then layer `sm:` `md:` `lg:` `xl:`.
+- Use the design tokens from `globals.css` — see `.cursor/rules/mobile-first-design.mdc` for the full reference.
 - Grids/flex must reflow, never overflow. Prefer `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`.
 - Avoid fixed pixel widths that break mobile. Use `w-full`, `max-w-*`, and `min-w-0`.
 - Long text must wrap or truncate (`truncate`, `break-words`).
-- Touch targets ≥ 40px on mobile.
+- Touch targets: use `min-h-touch` (44px mobile / 32px desktop), never `w-6 h-6`.
+- Typography: use `text-body`, `text-secondary`, `text-label` — never `text-[11px]`.
+- Icons: use `w-icon-sm h-icon-sm` (18px/14px), never `w-3 h-3`.
 
 ## Example
 ```tsx
-// ❌ BAD: fixed grid, breaks on phones
-<div className="grid grid-cols-5 gap-4">
+// ❌ BAD: hardcoded sizes, desktop-first
+<button className="text-[11px] px-2 py-1.5 w-6 h-6">
+  <X className="w-3 h-3" />
+</button>
 
-// ✅ GOOD: reflows across breakpoints
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+// ✅ GOOD: token-based, mobile-first
+<button className="min-h-touch px-4 text-button font-medium flex items-center gap-2">
+  <X className="w-icon-sm h-icon-sm" />
+  Close
+</button>
 ```
 
 When reporting the change, state which breakpoints you accounted for
