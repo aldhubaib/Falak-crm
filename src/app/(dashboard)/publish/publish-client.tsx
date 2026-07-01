@@ -790,97 +790,37 @@ function DatePanel({
 
 function DeliveryFilePreview({ file }: { file: ScheduledDeliveryFile }) {
   const [url, setUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!file.attachmentId) return;
     let cancelled = false;
-    setLoading(true);
     fetch(`/api/files/${file.attachmentId}/download-url`)
       .then((r) => r.json())
       .then((data) => { if (!cancelled && data.url) setUrl(data.url); })
-      .catch(() => {})
-      .finally(() => { if (!cancelled) setLoading(false); });
+      .catch(() => {});
     return () => { cancelled = true; };
   }, [file.attachmentId]);
 
-  const category = getFileCategory(file.type, file.allowedFormats);
-
   return (
-    <div className="border-b border-border/20 last:border-0">
-      <div className="flex items-center gap-2 px-3 py-2">
-        <span className="text-muted-foreground">
-          {getFileIcon(file.type, file.allowedFormats)}
-        </span>
-        <span className="flex-1 text-[11px] font-medium text-foreground truncate">{file.name}</span>
-        {url && (
-          <a
-            href={url}
-            download={file.name}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-6 h-6 rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors shrink-0"
-            title="Download"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Download className="w-3.5 h-3.5" />
-          </a>
-        )}
-      </div>
-
-      {loading && (
-        <div className="px-3 pb-2">
-          <div className="h-24 rounded-lg bg-muted/20 animate-pulse" />
-        </div>
-      )}
-
-      {url && category === "image" && (
-        <div className="px-3 pb-2">
-          <img src={url} alt={file.name} loading="lazy" className="w-full max-h-52 rounded-lg object-contain bg-black/30" />
-        </div>
-      )}
-
-      {url && category === "video" && (
-        <div className="px-3 pb-2">
-          <video controls className="w-full max-h-52 rounded-lg bg-black/30" src={url}>
-            Your browser does not support video.
-          </video>
-        </div>
-      )}
-
-      {url && category === "audio" && (
-        <div className="px-3 pb-2">
-          <audio controls className="w-full h-10" src={url}>
-            Your browser does not support audio.
-          </audio>
-        </div>
-      )}
-
-      {file.type === "text_area" && file.textValue && (
-        <div className="px-3 pb-2">
-          <div className="rounded-lg bg-muted/10 border border-border/30 px-3 py-2 text-[11px] text-foreground/80 whitespace-pre-wrap max-h-32 overflow-y-auto select-text">
-            {file.textValue}
-          </div>
-        </div>
-      )}
-
-      {!file.attachmentId && file.type === "file_upload" && (
-        <div className="px-3 pb-2">
-          <div className="h-16 rounded-lg bg-muted/10 border border-dashed border-border/50 flex items-center justify-center">
-            <span className="text-[10px] text-muted-foreground/50">No file uploaded</span>
-          </div>
-        </div>
+    <div className="flex items-center gap-2 px-3 py-2 border-b border-border/20 last:border-0">
+      <span className="text-muted-foreground">
+        {getFileIcon(file.type, file.allowedFormats)}
+      </span>
+      <span className="flex-1 text-[11px] font-medium text-foreground truncate">{file.name}</span>
+      {url && (
+        <a
+          href={url}
+          download={file.name}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-6 h-6 rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors shrink-0"
+          title="Download"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Download className="w-3.5 h-3.5" />
+        </a>
       )}
     </div>
   );
 }
 
-function getFileCategory(type: string, formats: string | null): "image" | "video" | "audio" | "other" {
-  if (type !== "file_upload") return "other";
-  if (!formats) return "other";
-  const f = formats.toLowerCase();
-  if (f.includes("mp4") || f.includes("mov") || f.includes("video") || f.includes("webm")) return "video";
-  if (f.includes("mp3") || f.includes("wav") || f.includes("audio") || f.includes("ogg") || f.includes("m4a")) return "audio";
-  if (f.includes("jpg") || f.includes("png") || f.includes("jpeg") || f.includes("webp") || f.includes("image") || f.includes("gif")) return "image";
-  return "other";
-}
