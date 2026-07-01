@@ -254,6 +254,22 @@ export function PublishClient({ projects }: { projects: Project[] }) {
     loadDeliveryTasks();
   };
 
+  const handleScheduleTask = async (task: DeliveryTask, dateStr: string) => {
+    const projectId = task.project?.id || selectedProjectId;
+    if (!projectId) return;
+    await scheduleTask({ taskId: task.id, projectId, scheduledDate: dateStr });
+    loadSchedule();
+    loadAllItems();
+    loadDeliveryTasks();
+  };
+
+  const handleReschedule = async (itemId: string, taskId: string, projectId: string, dateStr: string) => {
+    await scheduleTask({ taskId, projectId, scheduledDate: dateStr });
+    loadSchedule();
+    loadAllItems();
+    loadDeliveryTasks();
+  };
+
   const handleUnschedule = async (itemId: string) => {
     await unscheduleTask(itemId);
     loadSchedule();
@@ -356,6 +372,17 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                             )}
                             <p className="text-[12px] font-medium text-foreground truncate">{task.title}</p>
                           </div>
+                          <label className="shrink-0 flex items-center gap-1 px-2 py-1.5 rounded-lg bg-primary/10 text-primary text-[11px] font-medium cursor-pointer hover:bg-primary/20 transition-colors">
+                            <Calendar className="w-3 h-3" />
+                            <span className="hidden xl:inline">Schedule</span>
+                            <input
+                              type="date"
+                              className="sr-only"
+                              onChange={(e) => {
+                                if (e.target.value) handleScheduleTask(task, e.target.value);
+                              }}
+                            />
+                          </label>
                         </div>
                       </div>
                     );
@@ -475,6 +502,17 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                               )}
                               <p className="text-[12px] font-medium text-foreground truncate">{task.title}</p>
                             </div>
+                            <label className="shrink-0 flex items-center gap-1 px-2 py-1.5 rounded-lg bg-primary/10 text-primary text-[11px] font-medium cursor-pointer hover:bg-primary/20 transition-colors">
+                              <Calendar className="w-3 h-3" />
+                              Schedule
+                              <input
+                                type="date"
+                                className="sr-only"
+                                onChange={(e) => {
+                                  if (e.target.value) handleScheduleTask(task, e.target.value);
+                                }}
+                              />
+                            </label>
                           </div>
                         </div>
                       );
@@ -752,6 +790,7 @@ export function PublishClient({ projects }: { projects: Project[] }) {
             items={getItemsForDate(selectedDate)}
             onTogglePublished={handleTogglePublished}
             onUnschedule={handleUnschedule}
+            onReschedule={handleReschedule}
             onClose={() => setSelectedDate(null)}
           />
         </div>
@@ -767,6 +806,7 @@ export function PublishClient({ projects }: { projects: Project[] }) {
               items={getItemsForDate(selectedDate)}
               onTogglePublished={handleTogglePublished}
               onUnschedule={handleUnschedule}
+              onReschedule={handleReschedule}
               onClose={() => setSelectedDate(null)}
             />
           </div>
@@ -801,16 +841,18 @@ function DetailPanel({
   items,
   onTogglePublished,
   onUnschedule,
+  onReschedule,
   onClose,
 }: {
   selectedDate: string;
   items: ScheduledItem[];
   onTogglePublished: (item: ScheduledItem) => void;
   onUnschedule: (id: string) => void;
+  onReschedule: (itemId: string, taskId: string, projectId: string, dateStr: string) => void;
   onClose: () => void;
 }) {
   return (
-    <div className="w-[380px] border-l border-border flex flex-col shrink-0 bg-card/30">
+    <div className="w-full lg:w-[380px] border-l border-border flex flex-col shrink-0 bg-card/30">
       <div className="px-4 py-3 border-b border-border flex items-center justify-between">
         <div>
           <h3 className="text-[13px] font-semibold text-foreground">
@@ -855,10 +897,10 @@ function DetailPanel({
                 </div>
               )}
 
-              <div className="flex items-center justify-between px-3 py-2.5 border-t border-border/30 bg-black/20">
+              <div className="flex items-center justify-between px-3 py-2.5 border-t border-border/30 bg-black/20 gap-1">
                 <button
                   onClick={() => onTogglePublished(item)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
                     item.published
                       ? "text-green-400 bg-green-500/10 hover:bg-green-500/20"
                       : "text-muted-foreground hover:text-primary hover:bg-primary/10"
@@ -867,6 +909,20 @@ function DetailPanel({
                   {item.published ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Check className="w-3.5 h-3.5" />}
                   {item.published ? "Published" : "Mark Published"}
                 </button>
+                <label className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer">
+                  <Calendar className="w-3 h-3" />
+                  Reschedule
+                  <input
+                    type="date"
+                    className="sr-only"
+                    defaultValue={selectedDate}
+                    onChange={(e) => {
+                      if (e.target.value && e.target.value !== selectedDate) {
+                        onReschedule(item.id, item.task.id, item.project.id, e.target.value);
+                      }
+                    }}
+                  />
+                </label>
                 <button
                   onClick={() => onUnschedule(item.id)}
                   className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-colors"
