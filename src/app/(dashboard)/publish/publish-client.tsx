@@ -276,10 +276,18 @@ export function PublishClient({ projects }: { projects: Project[] }) {
     return m;
   }, [projects]);
 
+  const [mobileTab, setMobileTab] = useState<"calendar" | "queue">("calendar");
+  const [showMobileDetail, setShowMobileDetail] = useState(false);
+
+  const handleDateSelect = (dateStr: string) => {
+    setSelectedDate(dateStr);
+    setShowMobileDetail(true);
+  };
+
   return (
-    <div className="flex h-[calc(100vh-48px)]">
-      {/* Left sidebar — delivery queue */}
-      <div className="w-[300px] border-r border-border flex flex-col shrink-0 bg-card/30">
+    <div className="flex flex-col lg:flex-row h-full lg:h-[calc(100vh-48px)]">
+      {/* Left sidebar — delivery queue (desktop) */}
+      <div className="hidden lg:flex w-[300px] border-r border-border flex-col shrink-0 bg-card/30">
         <div className="px-4 py-3 border-b border-border">
           <h2 className="text-[13px] font-semibold text-foreground flex items-center gap-2">
             <Calendar className="w-4 h-4 text-primary" />
@@ -407,17 +415,113 @@ export function PublishClient({ projects }: { projects: Project[] }) {
         </div>
       </div>
 
+      {/* Mobile tabs */}
+      <div className="lg:hidden flex items-center border-b border-border bg-card/30">
+        <button
+          onClick={() => setMobileTab("calendar")}
+          className={`flex-1 py-2.5 text-[12px] font-medium text-center transition-colors ${mobileTab === "calendar" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
+        >
+          Calendar
+        </button>
+        <button
+          onClick={() => setMobileTab("queue")}
+          className={`flex-1 py-2.5 text-[12px] font-medium text-center transition-colors relative ${mobileTab === "queue" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}
+        >
+          Queue
+          {unscheduledTasks.length > 0 && (
+            <span className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-500/20 text-amber-400 text-[9px] font-bold">
+              {unscheduledTasks.length}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {/* Mobile queue view */}
+      {mobileTab === "queue" && (
+        <div className="lg:hidden flex-1 overflow-y-auto">
+          <div className="px-3 py-2 border-b border-border">
+            <select
+              value={selectedProjectId || ""}
+              onChange={(e) => setSelectedProjectId(e.target.value || null)}
+              className="w-full h-8 px-2 rounded-lg bg-black border border-border text-[12px] text-foreground focus:outline-none focus:border-ring"
+            >
+              <option value="">All Projects</option>
+              {projects.map((p) => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="px-3 py-2 space-y-1.5">
+            {unscheduledTasks.length === 0 && scheduledTasks.length === 0 ? (
+              <p className="text-[12px] text-muted-foreground text-center py-8">No deliveries ready</p>
+            ) : (
+              <>
+                {unscheduledTasks.length > 0 && (
+                  <>
+                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-1 pt-1">Unscheduled ({unscheduledTasks.length})</p>
+                    {unscheduledTasks.map((task) => {
+                      const tmpl = task.checklistItems[0]?.templateItem?.template;
+                      const tp = task.project || (selectedProjectId ? projectMap.get(selectedProjectId) : null);
+                      return (
+                        <div key={task.id} className="px-3 py-2.5 rounded-xl bg-black/40 border border-border/50">
+                          <div className="flex items-center gap-2.5">
+                            {tp && <ProjectAvatar thumbnailId={tp.thumbnailId ?? null} name={tp.name ?? ""} size="md" />}
+                            <div className="flex-1 min-w-0">
+                              {tmpl && (
+                                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium border mb-1"
+                                  style={{ borderColor: `${tmpl.color || "#3b82f6"}40`, color: tmpl.color || "#3b82f6", backgroundColor: `${tmpl.color || "#3b82f6"}10` }}>
+                                  {tmpl.icon} {tmpl.name}
+                                </span>
+                              )}
+                              <p className="text-[12px] font-medium text-foreground truncate">{task.title}</p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </>
+                )}
+                {scheduledTasks.length > 0 && (
+                  <>
+                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-1 pt-3">Scheduled ({scheduledTasks.length})</p>
+                    {scheduledTasks.map((task) => {
+                      const schedDate = task.publishItem ? new Date(task.publishItem.scheduledDate) : null;
+                      const tp = task.project || (selectedProjectId ? projectMap.get(selectedProjectId) : null);
+                      return (
+                        <div key={task.id} className="rounded-xl bg-black/20 border border-border/30 px-3 py-2.5">
+                          <div className="flex items-center gap-2.5">
+                            {tp && <ProjectAvatar thumbnailId={tp.thumbnailId ?? null} name={tp.name ?? ""} size="md" />}
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[12px] font-medium text-foreground truncate">{task.title}</p>
+                              {schedDate && (
+                                <p className="text-[10px] text-primary mt-0.5">
+                                  {schedDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className={`flex-1 flex flex-col min-w-0 ${mobileTab !== "calendar" ? "hidden lg:flex" : ""}`}>
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-3 border-b border-border">
-          <div className="flex items-center gap-4">
-            <h2 className="text-[16px] font-semibold text-foreground">
+        <div className="flex items-center justify-between px-3 lg:px-6 py-2 lg:py-3 border-b border-border">
+          <div className="flex items-center gap-2 lg:gap-4">
+            <h2 className="text-[14px] lg:text-[16px] font-semibold text-foreground">
               {viewMode === "week"
-                ? `${weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric" })} – ${new Date(weekStart.getTime() + 6 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
+                ? `${weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric" })} – ${new Date(weekStart.getTime() + 6 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`
                 : `${MONTHS[currentMonth]} ${currentYear}`}
             </h2>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5">
               <button onClick={() => {
                 if (viewMode === "week") setWeekStart(new Date(weekStart.getTime() - 7 * 86400000));
                 else prevMonth();
@@ -428,7 +532,7 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                 if (viewMode === "week") {
                   const d = new Date(); d.setDate(d.getDate() - d.getDay()); d.setHours(0,0,0,0); setWeekStart(d);
                 } else goToday();
-              }} className="px-2.5 py-1 rounded-lg text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+              }} className="px-2 py-1 rounded-lg text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
                 Today
               </button>
               <button onClick={() => {
@@ -440,8 +544,8 @@ export function PublishClient({ projects }: { projects: Project[] }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-4 text-[11px]">
+          <div className="flex items-center gap-2 lg:gap-3">
+            <div className="hidden lg:flex items-center gap-4 text-[11px]">
               <span className="text-muted-foreground">
                 <span className="text-foreground font-medium">{stats.scheduled}</span> scheduled
               </span>
@@ -456,8 +560,8 @@ export function PublishClient({ projects }: { projects: Project[] }) {
             <select
               value={viewMode}
               onChange={(e) => changeView(e.target.value as "month" | "week" | "schedule")}
-              className="h-8 px-3 pr-7 rounded-lg bg-black border border-border text-[12px] font-medium text-foreground focus:outline-none focus:border-ring transition-colors appearance-none cursor-pointer"
-              style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 8px center" }}
+              className="h-7 lg:h-8 px-2 lg:px-3 pr-6 lg:pr-7 rounded-lg bg-black border border-border text-[11px] lg:text-[12px] font-medium text-foreground focus:outline-none focus:border-ring transition-colors appearance-none cursor-pointer"
+              style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 6px center" }}
             >
               <option value="month">Month</option>
               <option value="week">Week</option>
@@ -640,15 +744,33 @@ export function PublishClient({ projects }: { projects: Project[] }) {
         )}
       </div>
 
-      {/* Right detail panel */}
+      {/* Right detail panel — desktop inline */}
       {selectedDate && (
-        <DetailPanel
-          selectedDate={selectedDate}
-          items={getItemsForDate(selectedDate)}
-          onTogglePublished={handleTogglePublished}
-          onUnschedule={handleUnschedule}
-          onClose={() => setSelectedDate(null)}
-        />
+        <div className="hidden lg:block">
+          <DetailPanel
+            selectedDate={selectedDate}
+            items={getItemsForDate(selectedDate)}
+            onTogglePublished={handleTogglePublished}
+            onUnschedule={handleUnschedule}
+            onClose={() => setSelectedDate(null)}
+          />
+        </div>
+      )}
+
+      {/* Right detail panel — mobile modal */}
+      {selectedDate && (
+        <div className="lg:hidden fixed inset-0 z-[500] flex flex-col">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setSelectedDate(null)} />
+          <div className="relative mt-auto max-h-[80vh] bg-background border-t border-border rounded-t-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom duration-200">
+            <DetailPanel
+              selectedDate={selectedDate}
+              items={getItemsForDate(selectedDate)}
+              onTogglePublished={handleTogglePublished}
+              onUnschedule={handleUnschedule}
+              onClose={() => setSelectedDate(null)}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

@@ -19,11 +19,20 @@ const PAGE_TITLES: Record<string, string> = {
   "/deals": "Deals",
   "/projects": "Projects",
   "/invoices": "Invoices",
+  "/publish": "Publish",
+  "/more": "More",
   "/settings": "Settings",
   "/settings/team": "Team & Roles",
   "/settings/billing": "Billing",
   "/settings/whatsapp": "WhatsApp",
   "/settings/checklists": "Checklists",
+  "/settings/statuses": "Statuses",
+  "/settings/pipelines": "Pipelines",
+  "/settings/services": "Services",
+  "/settings/currencies": "Currencies",
+  "/settings/industries": "Industries",
+  "/settings/referrals": "Referrals",
+  "/settings/trash": "Trash",
 };
 
 function getPageTitle(pathname: string): string {
@@ -40,6 +49,10 @@ function hasOwnHeader(pathname: string): boolean {
   const segments = pathname.split("/").filter(Boolean);
   if (segments[0] === "projects" && segments.length >= 2) return true;
   if (segments[0] === "deals" && segments.length >= 2) return true;
+  if (segments[0] === "companies" && segments.length >= 2) return true;
+  if (segments[0] === "contacts" && segments.length >= 2) return true;
+  if (segments[0] === "invoices" && segments.length >= 2) return true;
+  if (segments[0] === "settings" && segments.length >= 2) return true;
   return false;
 }
 
