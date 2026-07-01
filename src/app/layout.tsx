@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { ErrorToast } from "@/components/error-toast";
+import { ServiceWorkerRegister } from "@/components/sw-register";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,6 +20,10 @@ export const metadata: Metadata = {
   title: "Falak CRM",
   description: "CRM & Bookkeeping for marketing agencies",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.png",
+    apple: "/apple-touch-icon.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -51,6 +56,7 @@ export default function RootLayout({
         >
           {children}
           <ErrorToast />
+          <ServiceWorkerRegister />
         </ClerkProvider>
       </body>
     </html>
