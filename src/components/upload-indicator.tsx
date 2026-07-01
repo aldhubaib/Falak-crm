@@ -52,7 +52,7 @@ export function UploadIndicator() {
         )}
 
         <div className="flex-1 min-w-0">
-          <p className="text-[12px] font-medium text-foreground">
+          <p className="text-secondary font-medium text-foreground">
             {activeCount > 0
               ? `Uploading ${activeCount} file${activeCount > 1 ? "s" : ""}...`
               : errorCount > 0
@@ -70,13 +70,13 @@ export function UploadIndicator() {
         </div>
 
         <div className="flex items-center gap-1 shrink-0">
-          {expanded ? <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" />}
+          {expanded ? <ChevronDown className="w-icon-sm h-icon-sm text-muted-foreground" /> : <ChevronUp className="w-icon-sm h-icon-sm text-muted-foreground" />}
           {activeCount === 0 && (
             <button
               onClick={(e) => { e.stopPropagation(); handleDismiss(); }}
               className="w-5 h-5 rounded flex items-center justify-center text-muted-foreground hover:text-foreground"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-icon-sm h-icon-sm" />
             </button>
           )}
         </div>
@@ -86,18 +86,18 @@ export function UploadIndicator() {
       {expanded && (
         <div className="border-t border-border max-h-60 overflow-y-auto">
           {items.map((item) => (
-            <div key={item.id} className="flex items-center gap-3 px-4 py-2 text-[11px]">
+            <div key={item.id} className="flex items-center gap-3 px-4 py-2 text-secondary">
               {item.status === "done" ? (
-                <CheckCircle2 className="w-3.5 h-3.5 text-green-400 shrink-0" />
+                <CheckCircle2 className="w-icon-sm h-icon-sm text-green-400 shrink-0" />
               ) : item.status === "error" ? (
-                <AlertCircle className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                <AlertCircle className="w-icon-sm h-icon-sm text-red-400 shrink-0" />
               ) : (
-                <Upload className="w-3.5 h-3.5 text-primary shrink-0" />
+                <Upload className="w-icon-sm h-icon-sm text-primary shrink-0" />
               )}
               <div className="flex-1 min-w-0">
                 <span className="block truncate text-foreground">{item.file.name}</span>
                 {item.status === "error" && item.error && (
-                  <span className="block text-red-400 text-[10px] truncate">{item.error}</span>
+                  <span className="block text-red-400 text-label truncate">{item.error}</span>
                 )}
               </div>
               {(item.status === "uploading" || item.status === "completing") && (
@@ -106,10 +106,10 @@ export function UploadIndicator() {
               {item.status === "error" && (
                 <button
                   onClick={(e) => { e.stopPropagation(); uploadManager.retry(item.id); }}
-                  className="shrink-0 flex items-center gap-1 text-[10px] text-primary hover:text-primary/80 transition-colors"
+                  className="shrink-0 flex items-center gap-1 text-label text-primary hover:text-primary/80 transition-colors min-h-touch"
                   title="Retry upload"
                 >
-                  <RotateCcw className="w-3 h-3" />
+                  <RotateCcw className="w-icon-sm h-icon-sm" />
                   Retry
                 </button>
               )}
@@ -123,9 +123,9 @@ export function UploadIndicator() {
         <div className="border-t border-border px-4 py-2 flex items-center justify-end">
           <button
             onClick={() => uploadManager.retryAll()}
-            className="flex items-center gap-1.5 text-[11px] font-medium text-primary hover:text-primary/80 transition-colors"
+            className="flex items-center gap-1.5 text-secondary font-medium text-primary hover:text-primary/80 transition-colors min-h-touch"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
+            <RotateCcw className="w-icon-sm h-icon-sm" />
             Retry all failed ({errorCount})
           </button>
         </div>

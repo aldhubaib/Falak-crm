@@ -174,17 +174,17 @@ export function TaskComments({
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8 text-muted-foreground">
-        <Loader2 className="w-4 h-4 animate-spin" />
+        <Loader2 className="w-icon-md h-icon-md animate-spin" />
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      <h3 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+      <h3 className="text-label font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
         Comments
         {comments.length > 0 && (
-          <span className="text-[10px] bg-muted/50 text-muted-foreground px-1.5 py-0.5 rounded-full font-normal">
+          <span className="text-label bg-muted/50 text-muted-foreground px-1.5 py-0.5 rounded-full font-normal">
             {comments.length}
           </span>
         )}
@@ -194,21 +194,21 @@ export function TaskComments({
         <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
           {comments.map((comment) => (
             <div key={comment.id} className="flex gap-3">
-              <div className="w-7 h-7 rounded-full bg-primary/15 flex items-center justify-center shrink-0 mt-0.5">
-                <span className="text-[10px] font-bold text-primary">
+              <div className="w-icon-btn h-icon-btn rounded-full bg-primary/15 flex items-center justify-center shrink-0 mt-0.5">
+                <span className="text-label font-bold text-primary">
                   {getInitials(comment.author.name, comment.author.email)}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-[12px] font-medium text-foreground">
+                  <span className="text-secondary font-medium text-foreground">
                     {comment.author.name || comment.author.email}
                   </span>
-                  <span className="text-[10px] text-muted-foreground/60">
+                  <span className="text-label text-muted-foreground/60">
                     {formatDistanceToNow(comment.createdAt, { addSuffix: true })}
                   </span>
                 </div>
-                <p className="text-[13px] text-foreground/80 mt-0.5 whitespace-pre-wrap break-words">
+                <p className="text-body text-foreground/80 mt-0.5 whitespace-pre-wrap break-words">
                   {renderCommentBody(comment.body)}
                 </p>
               </div>
@@ -229,18 +229,18 @@ export function TaskComments({
                 key={m.id}
                 type="button"
                 onClick={() => insertMention(m)}
-                className={`w-full text-left px-3 py-2 text-[13px] flex items-center gap-2 transition-colors ${
+                className={`w-full text-left px-3 py-2 text-body flex items-center gap-2 transition-colors ${
                   i === mentionIndex ? "bg-primary/15 text-foreground" : "text-muted-foreground hover:bg-muted/30"
                 }`}
               >
-                <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <span className="text-[9px] font-bold text-primary">
+                <div className="w-icon-btn h-icon-btn rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <span className="text-label font-bold text-primary">
                     {getInitials(m.name, m.email)}
                   </span>
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="truncate font-medium text-[12px]">{m.name || m.email}</div>
-                  {m.name && <div className="truncate text-[10px] text-muted-foreground/60">{m.email}</div>}
+                  <div className="truncate font-medium text-secondary">{m.name || m.email}</div>
+                  {m.name && <div className="truncate text-label text-muted-foreground/60">{m.email}</div>}
                 </div>
               </button>
             ))}
@@ -259,9 +259,9 @@ export function TaskComments({
                 inputRef.current.focus();
               }
             }}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/30 transition-colors shrink-0"
+            className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/30 transition-colors shrink-0"
           >
-            <AtSign className="w-4 h-4" />
+            <AtSign className="w-icon-md h-icon-md" />
           </button>
           <textarea
             ref={inputRef}
@@ -288,7 +288,7 @@ export function TaskComments({
             onKeyDown={handleKeyDown}
             placeholder="Write a comment... Use @ to mention"
             rows={1}
-            className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/40 resize-none focus:outline-none py-1.5 max-h-32"
+            className="flex-1 bg-transparent text-body text-foreground placeholder:text-muted-foreground/40 resize-none focus:outline-none py-1.5 max-h-32"
             style={{ minHeight: "32px" }}
             onInput={(e) => {
               const target = e.target as HTMLTextAreaElement;
@@ -299,12 +299,12 @@ export function TaskComments({
           <button
             onClick={handleSend}
             disabled={!body.trim() || sending}
-            className="w-8 h-8 rounded-lg flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+            className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
           >
             {sending ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <Loader2 className="w-icon-sm h-icon-sm animate-spin" />
             ) : (
-              <Send className="w-3.5 h-3.5" />
+              <Send className="w-icon-sm h-icon-sm" />
             )}
           </button>
         </div>

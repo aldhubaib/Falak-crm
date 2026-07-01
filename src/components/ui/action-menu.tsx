@@ -67,9 +67,9 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
       <div ref={menuRef} className="relative">
         <button
           onClick={() => setOpen(!open)}
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <MoreVertical className="w-4 h-4" />
+          <MoreVertical className="w-icon-md h-icon-md" />
         </button>
 
         {open && (
@@ -77,9 +77,9 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
             <button
               onClick={handleDeleteClick}
               disabled={loading}
-              className="w-full flex items-center gap-2 px-3 py-2.5 text-[12px] text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50"
+              className="w-full flex items-center gap-2 px-3 min-h-touch text-secondary text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50"
             >
-              <Trash2 className="w-3.5 h-3.5" />
+              <Trash2 className="w-icon-sm h-icon-sm" />
               Delete
             </button>
           </div>
@@ -99,8 +99,8 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
                       <AlertTriangle className="w-5 h-5 text-amber-500" />
                     </div>
                     <div>
-                      <h3 className="text-[14px] font-semibold text-foreground">Cannot Delete</h3>
-                      <p className="text-[12px] text-muted-foreground">
+                      <h3 className="text-body font-semibold text-foreground">Cannot Delete</h3>
+                      <p className="text-secondary text-muted-foreground">
                         &quot;{entityName}&quot; has related records that must be removed first.
                       </p>
                     </div>
@@ -109,17 +109,17 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
                   <div className="space-y-3 mb-5">
                     {blocks.map((block) => (
                       <div key={block.label} className="rounded-lg border border-border p-3">
-                        <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
+                        <p className="text-label font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
                           {block.label} ({block.count})
                         </p>
                         <ul className="space-y-1">
                           {block.items.map((item) => (
-                            <li key={item.id} className="text-[12px] text-foreground">
+                            <li key={item.id} className="text-secondary text-foreground">
                               • {item.name}
                             </li>
                           ))}
                           {block.count > block.items.length && (
-                            <li className="text-[11px] text-muted-foreground">
+                            <li className="text-secondary text-muted-foreground">
                               ...and {block.count - block.items.length} more
                             </li>
                           )}
@@ -131,7 +131,7 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
                   <div className="flex justify-end">
                     <button
                       onClick={() => setConfirmOpen(false)}
-                      className="h-9 px-4 rounded-full border border-border text-[12px] font-medium text-foreground hover:bg-muted/30 transition-colors"
+                      className="min-h-touch px-4 rounded-full border border-border text-button font-medium text-foreground hover:bg-muted/30 transition-colors"
                     >
                       Close
                     </button>
@@ -144,8 +144,8 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
                       <Trash2 className="w-5 h-5 text-destructive" />
                     </div>
                     <div>
-                      <h3 className="text-[14px] font-semibold text-foreground">Delete {entityType}?</h3>
-                      <p className="text-[12px] text-muted-foreground">
+                      <h3 className="text-body font-semibold text-foreground">Delete {entityType}?</h3>
+                      <p className="text-secondary text-muted-foreground">
                         &quot;{entityName}&quot; will be moved to trash. You can restore it later from Settings.
                       </p>
                     </div>
@@ -154,14 +154,14 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
                   <div className="flex items-center justify-end gap-2">
                     <button
                       onClick={() => setConfirmOpen(false)}
-                      className="h-9 px-4 rounded-full border border-border text-[12px] font-medium text-foreground hover:bg-muted/30 transition-colors"
+                      className="min-h-touch px-4 rounded-full border border-border text-button font-medium text-foreground hover:bg-muted/30 transition-colors"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleConfirmDelete}
                       disabled={loading}
-                      className="h-9 px-4 rounded-full border border-destructive bg-destructive text-[12px] font-medium text-destructive-foreground hover:bg-destructive/90 transition-colors disabled:opacity-50"
+                      className="min-h-touch px-4 rounded-full border border-destructive bg-destructive text-button font-medium text-destructive-foreground hover:bg-destructive/90 transition-colors disabled:opacity-50"
                     >
                       {loading ? "Deleting..." : "Delete"}
                     </button>

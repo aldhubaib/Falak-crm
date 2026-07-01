@@ -9,7 +9,7 @@ interface RecordOwnerProps {
 export function RecordOwner({ ownerName }: RecordOwnerProps) {
   return (
     <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5">
-      <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+      <label className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider">
         <User className="w-3 h-3" />
         Record Owner
       </label>
@@ -17,7 +17,7 @@ export function RecordOwner({ ownerName }: RecordOwnerProps) {
         <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center">
           <User className="w-3 h-3 text-muted-foreground" />
         </div>
-        <span className="text-[13px] text-foreground">
+        <span className="text-body text-foreground">
           {ownerName || "Unassigned"}
         </span>
       </div>

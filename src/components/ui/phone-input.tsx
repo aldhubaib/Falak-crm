@@ -109,12 +109,12 @@ export function PhoneInput({
     <div ref={containerRef} className="relative">
       <div className={cn(
         "flex items-center transition-colors",
-        embedded ? "h-8" : "h-8"
+        embedded ? "h-input" : "h-input"
       )}>
         <button
           type="button"
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center gap-1 px-2 h-full border-r border-border text-[12px] text-foreground hover:bg-muted/30 transition-colors shrink-0"
+          className="flex items-center gap-1 px-2 h-full border-r border-border text-secondary text-foreground hover:bg-muted/30 transition-colors shrink-0"
         >
           {selectedCode ? (
             <>
@@ -126,14 +126,14 @@ export function PhoneInput({
           ) : (
             <span className="text-muted-foreground/50">Code</span>
           )}
-          <ChevronDown className="w-3 h-3 text-muted-foreground" />
+          <ChevronDown className="w-icon-sm h-icon-sm text-muted-foreground" />
         </button>
         <input
           ref={ref}
           value={number}
           onChange={handleNumberChange}
           placeholder={placeholder}
-          className="flex-1 h-full px-3 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none"
+          className="flex-1 h-full px-3 bg-transparent text-body text-foreground placeholder:text-muted-foreground/50 outline-none"
         />
       </div>
       <input type="hidden" name={name} value={fullNumber} />
@@ -146,7 +146,7 @@ export function PhoneInput({
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search..."
               autoFocus
-              className="w-full h-8 px-2 rounded bg-muted/30 border-none text-[12px] text-foreground placeholder:text-muted-foreground/50 outline-none"
+              className="w-full h-input px-2 rounded bg-muted/30 border-none text-secondary text-foreground placeholder:text-muted-foreground/50 outline-none"
             />
           </div>
           <div className="max-h-48 overflow-y-auto">
@@ -155,8 +155,8 @@ export function PhoneInput({
                 key={c.code}
                 type="button"
                 onClick={() => handleCodeSelect(c.code)}
-                className={cn(
-                  "w-full flex items-center gap-2 px-3 py-2 text-left text-[12px] hover:bg-muted/30 transition-colors",
+                  className={cn(
+                  "w-full flex items-center gap-2 px-3 min-h-touch text-left text-secondary hover:bg-muted/30 transition-colors",
                   selectedCode === c.code && "bg-muted/40"
                 )}
               >
@@ -184,8 +184,8 @@ export function PhoneInput({
         )}
       >
         {label && (
-          <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-            <Phone className="w-3 h-3" />
+          <label className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider">
+            <Phone className="w-icon-sm h-icon-sm" />
             {label}
             {required && <span className="text-destructive">*</span>}
           </label>
@@ -193,7 +193,7 @@ export function PhoneInput({
         {phoneRow}
       </div>
       {error && errorMessage && (
-        <p className="text-[11px] text-destructive mt-1">{errorMessage}</p>
+        <p className="text-secondary text-destructive mt-1">{errorMessage}</p>
       )}
     </div>
   );

@@ -54,13 +54,13 @@ export default async function DashboardPage() {
       {/* Recent Deals */}
       <div className="rounded-xl border border-border bg-card p-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[13px] font-medium text-foreground">Recent Deals</h3>
-          <Link href="/deals" className="text-[11px] text-primary no-underline hover:text-primary/80">
+          <h3 className="text-body font-medium text-foreground">Recent Deals</h3>
+          <Link href="/deals" className="text-secondary text-primary no-underline hover:text-primary/80">
             View all
           </Link>
         </div>
         {recentDeals.length === 0 ? (
-          <p className="text-[12px] text-muted-foreground">No deals yet. Create your first deal to get started.</p>
+          <p className="text-secondary text-muted-foreground">No deals yet. Create your first deal to get started.</p>
         ) : (
           <div className="space-y-2">
             {recentDeals.map((deal) => (
@@ -70,15 +70,15 @@ export default async function DashboardPage() {
                 className="flex items-center justify-between p-2.5 rounded-lg hover:bg-muted/50 transition-colors no-underline"
               >
                 <div>
-                  <p className="text-[13px] text-foreground">{deal.title}</p>
-                  <p className="text-[11px] text-muted-foreground">{deal.company?.name || "No company"}</p>
+                  <p className="text-body text-foreground">{deal.title}</p>
+                  <p className="text-secondary text-muted-foreground">{deal.company?.name || "No company"}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[12px] font-medium text-foreground">
+                  <p className="text-secondary font-medium text-foreground">
                     {Number(deal.value).toLocaleString()} {workspace.baseCurrency}
                   </p>
                   <span
-                    className="text-[10px] px-1.5 py-0.5 rounded"
+                    className="text-label px-1.5 py-0.5 rounded"
                     style={{ backgroundColor: `${deal.stage.color}20`, color: deal.stage.color }}
                   >
                     {deal.stage.name}
@@ -92,7 +92,7 @@ export default async function DashboardPage() {
 
       {/* Activity Log */}
       <div className="rounded-xl border border-border bg-card p-4">
-        <h3 className="text-[13px] font-medium text-foreground mb-4">Activity</h3>
+        <h3 className="text-body font-medium text-foreground mb-4">Activity</h3>
         <ActivityFeed activities={recentActivity as any} />
       </div>
       </div>
@@ -123,7 +123,7 @@ function StatCard({
       href={href}
       className="rounded-xl border border-border bg-card p-4 hover:border-primary/30 transition-colors no-underline block"
     >
-      <p className="text-[12px] text-muted-foreground mb-1">{label}</p>
+      <p className="text-secondary text-muted-foreground mb-1">{label}</p>
       <p className={`text-xl font-semibold ${colorClasses[color]}`}>{value}</p>
     </Link>
   );

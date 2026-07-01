@@ -128,9 +128,9 @@ export function CompanyDetailClient({
       <div className="flex items-center gap-3 h-12 mb-6">
         <Link
           href="/companies"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-icon-md h-icon-md" />
         </Link>
         <h1 className="text-lg font-semibold text-foreground flex-1">{company.name}</h1>
         <ActionMenu
@@ -146,13 +146,13 @@ export function CompanyDetailClient({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <InputField
             label="Company Name"
-            icon={<Building2 className="w-3 h-3" />}
+            icon={<Building2 className="w-icon-sm h-icon-sm" />}
             value={company.name}
             onSave={save("name")}
           />
           <InputField
             label="Company Name (Arabic)"
-            icon={<Building2 className="w-3 h-3" />}
+            icon={<Building2 className="w-icon-sm h-icon-sm" />}
             value={company.nameAr || ""}
             placeholder="اسم الشركة"
             dir="rtl"
@@ -178,13 +178,13 @@ export function CompanyDetailClient({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <CountryField
             label="Country"
-            icon={<MapPin className="w-3 h-3" />}
+            icon={<MapPin className="w-icon-sm h-icon-sm" />}
             value={company.address || ""}
             onSave={save("address")}
           />
           <InputField
             label="Website"
-            icon={<Globe className="w-3 h-3" />}
+            icon={<Globe className="w-icon-sm h-icon-sm" />}
             value={company.website || ""}
             placeholder="https://"
             onSave={save("website")}
@@ -196,8 +196,8 @@ export function CompanyDetailClient({
       <div className="border-t border-border my-8" />
       <div>
         <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 mb-4 focus-within:border-ring transition-colors">
-          <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-            <StickyNote className="w-3 h-3" />
+          <label className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider">
+            <StickyNote className="w-icon-sm h-icon-sm" />
             Notes
           </label>
           <textarea
@@ -211,7 +211,7 @@ export function CompanyDetailClient({
                 addNote();
               }
             }}
-            className="w-full py-1.5 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-none"
+            className="w-full py-1.5 bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-none"
           />
         </div>
 
@@ -230,8 +230,8 @@ export function CompanyDetailClient({
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-[13px] text-foreground">{note.text}</p>
-                  <p className="text-[10px] text-muted-foreground mt-1">
+                  <p className="text-body text-foreground">{note.text}</p>
+                  <p className="text-label text-muted-foreground mt-1">
                     {note.userName && <span className="font-medium">{note.userName}</span>}
                     {note.userName && " • "}
                     {new Date(note.date).toLocaleString()}
@@ -240,9 +240,9 @@ export function CompanyDetailClient({
                 <button
                   type="button"
                   onClick={() => removeNote(i)}
-                  className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                  className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:text-destructive opacity-100 [@media(pointer:fine)]:opacity-0 [@media(pointer:fine)]:group-hover:opacity-100 transition-opacity shrink-0"
                 >
-                  <Trash2 className="w-3 h-3" />
+                  <Trash2 className="w-icon-sm h-icon-sm" />
                 </button>
               </div>
             ))}
@@ -253,7 +253,7 @@ export function CompanyDetailClient({
       {/* Contacts Table */}
       <div className="border-t border-border my-8" />
       <RelatedTable
-        icon={<Users className="w-3 h-3" />}
+        icon={<Users className="w-icon-sm h-icon-sm" />}
         title="Contacts"
         data={activeContacts}
         getRowId={(r) => r.id}
@@ -265,7 +265,7 @@ export function CompanyDetailClient({
       {/* Deals Table */}
       <div className="border-t border-border my-8" />
       <RelatedTable
-        icon={<Handshake className="w-3 h-3" />}
+        icon={<Handshake className="w-icon-sm h-icon-sm" />}
         title="Deals"
         data={company.deals}
         getRowId={(r) => r.id}

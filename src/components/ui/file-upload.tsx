@@ -65,12 +65,12 @@ export function FileUpload({
             : "border-border hover:border-muted-foreground/30 hover:bg-muted/30"
         }`}
       >
-        <Upload className={`w-6 h-6 ${dragOver ? "text-primary" : "text-muted-foreground"}`} />
+        <Upload className={`w-icon-lg h-icon-lg ${dragOver ? "text-primary" : "text-muted-foreground"}`} />
         <div className="text-center">
-          <p className="text-[13px] text-foreground font-medium">
+          <p className="text-body text-foreground font-medium">
             {dragOver ? "Drop files here" : "Drop files or click to upload"}
           </p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">
+          <p className="text-secondary text-muted-foreground mt-0.5">
             Up to {maxSizeMB} MB per file
           </p>
         </div>
@@ -129,7 +129,7 @@ function UploadRow({
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-[12px] text-foreground truncate">{entry.name}</p>
+        <p className="text-secondary text-foreground truncate">{entry.name}</p>
         <div className="flex items-center gap-2 mt-1">
           {!isDone && !isError && (
             <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
@@ -139,7 +139,7 @@ function UploadRow({
               />
             </div>
           )}
-          <span className={`text-[10px] shrink-0 ${isError ? "text-destructive" : "text-muted-foreground"}`}>
+          <span className={`text-label shrink-0 ${isError ? "text-destructive" : "text-muted-foreground"}`}>
             {isError
               ? entry.error || "Failed"
               : isDone
@@ -153,17 +153,17 @@ function UploadRow({
         {isError && (
           <button
             onClick={onRetry}
-            className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
           >
-            <RotateCw className="w-3.5 h-3.5" />
+            <RotateCw className="w-icon-sm h-icon-sm" />
           </button>
         )}
         {!isDone && (
           <button
             onClick={onCancel}
-            className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors"
+            className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors"
           >
-            <X className="w-3.5 h-3.5" />
+            <X className="w-icon-sm h-icon-sm" />
           </button>
         )}
       </div>

@@ -101,24 +101,24 @@ export function ProjectDetailClient({
       <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 h-12 border-b border-border/50 shrink-0">
         <Link
           href="/projects"
-          className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors shrink-0"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors shrink-0"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="w-icon-sm h-icon-sm" />
         </Link>
         <ProjectThumbnail thumbnailId={project.thumbnailId} name={project.name} />
         {project.deal && (
-          <span className="text-[13px] text-muted-foreground truncate">
+          <span className="text-body text-muted-foreground truncate">
             Deal: <Link href={`/deals/${project.deal.id}`} className="text-primary hover:underline">{project.deal.title}</Link>
           </span>
         )}
-        <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-muted text-muted-foreground capitalize shrink-0">{project.type}</span>
+        <span className="px-1.5 py-0.5 rounded text-label font-medium bg-muted text-muted-foreground capitalize shrink-0">{project.type}</span>
         <div className="flex-1" />
         {canEditProject && (
           <Link
             href={`/projects/${project.id}/settings`}
-            className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors shrink-0"
+            className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors shrink-0"
           >
-            <Settings className="w-3.5 h-3.5" />
+            <Settings className="w-icon-sm h-icon-sm" />
           </Link>
         )}
         <HeaderActions />
@@ -128,14 +128,14 @@ export function ProjectDetailClient({
       <div className="px-4 sm:px-6 pt-3">
         <div className="inline-flex items-center rounded-xl bg-muted/30 border border-border p-1">
           {([
-            { id: "board" as const, label: "Board", icon: <LayoutGrid className="w-3.5 h-3.5" /> },
-            { id: "assets" as const, label: "Assets", icon: <Paperclip className="w-3.5 h-3.5" /> },
-            { id: "dashboard" as const, label: "Dashboard", icon: <BarChart3 className="w-3.5 h-3.5" /> },
+            { id: "board" as const, label: "Board", icon: <LayoutGrid className="w-icon-sm h-icon-sm" /> },
+            { id: "assets" as const, label: "Assets", icon: <Paperclip className="w-icon-sm h-icon-sm" /> },
+            { id: "dashboard" as const, label: "Dashboard", icon: <BarChart3 className="w-icon-sm h-icon-sm" /> },
           ]).map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-secondary font-medium transition-colors ${
                 activeTab === tab.id
                   ? "bg-card text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
@@ -203,7 +203,7 @@ function ProjectThumbnail({ thumbnailId, name }: { thumbnailId: string | null; n
   const initials = name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
   return (
     <div className="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
-      <span className="text-[11px] font-bold text-primary">{initials}</span>
+      <span className="text-secondary font-bold text-primary">{initials}</span>
     </div>
   );
 }
@@ -268,55 +268,55 @@ function ProjectDashboard({ project, taskStatuses }: { project: Project; taskSta
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="rounded-xl border border-border bg-card p-4">
           <div className="flex items-center gap-2 text-muted-foreground mb-2">
-            <ListChecks className="w-4 h-4" />
-            <span className="text-[11px] font-medium uppercase tracking-wider">Tasks</span>
+            <ListChecks className="w-icon-md h-icon-md" />
+            <span className="text-secondary font-medium uppercase tracking-wider">Tasks</span>
           </div>
-          <p className="text-2xl font-bold text-foreground">{completedTasks}<span className="text-muted-foreground text-[14px] font-normal">/{totalTasks}</span></p>
+          <p className="text-2xl font-bold text-foreground">{completedTasks}<span className="text-muted-foreground text-body font-normal">/{totalTasks}</span></p>
           <div className="mt-2 h-1.5 rounded-full bg-muted overflow-hidden">
             <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${overallProgress}%` }} />
           </div>
-          <p className="text-[10px] text-muted-foreground mt-1">{overallProgress}% complete</p>
+          <p className="text-label text-muted-foreground mt-1">{overallProgress}% complete</p>
         </div>
 
         <div className="rounded-xl border border-border bg-card p-4">
           <div className="flex items-center gap-2 text-muted-foreground mb-2">
-            <Clock className="w-4 h-4" />
-            <span className="text-[11px] font-medium uppercase tracking-wider">In Progress</span>
+            <Clock className="w-icon-md h-icon-md" />
+            <span className="text-secondary font-medium uppercase tracking-wider">In Progress</span>
           </div>
           <p className="text-2xl font-bold text-primary">{inProgressTasks}</p>
-          <p className="text-[10px] text-muted-foreground mt-1">
+          <p className="text-label text-muted-foreground mt-1">
             {totalTasks - completedTasks - inProgressTasks} remaining
           </p>
         </div>
 
         <div className="rounded-xl border border-border bg-card p-4">
           <div className="flex items-center gap-2 text-muted-foreground mb-2">
-            <CheckCircle2 className="w-4 h-4" />
-            <span className="text-[11px] font-medium uppercase tracking-wider">Checklist</span>
+            <CheckCircle2 className="w-icon-md h-icon-md" />
+            <span className="text-secondary font-medium uppercase tracking-wider">Checklist</span>
           </div>
-          <p className="text-2xl font-bold text-foreground">{completedChecklist}<span className="text-muted-foreground text-[14px] font-normal">/{totalChecklist}</span></p>
+          <p className="text-2xl font-bold text-foreground">{completedChecklist}<span className="text-muted-foreground text-body font-normal">/{totalChecklist}</span></p>
           <div className="mt-2 h-1.5 rounded-full bg-muted overflow-hidden">
             <div className="h-full rounded-full bg-green-500 transition-all" style={{ width: `${checklistProgress}%` }} />
           </div>
-          <p className="text-[10px] text-muted-foreground mt-1">{checklistProgress}% items done</p>
+          <p className="text-label text-muted-foreground mt-1">{checklistProgress}% items done</p>
         </div>
 
         <div className="rounded-xl border border-border bg-card p-4">
           <div className="flex items-center gap-2 text-muted-foreground mb-2">
-            <CalendarDays className="w-4 h-4" />
-            <span className="text-[11px] font-medium uppercase tracking-wider">Deadline</span>
+            <CalendarDays className="w-icon-md h-icon-md" />
+            <span className="text-secondary font-medium uppercase tracking-wider">Deadline</span>
           </div>
           {project.deadline ? (
             <>
               <p className={`text-2xl font-bold ${daysUntilDeadline! < 0 ? "text-red-400" : daysUntilDeadline! <= 7 ? "text-amber-400" : "text-foreground"}`}>
                 {daysUntilDeadline! < 0 ? `${Math.abs(daysUntilDeadline!)}d overdue` : `${daysUntilDeadline}d`}
               </p>
-              <p className="text-[10px] text-muted-foreground mt-1">
+              <p className="text-label text-muted-foreground mt-1">
                 {new Date(project.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
               </p>
             </>
           ) : (
-            <p className="text-[14px] text-muted-foreground mt-2">Not set</p>
+            <p className="text-body text-muted-foreground mt-2">Not set</p>
           )}
         </div>
       </div>
@@ -324,40 +324,40 @@ function ProjectDashboard({ project, taskStatuses }: { project: Project; taskSta
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Project Info */}
         <div className="rounded-xl border border-border bg-card p-4">
-          <h3 className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Project Info</h3>
+          <h3 className="text-secondary font-semibold text-muted-foreground uppercase tracking-wider mb-3">Project Info</h3>
           <div className="space-y-2.5">
             {project.status && (
               <div className="flex items-center justify-between">
-                <span className="text-[12px] text-muted-foreground">Status</span>
-                <span className="px-2 py-0.5 rounded-full text-[11px] font-medium" style={{ backgroundColor: `${project.status.color}20`, color: project.status.color }}>
+                <span className="text-secondary text-muted-foreground">Status</span>
+                <span className="px-2 py-0.5 rounded-full text-secondary font-medium" style={{ backgroundColor: `${project.status.color}20`, color: project.status.color }}>
                   {project.status.name}
                 </span>
               </div>
             )}
             {project.company && (
               <div className="flex items-center justify-between">
-                <span className="text-[12px] text-muted-foreground">Client</span>
-                <Link href={`/companies/${project.company.id}`} className="text-[12px] text-primary hover:underline no-underline flex items-center gap-1">
-                  <Building2 className="w-3 h-3" />
+                <span className="text-secondary text-muted-foreground">Client</span>
+                <Link href={`/companies/${project.company.id}`} className="text-secondary text-primary hover:underline no-underline flex items-center gap-1">
+                  <Building2 className="w-icon-sm h-icon-sm" />
                   {project.company.name}
                 </Link>
               </div>
             )}
             {project.startDate && (
               <div className="flex items-center justify-between">
-                <span className="text-[12px] text-muted-foreground">Start Date</span>
-                <span className="text-[12px] text-foreground">
+                <span className="text-secondary text-muted-foreground">Start Date</span>
+                <span className="text-secondary text-foreground">
                   {new Date(project.startDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                 </span>
               </div>
             )}
             <div className="flex items-center justify-between">
-              <span className="text-[12px] text-muted-foreground">Type</span>
-              <span className="text-[12px] text-foreground capitalize">{project.type}</span>
+              <span className="text-secondary text-muted-foreground">Type</span>
+              <span className="text-secondary text-foreground capitalize">{project.type}</span>
             </div>
             {project.description && (
               <div className="pt-2 border-t border-border/30">
-                <p className="text-[11px] text-muted-foreground/80 leading-relaxed">{project.description}</p>
+                <p className="text-secondary text-muted-foreground/80 leading-relaxed">{project.description}</p>
               </div>
             )}
           </div>
@@ -365,40 +365,40 @@ function ProjectDashboard({ project, taskStatuses }: { project: Project; taskSta
 
         {/* Tasks by Status */}
         <div className="rounded-xl border border-border bg-card p-4">
-          <h3 className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Tasks by Status</h3>
+          <h3 className="text-secondary font-semibold text-muted-foreground uppercase tracking-wider mb-3">Tasks by Status</h3>
           <div className="space-y-2">
             {tasksByStatus.map((s) => (
               <div key={s.name} className="flex items-center gap-3">
                 <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: s.color }} />
-                <span className="text-[12px] text-foreground flex-1">{s.name}</span>
-                <span className="text-[12px] font-semibold text-foreground">{s.count}</span>
+                <span className="text-secondary text-foreground flex-1">{s.name}</span>
+                <span className="text-secondary font-semibold text-foreground">{s.count}</span>
                 <div className="w-16 h-1.5 rounded-full bg-muted overflow-hidden">
                   <div className="h-full rounded-full transition-all" style={{ width: `${totalTasks > 0 ? (s.count / totalTasks) * 100 : 0}%`, backgroundColor: s.color }} />
                 </div>
               </div>
             ))}
             {tasksByStatus.length === 0 && (
-              <p className="text-[12px] text-muted-foreground/60 text-center py-4">No tasks yet</p>
+              <p className="text-secondary text-muted-foreground/60 text-center py-4">No tasks yet</p>
             )}
           </div>
         </div>
 
         {/* Team */}
         <div className="rounded-xl border border-border bg-card p-4">
-          <h3 className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Team</h3>
+          <h3 className="text-secondary font-semibold text-muted-foreground uppercase tracking-wider mb-3">Team</h3>
           <div className="space-y-2">
             {assigneeCounts.map((a) => (
               <div key={a.name} className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center text-[9px] font-semibold text-primary shrink-0">
+                <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center text-label font-semibold text-primary shrink-0">
                   {a.name.charAt(0).toUpperCase()}
                 </div>
-                <span className="text-[12px] text-foreground flex-1 truncate">{a.name}</span>
-                <span className="text-[11px] text-green-400">{a.completed}</span>
-                <span className="text-[11px] text-muted-foreground">/ {a.count}</span>
+                <span className="text-secondary text-foreground flex-1 truncate">{a.name}</span>
+                <span className="text-secondary text-green-400">{a.completed}</span>
+                <span className="text-secondary text-muted-foreground">/ {a.count}</span>
               </div>
             ))}
             {assigneeCounts.length === 0 && (
-              <p className="text-[12px] text-muted-foreground/60 text-center py-4">No team members assigned</p>
+              <p className="text-secondary text-muted-foreground/60 text-center py-4">No team members assigned</p>
             )}
           </div>
         </div>
@@ -407,19 +407,19 @@ function ProjectDashboard({ project, taskStatuses }: { project: Project; taskSta
       {/* Invoices */}
       {project.invoices.length > 0 && (
         <div className="rounded-xl border border-border bg-card p-4">
-          <h3 className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Financials</h3>
+          <h3 className="text-secondary font-semibold text-muted-foreground uppercase tracking-wider mb-3">Financials</h3>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <p className="text-[11px] text-muted-foreground">Total Invoiced</p>
-              <p className="text-[16px] font-bold text-foreground mt-0.5">{totalInvoiced.toLocaleString()}</p>
+              <p className="text-secondary text-muted-foreground">Total Invoiced</p>
+              <p className="text-subheading font-bold text-foreground mt-0.5">{totalInvoiced.toLocaleString()}</p>
             </div>
             <div>
-              <p className="text-[11px] text-muted-foreground">Paid</p>
-              <p className="text-[16px] font-bold text-green-400 mt-0.5">{totalPaid.toLocaleString()}</p>
+              <p className="text-secondary text-muted-foreground">Paid</p>
+              <p className="text-subheading font-bold text-green-400 mt-0.5">{totalPaid.toLocaleString()}</p>
             </div>
             <div>
-              <p className="text-[11px] text-muted-foreground">Pending</p>
-              <p className="text-[16px] font-bold text-amber-400 mt-0.5">{totalPending.toLocaleString()}</p>
+              <p className="text-secondary text-muted-foreground">Pending</p>
+              <p className="text-subheading font-bold text-amber-400 mt-0.5">{totalPending.toLocaleString()}</p>
             </div>
           </div>
         </div>
@@ -673,17 +673,17 @@ function KanbanBoard({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
           <div className="bg-card border border-border rounded-2xl p-6 max-w-md w-full mx-4 space-y-4 shadow-2xl">
             <h3 className="text-lg font-semibold text-foreground">{confirmModal.title}</h3>
-            <p className="text-[14px] text-muted-foreground leading-relaxed">{confirmModal.message}</p>
+            <p className="text-body text-muted-foreground leading-relaxed">{confirmModal.message}</p>
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 onClick={() => setConfirmModal(null)}
-                className="text-[13px] text-muted-foreground hover:text-foreground px-4 py-2 transition-colors"
+                className="text-body text-muted-foreground hover:text-foreground px-4 py-2 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmMove}
-                className="text-[13px] font-medium text-white bg-amber-600 hover:bg-amber-500 px-5 py-2.5 rounded-xl transition-colors"
+                className="text-body font-medium text-white bg-amber-600 hover:bg-amber-500 px-5 py-2.5 rounded-xl transition-colors"
               >
                 {confirmModal.button}
               </button>
@@ -696,14 +696,14 @@ function KanbanBoard({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
           <div className="bg-card border border-border rounded-2xl p-6 max-w-md w-full mx-4 space-y-4 shadow-2xl">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-destructive shrink-0" />
+              <AlertTriangle className="w-icon-lg h-icon-lg text-destructive shrink-0" />
               <h3 className="text-lg font-semibold text-foreground">Cannot Move Task</h3>
             </div>
-            <p className="text-[14px] text-muted-foreground leading-relaxed">{gateError.message}</p>
+            <p className="text-body text-muted-foreground leading-relaxed">{gateError.message}</p>
             <div className="flex items-center justify-end pt-2">
               <button
                 onClick={() => setGateError(null)}
-                className="text-[13px] font-medium text-white bg-destructive hover:bg-destructive/80 px-5 py-2.5 rounded-xl transition-colors"
+                className="text-body font-medium text-white bg-destructive hover:bg-destructive/80 px-5 py-2.5 rounded-xl transition-colors"
               >
                 OK
               </button>
@@ -783,16 +783,16 @@ function DeclineTaskModal({
       <div className="bg-card border border-border rounded-2xl p-6 max-w-md w-full mx-4 space-y-4 shadow-2xl">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-red-500/15 flex items-center justify-center shrink-0">
-            <AlertTriangle className="w-5 h-5 text-red-400" />
+            <AlertTriangle className="w-icon-lg h-icon-lg text-red-400" />
           </div>
           <div>
             <h3 className="text-lg font-semibold text-foreground">Decline Task</h3>
-            <p className="text-[12px] text-muted-foreground">Return this task from {fromName} back to {toName}</p>
+            <p className="text-secondary text-muted-foreground">Return this task from {fromName} back to {toName}</p>
           </div>
         </div>
 
         <div>
-          <label className="text-[12px] font-medium text-muted-foreground mb-1.5 block">
+          <label className="text-secondary font-medium text-muted-foreground mb-1.5 block">
             Reason for declining <span className="text-red-400">*</span>
           </label>
           <textarea
@@ -800,10 +800,10 @@ function DeclineTaskModal({
             onChange={(e) => setComment(e.target.value)}
             placeholder="Explain what needs to be fixed or changed..."
             rows={4}
-            className="w-full text-[13px] text-foreground bg-transparent border border-border rounded-xl px-4 py-3 focus:outline-none focus:border-ring transition-colors placeholder:text-muted-foreground/40 resize-none"
+            className="w-full text-body text-foreground bg-transparent border border-border rounded-xl px-4 py-3 focus:outline-none focus:border-ring transition-colors placeholder:text-muted-foreground/40 resize-none"
             autoFocus
           />
-          <p className="text-[11px] text-muted-foreground/50 mt-1">A comment is required when declining a task</p>
+          <p className="text-secondary text-muted-foreground/50 mt-1">A comment is required when declining a task</p>
         </div>
 
         <div>
@@ -818,19 +818,19 @@ function DeclineTaskModal({
             }}
           />
           {file ? (
-            <div className="flex items-center gap-2 text-[12px] text-foreground bg-muted/30 rounded-lg px-3 py-2">
-              <Paperclip className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+            <div className="flex items-center gap-2 text-secondary text-foreground bg-muted/30 rounded-lg px-3 py-2">
+              <Paperclip className="w-icon-sm h-icon-sm text-muted-foreground shrink-0" />
               <span className="flex-1 truncate">{file.name}</span>
               <button onClick={() => setFile(null)} className="text-muted-foreground hover:text-foreground">
-                <X className="w-3.5 h-3.5" />
+                <X className="w-icon-sm h-icon-sm" />
               </button>
             </div>
           ) : (
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="flex items-center gap-2 text-[12px] text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-2 text-secondary text-muted-foreground hover:text-foreground transition-colors"
             >
-              <Paperclip className="w-3.5 h-3.5" />
+              <Paperclip className="w-icon-sm h-icon-sm" />
               Attach files
             </button>
           )}
@@ -840,19 +840,19 @@ function DeclineTaskModal({
           <button
             onClick={onCancel}
             disabled={submitting}
-            className="text-[13px] text-muted-foreground hover:text-foreground px-4 py-2 transition-colors"
+            className="text-body text-muted-foreground hover:text-foreground px-4 py-2 transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={!comment.trim() || submitting}
-            className="text-[13px] font-medium text-red-400 bg-red-500/15 hover:bg-red-500/25 disabled:opacity-40 disabled:cursor-not-allowed px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2"
+            className="text-body font-medium text-red-400 bg-red-500/15 hover:bg-red-500/25 disabled:opacity-40 disabled:cursor-not-allowed px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2"
           >
             {submitting ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <Loader2 className="w-icon-sm h-icon-sm animate-spin" />
             ) : (
-              <Undo2 className="w-3.5 h-3.5" />
+              <Undo2 className="w-icon-sm h-icon-sm" />
             )}
             Decline & Return
           </button>
@@ -896,15 +896,15 @@ const KanbanColumn = memo(function KanbanColumn({
       <div className="flex items-center justify-between mb-2 px-1">
         <div className="flex items-center gap-2 min-w-0">
           <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: status.color }} />
-          <h3 className="text-[12px] font-semibold text-foreground uppercase tracking-wider truncate">{status.name}</h3>
-          <span className="text-[11px] text-muted-foreground shrink-0">{tasks.length}</span>
+          <h3 className="text-secondary font-semibold text-foreground uppercase tracking-wider truncate">{status.name}</h3>
+          <span className="text-secondary text-muted-foreground shrink-0">{tasks.length}</span>
         </div>
         {canEdit && onAddTask && (
           <button
             onClick={onAddTask}
-            className="w-5 h-5 rounded flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-icon-sm h-icon-sm" />
           </button>
         )}
       </div>
@@ -932,7 +932,7 @@ const KanbanColumn = memo(function KanbanColumn({
 
         {tasks.length === 0 && (
           <div className="py-6 text-center">
-            <p className="text-[11px] text-muted-foreground/50">No tasks</p>
+            <p className="text-secondary text-muted-foreground/50">No tasks</p>
           </div>
         )}
       </div>
@@ -994,20 +994,20 @@ const TaskCard = memo(function TaskCard({
       {tplData && (
         <div className="mb-3">
           <span
-            className="inline-flex items-center gap-1 text-[10px] font-medium rounded-md px-1.5 py-0.5 border"
+            className="inline-flex items-center gap-1 text-label font-medium rounded-md px-1.5 py-0.5 border"
             style={{
               color: tplData.color || "#22d3ee",
               backgroundColor: `${tplData.color || "#22d3ee"}15`,
               borderColor: `${tplData.color || "#22d3ee"}30`,
             }}
           >
-            {tplData.icon && <span className="text-[11px]">{tplData.icon}</span>}
+            {tplData.icon && <span className="text-secondary">{tplData.icon}</span>}
             {tplData.name}
           </span>
         </div>
       )}
 
-      <p className="text-[13px] font-medium leading-snug mb-2 text-foreground">
+      <p className="text-body font-medium leading-snug mb-2 text-foreground">
         {task.taskNumber > 0 && <span className="text-muted-foreground/50 mr-1.5">#{task.taskNumber}</span>}
         {task.title}
       </p>
@@ -1022,10 +1022,10 @@ const TaskCard = memo(function TaskCard({
           + (enteredAt ? Date.now() - enteredAt : 0);
         if (totalMs < 60_000) return null;
         return (
-          <div className="flex items-center gap-3 mb-2 text-[10px] text-muted-foreground/60">
+          <div className="flex items-center gap-3 mb-2 text-label text-muted-foreground/60">
             {currentStageMs > 0 && (
               <span className="inline-flex items-center gap-1" title="Time in current stage">
-                <Clock className="w-3 h-3" />
+                <Clock className="w-icon-sm h-icon-sm" />
                 {formatDuration(currentStageMs)}
               </span>
             )}
@@ -1040,13 +1040,13 @@ const TaskCard = memo(function TaskCard({
       <div className="flex-1" />
       <div className="flex items-center gap-1.5">
         {p && (
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ring-1 ${priorityColor}`}>
+          <span className={`text-label font-bold px-2 py-0.5 rounded-full ring-1 ${priorityColor}`}>
             P{p}
           </span>
         )}
         {task.rejectionCount > 0 && (
-          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ring-1 bg-amber-500/20 text-amber-400 ring-amber-500/30">
-            <RotateCcw className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 text-label font-bold px-2 py-0.5 rounded-full ring-1 bg-amber-500/20 text-amber-400 ring-amber-500/30">
+            <RotateCcw className="w-icon-sm h-icon-sm" />
             {task.rejectionCount}
           </span>
         )}
@@ -1055,10 +1055,10 @@ const TaskCard = memo(function TaskCard({
           <button
             onClick={handleAssignToMe}
             disabled={assigning}
-            className="w-7 h-7 rounded-full flex items-center justify-center text-muted-foreground/40 hover:text-primary hover:bg-primary/10 transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-50 shrink-0"
+            className="w-icon-btn h-icon-btn rounded-full flex items-center justify-center text-muted-foreground/40 hover:text-primary hover:bg-primary/10 transition-colors opacity-100 [@media(pointer:fine)]:opacity-0 [@media(pointer:fine)]:group-hover:opacity-100 disabled:opacity-50 shrink-0"
             title="Assign to me"
           >
-            <UserCheck className="w-3.5 h-3.5" />
+            <UserCheck className="w-icon-sm h-icon-sm" />
           </button>
         )}
         {task.assignee && (
@@ -1079,7 +1079,7 @@ function AssigneeAvatar({ name }: { name: string | null }) {
       className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center ring-2 ring-card"
       title={name || "Unassigned"}
     >
-      <span className="text-[10px] font-bold text-primary">{initials}</span>
+      <span className="text-label font-bold text-primary">{initials}</span>
     </div>
   );
 }
@@ -1089,7 +1089,7 @@ function AssigneeAvatar({ name }: { name: string | null }) {
 function InvoicesSection({ project }: { project: Project }) {
   return (
     <div className="rounded-xl border border-border bg-card p-4">
-      <h3 className="text-[13px] font-medium text-foreground mb-3">
+      <h3 className="text-body font-medium text-foreground mb-3">
         Invoices <span className="text-muted-foreground font-normal">({project.invoices.length})</span>
       </h3>
       <div className="space-y-2">
@@ -1101,15 +1101,15 @@ function InvoicesSection({ project }: { project: Project }) {
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-orange/15 flex items-center justify-center">
-                <FileText className="w-3.5 h-3.5 text-orange" />
+                <FileText className="w-icon-sm h-icon-sm text-orange" />
               </div>
               <div>
-                <p className="text-[12px] font-medium text-foreground">{invoice.number}</p>
-                <p className="text-[11px] text-muted-foreground">{new Date(invoice.createdAt).toLocaleDateString()}</p>
+                <p className="text-secondary font-medium text-foreground">{invoice.number}</p>
+                <p className="text-secondary text-muted-foreground">{new Date(invoice.createdAt).toLocaleDateString()}</p>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-[12px] font-semibold text-foreground">
+              <p className="text-secondary font-semibold text-foreground">
                 {Number(invoice.total).toLocaleString()} {invoice.currency || "KWD"}
               </p>
               <InvoiceStatusBadge status={invoice.status} />
@@ -1132,7 +1132,7 @@ function InvoiceStatusBadge({ status }: { status: string }) {
   };
   const { label, className } = config[status] ?? config.DRAFT;
   return (
-    <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${className}`}>
+    <span className={`px-1.5 py-0.5 rounded text-label font-medium ${className}`}>
       {label}
     </span>
   );
@@ -1282,7 +1282,7 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
       {/* Toolbar */}
       <div className="flex items-center gap-3">
         {/* Breadcrumbs */}
-        <div className="flex items-center gap-1 text-[12px] flex-1 min-w-0">
+        <div className="flex items-center gap-1 text-secondary flex-1 min-w-0">
           <button
             onClick={() => setCurrentFolderId(null)}
             onDragOver={(e) => { if (currentFolderId) { e.preventDefault(); e.stopPropagation(); } }}
@@ -1300,7 +1300,7 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
           </button>
           {breadcrumbs.map((crumb) => (
             <span key={crumb.id} className="flex items-center gap-1">
-              <ChevronRight className="w-3 h-3 text-muted-foreground/40" />
+              <ChevronRight className="w-icon-sm h-icon-sm text-muted-foreground/40" />
               <button
                 onClick={() => setCurrentFolderId(crumb.id)}
                 onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
@@ -1333,16 +1333,16 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setShowNewFolder(true)}
-              className="h-8 px-3 rounded-lg border border-border bg-card text-[12px] text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors"
+              className="min-h-touch px-3 rounded-lg border border-border bg-card text-secondary text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors"
             >
-              <FolderPlus className="w-3.5 h-3.5" />
+              <FolderPlus className="w-icon-sm h-icon-sm" />
               New Folder
             </button>
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[12px] font-medium flex items-center gap-1.5 hover:bg-primary/90 transition-colors"
+              className="min-h-touch px-3 rounded-lg bg-primary text-primary-foreground text-secondary font-medium flex items-center gap-1.5 hover:bg-primary/90 transition-colors"
             >
-              <Upload className="w-3.5 h-3.5" />
+              <Upload className="w-icon-sm h-icon-sm" />
               Upload
             </button>
           </div>
@@ -1352,23 +1352,23 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
       {/* New folder inline form */}
       {showNewFolder && (
         <div className="flex items-center gap-2">
-          <FolderOpen className="w-4 h-4 text-amber-400" />
+          <FolderOpen className="w-icon-md h-icon-md text-amber-400" />
           <input
             value={newFolderName}
             onChange={(e) => setNewFolderName(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") handleCreateFolder(); if (e.key === "Escape") setShowNewFolder(false); }}
             placeholder="Folder name..."
             autoFocus
-            className="h-8 flex-1 px-3 rounded-lg bg-black border border-border text-[13px] text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-ring transition-colors"
+            className="h-input flex-1 px-3 rounded-lg bg-black border border-border text-body text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-ring transition-colors"
           />
-          <button onClick={handleCreateFolder} className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[12px] font-medium">Create</button>
-          <button onClick={() => setShowNewFolder(false)} className="text-muted-foreground hover:text-foreground"><X className="w-4 h-4" /></button>
+          <button onClick={handleCreateFolder} className="min-h-touch px-3 rounded-lg bg-primary text-primary-foreground text-secondary font-medium">Create</button>
+          <button onClick={() => setShowNewFolder(false)} className="text-muted-foreground hover:text-foreground"><X className="w-icon-md h-icon-md" /></button>
         </div>
       )}
 
       {loading ? (
         <div className="flex items-center justify-center py-16">
-          <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+          <Loader2 className="w-icon-lg h-icon-lg animate-spin text-muted-foreground" />
         </div>
       ) : folders.length === 0 && assets.length === 0 ? (
         <div
@@ -1376,8 +1376,8 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
           className="flex flex-col items-center justify-center py-20 rounded-xl border-2 border-dashed border-border hover:border-muted-foreground/30 cursor-pointer transition-colors"
         >
           <FolderOpen className="w-10 h-10 text-muted-foreground/30 mb-3" />
-          <p className="text-[13px] text-muted-foreground/60">No files yet</p>
-          <p className="text-[11px] text-muted-foreground/40 mt-1">Drop files or click to upload</p>
+          <p className="text-body text-muted-foreground/60">No files yet</p>
+          <p className="text-secondary text-muted-foreground/40 mt-1">Drop files or click to upload</p>
         </div>
       ) : (
         <div className="space-y-1">
@@ -1406,7 +1406,7 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
               }`}
               onClick={() => setCurrentFolderId(folder.id)}
             >
-              <FolderOpen className="w-5 h-5 text-amber-400 shrink-0" />
+              <FolderOpen className="w-icon-lg h-icon-lg text-amber-400 shrink-0" />
               {renaming?.id === folder.id ? (
                 <input
                   value={renaming.name}
@@ -1415,15 +1415,15 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
                   onKeyDown={(e) => { if (e.key === "Enter") handleRename(); if (e.key === "Escape") setRenaming(null); }}
                   onClick={(e) => e.stopPropagation()}
                   autoFocus
-                  className="flex-1 h-7 px-2 rounded bg-black border border-border text-[13px] text-foreground focus:outline-none focus:border-ring"
+                  className="flex-1 h-input px-2 rounded bg-black border border-border text-body text-foreground focus:outline-none focus:border-ring"
                 />
               ) : (
-                <span className="flex-1 text-[13px] text-foreground truncate">{folder.name}</span>
+                <span className="flex-1 text-body text-foreground truncate">{folder.name}</span>
               )}
-              <span className="text-[11px] text-muted-foreground/50">
+              <span className="text-secondary text-muted-foreground/50">
                 {folder._count.assets + folder._count.children} items
               </span>
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0" onClick={(e) => e.stopPropagation()}>
+              <div className="opacity-100 [@media(pointer:fine)]:opacity-0 [@media(pointer:fine)]:group-hover:opacity-100 transition-opacity shrink-0" onClick={(e) => e.stopPropagation()}>
                 <ItemMenu
                   onRename={() => { setRenaming({ id: folder.id, name: folder.name }); setContextMenu({ type: "folder", id: folder.id, name: folder.name }); }}
                   onDelete={() => handleDeleteFolder(folder.id)}
@@ -1449,7 +1449,7 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
               onClick={() => setPreviewAsset(asset)}
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted/30 group transition-colors cursor-pointer"
             >
-              <span className="text-[16px] shrink-0">{getFileIcon(asset.contentType)}</span>
+              <span className="text-subheading shrink-0">{getFileIcon(asset.contentType)}</span>
               {renaming?.id === asset.id ? (
                 <input
                   value={renaming.name}
@@ -1457,13 +1457,13 @@ function AssetsPanel({ projectId, canEdit }: { projectId: string; canEdit: boole
                   onBlur={handleRename}
                   onKeyDown={(e) => { if (e.key === "Enter") handleRename(); if (e.key === "Escape") setRenaming(null); }}
                   autoFocus
-                  className="flex-1 h-7 px-2 rounded bg-black border border-border text-[13px] text-foreground focus:outline-none focus:border-ring"
+                  className="flex-1 h-input px-2 rounded bg-black border border-border text-body text-foreground focus:outline-none focus:border-ring"
                 />
               ) : (
-                <span className="flex-1 text-[13px] text-foreground truncate">{asset.name}</span>
+                <span className="flex-1 text-body text-foreground truncate">{asset.name}</span>
               )}
-              <span className="text-[11px] text-muted-foreground/50 shrink-0">{formatSize(asset.fileSize)}</span>
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0" onClick={(e) => e.stopPropagation()}>
+              <span className="text-secondary text-muted-foreground/50 shrink-0">{formatSize(asset.fileSize)}</span>
+              <div className="opacity-100 [@media(pointer:fine)]:opacity-0 [@media(pointer:fine)]:group-hover:opacity-100 transition-opacity shrink-0" onClick={(e) => e.stopPropagation()}>
                 <ItemMenu
                   onRename={() => { setRenaming({ id: asset.id, name: asset.name }); setContextMenu({ type: "asset", id: asset.id, name: asset.name }); }}
                   onDelete={() => handleDeleteAsset(asset.id)}
@@ -1571,8 +1571,8 @@ function FilePreviewModal({
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-3 shrink-0">
           <div className="flex items-center gap-3 min-w-0">
-            <span className="text-[14px] font-medium text-white truncate">{asset.name}</span>
-            <span className="text-[11px] text-white/40 shrink-0">
+            <span className="text-body font-medium text-white truncate">{asset.name}</span>
+            <span className="text-secondary text-white/40 shrink-0">
               {asset.fileSize < 1024 * 1024
                 ? `${(asset.fileSize / 1024).toFixed(1)} KB`
                 : `${(asset.fileSize / (1024 * 1024)).toFixed(1)} MB`}
@@ -1582,16 +1582,16 @@ function FilePreviewModal({
             <button
               onClick={handleDownload}
               disabled={!url}
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30"
+              className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30"
               title="Download"
             >
-              <Download className="w-4 h-4" />
+              <Download className="w-icon-md h-icon-md" />
             </button>
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+              className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
             >
-              <X className="w-5 h-5" />
+              <X className="w-icon-lg h-icon-lg" />
             </button>
           </div>
         </div>
@@ -1604,7 +1604,7 @@ function FilePreviewModal({
               onClick={() => onNavigate(assets[currentIndex - 1])}
               className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors z-10"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-icon-lg h-icon-lg" />
             </button>
           )}
 
@@ -1614,14 +1614,14 @@ function FilePreviewModal({
               onClick={() => onNavigate(assets[currentIndex + 1])}
               className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors z-10"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-icon-lg h-icon-lg" />
             </button>
           )}
 
           {loading ? (
             <Loader2 className="w-8 h-8 animate-spin text-white/40" />
           ) : !url ? (
-            <p className="text-white/40 text-[13px]">Unable to load preview</p>
+            <p className="text-white/40 text-body">Unable to load preview</p>
           ) : isImage ? (
             <img src={url} alt={asset.name} className="max-w-full max-h-[80vh] object-contain rounded-lg select-none" draggable={false} />
           ) : isVideo ? (
@@ -1631,7 +1631,7 @@ function FilePreviewModal({
           ) : isAudio ? (
             <div className="w-full max-w-lg bg-white/5 rounded-xl p-8 flex flex-col items-center gap-4">
               <span className="text-[40px]">🎵</span>
-              <p className="text-white/80 text-[13px] font-medium">{asset.name}</p>
+              <p className="text-white/80 text-body font-medium">{asset.name}</p>
               <audio controls autoPlay className="w-full" src={url}>
                 Your browser does not support audio.
               </audio>
@@ -1641,13 +1641,13 @@ function FilePreviewModal({
           ) : (
             <div className="flex flex-col items-center gap-4 text-center">
               <span className="text-[48px]">📎</span>
-              <p className="text-white/80 text-[14px] font-medium">{asset.name}</p>
-              <p className="text-white/40 text-[12px]">Preview not available for this file type</p>
+              <p className="text-white/80 text-body font-medium">{asset.name}</p>
+              <p className="text-white/40 text-secondary">Preview not available for this file type</p>
               <button
                 onClick={handleDownload}
-                className="mt-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-[13px] font-medium hover:bg-primary/90 transition-colors flex items-center gap-2"
+                className="mt-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-body font-medium hover:bg-primary/90 transition-colors flex items-center gap-2"
               >
-                <Download className="w-4 h-4" />
+                <Download className="w-icon-md h-icon-md" />
                 Download File
               </button>
             </div>
@@ -1657,7 +1657,7 @@ function FilePreviewModal({
         {/* Counter */}
         {assets.length > 1 && (
           <div className="text-center pb-3">
-            <span className="text-[11px] text-white/30">{currentIndex + 1} / {assets.length}</span>
+            <span className="text-secondary text-white/30">{currentIndex + 1} / {assets.length}</span>
           </div>
         )}
       </div>
@@ -1694,41 +1694,41 @@ function ItemMenu({
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+        className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
       >
-        <MoreHorizontal className="w-4 h-4" />
+        <MoreHorizontal className="w-icon-md h-icon-md" />
       </button>
       {open && (
         <div className="absolute right-0 top-8 z-30 w-40 rounded-xl bg-black border border-border shadow-xl py-1 overflow-hidden">
           <button
             onClick={() => { setOpen(false); onDownload(); }}
-            className="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-foreground hover:bg-muted/40 transition-colors"
+            className="w-full flex items-center gap-2 px-3 py-2 text-secondary text-foreground hover:bg-muted/40 transition-colors"
           >
-            <Download className="w-3.5 h-3.5" />
+            <Download className="w-icon-sm h-icon-sm" />
             Download
           </button>
           {canEdit && (
             <>
               <button
                 onClick={() => { setOpen(false); onMove?.(); }}
-                className="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-foreground hover:bg-muted/40 transition-colors"
+                className="w-full flex items-center gap-2 px-3 py-2 text-secondary text-foreground hover:bg-muted/40 transition-colors"
               >
-                <FolderInput className="w-3.5 h-3.5" />
+                <FolderInput className="w-icon-sm h-icon-sm" />
                 Move to...
               </button>
               <button
                 onClick={() => { setOpen(false); onRename(); }}
-                className="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-foreground hover:bg-muted/40 transition-colors"
+                className="w-full flex items-center gap-2 px-3 py-2 text-secondary text-foreground hover:bg-muted/40 transition-colors"
               >
-                <Pencil className="w-3.5 h-3.5" />
+                <Pencil className="w-icon-sm h-icon-sm" />
                 Rename
               </button>
               <div className="border-t border-border my-1" />
               <button
                 onClick={() => { setOpen(false); onDelete(); }}
-                className="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-red-400 hover:bg-red-500/10 transition-colors"
+                className="w-full flex items-center gap-2 px-3 py-2 text-secondary text-red-400 hover:bg-red-500/10 transition-colors"
               >
-                <Trash2 className="w-3.5 h-3.5" />
+                <Trash2 className="w-icon-sm h-icon-sm" />
                 Delete
               </button>
             </>
@@ -1794,11 +1794,11 @@ function MoveModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={onClose}>
       <div className="w-[400px] max-h-[500px] rounded-2xl bg-black border border-border shadow-2xl flex flex-col" onClick={(e) => e.stopPropagation()}>
         <div className="px-4 py-3 border-b border-border">
-          <h3 className="text-[14px] font-semibold text-foreground">Move &quot;{itemName}&quot;</h3>
-          <p className="text-[11px] text-muted-foreground mt-0.5">Select destination folder</p>
+          <h3 className="text-body font-semibold text-foreground">Move &quot;{itemName}&quot;</h3>
+          <p className="text-secondary text-muted-foreground mt-0.5">Select destination folder</p>
         </div>
 
-        <div className="px-4 py-2 border-b border-border flex items-center gap-1 text-[12px] min-h-[36px]">
+        <div className="px-4 py-2 border-b border-border flex items-center gap-1 text-secondary min-h-[36px]">
           <button
             onClick={() => setBrowseFolderId(null)}
             className={`px-1.5 py-0.5 rounded transition-colors ${!browseFolderId ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
@@ -1807,7 +1807,7 @@ function MoveModal({
           </button>
           {breadcrumbs.map((crumb) => (
             <span key={crumb.id} className="flex items-center gap-1">
-              <ChevronRight className="w-3 h-3 text-muted-foreground/50" />
+              <ChevronRight className="w-icon-sm h-icon-sm text-muted-foreground/50" />
               <button
                 onClick={() => setBrowseFolderId(crumb.id)}
                 className={`px-1.5 py-0.5 rounded transition-colors ${browseFolderId === crumb.id ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
@@ -1821,18 +1821,18 @@ function MoveModal({
         <div className="flex-1 overflow-y-auto px-2 py-2 min-h-[120px] max-h-[300px]">
           {loading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+              <Loader2 className="w-icon-lg h-icon-lg animate-spin text-muted-foreground" />
             </div>
           ) : browseFolders.length === 0 ? (
-            <p className="text-center py-8 text-[12px] text-muted-foreground">No subfolders</p>
+            <p className="text-center py-8 text-secondary text-muted-foreground">No subfolders</p>
           ) : (
             browseFolders.map((folder) => (
               <button
                 key={folder.id}
                 onClick={() => setBrowseFolderId(folder.id)}
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-foreground hover:bg-muted/30 transition-colors text-left"
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-body text-foreground hover:bg-muted/30 transition-colors text-left"
               >
-                <FolderOpen className="w-4 h-4 text-amber-400 shrink-0" />
+                <FolderOpen className="w-icon-md h-icon-md text-amber-400 shrink-0" />
                 {folder.name}
               </button>
             ))
@@ -1840,19 +1840,19 @@ function MoveModal({
         </div>
 
         <div className="px-4 py-3 border-t border-border flex items-center justify-between">
-          <p className="text-[11px] text-muted-foreground truncate max-w-[180px]">
+          <p className="text-secondary text-muted-foreground truncate max-w-[180px]">
             Move to: <span className="text-foreground font-medium">{breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1].name : "Root"}</span>
           </p>
           <div className="flex items-center gap-2">
-            <button onClick={onClose} className="px-3 py-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors rounded-lg">
+            <button onClick={onClose} className="px-3 py-1.5 text-secondary text-muted-foreground hover:text-foreground transition-colors rounded-lg">
               Cancel
             </button>
             <button
               onClick={handleMove}
               disabled={moving}
-              className="px-4 py-1.5 text-[12px] font-medium text-white bg-primary rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors flex items-center gap-1.5"
+              className="px-4 py-1.5 text-secondary font-medium text-white bg-primary rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors flex items-center gap-1.5"
             >
-              {moving && <Loader2 className="w-3 h-3 animate-spin" />}
+              {moving && <Loader2 className="w-icon-sm h-icon-sm animate-spin" />}
               Move here
             </button>
           </div>

@@ -397,11 +397,11 @@ export function TaskDetailClient({
           href={`/projects/${projectId}`}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors shrink-0"
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span className="text-[13px]">Back</span>
+          <ArrowLeft className="w-icon-md h-icon-md" />
+          <span className="text-body">Back</span>
         </Link>
         <span className="text-muted-foreground/30">/</span>
-        <span className="text-[13px] text-foreground font-medium truncate">{isNew ? "New Task" : task?.taskNumber ? `Task #${task.taskNumber}` : "Task"}</span>
+        <span className="text-body text-foreground font-medium truncate">{isNew ? "New Task" : task?.taskNumber ? `Task #${task.taskNumber}` : "Task"}</span>
         <div className="flex-1" />
         {canEdit && (
           <div className="flex items-center gap-2 shrink-0">
@@ -412,19 +412,19 @@ export function TaskDetailClient({
                 onClick={handleSave}
                 className="gap-1.5"
               >
-                {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                {saving ? <Loader2 className="w-icon-sm h-icon-sm animate-spin" /> : <Save className="w-icon-sm h-icon-sm" />}
                 {saving ? "Creating..." : "Create"}
               </Button>
             ) : (
-              <span className="flex items-center gap-1.5 text-[12px] px-3 py-1.5">
+              <span className="flex items-center gap-1.5 text-secondary px-3 py-1.5">
                 {saving ? (
                   <>
-                    <Loader2 className="w-3 h-3 animate-spin text-muted-foreground" />
+                    <Loader2 className="w-icon-sm h-icon-sm animate-spin text-muted-foreground" />
                     <span className="text-muted-foreground">Saving...</span>
                   </>
                 ) : saved ? (
                   <>
-                    <CheckCircle2 className="w-3 h-3 text-green-400" />
+                    <CheckCircle2 className="w-icon-sm h-icon-sm text-green-400" />
                     <span className="text-green-400">Saved</span>
                   </>
                 ) : null}
@@ -437,9 +437,9 @@ export function TaskDetailClient({
                   await deleteTask(task.id, projectId, task.project.dealId || undefined);
                   router.push(`/projects/${projectId}`);
                 }}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-icon-md h-icon-md" />
               </button>
             )}
           </div>
@@ -450,12 +450,12 @@ export function TaskDetailClient({
 
       {showValidation && missingFields.length > 0 && (
         <div className="mx-6 mt-3 flex items-start gap-3 rounded-xl px-4 py-3 bg-red-500/10 border border-red-500/20">
-          <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+          <AlertCircle className="w-icon-md h-icon-md text-red-400 shrink-0 mt-0.5" />
           <div>
-            <p className="text-[13px] text-red-400 font-medium">Please fill in the required fields:</p>
+            <p className="text-body text-red-400 font-medium">Please fill in the required fields:</p>
             <ul className="mt-1 space-y-0.5">
               {missingFields.map((f) => (
-                <li key={f} className="text-[12px] text-red-400/80">• {f}</li>
+                <li key={f} className="text-secondary text-red-400/80">• {f}</li>
               ))}
             </ul>
           </div>
@@ -480,7 +480,7 @@ export function TaskDetailClient({
           {hasTemplates && (
             canEdit ? (
               <>
-                <label className="text-[12px] font-medium text-muted-foreground -mb-6 block">
+                <label className="text-secondary font-medium text-muted-foreground -mb-6 block">
                   {availableTemplates.find((t) => t.id === activeTemplateId)?.name} Name
                 </label>
                 <input
@@ -527,7 +527,7 @@ export function TaskDetailClient({
               .filter((s) => s.ms > 0);
 
             return (
-              <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground/60">
+              <div className="flex flex-wrap items-center gap-3 text-secondary text-muted-foreground/60">
                 {stageBreakdown.map((s) => (
                   <span key={s.name} className="inline-flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: s.color }} />
@@ -544,14 +544,14 @@ export function TaskDetailClient({
           {/* Priority — only after a template is selected */}
           {hasTemplates && (
             <div>
-              <label className="text-[12px] font-medium text-muted-foreground mb-2 block">Priority</label>
+              <label className="text-secondary font-medium text-muted-foreground mb-2 block">Priority</label>
               <div className="flex gap-1.5">
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
                   <button
                     key={n}
                     onClick={() => { if (!canEdit) return; setSaved(false); setPriority(priority === n ? null : n); }}
                     disabled={!canEdit}
-                    className={`w-9 h-9 rounded-lg text-[13px] font-medium transition-colors ${
+                    className={`w-9 min-h-touch rounded-lg text-body font-medium transition-colors ${
                       priority === n
                         ? n <= 3
                           ? "bg-green-500/20 text-green-400 ring-1 ring-green-500/40"
@@ -566,7 +566,7 @@ export function TaskDetailClient({
                 ))}
               </div>
               {!priority && (
-                <p className="text-[11px] text-muted-foreground/50 mt-1.5">No priority selected</p>
+                <p className="text-secondary text-muted-foreground/50 mt-1.5">No priority selected</p>
               )}
             </div>
           )}
@@ -574,7 +574,7 @@ export function TaskDetailClient({
           {/* Fields — new mode */}
           {isNew && newModeItems.length > 0 && (
             <div className="space-y-6">
-              <label className="text-[12px] font-medium text-muted-foreground block">
+              <label className="text-secondary font-medium text-muted-foreground block">
                 {selectedTemplate?.name} Questions
               </label>
               <div className="space-y-5">
@@ -609,13 +609,13 @@ export function TaskDetailClient({
                 return (
                   <div key={phase}>
                     <div className="flex items-center gap-2 mb-3">
-                      <h3 className={`text-[12px] font-semibold uppercase tracking-wider ${
+                      <h3 className={`text-secondary font-semibold uppercase tracking-wider ${
                         phase === "create" ? "text-primary" : "text-amber-400"
                       }`}>
                         {phase === "create" ? "Create" : "Delivery"}
                       </h3>
                       {createLocked && (
-                        <span className="text-[10px] text-muted-foreground/50 bg-muted/30 px-2 py-0.5 rounded">Locked</span>
+                        <span className="text-label text-muted-foreground/50 bg-muted/30 px-2 py-0.5 rounded">Locked</span>
                       )}
                       <div className="flex-1 border-t border-border" />
                     </div>
@@ -690,13 +690,13 @@ function NewModeField({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2 px-1">
-        <span className="text-[12px] text-muted-foreground/50">{index}.</span>
-        <span className="text-[13px] font-medium text-foreground flex-1">{item.name}</span>
+        <span className="text-secondary text-muted-foreground/50">{index}.</span>
+        <span className="text-body font-medium text-foreground flex-1">{item.name}</span>
         {item.mandatory && (
-          <span className="text-[10px] text-red-400">*</span>
+          <span className="text-label text-red-400">*</span>
         )}
         {item.allowedFileTypes && (
-          <span className="text-[10px] text-muted-foreground/50">{item.allowedFileTypes}</span>
+          <span className="text-label text-muted-foreground/50">{item.allowedFileTypes}</span>
         )}
       </div>
 
@@ -705,7 +705,7 @@ function NewModeField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Type your answer..."
-          className="w-full text-[13px] text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors"
+          className="w-full text-body text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors"
         />
       )}
 
@@ -722,7 +722,7 @@ function NewModeField({
           }}
           placeholder="Type your answer..."
           rows={2}
-          className="w-full text-[13px] text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors resize-none overflow-hidden"
+          className="w-full text-body text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors resize-none overflow-hidden"
         />
       )}
 
@@ -731,14 +731,14 @@ function NewModeField({
           <select
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full text-[13px] text-foreground rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors appearance-none cursor-pointer"
+            className="w-full text-body text-foreground rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors appearance-none cursor-pointer"
           >
             <option value="" className="bg-black">Select...</option>
             {options.map((opt) => (
               <option key={opt} value={opt} className="bg-black">{opt}</option>
             ))}
           </select>
-          <ChevronDown className="w-3.5 h-3.5 text-muted-foreground absolute right-3 top-3.5 pointer-events-none" />
+          <ChevronDown className="w-icon-sm h-icon-sm text-muted-foreground absolute right-3 top-3.5 pointer-events-none" />
         </div>
       )}
 
@@ -748,7 +748,7 @@ function NewModeField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="https://..."
-          className="w-full text-[13px] text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors"
+          className="w-full text-body text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors"
         />
       )}
 
@@ -759,7 +759,7 @@ function NewModeField({
               key={opt}
               type="button"
               onClick={() => onChange(value === opt ? "" : opt)}
-              className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium transition-all border ${
+              className={`flex-1 py-2.5 rounded-xl text-body font-medium transition-all border ${
                 value === opt
                   ? opt === "Yes"
                     ? "bg-green-500/15 text-green-400 border-green-500/30"
@@ -786,7 +786,7 @@ function NewModeField({
                   key={opt}
                   type="button"
                   onClick={() => update(opt === "Yes", opt === "No" ? "" : text)}
-                  className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium transition-all border ${
+                  className={`flex-1 py-2.5 rounded-xl text-body font-medium transition-all border ${
                     (opt === "Yes" && enabled) || (opt === "No" && !enabled)
                       ? opt === "Yes"
                         ? "bg-green-500/15 text-green-400 border-green-500/30"
@@ -805,7 +805,7 @@ function NewModeField({
                   value={text}
                   onChange={(e) => update(true, e.target.value)}
                   placeholder="Enter account name (e.g. @username)"
-                  className="w-full text-[13px] text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors"
+                  className="w-full text-body text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors"
                 />
               ) : (
                 <textarea
@@ -813,7 +813,7 @@ function NewModeField({
                   onChange={(e) => { update(true, e.target.value); e.target.style.height = "auto"; e.target.style.height = e.target.scrollHeight + "px"; }}
                   placeholder="Enter copyright text"
                   rows={1}
-                  className="w-full text-[13px] text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors resize-none overflow-hidden"
+                  className="w-full text-body text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors resize-none overflow-hidden"
                   ref={(el) => { if (el) { el.style.height = "auto"; el.style.height = el.scrollHeight + "px"; } }}
                 />
               )
@@ -840,20 +840,20 @@ function NewModeField({
             />
             {fileError && (
               <div className="flex items-start gap-2 rounded-xl px-3 py-2 bg-red-500/10 border border-red-500/20">
-                <AlertCircle className="w-3.5 h-3.5 text-red-400 mt-0.5 shrink-0" />
-                <span className="text-[11px] text-red-400">{fileError}</span>
+                <AlertCircle className="w-icon-sm h-icon-sm text-red-400 mt-0.5 shrink-0" />
+                <span className="text-secondary text-red-400">{fileError}</span>
               </div>
             )}
             {pendingFile ? (
               <div className="rounded-xl border border-green-500/30 bg-green-500/5 overflow-hidden">
                 <FilePreview file={pendingFile} />
                 <div className="flex items-center gap-3 px-4 py-3">
-                  <CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" />
-                  <span className="text-[12px] text-green-400 font-medium flex-1 truncate">{pendingFile.name}</span>
+                  <CheckCircle2 className="w-icon-md h-icon-md text-green-400 shrink-0" />
+                  <span className="text-secondary text-green-400 font-medium flex-1 truncate">{pendingFile.name}</span>
                   <button
                     type="button"
                     onClick={() => { onFileSelect?.(null); setFileError(null); }}
-                    className="text-[11px] text-muted-foreground hover:text-foreground"
+                    className="text-secondary text-muted-foreground hover:text-foreground"
                   >
                     Remove
                   </button>
@@ -883,20 +883,20 @@ function NewModeField({
                     <div className="w-full px-6">
                       <FilePlaceholder category={cat} />
                     </div>
-                    <span className="text-[12px] text-muted-foreground/50">
+                    <span className="text-secondary text-muted-foreground/50">
                       {dragOver ? "Drop file here" : `Drop ${cat} file or click to attach`}
                     </span>
                   </>
                 ) : (
                   <>
-                    <Paperclip className={`w-4 h-4 shrink-0 ${dragOver ? "text-primary" : "text-muted-foreground/40"}`} />
-                    <span className="text-[12px] text-muted-foreground/60">
+                    <Paperclip className={`w-icon-md h-icon-md shrink-0 ${dragOver ? "text-primary" : "text-muted-foreground/40"}`} />
+                    <span className="text-secondary text-muted-foreground/60">
                       {dragOver ? "Drop file here" : "Drop file or click to attach"}
                     </span>
                   </>
                 )}
                 {constraints && (
-                  <span className="text-[10px] text-muted-foreground/40">{constraints}</span>
+                  <span className="text-label text-muted-foreground/40">{constraints}</span>
                 )}
               </div>
             )}
@@ -912,7 +912,7 @@ function NewModeField({
             onChange={(e) => onChange(e.target.checked ? "true" : "")}
             className="rounded"
           />
-          <span className="text-[13px] text-foreground">Done</span>
+          <span className="text-body text-foreground">Done</span>
         </label>
       )}
     </div>
@@ -932,7 +932,7 @@ function TemplateTabs({
 }) {
   return (
     <div>
-      <label className="text-[12px] font-medium text-muted-foreground mb-3 block">Type</label>
+      <label className="text-secondary font-medium text-muted-foreground mb-3 block">Type</label>
       <div className="flex flex-wrap gap-2">
         {templates.map((t) => {
           const isActive = activeId === t.id;
@@ -942,14 +942,14 @@ function TemplateTabs({
               type="button"
               onClick={() => !syncing && onSelect(t.id)}
               disabled={syncing}
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-medium transition-all border ${
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-body font-medium transition-all border ${
                 isActive
                   ? "bg-primary/15 text-primary border-primary/30"
                   : "bg-muted/30 text-muted-foreground border-border hover:bg-muted/50 hover:text-foreground"
               } disabled:opacity-50`}
             >
               {t.name}
-              <span className={`text-[10px] ${isActive ? "text-primary/60" : "text-muted-foreground/50"}`}>
+              <span className={`text-label ${isActive ? "text-primary/60" : "text-muted-foreground/50"}`}>
                 {t.itemCount}
               </span>
             </button>
@@ -1036,7 +1036,7 @@ function EmptyAudioPlaceholder() {
         <line x1="12" y1="17" x2="12" y2="21" />
         <line x1="8" y1="21" x2="16" y2="21" />
       </svg>
-      <span className="text-[11px] text-muted-foreground/40">Audio</span>
+      <span className="text-secondary text-muted-foreground/40">Audio</span>
     </div>
   );
 }
@@ -1050,7 +1050,7 @@ function EmptyVideoPlaceholder() {
         <circle cx="15" cy="22" r="4" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.4" />
         <path d="M13.5 22l1.5 1.5 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.4" />
       </svg>
-      <span className="text-[11px] text-muted-foreground/40">Video</span>
+      <span className="text-secondary text-muted-foreground/40">Video</span>
     </div>
   );
 }
@@ -1063,7 +1063,7 @@ function EmptyImagePlaceholder() {
         <circle cx="16" cy="18" r="3" fill="currentColor" opacity="0.4" />
         <path d="M6 30l10-8 6 5 8-6 12 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.5" />
       </svg>
-      <span className="text-[11px] text-muted-foreground/40">Image</span>
+      <span className="text-secondary text-muted-foreground/40">Image</span>
     </div>
   );
 }
@@ -1322,12 +1322,12 @@ function ChecklistItemRow({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2 px-1">
-        <span className="text-[13px] font-medium text-foreground flex-1">
+        <span className="text-body font-medium text-foreground flex-1">
           {item.name}
           {item.mandatory && <span className="text-red-400 ml-1">*</span>}
         </span>
         {item.allowedFileTypes && (
-          <span className="text-[10px] text-muted-foreground/50">{item.allowedFileTypes}</span>
+          <span className="text-label text-muted-foreground/50">{item.allowedFileTypes}</span>
         )}
       </div>
 
@@ -1374,15 +1374,15 @@ function ChecklistItemRow({
 
             {typeError && (
               <div className="flex items-center gap-2 rounded-lg px-3 py-2 bg-red-500/10 border border-red-500/20">
-                <AlertCircle className="w-3.5 h-3.5 text-red-400 shrink-0" />
-                <span className="text-[11px] text-red-400">{typeError}</span>
+                <AlertCircle className="w-icon-sm h-icon-sm text-red-400 shrink-0" />
+                <span className="text-secondary text-red-400">{typeError}</span>
               </div>
             )}
 
             {uploading ? (
               <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-4 py-3">
-                <Loader2 className="w-4 h-4 text-primary animate-spin shrink-0" />
-                <span className="text-[12px] text-muted-foreground">Uploading...</span>
+                <Loader2 className="w-icon-md h-icon-md text-primary animate-spin shrink-0" />
+                <span className="text-secondary text-muted-foreground">Uploading...</span>
               </div>
             ) : hasFile ? (
               <div className="rounded-xl border border-green-500/30 bg-green-500/5 overflow-hidden">
@@ -1408,8 +1408,8 @@ function ChecklistItemRow({
                 )}
 
                 <div className="flex items-center gap-3 px-4 py-3">
-                  <CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" />
-                  <span className="text-[12px] text-green-400 font-medium flex-1 min-w-0 truncate">{displayName}</span>
+                  <CheckCircle2 className="w-icon-md h-icon-md text-green-400 shrink-0" />
+                  <span className="text-secondary text-green-400 font-medium flex-1 min-w-0 truncate">{displayName}</span>
                   <div className="flex items-center gap-3 shrink-0">
                     {previewUrl && (
                       <a
@@ -1420,14 +1420,14 @@ function ChecklistItemRow({
                         className="text-muted-foreground hover:text-primary transition-colors"
                         title="Download"
                       >
-                        <Download className="w-3.5 h-3.5" />
+                        <Download className="w-icon-sm h-icon-sm" />
                       </a>
                     )}
                     {canEdit && (
                       <>
                         <button
                           onClick={() => fileInputRef.current?.click()}
-                          className="text-[11px] text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+                          className="text-secondary text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
                         >
                           Replace
                         </button>
@@ -1440,7 +1440,7 @@ function ChecklistItemRow({
                           }}
                           className="text-muted-foreground hover:text-red-400 transition-colors"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Trash2 className="w-icon-sm h-icon-sm" />
                         </button>
                       </>
                     )}
@@ -1471,20 +1471,20 @@ function ChecklistItemRow({
                     <div className="w-full px-6">
                       <FilePlaceholder category={cat} />
                     </div>
-                    <span className="text-[12px] text-muted-foreground/50">
+                    <span className="text-secondary text-muted-foreground/50">
                       {dragOver ? "Drop file here" : `Drop ${cat} file or click to attach`}
                     </span>
                   </>
                 ) : (
                   <>
-                    <Paperclip className={`w-4 h-4 shrink-0 ${dragOver ? "text-primary" : "text-muted-foreground/40"}`} />
-                    <span className="text-[12px] text-muted-foreground/60">
+                    <Paperclip className={`w-icon-md h-icon-md shrink-0 ${dragOver ? "text-primary" : "text-muted-foreground/40"}`} />
+                    <span className="text-secondary text-muted-foreground/60">
                       {dragOver ? "Drop file here" : "Drop file or click to attach"}
                     </span>
                   </>
                 )}
                 {constraints && (
-                  <span className="text-[10px] text-muted-foreground/40">{constraints}</span>
+                  <span className="text-label text-muted-foreground/40">{constraints}</span>
                 )}
               </div>
             )}
@@ -1541,7 +1541,7 @@ function TextAreaField({
           onBlur={handleSave}
           placeholder={canEdit ? "Type your answer..." : ""}
           readOnly={!canEdit}
-          className={`w-full text-[13px] text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 focus:outline-none transition-colors ${
+          className={`w-full text-body text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 focus:outline-none transition-colors ${
             !canEdit ? "cursor-text select-text opacity-80" : ""
           } ${
             saved && value.trim()
@@ -1559,7 +1559,7 @@ function TextAreaField({
           </button>
         )}
         {saved && value.trim() && canEdit && (
-          <CheckCircle2 className="w-4 h-4 text-green-400 absolute top-3 right-3" />
+          <CheckCircle2 className="w-icon-md h-icon-md text-green-400 absolute top-3 right-3" />
         )}
       </div>
     );
@@ -1575,7 +1575,7 @@ function TextAreaField({
         placeholder={canEdit ? "Type your answer..." : ""}
         rows={2}
         readOnly={!canEdit}
-        className={`w-full text-[13px] text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 focus:outline-none transition-colors resize-none ${
+        className={`w-full text-body text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 focus:outline-none transition-colors resize-none ${
           !canEdit ? "cursor-text select-text opacity-80" : ""
         } ${
           saved && value.trim()
@@ -1593,7 +1593,7 @@ function TextAreaField({
         </button>
       )}
       {saved && value.trim() && canEdit && (
-        <CheckCircle2 className="w-4 h-4 text-green-400 absolute top-3 right-3" />
+        <CheckCircle2 className="w-icon-md h-icon-md text-green-400 absolute top-3 right-3" />
       )}
     </div>
   );
@@ -1628,7 +1628,7 @@ function SelectField({
         value={value}
         onChange={(e) => handleChange(e.target.value)}
         disabled={!canEdit}
-        className={`w-full text-[13px] text-foreground rounded-xl px-4 py-3 focus:outline-none transition-colors disabled:opacity-60 appearance-none cursor-pointer ${
+        className={`w-full text-body text-foreground rounded-xl px-4 py-3 focus:outline-none transition-colors disabled:opacity-60 appearance-none cursor-pointer ${
           saved && value
             ? "bg-green-500/5 border border-green-500/30"
             : "bg-transparent border border-border focus:border-ring"
@@ -1639,9 +1639,9 @@ function SelectField({
           <option key={opt} value={opt} className="bg-black">{opt}</option>
         ))}
       </select>
-      <ChevronDown className="w-3.5 h-3.5 text-muted-foreground absolute right-3 top-3.5 pointer-events-none" />
+      <ChevronDown className="w-icon-sm h-icon-sm text-muted-foreground absolute right-3 top-3.5 pointer-events-none" />
       {saved && value && (
-        <CheckCircle2 className="w-4 h-4 text-green-400 absolute top-3 right-8" />
+        <CheckCircle2 className="w-icon-md h-icon-md text-green-400 absolute top-3 right-8" />
       )}
     </div>
   );
@@ -1678,14 +1678,14 @@ function LinkField({
         onBlur={handleSave}
         placeholder="https://..."
         disabled={!canEdit}
-        className={`w-full text-[13px] text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 focus:outline-none transition-colors disabled:opacity-60 ${
+        className={`w-full text-body text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 focus:outline-none transition-colors disabled:opacity-60 ${
           saved && value.trim()
             ? "bg-green-500/5 border border-green-500/30"
             : "bg-transparent border border-border focus:border-ring"
         }`}
       />
       {saved && value.trim() && (
-        <CheckCircle2 className="w-4 h-4 text-green-400 absolute top-3 right-3" />
+        <CheckCircle2 className="w-icon-md h-icon-md text-green-400 absolute top-3 right-3" />
       )}
     </div>
   );
@@ -1719,7 +1719,7 @@ function YesNoField({
           type="button"
           onClick={() => canEdit && handleSelect(opt)}
           disabled={!canEdit}
-          className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium transition-all border ${
+          className={`flex-1 py-2.5 rounded-xl text-body font-medium transition-all border ${
             value === opt
               ? opt === "Yes"
                 ? "bg-green-500/15 text-green-400 border-green-500/30"
@@ -1782,7 +1782,7 @@ function MentionCopyrightField({
             type="button"
             onClick={() => handleToggle(opt)}
             disabled={!canEdit}
-            className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium transition-all border ${
+            className={`flex-1 py-2.5 rounded-xl text-body font-medium transition-all border ${
               (opt === "Yes" && enabled) || (opt === "No" && !enabled)
                 ? opt === "Yes"
                   ? "bg-green-500/15 text-green-400 border-green-500/30"
@@ -1803,7 +1803,7 @@ function MentionCopyrightField({
             onBlur={handleTextBlur}
             disabled={!canEdit}
             placeholder="Enter account name (e.g. @username)"
-            className="w-full text-[13px] text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors disabled:opacity-60"
+            className="w-full text-body text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors disabled:opacity-60"
           />
         ) : (
           <textarea
@@ -1813,7 +1813,7 @@ function MentionCopyrightField({
             disabled={!canEdit}
             placeholder="Enter copyright text"
             rows={1}
-            className="w-full text-[13px] text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors resize-none overflow-hidden disabled:opacity-60"
+            className="w-full text-body text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-transparent border border-border focus:outline-none focus:border-ring transition-colors resize-none overflow-hidden disabled:opacity-60"
             ref={(el) => { if (el) { el.style.height = "auto"; el.style.height = el.scrollHeight + "px"; } }}
           />
         )
@@ -1887,30 +1887,30 @@ function TaskHistoryButton({ taskId }: { taskId: string }) {
     <div className="relative" ref={panelRef}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+        className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         title="Task history"
       >
-        <History className="w-4 h-4" />
+        <History className="w-icon-md h-icon-md" />
       </button>
 
       {open && (
         <div className="absolute right-0 top-full mt-2 w-96 bg-black border border-border rounded-xl shadow-xl overflow-hidden z-[200]">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-            <h3 className="text-[13px] font-semibold text-foreground">Task History</h3>
+            <h3 className="text-body font-semibold text-foreground">Task History</h3>
             <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground">
-              <X className="w-4 h-4" />
+              <X className="w-icon-md h-icon-md" />
             </button>
           </div>
 
           <div className="max-h-[400px] overflow-y-auto">
             {loading ? (
               <div className="flex items-center justify-center py-8">
-                <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+                <Loader2 className="w-icon-md h-icon-md animate-spin text-muted-foreground" />
               </div>
             ) : entries.length === 0 ? (
               <div className="py-8 text-center">
                 <History className="w-8 h-8 mx-auto text-muted-foreground/20 mb-2" />
-                <p className="text-[12px] text-muted-foreground/60">No activity recorded yet</p>
+                <p className="text-secondary text-muted-foreground/60">No activity recorded yet</p>
               </div>
             ) : (
               <div className="py-2">
@@ -1919,14 +1919,14 @@ function TaskHistoryButton({ taskId }: { taskId: string }) {
                     {idx < entries.length - 1 && (
                       <div className="absolute left-[27px] top-[34px] bottom-0 w-px bg-border/50" />
                     )}
-                    <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center text-[9px] font-bold text-primary shrink-0 mt-0.5 z-10">
+                    <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center text-label font-bold text-primary shrink-0 mt-0.5 z-10">
                       {(entry.userName || "?").charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[12px] text-foreground leading-snug">
+                      <p className="text-secondary text-foreground leading-snug">
                         {describeAction(entry)}
                       </p>
-                      <p className="text-[10px] text-muted-foreground/50 mt-0.5">
+                      <p className="text-label text-muted-foreground/50 mt-0.5">
                         {formatDistanceToNow(entry.createdAt, { addSuffix: true })}
                       </p>
                     </div>

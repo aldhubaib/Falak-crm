@@ -61,7 +61,7 @@ export function DealsClient({
         <h1 className="text-lg font-semibold text-foreground">Deals</h1>
         <Link href="/deals/new">
           <Button size="sm">
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-icon-sm h-icon-sm" />
             New Deal
           </Button>
         </Link>
@@ -73,8 +73,8 @@ export function DealsClient({
           const total = stage.deals.reduce((sum, d) => sum + Number(d.value), 0);
           return (
             <div key={stage.id} className="min-w-[280px] w-[280px] flex-shrink-0">
-              <p className="text-[12px] text-muted-foreground px-1">
-                {total.toLocaleString()} <span className="text-[10px]">{stage.deals[0]?.currency || "KWD"}</span>
+              <p className="text-secondary text-muted-foreground px-1">
+                {total.toLocaleString()} <span className="text-label">{stage.deals[0]?.currency || "KWD"}</span>
               </p>
             </div>
           );
@@ -92,11 +92,11 @@ export function DealsClient({
             <div className="rounded-t-xl overflow-hidden mb-0">
               <div className="h-1" style={{ backgroundColor: stage.color }} />
               <div className="flex items-center gap-2 px-3 py-2.5 bg-card border border-t-0 border-border rounded-b-none">
-                <span className="text-[12px] font-semibold text-foreground">
+                <span className="text-secondary font-semibold text-foreground">
                   {stage.name}
                 </span>
                 <span
-                  className="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center"
+                  className="ml-auto text-label font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center"
                   style={{ backgroundColor: `${stage.color}20`, color: stage.color }}
                 >
                   {stage.deals.length}
@@ -116,7 +116,7 @@ export function DealsClient({
               ))}
               {stage.deals.length === 0 && (
                 <div className="rounded-xl border border-dashed border-border/50 p-4 text-center">
-                  <p className="text-[11px] text-muted-foreground/50">No deals</p>
+                  <p className="text-secondary text-muted-foreground/50">No deals</p>
                 </div>
               )}
             </div>
@@ -147,15 +147,15 @@ const DealCard = memo(function DealCard({
         href={`/deals/${deal.id}`}
         className="block p-3 no-underline"
       >
-        <p className="text-[13px] font-medium text-foreground group-hover:text-primary transition-colors leading-tight mb-1.5">
+        <p className="text-body font-medium text-foreground group-hover:text-primary transition-colors leading-tight mb-1.5">
           {deal.title}
         </p>
-        <p className="text-[11px] text-muted-foreground mb-2">
+        <p className="text-secondary text-muted-foreground mb-2">
           {deal.company?.name || "No company"}
           {deal.contact && ` • ${deal.contact.firstName} ${deal.contact.lastName}`}
         </p>
-        <p className="text-[14px] font-semibold text-foreground">
-          {Number(deal.value).toLocaleString()} <span className="text-[11px] font-normal text-muted-foreground">{deal.currency || "KWD"}</span>
+        <p className="text-subheading font-semibold text-foreground">
+          {Number(deal.value).toLocaleString()} <span className="text-secondary font-normal text-muted-foreground">{deal.currency || "KWD"}</span>
         </p>
       </Link>
 
@@ -169,9 +169,9 @@ const DealCard = memo(function DealCard({
             }}>
               <button
                 type="submit"
-                className="w-full h-7 rounded-lg bg-muted/50 border border-border text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center justify-center gap-1"
+                className="w-full min-h-touch rounded-lg bg-muted/50 border border-border text-secondary font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center justify-center gap-1"
               >
-                <ArrowRight className="w-3 h-3" />
+                <ArrowRight className="w-icon-sm h-icon-sm" />
                 {nextStage.name}
               </button>
             </form>
@@ -185,9 +185,9 @@ const DealCard = memo(function DealCard({
             }}>
               <button
                 type="submit"
-                className="w-full h-7 rounded-lg bg-green-500/10 border border-green-500/20 text-[11px] font-medium text-green-400 hover:bg-green-500/20 transition-colors flex items-center justify-center gap-1"
+                className="w-full min-h-touch rounded-lg bg-green-500/10 border border-green-500/20 text-secondary font-medium text-green-400 hover:bg-green-500/20 transition-colors flex items-center justify-center gap-1"
               >
-                <Rocket className="w-3 h-3" />
+                <Rocket className="w-icon-sm h-icon-sm" />
                 Create Project
               </button>
             </form>
@@ -199,7 +199,7 @@ const DealCard = memo(function DealCard({
         <div className="px-3 pb-3 pt-0">
           <Link
             href={`/projects/${deal.project.id}`}
-            className="w-full h-7 rounded-lg bg-primary/10 border border-primary/20 text-[11px] font-medium text-primary hover:bg-primary/20 transition-colors flex items-center justify-center gap-1 no-underline"
+            className="w-full min-h-touch rounded-lg bg-primary/10 border border-primary/20 text-secondary font-medium text-primary hover:bg-primary/20 transition-colors flex items-center justify-center gap-1 no-underline"
           >
             View Project
           </Link>

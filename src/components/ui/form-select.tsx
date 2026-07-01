@@ -62,16 +62,16 @@ export function FormSelect({
         )}
       >
         {label && (
-          <span className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+          <span className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider">
             {label}
             {required && <span className="text-destructive">*</span>}
           </span>
         )}
-        <div className="flex items-center justify-between h-8">
-          <span className={cn("text-[13px]", currentValue ? "text-foreground" : "text-muted-foreground/50")}>
+        <div className="flex items-center justify-between h-input">
+          <span className={cn("text-body", currentValue ? "text-foreground" : "text-muted-foreground/50")}>
             {displayLabel || placeholder || "Select..."}
           </span>
-          <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+          <ChevronDown className="w-icon-sm h-icon-sm text-muted-foreground shrink-0" />
         </div>
       </button>
 
@@ -86,7 +86,7 @@ export function FormSelect({
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search..."
-                  className="w-full h-8 px-2.5 rounded bg-black text-[12px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+                  className="w-full h-input px-2.5 rounded bg-black text-secondary text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
                   onKeyDown={(e) => {
                     if (e.key === "Escape") { setOpen(false); setSearch(""); }
                     if (e.key === "Enter" && filtered.length > 0) handleSelect(filtered[0].value);
@@ -100,7 +100,7 @@ export function FormSelect({
                   type="button"
                   onClick={() => handleSelect("")}
                   className={cn(
-                    "w-full px-3 py-2 text-left text-[12px] text-muted-foreground/50 hover:bg-muted/30 transition-colors",
+                    "w-full px-3 min-h-touch text-left text-secondary text-muted-foreground/50 hover:bg-muted/30 transition-colors flex items-center",
                     !currentValue && "bg-muted/40"
                   )}
                 >
@@ -113,7 +113,7 @@ export function FormSelect({
                   type="button"
                   onClick={() => handleSelect(opt.value)}
                   className={cn(
-                    "w-full px-3 py-2 text-left text-[12px] text-foreground hover:bg-muted/30 transition-colors",
+                    "w-full px-3 min-h-touch text-left text-secondary text-foreground hover:bg-muted/30 transition-colors flex items-center",
                     currentValue === opt.value && "bg-muted/40"
                   )}
                 >
@@ -121,7 +121,7 @@ export function FormSelect({
                 </button>
               ))}
               {filtered.length === 0 && (
-                <p className="px-3 py-2 text-[11px] text-muted-foreground">No results</p>
+                <p className="px-3 py-2 text-secondary text-muted-foreground">No results</p>
               )}
             </div>
           </div>

@@ -10,9 +10,9 @@ export default async function InvoicesPage() {
       <div className="flex items-center justify-end mb-4">
         <Link
           href="/invoices/new"
-          className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[12px] font-medium flex items-center gap-1.5 no-underline hover:bg-primary/90 transition-colors"
+          className="min-h-touch px-3 rounded-lg bg-primary text-primary-foreground text-button font-medium flex items-center gap-1.5 no-underline hover:bg-primary/90 transition-colors"
         >
-          <Plus className="w-3.5 h-3.5" />
+          <Plus className="w-icon-sm h-icon-sm" />
           New Invoice
         </Link>
       </div>
@@ -34,17 +34,17 @@ export default async function InvoicesPage() {
               >
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-lg bg-orange/15 flex items-center justify-center">
-                    <FileText className="w-4 h-4 text-orange" />
+                    <FileText className="w-icon-md h-icon-md text-orange" />
                   </div>
                   <div>
-                    <h3 className="text-[13px] font-medium text-foreground">
+                    <h3 className="text-body font-medium text-foreground">
                       {invoice.number}
                     </h3>
-                    <p className="text-[12px] text-muted-foreground mt-0.5">
+                    <p className="text-secondary text-muted-foreground mt-0.5">
                       {invoice.contact ? `${invoice.contact.firstName} ${invoice.contact.lastName}` : "No contact"}
                       {projectName && (
                         <span className="inline-flex items-center gap-1 ml-2">
-                          <FolderKanban className="w-3 h-3" />
+                          <FolderKanban className="w-icon-sm h-icon-sm" />
                           {projectName}
                         </span>
                       )}
@@ -52,7 +52,7 @@ export default async function InvoicesPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-[13px] font-semibold text-foreground">
+                  <p className="text-body font-semibold text-foreground">
                     {Number(invoice.total).toLocaleString()} {invoice.currency || "KWD"}
                   </p>
                   <InvoiceStatusBadge status={invoice.status} />
@@ -77,7 +77,7 @@ function InvoiceStatusBadge({ status }: { status: string }) {
   };
   const { label, className } = config[status] ?? config.DRAFT;
   return (
-    <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${className}`}>
+    <span className={`px-1.5 py-0.5 rounded text-label font-medium ${className}`}>
       {label}
     </span>
   );

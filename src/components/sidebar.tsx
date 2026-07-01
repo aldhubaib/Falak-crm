@@ -76,7 +76,7 @@ export function Sidebar({
             <div className="w-7 h-7 rounded-full bg-primary/15 flex items-center justify-center text-[11px] font-semibold text-primary shrink-0">
               F
             </div>
-            <span className="font-semibold text-[13px] text-foreground truncate">
+            <span className="font-semibold text-body text-foreground truncate">
               Falak CRM
             </span>
           </div>
@@ -91,7 +91,7 @@ export function Sidebar({
         {!collapsed && onTogglePin && (
           <button
             className={cn(
-              "w-7 h-7 rounded-full flex items-center justify-center transition-colors",
+              "w-icon-btn h-icon-btn rounded-full flex items-center justify-center transition-colors",
               pinned
                 ? "text-primary hover:bg-card/60"
                 : "text-muted-foreground hover:bg-card/60"
@@ -99,9 +99,9 @@ export function Sidebar({
             onClick={onTogglePin}
           >
             {pinned ? (
-              <Pin className="w-3.5 h-3.5" strokeWidth={1.5} />
+              <Pin className="w-icon-sm h-icon-sm" strokeWidth={1.5} />
             ) : (
-              <PinOff className="w-3.5 h-3.5" strokeWidth={1.5} />
+              <PinOff className="w-icon-sm h-icon-sm" strokeWidth={1.5} />
             )}
           </button>
         )}
@@ -117,7 +117,7 @@ export function Sidebar({
               <Link
                 href={item.href}
                 className={cn(
-                  "w-full flex items-center gap-2.5 rounded-full text-[13px] font-medium transition-colors mb-0.5 no-underline",
+                  "w-full flex items-center gap-2.5 rounded-full text-body font-medium transition-colors mb-0.5 no-underline",
                   collapsed ? "justify-center px-0 py-2" : "px-2.5 py-[7px]",
                   active
                     ? "bg-card text-foreground"

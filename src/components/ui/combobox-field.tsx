@@ -59,14 +59,14 @@ export function ComboboxField({
           open && !error && "border-ring"
         )}
       >
-        <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider pointer-events-none">
+        <label className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider pointer-events-none">
           {icon}
           {label}
           {required && <span className="text-destructive">*</span>}
         </label>
-        <div className="flex items-center justify-between h-8">
+        <div className="flex items-center justify-between h-input">
           <span className={cn(
-            "truncate flex items-center gap-1.5 text-[13px]",
+            "truncate flex items-center gap-1.5 text-body",
             (value && (!selectById || options.some((o) => o.id === value))) ? "text-foreground" : "text-muted-foreground/50"
           )}>
             {(() => {
@@ -75,7 +75,7 @@ export function ComboboxField({
               return <span>{placeholder || "Select..."}</span>;
             })()}
           </span>
-          <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+          <ChevronDown className="w-icon-sm h-icon-sm text-muted-foreground shrink-0" />
         </div>
       </button>
 
@@ -87,7 +87,7 @@ export function ComboboxField({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={onCreate ? "Search or type to add..." : "Search..."}
-              className="w-full h-8 px-2.5 rounded bg-black text-[12px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+              className="w-full h-input px-2.5 rounded bg-black text-secondary text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
               onKeyDown={async (e) => {
                 if (e.key === "Enter" && search && !hasExactMatch && onCreate) {
                   e.preventDefault();
@@ -102,7 +102,7 @@ export function ComboboxField({
           </div>
           <div className="max-h-[200px] overflow-y-auto border-t border-border">
             {filtered.length === 0 && !search && (
-              <p className="px-3 py-2 text-[11px] text-muted-foreground">No options yet</p>
+              <p className="px-3 py-2 text-secondary text-muted-foreground">No options yet</p>
             )}
             {filtered.map((opt) => (
               <div
@@ -111,7 +111,7 @@ export function ComboboxField({
               >
                 <button
                   type="button"
-                  className="flex-1 text-left text-[12px] text-foreground flex items-center gap-1.5"
+                  className="flex-1 text-left text-secondary text-foreground flex items-center gap-1.5 min-h-touch"
                   onClick={() => {
                     onSelect(selectById ? opt.id : opt.label);
                     setSearch("");
@@ -128,9 +128,9 @@ export function ComboboxField({
                       e.stopPropagation();
                       await onDelete(opt.id);
                     }}
-                    className="w-5 h-5 rounded flex items-center justify-center text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:text-destructive opacity-100 [@media(pointer:fine)]:opacity-0 [@media(pointer:fine)]:group-hover:opacity-100 transition-opacity"
                   >
-                    <X className="w-3 h-3" />
+                    <X className="w-icon-sm h-icon-sm" />
                   </button>
                 )}
               </div>
@@ -138,7 +138,7 @@ export function ComboboxField({
             {search && !hasExactMatch && onCreate && (
               <button
                 type="button"
-                className="w-full px-3 py-2 flex items-center gap-1.5 text-[12px] text-primary hover:bg-muted/50 border-t border-border"
+                className="w-full px-3 min-h-touch flex items-center gap-1.5 text-secondary text-primary hover:bg-muted/50 border-t border-border"
                 onClick={async () => {
                   await onCreate(search);
                   onSelect(search);
@@ -146,7 +146,7 @@ export function ComboboxField({
                   setOpen(false);
                 }}
               >
-                <Plus className="w-3 h-3" />
+                <Plus className="w-icon-sm h-icon-sm" />
                 Add &quot;{search}&quot;
               </button>
             )}

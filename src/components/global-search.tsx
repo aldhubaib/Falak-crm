@@ -92,10 +92,10 @@ export function GlobalSearch() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-ring hover:text-foreground transition-colors"
+        className="w-icon-btn h-icon-btn rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-ring hover:text-foreground transition-colors"
         title="Search (⌘K)"
       >
-        <Search className="w-4 h-4" />
+        <Search className="w-icon-md h-icon-md" />
       </button>
     );
   }
@@ -109,23 +109,23 @@ export function GlobalSearch() {
       <div className="fixed top-[15%] left-1/2 -translate-x-1/2 w-full max-w-lg z-50">
         <div className="mx-4 bg-black border border-border rounded-xl shadow-2xl overflow-hidden">
           <div className="flex items-center px-4 h-12 border-b border-border">
-            <Search className="w-4 h-4 text-muted-foreground mr-3 shrink-0" />
+            <Search className="w-icon-md h-icon-md text-muted-foreground mr-3 shrink-0" />
             <input
               ref={inputRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Search companies, contacts, deals..."
-              className="flex-1 bg-transparent text-[14px] text-foreground placeholder:text-muted-foreground/50 outline-none"
+              className="flex-1 bg-transparent text-body text-foreground placeholder:text-muted-foreground/50 outline-none"
             />
             {query && (
-              <button onClick={() => { setQuery(""); setResults([]); }} className="text-muted-foreground hover:text-foreground ml-2">
-                <X className="w-4 h-4" />
+              <button onClick={() => { setQuery(""); setResults([]); }} className="text-muted-foreground hover:text-foreground ml-2 w-icon-btn h-icon-btn flex items-center justify-center">
+                <X className="w-icon-md h-icon-md" />
               </button>
             )}
             <button
               onClick={() => { setOpen(false); setQuery(""); setResults([]); }}
-              className="ml-3 text-[11px] text-muted-foreground border border-border rounded px-1.5 py-0.5"
+              className="ml-3 text-label text-muted-foreground border border-border rounded px-1.5 py-0.5"
             >
               ESC
             </button>
@@ -134,10 +134,10 @@ export function GlobalSearch() {
           {(results.length > 0 || loading || (query.length >= 2 && !loading && results.length === 0)) && (
             <div className="max-h-[50vh] overflow-y-auto py-2">
               {loading && (
-                <p className="text-[12px] text-muted-foreground px-4 py-3">Searching...</p>
+                <p className="text-secondary text-muted-foreground px-4 py-3">Searching...</p>
               )}
               {!loading && query.length >= 2 && results.length === 0 && (
-                <p className="text-[12px] text-muted-foreground px-4 py-3">No results found.</p>
+                <p className="text-secondary text-muted-foreground px-4 py-3">No results found.</p>
               )}
               {results.map((result, i) => {
                 const Icon = typeIcons[result.type];
@@ -146,18 +146,18 @@ export function GlobalSearch() {
                     key={`${result.type}-${result.id}`}
                     onClick={() => navigate(result.href)}
                     onMouseEnter={() => setActive(i)}
-                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${
+                    className={`w-full flex items-center gap-3 px-4 min-h-touch text-left transition-colors ${
                       i === active ? "bg-muted/40" : "hover:bg-muted/20"
                     }`}
                   >
-                    <Icon className="w-4 h-4 text-muted-foreground shrink-0" />
+                    <Icon className="w-icon-md h-icon-md text-muted-foreground shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-[13px] text-foreground truncate">{result.title}</p>
+                      <p className="text-body text-foreground truncate">{result.title}</p>
                       {result.subtitle && (
-                        <p className="text-[11px] text-muted-foreground truncate">{result.subtitle}</p>
+                        <p className="text-secondary text-muted-foreground truncate">{result.subtitle}</p>
                       )}
                     </div>
-                    <span className="text-[10px] text-muted-foreground/70 uppercase shrink-0">{typeLabels[result.type]}</span>
+                    <span className="text-label text-muted-foreground/70 uppercase shrink-0">{typeLabels[result.type]}</span>
                   </button>
                 );
               })}

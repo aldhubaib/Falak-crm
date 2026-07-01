@@ -20,8 +20,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         "border-destructive/40 text-destructive hover:bg-destructive/10": variant === "destructive",
       },
       {
-        "h-8 px-4 text-[12px]": size === "sm",
-        "h-9 px-5 text-[13px]": size === "md",
+        "min-h-touch px-4 text-button": size === "sm",
+        "min-h-touch-lg px-5 text-button": size === "md",
       },
       className,
     );

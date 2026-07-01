@@ -54,7 +54,7 @@ export function AddContactForm({ companyId, onSuccess }: AddContactFormProps) {
       className="rounded-lg border border-border p-4 space-y-3"
     >
       <div className="flex items-center justify-between mb-1">
-        <p className="text-[12px] font-medium text-foreground">New Contact</p>
+        <p className="text-secondary font-medium text-foreground">New Contact</p>
         <button type="button" onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground">
           <X className="w-4 h-4" />
         </button>
@@ -62,7 +62,7 @@ export function AddContactForm({ companyId, onSuccess }: AddContactFormProps) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-          <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+          <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">
             First Name <span className="text-destructive">*</span>
           </label>
           <input
@@ -70,18 +70,18 @@ export function AddContactForm({ companyId, onSuccess }: AddContactFormProps) {
             placeholder="First name"
             required
             autoFocus
-            className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+            className="w-full h-input bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
           />
         </div>
         <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-          <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+          <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">
             Last Name <span className="text-destructive">*</span>
           </label>
           <input
             name="lastName"
             placeholder="Last name"
             required
-            className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+            className="w-full h-input bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
           />
         </div>
       </div>
@@ -89,36 +89,36 @@ export function AddContactForm({ companyId, onSuccess }: AddContactFormProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <PhoneInput name="mobile" label="Mobile" required />
         <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-          <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+          <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">
             Email
           </label>
           <input
             name="email"
             type="email"
             placeholder="name@company.com"
-            className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+            className="w-full h-input bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
           />
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-          <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+          <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">
             Country <span className="text-destructive">*</span>
           </label>
           <input
             name="country"
             placeholder="Country"
             required
-            className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+            className="w-full h-input bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
           />
         </div>
         <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-          <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Role</label>
+          <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">Role</label>
           <input
             name="role"
             placeholder="Title / Position"
-            className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+            className="w-full h-input bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
           />
         </div>
       </div>

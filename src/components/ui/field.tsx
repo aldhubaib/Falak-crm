@@ -84,7 +84,7 @@ export function InputField({
         saving && "border-primary/50"
       )}
     >
-      <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+      <label className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider">
         {icon}
         {label}
         {saving && <Loader2 className="w-2.5 h-2.5 animate-spin text-primary" />}
@@ -100,22 +100,22 @@ export function InputField({
             placeholder={placeholder || "—"}
             onChange={(e) => setLocalValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+            className="w-full h-input bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
           />
-          <button onClick={handleSave} className="w-6 h-6 rounded flex items-center justify-center text-primary hover:bg-primary/10 shrink-0">
-            <Check className="w-3.5 h-3.5" />
+          <button onClick={handleSave} className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-primary hover:bg-primary/10 shrink-0">
+            <Check className="w-icon-sm h-icon-sm" />
           </button>
-          <button onClick={handleCancel} className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:bg-muted/30 shrink-0">
-            <X className="w-3.5 h-3.5" />
+          <button onClick={handleCancel} className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:bg-muted/30 shrink-0">
+            <X className="w-icon-sm h-icon-sm" />
           </button>
         </div>
       ) : (
-        <div className="flex items-center h-8 cursor-pointer" onClick={startEdit}>
-          <span dir={dir} className={cn("flex-1 text-[13px] truncate", value ? "text-foreground" : "text-muted-foreground/50")}>
+        <div className="flex items-center h-input cursor-pointer" onClick={startEdit}>
+          <span dir={dir} className={cn("flex-1 text-body truncate", value ? "text-foreground" : "text-muted-foreground/50")}>
             {value || placeholder || "—"}
           </span>
           {!readOnly && (
-            <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+            <Pencil className="w-icon-sm h-icon-sm text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
           )}
         </div>
       )}
@@ -174,19 +174,19 @@ export function SelectField({
           saving && "border-primary/50"
         )}
       >
-        <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider pointer-events-none">
+        <label className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider pointer-events-none">
           {icon}
           {label}
           {saving && <Loader2 className="w-2.5 h-2.5 animate-spin text-primary" />}
         </label>
-        <div className="flex items-center h-8 cursor-pointer" onClick={startEdit}>
-          <span className={cn("flex-1 text-[13px]", value ? "text-foreground" : "text-muted-foreground/50")}>
+        <div className="flex items-center h-input cursor-pointer" onClick={startEdit}>
+          <span className={cn("flex-1 text-body", value ? "text-foreground" : "text-muted-foreground/50")}>
             {displayLabel || placeholder || "Select..."}
           </span>
           {!editing && (
-            <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+            <Pencil className="w-icon-sm h-icon-sm text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
           )}
-          {editing && <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />}
+          {editing && <ChevronDown className="w-icon-sm h-icon-sm text-muted-foreground shrink-0" />}
         </div>
       </div>
 
@@ -201,7 +201,7 @@ export function SelectField({
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search..."
-                  className="w-full h-8 px-2.5 rounded bg-black text-[12px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+                  className="w-full h-input px-2.5 rounded bg-black text-secondary text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
                   onKeyDown={(e) => {
                     if (e.key === "Escape") handleClose();
                     if (e.key === "Enter" && filtered.length > 0) handleSelect(filtered[0].value);
@@ -215,7 +215,7 @@ export function SelectField({
                   type="button"
                   onClick={() => handleSelect("")}
                   className={cn(
-                    "w-full px-3 py-2 text-left text-[12px] text-muted-foreground/50 hover:bg-muted/30 transition-colors",
+                    "w-full px-3 min-h-touch text-left text-secondary text-muted-foreground/50 hover:bg-muted/30 transition-colors flex items-center",
                     !value && "bg-muted/40"
                   )}
                 >
@@ -228,7 +228,7 @@ export function SelectField({
                   type="button"
                   onClick={() => handleSelect(opt.value)}
                   className={cn(
-                    "w-full px-3 py-2 text-left text-[12px] text-foreground hover:bg-muted/30 transition-colors",
+                    "w-full px-3 min-h-touch text-left text-secondary text-foreground hover:bg-muted/30 transition-colors flex items-center",
                     value === opt.value && "bg-muted/40"
                   )}
                 >
@@ -236,7 +236,7 @@ export function SelectField({
                 </button>
               ))}
               {filtered.length === 0 && (
-                <p className="px-3 py-2 text-[11px] text-muted-foreground">No results</p>
+                <p className="px-3 py-2 text-secondary text-muted-foreground">No results</p>
               )}
             </div>
           </div>
@@ -286,7 +286,7 @@ export function TextareaField({
         saving && "border-primary/50"
       )}
     >
-      <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+      <label className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider">
         {icon}
         {label}
         {saving && <Loader2 className="w-2.5 h-2.5 animate-spin text-primary" />}
@@ -300,23 +300,23 @@ export function TextareaField({
             placeholder={placeholder || "—"}
             rows={3}
             onChange={(e) => setLocalValue(e.target.value)}
-            className="w-full py-1.5 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-none"
+            className="w-full py-1.5 bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-none"
           />
           <div className="flex items-center gap-1 justify-end pb-1">
-            <button onClick={handleSave} className="w-6 h-6 rounded flex items-center justify-center text-primary hover:bg-primary/10">
-              <Check className="w-3.5 h-3.5" />
+            <button onClick={handleSave} className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-primary hover:bg-primary/10">
+              <Check className="w-icon-sm h-icon-sm" />
             </button>
-            <button onClick={handleCancel} className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:bg-muted/30">
-              <X className="w-3.5 h-3.5" />
+            <button onClick={handleCancel} className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:bg-muted/30">
+              <X className="w-icon-sm h-icon-sm" />
             </button>
           </div>
         </div>
       ) : (
         <div className="flex items-start min-h-[2rem] py-1.5 cursor-pointer" onClick={startEdit}>
-          <span className={cn("flex-1 text-[13px] whitespace-pre-wrap", value ? "text-foreground" : "text-muted-foreground/50")}>
+          <span className={cn("flex-1 text-body whitespace-pre-wrap", value ? "text-foreground" : "text-muted-foreground/50")}>
             {value || placeholder || "—"}
           </span>
-          <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0 mt-0.5" />
+          <Pencil className="w-icon-sm h-icon-sm text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0 mt-0.5" />
         </div>
       )}
     </div>
@@ -360,8 +360,8 @@ export function PhoneField({ label, icon, value, onSave }: PhoneFieldProps) {
         saving && "border-primary/50"
       )}
     >
-      <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-        {icon || <Phone className="w-3 h-3" />}
+      <label className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider">
+        {icon || <Phone className="w-icon-sm h-icon-sm" />}
         {label}
         {saving && <Loader2 className="w-2.5 h-2.5 animate-spin text-primary" />}
       </label>
@@ -376,19 +376,19 @@ export function PhoneField({ label, icon, value, onSave }: PhoneFieldProps) {
               embedded
             />
           </div>
-          <button onClick={handleSave} className="w-6 h-6 rounded flex items-center justify-center text-primary hover:bg-primary/10 shrink-0">
-            <Check className="w-3.5 h-3.5" />
+          <button onClick={handleSave} className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-primary hover:bg-primary/10 shrink-0">
+            <Check className="w-icon-sm h-icon-sm" />
           </button>
-          <button onClick={handleCancel} className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:bg-muted/30 shrink-0">
-            <X className="w-3.5 h-3.5" />
+          <button onClick={handleCancel} className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:bg-muted/30 shrink-0">
+            <X className="w-icon-sm h-icon-sm" />
           </button>
         </div>
       ) : (
-        <div className="flex items-center h-8 cursor-pointer" onClick={startEdit}>
-          <span className={cn("flex-1 text-[13px]", value ? "text-foreground" : "text-muted-foreground/50")}>
+        <div className="flex items-center h-input cursor-pointer" onClick={startEdit}>
+          <span className={cn("flex-1 text-body", value ? "text-foreground" : "text-muted-foreground/50")}>
             {value || "—"}
           </span>
-          <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+          <Pencil className="w-icon-sm h-icon-sm text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
         </div>
       )}
     </div>
@@ -450,8 +450,8 @@ export function EmailField({ label, icon, value, placeholder, onSave }: EmailFie
           saving && "border-primary/50"
         )}
       >
-        <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-          {icon || <Mail className="w-3 h-3" />}
+        <label className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider">
+          {icon || <Mail className="w-icon-sm h-icon-sm" />}
           {label}
           {saving && <Loader2 className="w-2.5 h-2.5 animate-spin text-primary" />}
         </label>
@@ -468,26 +468,26 @@ export function EmailField({ label, icon, value, placeholder, onSave }: EmailFie
                 if (formatError) setFormatError(false);
               }}
               onKeyDown={handleKeyDown}
-              className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+              className="w-full h-input bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
             />
-            <button onClick={handleSave} className="w-6 h-6 rounded flex items-center justify-center text-primary hover:bg-primary/10 shrink-0">
-              <Check className="w-3.5 h-3.5" />
+            <button onClick={handleSave} className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-primary hover:bg-primary/10 shrink-0">
+              <Check className="w-icon-sm h-icon-sm" />
             </button>
-            <button onClick={handleCancel} className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:bg-muted/30 shrink-0">
-              <X className="w-3.5 h-3.5" />
+            <button onClick={handleCancel} className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:bg-muted/30 shrink-0">
+              <X className="w-icon-sm h-icon-sm" />
             </button>
           </div>
         ) : (
-          <div className="flex items-center h-8 cursor-pointer" onClick={startEdit}>
-            <span className={cn("flex-1 text-[13px] truncate", value ? "text-foreground" : "text-muted-foreground/50")}>
+          <div className="flex items-center h-input cursor-pointer" onClick={startEdit}>
+            <span className={cn("flex-1 text-body truncate", value ? "text-foreground" : "text-muted-foreground/50")}>
               {value || placeholder || "—"}
             </span>
-            <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+            <Pencil className="w-icon-sm h-icon-sm text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
           </div>
         )}
       </div>
       {formatError && (
-        <p className="text-[11px] text-destructive mt-1">Please enter a valid email</p>
+        <p className="text-secondary text-destructive mt-1">Please enter a valid email</p>
       )}
     </div>
   );
@@ -543,20 +543,20 @@ export function CountryField({ label, icon, value, onSave }: CountryFieldProps) 
           saving && "border-primary/50"
         )}
       >
-        <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider pointer-events-none">
-          {icon || <MapPin className="w-3 h-3" />}
+        <label className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider pointer-events-none">
+          {icon || <MapPin className="w-icon-sm h-icon-sm" />}
           {label}
           {saving && <Loader2 className="w-2.5 h-2.5 animate-spin text-primary" />}
         </label>
-        <div className="flex items-center h-8 cursor-pointer" onClick={startEdit}>
-          <span className={cn("flex-1 text-[13px] flex items-center gap-2", value ? "text-foreground" : "text-muted-foreground/50")}>
+        <div className="flex items-center h-input cursor-pointer" onClick={startEdit}>
+          <span className={cn("flex-1 text-body flex items-center gap-2", value ? "text-foreground" : "text-muted-foreground/50")}>
             {flag && <span className="text-[16px]">{flag}</span>}
             {value || "Select country..."}
           </span>
           {!editing && (
-            <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+            <Pencil className="w-icon-sm h-icon-sm text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
           )}
-          {editing && <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />}
+          {editing && <ChevronDown className="w-icon-sm h-icon-sm text-muted-foreground shrink-0" />}
         </div>
       </div>
 
@@ -570,7 +570,7 @@ export function CountryField({ label, icon, value, onSave }: CountryFieldProps) 
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search countries..."
-                className="w-full h-8 px-2.5 rounded bg-black text-[12px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+                className="w-full h-input px-2.5 rounded bg-black text-secondary text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
                 onKeyDown={(e) => {
                   if (e.key === "Escape") handleClose();
                   if (e.key === "Enter" && filtered.length > 0) handleSelect(filtered[0].name);
@@ -584,16 +584,16 @@ export function CountryField({ label, icon, value, onSave }: CountryFieldProps) 
                   type="button"
                   onClick={() => handleSelect(c.name)}
                   className={cn(
-                    "w-full flex items-center gap-2 px-3 py-2 text-left text-[12px] hover:bg-muted/30 transition-colors",
+                    "w-full flex items-center gap-2 px-3 min-h-touch text-left text-secondary hover:bg-muted/30 transition-colors",
                     value === c.name && "bg-muted/40"
                   )}
                 >
-                  <span className="text-[14px]">{c.flag}</span>
+                  <span className="text-body">{c.flag}</span>
                   <span className="text-foreground">{c.name}</span>
                 </button>
               ))}
               {filtered.length === 0 && (
-                <p className="px-3 py-2 text-[11px] text-muted-foreground">No countries found</p>
+                <p className="px-3 py-2 text-secondary text-muted-foreground">No countries found</p>
               )}
             </div>
           </div>

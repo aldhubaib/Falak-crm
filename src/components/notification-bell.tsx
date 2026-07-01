@@ -112,11 +112,11 @@ export function NotificationBell() {
     <div className="relative" ref={panelRef}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors relative"
+        className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors relative"
       >
-        <Bell className="w-4 h-4" />
+        <Bell className="w-icon-md h-icon-md" />
         {unreadCount > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-primary text-[9px] font-bold text-primary-foreground flex items-center justify-center">
+          <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 rounded-full bg-primary text-label font-bold text-primary-foreground flex items-center justify-center px-0.5">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -125,13 +125,13 @@ export function NotificationBell() {
       {open && (
         <div className="absolute right-0 top-full mt-2 w-80 bg-black border border-border rounded-xl shadow-xl overflow-hidden z-[200]">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-            <h3 className="text-[13px] font-semibold text-foreground">Notifications</h3>
+            <h3 className="text-body font-semibold text-foreground">Notifications</h3>
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllRead}
-                className="text-[11px] text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+                className="text-secondary text-primary hover:text-primary/80 transition-colors flex items-center gap-1 min-h-touch"
               >
-                <CheckCheck className="w-3 h-3" />
+                <CheckCheck className="w-icon-sm h-icon-sm" />
                 Mark all read
               </button>
             )}
@@ -145,7 +145,7 @@ export function NotificationBell() {
             ) : notifications.length === 0 ? (
               <div className="py-8 text-center">
                 <Bell className="w-8 h-8 mx-auto text-muted-foreground/20 mb-2" />
-                <p className="text-[12px] text-muted-foreground/60">No notifications yet</p>
+                <p className="text-secondary text-muted-foreground/60">No notifications yet</p>
               </div>
             ) : (
               notifications.map((n) => (
@@ -164,18 +164,18 @@ export function NotificationBell() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className={`text-[12px] leading-snug ${!n.read ? "text-foreground font-medium" : "text-foreground/70"}`}>
+                    <p className={`text-secondary leading-snug ${!n.read ? "text-foreground font-medium" : "text-foreground/70"}`}>
                       {n.title}
                     </p>
                     {n.body && (
-                      <p className="text-[11px] text-muted-foreground/60 mt-0.5 truncate">{n.body}</p>
+                      <p className="text-secondary text-muted-foreground/60 mt-0.5 truncate">{n.body}</p>
                     )}
-                    <p className="text-[10px] text-muted-foreground/40 mt-1">
+                    <p className="text-label text-muted-foreground/40 mt-1">
                       {formatDistanceToNow(n.createdAt, { addSuffix: true })}
                     </p>
                   </div>
                   {n.linkUrl && (
-                    <ExternalLink className="w-3 h-3 text-muted-foreground/30 shrink-0 mt-1" />
+                    <ExternalLink className="w-icon-sm h-icon-sm text-muted-foreground/30 shrink-0 mt-1" />
                   )}
                 </button>
               ))

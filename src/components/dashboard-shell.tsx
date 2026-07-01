@@ -110,11 +110,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <div className="fixed top-0 left-0 right-0 h-12 flex items-center justify-between px-4 border-b border-border bg-background z-[100]">
           <button
             onClick={() => setDrawerOpen(true)}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+            className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
           >
-            <Menu className="w-4 h-4" />
+            <Menu className="w-icon-md h-icon-md" />
           </button>
-          <span className="font-semibold text-[13px] text-foreground">
+          <span className="font-semibold text-subheading text-foreground">
             {pageTitle || "Dashboard"}
           </span>
           <div className="flex items-center gap-2">
@@ -157,7 +157,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         {/* Top bar — only on pages without their own header */}
         {isDesktop && !hasOwnHeader(pathname) && (
           <div className="flex items-center justify-between px-6 h-12 shrink-0 border-b border-border/50">
-            <h1 className="text-[15px] font-semibold text-foreground">{pageTitle}</h1>
+            <h1 className="text-subheading font-semibold text-foreground">{pageTitle}</h1>
             <div className="flex items-center gap-2">
               <GlobalSearch />
               <NotificationBell />

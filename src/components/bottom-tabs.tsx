@@ -63,8 +63,8 @@ export function BottomTabs() {
                 : "text-muted-foreground"
             )}
           >
-            <tab.icon className="w-5 h-5" strokeWidth={1.5} />
-            <span className="text-[10px] font-medium">{tab.name}</span>
+            <tab.icon className="w-icon-md h-icon-md" strokeWidth={1.5} />
+            <span className="text-label font-medium">{tab.name}</span>
           </Link>
         );
       })}

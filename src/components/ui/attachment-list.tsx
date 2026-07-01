@@ -68,32 +68,32 @@ export function AttachmentList({
             <FileIcon className="w-4 h-4 text-muted-foreground" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[12px] text-foreground truncate">{att.name}</p>
-            <p className="text-[10px] text-muted-foreground">
+            <p className="text-secondary text-foreground truncate">{att.name}</p>
+            <p className="text-label text-muted-foreground">
               {att.sizeBytes ? formatBytes(att.sizeBytes) : "—"} •{" "}
               {new Date(att.createdAt).toLocaleDateString()}
             </p>
           </div>
-          <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex items-center gap-1 shrink-0 opacity-100 [@media(pointer:fine)]:opacity-0 [@media(pointer:fine)]:group-hover:opacity-100 transition-opacity">
             <button
               onClick={() => handleDownload(att.id, att.name)}
               disabled={downloading === att.id}
-              className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+              className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
               title="Download"
             >
               {downloading === att.id ? (
-                <ExternalLink className="w-3.5 h-3.5 animate-pulse" />
+                <ExternalLink className="w-icon-sm h-icon-sm animate-pulse" />
               ) : (
-                <Download className="w-3.5 h-3.5" />
+                <Download className="w-icon-sm h-icon-sm" />
               )}
             </button>
             {canDelete && (
               <button
                 onClick={() => handleDelete(att.id)}
-                className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
                 title="Delete"
               >
-                <Trash2 className="w-3.5 h-3.5" />
+                <Trash2 className="w-icon-sm h-icon-sm" />
               </button>
             )}
           </div>

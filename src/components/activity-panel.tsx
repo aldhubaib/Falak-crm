@@ -42,10 +42,10 @@ export function ActivityPanel() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-ring hover:text-foreground transition-colors"
+        className="w-icon-btn h-icon-btn rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-ring hover:text-foreground transition-colors"
         title="Activity Log"
       >
-        <History className="w-4 h-4" />
+        <History className="w-icon-md h-icon-md" />
       </button>
 
       {/* Backdrop */}
@@ -65,20 +65,20 @@ export function ActivityPanel() {
       >
         <div className="flex items-center justify-between px-5 h-14 border-b border-border shrink-0">
           <div className="flex items-center gap-2">
-            <History className="w-4 h-4 text-muted-foreground" />
-            <h2 className="text-[14px] font-semibold text-foreground">Activity</h2>
+            <History className="w-icon-md h-icon-md text-muted-foreground" />
+            <h2 className="text-body font-semibold text-foreground">Activity</h2>
           </div>
           <button
             onClick={() => setOpen(false)}
-            className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+            className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
           >
-            <X className="w-4 h-4" />
+            <X className="w-icon-md h-icon-md" />
           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto px-5 py-4">
           {loading && activities.length === 0 ? (
-            <p className="text-[12px] text-muted-foreground">Loading...</p>
+            <p className="text-secondary text-muted-foreground">Loading...</p>
           ) : (
             <ActivityFeed activities={activities} />
           )}

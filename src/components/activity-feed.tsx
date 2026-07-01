@@ -24,14 +24,14 @@ type Activity = {
 };
 
 const actionIcons: Record<string, React.ReactNode> = {
-  created: <Plus className="w-3 h-3" />,
-  updated: <Pencil className="w-3 h-3" />,
-  deleted: <Trash2 className="w-3 h-3" />,
-  moved: <ArrowRight className="w-3 h-3" />,
-  sent: <Send className="w-3 h-3" />,
-  accepted: <CheckCircle className="w-3 h-3" />,
-  rejected: <XCircle className="w-3 h-3" />,
-  paid: <DollarSign className="w-3 h-3" />,
+  created: <Plus className="w-icon-sm h-icon-sm" />,
+  updated: <Pencil className="w-icon-sm h-icon-sm" />,
+  deleted: <Trash2 className="w-icon-sm h-icon-sm" />,
+  moved: <ArrowRight className="w-icon-sm h-icon-sm" />,
+  sent: <Send className="w-icon-sm h-icon-sm" />,
+  accepted: <CheckCircle className="w-icon-sm h-icon-sm" />,
+  rejected: <XCircle className="w-icon-sm h-icon-sm" />,
+  paid: <DollarSign className="w-icon-sm h-icon-sm" />,
 };
 
 const actionColors: Record<string, string> = {
@@ -48,7 +48,7 @@ const actionColors: Record<string, string> = {
 export function ActivityFeed({ activities }: { activities: Activity[] }) {
   if (activities.length === 0) {
     return (
-      <p className="text-[12px] text-muted-foreground">No activity yet</p>
+      <p className="text-secondary text-muted-foreground">No activity yet</p>
     );
   }
 
@@ -60,14 +60,14 @@ export function ActivityFeed({ activities }: { activities: Activity[] }) {
           {activity.userImage ? (
             <img src={activity.userImage} alt="" loading="lazy" className="w-7 h-7 rounded-full shrink-0" />
           ) : (
-            <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-[10px] font-semibold text-muted-foreground shrink-0">
+            <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-label font-semibold text-muted-foreground shrink-0">
               {(activity.userName || "?").charAt(0)}
             </div>
           )}
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <p className="text-[13px] text-foreground leading-snug">
+            <p className="text-body text-foreground leading-snug">
               <span className="font-medium">{activity.userName || "System"}</span>
               {" "}
               {activity.action === "moved" && activity.changes?.stage ? (
@@ -86,7 +86,7 @@ export function ActivityFeed({ activities }: { activities: Activity[] }) {
                 </span>
               )}
             </p>
-            <p className="text-[11px] text-muted-foreground mt-0.5">
+            <p className="text-secondary text-muted-foreground mt-0.5">
               {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}
             </p>
           </div>

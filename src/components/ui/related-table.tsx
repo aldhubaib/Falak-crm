@@ -36,7 +36,7 @@ export function RelatedTable<T>({
   return (
     <div className="rounded-lg bg-black border border-border p-4">
       <div className="flex items-center justify-between mb-3">
-        <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+        <label className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider">
           {icon}
           {title} ({data.length})
         </label>
@@ -44,7 +44,7 @@ export function RelatedTable<T>({
       </div>
 
       {data.length === 0 ? (
-        <p className="text-[12px] text-muted-foreground">{emptyMessage}</p>
+        <p className="text-secondary text-muted-foreground">{emptyMessage}</p>
       ) : (
         <div className="rounded-lg border border-border overflow-hidden">
           <table className="w-full text-left">
@@ -54,7 +54,7 @@ export function RelatedTable<T>({
                   <th
                     key={col.key}
                     className={cn(
-                      "px-4 py-2.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider",
+                      "px-4 py-2.5 text-label font-medium text-muted-foreground uppercase tracking-wider",
                       col.align === "right" && "text-right",
                       col.align === "center" && "text-center"
                     )}
@@ -81,7 +81,7 @@ export function RelatedTable<T>({
                       <td
                         key={col.key}
                         className={cn(
-                          "px-4 py-2.5 text-[13px]",
+                          "px-4 py-2.5 text-body",
                           col.align === "right" && "text-right",
                           col.align === "center" && "text-center"
                         )}

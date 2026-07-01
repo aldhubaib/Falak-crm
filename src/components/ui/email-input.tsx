@@ -61,8 +61,8 @@ export function EmailInput({
         )}
       >
         {label && (
-          <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-            <Mail className="w-3 h-3" />
+          <label className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider">
+            <Mail className="w-icon-sm h-icon-sm" />
             {label}
             {required && <span className="text-destructive">*</span>}
           </label>
@@ -74,11 +74,11 @@ export function EmailInput({
           onChange={handleChange}
           onBlur={handleBlur}
           placeholder={placeholder}
-          className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+          className="w-full h-input bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
         />
       </div>
       {hasError && (
-        <p className="text-[11px] text-destructive mt-1">
+        <p className="text-secondary text-destructive mt-1">
           {externalErrorMessage || "Please enter a valid email address"}
         </p>
       )}

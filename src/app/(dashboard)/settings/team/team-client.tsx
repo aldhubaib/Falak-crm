@@ -63,21 +63,21 @@ export function TeamClient({
       {/* Test Mode Banner */}
       {testingRole && (
         <div className="flex items-center gap-3 rounded-xl px-4 py-3 bg-amber-500/10 border border-amber-500/30">
-          <Play className="w-4 h-4 text-amber-400 shrink-0" />
+          <Play className="w-icon-md h-icon-md text-amber-400 shrink-0" />
           <div className="flex-1 min-w-0">
-            <p className="text-[13px] text-amber-400 font-medium">
+            <p className="text-body text-amber-400 font-medium">
               Testing role: <span className="text-foreground">{testingRole.name}</span>
             </p>
-            <p className="text-[11px] text-amber-400/60">You are seeing the app as this role would. Navigate around to test permissions.</p>
+            <p className="text-secondary text-amber-400/60">You are seeing the app as this role would. Navigate around to test permissions.</p>
           </div>
           <button
             onClick={async () => {
               await stopTestRole();
               router.refresh();
             }}
-            className="flex items-center gap-1.5 text-[12px] font-medium text-amber-400 bg-amber-500/15 hover:bg-amber-500/25 px-3 py-1.5 rounded-lg transition-colors shrink-0"
+            className="flex items-center gap-1.5 text-secondary font-medium text-amber-400 bg-amber-500/15 hover:bg-amber-500/25 px-3 py-1.5 rounded-lg transition-colors shrink-0"
           >
-            <Square className="w-3 h-3" />
+            <Square className="w-icon-sm h-icon-sm" />
             Stop Testing
           </button>
         </div>
@@ -85,9 +85,9 @@ export function TeamClient({
       {/* Members */}
       <div className="rounded-xl border border-border bg-card p-4 max-w-2xl">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[13px] font-medium text-foreground">Members ({members.length})</h3>
+          <h3 className="text-body font-medium text-foreground">Members ({members.length})</h3>
           <Button size="sm" onClick={() => setShowInvite(true)}>
-            <UserPlus className="w-3.5 h-3.5" /> Invite
+            <UserPlus className="w-icon-sm h-icon-sm" /> Invite
           </Button>
         </div>
 
@@ -104,21 +104,21 @@ export function TeamClient({
           >
             <div className="grid grid-cols-2 gap-2">
               <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-                <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Email <span className="text-destructive">*</span></label>
+                <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">Email <span className="text-destructive">*</span></label>
                 <input
                   name="email"
                   type="email"
                   required
                   placeholder="member@company.com"
-                  className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+                  className="w-full h-input bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
                 />
               </div>
               <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-                <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Name</label>
+                <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">Name</label>
                 <input
                   name="name"
                   placeholder="Full name"
-                  className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+                  className="w-full h-input bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
                 />
               </div>
             </div>
@@ -140,7 +140,7 @@ export function TeamClient({
               />
             </div>
             <div className="flex gap-2">
-              <Button type="submit" size="sm"><UserPlus className="w-3.5 h-3.5" /> Invite</Button>
+              <Button type="submit" size="sm"><UserPlus className="w-icon-sm h-icon-sm" /> Invite</Button>
               <Button type="button" variant="ghost" size="sm" onClick={() => setShowInvite(false)}>Cancel</Button>
             </div>
           </form>
@@ -149,16 +149,16 @@ export function TeamClient({
         <div className="space-y-1">
           {members.map((member) => (
             <div key={member.id} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 group">
-              <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center text-[11px] font-semibold text-primary shrink-0">
+              <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center text-secondary font-semibold text-primary shrink-0">
                 {(member.name || member.email).charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[13px] text-foreground truncate">{member.name || member.email}</p>
-                <p className="text-[11px] text-muted-foreground">{member.email}</p>
+                <p className="text-body text-foreground truncate">{member.name || member.email}</p>
+                <p className="text-secondary text-muted-foreground">{member.email}</p>
               </div>
 
               {member.type === "OWNER" ? (
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-primary/15 text-primary">
+                <span className="px-1.5 py-0.5 rounded text-label font-medium bg-primary/15 text-primary">
                   owner
                 </span>
               ) : (
@@ -177,8 +177,8 @@ export function TeamClient({
                     const result = await removeMember(member.id);
                     if (!result.ok) useErrorStore.getState().push(result.error);
                   }}>
-                    <button type="submit" className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity">
-                      <X className="w-3 h-3" />
+                    <button type="submit" className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:text-destructive opacity-100 [@media(pointer:fine)]:opacity-0 [@media(pointer:fine)]:group-hover:opacity-100 transition-opacity">
+                      <X className="w-icon-sm h-icon-sm" />
                     </button>
                   </form>
                 </div>
@@ -192,14 +192,14 @@ export function TeamClient({
       <div className="rounded-xl border border-border bg-card p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Shield className="w-4 h-4 text-primary" />
-            <h3 className="text-[13px] font-medium text-foreground">Roles</h3>
+            <Shield className="w-icon-md h-icon-md text-primary" />
+            <h3 className="text-body font-medium text-foreground">Roles</h3>
           </div>
           <div className="flex items-center gap-2">
             {roles.length === 0 && (
               <form action={seedDefaultRoles}>
                 <Button type="submit" size="sm" variant="ghost">
-                  <Plus className="w-3.5 h-3.5" /> Create Defaults
+                  <Plus className="w-icon-sm h-icon-sm" /> Create Defaults
                 </Button>
               </form>
             )}
@@ -211,7 +211,7 @@ export function TeamClient({
                 else useErrorStore.getState().push(result.error);
               }}
             >
-              <Plus className="w-3.5 h-3.5" /> New Role
+              <Plus className="w-icon-sm h-icon-sm" /> New Role
             </Button>
           </div>
         </div>
@@ -225,9 +225,9 @@ export function TeamClient({
               <div key={role.id}>
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <Shield className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
-                    <span className="text-[13px] font-medium text-foreground truncate">{role.name}</span>
-                    <span className="text-[10px] text-muted-foreground shrink-0">👥 {memberCount}</span>
+                    <Shield className="w-icon-sm h-icon-sm text-muted-foreground shrink-0" />
+                    <span className="text-body font-medium text-foreground truncate">{role.name}</span>
+                    <span className="text-label text-muted-foreground shrink-0">👥 {memberCount}</span>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     {testingRoleId === role.id ? (
@@ -236,9 +236,9 @@ export function TeamClient({
                           await stopTestRole();
                           router.refresh();
                         }}
-                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium text-amber-400 bg-amber-500/15 hover:bg-amber-500/25 transition-colors"
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-secondary font-medium text-amber-400 bg-amber-500/15 hover:bg-amber-500/25 transition-colors"
                       >
-                        <Square className="w-3 h-3" />
+                        <Square className="w-icon-sm h-icon-sm" />
                         Stop
                       </button>
                     ) : (
@@ -248,18 +248,18 @@ export function TeamClient({
                           if (result.ok) router.refresh();
                           else useErrorStore.getState().push(result.error);
                         }}
-                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-secondary font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
                         title={`Test as ${role.name}`}
                       >
-                        <Play className="w-3 h-3" />
+                        <Play className="w-icon-sm h-icon-sm" />
                         Test
                       </button>
                     )}
                     <button
                       onClick={() => setEditingRoleId(isEditing ? null : role.id)}
-                      className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+                      className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
                     >
-                      <Pencil className="w-3.5 h-3.5" />
+                      <Pencil className="w-icon-sm h-icon-sm" />
                     </button>
                     <button
                       onClick={async () => {
@@ -267,9 +267,9 @@ export function TeamClient({
                         const result = await deleteRole(role.id);
                         if (!result.ok) useErrorStore.getState().push(result.error);
                       }}
-                      className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                      className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-colors"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-icon-sm h-icon-sm" />
                     </button>
                   </div>
                 </div>
@@ -365,28 +365,28 @@ function RoleEditor({
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="w-full text-[14px] font-medium text-foreground bg-black border border-border rounded-xl px-4 py-3 focus:outline-none focus:border-ring transition-colors"
+        className="w-full text-body font-medium text-foreground bg-black border border-border rounded-xl px-4 py-3 focus:outline-none focus:border-ring transition-colors"
       />
 
       {/* Module Access */}
       <div>
-        <h4 className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-3">Module Access</h4>
+        <h4 className="text-secondary font-medium text-muted-foreground uppercase tracking-wider mb-3">Module Access</h4>
         <div className="rounded-xl border border-border overflow-hidden">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5">Module</th>
-                <th className="text-center text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-[80px]">None</th>
-                <th className="text-center text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-[80px]">View</th>
-                <th className="text-center text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-[80px]">Full</th>
+                <th className="text-left text-secondary font-medium text-muted-foreground px-4 py-2.5">Module</th>
+                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[80px]">None</th>
+                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[80px]">View</th>
+                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[80px]">Full</th>
               </tr>
             </thead>
             <tbody>
               {MODULE_DEFS.map((mod) => (
                 <tr key={mod.key} className="border-b border-border/50 last:border-0">
                   <td className="px-4 py-2.5">
-                    <p className="text-[13px] text-foreground">{mod.label}</p>
-                    <p className="text-[10px] text-muted-foreground/60">{mod.description}</p>
+                    <p className="text-body text-foreground">{mod.label}</p>
+                    <p className="text-label text-muted-foreground/60">{mod.description}</p>
                   </td>
                   <td className="text-center px-3 py-2.5">
                     <ModuleRadio checked={modules[mod.key] === "none"} onChange={() => setModules((p) => ({ ...p, [mod.key]: "none" }))} variant="none" />
@@ -402,25 +402,25 @@ function RoleEditor({
             </tbody>
           </table>
         </div>
-        <p className="text-[10px] text-muted-foreground/50 mt-2">
+        <p className="text-label text-muted-foreground/50 mt-2">
           None = hidden from sidebar. View = read-only access. Full = can create, edit, and delete.
         </p>
       </div>
 
       {/* Stage permissions table */}
       <div>
-        <h4 className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-3">Task Stage Permissions</h4>
+        <h4 className="text-secondary font-medium text-muted-foreground uppercase tracking-wider mb-3">Task Stage Permissions</h4>
         <div className="rounded-xl border border-border overflow-hidden">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5">Stage</th>
-                <th className="text-center text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Create</th>
-                <th className="text-center text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Modify</th>
-                <th className="text-center text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Forward</th>
-                <th className="text-center text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Rollback</th>
-                <th className="text-center text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Delete</th>
-                <th className="text-center text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-[80px]">Auto-Assign</th>
+                <th className="text-left text-secondary font-medium text-muted-foreground px-4 py-2.5">Stage</th>
+                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Create</th>
+                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Modify</th>
+                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Forward</th>
+                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Rollback</th>
+                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[72px]">Delete</th>
+                <th className="text-center text-secondary font-medium text-muted-foreground px-3 py-2.5 w-[80px]">Auto-Assign</th>
               </tr>
             </thead>
             <tbody>
@@ -431,7 +431,7 @@ function RoleEditor({
 
                 return (
                   <tr key={status.id} className="border-b border-border/50 last:border-0">
-                    <td className="px-4 py-2.5 text-[13px] text-foreground">{status.name}</td>
+                    <td className="px-4 py-2.5 text-body text-foreground">{status.name}</td>
                     <td className="text-center px-3 py-2.5">
                       <StageCheckbox checked={sp.create} onChange={() => toggleStage(status.id, "create")} />
                     </td>
@@ -440,14 +440,14 @@ function RoleEditor({
                     </td>
                     <td className="text-center px-3 py-2.5">
                       {isLast ? (
-                        <span className="text-[12px] text-muted-foreground/30">—</span>
+                        <span className="text-secondary text-muted-foreground/30">—</span>
                       ) : (
                         <StageCheckbox checked={sp.forward} onChange={() => toggleStage(status.id, "forward")} />
                       )}
                     </td>
                     <td className="text-center px-3 py-2.5">
                       {isFirst ? (
-                        <span className="text-[12px] text-muted-foreground/30">—</span>
+                        <span className="text-secondary text-muted-foreground/30">—</span>
                       ) : (
                         <StageCheckbox checked={sp.rollback} onChange={() => toggleStage(status.id, "rollback")} />
                       )}
@@ -464,7 +464,7 @@ function RoleEditor({
             </tbody>
           </table>
         </div>
-        <p className="text-[10px] text-muted-foreground/50 mt-2">
+        <p className="text-label text-muted-foreground/50 mt-2">
           Create = can create tasks in this stage. Modify = can edit tasks in this stage. Forward/Rollback = can move tasks to next/previous stage. Delete = can delete tasks in this stage. Auto-Assign = task is automatically assigned to this role when it enters this stage.
         </p>
       </div>
@@ -473,17 +473,17 @@ function RoleEditor({
       <div className="flex items-center justify-end gap-3">
         <button
           onClick={onClose}
-          className="flex items-center gap-1.5 text-[13px] text-muted-foreground hover:text-foreground px-4 py-2 transition-colors"
+          className="flex items-center gap-1.5 text-body text-muted-foreground hover:text-foreground px-4 py-2 transition-colors"
         >
-          <X className="w-3.5 h-3.5" />
+          <X className="w-icon-sm h-icon-sm" />
           Cancel
         </button>
         <button
           onClick={handleSave}
           disabled={saving || !name.trim()}
-          className="flex items-center gap-1.5 text-[13px] font-medium text-white bg-primary hover:bg-primary/90 disabled:opacity-40 px-5 py-2.5 rounded-xl transition-colors"
+          className="flex items-center gap-1.5 text-body font-medium text-white bg-primary hover:bg-primary/90 disabled:opacity-40 px-5 py-2.5 rounded-xl transition-colors"
         >
-          <Check className="w-3.5 h-3.5" />
+          <Check className="w-icon-sm h-icon-sm" />
           {saving ? "Saving..." : "Save"}
         </button>
       </div>
@@ -502,7 +502,7 @@ function StageCheckbox({ checked, onChange }: { checked: boolean; onChange: () =
           : "border-border hover:border-muted-foreground"
       }`}
     >
-      {checked && <Check className="w-3.5 h-3.5" />}
+      {checked && <Check className="w-icon-sm h-icon-sm" />}
     </button>
   );
 }

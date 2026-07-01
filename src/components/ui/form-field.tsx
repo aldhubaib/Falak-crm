@@ -11,16 +11,16 @@ import {
 } from "lucide-react";
 
 const ICONS: Record<string, React.ReactNode> = {
-  User: <User className="w-3 h-3" />,
-  Phone: <Phone className="w-3 h-3" />,
-  Mail: <Mail className="w-3 h-3" />,
-  MapPin: <MapPin className="w-3 h-3" />,
-  Building2: <Building2 className="w-3 h-3" />,
-  Globe: <Globe className="w-3 h-3" />,
-  UserPlus: <UserPlus className="w-3 h-3" />,
-  Layers: <Layers className="w-3 h-3" />,
-  DollarSign: <DollarSign className="w-3 h-3" />,
-  Handshake: <Handshake className="w-3 h-3" />,
+  User: <User className="w-icon-sm h-icon-sm" />,
+  Phone: <Phone className="w-icon-sm h-icon-sm" />,
+  Mail: <Mail className="w-icon-sm h-icon-sm" />,
+  MapPin: <MapPin className="w-icon-sm h-icon-sm" />,
+  Building2: <Building2 className="w-icon-sm h-icon-sm" />,
+  Globe: <Globe className="w-icon-sm h-icon-sm" />,
+  UserPlus: <UserPlus className="w-icon-sm h-icon-sm" />,
+  Layers: <Layers className="w-icon-sm h-icon-sm" />,
+  DollarSign: <DollarSign className="w-icon-sm h-icon-sm" />,
+  Handshake: <Handshake className="w-icon-sm h-icon-sm" />,
 };
 
 interface FormFieldProps {
@@ -87,7 +87,7 @@ export function FormField({ def, value, error, onChange, inputRef, suffix }: For
           hasError ? "border-destructive" : "border-border"
         )}
       >
-        <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+        <label className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider">
           {icon}
           {def.label}
           {isRequired && <span className="text-destructive">*</span>}
@@ -108,15 +108,15 @@ export function FormField({ def, value, error, onChange, inputRef, suffix }: For
               e.target.style.height = `${e.target.scrollHeight}px`;
             }}
             rows={1}
-            className="flex-1 min-h-[2rem] py-1 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-none overflow-hidden"
+            className="flex-1 min-h-[2rem] py-1 bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-none overflow-hidden"
           />
           {displaySuffix && (
-            <span className="text-[11px] text-muted-foreground font-medium shrink-0">{displaySuffix}</span>
+            <span className="text-secondary text-muted-foreground font-medium shrink-0">{displaySuffix}</span>
           )}
         </div>
       </div>
       {hasError && (
-        <p className="text-[11px] text-destructive mt-1">{error}</p>
+        <p className="text-secondary text-destructive mt-1">{error}</p>
       )}
     </div>
   );
@@ -162,17 +162,17 @@ function CountryFormField({
           open && !hasError && "border-ring"
         )}
       >
-        <label className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase tracking-wider pointer-events-none">
-          {icon || <MapPin className="w-3 h-3" />}
+        <label className="flex items-center gap-1.5 text-label font-medium text-muted-foreground uppercase tracking-wider pointer-events-none">
+          {icon || <MapPin className="w-icon-sm h-icon-sm" />}
           {def.label}
           {isRequired && <span className="text-destructive">*</span>}
         </label>
-        <div className="flex items-center justify-between h-8">
-          <span className={cn("text-[13px] flex items-center gap-2", value ? "text-foreground" : "text-muted-foreground/50")}>
+        <div className="flex items-center justify-between h-input">
+          <span className={cn("text-body flex items-center gap-2", value ? "text-foreground" : "text-muted-foreground/50")}>
             {flag && <span className="text-[16px]">{flag}</span>}
             {value || def.placeholder || "Select country..."}
           </span>
-          <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+          <ChevronDown className="w-icon-sm h-icon-sm text-muted-foreground shrink-0" />
         </div>
       </button>
 
@@ -186,7 +186,7 @@ function CountryFormField({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search countries..."
-                className="w-full h-8 px-2.5 rounded bg-black text-[12px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+                className="w-full h-input px-2.5 rounded bg-black text-secondary text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
                 onKeyDown={(e) => {
                   if (e.key === "Escape") { setOpen(false); setSearch(""); }
                   if (e.key === "Enter" && filtered.length > 0) {
@@ -208,16 +208,16 @@ function CountryFormField({
                     setSearch("");
                   }}
                   className={cn(
-                    "w-full flex items-center gap-2 px-3 py-2 text-left text-[12px] hover:bg-muted/30 transition-colors",
+                    "w-full flex items-center gap-2 px-3 min-h-touch text-left text-secondary hover:bg-muted/30 transition-colors",
                     value === c.name && "bg-muted/40"
                   )}
                 >
-                  <span className="text-[14px]">{c.flag}</span>
+                  <span className="text-body">{c.flag}</span>
                   <span className="text-foreground">{c.name}</span>
                 </button>
               ))}
               {filtered.length === 0 && (
-                <p className="px-3 py-2 text-[11px] text-muted-foreground">No countries found</p>
+                <p className="px-3 py-2 text-secondary text-muted-foreground">No countries found</p>
               )}
             </div>
           </div>
@@ -225,7 +225,7 @@ function CountryFormField({
       )}
 
       {hasError && (
-        <p className="text-[11px] text-destructive mt-1">{error}</p>
+        <p className="text-secondary text-destructive mt-1">{error}</p>
       )}
     </div>
   );

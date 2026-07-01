@@ -11,9 +11,9 @@ export default async function ProjectsPage() {
       <div className="flex items-center justify-end mb-4">
         <Link
           href="/projects/new"
-          className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[12px] font-medium flex items-center gap-1.5 no-underline hover:bg-primary/90 transition-colors"
+          className="min-h-touch px-3 rounded-lg bg-primary text-primary-foreground text-button font-medium flex items-center gap-1.5 no-underline hover:bg-primary/90 transition-colors"
         >
-          <Plus className="w-3.5 h-3.5" />
+          <Plus className="w-icon-sm h-icon-sm" />
           New Project
         </Link>
       </div>
@@ -37,18 +37,18 @@ export default async function ProjectsPage() {
                 />
               </div>
               <div className="p-3">
-                <h3 className="text-[13px] font-medium text-foreground truncate group-hover:text-primary transition-colors">
+                <h3 className="text-body font-medium text-foreground truncate group-hover:text-primary transition-colors">
                   {project.name}
                 </h3>
                 {project.description && (
-                  <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">{project.description}</p>
+                  <p className="text-secondary text-muted-foreground mt-0.5 line-clamp-2">{project.description}</p>
                 )}
-                <p className="text-[11px] text-muted-foreground mt-1 truncate">
+                <p className="text-secondary text-muted-foreground mt-1 truncate">
                   {project._count.tasks} tasks • {project._count.invoices} invoices
                 </p>
                 {project.status && (
                   <span
-                    className="inline-block mt-2 px-2 py-0.5 rounded-full text-[10px] font-medium"
+                    className="inline-block mt-2 px-2 py-0.5 rounded-full text-label font-medium"
                     style={{
                       backgroundColor: `${project.status.color}20`,
                       color: project.status.color,

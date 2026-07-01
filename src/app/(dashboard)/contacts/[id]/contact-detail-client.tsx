@@ -121,7 +121,7 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
             }}
             onClick={(e) => e.stopPropagation()}
             placeholder="e.g. CEO, Manager"
-            className="h-7 px-2 rounded-md bg-background border border-ring text-[13px] text-foreground focus:outline-none w-full max-w-[180px]"
+            className="h-input px-2 rounded-md bg-background border border-ring text-body text-foreground focus:outline-none w-full max-w-[180px]"
           />
         ) : (
           <span className="text-muted-foreground">{r.role || "—"}</span>
@@ -133,14 +133,14 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
       render: (r) => (
         <button
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (!r.primary) handleSetPrimary(r.companyId); }}
-          className={`w-6 h-6 rounded flex items-center justify-center transition-colors ${
+          className={`w-icon-btn h-icon-btn rounded flex items-center justify-center transition-colors ${
             r.primary
               ? "text-amber-400"
               : "text-muted-foreground/30 hover:text-amber-400/60"
           }`}
           title={r.primary ? "Primary company" : "Set as primary"}
         >
-          <Star className={`w-3.5 h-3.5 ${r.primary ? "fill-current" : ""}`} />
+          <Star className={`w-icon-sm h-icon-sm ${r.primary ? "fill-current" : ""}`} />
         </button>
       ),
     },
@@ -152,17 +152,17 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
         <div className="flex items-center justify-end gap-1">
           <button
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); startEdit(r); }}
-            className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
             title="Edit role"
           >
-            <Pencil className="w-3 h-3" />
+            <Pencil className="w-icon-sm h-icon-sm" />
           </button>
           <button
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleRemoveCompany(r.companyId); }}
-            className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors"
+            className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors"
             title="Remove"
           >
-            <Trash2 className="w-3 h-3" />
+            <Trash2 className="w-icon-sm h-icon-sm" />
           </button>
         </div>
       ),
@@ -174,9 +174,9 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
       <div className="flex items-center gap-3 h-12 mb-6">
         <Link
           href="/contacts"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-icon-md h-icon-md" />
         </Link>
         <h1 className="text-lg font-semibold text-foreground flex-1">
           {contact.firstName} {contact.middleName ? `${contact.middleName} ` : ""}{contact.lastName}
@@ -193,7 +193,7 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <InputField
             label="First Name"
-            icon={<User className="w-3 h-3" />}
+            icon={<User className="w-icon-sm h-icon-sm" />}
             value={contact.firstName}
             onSave={save("firstName")}
           />
@@ -234,7 +234,7 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <CountryField
             label="Country"
-            icon={<MapPin className="w-3 h-3" />}
+            icon={<MapPin className="w-icon-sm h-icon-sm" />}
             value={contact.country}
             onSave={save("country")}
           />
@@ -244,7 +244,7 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
       {/* Companies Table */}
       <div className="border-t border-border my-8" />
       <RelatedTable
-        icon={<Building2 className="w-3 h-3" />}
+        icon={<Building2 className="w-icon-sm h-icon-sm" />}
         title="Companies"
         data={contact.companies}
         getRowId={(r) => r.companyId}
@@ -253,7 +253,7 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
         action={
           availableCompanies.length > 0 ? (
             <Button size="sm" onClick={() => setShowAddCompany(true)}>
-              <Plus className="w-3.5 h-3.5" />
+              <Plus className="w-icon-sm h-icon-sm" />
               Add Company
             </Button>
           ) : undefined
@@ -274,11 +274,11 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
               options={availableCompanies.map((c) => ({ value: c.id, label: c.name }))}
             />
             <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-              <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Role at Company</label>
+              <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">Role at Company</label>
               <input
                 name="role"
                 placeholder="e.g. CEO, Consultant"
-                className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+                className="w-full h-input bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
               />
             </div>
           </div>
@@ -295,7 +295,7 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
       {/* Deals Table */}
       <div className="border-t border-border my-8" />
       <RelatedTable
-        icon={<Handshake className="w-3 h-3" />}
+        icon={<Handshake className="w-icon-sm h-icon-sm" />}
         title="Deals"
         data={contact.deals}
         getRowId={(r) => r.id}
