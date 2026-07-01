@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo, useCallback, memo, type DragEvent
 import { updateTaskStatus, getStageGateBlockers, assignTaskToMe } from "@/actions/projects";
 import { createInvoiceFromProject } from "@/actions/invoices";
 import { addTaskComment } from "@/actions/comments";
-import { ArrowLeft, Plus, FileText, AlertTriangle, Settings, GripVertical, ChevronRight, Undo2, Paperclip, X, Loader2, LayoutGrid, FolderOpen, Upload, Trash2, Download, MoreHorizontal, FolderPlus, Pencil, FolderInput, BarChart3, CheckCircle2, Clock, ListChecks, CalendarDays, Building2, Users, UserCheck } from "lucide-react";
+import { ArrowLeft, Plus, FileText, AlertTriangle, Settings, GripVertical, ChevronRight, Undo2, Paperclip, X, Loader2, LayoutGrid, FolderOpen, Upload, Trash2, Download, MoreHorizontal, FolderPlus, Pencil, FolderInput, BarChart3, CheckCircle2, Clock, ListChecks, CalendarDays, Building2, Users, UserCheck, RotateCcw } from "lucide-react";
 import { getProjectAssets, createFolder, deleteFolder, renameFolder, deleteAsset, renameAsset, getFolderBreadcrumbs, moveAsset, moveFolder } from "@/actions/assets";
 import { uploadManager } from "@/lib/upload-manager";
 import { HeaderActions } from "@/components/header-actions";
@@ -37,6 +37,7 @@ type Task = {
   price: unknown;
   priority: number | null;
   completedAt: Date | null;
+  rejectionCount: number;
   status: TaskStatus | null;
   service: { name: string } | null;
   assignee: { name: string | null; email: string } | null;
@@ -1003,6 +1004,12 @@ const TaskCard = memo(function TaskCard({
         {p && (
           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ring-1 ${priorityColor}`}>
             P{p}
+          </span>
+        )}
+        {task.rejectionCount > 0 && (
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ring-1 bg-amber-500/20 text-amber-400 ring-amber-500/30">
+            <RotateCcw className="w-3 h-3" />
+            {task.rejectionCount}
           </span>
         )}
         <div className="flex-1" />

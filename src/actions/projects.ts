@@ -272,6 +272,7 @@ export async function updateTaskStatus(taskId: string, statusId: string, project
       statusId,
       assigneeId: newAssigneeId,
       assignmentHistory: history,
+      rejectionCount: !isForward ? { increment: 1 } : undefined,
       completedAt: targetStatus?.name === "Completed" || targetStatus?.name === "Published" ? new Date() : null,
     },
   });
