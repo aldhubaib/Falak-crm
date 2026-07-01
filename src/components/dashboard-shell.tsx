@@ -146,8 +146,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {/* Main content */}
+      {/* Main content — size container for child queries */}
       <main
+        style={{ containerType: "inline-size" }}
         className={cn(
           "flex-1 min-w-0 bg-background relative z-10 flex flex-col",
           isDesktop ? "rounded-l-2xl" : hasOwnHeader(pathname) ? "pb-16" : "pt-12 pb-16"

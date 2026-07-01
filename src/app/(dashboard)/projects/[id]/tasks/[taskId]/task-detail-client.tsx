@@ -487,11 +487,11 @@ export function TaskDetailClient({
                   value={title}
                   onChange={(e) => { setSaved(false); setTitle(e.target.value); }}
                   placeholder="What needs to be done?"
-                  className="w-full text-xl font-semibold text-foreground bg-transparent border border-border rounded-xl px-4 py-3 focus:outline-none focus:border-ring transition-colors placeholder:text-muted-foreground/40"
+                  className="w-full text-heading font-semibold text-foreground bg-transparent border border-border rounded-xl px-4 py-3 focus:outline-none focus:border-ring transition-colors placeholder:text-muted-foreground/40"
                 />
               </>
             ) : (
-              <h1 className="text-xl font-semibold text-foreground">{task?.title}</h1>
+              <h1 className="text-heading font-semibold text-foreground">{task?.title}</h1>
             )
           )}
 

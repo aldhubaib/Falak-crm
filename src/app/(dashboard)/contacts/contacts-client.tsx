@@ -64,7 +64,7 @@ export function ContactsClient({ contacts }: { contacts: Contact[] }) {
   return (
     <div className="p-6">
       <div className="flex items-center justify-between h-12 mb-6">
-        <h1 className="text-lg font-semibold text-foreground">Contacts</h1>
+        <h1 className="text-heading font-semibold text-foreground">Contacts</h1>
         <Button size="sm" href="/contacts/new">
           <Plus className="w-3.5 h-3.5" />
           Add Contact

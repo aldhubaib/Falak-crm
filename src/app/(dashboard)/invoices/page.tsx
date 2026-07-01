@@ -18,7 +18,7 @@ export default async function InvoicesPage() {
       </div>
 
       {invoices.length === 0 ? (
-        <div className="rounded-xl border border-border bg-card p-8 text-center text-muted-foreground text-sm">
+        <div className="rounded-xl border border-border bg-card p-8 text-center text-muted-foreground text-sub">
           No invoices yet. Create an invoice to get started.
         </div>
       ) : (

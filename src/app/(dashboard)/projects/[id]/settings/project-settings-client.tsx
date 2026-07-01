@@ -70,9 +70,9 @@ export function ProjectSettingsClient({
       <div className="flex items-center gap-3 h-12 mb-8">
         <Link
           href={`/projects/${project.id}`}
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-icon-sm h-icon-sm" />
         </Link>
         <div className="flex-1 min-w-0">
           {editingName ? (
@@ -103,7 +103,7 @@ export function ProjectSettingsClient({
               {projectName}
             </h1>
           )}
-          <p className="text-[12px] text-muted-foreground">Project Settings</p>
+          <p className="text-sub text-muted-foreground">Project Settings</p>
         </div>
       </div>
 
@@ -123,7 +123,7 @@ export function ProjectSettingsClient({
                   setCurrentStatusId(status.id);
                   await updateProjectStatus(project.id, status.id);
                 }}
-                className={`px-3 py-1.5 rounded-lg text-[12px] font-medium transition-colors ${
+                className={`px-3 py-1.5 rounded-lg text-sub font-medium transition-colors ${
                   currentStatusId === status.id
                     ? "ring-2 ring-offset-1 ring-offset-background"
                     : "hover:opacity-80"
@@ -156,7 +156,7 @@ export function ProjectSettingsClient({
           description="Select which checklist templates apply to tasks in this project. When a new task is created, all items from linked templates will be added automatically."
         >
           {allTemplates.length === 0 ? (
-            <div className="text-[13px] text-muted-foreground py-4">
+            <div className="text-body text-muted-foreground py-4">
               No templates available.{" "}
               <Link href="/settings/checklists" className="text-primary hover:underline">
                 Create one in Settings
@@ -195,20 +195,20 @@ export function ProjectSettingsClient({
                         onClick={() => setExpandedId(expanded ? null : template.id)}
                       >
                         <div className="flex items-center gap-2">
-                          <h4 className="text-[13px] font-medium text-foreground">{template.name}</h4>
-                          <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                          <h4 className="text-body font-medium text-foreground">{template.name}</h4>
+                          <span className="text-label text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
                             {template.items.length} item{template.items.length !== 1 ? "s" : ""}
                           </span>
                         </div>
                         {template.description && (
-                          <p className="text-[11px] text-muted-foreground mt-0.5">{template.description}</p>
+                          <p className="text-sub text-muted-foreground mt-0.5">{template.description}</p>
                         )}
                       </div>
                       <button
                         onClick={() => setExpandedId(expanded ? null : template.id)}
-                        className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                        className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
                       >
-                        {expanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                        {expanded ? <ChevronDown className="w-icon-sm h-icon-sm" /> : <ChevronRight className="w-icon-sm h-icon-sm" />}
                       </button>
                     </div>
 
@@ -224,10 +224,10 @@ export function ProjectSettingsClient({
                                   <CheckSquare className="w-3 h-3" />
                                 )}
                               </div>
-                              <span className="flex-1 text-[12px] text-foreground">{item.name}</span>
+                              <span className="flex-1 text-sub text-foreground">{item.name}</span>
                               <RoleBadge role={item.role} />
                               {item.requiredBeforeStage && (
-                                <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 font-medium">
+                                <span className="text-label px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 font-medium">
                                   Before: {item.requiredBeforeStage.name}
                                 </span>
                               )}
@@ -266,7 +266,7 @@ function RequirePublishingSection({ projectId, initialValue }: { projectId: stri
           <button
             key={String(opt)}
             onClick={() => handleToggle(opt)}
-            className={`px-4 py-2 rounded-xl text-[13px] font-medium border transition-colors ${
+            className={`px-4 py-2 rounded-xl text-body font-medium border transition-colors ${
               value === opt
                 ? "bg-primary/15 text-primary border-primary/30"
                 : "bg-muted/30 text-muted-foreground border-border hover:text-foreground"
@@ -308,18 +308,18 @@ function DescriptionSection({ projectId, initialDescription }: { projectId: stri
         onChange={(e) => { setValue(e.target.value); setSaved(false); }}
         placeholder="Describe this project..."
         rows={4}
-        className="w-full text-[13px] text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-black border border-border focus:outline-none focus:border-ring transition-colors resize-none"
+        className="w-full text-body text-foreground placeholder:text-muted-foreground/40 rounded-xl px-4 py-3 bg-black border border-border focus:outline-none focus:border-ring transition-colors resize-none"
       />
       <div className="flex items-center justify-end gap-2 mt-2">
         {saved && (
-          <span className="flex items-center gap-1 text-[12px] text-green-400">
+          <span className="flex items-center gap-1 text-sub text-green-400">
             <CheckCircle2 className="w-3.5 h-3.5" /> Saved
           </span>
         )}
         <button
           onClick={handleSave}
           disabled={saving}
-          className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground text-[12px] font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+          className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground text-sub font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
         >
           {saving ? "Saving..." : "Save"}
         </button>
@@ -405,7 +405,7 @@ function ThumbnailSection({ projectId, thumbnailId }: { projectId: string; thumb
       {uploading ? (
         <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-4 py-6 justify-center">
           <Loader2 className="w-5 h-5 text-primary animate-spin" />
-          <span className="text-[13px] text-muted-foreground">Uploading...</span>
+          <span className="text-body text-muted-foreground">Uploading...</span>
         </div>
       ) : previewUrl ? (
         <div className="relative rounded-xl overflow-hidden border border-border group">
@@ -413,13 +413,13 @@ function ThumbnailSection({ projectId, thumbnailId }: { projectId: string; thumb
           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="text-[12px] text-white bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
+              className="text-sub text-white bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
             >
               Replace
             </button>
             <button
               onClick={handleRemove}
-              className="text-[12px] text-white bg-red-500/40 hover:bg-red-500/60 px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5"
+              className="text-sub text-white bg-red-500/40 hover:bg-red-500/60 px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5"
             >
               <Trash2 className="w-3.5 h-3.5" />
               Remove
@@ -432,7 +432,7 @@ function ThumbnailSection({ projectId, thumbnailId }: { projectId: string; thumb
           className="w-full flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border hover:border-muted-foreground/30 hover:bg-muted/20 py-10 cursor-pointer transition-colors"
         >
           <Upload className="w-6 h-6 text-muted-foreground/40" />
-          <span className="text-[12px] text-muted-foreground/60">Click to upload a thumbnail image</span>
+          <span className="text-sub text-muted-foreground/60">Click to upload a thumbnail image</span>
         </button>
       )}
     </SettingsSection>
@@ -454,9 +454,9 @@ function SettingsSection({
     <div>
       <div className="flex items-center gap-2 mb-1">
         <span className="text-muted-foreground">{icon}</span>
-        <h2 className="text-[14px] font-semibold text-foreground">{title}</h2>
+        <h2 className="text-subheading font-semibold text-foreground">{title}</h2>
       </div>
-      <p className="text-[12px] text-muted-foreground mb-4">{description}</p>
+      <p className="text-sub text-muted-foreground mb-4">{description}</p>
       {children}
     </div>
   );
@@ -470,7 +470,7 @@ function RoleBadge({ role }: { role: string }) {
   };
   const { label, className } = config[role] || config.any;
   return (
-    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium inline-flex items-center gap-0.5 ${className}`}>
+    <span className={`text-label px-1.5 py-0.5 rounded font-medium inline-flex items-center gap-0.5 ${className}`}>
       <Shield className="w-2.5 h-2.5" />
       {label}
     </span>

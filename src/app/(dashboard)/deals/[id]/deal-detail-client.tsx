@@ -144,7 +144,7 @@ export function DealDetailClient({
       {/* Details */}
       <div className="rounded-xl border border-border bg-card p-4">
         <h3 className="text-body font-medium text-foreground mb-3">Details</h3>
-        <dl className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-2 text-sm">
+        <dl className="grid grid-cols-1 @lg:grid-cols-2 gap-x-8 gap-y-2 text-sub">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">Company</dt>
             <dd className="text-foreground">{deal.company?.name || "—"}</dd>
@@ -177,7 +177,7 @@ export function DealDetailClient({
             </div>
           )}
           {deal.lostReason && (
-            <div className="flex justify-between lg:col-span-2">
+            <div className="flex justify-between @lg:col-span-2">
               <dt className="text-muted-foreground">Lost Reason</dt>
               <dd className="text-foreground">{deal.lostReason}</dd>
             </div>

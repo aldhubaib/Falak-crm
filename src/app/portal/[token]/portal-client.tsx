@@ -62,12 +62,12 @@ export function PortalClient({ data }: { data: PortalData }) {
       <header className="border-b border-border bg-card">
         <div className="max-w-3xl mx-auto px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-primary/15 flex items-center justify-center text-[13px] font-semibold text-primary">
+            <div className="w-9 h-9 rounded-full bg-primary/15 flex items-center justify-center text-body font-semibold text-primary">
               {deal.title.charAt(0).toUpperCase()}
             </div>
             <div>
               <h1 className="text-lg font-semibold text-foreground">{deal.title}</h1>
-              <p className="text-[12px] text-muted-foreground">
+              <p className="text-sub text-muted-foreground">
                 {deal.company?.name || ""}
                 {clientName && ` • Welcome, ${clientName}`}
               </p>
@@ -82,13 +82,13 @@ export function PortalClient({ data }: { data: PortalData }) {
           <section className="rounded-xl border border-border bg-card p-5">
             <div className="flex items-center gap-2 mb-4">
               <FolderKanban className="w-4 h-4 text-primary" />
-              <h2 className="text-[14px] font-medium text-foreground">Project Status</h2>
+              <h2 className="text-subheading font-medium text-foreground">Project Status</h2>
             </div>
 
             <div className="flex items-center justify-between mb-3">
               {project.status && (
                 <span
-                  className="px-2.5 py-1 rounded-full text-[12px] font-medium"
+                  className="px-2.5 py-1 rounded-full text-sub font-medium"
                   style={{
                     backgroundColor: `${project.status.color}20`,
                     color: project.status.color,
@@ -97,7 +97,7 @@ export function PortalClient({ data }: { data: PortalData }) {
                   {project.status.name}
                 </span>
               )}
-              <span className="text-[13px] text-muted-foreground">
+              <span className="text-body text-muted-foreground">
                 {completedTasks}/{totalTasks} tasks completed
               </span>
             </div>
@@ -108,14 +108,14 @@ export function PortalClient({ data }: { data: PortalData }) {
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="text-[12px] text-muted-foreground mt-1.5">{progress}% complete</p>
+            <p className="text-sub text-muted-foreground mt-1.5">{progress}% complete</p>
           </section>
         )}
 
         {/* Tasks List */}
         {permissions.tasks && project && project.tasks.length > 0 && (
           <section className="rounded-xl border border-border bg-card p-5">
-            <h2 className="text-[14px] font-medium text-foreground mb-4">Tasks</h2>
+            <h2 className="text-subheading font-medium text-foreground mb-4">Tasks</h2>
             <div className="space-y-2">
               {project.tasks.map((task) => (
                 <div
@@ -128,7 +128,7 @@ export function PortalClient({ data }: { data: PortalData }) {
                     <Circle className="w-4 h-4 text-muted-foreground shrink-0" />
                   )}
                   <span
-                    className={`text-[13px] flex-1 ${
+                    className={`text-body flex-1 ${
                       task.completedAt ? "line-through text-muted-foreground" : "text-foreground"
                     }`}
                   >
@@ -136,7 +136,7 @@ export function PortalClient({ data }: { data: PortalData }) {
                   </span>
                   {task.status && (
                     <span
-                      className="px-1.5 py-0.5 rounded text-[10px] font-medium"
+                      className="px-1.5 py-0.5 rounded text-label font-medium"
                       style={{
                         backgroundColor: `${task.status.color}20`,
                         color: task.status.color,
@@ -156,7 +156,7 @@ export function PortalClient({ data }: { data: PortalData }) {
           <section className="rounded-xl border border-border bg-card p-5">
             <div className="flex items-center gap-2 mb-4">
               <FileText className="w-4 h-4 text-orange" />
-              <h2 className="text-[14px] font-medium text-foreground">Invoices</h2>
+              <h2 className="text-subheading font-medium text-foreground">Invoices</h2>
             </div>
             <div className="space-y-2">
               {project.invoices.map((invoice) => (
@@ -166,13 +166,13 @@ export function PortalClient({ data }: { data: PortalData }) {
                   className="flex items-center justify-between p-3 rounded-lg bg-muted/30 no-underline hover:bg-muted/50 transition-colors"
                 >
                   <div>
-                    <p className="text-[13px] font-medium text-foreground">{invoice.number}</p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                    <p className="text-body font-medium text-foreground">{invoice.number}</p>
+                    <p className="text-sub text-muted-foreground mt-0.5">
                       {new Date(invoice.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[13px] font-semibold text-foreground">
+                    <p className="text-body font-semibold text-foreground">
                       {Number(invoice.total).toLocaleString()} {invoice.currency || "KWD"}
                     </p>
                     <InvoiceStatusBadge status={invoice.status} />
@@ -197,7 +197,7 @@ export function PortalClient({ data }: { data: PortalData }) {
       {/* Footer */}
       <footer className="border-t border-border mt-12">
         <div className="max-w-3xl mx-auto px-6 py-4">
-          <p className="text-[11px] text-muted-foreground text-center">
+          <p className="text-sub text-muted-foreground text-center">
             Powered by Falak CRM
           </p>
         </div>
@@ -217,7 +217,7 @@ function InvoiceStatusBadge({ status }: { status: string }) {
   };
   const { label, className } = config[status] ?? config.DRAFT;
   return (
-    <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${className}`}>
+    <span className={`px-1.5 py-0.5 rounded text-label font-medium ${className}`}>
       {label}
     </span>
   );

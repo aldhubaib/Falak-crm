@@ -18,7 +18,7 @@ export default function MorePage() {
             className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-card transition-colors no-underline"
           >
             <item.icon className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
-            <span className="text-[14px] font-medium text-foreground">
+            <span className="text-body font-medium text-foreground">
               {item.name}
             </span>
           </Link>

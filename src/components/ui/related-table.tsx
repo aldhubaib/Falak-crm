@@ -72,7 +72,7 @@ export function RelatedTable<T>({
                   <tr
                     key={getRowId(row)}
                     className={cn(
-                      "border-b border-border last:border-0 hover:bg-muted/20 transition-colors",
+                      "border-b border-border last:border-0 hover:bg-muted/20 transition-colors min-h-list-item",
                       href && "cursor-pointer"
                     )}
                     onClick={href ? () => router.push(href) : undefined}

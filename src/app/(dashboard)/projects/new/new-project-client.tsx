@@ -36,11 +36,11 @@ export function NewProjectClient({
       <div className="flex items-center gap-3 h-12 mb-8">
         <Link
           href="/projects"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-icon-sm h-icon-sm" />
         </Link>
-        <h1 className="text-lg font-semibold text-foreground flex-1">New Project</h1>
+        <h1 className="text-heading font-semibold text-foreground flex-1">New Project</h1>
         <Button type="submit" form="project-form" disabled={saving}>
           {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
           {saving ? "Saving..." : "Save"}
@@ -75,38 +75,38 @@ export function NewProjectClient({
       >
         <RecordOwner ownerName={currentUserName} />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <div className="rounded-lg bg-card border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+            <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">
               Project Name <span className="text-destructive">*</span>
             </label>
             <input
               value={name}
               onChange={(e) => { setName(e.target.value); setNameError(""); }}
               placeholder="Project name"
-              className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+              className="w-full h-input bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
             />
-            {nameError && <p className="text-[11px] text-destructive mt-0.5">{nameError}</p>}
+            {nameError && <p className="text-sub text-destructive mt-0.5">{nameError}</p>}
           </div>
 
           <div className="rounded-lg bg-card border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Description</label>
+            <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">Description</label>
             <input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Optional description"
-              className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+              className="w-full h-input bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <div className="rounded-lg bg-card border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Project Type</label>
+            <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">Project Type</label>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="w-full h-8 bg-transparent border-none text-[13px] text-foreground focus:outline-none"
+              className="w-full h-input bg-transparent border-none text-body text-foreground focus:outline-none"
             >
               <option value="fixed">Fixed</option>
               <option value="recurring">Recurring</option>
@@ -125,7 +125,7 @@ export function NewProjectClient({
 
         {checklistTemplates.length > 0 && (
           <div className="rounded-lg bg-card border border-border px-3 pt-2 pb-2.5">
-            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mb-2">
+            <label className="text-label font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mb-2">
               <ClipboardCheck className="w-3 h-3" />
               Checklist Templates
             </label>
@@ -141,14 +141,14 @@ export function NewProjectClient({
                         selected ? prev.filter((x) => x !== t.id) : [...prev, t.id]
                       )
                     }
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] font-medium transition-colors ${
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sub font-medium transition-colors ${
                       selected
                         ? "bg-primary/15 text-primary border border-primary/30"
                         : "bg-muted/50 text-muted-foreground border border-border hover:border-primary/30"
                     }`}
                   >
                     {t.name}
-                    <span className="text-[10px] opacity-60">{t.itemCount} items</span>
+                    <span className="text-label opacity-60">{t.itemCount} items</span>
                     {selected && <X className="w-3 h-3 ml-0.5" />}
                   </button>
                 );

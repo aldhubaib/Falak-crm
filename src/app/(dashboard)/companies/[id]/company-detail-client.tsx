@@ -132,7 +132,7 @@ export function CompanyDetailClient({
         >
           <ArrowLeft className="w-icon-md h-icon-md" />
         </Link>
-        <h1 className="text-lg font-semibold text-foreground flex-1">{company.name}</h1>
+        <h1 className="text-heading font-semibold text-foreground flex-1">{company.name}</h1>
         <ActionMenu
           entityType="company"
           entityId={company.id}
@@ -143,7 +143,7 @@ export function CompanyDetailClient({
 
       {/* Fields */}
       <div className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <InputField
             label="Company Name"
             icon={<Building2 className="w-icon-sm h-icon-sm" />}
@@ -159,7 +159,7 @@ export function CompanyDetailClient({
             onSave={save("nameAr")}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <SelectField
             label="Industry"
             value={company.industry || ""}
@@ -175,7 +175,7 @@ export function CompanyDetailClient({
             onSave={save("referral")}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <CountryField
             label="Country"
             icon={<MapPin className="w-icon-sm h-icon-sm" />}
@@ -225,7 +225,7 @@ export function CompanyDetailClient({
                 {note.userImage ? (
                   <img src={note.userImage} alt="" loading="lazy" className="w-6 h-6 rounded-full shrink-0" />
                 ) : (
-                  <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center text-[10px] font-semibold text-primary shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center text-label font-semibold text-primary shrink-0">
                     {(note.userName || "?").charAt(0)}
                   </div>
                 )}

@@ -82,7 +82,7 @@ const generalSettings: SettingsCategory[] = [
 export default function SettingsPage() {
   return (
     <div className="p-6 w-full">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 @sm:grid-cols-2 @lg:grid-cols-3 @xl:grid-cols-5 gap-4">
         {generalSettings.map((category) => (
           <div
             key={category.name}
@@ -93,7 +93,7 @@ export default function SettingsPage() {
                 className={`w-4 h-4 ${category.color}`}
                 strokeWidth={1.5}
               />
-              <h3 className={`text-[13px] font-semibold ${category.color}`}>
+              <h3 className={`text-sub font-semibold ${category.color}`}>
                 {category.name}
               </h3>
             </div>
@@ -102,7 +102,7 @@ export default function SettingsPage() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="block px-2 py-1.5 text-[13px] text-muted-foreground hover:text-foreground transition-colors no-underline rounded-md hover:bg-muted/40"
+                  className="block px-2 py-1.5 text-sub text-muted-foreground hover:text-foreground transition-colors no-underline rounded-md hover:bg-muted/40"
                 >
                   {link.title}
                 </Link>

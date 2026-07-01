@@ -5,8 +5,8 @@ export default function DealDetailLoading() {
         <div className="h-4 w-4 bg-muted rounded animate-pulse" />
         <div className="h-5 w-48 bg-muted rounded animate-pulse" />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-4">
+      <div className="grid grid-cols-1 @lg:grid-cols-3 gap-6">
+        <div className="@lg:col-span-2 space-y-4">
           <div className="rounded-xl border border-border bg-card p-5 space-y-3">
             <div className="h-4 w-20 bg-muted rounded animate-pulse" />
             <div className="h-3 w-full bg-muted/30 rounded animate-pulse" />

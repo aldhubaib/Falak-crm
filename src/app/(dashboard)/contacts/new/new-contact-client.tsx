@@ -71,11 +71,11 @@ export function NewContactClient({ companies, currentUserName }: { companies: Co
       <div className="flex items-center gap-3 h-12 mb-8">
         <Link
           href="/contacts"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-icon-sm h-icon-sm" />
         </Link>
-        <h1 className="text-lg font-semibold text-foreground flex-1">New Contact</h1>
+        <h1 className="text-heading font-semibold text-foreground flex-1">New Contact</h1>
         <Button type="submit" form="contact-form" disabled={saving}>
           {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
           {saving ? "Saving..." : "Save"}
@@ -109,7 +109,7 @@ export function NewContactClient({ companies, currentUserName }: { companies: Co
         <RecordOwner ownerName={currentUserName} />
 
         {/* Name fields */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-3 gap-4">
           <FormField def={FIELD_REGISTRY.firstName} value={values.firstName} error={errors.firstName} onChange={(v) => setValue("firstName", v)} />
           <FormField def={FIELD_REGISTRY.middleName} value={values.middleName} error={errors.middleName} onChange={(v) => setValue("middleName", v)} />
           <FormField def={FIELD_REGISTRY.lastName} value={values.lastName} error={errors.lastName} onChange={(v) => setValue("lastName", v)} />
@@ -119,13 +119,13 @@ export function NewContactClient({ companies, currentUserName }: { companies: Co
         <FormField def={FIELD_REGISTRY.nameAr} value={values.nameAr} error={errors.nameAr} onChange={(v) => setValue("nameAr", v)} />
 
         {/* Mobile & Email */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <FormField def={FIELD_REGISTRY.mobile} value={values.mobile} error={errors.mobile} onChange={(v) => setValue("mobile", v)} />
           <FormField def={FIELD_REGISTRY.email} value={values.email} error={errors.email} onChange={(v) => setValue("email", v)} />
         </div>
 
         {/* Role & Country */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <FormField def={FIELD_REGISTRY.role} value={values.role} error={errors.role} onChange={(v) => setValue("role", v)} />
           <div className={cn(errors.country && "shake")}>
             <ComboboxField
@@ -139,13 +139,13 @@ export function NewContactClient({ companies, currentUserName }: { companies: Co
               onSelect={(val) => setValue("country", val)}
             />
             {errors.country && (
-              <p className="text-[11px] text-destructive mt-1">{errors.country}</p>
+              <p className="text-sub text-destructive mt-1">{errors.country}</p>
             )}
           </div>
         </div>
 
         {/* Company */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <ComboboxField
             label="Company"
             value={values.companyId}

@@ -69,11 +69,11 @@ export function NewCompanyClient({ industries, referrals, currentUserName }: { i
       <div className="flex items-center gap-3 h-12 mb-8">
         <Link
           href="/companies"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-icon-sm h-icon-sm" />
         </Link>
-        <h1 className="text-lg font-semibold text-foreground flex-1">New Company</h1>
+        <h1 className="text-heading font-semibold text-foreground flex-1">New Company</h1>
         <Button type="submit" form="company-form" disabled={saving}>
           {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
           {saving ? "Saving..." : "Save"}
@@ -107,12 +107,12 @@ export function NewCompanyClient({ industries, referrals, currentUserName }: { i
 
         <RecordOwner ownerName={currentUserName} />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <FormField def={FIELD_REGISTRY.companyName} value={values.name} error={errors.name} onChange={(v) => setValue("name", v)} />
           <FormField def={FIELD_REGISTRY.companyNameAr} value={values.nameAr} error={errors.nameAr} onChange={(v) => setValue("nameAr", v)} />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <div className={cn(errors.industry && "shake")}>
             <ComboboxField
               label="Industry"
@@ -135,7 +135,7 @@ export function NewCompanyClient({ industries, referrals, currentUserName }: { i
               }}
             />
             {errors.industry && (
-              <p className="text-[11px] text-destructive mt-1">{errors.industry}</p>
+              <p className="text-sub text-destructive mt-1">{errors.industry}</p>
             )}
           </div>
           <div className={cn(errors.country && "shake")}>
@@ -150,12 +150,12 @@ export function NewCompanyClient({ industries, referrals, currentUserName }: { i
               onSelect={(val) => setValue("country", val)}
             />
             {errors.country && (
-              <p className="text-[11px] text-destructive mt-1">{errors.country}</p>
+              <p className="text-sub text-destructive mt-1">{errors.country}</p>
             )}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <div className={cn(errors.referral && "shake")}>
             <ComboboxField
               label="Referral"
@@ -178,7 +178,7 @@ export function NewCompanyClient({ industries, referrals, currentUserName }: { i
               }}
             />
             {errors.referral && (
-              <p className="text-[11px] text-destructive mt-1">{errors.referral}</p>
+              <p className="text-sub text-destructive mt-1">{errors.referral}</p>
             )}
           </div>
           <FormField def={FIELD_REGISTRY.website} value={values.website} error={errors.website} onChange={(v) => setValue("website", v)} />

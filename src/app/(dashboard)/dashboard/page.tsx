@@ -43,14 +43,14 @@ export default async function DashboardPage() {
     <div className="p-6">
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+      <div className="grid grid-cols-2 @lg:grid-cols-4 gap-3 mb-8">
         <StatCard label="Active Deals" value={String(dealCount)} color="primary" href="/deals" />
         <StatCard label="Projects" value={String(projectCount)} color="purple" href="/projects" />
         <StatCard label="Pending Invoices" value={String(pendingInvoices)} color="orange" href="/invoices" />
         <StatCard label="Revenue" value={`${totalRevenue.toLocaleString()} ${workspace.baseCurrency}`} color="success" href="/invoices" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 @lg:grid-cols-2 gap-6">
       {/* Recent Deals */}
       <div className="rounded-xl border border-border bg-card p-4">
         <div className="flex items-center justify-between mb-4">
@@ -121,7 +121,7 @@ function StatCard({
   return (
     <Link
       href={href}
-      className="rounded-xl border border-border bg-card p-4 hover:border-primary/30 transition-colors no-underline block"
+      className="cq-adapt rounded-xl border border-border bg-card p-card hover:border-primary/30 transition-colors no-underline block"
     >
       <p className="text-sub text-muted-foreground mb-1">{label}</p>
       <p className={`text-xl font-semibold ${colorClasses[color]}`}>{value}</p>

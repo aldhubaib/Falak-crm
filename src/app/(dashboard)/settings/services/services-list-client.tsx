@@ -46,7 +46,7 @@ const columns = [
     label: "Status",
     render: (row: Service) => (
       <span
-        className={`inline-flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-full ${
+        className={`inline-flex items-center gap-1.5 text-sub font-medium px-2 py-0.5 rounded-full ${
           row.active
             ? "bg-emerald-500/10 text-emerald-400"
             : "bg-muted text-muted-foreground"
@@ -69,13 +69,13 @@ export function ServicesListClient({ services }: { services: Service[] }) {
       <div className="flex items-center gap-3 h-12 mb-6">
         <Link
           href="/settings"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-icon-sm h-icon-sm" />
         </Link>
         <div className="flex items-center gap-2 flex-1">
           <Layers className="w-4 h-4 text-muted-foreground" />
-          <h1 className="text-lg font-semibold text-foreground">Services</h1>
+          <h1 className="text-heading font-semibold text-foreground">Services</h1>
         </div>
         <Link href="/settings/services/new">
           <Button size="sm">

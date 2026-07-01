@@ -20,14 +20,14 @@ export function StatusesClient({
       <div className="flex items-center gap-3 h-12 mb-6">
         <Link
           href="/settings"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-icon-sm h-icon-sm" />
         </Link>
-        <h1 className="text-lg font-semibold text-foreground">Statuses</h1>
+        <h1 className="text-heading font-semibold text-foreground">Statuses</h1>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 @lg:grid-cols-2 gap-6">
         <StatusSection
           title="Project Statuses"
           statuses={projectStatuses}
@@ -61,10 +61,10 @@ function StatusSection({
   return (
     <div className="rounded-xl border border-border bg-card p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-[14px] font-medium text-foreground">{title}</h3>
+        <h3 className="text-subheading font-medium text-foreground">{title}</h3>
         <button
           onClick={() => setShowForm(true)}
-          className="text-[11px] text-primary hover:text-primary/80 flex items-center gap-1"
+          className="text-sub text-primary hover:text-primary/80 flex items-center gap-1"
         >
           <Plus className="w-3 h-3" /> Add
         </button>
@@ -82,7 +82,7 @@ function StatusSection({
             name="name"
             placeholder="Status name"
             required
-            className="flex-1 h-8 px-2 rounded-lg bg-black border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
+            className="flex-1 h-input px-2 rounded-lg bg-black border border-border text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-ring transition-colors"
           />
           <input
             name="color"
@@ -107,13 +107,13 @@ function StatusSection({
               className="w-3 h-3 rounded-full shrink-0"
               style={{ backgroundColor: status.color }}
             />
-            <span className="flex-1 text-[13px] text-foreground">{status.name}</span>
+            <span className="flex-1 text-body text-foreground">{status.name}</span>
             <form action={deleteAction.bind(null, status.id)}>
               <button
                 type="submit"
-                className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
               >
-                <Trash2 className="w-3 h-3" />
+                <Trash2 className="w-icon-sm h-icon-sm" />
               </button>
             </form>
           </div>

@@ -43,7 +43,7 @@ export function DealsClient({
   if (!pipeline) {
     return (
       <div className="p-6">
-        <div className="rounded-xl border border-border bg-card p-8 text-center text-muted-foreground text-sm">
+        <div className="rounded-xl border border-border bg-card p-8 text-center text-muted-foreground text-sub">
           No pipeline configured. Go to Settings → Pipelines to set one up.
         </div>
       </div>
@@ -58,7 +58,7 @@ export function DealsClient({
   return (
     <div className="p-6 h-full">
       <div className="flex items-center justify-between h-12 mb-6">
-        <h1 className="text-lg font-semibold text-foreground">Deals</h1>
+        <h1 className="text-heading font-semibold text-foreground">Deals</h1>
         <Link href="/deals/new">
           <Button size="sm">
             <Plus className="w-icon-sm h-icon-sm" />
@@ -87,6 +87,7 @@ export function DealsClient({
           <div
             key={stage.id}
             className="min-w-[280px] w-[280px] flex-shrink-0 flex flex-col"
+            style={{ containerType: "inline-size" }}
           >
             {/* Stage Header */}
             <div className="rounded-t-xl overflow-hidden mb-0">
@@ -142,7 +143,7 @@ const DealCard = memo(function DealCard({
   const isClosed = isWon || isLost;
 
   return (
-    <div className="rounded-xl border border-border bg-card hover:border-border/80 transition-colors group">
+    <div className="cq-adapt rounded-xl border border-border bg-card hover:border-border/80 transition-colors group">
       <Link
         href={`/deals/${deal.id}`}
         className="block p-3 no-underline"

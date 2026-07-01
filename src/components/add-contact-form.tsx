@@ -60,7 +60,7 @@ export function AddContactForm({ companyId, onSuccess }: AddContactFormProps) {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 @sm:grid-cols-2 gap-3">
         <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
           <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">
             First Name <span className="text-destructive">*</span>
@@ -86,7 +86,7 @@ export function AddContactForm({ companyId, onSuccess }: AddContactFormProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 @sm:grid-cols-2 gap-3">
         <PhoneInput name="mobile" label="Mobile" required />
         <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
           <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">
@@ -101,7 +101,7 @@ export function AddContactForm({ companyId, onSuccess }: AddContactFormProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 @sm:grid-cols-2 gap-3">
         <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
           <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">
             Country <span className="text-destructive">*</span>

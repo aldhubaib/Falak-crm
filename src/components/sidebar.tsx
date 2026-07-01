@@ -73,7 +73,7 @@ export function Sidebar({
       <div className="relative px-3 h-12 flex items-center justify-between shrink-0">
         {!collapsed ? (
           <div className="flex items-center gap-2.5 min-w-0 flex-1">
-            <div className="w-7 h-7 rounded-full bg-primary/15 flex items-center justify-center text-[11px] font-semibold text-primary shrink-0">
+            <div className="w-7 h-7 rounded-full bg-primary/15 flex items-center justify-center text-sub font-semibold text-primary shrink-0">
               F
             </div>
             <span className="font-semibold text-body text-foreground truncate">
@@ -82,7 +82,7 @@ export function Sidebar({
           </div>
         ) : (
           <div className="mx-auto">
-            <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center text-[11px] font-semibold text-primary">
+            <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center text-sub font-semibold text-primary">
               F
             </div>
           </div>

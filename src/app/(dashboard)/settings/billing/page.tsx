@@ -24,18 +24,18 @@ export default async function BillingSettingsPage() {
       <div className="flex items-center gap-3 mb-4">
         <Link
           href="/settings"
-          className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="w-icon-sm h-icon-sm" />
         </Link>
       </div>
 
       <div className="rounded-xl border border-border bg-card p-4 max-w-md">
         <form action={updateBilling} className="space-y-4">
           <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5">
-            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Base Currency</label>
-            <p className="text-[13px] text-foreground font-medium h-8 flex items-center">{workspace.baseCurrency}</p>
-            <p className="text-[11px] text-muted-foreground">
+            <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">Base Currency</label>
+            <p className="text-body text-foreground font-medium h-8 flex items-center">{workspace.baseCurrency}</p>
+            <p className="text-sub text-muted-foreground">
               Manage currencies in{" "}
               <Link href="/settings/currencies" className="text-primary no-underline hover:underline">
                 Settings → Currencies
@@ -43,13 +43,13 @@ export default async function BillingSettingsPage() {
             </p>
           </div>
           <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Tax Rate (%)</label>
+            <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">Tax Rate (%)</label>
             <input
               name="taxRate"
               type="number"
               step="0.01"
               defaultValue={Number(workspace.taxRate)}
-              className="w-full h-8 bg-transparent border-none text-[13px] text-foreground focus:outline-none"
+              className="w-full h-input bg-transparent border-none text-body text-foreground focus:outline-none"
             />
           </div>
           <Button type="submit">

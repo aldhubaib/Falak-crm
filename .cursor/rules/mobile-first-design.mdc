@@ -1,5 +1,5 @@
 ---
-description: Mobile-first design standards for Falak CRM — touch targets, typography, spacing, icons, forms
+description: Mobile-first design standards for Falak CRM — fluid tokens, container queries, touch targets, typography
 globs: src/**/*.tsx,src/**/*.css
 alwaysApply: true
 ---
@@ -14,10 +14,41 @@ Sources: Apple HIG, Google Material Design 3, WCAG 2.2 (AA).
 
 ---
 
-## 1. CSS Design Tokens
+## 1. Responsive Architecture — 3 Layers
+
+The app uses a **3-layer responsive system**:
+
+1. **Fluid tokens** — CSS custom properties with `clamp()` that scale smoothly
+   between small and large viewports. Touch devices (`pointer: coarse`) lock
+   to spacious mobile sizes.
+2. **Container queries** — Layouts respond to the **container's width**, not
+   the viewport. The `<main>` element in `DashboardShell` has
+   `container-type: inline-size`. Use `@sm:`, `@md:`, `@lg:`, `@xl:` instead
+   of `sm:`, `md:`, `lg:`, `xl:` for layout breakpoints.
+3. **Container-adaptive tokens** — Components with class `cq-adapt` get token
+   overrides based on their container's inline-size (compact / normal / spacious).
+
+### NEVER use viewport breakpoints (`sm:`, `md:`, `lg:`, `xl:`)
+
+Use container query variants instead:
+
+```tsx
+// ✅ GOOD — responds to container width
+<div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 gap-4">
+
+// ❌ BAD — responds to viewport width
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+```
+
+Exception: Modals with `fixed inset-0` are outside the container flow —
+they may still use `lg:` for mobile-vs-desktop positioning.
+
+---
+
+## 2. CSS Design Tokens
 
 All sizing uses CSS custom properties defined in `globals.css`. These tokens
-auto-adapt between touch devices (`pointer: coarse`) and desktop (`pointer: fine`).
+scale fluidly via `clamp()` and lock to spacious values on touch devices.
 
 **NEVER hardcode pixel sizes like `text-[11px]` or `w-6 h-6`.** Always use the
 token-based classes or the CSS variables.
@@ -25,47 +56,107 @@ token-based classes or the CSS variables.
 ### How to use tokens in Tailwind
 
 ```tsx
-// ✅ GOOD — uses tokens, auto-adapts to device
+// ✅ GOOD — uses tokens, auto-adapts
 <button className="text-body min-h-touch px-card">Save</button>
 <p className="text-sub">Subtitle</p>
 <span className="text-label">LABEL</span>
 
 // ❌ BAD — hardcoded, too small on mobile
 <button className="text-[11px] px-2 py-1.5">Save</button>
-<p className="text-[12px]">Subtitle</p>
-<span className="text-[9px]">LABEL</span>
 ```
 
 ### Token reference
 
-| Token | Mobile (touch) | Desktop (mouse) | Tailwind class |
-|-------|---------------|-----------------|----------------|
-| `--text-body` | 16px | 14px | `text-body` |
-| `--text-sub` | 14px | 12px | `text-sub` |
-| `--text-label` | 12px | 10px | `text-label` |
-| `--text-button` | 14px | 12px | `text-button` |
-| `--text-heading` | 20px | 18px | `text-heading` |
-| `--text-subheading` | 16px | 14px | `text-subheading` |
-| `--size-touch` | 44px | 32px | `min-h-touch` / `min-w-touch` |
-| `--size-touch-lg` | 48px | 36px | `min-h-touch-lg` |
-| `--size-icon-btn` | 40px | 28px | `w-icon-btn h-icon-btn` |
-| `--size-icon-sm` | 18px | 14px | `w-icon-sm h-icon-sm` |
-| `--size-icon-md` | 20px | 16px | `w-icon-md h-icon-md` |
-| `--size-icon-lg` | 24px | 20px | `w-icon-lg h-icon-lg` |
-| `--space-card` | 16px | 12px | `px-card` / `py-card` |
-| `--space-card-sm` | 12px | 8px | `px-card-sm` / `py-card-sm` |
-| `--space-section` | 24px | 16px | `gap-section` / `mb-section` |
-| `--size-input` | 48px | 36px | `h-input` |
-| `--size-list-item` | 48px | 36px | `min-h-list-item` |
+| Token | Range (min→max) | Touch lock | Tailwind class |
+|-------|----------------|------------|----------------|
+| `--text-body` | 14px → 16px | 16px | `text-body` |
+| `--text-sub` | 12px → 14px | 14px | `text-sub` |
+| `--text-label` | 10px → 12px | 12px | `text-label` |
+| `--text-button` | 12px → 14px | 14px | `text-button` |
+| `--text-heading` | 18px → 20px | 20px | `text-heading` |
+| `--text-subheading` | 14px → 16px | 16px | `text-subheading` |
+| `--size-touch` | 32px → 44px | 44px | `min-h-touch` / `min-w-touch` |
+| `--size-touch-lg` | 36px → 48px | 48px | `min-h-touch-lg` |
+| `--size-icon-btn` | 28px → 40px | 40px | `w-icon-btn h-icon-btn` |
+| `--size-icon-sm` | 14px → 18px | 18px | `w-icon-sm h-icon-sm` |
+| `--size-icon-md` | 16px → 20px | 20px | `w-icon-md h-icon-md` |
+| `--size-icon-lg` | 20px → 24px | 24px | `w-icon-lg h-icon-lg` |
+| `--space-card` | 12px → 16px | 16px | `px-card` / `py-card` |
+| `--space-card-sm` | 8px → 12px | 12px | `px-card-sm` / `py-card-sm` |
+| `--space-section` | 16px → 24px | 24px | `gap-section` / `mb-section` |
+| `--size-input` | 36px → 48px | 48px | `h-input` |
+| `--size-list-item` | 36px → 48px | 48px | `min-h-list-item` |
 
 ---
 
-## 2. Touch Targets
+## 3. Container Queries
+
+### How container queries work
+
+The `<main>` element in `DashboardShell` has `container-type: inline-size`.
+All child components can use `@sm:`, `@md:`, `@lg:`, `@xl:` variants which
+respond to the **main area's width**, not the viewport.
+
+### Tailwind v4 container breakpoint values
+
+These are NOT viewport breakpoints — they are smaller:
+
+| Variant | Min container width |
+|---------|---------------------|
+| `@sm` | 384px (24rem) |
+| `@md` | 448px (28rem) |
+| `@lg` | 512px (32rem) |
+| `@xl` | 576px (36rem) |
+
+For component-level containers (Kanban columns, calendar cells, panels), add
+`style={{ containerType: "inline-size" }}` to the wrapper element.
+
+### Adding a container context
+
+```tsx
+// Make an element a size container
+<div style={{ containerType: "inline-size" }}>
+  {/* Children can now use @sm:, @md:, etc. based on THIS element's width */}
+</div>
+```
+
+### The `cq-adapt` class
+
+Add `cq-adapt` to any component that should have its typography, icons,
+and spacing adapt based on the container's width. Touch targets (buttons,
+inputs, list items) are NEVER reduced — they stay at the `pointer: coarse`
+floor on touch devices.
+
+- `≤320px` → compact (smaller text, tighter spacing)
+- `321px–599px` → normal (balanced)
+- `≥600px` → spacious (full mobile sizes)
+
+```tsx
+// Card that auto-adapts text and spacing, touch targets stay safe
+<div className="cq-adapt rounded-xl border bg-card p-card">
+  <h3 className="text-subheading font-semibold">Title</h3>
+  <button className="min-h-touch text-button">Action</button>
+</div>
+```
+
+### Existing container contexts
+
+| Element | File | What it contains |
+|---------|------|-----------------|
+| `<main>` | `dashboard-shell.tsx` | All page content |
+| Kanban column | `project-detail-client.tsx` | Task cards |
+| Deal column | `deals-client.tsx` | Deal cards |
+| Activity panel | `activity-panel.tsx` | Activity feed |
+| Date panel | `publish-client.tsx` | Scheduled items |
+
+---
+
+## 4. Touch Targets
 
 **Minimum 44×44px on touch devices.** This is non-negotiable.
 
-| Element | Mobile min | Desktop min | Pattern |
-|---------|-----------|-------------|---------|
+| Element | Touch min | Desktop min | Pattern |
+|---------|----------|-------------|---------|
 | Primary button | 44×44px | 32px tall | `min-h-touch px-4` |
 | Icon button | 40×40px | 28×28px | `w-icon-btn h-icon-btn` + icon centered |
 | List/row item | 48px tall | 36px tall | `min-h-list-item` |
@@ -78,8 +169,6 @@ token-based classes or the CSS variables.
 **Minimum 8px gap** between adjacent tappable elements. Use `gap-2` minimum.
 
 ### Icon-inside-button pattern
-
-The icon can be small visually, but the tappable area must be large:
 
 ```tsx
 // ✅ GOOD — 40px tap area, 18px icon
@@ -95,63 +184,61 @@ The icon can be small visually, but the tappable area must be large:
 
 ---
 
-## 3. Typography
+## 5. Typography
 
 **Nothing below 12px on mobile, ever.**
 
-| Role | Mobile | Desktop | Class | Weight |
-|------|--------|---------|-------|--------|
-| Page heading | 20px | 18px | `text-heading` | `font-bold` |
-| Card/section title | 16px | 14px | `text-subheading` | `font-semibold` |
-| Body / primary text | 16px | 14px | `text-body` | `font-medium` |
-| Secondary text | 14px | 12px | `text-sub` | `font-normal` |
-| Button text | 14px | 12px | `text-button` | `font-medium` |
-| Labels / captions | 12px | 10px | `text-label` | `font-medium` |
-| Badges / status | 12px | 10px | `text-label` | `font-semibold` |
+| Role | Range | Class | Weight |
+|------|-------|-------|--------|
+| Page heading | 18–20px | `text-heading` | `font-bold` |
+| Card/section title | 14–16px | `text-subheading` | `font-semibold` |
+| Body / primary text | 14–16px | `text-body` | `font-medium` |
+| Secondary text | 12–14px | `text-sub` | `font-normal` |
+| Button text | 12–14px | `text-button` | `font-medium` |
+| Labels / captions | 10–12px | `text-label` | `font-medium` |
 
 ### Rules
 
-- Body text: **16px minimum** on mobile — prevents iOS auto-zoom on inputs
+- Body text: **16px minimum** on touch devices — prevents iOS auto-zoom
 - Line height: **1.5** for body, **1.2** for headings
 - Truncate long text with `truncate`, never shrink font below the floor
-- Use `font-medium` as default weight, not `font-normal` (better legibility on dark backgrounds)
+- Use `font-medium` as default weight (better legibility on dark backgrounds)
 
 ---
 
-## 4. Spacing
+## 6. Spacing
 
 Use the **4px / 8px grid** system. All spacing should be a multiple of 4.
 
-| Context | Mobile | Desktop | Token |
-|---------|--------|---------|-------|
-| Card inner padding | 16px | 12px | `--space-card` |
-| Compact card padding | 12px | 8px | `--space-card-sm` |
-| Between sections | 24px | 16px | `--space-section` |
-| Between cards | 12px | 8px | `gap-3` / `gap-2` |
-| Between tappable items | 8px+ | 4px+ | `gap-2` minimum |
-| Page horizontal padding | 16px | 24px | `px-4 lg:px-6` |
+| Context | Range | Token |
+|---------|-------|-------|
+| Card inner padding | 12–16px | `--space-card` |
+| Compact card padding | 8–12px | `--space-card-sm` |
+| Between sections | 16–24px | `--space-section` |
+| Between cards | 8–12px | `gap-3` / `gap-2` |
+| Between tappable items | 4–8px | `gap-2` minimum |
+| Page horizontal padding | 16px, @sm:24px | `px-4 @sm:px-6` |
 
 ---
 
-## 5. Icons
+## 7. Icons
 
 Always use **Lucide** icons. Size them with tokens:
 
-| Context | Mobile | Desktop | Class |
-|---------|--------|---------|-------|
-| Inside buttons | 18px | 14px | `w-icon-sm h-icon-sm` |
-| Navigation | 24px | 20px | `w-icon-lg h-icon-lg` |
-| Inline with text | 16px | 14px | `w-4 h-4` or `w-icon-sm h-icon-sm` |
-| Standalone icon buttons | 20px | 16px | `w-icon-md h-icon-md` inside `w-icon-btn h-icon-btn` |
-| Status indicators | 14px | 12px | `w-3.5 h-3.5` |
+| Context | Range | Class |
+|---------|-------|-------|
+| Inside buttons | 14–18px | `w-icon-sm h-icon-sm` |
+| Navigation | 20–24px | `w-icon-lg h-icon-lg` |
+| Inline with text | 14–16px | `w-icon-sm h-icon-sm` |
+| Standalone icon buttons | 16–20px | `w-icon-md h-icon-md` inside `w-icon-btn h-icon-btn` |
 
 ---
 
-## 6. Buttons
+## 8. Buttons
 
 ```tsx
 // Primary action — full width on mobile
-<button className="w-full lg:w-auto min-h-touch px-6 rounded-xl text-button font-semibold
+<button className="w-full @sm:w-auto min-h-touch px-6 rounded-xl text-button font-semibold
   bg-primary text-primary-foreground flex items-center justify-center gap-2">
   <Check className="w-icon-sm h-icon-sm" />
   Save
@@ -172,30 +259,11 @@ Always use **Lucide** icons. Size them with tokens:
 </button>
 ```
 
-### Action bar pattern (bottom of cards/modals)
-
-```tsx
-<div className="flex items-center border-t border-border/40">
-  <button className="flex-1 flex items-center justify-center gap-2 min-h-touch
-    text-button font-medium text-muted-foreground hover:text-primary hover:bg-primary/5">
-    <Calendar className="w-icon-sm h-icon-sm" />
-    Reschedule
-  </button>
-  <div className="w-px h-5 bg-border/30" />
-  <button className="flex-1 flex items-center justify-center gap-2 min-h-touch
-    text-button font-medium text-muted-foreground hover:text-red-400 hover:bg-red-500/5">
-    <Trash2 className="w-icon-sm h-icon-sm" />
-    Remove
-  </button>
-</div>
-```
-
 ---
 
-## 7. Forms
+## 9. Forms
 
 ```tsx
-// Text input
 <input
   type="text"
   className="w-full h-input px-4 rounded-xl bg-black border border-border
@@ -203,13 +271,6 @@ Always use **Lucide** icons. Size them with tokens:
     focus:outline-none focus:border-ring"
 />
 
-// Select dropdown
-<select className="w-full h-input px-4 rounded-xl bg-black border border-border
-  text-body text-foreground focus:outline-none focus:border-ring appearance-none">
-  <option>Option</option>
-</select>
-
-// Label
 <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">
   Field Name
 </label>
@@ -217,88 +278,54 @@ Always use **Lucide** icons. Size them with tokens:
 
 ### Rules
 
-- Input height: **48px on mobile**, 36px on desktop (`h-input`)
-- Font size: **16px on mobile** to prevent iOS zoom
+- Input height: **48px on touch**, 36px on desktop (`h-input`)
+- Font size: **16px on touch** to prevent iOS zoom
 - Always use `type="email"`, `type="tel"`, `type="number"` for correct keyboard
 - Full-width inputs on mobile (`w-full`)
 - Labels above inputs, never inline on mobile
 
 ---
 
-## 8. Cards
+## 10. Responsive Grids — Container Query Patterns
 
 ```tsx
-<div className="rounded-2xl border border-border bg-card/60 overflow-hidden">
-  {/* Header */}
-  <div className="px-card py-card">
-    <h3 className="text-subheading font-semibold text-foreground">Title</h3>
-    <p className="text-sub text-muted-foreground mt-1">Description</p>
-  </div>
+// Form fields — 2 columns on medium containers
+<div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
 
-  {/* Content */}
-  <div className="px-card py-card-sm border-t border-border/30">
-    <p className="text-body text-foreground">Content here</p>
-  </div>
+// Stat cards — 2 columns default, 4 on large containers
+<div className="grid grid-cols-2 @lg:grid-cols-4 gap-3">
 
-  {/* Actions */}
-  <div className="flex items-center border-t border-border/40">
-    <button className="flex-1 min-h-touch text-button ...">Action</button>
-  </div>
-</div>
+// Project grid — scales from 2 to 5 columns
+<div className="grid grid-cols-2 @md:grid-cols-3 @lg:grid-cols-4 @xl:grid-cols-5 gap-4">
+
+// Kanban — stacked on small, horizontal on medium+
+<div className="flex flex-col @md:flex-row gap-3 @md:overflow-x-auto">
 ```
 
 ---
 
-## 9. Lists & Rows
-
-```tsx
-// Tappable list item
-<div className="flex items-center gap-3 px-card min-h-list-item
-  hover:bg-muted/10 transition-colors cursor-pointer">
-  <Avatar className="w-icon-btn h-icon-btn" />
-  <div className="flex-1 min-w-0">
-    <p className="text-body font-medium text-foreground truncate">Item title</p>
-    <p className="text-sub text-muted-foreground">Subtitle</p>
-  </div>
-  <ChevronRight className="w-icon-sm h-icon-sm text-muted-foreground/50 shrink-0" />
-</div>
-```
-
----
-
-## 10. Modals & Overlays
+## 11. Modals & Overlays
 
 - On mobile: **bottom sheet** sliding up from bottom, `rounded-t-2xl`
 - On desktop: **centered card** with backdrop, `rounded-2xl`
+- Modals use `lg:` viewport breakpoints (they are `fixed`, outside container flow)
 - Close button: `w-icon-btn h-icon-btn` in the top-right corner
 - Max height: `max-h-[85vh]` to always show some backdrop
-- Content area: `overflow-y-auto`
 
 ```tsx
-// Responsive modal
 <div className="fixed inset-0 z-[500] flex items-end lg:items-center justify-center">
   <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
   <div className="relative w-full lg:w-[480px] max-h-[85vh] bg-background
-    border border-border rounded-t-2xl lg:rounded-2xl overflow-hidden flex flex-col">
-    {/* Header with close */}
-    <div className="px-card py-card border-b border-border flex items-center justify-between">
-      <h3 className="text-subheading font-semibold">Title</h3>
-      <button className="w-icon-btn h-icon-btn rounded-full flex items-center justify-center
-        text-muted-foreground hover:text-foreground hover:bg-muted">
-        <X className="w-icon-md h-icon-md" />
-      </button>
-    </div>
-    {/* Scrollable content */}
-    <div className="flex-1 overflow-y-auto px-card py-card">
-      ...
-    </div>
+    border border-border rounded-t-2xl lg:rounded-2xl overflow-hidden flex flex-col"
+    style={{ containerType: "inline-size" }}>
+    {/* Content inside uses @container queries */}
   </div>
 </div>
 ```
 
 ---
 
-## 11. Navigation & PWA
+## 12. Navigation & PWA
 
 - **Bottom tabs**: always 48px+ height, icon 24px, label 12px
 - **Safe areas**: use `env(safe-area-inset-bottom)` for bottom nav padding
@@ -309,7 +336,7 @@ Always use **Lucide** icons. Size them with tokens:
 
 ---
 
-## 12. Migration Checklist
+## 13. Migration Checklist
 
 When updating any component to follow these standards:
 
@@ -318,5 +345,7 @@ When updating any component to follow these standards:
 - [ ] Replace `w-3 h-3`, `w-3.5 h-3.5` icons → `w-icon-sm h-icon-sm`
 - [ ] Replace `px-2 py-1.5` tiny buttons → `min-h-touch px-4`
 - [ ] Replace `h-8` inputs → `h-input`
+- [ ] Replace `md:`, `lg:` grid breakpoints → `@md:`, `@lg:` container queries
+- [ ] Add `cq-adapt` to cards/components that appear in varying-width containers
 - [ ] Ensure **8px+ gap** between adjacent tappable elements
 - [ ] Test on 375px viewport (iPhone SE) — nothing should overflow or be untappable

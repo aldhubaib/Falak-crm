@@ -178,7 +178,7 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
         >
           <ArrowLeft className="w-icon-md h-icon-md" />
         </Link>
-        <h1 className="text-lg font-semibold text-foreground flex-1">
+        <h1 className="text-heading font-semibold text-foreground flex-1">
           {contact.firstName} {contact.middleName ? `${contact.middleName} ` : ""}{contact.lastName}
         </h1>
         <ActionMenu
@@ -190,7 +190,7 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
       </div>
 
       <div className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-3 gap-4">
           <InputField
             label="First Name"
             icon={<User className="w-icon-sm h-icon-sm" />}
@@ -209,7 +209,7 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
             onSave={save("lastName")}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <InputField
             label="الاسم بالعربي (Arabic Name)"
             value={contact.nameAr || ""}
@@ -218,7 +218,7 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
             onSave={save("nameAr")}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <PhoneField
             label="Mobile"
             value={contact.mobile}
@@ -231,7 +231,7 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
             onSave={save("email")}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <CountryField
             label="Country"
             icon={<MapPin className="w-icon-sm h-icon-sm" />}
@@ -265,7 +265,7 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
           action={handleAddCompany}
           className="mt-3 p-4 rounded-lg border border-border bg-black space-y-3"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 @sm:grid-cols-2 gap-3">
             <FormSelect
               name="companyId"
               label="Company"

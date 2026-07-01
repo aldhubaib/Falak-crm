@@ -121,11 +121,11 @@ export function TrashClient({ items }: { items: TrashItem[] }) {
       <div className="flex items-center gap-3 h-12 mb-6">
         <Link
           href="/settings"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-icon-sm h-icon-sm" />
         </Link>
-        <h1 className="text-lg font-semibold text-foreground flex-1">Trash</h1>
+        <h1 className="text-heading font-semibold text-foreground flex-1">Trash</h1>
         {items.length > 0 && (
           <Button
             variant="destructive"
@@ -143,10 +143,10 @@ export function TrashClient({ items }: { items: TrashItem[] }) {
         <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 mb-6 flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="text-[13px] font-medium text-foreground">
+            <p className="text-body font-medium text-foreground">
               Permanently delete all {items.length} items?
             </p>
-            <p className="text-[12px] text-muted-foreground mt-1">
+            <p className="text-sub text-muted-foreground mt-1">
               This action cannot be undone. All files and data associated with these items will be permanently removed.
             </p>
             <div className="flex items-center gap-2 mt-3">
@@ -174,8 +174,8 @@ export function TrashClient({ items }: { items: TrashItem[] }) {
       {items.length === 0 ? (
         <div className="rounded-xl border border-border bg-card p-12 text-center">
           <Trash2 className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
-          <p className="text-[14px] font-medium text-muted-foreground">Trash is empty</p>
-          <p className="text-[12px] text-muted-foreground/60 mt-1">Deleted items will appear here</p>
+          <p className="text-subheading font-medium text-muted-foreground">Trash is empty</p>
+          <p className="text-sub text-muted-foreground/60 mt-1">Deleted items will appear here</p>
         </div>
       ) : (
         <>
@@ -189,14 +189,14 @@ export function TrashClient({ items }: { items: TrashItem[] }) {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-3 py-1.5 rounded-full text-[12px] font-medium transition-colors whitespace-nowrap ${
+                  className={`px-3 py-1.5 rounded-full text-sub font-medium transition-colors whitespace-nowrap ${
                     activeTab === tab
                       ? "bg-primary/15 text-primary"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
                   }`}
                 >
                   {label}
-                  <span className={`ml-1.5 text-[11px] ${activeTab === tab ? "text-primary/60" : "text-muted-foreground/60"}`}>
+                  <span className={`ml-1.5 text-sub ${activeTab === tab ? "text-primary/60" : "text-muted-foreground/60"}`}>
                     {count}
                   </span>
                 </button>
@@ -208,7 +208,7 @@ export function TrashClient({ items }: { items: TrashItem[] }) {
           <div className="space-y-6">
             {grouped.map((group) => (
               <div key={group.label}>
-                <h3 className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-2 px-1">
+                <h3 className="text-sub font-medium text-muted-foreground uppercase tracking-wider mb-2 px-1">
                   {group.label}
                 </h3>
                 <div className="rounded-lg border border-border overflow-hidden">
@@ -226,8 +226,8 @@ export function TrashClient({ items }: { items: TrashItem[] }) {
                           <Icon className="w-3.5 h-3.5 text-muted-foreground" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-[13px] text-foreground truncate">{item.name}</p>
-                          <p className="text-[11px] text-muted-foreground">
+                          <p className="text-body text-foreground truncate">{item.name}</p>
+                          <p className="text-sub text-muted-foreground">
                             {cfg.label} &middot; {formatDistanceToNow(new Date(item.deletedAt), { addSuffix: true })}
                           </p>
                         </div>
@@ -236,7 +236,7 @@ export function TrashClient({ items }: { items: TrashItem[] }) {
                             size="sm"
                             onClick={() => handleRestore(item.type, item.id)}
                             disabled={restoring === item.id}
-                            className="h-7 text-[11px] px-2.5"
+                            className="min-h-touch text-button px-2.5"
                           >
                             <RotateCcw className="w-3 h-3" />
                             {restoring === item.id ? "..." : "Restore"}
@@ -246,7 +246,7 @@ export function TrashClient({ items }: { items: TrashItem[] }) {
                             variant="ghost"
                             onClick={() => handlePermanentDelete(item.type, item.id)}
                             disabled={deleting === item.id}
-                            className="h-7 text-[11px] px-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                            className="min-h-touch text-button px-2 text-destructive hover:text-destructive hover:bg-destructive/10"
                           >
                             <Trash2 className="w-3 h-3" />
                           </Button>

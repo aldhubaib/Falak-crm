@@ -88,10 +88,9 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
 
       {/* Confirm / Block Dialog */}
       {confirmOpen && (
-        <>
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]" onClick={() => setConfirmOpen(false)} />
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md z-[101]">
-            <div className="mx-4 bg-background border border-border rounded-xl shadow-2xl p-6">
+        <div className="fixed inset-0 z-[100] flex items-end lg:items-center justify-center">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setConfirmOpen(false)} />
+          <div className="relative w-full lg:w-[480px] max-w-md max-h-[85vh] bg-background border border-border rounded-t-2xl lg:rounded-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom lg:zoom-in-95 duration-200 shadow-2xl p-6">
               {blocks.length > 0 ? (
                 <>
                   <div className="flex items-center gap-3 mb-4">
@@ -168,9 +167,8 @@ export function ActionMenu({ entityType, entityId, entityName, redirectAfterDele
                   </div>
                 </>
               )}
-            </div>
           </div>
-        </>
+        </div>
       )}
     </>
   );

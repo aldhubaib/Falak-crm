@@ -76,7 +76,7 @@ export function ActivityPanel() {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-5 py-4">
+        <div className="flex-1 overflow-y-auto px-5 py-4" style={{ containerType: "inline-size" }}>
           {loading && activities.length === 0 ? (
             <p className="text-sub text-muted-foreground">Loading...</p>
           ) : (

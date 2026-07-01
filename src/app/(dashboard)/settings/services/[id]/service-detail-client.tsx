@@ -40,13 +40,13 @@ export function ServiceDetailClient({ service }: { service: Service }) {
       <div className="flex items-center gap-3 h-12 mb-6">
         <Link
           href="/settings/services"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-icon-sm h-icon-sm" />
         </Link>
         <div className="flex items-center gap-2 flex-1">
           <Layers className="w-4 h-4 text-muted-foreground" />
-          <h1 className="text-lg font-semibold text-foreground">{service.name}</h1>
+          <h1 className="text-heading font-semibold text-foreground">{service.name}</h1>
         </div>
         <button
           onClick={async () => {
@@ -54,14 +54,14 @@ export function ServiceDetailClient({ service }: { service: Service }) {
             await deleteService(service.id);
             router.push("/settings/services");
           }}
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="w-icon-sm h-icon-sm" />
         </button>
       </div>
 
       <div className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <InputField
             label="Service Name"
             icon={<Layers className="w-3 h-3" />}
@@ -75,7 +75,7 @@ export function ServiceDetailClient({ service }: { service: Service }) {
             onSave={save("pricingType")}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <InputField
             label="Price"
             value={String(Number(service.unitPrice))}

@@ -16,9 +16,9 @@ export default async function TeamSettingsPage() {
       <div className="flex items-center gap-3 mb-4">
         <Link
           href="/settings"
-          className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="w-icon-sm h-icon-sm" />
         </Link>
       </div>
 

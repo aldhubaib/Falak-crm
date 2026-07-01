@@ -95,14 +95,14 @@ export default function DashboardError({
           <div className="flex items-center gap-2">
             <button
               onClick={reset}
-              className="h-9 px-4 rounded-full border border-border text-[12px] font-medium text-foreground hover:bg-muted/30 transition-colors flex items-center gap-2"
+              className="min-h-touch px-4 rounded-full border border-border text-button font-medium text-foreground hover:bg-muted/30 transition-colors flex items-center gap-2"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               Try Again
             </button>
             <button
               onClick={handleCopy}
-              className={`h-9 px-4 rounded-full border text-[12px] font-medium flex items-center gap-2 transition-all ${
+              className={`min-h-touch px-4 rounded-full border text-button font-medium flex items-center gap-2 transition-all ${
                 copied
                   ? "border-green-500/50 text-green-500 bg-green-500/10"
                   : "border-border text-muted-foreground hover:text-foreground hover:bg-muted/30"

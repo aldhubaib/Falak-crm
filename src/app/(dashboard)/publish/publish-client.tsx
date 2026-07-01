@@ -99,7 +99,7 @@ function ProjectAvatar({ thumbnailId, name, size = "sm" }: { thumbnailId: string
   }, [thumbnailId]);
 
   const s = size === "lg" ? "w-10 h-10" : size === "md" ? "w-7 h-7" : "w-5 h-5";
-  const textSize = size === "lg" ? "text-[13px]" : size === "md" ? "text-[10px]" : "text-[8px]";
+  const textSize = size === "lg" ? "text-body" : size === "md" ? "text-label" : "text-label";
   const radius = size === "lg" ? "rounded-xl" : "rounded";
 
   if (url) {
@@ -270,9 +270,9 @@ export function PublishClient({ projects }: { projects: Project[] }) {
       {/* Main content — full width calendar */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <div className="flex items-center justify-between px-3 lg:px-6 py-2 lg:py-3 border-b border-border">
-          <div className="flex items-center gap-2 lg:gap-4">
-            <h2 className="text-body lg:text-subheading font-semibold text-foreground">
+        <div className="flex items-center justify-between px-3 @lg:px-6 py-2 @lg:py-3 border-b border-border">
+          <div className="flex items-center gap-2 @lg:gap-4">
+            <h2 className="text-body @lg:text-subheading font-semibold text-foreground">
               {viewMode === "week"
                 ? `${weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric" })} – ${new Date(weekStart.getTime() + 6 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`
                 : `${MONTHS[currentMonth]} ${currentYear}`}
@@ -300,8 +300,8 @@ export function PublishClient({ projects }: { projects: Project[] }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 lg:gap-3">
-            <div className="hidden md:flex items-center gap-4 text-sub">
+          <div className="flex items-center gap-2 @lg:gap-3">
+            <div className="hidden @md:flex items-center gap-4 text-sub">
               <span className="text-muted-foreground">
                 <span className="text-foreground font-medium">{stats.scheduled}</span> scheduled
               </span>
@@ -328,7 +328,7 @@ export function PublishClient({ projects }: { projects: Project[] }) {
             <select
               value={viewMode}
               onChange={(e) => changeView(e.target.value as "month" | "week" | "schedule")}
-              className="h-input px-2 lg:px-3 pr-6 lg:pr-7 rounded-lg bg-black border border-border text-sub font-medium text-foreground focus:outline-none focus:border-ring transition-colors appearance-none cursor-pointer"
+              className="h-input px-2 @lg:px-3 pr-6 @lg:pr-7 rounded-lg bg-black border border-border text-sub font-medium text-foreground focus:outline-none focus:border-ring transition-colors appearance-none cursor-pointer"
               style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 6px center" }}
             >
               <option value="month">Month</option>
@@ -358,7 +358,7 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                 return (
                   <div
                     key={i}
-                    className={`border-b border-r border-border/30 p-1 min-h-[80px] lg:min-h-[100px] transition-colors cursor-pointer ${
+                    className={`border-b border-r border-border/30 p-1 min-h-[80px] @lg:min-h-[100px] transition-colors cursor-pointer ${
                       !isCurrentMonth ? "bg-black/20" : selectedDate === dateStr ? "bg-primary/10 ring-1 ring-primary/30" : "hover:bg-muted/10"
                     }`}
                     onClick={() => isCurrentMonth && setSelectedDate(selectedDate === dateStr ? null : dateStr)}
@@ -597,7 +597,7 @@ function DatePanel({
   return (
     <div className="fixed inset-0 z-[500] flex items-end lg:items-center justify-center">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full lg:w-[480px] max-h-[85vh] lg:max-h-[80vh] bg-background border border-border rounded-t-2xl lg:rounded-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom lg:zoom-in-95 duration-200">
+      <div className="relative w-full lg:w-[480px] max-h-[85vh] lg:max-h-[80vh] bg-background border border-border rounded-t-2xl lg:rounded-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom lg:zoom-in-95 duration-200" style={{ containerType: "inline-size" }}>
         {/* Header */}
         <div className="px-4 py-3 border-b border-border">
           <div className="flex items-center justify-between">

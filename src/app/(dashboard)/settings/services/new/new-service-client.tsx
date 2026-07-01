@@ -65,11 +65,11 @@ export function NewServiceClient({ currentUserName }: { currentUserName: string 
       <div className="flex items-center gap-3 h-12 mb-8">
         <Link
           href="/settings/services"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-icon-sm h-icon-sm" />
         </Link>
-        <h1 className="text-lg font-semibold text-foreground flex-1">New Service</h1>
+        <h1 className="text-heading font-semibold text-foreground flex-1">New Service</h1>
         <Button type="submit" form="service-form" disabled={saving}>
           {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
           {saving ? "Saving..." : "Save"}
@@ -100,7 +100,7 @@ export function NewServiceClient({ currentUserName }: { currentUserName: string 
       >
         <RecordOwner ownerName={currentUserName} />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <FormField
             def={FIELD_REGISTRY.serviceName}
             value={values.name}
@@ -119,7 +119,7 @@ export function NewServiceClient({ currentUserName }: { currentUserName: string 
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-4">
           <FormField
             def={FIELD_REGISTRY.servicePrice}
             value={values.unitPrice}

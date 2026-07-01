@@ -74,7 +74,7 @@ export function UploadIndicator() {
           {activeCount === 0 && (
             <button
               onClick={(e) => { e.stopPropagation(); handleDismiss(); }}
-              className="w-5 h-5 rounded flex items-center justify-center text-muted-foreground hover:text-foreground"
+              className="w-icon-btn h-icon-btn rounded flex items-center justify-center text-muted-foreground hover:text-foreground"
             >
               <X className="w-icon-sm h-icon-sm" />
             </button>

@@ -98,7 +98,7 @@ export function ProjectDetailClient({
   return (
     <div className="flex flex-col min-h-full">
       {/* Header */}
-      <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 h-12 border-b border-border/50 shrink-0">
+      <div className="flex items-center gap-2 @sm:gap-3 px-4 @sm:px-6 h-12 border-b border-border/50 shrink-0">
         <Link
           href="/projects"
           className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors shrink-0"
@@ -125,7 +125,7 @@ export function ProjectDetailClient({
       </div>
 
       {/* Tabs */}
-      <div className="px-4 sm:px-6 pt-3">
+      <div className="px-4 @sm:px-6 pt-3">
         <div className="inline-flex items-center rounded-xl bg-muted/30 border border-border p-1">
           {([
             { id: "board" as const, label: "Board", icon: <LayoutGrid className="w-icon-sm h-icon-sm" /> },
@@ -150,14 +150,14 @@ export function ProjectDetailClient({
 
       {/* Tab content */}
       {activeTab === "dashboard" && (
-        <div className="px-4 sm:px-6 pt-4 pb-6">
+        <div className="px-4 @sm:px-6 pt-4 pb-6">
           <ProjectDashboard project={project} taskStatuses={taskStatuses} />
         </div>
       )}
 
       {activeTab === "board" && (
         <>
-          <div className="px-4 sm:px-6 pt-4">
+          <div className="px-4 @sm:px-6 pt-4">
             <KanbanBoard
               project={project}
               taskStatuses={taskStatuses}
@@ -167,7 +167,7 @@ export function ProjectDetailClient({
             />
           </div>
           {project.invoices.length > 0 && permissions.invoices !== "none" && (
-            <div className="px-4 sm:px-6">
+            <div className="px-4 @sm:px-6">
               <InvoicesSection project={project} />
             </div>
           )}
@@ -175,7 +175,7 @@ export function ProjectDetailClient({
       )}
 
       {activeTab === "assets" && (
-        <div className="px-4 sm:px-6 pt-4 flex-1">
+        <div className="px-4 @sm:px-6 pt-4 flex-1">
           <AssetsPanel projectId={project.id} canEdit={canEditProject} />
         </div>
       )}
@@ -265,7 +265,7 @@ function ProjectDashboard({ project, taskStatuses }: { project: Project; taskSta
   return (
     <div className="space-y-5">
       {/* Top stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 @lg:grid-cols-4 gap-3">
         <div className="rounded-xl border border-border bg-card p-4">
           <div className="flex items-center gap-2 text-muted-foreground mb-2">
             <ListChecks className="w-icon-md h-icon-md" />
@@ -321,7 +321,7 @@ function ProjectDashboard({ project, taskStatuses }: { project: Project; taskSta
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 @lg:grid-cols-3 gap-5">
         {/* Project Info */}
         <div className="rounded-xl border border-border bg-card p-4">
           <h3 className="text-sub font-semibold text-muted-foreground uppercase tracking-wider mb-3">Project Info</h3>
@@ -670,20 +670,21 @@ function KanbanBoard({
       )}
 
       {confirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-card border border-border rounded-2xl p-6 max-w-md w-full mx-4 space-y-4 shadow-2xl">
-            <h3 className="text-lg font-semibold text-foreground">{confirmModal.title}</h3>
+        <div className="fixed inset-0 z-50 flex items-end lg:items-center justify-center">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setConfirmModal(null)} />
+          <div className="relative w-full lg:w-[480px] max-w-md max-h-[85vh] bg-card border border-border rounded-t-2xl lg:rounded-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom lg:zoom-in-95 duration-200 shadow-2xl p-6 space-y-4">
+            <h3 className="text-heading font-semibold text-foreground">{confirmModal.title}</h3>
             <p className="text-body text-muted-foreground leading-relaxed">{confirmModal.message}</p>
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 onClick={() => setConfirmModal(null)}
-                className="text-body text-muted-foreground hover:text-foreground px-4 py-2 transition-colors"
+                className="min-h-touch text-body text-muted-foreground hover:text-foreground px-4 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmMove}
-                className="text-body font-medium text-white bg-amber-600 hover:bg-amber-500 px-5 py-2.5 rounded-xl transition-colors"
+                className="min-h-touch text-body font-medium text-white bg-amber-600 hover:bg-amber-500 px-5 rounded-xl transition-colors"
               >
                 {confirmModal.button}
               </button>
@@ -693,17 +694,18 @@ function KanbanBoard({
       )}
 
       {gateError && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-card border border-border rounded-2xl p-6 max-w-md w-full mx-4 space-y-4 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-end lg:items-center justify-center">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setGateError(null)} />
+          <div className="relative w-full lg:w-[480px] max-w-md max-h-[85vh] bg-card border border-border rounded-t-2xl lg:rounded-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom lg:zoom-in-95 duration-200 shadow-2xl p-6 space-y-4">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-icon-lg h-icon-lg text-destructive shrink-0" />
-              <h3 className="text-lg font-semibold text-foreground">Cannot Move Task</h3>
+              <h3 className="text-heading font-semibold text-foreground">Cannot Move Task</h3>
             </div>
             <p className="text-body text-muted-foreground leading-relaxed">{gateError.message}</p>
             <div className="flex items-center justify-end pt-2">
               <button
                 onClick={() => setGateError(null)}
-                className="text-body font-medium text-white bg-destructive hover:bg-destructive/80 px-5 py-2.5 rounded-xl transition-colors"
+                className="min-h-touch text-body font-medium text-white bg-destructive hover:bg-destructive/80 px-5 rounded-xl transition-colors"
               >
                 OK
               </button>
@@ -712,7 +714,7 @@ function KanbanBoard({
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row gap-3 pb-2 md:overflow-x-auto">
+      <div className="flex flex-col @md:flex-row gap-3 pb-2 @md:overflow-x-auto">
         {sorted.map((status, idx) => (
             <KanbanColumn
               key={status.id}
@@ -779,14 +781,15 @@ function DeclineTaskModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="bg-card border border-border rounded-2xl p-6 max-w-md w-full mx-4 space-y-4 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-end lg:items-center justify-center">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onCancel} />
+      <div className="relative w-full lg:w-[480px] max-w-md max-h-[85vh] bg-card border border-border rounded-t-2xl lg:rounded-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom lg:zoom-in-95 duration-200 shadow-2xl p-6 space-y-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-red-500/15 flex items-center justify-center shrink-0">
             <AlertTriangle className="w-icon-lg h-icon-lg text-red-400" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-foreground">Decline Task</h3>
+            <h3 className="text-heading font-semibold text-foreground">Decline Task</h3>
             <p className="text-sub text-muted-foreground">Return this task from {fromName} back to {toName}</p>
           </div>
         </div>
@@ -840,14 +843,14 @@ function DeclineTaskModal({
           <button
             onClick={onCancel}
             disabled={submitting}
-            className="text-body text-muted-foreground hover:text-foreground px-4 py-2 transition-colors"
+            className="min-h-touch text-body text-muted-foreground hover:text-foreground px-4 transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={!comment.trim() || submitting}
-            className="text-body font-medium text-red-400 bg-red-500/15 hover:bg-red-500/25 disabled:opacity-40 disabled:cursor-not-allowed px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2"
+            className="min-h-touch text-body font-medium text-red-400 bg-red-500/15 hover:bg-red-500/25 disabled:opacity-40 disabled:cursor-not-allowed px-5 rounded-xl transition-colors flex items-center gap-2"
           >
             {submitting ? (
               <Loader2 className="w-icon-sm h-icon-sm animate-spin" />
@@ -892,7 +895,7 @@ const KanbanColumn = memo(function KanbanColumn({
   gateError: { taskId: string; message: string } | null;
 }) {
   return (
-    <div className="w-full md:min-w-[220px] md:flex-1">
+    <div className="w-full @md:min-w-[220px] @md:flex-1" style={{ containerType: "inline-size" }}>
       <div className="flex items-center justify-between mb-2 px-1">
         <div className="flex items-center gap-2 min-w-0">
           <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: status.color }} />
@@ -910,7 +913,7 @@ const KanbanColumn = memo(function KanbanColumn({
       </div>
 
       <div
-        className={`space-y-2 min-h-[60px] md:min-h-[100px] rounded-lg p-2 transition-colors ${
+        className={`space-y-2 min-h-[60px] @md:min-h-[100px] rounded-lg p-2 transition-colors ${
           isDragOver ? "bg-primary/10 ring-1 ring-primary/30" : "bg-muted/30"
         }`}
         onDragOver={(e) => onDragOver(e, status.id)}
@@ -987,7 +990,7 @@ const TaskCard = memo(function TaskCard({
       onDragStart={(e) => onDragStart(e, task.id)}
       onDragEnd={onDragEnd}
       onClick={() => router.push(`/projects/${projectId}/tasks/${task.id}`)}
-      className={`rounded-xl border bg-card p-3 md:p-4 group transition-all cursor-pointer md:min-h-[120px] flex flex-col ${
+      className={`cq-adapt rounded-xl border bg-card p-card group transition-all cursor-pointer flex flex-col ${
         isDragging ? "opacity-40 scale-95" : "hover:border-primary/30"
       } ${hasGateError ? "border-destructive/40" : "border-border"}`}
     >
@@ -1791,8 +1794,9 @@ function MoveModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={onClose}>
-      <div className="w-[400px] max-h-[500px] rounded-2xl bg-black border border-border shadow-2xl flex flex-col" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-end lg:items-center justify-center">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full lg:w-[480px] max-h-[85vh] bg-black border border-border rounded-t-2xl lg:rounded-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom lg:zoom-in-95 duration-200 shadow-2xl" onClick={(e) => e.stopPropagation()}>
         <div className="px-4 py-3 border-b border-border">
           <h3 className="text-body font-semibold text-foreground">Move &quot;{itemName}&quot;</h3>
           <p className="text-sub text-muted-foreground mt-0.5">Select destination folder</p>
@@ -1844,13 +1848,13 @@ function MoveModal({
             Move to: <span className="text-foreground font-medium">{breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1].name : "Root"}</span>
           </p>
           <div className="flex items-center gap-2">
-            <button onClick={onClose} className="px-3 py-1.5 text-sub text-muted-foreground hover:text-foreground transition-colors rounded-lg">
+            <button onClick={onClose} className="min-h-touch px-3 text-sub text-muted-foreground hover:text-foreground transition-colors rounded-lg">
               Cancel
             </button>
             <button
               onClick={handleMove}
               disabled={moving}
-              className="px-4 py-1.5 text-sub font-medium text-white bg-primary rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors flex items-center gap-1.5"
+              className="min-h-touch px-4 text-sub font-medium text-white bg-primary rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors flex items-center gap-1.5"
             >
               {moving && <Loader2 className="w-icon-sm h-icon-sm animate-spin" />}
               Move here

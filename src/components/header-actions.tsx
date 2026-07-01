@@ -27,9 +27,9 @@ export function HeaderActions() {
       <div className="relative" ref={menuRef}>
         <button
           onClick={() => setOpen(!open)}
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <MoreVertical className="w-4 h-4" />
+          <MoreVertical className="w-icon-sm h-icon-sm" />
         </button>
         {open && (
           <div className="absolute right-0 top-full mt-1 bg-black border border-border rounded-xl shadow-xl overflow-hidden z-[200] p-1.5 flex flex-col gap-1">

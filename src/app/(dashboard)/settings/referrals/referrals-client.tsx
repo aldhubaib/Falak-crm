@@ -17,11 +17,11 @@ export function ReferralsClient({ referrals: initial }: { referrals: Referral[] 
       <div className="flex items-center gap-3 h-12 mb-6">
         <Link
           href="/settings"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+          className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-icon-sm h-icon-sm" />
         </Link>
-        <h1 className="text-lg font-semibold text-foreground">Referrals</h1>
+        <h1 className="text-heading font-semibold text-foreground">Referrals</h1>
       </div>
 
       <div className="max-w-md">
@@ -36,12 +36,12 @@ export function ReferralsClient({ referrals: initial }: { referrals: Referral[] 
           className="flex items-center gap-2 mb-6"
         >
           <div className="flex-1 rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
-            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Referral Source</label>
+            <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">Referral Source</label>
             <input
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               placeholder="New referral source..."
-              className="w-full h-8 bg-transparent border-none text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+              className="w-full h-input bg-transparent border-none text-body text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
             />
           </div>
           <Button type="submit" disabled={!newName.trim()}>
@@ -51,7 +51,7 @@ export function ReferralsClient({ referrals: initial }: { referrals: Referral[] 
         </form>
 
         {referrals.length === 0 ? (
-          <p className="text-[12px] text-muted-foreground">No referral sources yet. Add one above.</p>
+          <p className="text-sub text-muted-foreground">No referral sources yet. Add one above.</p>
         ) : (
           <div className="space-y-1">
             {referrals.map((referral) => (
@@ -59,15 +59,15 @@ export function ReferralsClient({ referrals: initial }: { referrals: Referral[] 
                 key={referral.id}
                 className="flex items-center justify-between p-3 rounded-lg hover:bg-card transition-colors group"
               >
-                <span className="text-[13px] text-foreground">{referral.name}</span>
+                <span className="text-body text-foreground">{referral.name}</span>
                 <button
                   onClick={async () => {
                     await deleteReferral(referral.id);
                     setReferrals((prev) => prev.filter((r) => r.id !== referral.id));
                   }}
-                  className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100"
+                  className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  <Trash2 className="w-icon-sm h-icon-sm" />
                 </button>
               </div>
             ))}
