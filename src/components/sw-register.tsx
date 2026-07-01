@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { RefreshCw } from "lucide-react";
 
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 
@@ -42,13 +43,59 @@ async function subscribeToPush(registration: ServiceWorkerRegistration) {
 }
 
 export function ServiceWorkerRegister() {
+  const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(null);
+  const [showUpdate, setShowUpdate] = useState(false);
+
+  const handleUpdate = useCallback(() => {
+    if (waitingWorker) {
+      waitingWorker.postMessage("SKIP_WAITING");
+    }
+  }, [waitingWorker]);
+
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
 
     navigator.serviceWorker.register("/sw.js").then((registration) => {
       subscribeToPush(registration);
+
+      if (registration.waiting) {
+        setWaitingWorker(registration.waiting);
+        setShowUpdate(true);
+        return;
+      }
+
+      registration.addEventListener("updatefound", () => {
+        const newWorker = registration.installing;
+        if (!newWorker) return;
+
+        newWorker.addEventListener("statechange", () => {
+          if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+            setWaitingWorker(newWorker);
+            setShowUpdate(true);
+          }
+        });
+      });
     }).catch(() => {});
+
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      window.location.reload();
+    });
   }, []);
 
-  return null;
+  if (!showUpdate) return null;
+
+  return (
+    <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[9999] animate-in slide-in-from-bottom-4 fade-in duration-300">
+      <div className="flex items-center gap-3 bg-primary text-primary-foreground px-5 py-3 rounded-2xl shadow-2xl shadow-primary/20">
+        <RefreshCw className="w-4 h-4 shrink-0" />
+        <span className="text-[13px] font-medium">A new version is available</span>
+        <button
+          onClick={handleUpdate}
+          className="text-[13px] font-bold bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg transition-colors"
+        >
+          Update
+        </button>
+      </div>
+    </div>
+  );
 }

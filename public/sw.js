@@ -1,7 +1,7 @@
-const CACHE_NAME = "falak-crm-v1";
+const CACHE_NAME = "falak-crm-v2";
 
-self.addEventListener("install", (event) => {
-  self.skipWaiting();
+self.addEventListener("install", () => {
+  // Don't skipWaiting automatically — wait for user to accept the update
 });
 
 self.addEventListener("activate", (event) => {
@@ -11,6 +11,12 @@ self.addEventListener("activate", (event) => {
     )
   );
   self.clients.claim();
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener("fetch", (event) => {
