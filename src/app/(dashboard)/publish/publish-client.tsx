@@ -86,7 +86,7 @@ function getFileIcon(type: string, formats: string | null) {
   return <FileText className="w-3 h-3" />;
 }
 
-function ProjectAvatar({ thumbnailId, name, size = "sm" }: { thumbnailId: string | null; name: string; size?: "sm" | "md" }) {
+function ProjectAvatar({ thumbnailId, name, size = "sm" }: { thumbnailId: string | null; name: string; size?: "sm" | "md" | "lg" }) {
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
     if (!thumbnailId) return;
@@ -98,16 +98,17 @@ function ProjectAvatar({ thumbnailId, name, size = "sm" }: { thumbnailId: string
     return () => { cancelled = true; };
   }, [thumbnailId]);
 
-  const s = size === "md" ? "w-7 h-7" : "w-5 h-5";
-  const textSize = size === "md" ? "text-[10px]" : "text-[8px]";
+  const s = size === "lg" ? "w-10 h-10" : size === "md" ? "w-7 h-7" : "w-5 h-5";
+  const textSize = size === "lg" ? "text-[13px]" : size === "md" ? "text-[10px]" : "text-[8px]";
+  const radius = size === "lg" ? "rounded-xl" : "rounded";
 
   if (url) {
-    return <img src={url} alt={name} className={`${s} rounded object-cover shrink-0`} loading="lazy" />;
+    return <img src={url} alt={name} className={`${s} ${radius} object-cover shrink-0`} loading="lazy" />;
   }
 
   const initials = name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
   return (
-    <div className={`${s} rounded bg-primary/15 flex items-center justify-center ${textSize} font-semibold text-primary shrink-0`}>
+    <div className={`${s} ${radius} bg-primary/15 flex items-center justify-center ${textSize} font-semibold text-primary shrink-0`}>
       {initials}
     </div>
   );
@@ -692,68 +693,85 @@ function DatePanel({
                       <ProjectAvatar thumbnailId={project.thumbnailId} name={project.name} size="sm" />
                       <p className="text-[11px] font-semibold text-muted-foreground">{project.name} ({items.length})</p>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       {items.map((item) => (
-                        <div key={item.id} className="rounded-xl border border-border bg-black/40 overflow-hidden">
-                          <div className="px-3 pt-3 pb-2 flex items-start gap-2.5">
-                            <ProjectAvatar thumbnailId={item.project.thumbnailId} name={item.project.name} size="md" />
-                            <div className="flex-1 min-w-0">
-                              <p className="text-[13px] font-medium text-foreground truncate">{item.task.title}</p>
-                              <div className="flex items-center gap-3 mt-1 text-[10px]">
-                                {item.task.completedAt && (
-                                  <span className="text-green-400/70 flex items-center gap-1">
-                                    <CheckCircle2 className="w-2.5 h-2.5" />
-                                    Delivered {new Date(item.task.completedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                                  </span>
-                                )}
-                                <span className="text-primary flex items-center gap-1">
-                                  <Calendar className="w-2.5 h-2.5" />
-                                  Publish {new Date(item.scheduledDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                                </span>
+                        <div key={item.id} className="rounded-2xl border border-border/60 bg-card/60 overflow-hidden">
+                          {/* Header */}
+                          <div className="px-4 pt-4 pb-3">
+                            <div className="flex items-start gap-3">
+                              <ProjectAvatar thumbnailId={item.project.thumbnailId} name={item.project.name} size="lg" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-[10px] text-muted-foreground/70 font-medium">{item.project.name}</p>
+                                <p className="text-[14px] font-semibold text-foreground mt-0.5 leading-tight">{item.task.title}</p>
                               </div>
+                              {item.published && (
+                                <span className="shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-500/15 text-green-400 text-[10px] font-semibold">
+                                  <CheckCircle2 className="w-3 h-3" />
+                                  Published
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Date pills */}
+                            <div className="flex items-center gap-2 mt-3">
+                              {item.task.completedAt && (
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-green-500/10 text-[10px] font-medium text-green-400">
+                                  <CheckCircle2 className="w-3 h-3" />
+                                  Delivered {new Date(item.task.completedAt).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+                                </span>
+                              )}
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary/10 text-[10px] font-medium text-primary">
+                                <Calendar className="w-3 h-3" />
+                                Publish {new Date(item.scheduledDate).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+                              </span>
                             </div>
                           </div>
 
-                          <div className="border-t border-border/30">
-                            {item.task.checklistItems.map((ci) => (
-                              <DeliveryFilePreview key={ci.id} file={ci} />
-                            ))}
-                          </div>
+                          {/* Files */}
+                          {item.task.checklistItems.length > 0 && (
+                            <div className="mx-4 mb-3 rounded-xl border border-border/40 overflow-hidden bg-black/30">
+                              {item.task.checklistItems.map((ci) => (
+                                <DeliveryFilePreview key={ci.id} file={ci} />
+                              ))}
+                            </div>
+                          )}
 
-                          <div className="flex items-center border-t border-border/30 bg-black/20">
+                          {/* Actions */}
+                          <div className="border-t border-border/40">
+                            <div className="flex items-center">
+                              <label className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 text-[11px] font-medium text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors cursor-pointer">
+                                <Calendar className="w-3.5 h-3.5" />
+                                Reschedule
+                                <input
+                                  type="date"
+                                  className="sr-only"
+                                  defaultValue={selectedDate}
+                                  onChange={(e) => {
+                                    if (e.target.value && e.target.value !== selectedDate) {
+                                      onReschedule(item.id, item.task.id, item.project.id, e.target.value);
+                                    }
+                                  }}
+                                />
+                              </label>
+                              <div className="w-px h-5 bg-border/30" />
+                              <button
+                                onClick={() => onUnschedule(item.id)}
+                                className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 text-[11px] font-medium text-muted-foreground hover:text-red-400 hover:bg-red-500/5 transition-colors"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                                Remove
+                              </button>
+                            </div>
                             <button
                               onClick={() => onTogglePublished(item)}
-                              className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2 text-[11px] font-medium transition-colors ${
+                              className={`w-full flex items-center justify-center gap-2 px-4 py-3 border-t border-border/40 text-[12px] font-semibold transition-colors ${
                                 item.published
-                                  ? "text-green-400 hover:bg-green-500/10"
-                                  : "text-muted-foreground hover:text-primary hover:bg-primary/10"
+                                  ? "text-green-400 bg-green-500/5 hover:bg-green-500/10"
+                                  : "text-primary bg-primary/5 hover:bg-primary/10"
                               }`}
                             >
-                              {item.published ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Check className="w-3.5 h-3.5" />}
-                              {item.published ? "Published" : "Publish"}
-                            </button>
-                            <div className="w-px h-4 bg-border/30" />
-                            <label className="flex-1 flex items-center justify-center gap-1 px-2 py-2 text-[11px] font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer">
-                              <Calendar className="w-3 h-3" />
-                              Reschedule
-                              <input
-                                type="date"
-                                className="sr-only"
-                                defaultValue={selectedDate}
-                                onChange={(e) => {
-                                  if (e.target.value && e.target.value !== selectedDate) {
-                                    onReschedule(item.id, item.task.id, item.project.id, e.target.value);
-                                  }
-                                }}
-                              />
-                            </label>
-                            <div className="w-px h-4 bg-border/30" />
-                            <button
-                              onClick={() => onUnschedule(item.id)}
-                              className="flex-1 flex items-center justify-center gap-1 px-2 py-2 text-[11px] font-medium text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-colors"
-                            >
-                              <X className="w-3 h-3" />
-                              Unschedule
+                              {item.published ? <CheckCircle2 className="w-4 h-4" /> : <Check className="w-4 h-4" />}
+                              {item.published ? "Published" : "Mark Published"}
                             </button>
                           </div>
                         </div>
