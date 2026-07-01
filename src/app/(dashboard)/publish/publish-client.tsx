@@ -402,7 +402,7 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                     return (
                       <div
                         key={task.id}
-                        className="rounded-xl bg-black/20 border border-border/30 opacity-70 hover:opacity-100 transition-all overflow-hidden"
+                        className="rounded-xl bg-black/20 border border-border/30 hover:border-border/60 transition-all overflow-hidden"
                       >
                         <div className="flex items-center gap-2.5 px-3 pt-2.5 pb-2">
                           {tp && (
@@ -412,25 +412,46 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                               size="md"
                             />
                           )}
-                          <p className="text-[12px] font-medium text-foreground truncate flex-1 min-w-0">{task.title}</p>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[12px] font-medium text-foreground truncate">{task.title}</p>
+                            <div className="flex items-center gap-2 mt-0.5 text-[10px]">
+                              {deliveredDate && (
+                                <span className="text-green-400">
+                                  Delivered {deliveredDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                                </span>
+                              )}
+                              {schedDate && (
+                                <span className="text-primary">
+                                  Publish {schedDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                                </span>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex border-t border-border/20">
-                          {deliveredDate && (
-                            <div className="flex-1 px-3 py-1.5 border-r border-border/20">
-                              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Delivered</p>
-                              <p className="text-[11px] text-green-400 font-medium mt-0.5">
-                                {deliveredDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                              </p>
-                            </div>
-                          )}
-                          {schedDate && (
-                            <div className="flex-1 px-3 py-1.5">
-                              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Publish</p>
-                              <p className="text-[11px] text-primary font-medium mt-0.5">
-                                {schedDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                              </p>
-                            </div>
-                          )}
+                        <div className="flex items-center border-t border-border/20">
+                          <button
+                            onClick={() => task.publishItem && handleUnschedule(task.publishItem.id)}
+                            className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-[10px] font-medium text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                          >
+                            <X className="w-3 h-3" />
+                            Unschedule
+                          </button>
+                          <div className="w-px h-4 bg-border/30" />
+                          <label className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-[10px] font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer">
+                            <Calendar className="w-3 h-3" />
+                            Reschedule
+                            <input
+                              type="date"
+                              className="sr-only"
+                              defaultValue={task.publishItem ? toLocalDateStr(new Date(task.publishItem.scheduledDate)) : ""}
+                              onChange={(e) => {
+                                if (e.target.value && task.publishItem) {
+                                  const projectId = tp?.id || selectedProjectId;
+                                  if (projectId) handleReschedule(task.publishItem.id, task.id, projectId, e.target.value);
+                                }
+                              }}
+                            />
+                          </label>
                         </div>
                       </div>
                     );
@@ -526,17 +547,42 @@ export function PublishClient({ projects }: { projects: Project[] }) {
                       const schedDate = task.publishItem ? new Date(task.publishItem.scheduledDate) : null;
                       const tp = task.project || (selectedProjectId ? projectMap.get(selectedProjectId) : null);
                       return (
-                        <div key={task.id} className="rounded-xl bg-black/20 border border-border/30 px-3 py-2.5">
-                          <div className="flex items-center gap-2.5">
+                        <div key={task.id} className="rounded-xl bg-black/20 border border-border/30 overflow-hidden">
+                          <div className="flex items-center gap-2.5 px-3 py-2.5">
                             {tp && <ProjectAvatar thumbnailId={tp.thumbnailId ?? null} name={tp.name ?? ""} size="md" />}
                             <div className="flex-1 min-w-0">
                               <p className="text-[12px] font-medium text-foreground truncate">{task.title}</p>
                               {schedDate && (
                                 <p className="text-[10px] text-primary mt-0.5">
-                                  {schedDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                                  Publish {schedDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                                 </p>
                               )}
                             </div>
+                          </div>
+                          <div className="flex items-center border-t border-border/20">
+                            <button
+                              onClick={() => task.publishItem && handleUnschedule(task.publishItem.id)}
+                              className="flex-1 flex items-center justify-center gap-1 px-2 py-2 text-[11px] font-medium text-muted-foreground hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                            >
+                              <X className="w-3 h-3" />
+                              Unschedule
+                            </button>
+                            <div className="w-px h-4 bg-border/30" />
+                            <label className="flex-1 flex items-center justify-center gap-1 px-2 py-2 text-[11px] font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer">
+                              <Calendar className="w-3 h-3" />
+                              Reschedule
+                              <input
+                                type="date"
+                                className="sr-only"
+                                defaultValue={task.publishItem ? toLocalDateStr(new Date(task.publishItem.scheduledDate)) : ""}
+                                onChange={(e) => {
+                                  if (e.target.value && task.publishItem) {
+                                    const projectId = tp?.id || selectedProjectId;
+                                    if (projectId) handleReschedule(task.publishItem.id, task.id, projectId, e.target.value);
+                                  }
+                                }}
+                              />
+                            </label>
                           </div>
                         </div>
                       );
