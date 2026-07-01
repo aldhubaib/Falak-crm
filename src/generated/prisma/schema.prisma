@@ -86,13 +86,14 @@ model WorkspaceMember {
   roleId      String?
   joinedAt    DateTime   @default(now())
 
-  workspace      Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  role           Role?            @relation(fields: [roleId], references: [id])
-  assignedTasks  Task[]           @relation("TaskAssignee")
-  comments       TaskComment[]    @relation("CommentAuthor")
-  mentionedIn    CommentMention[] @relation("MentionedIn")
-  notifications  Notification[]   @relation("NotificationRecipient")
-  scheduledItems PublishItem[]    @relation("PublishScheduler")
+  workspace         Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  role              Role?              @relation(fields: [roleId], references: [id])
+  assignedTasks     Task[]             @relation("TaskAssignee")
+  comments          TaskComment[]      @relation("CommentAuthor")
+  mentionedIn       CommentMention[]   @relation("MentionedIn")
+  notifications     Notification[]     @relation("NotificationRecipient")
+  pushSubscriptions PushSubscription[]
+  scheduledItems    PublishItem[]      @relation("PublishScheduler")
 
   @@unique([workspaceId, userId])
   @@index([userId])
@@ -593,8 +594,8 @@ model CommentMention {
 
 model Notification {
   id          String   @id @default(cuid())
-  recipientId String // WorkspaceMember ID
-  type        String // "mention", "comment"
+  recipientId String
+  type        String // "mention", "comment", "assignment", "status_change", "rejection"
   title       String
   body        String?
   linkUrl     String?
@@ -604,6 +605,19 @@ model Notification {
   recipient WorkspaceMember @relation("NotificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
 
   @@index([recipientId, read, createdAt])
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  memberId  String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  member WorkspaceMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([memberId])
 }
 
 // ─── Invoices ──────────────────────────────────────────────────────────────────

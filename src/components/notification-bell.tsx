@@ -30,6 +30,10 @@ export function NotificationBell() {
     try {
       const count = await getUnreadCount();
       setUnreadCount(count);
+      if ("setAppBadge" in navigator) {
+        if (count > 0) navigator.setAppBadge(count);
+        else navigator.clearAppBadge();
+      }
     } catch {}
   }, []);
 
@@ -101,6 +105,7 @@ export function NotificationBell() {
     await markAllNotificationsRead();
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
     setUnreadCount(0);
+    if ("clearAppBadge" in navigator) navigator.clearAppBadge();
   };
 
   return (

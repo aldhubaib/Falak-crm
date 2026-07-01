@@ -473,6 +473,15 @@ exports.Prisma.NotificationScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.PushSubscriptionScalarFieldEnum = {
+  id: 'id',
+  memberId: 'memberId',
+  endpoint: 'endpoint',
+  p256dh: 'p256dh',
+  auth: 'auth',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.InvoiceScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -740,6 +749,7 @@ exports.Prisma.ModelName = {
   TaskComment: 'TaskComment',
   CommentMention: 'CommentMention',
   Notification: 'Notification',
+  PushSubscription: 'PushSubscription',
   Invoice: 'Invoice',
   InvoiceItem: 'InvoiceItem',
   WhatsAppConfig: 'WhatsAppConfig',

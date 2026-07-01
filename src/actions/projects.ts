@@ -8,6 +8,7 @@ import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
 import { deleteObject } from "@/lib/storage";
+import { sendNotification } from "@/lib/push";
 
 export async function getProjects() {
   const workspace = await requireWorkspace();
@@ -285,6 +286,33 @@ export async function updateTaskStatus(taskId: string, statusId: string, project
     changes: { status: { from: task?.status?.name, to: targetStatus?.name } },
     metadata: { projectId },
   });
+
+  if (newAssigneeId !== member.id) {
+    const moverName = member.permissions
+      ? (await db.workspaceMember.findUnique({ where: { id: member.id }, select: { name: true, email: true } }))
+      : null;
+    const name = (moverName as { name: string | null; email: string } | null)?.name || "Someone";
+
+    if (!isForward) {
+      sendNotification({
+        recipientId: newAssigneeId,
+        type: "rejection",
+        title: `"${task?.title}" was sent back to ${targetStatus?.name}`,
+        body: `${name} moved the task back`,
+        url: `/projects/${projectId}/tasks/${taskId}`,
+        tag: `rejection-${taskId}`,
+      }).catch(() => {});
+    } else {
+      sendNotification({
+        recipientId: newAssigneeId,
+        type: "assignment",
+        title: `You've been assigned "${task?.title}"`,
+        body: `Task moved to ${targetStatus?.name}`,
+        url: `/projects/${projectId}/tasks/${taskId}`,
+        tag: `assign-${taskId}`,
+      }).catch(() => {});
+    }
+  }
 
   revalidatePath(`/projects/${projectId}`);
   if (dealId) revalidatePath(`/deals/${dealId}`);
