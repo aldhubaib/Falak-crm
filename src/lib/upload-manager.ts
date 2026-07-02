@@ -1,10 +1,14 @@
 type UploadStatus = "queued" | "uploading" | "completing" | "done" | "error";
 
+export type UploadTarget =
+  | { kind: "project_asset"; projectId: string; folderId: string | null }
+  | { kind: "checklist_item"; checklistItemId: string; projectId: string };
+
 export type UploadItem = {
   id: string;
   file: File;
-  projectId: string;
-  folderId: string | null;
+  target: UploadTarget;
+  label?: string;
   status: UploadStatus;
   progress: number; // 0-100
   error?: string;
@@ -73,8 +77,7 @@ class UploadManager {
       const item: UploadItem = {
         id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
         file,
-        projectId,
-        folderId,
+        target: { kind: "project_asset", projectId, folderId },
         status: "queued",
         progress: 0,
       };
@@ -82,6 +85,48 @@ class UploadManager {
     }
     this.notify();
     this.processQueue();
+  }
+
+  // Enqueue a single file to be attached to a task checklist item. Returns the
+  // upload item id (or null if the file was skipped), so the caller can track it.
+  enqueueChecklist(
+    file: File,
+    opts: { checklistItemId: string; projectId: string; label?: string }
+  ): string | null {
+    if (file.size === 0) return null;
+    // A checklist field holds one file — drop any prior finished/failed upload
+    // for the same item so the indicator and inline UI don't show stale entries.
+    this.queue = this.queue.filter(
+      (i) =>
+        !(
+          i.target.kind === "checklist_item" &&
+          i.target.checklistItemId === opts.checklistItemId &&
+          (i.status === "done" || i.status === "error")
+        )
+    );
+    const item: UploadItem = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      file,
+      target: { kind: "checklist_item", checklistItemId: opts.checklistItemId, projectId: opts.projectId },
+      label: opts.label,
+      status: "queued",
+      progress: 0,
+    };
+    this.queue.push(item);
+    this.notify();
+    this.processQueue();
+    return item.id;
+  }
+
+  // Most recent upload item for a given checklist item (for inline field UI).
+  getItemForChecklist(checklistItemId: string): UploadItem | undefined {
+    let match: UploadItem | undefined;
+    for (const i of this.snapshot) {
+      if (i.target.kind === "checklist_item" && i.target.checklistItemId === checklistItemId) {
+        match = i;
+      }
+    }
+    return match;
   }
 
   retry(itemId: string) {
@@ -254,6 +299,11 @@ class UploadManager {
 
   private async uploadItem(item: UploadItem) {
     try {
+      const entityType = item.target.kind;
+      const entityId =
+        item.target.kind === "checklist_item"
+          ? item.target.checklistItemId
+          : item.target.projectId;
       const isResume = !!item.attachmentId;
       let attachmentId = item.attachmentId;
       let r2Key = item.r2Key;
@@ -289,7 +339,7 @@ class UploadManager {
             item.status = "completing";
             this.notify();
             await fetch(`/api/files/${attachmentId}/complete`, { method: "POST" });
-            await this.createAssetRecord(item);
+            await this.finalizeTarget(item);
             item.progress = 100;
             item.status = "done";
             this.notify();
@@ -315,8 +365,8 @@ class UploadManager {
               name: item.file.name,
               sizeBytes: item.file.size,
               contentType: item.file.type || "application/octet-stream",
-              entityType: "project_asset",
-              entityId: item.projectId,
+              entityType,
+              entityId,
             }),
           });
           if (!createRes.ok) throw new Error("Failed to re-create upload");
@@ -338,8 +388,8 @@ class UploadManager {
             name: item.file.name,
             sizeBytes: item.file.size,
             contentType,
-            entityType: "project_asset",
-            entityId: item.projectId,
+            entityType,
+            entityId,
           }),
         });
 
@@ -383,7 +433,7 @@ class UploadManager {
 
       // Finalize
       await fetch(`/api/files/${attachmentId}/complete`, { method: "POST" });
-      await this.createAssetRecord(item);
+      await this.finalizeTarget(item);
 
       item.progress = 100;
       item.status = "done";
@@ -418,11 +468,22 @@ class UploadManager {
     });
   }
 
-  private async createAssetRecord(item: UploadItem) {
+  // Bind the finished upload to its target entity in the database.
+  private async finalizeTarget(item: UploadItem) {
+    if (item.target.kind === "checklist_item") {
+      if (!item.attachmentId) throw new Error("Missing attachment id");
+      const { setChecklistItemAttachment } = await import("@/actions/projects");
+      await setChecklistItemAttachment(
+        item.target.checklistItemId,
+        item.attachmentId,
+        item.target.projectId
+      );
+      return;
+    }
     const { createAsset } = await import("@/actions/assets");
     await createAsset({
-      projectId: item.projectId,
-      folderId: item.folderId,
+      projectId: item.target.projectId,
+      folderId: item.target.folderId,
       name: item.file.name,
       fileSize: item.file.size,
       contentType: item.file.type,

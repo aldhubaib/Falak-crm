@@ -96,6 +96,9 @@ export function UploadIndicator() {
               )}
               <div className="flex-1 min-w-0">
                 <span className="block truncate text-foreground">{item.file.name}</span>
+                {item.label && (
+                  <span className="block text-muted-foreground text-label truncate">{item.label}</span>
+                )}
                 {item.status === "error" && item.error && (
                   <span className="block text-red-400 text-label truncate">{item.error}</span>
                 )}

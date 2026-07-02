@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect, useMemo } from "react";
-import { updateTask, deleteTask, setChecklistItemAttachment, removeChecklistItemAttachment, saveChecklistItemText, syncTaskTemplates, createFullTask, getTaskHistory } from "@/actions/projects";
+import { useState, useRef, useCallback, useEffect, useMemo, useSyncExternalStore } from "react";
+import { updateTask, deleteTask, removeChecklistItemAttachment, saveChecklistItemText, syncTaskTemplates, createFullTask, getTaskHistory } from "@/actions/projects";
 import { formatDistanceToNow } from "date-fns";
 import { ArrowLeft, Trash2, Save, Loader2, Paperclip, CheckCircle2, AlertCircle, ChevronDown, Download, History, X } from "lucide-react";
 import { TaskComments } from "@/components/task-comments";
@@ -10,113 +10,26 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { usePermissions } from "@/components/permissions-provider";
 import { useRouter } from "next/navigation";
+import { uploadManager, type UploadItem } from "@/lib/upload-manager";
 
-async function uploadFileDirect(
-  file: File,
-  entityType: string,
-  entityId: string
-): Promise<string> {
-  const contentType = file.type || "application/octet-stream";
-  const createRes = await fetch("/api/files", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: file.name,
-      sizeBytes: file.size,
-      contentType,
-      entityType,
-      entityId,
-    }),
-  });
-  const data = await createRes.json();
-  if (!createRes.ok) throw new Error(data.error || "Failed to start upload");
-
-  if (data.uploadUrl) {
-    try {
-      await new Promise<void>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("PUT", data.uploadUrl);
-        xhr.setRequestHeader("Content-Type", contentType);
-        xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            const etag = xhr.getResponseHeader("ETag") || '"single"';
-            fetch(`/api/files/${data.id}/parts/1`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ etag }),
-            }).catch(() => {});
-            resolve();
-          } else {
-            reject(new Error(`Upload failed: ${xhr.status}`));
-          }
-        };
-        xhr.onerror = () => reject(new Error("Network error"));
-        xhr.send(file);
-      });
-    } catch {
-      const fallback = await fetch(`/api/files/${data.id}/upload`, {
-        method: "PUT",
-        body: file,
-        headers: { "Content-Type": contentType },
-      });
-      if (!fallback.ok) throw new Error("Upload failed — please try again");
-    }
-  } else if (data.parts && data.parts.length > 0) {
-    const partSize = data.partSize || 10 * 1024 * 1024;
-    const uploadPart = (part: { number: number; url: string }) =>
-      new Promise<void>((resolve, reject) => {
-        const start = (part.number - 1) * partSize;
-        const end = Math.min(part.number * partSize, file.size);
-        const blob = file.slice(start, end);
-        const pxhr = new XMLHttpRequest();
-        pxhr.open("PUT", part.url);
-        pxhr.setRequestHeader("Content-Type", contentType);
-        pxhr.onload = () => {
-          if (pxhr.status >= 200 && pxhr.status < 300) {
-            const etag = pxhr.getResponseHeader("ETag") || `"part-${part.number}"`;
-            fetch(`/api/files/${data.id}/parts/${part.number}`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ etag }),
-            }).catch(() => {});
-            resolve();
-          } else {
-            reject(new Error(`Part ${part.number} failed: ${pxhr.status}`));
-          }
-        };
-        pxhr.onerror = () => reject(new Error(`Part ${part.number}: network error`));
-        pxhr.send(blob);
-      });
-
-    try {
-      for (const part of data.parts as { number: number; url: string }[]) {
-        let lastErr: unknown;
-        for (let attempt = 0; attempt < 3; attempt++) {
-          try {
-            await uploadPart(part);
-            lastErr = undefined;
-            break;
-          } catch (e) {
-            lastErr = e;
-            await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
-          }
-        }
-        if (lastErr) throw lastErr;
+// Subscribe to the global upload manager and return this checklist item's
+// current upload (if any). Driven off the manager's snapshot array (whose
+// reference changes on every notify) so React re-renders on progress ticks.
+const EMPTY_UPLOADS: UploadItem[] = [];
+function useChecklistUpload(checklistItemId: string): UploadItem | undefined {
+  const subscribe = useCallback((cb: () => void) => uploadManager.subscribe(cb), []);
+  const getSnapshot = useCallback(() => uploadManager.getItems(), []);
+  const getServerSnapshot = useCallback(() => EMPTY_UPLOADS, []);
+  const items = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  return useMemo(() => {
+    let match: UploadItem | undefined;
+    for (const i of items) {
+      if (i.target.kind === "checklist_item" && i.target.checklistItemId === checklistItemId) {
+        match = i;
       }
-    } catch {
-      // Direct multipart upload to R2 failed (e.g. CORS/network) — fall back
-      // to the server proxy, which writes the whole file server-side.
-      const fallback = await fetch(`/api/files/${data.id}/upload`, {
-        method: "PUT",
-        body: file,
-        headers: { "Content-Type": contentType },
-      });
-      if (!fallback.ok) throw new Error("Upload failed — please try again");
     }
-  }
-
-  await fetch(`/api/files/${data.id}/complete`, { method: "POST" });
-  return data.id;
+    return match;
+  }, [items, checklistItemId]);
 }
 
 type ChecklistItem = {
@@ -384,19 +297,21 @@ export function TaskDetailClient({
         });
         if (result.ok) {
           if (Object.keys(pendingFiles).length > 0) {
+            // Resolve the created checklist item ids, then hand each file to the
+            // global upload manager so uploads continue in the background (and
+            // show in the floating indicator) even as we navigate to the task.
             const taskRes = await fetch(`/api/tasks/${result.data.id}/checklist-items`);
-            const items: { id: string; templateItemId: string }[] = await taskRes.json();
+            const items: { id: string; templateItemId: string; name?: string }[] = await taskRes.json();
 
-            await Promise.all(
-              Object.entries(pendingFiles).map(async ([templateItemId, file]) => {
-                const checklistItem = items.find((i) => i.templateItemId === templateItemId);
-                if (!checklistItem) return;
-                const attachmentId = await uploadFileDirect(file, "checklist_item", checklistItem.id);
-                if (attachmentId) {
-                  await setChecklistItemAttachment(checklistItem.id, attachmentId, projectId);
-                }
-              })
-            );
+            for (const [templateItemId, file] of Object.entries(pendingFiles)) {
+              const checklistItem = items.find((i) => i.templateItemId === templateItemId);
+              if (!checklistItem) continue;
+              uploadManager.enqueueChecklist(file, {
+                checklistItemId: checklistItem.id,
+                projectId,
+                label: checklistItem.name,
+              });
+            }
           }
           router.replace(`/projects/${projectId}/tasks/${result.data.id}`);
         }
@@ -1312,48 +1227,62 @@ function ChecklistItemRow({
   canEdit: boolean;
   onComplete: (done: boolean) => void;
 }) {
-  const [uploading, setUploading] = useState(false);
+  const router = useRouter();
   const [validating, setValidating] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [typeError, setTypeError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [localDone, setLocalDone] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const processedRef = useRef<string | null>(null);
 
-  const hasFile = !!item.attachmentId;
+  // Live state of this item's background upload (survives navigation).
+  const upload = useChecklistUpload(item.id);
+  const uploading = !!upload && (upload.status === "queued" || upload.status === "uploading" || upload.status === "completing");
+  const progress = upload?.progress ?? 0;
+  const uploadError = upload?.status === "error" ? (upload.error ?? "Upload failed") : null;
+
+  const hasFile = !!item.attachmentId || localDone;
 
   useEffect(() => {
-    if (!hasFile || !item.attachmentId) return;
+    if (!item.attachmentId) return;
     let cancelled = false;
     fetch(`/api/files/${item.attachmentId}/download-url`)
       .then((r) => r.json())
       .then((data) => { if (!cancelled && data.url) setPreviewUrl(data.url); })
       .catch(() => {});
     return () => { cancelled = true; };
-  }, [item.attachmentId, hasFile]);
+  }, [item.attachmentId]);
 
-  const handleFileUpload = useCallback(async (file: File) => {
-    setUploading(true);
+  // When the background upload finishes, the manager has already bound the
+  // attachment server-side — reflect it inline and refresh server state.
+  useEffect(() => {
+    if (upload?.status !== "done" || !upload.attachmentId) return;
+    if (processedRef.current === upload.attachmentId) return;
+    processedRef.current = upload.attachmentId;
+    const attachmentId = upload.attachmentId;
+    setUploadedFileName(upload.file.name);
+    setLocalDone(true);
+    onComplete(true);
+    fetch(`/api/files/${attachmentId}/download-url`)
+      .then((r) => r.json())
+      .then((d) => { if (d.url) setPreviewUrl(d.url); })
+      .catch(() => {});
+    router.refresh();
+  }, [upload?.status, upload?.attachmentId, upload?.file, onComplete, router]);
+
+  const handleFileUpload = useCallback((file: File) => {
     setTypeError(null);
-    try {
-      const attachmentId = await uploadFileDirect(file, "checklist_item", item.id);
-
-      await setChecklistItemAttachment(item.id, attachmentId, projectId);
-      setUploadedFileName(file.name);
-
-      const dlRes = await fetch(`/api/files/${attachmentId}/download-url`);
-      const dlData = await dlRes.json();
-      if (dlData.url) setPreviewUrl(dlData.url);
-
-      onComplete(true);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Upload failed";
-      setTypeError(msg);
-      console.error("Upload failed:", err);
-    } finally {
-      setUploading(false);
-    }
-  }, [item.id, projectId, onComplete]);
+    setLocalDone(false);
+    processedRef.current = null;
+    setUploadedFileName(file.name);
+    uploadManager.enqueueChecklist(file, {
+      checklistItemId: item.id,
+      projectId,
+      label: item.name,
+    });
+  }, [item.id, item.name, projectId]);
 
   const tryUpload = useCallback(async (file: File) => {
     setTypeError(null);
@@ -1435,17 +1364,32 @@ function ChecklistItemRow({
               }}
             />
 
-            {typeError && (
+            {(typeError || uploadError) && (
               <div className="flex items-center gap-2 rounded-lg px-3 py-2 bg-red-500/10 border border-red-500/20">
                 <AlertCircle className="w-icon-sm h-icon-sm text-red-400 shrink-0" />
-                <span className="text-sub text-red-400">{typeError}</span>
+                <span className="text-sub text-red-400">{typeError || uploadError}</span>
               </div>
             )}
 
             {(validating || uploading) ? (
-              <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-4 py-3">
-                <Loader2 className="w-icon-md h-icon-md text-primary animate-spin shrink-0" />
-                <span className="text-sub text-muted-foreground">{validating ? "Checking file..." : "Uploading..."}</span>
+              <div className="rounded-xl border border-border bg-muted/30 px-4 py-3 space-y-2">
+                <div className="flex items-center gap-3">
+                  <Loader2 className="w-icon-md h-icon-md text-primary animate-spin shrink-0" />
+                  <span className="text-sub text-muted-foreground flex-1">
+                    {validating ? "Checking file..." : "Uploading..."}
+                  </span>
+                  {uploading && !validating && (
+                    <span className="text-sub font-medium text-foreground tabular-nums">{progress}%</span>
+                  )}
+                </div>
+                {uploading && !validating && (
+                  <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-primary transition-[width] duration-200 ease-out"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                )}
               </div>
             ) : hasFile ? (
               <div className="rounded-xl border border-green-500/30 bg-green-500/5 overflow-hidden">

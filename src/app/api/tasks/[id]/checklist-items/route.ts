@@ -5,7 +5,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const { id } = await params;
   const items = await db.taskChecklistItem.findMany({
     where: { taskId: id },
-    select: { id: true, templateItemId: true },
+    select: { id: true, templateItemId: true, name: true },
   });
   return NextResponse.json(items);
 }
