@@ -44,7 +44,6 @@ export async function inviteMember(formData: FormData): Promise<ActionResult> {
 
     const email = formData.get("email") as string;
     const name = (formData.get("name") as string) || undefined;
-    const roleId = (formData.get("roleId") as string) || undefined;
     const type = (formData.get("type") as string) || "MEMBER";
 
     await db.workspaceMember.create({
@@ -54,7 +53,6 @@ export async function inviteMember(formData: FormData): Promise<ActionResult> {
         email,
         name,
         type: type as "MEMBER" | "FREELANCER",
-        roleId: roleId || null,
       },
     });
 

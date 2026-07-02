@@ -1,6 +1,8 @@
 import { getProject } from "@/actions/projects";
 import { getTaskStatuses } from "@/actions/settings";
+import { getProjectAccess } from "@/lib/workspace";
 import { notFound } from "next/navigation";
+import { PermissionsProvider } from "@/components/permissions-provider";
 import { ProjectDetailClient } from "./project-detail-client";
 
 interface Props {
@@ -9,6 +11,9 @@ interface Props {
 
 export default async function ProjectDetailPage({ params }: Props) {
   const { id } = await params;
+
+  const access = await getProjectAccess(id);
+  if (!access.hasAccess) notFound();
 
   const [project, taskStatuses] = await Promise.all([
     getProject(id),
@@ -19,9 +24,11 @@ export default async function ProjectDetailPage({ params }: Props) {
 
   const safe = <T,>(obj: T): T => JSON.parse(JSON.stringify(obj));
   return (
-    <ProjectDetailClient
-      project={safe(project)}
-      taskStatuses={safe(taskStatuses)}
-    />
+    <PermissionsProvider permissions={safe(access.permissions)}>
+      <ProjectDetailClient
+        project={safe(project)}
+        taskStatuses={safe(taskStatuses)}
+      />
+    </PermissionsProvider>
   );
 }

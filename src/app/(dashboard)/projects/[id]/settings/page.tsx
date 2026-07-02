@@ -1,5 +1,6 @@
 import { getProject } from "@/actions/projects";
 import { getChecklistTemplates, getTaskStatuses, getProjectStatuses } from "@/actions/settings";
+import { getProjectAccess } from "@/lib/workspace";
 import { notFound } from "next/navigation";
 import { ProjectSettingsClient } from "./project-settings-client";
 
@@ -9,6 +10,9 @@ interface Props {
 
 export default async function ProjectSettingsPage({ params }: Props) {
   const { id } = await params;
+
+  const access = await getProjectAccess(id);
+  if (!access.hasAccess || access.permissions.projects !== "full") notFound();
 
   const [project, allTemplates, taskStatuses, projectStatuses] = await Promise.all([
     getProject(id),

@@ -1,19 +1,13 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { requireWorkspaceWithMember } from "@/lib/workspace";
-import { canEdit } from "@/lib/permissions";
+import { getProjectAccess, requireProjectWork } from "@/lib/workspace";
 import { revalidatePath } from "next/cache";
 import { deleteObject } from "@/lib/storage";
 
 export async function getProjectAssets(projectId: string, folderId?: string | null) {
-  const { workspace } = await requireWorkspaceWithMember();
-
-  const project = await db.project.findFirst({
-    where: { id: projectId, workspaceId: workspace.id },
-    select: { id: true },
-  });
-  if (!project) throw new Error("Project not found");
+  const access = await getProjectAccess(projectId);
+  if (!access.hasAccess || !access.project) throw new Error("Project not found");
 
   const [folders, assets] = await Promise.all([
     db.projectFolder.findMany({
@@ -31,8 +25,7 @@ export async function getProjectAssets(projectId: string, folderId?: string | nu
 }
 
 export async function createFolder(projectId: string, name: string, parentId?: string | null) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  await requireProjectWork(projectId);
 
   await db.projectFolder.create({
     data: {
@@ -46,8 +39,9 @@ export async function createFolder(projectId: string, name: string, parentId?: s
 }
 
 export async function renameFolder(folderId: string, name: string) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  const existing = await db.projectFolder.findUnique({ where: { id: folderId }, select: { projectId: true } });
+  if (!existing) throw new Error("Folder not found");
+  await requireProjectWork(existing.projectId);
 
   const folder = await db.projectFolder.update({
     where: { id: folderId },
@@ -58,8 +52,9 @@ export async function renameFolder(folderId: string, name: string) {
 }
 
 export async function deleteFolder(folderId: string) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  const existing = await db.projectFolder.findUnique({ where: { id: folderId }, select: { projectId: true } });
+  if (!existing) throw new Error("Folder not found");
+  await requireProjectWork(existing.projectId);
 
   const allAssets = await getNestedAssets(folderId);
   if (allAssets.length > 0) {
@@ -91,8 +86,7 @@ export async function createAsset(data: {
   contentType: string;
   r2Key: string;
 }) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  const { member } = await requireProjectWork(data.projectId);
 
   const asset = await db.projectAsset.create({
     data: {
@@ -111,11 +105,9 @@ export async function createAsset(data: {
 }
 
 export async function deleteAsset(assetId: string) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
-
   const asset = await db.projectAsset.findUnique({ where: { id: assetId } });
   if (!asset) throw new Error("Asset not found");
+  await requireProjectWork(asset.projectId);
 
   await deleteObject(asset.r2Key);
   await db.projectAsset.delete({ where: { id: assetId } });
@@ -124,8 +116,9 @@ export async function deleteAsset(assetId: string) {
 }
 
 export async function renameAsset(assetId: string, name: string) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  const existing = await db.projectAsset.findUnique({ where: { id: assetId }, select: { projectId: true } });
+  if (!existing) throw new Error("Asset not found");
+  await requireProjectWork(existing.projectId);
 
   const asset = await db.projectAsset.update({
     where: { id: assetId },
@@ -153,8 +146,9 @@ export async function getFolderBreadcrumbs(folderId: string) {
 }
 
 export async function moveAsset(assetId: string, targetFolderId: string | null) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  const existing = await db.projectAsset.findUnique({ where: { id: assetId }, select: { projectId: true } });
+  if (!existing) throw new Error("Asset not found");
+  await requireProjectWork(existing.projectId);
 
   const asset = await db.projectAsset.update({
     where: { id: assetId },
@@ -165,8 +159,9 @@ export async function moveAsset(assetId: string, targetFolderId: string | null) 
 }
 
 export async function moveFolder(folderId: string, targetParentId: string | null) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  const existing = await db.projectFolder.findUnique({ where: { id: folderId }, select: { projectId: true } });
+  if (!existing) throw new Error("Folder not found");
+  await requireProjectWork(existing.projectId);
 
   if (folderId === targetParentId) return;
 

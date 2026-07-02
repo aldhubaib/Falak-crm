@@ -2,7 +2,7 @@
 
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
-import { requireWorkspace, requireWorkspaceWithMember } from "@/lib/workspace";
+import { requireWorkspace, requireWorkspaceWithMember, requireProjectEdit, requireProjectWork, getProjectAccess } from "@/lib/workspace";
 import { canEdit } from "@/lib/permissions";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
@@ -11,9 +11,21 @@ import { deleteObject } from "@/lib/storage";
 import { sendNotification } from "@/lib/push";
 
 export async function getProjects() {
-  const workspace = await requireWorkspace();
+  const { workspace, member } = await requireWorkspaceWithMember();
+  const isOwner = member.type === "OWNER";
   return db.project.findMany({
-    where: { workspaceId: workspace.id, deletedAt: null },
+    where: {
+      workspaceId: workspace.id,
+      deletedAt: null,
+      ...(isOwner
+        ? {}
+        : {
+            OR: [
+              { ownerId: member.userId },
+              { members: { some: { memberId: member.id } } },
+            ],
+          }),
+    },
     select: {
       id: true,
       name: true,
@@ -74,16 +86,20 @@ export async function getProject(id: string) {
 // ─── Project Team ──────────────────────────────────────────────────────────────
 
 export async function getProjectTeam(projectId: string) {
-  const workspace = await requireWorkspace();
+  const access = await getProjectAccess(projectId);
+  if (!access.hasAccess) throw new Error("Permission denied");
+  const workspace = access.workspace;
 
-  const [members, allMembers] = await Promise.all([
+  const [members, allMembers, roles] = await Promise.all([
     db.projectMember.findMany({
       where: { projectId, project: { workspaceId: workspace.id } },
       select: {
         id: true,
         memberId: true,
+        roleId: true,
         addedAt: true,
         member: { select: { id: true, userId: true, name: true, email: true, type: true } },
+        role: { select: { id: true, name: true } },
       },
       orderBy: { addedAt: "asc" },
     }),
@@ -92,40 +108,54 @@ export async function getProjectTeam(projectId: string) {
       select: { id: true, userId: true, name: true, email: true, type: true },
       orderBy: [{ name: "asc" }, { email: "asc" }],
     }),
+    db.role.findMany({
+      where: { workspaceId: workspace.id },
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    }),
   ]);
 
-  return { members, allMembers };
+  return { members, allMembers, roles };
 }
 
-export async function addProjectMember(projectId: string, memberId: string) {
-  const { workspace, member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+export async function addProjectMember(projectId: string, memberId: string, roleId?: string | null) {
+  const { workspace } = await requireProjectEdit(projectId);
 
-  // Ensure both project and member belong to this workspace.
-  const [project, target] = await Promise.all([
-    db.project.findFirst({ where: { id: projectId, workspaceId: workspace.id }, select: { id: true } }),
+  // Ensure member (and role, if any) belong to this workspace.
+  const [target, role] = await Promise.all([
     db.workspaceMember.findFirst({ where: { id: memberId, workspaceId: workspace.id }, select: { id: true } }),
+    roleId ? db.role.findFirst({ where: { id: roleId, workspaceId: workspace.id }, select: { id: true } }) : Promise.resolve(null),
   ]);
-  if (!project || !target) throw new Error("Not found");
+  if (!target) throw new Error("Not found");
+  const resolvedRoleId = roleId && role ? roleId : null;
 
   await db.projectMember.upsert({
     where: { projectId_memberId: { projectId, memberId } },
-    create: { projectId, memberId },
-    update: {},
+    create: { projectId, memberId, roleId: resolvedRoleId },
+    update: { roleId: resolvedRoleId },
+  });
+
+  revalidatePath(`/projects/${projectId}`);
+}
+
+export async function setProjectMemberRole(projectId: string, memberId: string, roleId: string | null) {
+  const { workspace } = await requireProjectEdit(projectId);
+
+  if (roleId) {
+    const role = await db.role.findFirst({ where: { id: roleId, workspaceId: workspace.id }, select: { id: true } });
+    if (!role) throw new Error("Role not found");
+  }
+
+  await db.projectMember.updateMany({
+    where: { projectId, memberId },
+    data: { roleId },
   });
 
   revalidatePath(`/projects/${projectId}`);
 }
 
 export async function removeProjectMember(projectId: string, memberId: string) {
-  const { workspace, member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
-
-  const project = await db.project.findFirst({
-    where: { id: projectId, workspaceId: workspace.id },
-    select: { id: true },
-  });
-  if (!project) throw new Error("Not found");
+  await requireProjectEdit(projectId);
 
   await db.projectMember.deleteMany({ where: { projectId, memberId } });
 
@@ -133,8 +163,7 @@ export async function removeProjectMember(projectId: string, memberId: string) {
 }
 
 export async function updateProjectStatus(id: string, statusId: string, dealId?: string) {
-  const { workspace, member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  const { workspace } = await requireProjectEdit(id);
 
   await db.project.update({
     where: { id, workspaceId: workspace.id },
@@ -154,8 +183,7 @@ export async function createFullTask(data: {
   answers?: Record<string, string>;
 }): Promise<ActionResult<{ id: string }>> {
   return safeAction("Create Task", async () => {
-    const { member } = await requireWorkspaceWithMember();
-    if (!canEdit(member, "projects")) throw new Error("Permission denied");
+    const { member } = await requireProjectWork(data.projectId);
 
     const [lastTask, lastNumber] = await Promise.all([
       db.task.findFirst({
@@ -224,8 +252,7 @@ export async function createFullTask(data: {
 }
 
 export async function createTask(projectId: string, formData: FormData, dealId?: string) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  await requireProjectWork(projectId);
 
   const title = formData.get("title") as string;
   const description = (formData.get("description") as string) || undefined;
@@ -278,8 +305,7 @@ export async function createTask(projectId: string, formData: FormData, dealId?:
 }
 
 export async function updateTaskStatus(taskId: string, statusId: string, projectId: string, dealId?: string) {
-  const { workspace, member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  const { workspace, member } = await requireProjectWork(projectId);
 
   const blockers = await getStageGateBlockers(taskId, statusId);
   if (blockers.length > 0) {
@@ -308,19 +334,20 @@ export async function updateTaskStatus(taskId: string, statusId: string, project
       history[task.statusId] = task.assigneeId;
     }
 
-    const roles = await db.role.findMany({
-      where: { workspaceId: workspace.id },
-      include: { members: true },
+    const projectMembers = await db.projectMember.findMany({
+      where: { projectId },
+      include: { role: true },
+      orderBy: { addedAt: "asc" },
     });
 
-    const autoAssignRole = roles.find((role) => {
-      const perms = (role.permissions as Record<string, unknown>) ?? {};
+    const autoAssignMember = projectMembers.find((pm) => {
+      const perms = (pm.role?.permissions as Record<string, unknown>) ?? {};
       const tp = (perms.taskPermissions as { stages: Record<string, { autoAssign?: boolean }> }) ?? { stages: {} };
       return tp.stages?.[statusId]?.autoAssign === true;
     });
 
-    if (autoAssignRole?.members?.length) {
-      newAssigneeId = autoAssignRole.members[0].id;
+    if (autoAssignMember) {
+      newAssigneeId = autoAssignMember.memberId;
     }
   } else {
     const previousAssignee = history[statusId];
@@ -390,8 +417,7 @@ export async function updateTaskStatus(taskId: string, statusId: string, project
 }
 
 export async function assignTaskToMe(taskId: string, projectId: string) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  const { member } = await requireProjectWork(projectId);
 
   const task = await db.task.findUnique({ where: { id: taskId } });
   if (!task) throw new Error("Task not found");
@@ -410,8 +436,7 @@ export async function assignTaskToMe(taskId: string, projectId: string) {
 }
 
 export async function deleteTask(taskId: string, projectId: string, dealId?: string) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  await requireProjectWork(projectId);
 
   await db.task.update({
     where: { id: taskId },
@@ -501,11 +526,12 @@ export async function updateTask(taskId: string, data: {
   assigneeId?: string | null;
   priority?: number | null;
 }) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  await requireWorkspaceWithMember();
 
   const task = await db.task.findUnique({ where: { id: taskId }, include: { project: true } });
   if (!task) throw new Error("Task not found");
+
+  await requireProjectWork(task.projectId);
 
   await db.task.update({ where: { id: taskId }, data });
 
@@ -516,8 +542,7 @@ export async function updateTask(taskId: string, data: {
 // ─── Checklist Items ──────────────────────────────────────────────────────────
 
 export async function toggleChecklistItem(itemId: string, completed: boolean, projectId: string) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  await requireProjectWork(projectId);
 
   await db.taskChecklistItem.update({
     where: { id: itemId },
@@ -531,8 +556,7 @@ export async function toggleChecklistItem(itemId: string, completed: boolean, pr
 }
 
 export async function saveChecklistItemText(itemId: string, textValue: string, projectId: string) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  await requireProjectWork(projectId);
 
   await db.taskChecklistItem.update({
     where: { id: itemId },
@@ -548,8 +572,7 @@ export async function saveChecklistItemText(itemId: string, textValue: string, p
 }
 
 export async function setChecklistItemAttachment(itemId: string, attachmentId: string, projectId: string) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  await requireProjectWork(projectId);
 
   await db.taskChecklistItem.update({
     where: { id: itemId },
@@ -564,8 +587,7 @@ export async function setChecklistItemAttachment(itemId: string, attachmentId: s
 }
 
 export async function removeChecklistItemAttachment(itemId: string, projectId: string) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  await requireProjectWork(projectId);
 
   await db.taskChecklistItem.update({
     where: { id: itemId },
@@ -580,8 +602,7 @@ export async function removeChecklistItemAttachment(itemId: string, projectId: s
 }
 
 export async function updateProjectName(projectId: string, name: string) {
-  const { workspace, member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  const { workspace } = await requireProjectEdit(projectId);
   if (!name.trim()) throw new Error("Name is required");
 
   await db.project.update({
@@ -595,8 +616,7 @@ export async function updateProjectName(projectId: string, name: string) {
 }
 
 export async function updateProjectRequirePublishing(projectId: string, requirePublishing: boolean) {
-  const { workspace, member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  const { workspace } = await requireProjectEdit(projectId);
 
   await db.project.update({
     where: { id: projectId, workspaceId: workspace.id },
@@ -608,8 +628,7 @@ export async function updateProjectRequirePublishing(projectId: string, requireP
 }
 
 export async function updateProjectDescription(projectId: string, description: string) {
-  const { workspace, member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  const { workspace } = await requireProjectEdit(projectId);
 
   await db.project.update({
     where: { id: projectId, workspaceId: workspace.id },
@@ -622,8 +641,7 @@ export async function updateProjectDescription(projectId: string, description: s
 }
 
 export async function updateProjectThumbnail(projectId: string, thumbnailId: string | null) {
-  const { workspace, member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  const { workspace } = await requireProjectEdit(projectId);
 
   await db.project.update({
     where: { id: projectId, workspaceId: workspace.id },
@@ -635,8 +653,7 @@ export async function updateProjectThumbnail(projectId: string, thumbnailId: str
 }
 
 export async function updateProjectTemplates(projectId: string, templateIds: string[]) {
-  const { workspace, member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  await requireProjectEdit(projectId);
 
   await db.projectTemplate.deleteMany({ where: { projectId } });
 
@@ -650,8 +667,7 @@ export async function updateProjectTemplates(projectId: string, templateIds: str
 }
 
 export async function syncTaskTemplates(taskId: string, templateIds: string[], projectId: string) {
-  const { member } = await requireWorkspaceWithMember();
-  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  await requireProjectWork(projectId);
 
   const currentItems = await db.taskChecklistItem.findMany({
     where: { taskId },

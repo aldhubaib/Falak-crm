@@ -1,6 +1,8 @@
 import { getTask } from "@/actions/projects";
 import { getTaskStatuses, getChecklistTemplates } from "@/actions/settings";
+import { getProjectAccess } from "@/lib/workspace";
 import { notFound } from "next/navigation";
+import { PermissionsProvider } from "@/components/permissions-provider";
 import { TaskDetailClient } from "./task-detail-client";
 
 interface Props {
@@ -11,6 +13,9 @@ interface Props {
 export default async function TaskDetailPage({ params, searchParams }: Props) {
   const { id: projectId, taskId } = await params;
   const { statusId } = await searchParams;
+
+  const access = await getProjectAccess(projectId);
+  if (!access.hasAccess) notFound();
 
   const isNew = taskId === "new";
 
@@ -46,12 +51,14 @@ export default async function TaskDetailPage({ params, searchParams }: Props) {
   }));
 
   return (
-    <TaskDetailClient
-      task={task ? safe(task) : null}
-      projectId={projectId}
-      initialStatusId={statusId || taskStatuses[0]?.id || ""}
-      taskStatuses={safe(taskStatuses)}
-      availableTemplates={templates}
-    />
+    <PermissionsProvider permissions={safe(access.permissions)}>
+      <TaskDetailClient
+        task={task ? safe(task) : null}
+        projectId={projectId}
+        initialStatusId={statusId || taskStatuses[0]?.id || ""}
+        taskStatuses={safe(taskStatuses)}
+        availableTemplates={templates}
+      />
+    </PermissionsProvider>
   );
 }

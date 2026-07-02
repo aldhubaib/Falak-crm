@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { requireWorkspaceWithMember } from "@/lib/workspace";
+import { requireWorkspaceWithMember, getProjectAccess } from "@/lib/workspace";
 import { safeAction, type ActionResult } from "@/lib/action";
 import { revalidatePath } from "next/cache";
 import { sendNotification } from "@/lib/push";
@@ -30,6 +30,9 @@ export async function addTaskComment(
       select: { id: true, title: true, projectId: true },
     });
     if (!task) throw new Error("Task not found");
+
+    const access = await getProjectAccess(task.projectId);
+    if (!access.hasAccess) throw new Error("Permission denied");
 
     const mentionedIds = parseMentions(body);
 

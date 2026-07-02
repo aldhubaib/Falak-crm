@@ -115,6 +115,7 @@ model Role {
 
   workspace   Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   members     WorkspaceMember[]
+  projectMembers ProjectMember[]
 
   @@unique([workspaceId, name])
 }
@@ -402,10 +403,12 @@ model ProjectMember {
   id         String   @id @default(cuid())
   projectId  String
   memberId   String
+  roleId     String?
   addedAt    DateTime @default(now())
 
   project    Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
   member     WorkspaceMember @relation("ProjectTeam", fields: [memberId], references: [id], onDelete: Cascade)
+  role       Role?           @relation(fields: [roleId], references: [id], onDelete: SetNull)
 
   @@unique([projectId, memberId])
   @@index([memberId])

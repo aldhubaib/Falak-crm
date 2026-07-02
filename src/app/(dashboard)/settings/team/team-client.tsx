@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { assignRole, inviteMember, removeMember, createRole, updateRole, deleteRole, startTestRole, stopTestRole } from "@/actions/team";
+import { inviteMember, removeMember, createRole, updateRole, deleteRole, startTestRole, stopTestRole } from "@/actions/team";
 import { seedDefaultRoles } from "@/actions/settings";
 import { Button } from "@/components/ui/button";
 import { FormSelect } from "@/components/ui/form-select";
@@ -56,7 +56,6 @@ export function TeamClient({
 
   const sortedStatuses = useMemo(() => [...taskStatuses].sort((a, b) => a.order - b.order), [taskStatuses]);
   const testingRole = testingRoleId ? roles.find((r) => r.id === testingRoleId) : null;
-  const roleOptions = useMemo(() => roles.map((r) => ({ value: r.id, label: r.name })), [roles]);
 
   return (
     <div className="space-y-6">
@@ -84,12 +83,15 @@ export function TeamClient({
       )}
       {/* Members */}
       <div className="rounded-xl border border-border bg-card p-4 max-w-2xl">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-1">
           <h3 className="text-body font-medium text-foreground">Members ({members.length})</h3>
           <Button size="sm" onClick={() => setShowInvite(true)}>
             <UserPlus className="w-icon-sm h-icon-sm" /> Invite
           </Button>
         </div>
+        <p className="text-label text-muted-foreground/70 mb-4">
+          Roles are assigned per project. Open a project&apos;s Team tab to give a member a role there.
+        </p>
 
         {showInvite && (
           <form
@@ -124,12 +126,6 @@ export function TeamClient({
             </div>
             <div className="grid grid-cols-2 gap-2">
               <FormSelect
-                name="roleId"
-                label="Role"
-                placeholder="No role"
-                options={roleOptions}
-              />
-              <FormSelect
                 name="type"
                 label="Type"
                 value="MEMBER"
@@ -163,16 +159,9 @@ export function TeamClient({
                 </span>
               ) : (
                 <div className="flex items-center gap-2">
-                  <FormSelect
-                    name={`role_${member.id}`}
-                    value={member.roleId || ""}
-                    placeholder="No role"
-                    options={roleOptions}
-                    onChange={async (val) => {
-                      const result = await assignRole(member.id, val || null);
-                      if (!result.ok) useErrorStore.getState().push(result.error);
-                    }}
-                  />
+                  <span className="px-1.5 py-0.5 rounded text-label font-medium bg-muted text-muted-foreground capitalize">
+                    {member.type.toLowerCase()}
+                  </span>
                   <form action={async () => {
                     const result = await removeMember(member.id);
                     if (!result.ok) useErrorStore.getState().push(result.error);

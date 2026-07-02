@@ -343,6 +343,7 @@ exports.Prisma.ProjectMemberScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
   memberId: 'memberId',
+  roleId: 'roleId',
   addedAt: 'addedAt'
 };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback, memo, type DragEvent } from "react";
-import { updateTaskStatus, getStageGateBlockers, assignTaskToMe, getProjectTeam, addProjectMember, removeProjectMember } from "@/actions/projects";
+import { updateTaskStatus, getStageGateBlockers, assignTaskToMe, getProjectTeam, addProjectMember, removeProjectMember, setProjectMemberRole } from "@/actions/projects";
 import { createInvoiceFromProject } from "@/actions/invoices";
 import { addTaskComment } from "@/actions/comments";
 import { ArrowLeft, Plus, FileText, AlertTriangle, Settings, GripVertical, ChevronRight, Undo2, Paperclip, X, Loader2, LayoutGrid, FolderOpen, Upload, Trash2, Download, MoreHorizontal, FolderPlus, Pencil, FolderInput, BarChart3, CheckCircle2, Clock, ListChecks, CalendarDays, Building2, Users, UserCheck, RotateCcw } from "lucide-react";
@@ -1152,11 +1152,13 @@ function InvoiceStatusBadge({ status }: { status: string }) {
 // ─── Team Panel ───────────────────────────────────────────────────────────────
 
 type TeamMember = { id: string; userId: string; name: string | null; email: string; type: string };
-type ProjectTeamRow = { id: string; memberId: string; addedAt: string | Date; member: TeamMember };
+type RoleOption = { id: string; name: string };
+type ProjectTeamRow = { id: string; memberId: string; roleId: string | null; addedAt: string | Date; member: TeamMember; role: RoleOption | null };
 
 function TeamPanel({ projectId, canEdit }: { projectId: string; canEdit: boolean }) {
   const [members, setMembers] = useState<ProjectTeamRow[]>([]);
   const [allMembers, setAllMembers] = useState<TeamMember[]>([]);
+  const [roles, setRoles] = useState<RoleOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
   const [search, setSearch] = useState("");
@@ -1169,6 +1171,7 @@ function TeamPanel({ projectId, canEdit }: { projectId: string; canEdit: boolean
       const data = await getProjectTeam(projectId);
       setMembers(data.members as ProjectTeamRow[]);
       setAllMembers(data.allMembers as TeamMember[]);
+      setRoles(data.roles as RoleOption[]);
     } catch (e) {
       pushError(createAppError(e, { action: "Load project team" }));
     } finally {
@@ -1190,7 +1193,7 @@ function TeamPanel({ projectId, canEdit }: { projectId: string; canEdit: boolean
 
   const handleAdd = async (member: TeamMember) => {
     setBusyId(member.id);
-    setMembers((prev) => [...prev, { id: `tmp-${member.id}`, memberId: member.id, addedAt: new Date(), member }]);
+    setMembers((prev) => [...prev, { id: `tmp-${member.id}`, memberId: member.id, roleId: null, addedAt: new Date(), member, role: null }]);
     try {
       await addProjectMember(projectId, member.id);
       await load();
@@ -1213,6 +1216,23 @@ function TeamPanel({ projectId, canEdit }: { projectId: string; canEdit: boolean
       pushError(createAppError(e, { action: "Remove project member" }));
     } finally {
       setBusyId(null);
+    }
+  };
+
+  const handleRoleChange = async (memberId: string, roleId: string | null) => {
+    const prev = members;
+    setMembers((cur) =>
+      cur.map((m) =>
+        m.memberId === memberId
+          ? { ...m, roleId, role: roleId ? roles.find((r) => r.id === roleId) ?? null : null }
+          : m
+      )
+    );
+    try {
+      await setProjectMemberRole(projectId, memberId, roleId);
+    } catch (e) {
+      setMembers(prev);
+      pushError(createAppError(e, { action: "Set project role" }));
     }
   };
 
@@ -1304,6 +1324,22 @@ function TeamPanel({ projectId, canEdit }: { projectId: string; canEdit: boolean
               </div>
               {row.member.type === "OWNER" && (
                 <span className="px-1.5 py-0.5 rounded text-label font-medium bg-primary/15 text-primary">owner</span>
+              )}
+              {canEdit ? (
+                <select
+                  value={row.roleId || ""}
+                  onChange={(e) => handleRoleChange(row.memberId, e.target.value || null)}
+                  className="shrink-0 px-2 py-1.5 rounded-lg bg-muted/40 border border-border text-sub text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                >
+                  <option value="">No role</option>
+                  {roles.map((r) => (
+                    <option key={r.id} value={r.id}>{r.name}</option>
+                  ))}
+                </select>
+              ) : (
+                row.role && (
+                  <span className="shrink-0 px-1.5 py-0.5 rounded text-label font-medium bg-muted text-muted-foreground">{row.role.name}</span>
+                )
               )}
               {canEdit && (
                 <button

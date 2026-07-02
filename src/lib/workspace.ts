@@ -142,3 +142,78 @@ export const requireWorkspaceWithMember = cache(async () => {
 
   return { workspace, member };
 });
+
+// Resolves a member's effective permissions *within a specific project*.
+// Global modules (deals, invoices, settings, etc.) keep their workspace-level
+// values; the `projects` module and task-stage permissions are governed by the
+// member's per-project role. Non-assigned members (that aren't owners or the
+// project's record owner) have no access to the project.
+export const getProjectAccess = cache(async (projectId: string) => {
+  const { workspace, member } = await requireWorkspaceWithMember();
+
+  const project = await db.project.findFirst({
+    where: { id: projectId, workspaceId: workspace.id },
+    select: { id: true, ownerId: true },
+  });
+
+  if (!project) {
+    return { workspace, member, project: null, hasAccess: false, permissions: member.permissions };
+  }
+
+  // Owners and the project's record owner always have full access.
+  if (member.type === "OWNER" || (project.ownerId && project.ownerId === member.userId)) {
+    return { workspace, member, project, hasAccess: true, permissions: member.permissions };
+  }
+
+  const projectMember = await db.projectMember.findFirst({
+    where: { projectId, memberId: member.id },
+    include: { role: true },
+  });
+
+  if (!projectMember) {
+    return {
+      workspace,
+      member,
+      project,
+      hasAccess: false,
+      permissions: { ...member.permissions, projects: "none" as const, taskPermissions: { stages: {} } },
+    };
+  }
+
+  const rolePerms = (projectMember.role?.permissions as unknown as Permissions | null) ?? null;
+  const permissions: Permissions = {
+    ...member.permissions,
+    projects: rolePerms?.projects ?? "view",
+    taskPermissions: rolePerms?.taskPermissions ?? { stages: {} },
+  };
+
+  return { workspace, member, project, hasAccess: true, permissions };
+});
+
+// Throws unless the current member has full edit rights on the project
+// (project-level admin actions: settings, templates, team, project meta).
+export const requireProjectEdit = async (projectId: string) => {
+  const access = await getProjectAccess(projectId);
+  if (!access.hasAccess) throw new Error("Permission denied");
+  if (access.permissions.projects !== "full") throw new Error("Permission denied");
+  return access;
+};
+
+function hasAnyTaskStagePermission(permissions: Permissions): boolean {
+  const stages = permissions.taskPermissions?.stages;
+  if (!stages) return false;
+  return Object.values(stages).some(
+    (s) => s.create || s.modify || s.forward || s.rollback || s.delete
+  );
+}
+
+// Throws unless the current member can work on tasks/deliverables in the
+// project: either full project access, or a project role that grants at least
+// one task-stage permission. Non-members are always rejected.
+export const requireProjectWork = async (projectId: string) => {
+  const access = await getProjectAccess(projectId);
+  if (!access.hasAccess) throw new Error("Permission denied");
+  if (access.permissions.projects === "full") return access;
+  if (hasAnyTaskStagePermission(access.permissions)) return access;
+  throw new Error("Permission denied");
+};
