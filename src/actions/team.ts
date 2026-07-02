@@ -67,10 +67,18 @@ export async function createRole(name: string): Promise<ActionResult<string>> {
     const { workspace, member } = await requireWorkspaceWithMember();
     if (!canEdit(member, "team")) throw new Error("Permission denied");
 
+    const trimmed = name.trim();
+    if (!trimmed) throw new Error("Role name cannot be empty");
+
+    const existing = await db.role.findFirst({
+      where: { workspaceId: workspace.id, name: trimmed },
+    });
+    if (existing) throw new Error(`A role named "${trimmed}" already exists`);
+
     const role = await db.role.create({
       data: {
         workspaceId: workspace.id,
-        name,
+        name: trimmed,
         permissions: {
           deals: "view",
           pipeline: "none",
@@ -91,6 +99,16 @@ export async function updateRole(roleId: string, data: { name?: string; permissi
   return safeAction("Update Role", async () => {
     const { workspace, member } = await requireWorkspaceWithMember();
     if (!canEdit(member, "team")) throw new Error("Permission denied");
+
+    if (data.name !== undefined) {
+      const trimmed = data.name.trim();
+      if (!trimmed) throw new Error("Role name cannot be empty");
+      const existing = await db.role.findFirst({
+        where: { workspaceId: workspace.id, name: trimmed, id: { not: roleId } },
+      });
+      if (existing) throw new Error(`A role named "${trimmed}" already exists`);
+      data.name = trimmed;
+    }
 
     await db.role.update({
       where: { id: roleId, workspaceId: workspace.id },
