@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
 import {
   ChevronLeft,
   ChevronRight,
@@ -570,6 +571,8 @@ function DatePanel({
   const [tab, setTab] = useState<"unscheduled" | "scheduled">(
     unscheduledTasks.length > 0 ? "unscheduled" : "scheduled"
   );
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const d = new Date(selectedDate + "T00:00:00");
 
   const scheduledByProject = useMemo(() => {
@@ -594,12 +597,14 @@ function DatePanel({
     return Array.from(map.values());
   }, [unscheduledTasks, projects, selectedProjectId]);
 
-  return (
-    <div className="fixed inset-0 z-[500] flex items-end lg:items-center justify-center">
+  if (!mounted) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[900] flex items-stretch lg:items-center justify-center">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full lg:w-[480px] max-h-[85vh] lg:max-h-[80vh] bg-background border border-border rounded-t-2xl lg:rounded-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom lg:zoom-in-95 duration-200" style={{ containerType: "inline-size" }}>
+      <div className="relative w-full h-full lg:h-auto lg:w-[480px] max-h-full lg:max-h-[80vh] bg-background lg:border border-border rounded-none lg:rounded-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom lg:zoom-in-95 duration-200" style={{ containerType: "inline-size" }}>
         {/* Header */}
-        <div className="px-4 py-3 border-b border-border">
+        <div className="px-4 py-3 border-b border-border pt-[max(env(safe-area-inset-top),0.75rem)] lg:pt-3">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-label font-medium text-muted-foreground uppercase tracking-wider">
@@ -784,7 +789,8 @@ function DatePanel({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
