@@ -666,6 +666,7 @@ function NewModeField({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
   const [fileError, setFileError] = useState<string | null>(null);
+  const [validating, setValidating] = useState(false);
 
   const handleFileValidation = useCallback(async (file: File) => {
     setFileError(null);
@@ -679,12 +680,17 @@ function NewModeField({
       setFileError(`".${ext}" is not allowed. ${formatErr}`);
       return;
     }
-    const arErr = await validateAspectRatio(file, item.aspectRatio);
-    if (arErr) {
-      setFileError(arErr);
-      return;
+    if (item.aspectRatio) setValidating(true);
+    try {
+      const arErr = await validateAspectRatio(file, item.aspectRatio);
+      if (arErr) {
+        setFileError(arErr);
+        return;
+      }
+      onFileSelect?.(file);
+    } finally {
+      setValidating(false);
     }
-    onFileSelect?.(file);
   }, [item.allowedFileTypes, item.allowedFormats, item.aspectRatio, onFileSelect]);
 
   return (
@@ -844,7 +850,12 @@ function NewModeField({
                 <span className="text-sub text-red-400">{fileError}</span>
               </div>
             )}
-            {pendingFile ? (
+            {validating ? (
+              <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-4 py-3">
+                <Loader2 className="w-icon-md h-icon-md text-primary animate-spin shrink-0" />
+                <span className="text-sub text-muted-foreground">Checking file...</span>
+              </div>
+            ) : pendingFile ? (
               <div className="rounded-xl border border-green-500/30 bg-green-500/5 overflow-hidden">
                 <FilePreview file={pendingFile} />
                 <div className="flex items-center gap-3 px-4 py-3">
@@ -1181,31 +1192,49 @@ function validateAspectRatio(
   return new Promise((resolve) => {
     if (isImage) {
       const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+      let settled = false;
+      const settle = (val: string | null) => {
+        if (settled) return;
+        settled = true;
+        URL.revokeObjectURL(objectUrl);
+        resolve(val);
+      };
+      const timeout = setTimeout(() => settle(null), 5000);
       img.onload = () => {
-        URL.revokeObjectURL(img.src);
+        clearTimeout(timeout);
         const actual = img.naturalWidth / img.naturalHeight;
         if (Math.abs(actual - target) / target > tolerance) {
-          resolve(`Aspect ratio must be ${aspectRatio} (file is ${img.naturalWidth}×${img.naturalHeight})`);
+          settle(`Aspect ratio must be ${aspectRatio} (file is ${img.naturalWidth}×${img.naturalHeight})`);
         } else {
-          resolve(null);
+          settle(null);
         }
       };
-      img.onerror = () => { URL.revokeObjectURL(img.src); resolve(null); };
-      img.src = URL.createObjectURL(file);
+      img.onerror = () => { clearTimeout(timeout); settle(null); };
+      img.src = objectUrl;
     } else {
       const video = document.createElement("video");
       video.preload = "metadata";
+      const objectUrl = URL.createObjectURL(file);
+      let settled = false;
+      const settle = (val: string | null) => {
+        if (settled) return;
+        settled = true;
+        URL.revokeObjectURL(objectUrl);
+        resolve(val);
+      };
+      const timeout = setTimeout(() => settle(null), 5000);
       video.onloadedmetadata = () => {
-        URL.revokeObjectURL(video.src);
+        clearTimeout(timeout);
         const actual = video.videoWidth / video.videoHeight;
         if (Math.abs(actual - target) / target > tolerance) {
-          resolve(`Aspect ratio must be ${aspectRatio} (file is ${video.videoWidth}×${video.videoHeight})`);
+          settle(`Aspect ratio must be ${aspectRatio} (file is ${video.videoWidth}×${video.videoHeight})`);
         } else {
-          resolve(null);
+          settle(null);
         }
       };
-      video.onerror = () => { URL.revokeObjectURL(video.src); resolve(null); };
-      video.src = URL.createObjectURL(file);
+      video.onerror = () => { clearTimeout(timeout); settle(null); };
+      video.src = objectUrl;
     }
   });
 }
@@ -1258,6 +1287,7 @@ function ChecklistItemRow({
   onComplete: (done: boolean) => void;
 }) {
   const [uploading, setUploading] = useState(false);
+  const [validating, setValidating] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [typeError, setTypeError] = useState<string | null>(null);
@@ -1309,9 +1339,14 @@ function ChecklistItemRow({
       setTypeError(`".${ext}" is not allowed. ${formatErr}`);
       return;
     }
-    const arErr = await validateAspectRatio(file, item.aspectRatio);
-    if (arErr) { setTypeError(arErr); return; }
-    handleFileUpload(file);
+    if (item.aspectRatio) setValidating(true);
+    try {
+      const arErr = await validateAspectRatio(file, item.aspectRatio);
+      if (arErr) { setTypeError(arErr); return; }
+      handleFileUpload(file);
+    } finally {
+      setValidating(false);
+    }
   }, [item.allowedFileTypes, item.allowedFormats, item.aspectRatio, handleFileUpload]);
 
   const displayName = uploadedFileName || "File uploaded";
@@ -1379,10 +1414,10 @@ function ChecklistItemRow({
               </div>
             )}
 
-            {uploading ? (
+            {(validating || uploading) ? (
               <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-4 py-3">
                 <Loader2 className="w-icon-md h-icon-md text-primary animate-spin shrink-0" />
-                <span className="text-sub text-muted-foreground">Uploading...</span>
+                <span className="text-sub text-muted-foreground">{validating ? "Checking file..." : "Uploading..."}</span>
               </div>
             ) : hasFile ? (
               <div className="rounded-xl border border-green-500/30 bg-green-500/5 overflow-hidden">
