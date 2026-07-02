@@ -185,7 +185,7 @@ class UploadManager {
     const queue = [...partsToUpload];
     const active = new Set<Promise<void>>();
 
-    const uploadPart = async (part: { number: number; url: string }): Promise<void> => {
+    const attemptPart = (part: { number: number; url: string }): Promise<void> => {
       const start = (part.number - 1) * PART_SIZE;
       const end = Math.min(part.number * PART_SIZE, item.file.size);
       const blob = item.file.slice(start, end);
@@ -224,6 +224,20 @@ class UploadManager {
         xhr.onerror = () => reject(new Error(`Part ${part.number}: network error`));
         xhr.send(blob);
       });
+    };
+
+    const uploadPart = async (part: { number: number; url: string }): Promise<void> => {
+      let lastErr: unknown;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          await attemptPart(part);
+          return;
+        } catch (e) {
+          lastErr = e;
+          await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
+        }
+      }
+      throw lastErr;
     };
 
     while (queue.length > 0 || active.size > 0) {
@@ -354,7 +368,11 @@ class UploadManager {
           await this.uploadViaProxy(item);
         }
       } else if (parts.length > 0) {
-        await this.uploadMultipartDirect(item, parts, skipParts);
+        try {
+          await this.uploadMultipartDirect(item, parts, skipParts);
+        } catch {
+          await this.uploadViaProxy(item);
+        }
       } else {
         throw new Error("No upload URL or parts received from server");
       }

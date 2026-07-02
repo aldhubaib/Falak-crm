@@ -156,6 +156,27 @@ export function useUpload(options: UploadOptions) {
     }
   }
 
+  async function uploadViaProxy(entry: UploadEntry) {
+    return new Promise<void>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("PUT", `/api/files/${entry.attachmentId}/upload`);
+      xhr.setRequestHeader("Content-Type", entry.contentType);
+
+      xhr.upload.addEventListener("progress", (e) => {
+        if (e.lengthComputable) {
+          updateEntry(entry.id, { progress: Math.round((e.loaded / e.total) * 100) });
+        }
+      });
+
+      xhr.addEventListener("load", () => {
+        if (xhr.status >= 200 && xhr.status < 300) resolve();
+        else reject(new Error(`Proxy upload failed: ${xhr.status}`));
+      });
+      xhr.addEventListener("error", () => reject(new Error("Network error during proxy upload")));
+      xhr.send(entry.file);
+    });
+  }
+
   async function completeUpload(entry: UploadEntry) {
     const resp = await fetch(`/api/files/${entry.attachmentId}/complete`, {
       method: "POST",
@@ -192,9 +213,17 @@ export function useUpload(options: UploadOptions) {
       updateEntry(entry.id, { attachmentId: data.id, status: "uploading" });
 
       if (data.uploadUrl) {
-        await uploadSingle(entry, data.uploadUrl);
+        try {
+          await uploadSingle(entry, data.uploadUrl);
+        } catch {
+          await uploadViaProxy(entry);
+        }
       } else {
-        await uploadMultipart(entry, data.parts);
+        try {
+          await uploadMultipart(entry, data.parts);
+        } catch {
+          await uploadViaProxy(entry);
+        }
       }
 
       await completeUpload(entry);

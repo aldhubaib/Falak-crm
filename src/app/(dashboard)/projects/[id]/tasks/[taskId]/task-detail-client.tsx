@@ -63,11 +63,11 @@ async function uploadFileDirect(
     }
   } else if (data.parts && data.parts.length > 0) {
     const partSize = data.partSize || 10 * 1024 * 1024;
-    for (const part of data.parts as { number: number; url: string }[]) {
-      const start = (part.number - 1) * partSize;
-      const end = Math.min(part.number * partSize, file.size);
-      const blob = file.slice(start, end);
-      await new Promise<void>((resolve, reject) => {
+    const uploadPart = (part: { number: number; url: string }) =>
+      new Promise<void>((resolve, reject) => {
+        const start = (part.number - 1) * partSize;
+        const end = Math.min(part.number * partSize, file.size);
+        const blob = file.slice(start, end);
         const pxhr = new XMLHttpRequest();
         pxhr.open("PUT", part.url);
         pxhr.setRequestHeader("Content-Type", contentType);
@@ -87,6 +87,31 @@ async function uploadFileDirect(
         pxhr.onerror = () => reject(new Error(`Part ${part.number}: network error`));
         pxhr.send(blob);
       });
+
+    try {
+      for (const part of data.parts as { number: number; url: string }[]) {
+        let lastErr: unknown;
+        for (let attempt = 0; attempt < 3; attempt++) {
+          try {
+            await uploadPart(part);
+            lastErr = undefined;
+            break;
+          } catch (e) {
+            lastErr = e;
+            await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
+          }
+        }
+        if (lastErr) throw lastErr;
+      }
+    } catch {
+      // Direct multipart upload to R2 failed (e.g. CORS/network) — fall back
+      // to the server proxy, which writes the whole file server-side.
+      const fallback = await fetch(`/api/files/${data.id}/upload`, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": contentType },
+      });
+      if (!fallback.ok) throw new Error("Upload failed — please try again");
     }
   }
 
