@@ -15,7 +15,7 @@ async function uploadFileDirect(
   file: File,
   entityType: string,
   entityId: string
-): Promise<string | null> {
+): Promise<string> {
   const contentType = file.type || "application/octet-stream";
   const createRes = await fetch("/api/files", {
     method: "POST",
@@ -29,7 +29,7 @@ async function uploadFileDirect(
     }),
   });
   const data = await createRes.json();
-  if (!createRes.ok) return null;
+  if (!createRes.ok) throw new Error(data.error || "Failed to start upload");
 
   if (data.uploadUrl) {
     try {
@@ -54,11 +54,12 @@ async function uploadFileDirect(
         xhr.send(file);
       });
     } catch {
-      await fetch(`/api/files/${data.id}/upload`, {
+      const fallback = await fetch(`/api/files/${data.id}/upload`, {
         method: "PUT",
         body: file,
         headers: { "Content-Type": contentType },
       });
+      if (!fallback.ok) throw new Error("Upload failed — please try again");
     }
   } else if (data.parts && data.parts.length > 0) {
     const partSize = data.partSize || 10 * 1024 * 1024;
@@ -1308,9 +1309,9 @@ function ChecklistItemRow({
 
   const handleFileUpload = useCallback(async (file: File) => {
     setUploading(true);
+    setTypeError(null);
     try {
       const attachmentId = await uploadFileDirect(file, "checklist_item", item.id);
-      if (!attachmentId) throw new Error("Upload failed");
 
       await setChecklistItemAttachment(item.id, attachmentId, projectId);
       setUploadedFileName(file.name);
@@ -1321,6 +1322,8 @@ function ChecklistItemRow({
 
       onComplete(true);
     } catch (err) {
+      const msg = err instanceof Error ? err.message : "Upload failed";
+      setTypeError(msg);
       console.error("Upload failed:", err);
     } finally {
       setUploading(false);
