@@ -339,6 +339,13 @@ exports.Prisma.ProjectScalarFieldEnum = {
   deletedAt: 'deletedAt'
 };
 
+exports.Prisma.ProjectMemberScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  memberId: 'memberId',
+  addedAt: 'addedAt'
+};
+
 exports.Prisma.ProjectFolderScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
@@ -740,6 +747,7 @@ exports.Prisma.ModelName = {
   DealItem: 'DealItem',
   ProjectStatus: 'ProjectStatus',
   Project: 'Project',
+  ProjectMember: 'ProjectMember',
   ProjectFolder: 'ProjectFolder',
   ProjectAsset: 'ProjectAsset',
   ChecklistTemplate: 'ChecklistTemplate',

@@ -86,14 +86,15 @@ model WorkspaceMember {
   roleId      String?
   joinedAt    DateTime   @default(now())
 
-  workspace         Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  role              Role?              @relation(fields: [roleId], references: [id])
-  assignedTasks     Task[]             @relation("TaskAssignee")
-  comments          TaskComment[]      @relation("CommentAuthor")
-  mentionedIn       CommentMention[]   @relation("MentionedIn")
-  notifications     Notification[]     @relation("NotificationRecipient")
-  pushSubscriptions PushSubscription[]
-  scheduledItems    PublishItem[]      @relation("PublishScheduler")
+  workspace          Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  role               Role?              @relation(fields: [roleId], references: [id])
+  assignedTasks      Task[]             @relation("TaskAssignee")
+  comments           TaskComment[]      @relation("CommentAuthor")
+  mentionedIn        CommentMention[]   @relation("MentionedIn")
+  notifications      Notification[]     @relation("NotificationRecipient")
+  pushSubscriptions  PushSubscription[]
+  scheduledItems     PublishItem[]      @relation("PublishScheduler")
+  projectMemberships ProjectMember[]    @relation("ProjectTeam")
 
   @@unique([workspaceId, userId])
   @@index([userId])
@@ -392,8 +393,22 @@ model Project {
   folders          ProjectFolder[]
   assets           ProjectAsset[]
   publishItems     PublishItem[]
+  members          ProjectMember[]
 
   @@index([workspaceId, deletedAt])
+}
+
+model ProjectMember {
+  id        String   @id @default(cuid())
+  projectId String
+  memberId  String
+  addedAt   DateTime @default(now())
+
+  project Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  member  WorkspaceMember @relation("ProjectTeam", fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, memberId])
+  @@index([memberId])
 }
 
 // ─── Project Assets ─────────────────────────────────────────────────────────────

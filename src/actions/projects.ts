@@ -71,6 +71,67 @@ export async function getProject(id: string) {
   });
 }
 
+// ─── Project Team ──────────────────────────────────────────────────────────────
+
+export async function getProjectTeam(projectId: string) {
+  const workspace = await requireWorkspace();
+
+  const [members, allMembers] = await Promise.all([
+    db.projectMember.findMany({
+      where: { projectId, project: { workspaceId: workspace.id } },
+      select: {
+        id: true,
+        memberId: true,
+        addedAt: true,
+        member: { select: { id: true, userId: true, name: true, email: true, type: true } },
+      },
+      orderBy: { addedAt: "asc" },
+    }),
+    db.workspaceMember.findMany({
+      where: { workspaceId: workspace.id },
+      select: { id: true, userId: true, name: true, email: true, type: true },
+      orderBy: [{ name: "asc" }, { email: "asc" }],
+    }),
+  ]);
+
+  return { members, allMembers };
+}
+
+export async function addProjectMember(projectId: string, memberId: string) {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
+  // Ensure both project and member belong to this workspace.
+  const [project, target] = await Promise.all([
+    db.project.findFirst({ where: { id: projectId, workspaceId: workspace.id }, select: { id: true } }),
+    db.workspaceMember.findFirst({ where: { id: memberId, workspaceId: workspace.id }, select: { id: true } }),
+  ]);
+  if (!project || !target) throw new Error("Not found");
+
+  await db.projectMember.upsert({
+    where: { projectId_memberId: { projectId, memberId } },
+    create: { projectId, memberId },
+    update: {},
+  });
+
+  revalidatePath(`/projects/${projectId}`);
+}
+
+export async function removeProjectMember(projectId: string, memberId: string) {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
+  const project = await db.project.findFirst({
+    where: { id: projectId, workspaceId: workspace.id },
+    select: { id: true },
+  });
+  if (!project) throw new Error("Not found");
+
+  await db.projectMember.deleteMany({ where: { projectId, memberId } });
+
+  revalidatePath(`/projects/${projectId}`);
+}
+
 export async function updateProjectStatus(id: string, statusId: string, dealId?: string) {
   const { workspace, member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");

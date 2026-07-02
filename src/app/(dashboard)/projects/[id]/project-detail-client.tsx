@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback, memo, type DragEvent } from "react";
-import { updateTaskStatus, getStageGateBlockers, assignTaskToMe } from "@/actions/projects";
+import { updateTaskStatus, getStageGateBlockers, assignTaskToMe, getProjectTeam, addProjectMember, removeProjectMember } from "@/actions/projects";
 import { createInvoiceFromProject } from "@/actions/invoices";
 import { addTaskComment } from "@/actions/comments";
 import { ArrowLeft, Plus, FileText, AlertTriangle, Settings, GripVertical, ChevronRight, Undo2, Paperclip, X, Loader2, LayoutGrid, FolderOpen, Upload, Trash2, Download, MoreHorizontal, FolderPlus, Pencil, FolderInput, BarChart3, CheckCircle2, Clock, ListChecks, CalendarDays, Building2, Users, UserCheck, RotateCcw } from "lucide-react";
@@ -10,6 +10,7 @@ import { uploadManager } from "@/lib/upload-manager";
 import { HeaderActions } from "@/components/header-actions";
 import Link from "next/link";
 import { useErrorStore } from "@/lib/error-store";
+import { createAppError } from "@/lib/errors";
 import { usePermissions } from "@/components/permissions-provider";
 import { useRouter } from "next/navigation";
 import type { TaskPermissions } from "@/lib/permissions";
@@ -93,7 +94,7 @@ export function ProjectDetailClient({
   const canEditProject = permissions.projects === "full";
   const hasTaskPermissions = !!permissions.taskPermissions?.stages && Object.keys(permissions.taskPermissions.stages).length > 0;
   const canInteractWithTasks = canEditProject || hasTaskPermissions;
-  const [activeTab, setActiveTab] = useState<"dashboard" | "board" | "assets">("board");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "board" | "assets" | "team">("board");
 
   return (
     <div className="flex flex-col min-h-full">
@@ -130,6 +131,7 @@ export function ProjectDetailClient({
           {([
             { id: "board" as const, label: "Board", icon: <LayoutGrid className="w-icon-sm h-icon-sm" /> },
             { id: "assets" as const, label: "Assets", icon: <Paperclip className="w-icon-sm h-icon-sm" /> },
+            { id: "team" as const, label: "Team", icon: <Users className="w-icon-sm h-icon-sm" /> },
             { id: "dashboard" as const, label: "Dashboard", icon: <BarChart3 className="w-icon-sm h-icon-sm" /> },
           ]).map((tab) => (
             <button
@@ -177,6 +179,12 @@ export function ProjectDetailClient({
       {activeTab === "assets" && (
         <div className="px-4 @md:px-6 pt-4 flex-1">
           <AssetsPanel projectId={project.id} canEdit={canEditProject} />
+        </div>
+      )}
+
+      {activeTab === "team" && (
+        <div className="px-4 @md:px-6 pt-4 flex-1">
+          <TeamPanel projectId={project.id} canEdit={canEditProject} />
         </div>
       )}
     </div>
@@ -1138,6 +1146,180 @@ function InvoiceStatusBadge({ status }: { status: string }) {
     <span className={`px-1.5 py-0.5 rounded text-label font-medium ${className}`}>
       {label}
     </span>
+  );
+}
+
+// ─── Team Panel ───────────────────────────────────────────────────────────────
+
+type TeamMember = { id: string; userId: string; name: string | null; email: string; type: string };
+type ProjectTeamRow = { id: string; memberId: string; addedAt: string | Date; member: TeamMember };
+
+function TeamPanel({ projectId, canEdit }: { projectId: string; canEdit: boolean }) {
+  const [members, setMembers] = useState<ProjectTeamRow[]>([]);
+  const [allMembers, setAllMembers] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [adding, setAdding] = useState(false);
+  const [search, setSearch] = useState("");
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const pushError = useErrorStore((s) => s.push);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getProjectTeam(projectId);
+      setMembers(data.members as ProjectTeamRow[]);
+      setAllMembers(data.allMembers as TeamMember[]);
+    } catch (e) {
+      pushError(createAppError(e, { action: "Load project team" }));
+    } finally {
+      setLoading(false);
+    }
+  }, [projectId, pushError]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const assignedIds = useMemo(() => new Set(members.map((m) => m.memberId)), [members]);
+  const available = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return allMembers
+      .filter((m) => !assignedIds.has(m.id))
+      .filter((m) => !q || (m.name || "").toLowerCase().includes(q) || m.email.toLowerCase().includes(q));
+  }, [allMembers, assignedIds, search]);
+
+  const handleAdd = async (member: TeamMember) => {
+    setBusyId(member.id);
+    setMembers((prev) => [...prev, { id: `tmp-${member.id}`, memberId: member.id, addedAt: new Date(), member }]);
+    try {
+      await addProjectMember(projectId, member.id);
+      await load();
+    } catch (e) {
+      setMembers((prev) => prev.filter((m) => m.memberId !== member.id));
+      pushError(createAppError(e, { action: "Add project member" }));
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const handleRemove = async (memberId: string) => {
+    setBusyId(memberId);
+    const prev = members;
+    setMembers((cur) => cur.filter((m) => m.memberId !== memberId));
+    try {
+      await removeProjectMember(projectId, memberId);
+    } catch (e) {
+      setMembers(prev);
+      pushError(createAppError(e, { action: "Remove project member" }));
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16 text-muted-foreground">
+        <Loader2 className="w-icon-md h-icon-md animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-2xl space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-body font-semibold text-foreground">Team</h2>
+          <p className="text-sub text-muted-foreground">
+            {members.length === 0 ? "No one assigned yet" : `${members.length} ${members.length === 1 ? "person" : "people"} assigned`}
+          </p>
+        </div>
+        {canEdit && (
+          <button
+            onClick={() => { setAdding((v) => !v); setSearch(""); }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sub font-medium bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+          >
+            {adding ? <X className="w-icon-sm h-icon-sm" /> : <Plus className="w-icon-sm h-icon-sm" />}
+            {adding ? "Done" : "Add people"}
+          </button>
+        )}
+      </div>
+
+      {canEdit && adding && (
+        <div className="rounded-xl border border-border bg-card/50 p-3 space-y-2">
+          <input
+            autoFocus
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search people…"
+            className="w-full px-3 py-2 rounded-lg bg-muted/40 border border-border text-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+          <div className="max-h-64 overflow-y-auto space-y-1">
+            {available.length === 0 ? (
+              <p className="text-sub text-muted-foreground px-2 py-3 text-center">
+                {allMembers.length === assignedIds.size ? "Everyone is already assigned" : "No matches"}
+              </p>
+            ) : (
+              available.map((m) => (
+                <button
+                  key={m.id}
+                  disabled={busyId === m.id}
+                  onClick={() => handleAdd(m)}
+                  className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-muted/60 text-left transition-colors disabled:opacity-50"
+                >
+                  <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center text-sub font-semibold text-primary shrink-0">
+                    {(m.name || m.email).charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-body text-foreground truncate">{m.name || m.email}</p>
+                    <p className="text-sub text-muted-foreground truncate">{m.email}</p>
+                  </div>
+                  {busyId === m.id ? (
+                    <Loader2 className="w-icon-sm h-icon-sm animate-spin text-muted-foreground" />
+                  ) : (
+                    <Plus className="w-icon-sm h-icon-sm text-muted-foreground" />
+                  )}
+                </button>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+
+      {members.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-12 text-center border border-dashed border-border rounded-xl">
+          <Users className="w-8 h-8 text-muted-foreground/50 mb-2" />
+          <p className="text-body text-muted-foreground">No team members yet</p>
+          {canEdit && <p className="text-sub text-muted-foreground/70">Use “Add people” to assign someone to this project.</p>}
+        </div>
+      ) : (
+        <div className="space-y-1">
+          {members.map((row) => (
+            <div key={row.id} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 group">
+              <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center text-sub font-semibold text-primary shrink-0">
+                {(row.member.name || row.member.email).charAt(0).toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-body text-foreground truncate">{row.member.name || row.member.email}</p>
+                <p className="text-sub text-muted-foreground truncate">{row.member.email}</p>
+              </div>
+              {row.member.type === "OWNER" && (
+                <span className="px-1.5 py-0.5 rounded text-label font-medium bg-primary/15 text-primary">owner</span>
+              )}
+              {canEdit && (
+                <button
+                  onClick={() => handleRemove(row.memberId)}
+                  disabled={busyId === row.memberId}
+                  className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-red-400 hover:bg-red-400/10 transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-50 shrink-0"
+                  title="Remove from project"
+                >
+                  {busyId === row.memberId ? <Loader2 className="w-icon-sm h-icon-sm animate-spin" /> : <X className="w-icon-sm h-icon-sm" />}
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
