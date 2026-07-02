@@ -199,6 +199,28 @@ export const requireProjectEdit = async (projectId: string) => {
   return access;
 };
 
+// Returns the set of projects the current member may access. Owners (and the
+// workspace default) see everything (`all: true`); other members see only
+// projects they own the record for or are assigned to.
+export const getAccessibleProjectScope = async () => {
+  const { workspace, member } = await requireWorkspaceWithMember();
+
+  if (member.type === "OWNER") {
+    return { workspace, member, all: true as const, projectIds: null };
+  }
+
+  const rows = await db.project.findMany({
+    where: {
+      workspaceId: workspace.id,
+      deletedAt: null,
+      OR: [{ ownerId: member.userId }, { members: { some: { memberId: member.id } } }],
+    },
+    select: { id: true },
+  });
+
+  return { workspace, member, all: false as const, projectIds: rows.map((r) => r.id) };
+};
+
 function hasAnyTaskStagePermission(permissions: Permissions): boolean {
   const stages = permissions.taskPermissions?.stages;
   if (!stages) return false;
