@@ -82,7 +82,7 @@ const generalSettings: SettingsCategory[] = [
 export default function SettingsPage() {
   return (
     <div className="p-6 w-full">
-      <div className="grid grid-cols-1 @sm:grid-cols-2 @lg:grid-cols-3 @xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 @md:grid-cols-3 @lg:grid-cols-5 gap-4">
         {generalSettings.map((category) => (
           <div
             key={category.name}

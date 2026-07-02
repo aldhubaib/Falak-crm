@@ -1,12 +1,12 @@
 export default function TaskDetailLoading() {
   return (
     <div className="flex flex-col h-[calc(100vh)]">
-      <div className="px-4 @sm:px-6 py-3 border-b border-border flex items-center gap-3">
+      <div className="px-4 @md:px-6 py-3 border-b border-border flex items-center gap-3">
         <div className="h-4 w-4 bg-muted rounded animate-pulse" />
         <div className="h-5 w-56 bg-muted rounded animate-pulse" />
       </div>
       <div className="flex-1 flex flex-col @lg:flex-row">
-        <div className="flex-1 p-4 @sm:p-6 space-y-6">
+        <div className="flex-1 p-4 @md:p-6 space-y-6">
           <div className="space-y-3">
             <div className="h-6 w-64 bg-muted rounded animate-pulse" />
             <div className="h-3 w-32 bg-muted/50 rounded animate-pulse" />

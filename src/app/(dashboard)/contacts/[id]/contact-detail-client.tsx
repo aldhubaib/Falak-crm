@@ -265,7 +265,7 @@ export function ContactDetailClient({ contact, companies }: { contact: Contact; 
           action={handleAddCompany}
           className="mt-3 p-4 rounded-lg border border-border bg-black space-y-3"
         >
-          <div className="grid grid-cols-1 @sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 @md:grid-cols-2 gap-3">
             <FormSelect
               name="companyId"
               label="Company"

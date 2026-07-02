@@ -98,7 +98,7 @@ export function ProjectDetailClient({
   return (
     <div className="flex flex-col min-h-full">
       {/* Header */}
-      <div className="flex items-center gap-2 @sm:gap-3 px-4 @sm:px-6 h-12 border-b border-border/50 shrink-0">
+      <div className="flex items-center gap-2 @md:gap-3 px-4 @md:px-6 h-12 border-b border-border/50 shrink-0">
         <Link
           href="/projects"
           className="w-icon-btn h-icon-btn rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card transition-colors shrink-0"
@@ -125,7 +125,7 @@ export function ProjectDetailClient({
       </div>
 
       {/* Tabs */}
-      <div className="px-4 @sm:px-6 pt-3">
+      <div className="px-4 @md:px-6 pt-3">
         <div className="inline-flex items-center rounded-xl bg-muted/30 border border-border p-1">
           {([
             { id: "board" as const, label: "Board", icon: <LayoutGrid className="w-icon-sm h-icon-sm" /> },
@@ -150,14 +150,14 @@ export function ProjectDetailClient({
 
       {/* Tab content */}
       {activeTab === "dashboard" && (
-        <div className="px-4 @sm:px-6 pt-4 pb-6">
+        <div className="px-4 @md:px-6 pt-4 pb-6">
           <ProjectDashboard project={project} taskStatuses={taskStatuses} />
         </div>
       )}
 
       {activeTab === "board" && (
         <>
-          <div className="px-4 @sm:px-6 pt-4">
+          <div className="px-4 @md:px-6 pt-4">
             <KanbanBoard
               project={project}
               taskStatuses={taskStatuses}
@@ -167,7 +167,7 @@ export function ProjectDetailClient({
             />
           </div>
           {project.invoices.length > 0 && permissions.invoices !== "none" && (
-            <div className="px-4 @sm:px-6">
+            <div className="px-4 @md:px-6">
               <InvoicesSection project={project} />
             </div>
           )}
@@ -175,7 +175,7 @@ export function ProjectDetailClient({
       )}
 
       {activeTab === "assets" && (
-        <div className="px-4 @sm:px-6 pt-4 flex-1">
+        <div className="px-4 @md:px-6 pt-4 flex-1">
           <AssetsPanel projectId={project.id} canEdit={canEditProject} />
         </div>
       )}

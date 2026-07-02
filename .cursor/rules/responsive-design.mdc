@@ -19,16 +19,15 @@ BEFORE reporting the task as done.
 - Typography: use `text-body`, `text-sub`, `text-label` — never `text-[11px]`.
 - Icons: use `w-icon-sm h-icon-sm`, never `w-3 h-3`.
 
-## Container Query Breakpoints (Tailwind v4)
+## Container Query Breakpoints (3 tiers)
 
-| Variant | Min container width |
-|---------|---------------------|
-| `@sm` | 384px (24rem) |
-| `@md` | 448px (28rem) |
-| `@lg` | 512px (32rem) |
-| `@xl` | 576px (36rem) |
+| Tier | Variant | Container width |
+|------|---------|----------------|
+| Mobile | base | < 640px |
+| Laptop | `@md` | 640px (40rem) |
+| Desktop | `@lg` | 896px (56rem) |
 
-These are NOT the same as viewport breakpoints (640/768/1024/1280).
+Only use `@md:` and `@lg:`. Do NOT use `@sm:` or `@xl:`.
 
 ## Example
 ```tsx
@@ -38,7 +37,7 @@ These are NOT the same as viewport breakpoints (640/768/1024/1280).
   <X className="w-3 h-3" />
 </button>
 
-// GOOD: container queries, token-based
+// GOOD: container queries, 3 tiers (mobile / laptop / desktop)
 <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3">
 <button className="min-h-touch px-4 text-button font-medium flex items-center gap-2">
   <X className="w-icon-sm h-icon-sm" />

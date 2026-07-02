@@ -97,16 +97,15 @@ The `<main>` element in `DashboardShell` has `container-type: inline-size`.
 All child components can use `@sm:`, `@md:`, `@lg:`, `@xl:` variants which
 respond to the **main area's width**, not the viewport.
 
-### Tailwind v4 container breakpoint values
+### Container breakpoints (3 tiers)
 
-These are NOT viewport breakpoints — they are smaller:
+| Tier | Variant | Container width |
+|------|---------|----------------|
+| Mobile | base | < 640px |
+| Laptop | `@md` | 640px (40rem) |
+| Desktop | `@lg` | 896px (56rem) |
 
-| Variant | Min container width |
-|---------|---------------------|
-| `@sm` | 384px (24rem) |
-| `@md` | 448px (28rem) |
-| `@lg` | 512px (32rem) |
-| `@xl` | 576px (36rem) |
+Only use `@md:` and `@lg:`. Do NOT use `@sm:` or `@xl:`.
 
 For component-level containers (Kanban columns, calendar cells, panels), add
 `style={{ containerType: "inline-size" }}` to the wrapper element.
@@ -128,8 +127,8 @@ inputs, list items) are NEVER reduced — they stay at the `pointer: coarse`
 floor on touch devices.
 
 - `≤320px` → compact (smaller text, tighter spacing)
-- `321px–599px` → normal (balanced)
-- `≥600px` → spacious (full mobile sizes)
+- `321px–639px` → normal (balanced)
+- `≥640px` → spacious (full mobile sizes)
 
 ```tsx
 // Card that auto-adapts text and spacing, touch targets stay safe

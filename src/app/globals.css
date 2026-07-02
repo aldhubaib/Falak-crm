@@ -10,6 +10,10 @@
   --font-mono: "JetBrains Mono", monospace;
   --font-heading: "Inter", system-ui, sans-serif;
 
+  /* Container query breakpoints — 3 tiers: mobile (base) / laptop / desktop */
+  --container-md: 40rem; /* 640px — laptop */
+  --container-lg: 56rem; /* 896px — desktop */
+
   /* Responsive font sizes — use as text-body, text-sub, etc. */
   --font-size-body: var(--text-body);
   --font-size-sub: var(--text-secondary);
@@ -157,7 +161,7 @@
   }
 }
 
-@container (min-width: 321px) and (max-width: 599px) {
+@container (min-width: 321px) and (max-width: 639px) {
   .cq-adapt {
     --text-body: 15px;
     --text-secondary: 13px;
@@ -174,7 +178,7 @@
   }
 }
 
-@container (min-width: 600px) {
+@container (min-width: 640px) {
   .cq-adapt {
     --text-body: 16px;
     --text-secondary: 14px;

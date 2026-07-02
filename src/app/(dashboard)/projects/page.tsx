@@ -23,7 +23,7 @@ export default async function ProjectsPage() {
           No projects yet. Create a project to get started.
         </div>
       ) : (
-        <div className="grid grid-cols-2 @md:grid-cols-3 @lg:grid-cols-4 @xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 @md:grid-cols-3 @lg:grid-cols-5 gap-4">
           {projects.map((project) => (
             <Link
               key={project.id}

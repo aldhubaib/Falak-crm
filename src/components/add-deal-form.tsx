@@ -57,7 +57,7 @@ export function AddDealForm({ companyId, contactId, contacts, onSuccess }: AddDe
         </button>
       </div>
 
-      <div className="grid grid-cols-1 @sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 @md:grid-cols-2 gap-3">
         <div className="rounded-lg bg-black border border-border px-3 pt-2 pb-1.5 focus-within:border-ring transition-colors">
           <label className="text-label font-medium text-muted-foreground uppercase tracking-wider">
             Title <span className="text-destructive">*</span>
@@ -83,7 +83,7 @@ export function AddDealForm({ companyId, contactId, contacts, onSuccess }: AddDe
       </div>
 
       {contacts && contacts.length > 0 && (
-        <div className="grid grid-cols-1 @sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-3">
           <FormSelect
             name="contactId"
             label="Contact"
