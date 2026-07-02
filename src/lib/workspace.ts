@@ -20,6 +20,51 @@ export const getOrCreateWorkspace = cache(async () => {
   const { userId } = await auth();
   if (!userId) return null;
 
+  const user = await currentUser();
+  const email =
+    user?.emailAddresses?.[0]?.emailAddress ??
+    user?.primaryEmailAddress?.emailAddress ??
+    null;
+
+  // Claim a pending invitation for this account. Invited members are created
+  // with a placeholder `pending_*` userId until the person first signs in; we
+  // link that record to their real Clerk id (matched by email) so they join
+  // the workspace they were invited to instead of getting a fresh empty one.
+  if (email) {
+    const invited = await db.workspaceMember.findFirst({
+      where: {
+        email: { equals: email, mode: "insensitive" },
+        userId: { startsWith: "pending_" },
+      },
+      include: { workspace: true },
+      orderBy: { joinedAt: "asc" },
+    });
+    if (invited) {
+      const alreadyMember = await db.workspaceMember.findFirst({
+        where: { workspaceId: invited.workspaceId, userId },
+        select: { id: true },
+      });
+      if (alreadyMember) {
+        // Real membership already exists; drop the duplicate placeholder.
+        await db.workspaceMember.delete({ where: { id: invited.id } }).catch(() => {});
+      } else {
+        await db.workspaceMember.update({ where: { id: invited.id }, data: { userId } });
+      }
+      // If this account previously auto-created its own empty personal
+      // workspace (before being linked), drop that membership so the account
+      // resolves deterministically to the workspace they were invited to.
+      await db.workspaceMember.deleteMany({
+        where: {
+          userId,
+          type: "OWNER",
+          workspaceId: { not: invited.workspaceId },
+          workspace: { slug: { startsWith: `ws-${userId.slice(0, 8)}` } },
+        },
+      });
+      return invited.workspace;
+    }
+  }
+
   const existing = await db.workspaceMember.findFirst({
     where: { userId },
     include: { workspace: true },
@@ -27,7 +72,6 @@ export const getOrCreateWorkspace = cache(async () => {
 
   if (existing) return existing.workspace;
 
-  const user = await currentUser();
   const name = user?.firstName
     ? `${user.firstName}'s Workspace`
     : "My Workspace";
