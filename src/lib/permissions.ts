@@ -95,6 +95,67 @@ export interface MemberWithPermissions {
   permissions: Permissions;
 }
 
+const MODULE_KEYS: (keyof Omit<Permissions, "taskPermissions">)[] = [
+  "deals",
+  "pipeline",
+  "projects",
+  "invoices",
+  "publish",
+  "settings",
+  "team",
+];
+
+const LEVEL_RANK: Record<ModulePermission, number> = { none: 0, view: 1, full: 2 };
+
+const EMPTY_STAGE: StagePermission = {
+  create: false,
+  modify: false,
+  forward: false,
+  rollback: false,
+  delete: false,
+  autoAssign: false,
+};
+
+// Combines several permission sets into one, taking the most permissive
+// module level and OR-ing task-stage flags. Used to compute a member's global
+// permissions from the roles they hold across projects.
+export function mergePermissions(list: Permissions[]): Permissions {
+  const result: Permissions = {
+    deals: "none",
+    pipeline: "none",
+    projects: "none",
+    invoices: "none",
+    publish: "none",
+    settings: "none",
+    team: "none",
+    taskPermissions: { stages: {} },
+  };
+
+  for (const p of list) {
+    for (const key of MODULE_KEYS) {
+      const level = (p[key] as ModulePermission | undefined) ?? "none";
+      if (LEVEL_RANK[level] > LEVEL_RANK[result[key] as ModulePermission]) {
+        result[key] = level;
+      }
+    }
+
+    const stages = p.taskPermissions?.stages ?? {};
+    for (const [stageId, sp] of Object.entries(stages)) {
+      const cur = result.taskPermissions!.stages[stageId] ?? { ...EMPTY_STAGE };
+      result.taskPermissions!.stages[stageId] = {
+        create: cur.create || sp.create,
+        modify: cur.modify || sp.modify,
+        forward: cur.forward || sp.forward,
+        rollback: cur.rollback || sp.rollback,
+        delete: cur.delete || sp.delete,
+        autoAssign: cur.autoAssign || sp.autoAssign,
+      };
+    }
+  }
+
+  return result;
+}
+
 export function can(member: MemberWithPermissions, module: PermissionModule, requiredLevel: "view" | "full" = "view"): boolean {
   const level = member.permissions[module] as ModulePermission | undefined;
   if (level === "none") return false;

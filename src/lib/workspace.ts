@@ -2,7 +2,7 @@ import { cache } from "react";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
-import { DEFAULT_PERMISSIONS, ROLE_PRESETS, type MemberWithPermissions, type Permissions } from "@/lib/permissions";
+import { DEFAULT_PERMISSIONS, ROLE_PRESETS, mergePermissions, type MemberWithPermissions, type Permissions } from "@/lib/permissions";
 
 export const getWorkspace = cache(async () => {
   const { userId } = await auth();
@@ -114,12 +114,34 @@ export const requireWorkspaceWithMember = cache(async () => {
 
   if (!dbMember) throw new Error("Not a workspace member");
 
-  const rolePermissions = dbMember.role?.permissions as unknown as Permissions | null;
+  let permissions: Permissions;
+  if (dbMember.type === "OWNER") {
+    permissions = DEFAULT_PERMISSIONS;
+  } else {
+    // A member's global module access is derived from the role(s) they hold
+    // across the projects they're assigned to (merged, most permissive). A
+    // legacy workspace-level role, if any, is merged in for backwards compat.
+    const [projectRoles, assignedCount] = await Promise.all([
+      db.projectMember.findMany({
+        where: { memberId: dbMember.id, roleId: { not: null } },
+        select: { role: { select: { permissions: true } } },
+      }),
+      db.projectMember.count({ where: { memberId: dbMember.id } }),
+    ]);
+    const roleList: Permissions[] = projectRoles
+      .map((pr) => pr.role?.permissions as unknown as Permissions | undefined)
+      .filter((p): p is Permissions => !!p);
+    if (dbMember.role?.permissions) {
+      roleList.push(dbMember.role.permissions as unknown as Permissions);
+    }
+    permissions = mergePermissions(roleList);
 
-  let permissions: Permissions =
-    dbMember.type === "OWNER"
-      ? DEFAULT_PERMISSIONS
-      : rolePermissions ?? DEFAULT_PERMISSIONS;
+    // Being assigned to a project grants at least read access to the Projects
+    // module so the member can find and open their project(s).
+    if (assignedCount > 0 && permissions.projects === "none") {
+      permissions = { ...permissions, projects: "view" };
+    }
+  }
 
   const cookieStore = await cookies();
   const testRoleCookie = cookieStore.get("test_role_id")?.value;
