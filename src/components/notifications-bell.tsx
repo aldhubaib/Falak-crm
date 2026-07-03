@@ -45,12 +45,16 @@ export function NotificationsBell() {
 
   const refresh = useCallback(() => {
     startTransition(async () => {
-      const [items, count] = await Promise.all([
-        getNotifications(30),
-        getUnreadCount(),
-      ]);
-      setNotifications(items);
-      setUnreadCount(count);
+      try {
+        const [items, count] = await Promise.all([
+          getNotifications(30),
+          getUnreadCount(),
+        ]);
+        setNotifications(items);
+        setUnreadCount(count);
+      } catch {
+        // Network or auth error — silently ignore, will retry
+      }
     });
   }, [startTransition]);
 
@@ -66,16 +70,20 @@ export function NotificationsBell() {
 
   const handleMarkAllRead = () => {
     startTransition(async () => {
-      await markAllNotificationsRead();
-      refresh();
+      try {
+        await markAllNotificationsRead();
+        refresh();
+      } catch {}
     });
   };
 
   const handleClick = (n: Notification) => {
     if (!n.read) {
       startTransition(async () => {
-        await markNotificationRead(n.id);
-        refresh();
+        try {
+          await markNotificationRead(n.id);
+          refresh();
+        } catch {}
       });
     }
     setOpen(false);
