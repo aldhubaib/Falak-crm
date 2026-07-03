@@ -1,18 +1,47 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Link from "next/link";
+import { ArrowLeft, Bell } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 interface AppHeaderProps {
   title?: ReactNode;
+  /** Show a back arrow linking to this href instead of the sidebar trigger. */
+  backHref?: string;
+  /** Node rendered between back/trigger and the title (e.g. avatar). */
   leading?: ReactNode;
+  /** Right-hand actions. Notification bell is always shown unless hideNotifications is true. */
   actions?: ReactNode;
+  /** Hide the default notification bell. */
+  hideNotifications?: boolean;
 }
 
-export function AppHeader({ title, leading, actions }: AppHeaderProps) {
+export function AppHeader({
+  title,
+  backHref,
+  leading,
+  actions,
+  hideNotifications,
+}: AppHeaderProps) {
   return (
     <header className="sticky top-0 z-40 flex h-14 items-center gap-2 border-b border-border/60 bg-background/80 px-3 backdrop-blur-md sm:h-16 sm:px-5">
-      <SidebarTrigger className="shrink-0 lg:hidden" />
+      {backHref ? (
+        <Button
+          asChild
+          variant="ghost"
+          size="icon"
+          className="shrink-0 rounded-full"
+          aria-label="Back"
+        >
+          <Link href={backHref}>
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+        </Button>
+      ) : (
+        <SidebarTrigger className="shrink-0 lg:hidden" />
+      )}
 
       {leading}
 
@@ -30,11 +59,19 @@ export function AppHeader({ title, leading, actions }: AppHeaderProps) {
         )}
       </div>
 
-      {actions && (
-        <div className="ml-auto flex shrink-0 items-center gap-1">
-          {actions}
-        </div>
-      )}
+      <div className="ml-auto flex shrink-0 items-center gap-1">
+        {!hideNotifications && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative rounded-full"
+            aria-label="Notifications"
+          >
+            <Bell className="size-[18px]" />
+          </Button>
+        )}
+        {actions}
+      </div>
     </header>
   );
 }
