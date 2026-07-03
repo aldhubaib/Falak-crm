@@ -38,6 +38,8 @@ import { addTaskComment } from "@/actions/comments";
 import {
   categoryIcon,
   validateFile,
+  dotExt,
+  allowedExtsFor,
   isFileField,
   isYesNoField,
   yesFollowUp,
@@ -566,7 +568,7 @@ function TaskFileField({
 
   const upload = useChecklistUpload(item.id);
   const category = item.allowedFileTypes;
-  const formats = item.allowedFormats;
+  const formats = item.allowedFormats.map(dotExt).filter(Boolean);
   const Icon = categoryIcon(category);
   const label = category
     ? category.charAt(0).toUpperCase() + category.slice(1)
@@ -575,12 +577,8 @@ function TaskFileField({
     /\s+/g,
     " ",
   );
-  const accept =
-    formats.length > 0
-      ? formats.join(",")
-      : category && category !== "document"
-        ? `${category}/*`
-        : undefined;
+  const accepts = allowedExtsFor(category, item.allowedFormats);
+  const accept = accepts.length > 0 ? accepts.join(",") : undefined;
 
   // When an upload finishes, refresh so the saved attachment renders.
   useEffect(() => {

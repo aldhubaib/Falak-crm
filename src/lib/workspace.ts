@@ -20,7 +20,12 @@ export const getOrCreateWorkspace = cache(async () => {
   const { userId } = await auth();
   if (!userId) return null;
 
-  const user = await currentUser();
+  let user: Awaited<ReturnType<typeof currentUser>> = null;
+  try {
+    user = await currentUser();
+  } catch {
+    // Clerk API unreachable or session invalid — fall back to DB lookup
+  }
   const email =
     user?.emailAddresses?.[0]?.emailAddress ??
     user?.primaryEmailAddress?.emailAddress ??

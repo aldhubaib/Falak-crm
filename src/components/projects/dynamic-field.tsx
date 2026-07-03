@@ -272,35 +272,50 @@ export function categoryIcon(category: string | null) {
   }
 }
 
+// Extensions are stored inconsistently across editors (some with a leading dot,
+// some without). Normalize to a leading-dot form so `accept` and validation work
+// regardless of how the field was saved.
+export function dotExt(f: string): string {
+  const t = f.trim().toLowerCase();
+  if (!t) return "";
+  return t.startsWith(".") ? t : `.${t}`;
+}
+
+// Canonical extension set per file category. Used to enforce extensions even when
+// a field only picks a category (audio/video/image/document) and no explicit
+// formats. Union of the extensions offered by both field editors.
+export const CATEGORY_EXTENSIONS: Record<string, string[]> = {
+  audio: [".mp3", ".wav", ".ogg", ".aac", ".m4a", ".flac", ".wma"],
+  video: [".mp4", ".mov", ".webm", ".mkv", ".avi", ".m4v"],
+  image: [".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".bmp", ".tiff"],
+  document: [
+    ".pdf", ".doc", ".docx", ".txt", ".rtf",
+    ".ppt", ".pptx", ".xls", ".xlsx", ".csv",
+  ],
+};
+
+// Effective allowed extensions for a file field: the explicitly chosen formats
+// when present, otherwise the category's full extension set. Empty = no
+// restriction (a generic file upload).
+export function allowedExtsFor(
+  category: string | null,
+  formats: string[],
+): string[] {
+  const explicit = formats.map(dotExt).filter(Boolean);
+  if (explicit.length > 0) return explicit;
+  if (category && CATEGORY_EXTENSIONS[category]) return CATEGORY_EXTENSIONS[category];
+  return [];
+}
+
 export function validateFile(
   file: File,
   category: string | null,
   formats: string[],
 ): string | null {
   const ext = "." + (file.name.split(".").pop() ?? "").toLowerCase();
-  if (formats.length > 0) {
-    const allowed = formats.map((f) => f.toLowerCase());
-    if (!allowed.includes(ext)) {
-      return `File must be ${formats.join(", ")}`;
-    }
-  }
-  if (category) {
-    const mime = (file.type || "").toLowerCase();
-    let ok = true;
-    if (category === "audio") ok = mime.startsWith("audio/");
-    else if (category === "video") ok = mime.startsWith("video/");
-    else if (category === "image") ok = mime.startsWith("image/");
-    else if (category === "document")
-      ok =
-        mime.includes("pdf") ||
-        mime.includes("word") ||
-        mime.includes("document") ||
-        mime.includes("text") ||
-        [".pdf", ".doc", ".docx", ".txt", ".rtf"].includes(ext);
-    if (!ok) {
-      const article = /^[aeiou]/.test(category) ? "an" : "a";
-      return `File must be ${article} ${category} file`;
-    }
+  const allowed = allowedExtsFor(category, formats);
+  if (allowed.length > 0 && !allowed.includes(ext)) {
+    return `File must be ${allowed.join(", ")}`;
   }
   return null;
 }
@@ -381,7 +396,7 @@ function FileDrop({
   const [dragOver, setDragOver] = useState(false);
 
   const category = field.allowedFileTypes;
-  const formats = field.allowedFormats;
+  const formats = field.allowedFormats.map(dotExt).filter(Boolean);
   const Icon = categoryIcon(category);
   const label = category
     ? category.charAt(0).toUpperCase() + category.slice(1)
@@ -390,12 +405,8 @@ function FileDrop({
     /\s+/g,
     " ",
   );
-  const accept =
-    formats.length > 0
-      ? formats.join(",")
-      : category && category !== "document"
-        ? `${category}/*`
-        : undefined;
+  const accepts = allowedExtsFor(category, field.allowedFormats);
+  const accept = accepts.length > 0 ? accepts.join(",") : undefined;
 
   const file = answer?.kind === "file" ? answer.file : null;
 
