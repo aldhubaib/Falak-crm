@@ -15,9 +15,10 @@ import { createFullTask } from "@/actions/projects";
 import { PriorityPicker } from "@/components/projects/priority-picker";
 
 type Field = { id: string; name: string; type: string; mandatory: boolean };
-type TaskType = { id: string; name: string; fields: Field[] };
+type TaskType = { id: string; name: string; count: number; fields: Field[] };
 
-const isTextField = (type: string) => type === "text_area" || type === "text";
+const isTextField = (type: string) =>
+  type === "textarea" || type === "text" || type === "link";
 
 export function NewTaskClient({
   projectId,
@@ -99,6 +100,7 @@ export function NewTaskClient({
                       )}
                     >
                       {t.name}
+                      <span className="text-muted-foreground">{t.count}</span>
                     </button>
                   );
                 })}
@@ -125,6 +127,11 @@ export function NewTaskClient({
             hint="1 is highest priority. Leave empty if unsure."
           >
             <PriorityPicker value={priority} onChange={setPriority} />
+            {priority === null && (
+              <div className="mt-2 text-xs text-muted-foreground">
+                No priority selected
+              </div>
+            )}
           </Section>
 
           {type && type.fields.length > 0 && (

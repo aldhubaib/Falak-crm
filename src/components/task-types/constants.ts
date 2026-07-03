@@ -9,6 +9,8 @@ export const KIND_LABELS: Record<string, string> = {
   checkbox: "Checkbox",
   file_upload: "File Upload",
   link: "Link",
+  mention: "Mention",
+  copyright: "Copyright",
 };
 
 export const KINDS: string[] = [
@@ -20,6 +22,8 @@ export const KINDS: string[] = [
   "checkbox",
   "file_upload",
   "link",
+  "mention",
+  "copyright",
 ];
 
 // File categories for the file_upload kind (stored in allowedFileTypes).
