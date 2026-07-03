@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { DashboardShell } from "@/components/dashboard-shell";
 import { PermissionsProvider } from "@/components/permissions-provider";
 import { getCurrentPermissions } from "@/actions/permissions";
 
@@ -18,9 +19,7 @@ export default async function DashboardLayout({
 
   return (
     <PermissionsProvider permissions={permissions}>
-      <div className="min-h-screen bg-background">
-        {children}
-      </div>
+      <DashboardShell>{children}</DashboardShell>
     </PermissionsProvider>
   );
 }

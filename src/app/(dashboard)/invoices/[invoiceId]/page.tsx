@@ -1,0 +1,146 @@
+import { notFound } from "next/navigation";
+import { getInvoice } from "@/actions/invoices";
+import { AppHeader } from "@/components/app-header";
+import { SurfaceCard } from "@/components/surface-card";
+import { Badge } from "@/components/ui/badge";
+import { InvoiceActions } from "./invoice-actions";
+
+export default async function InvoiceDetailPage({
+  params,
+}: {
+  params: Promise<{ invoiceId: string }>;
+}) {
+  const { invoiceId } = await params;
+  const invoice = await getInvoice(invoiceId);
+  if (!invoice) notFound();
+
+  return (
+    <>
+      <AppHeader title={`Invoice ${invoice.number}`} />
+      <main className="min-h-0 flex-1 overflow-y-auto">
+        <div className="mx-auto max-w-3xl space-y-4 p-5">
+          <SurfaceCard className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h2 className="font-mono text-xl font-bold">{invoice.number}</h2>
+              {invoice.project && (
+                <div className="mt-1 text-sm text-muted-foreground">
+                  {invoice.project.name}
+                  {invoice.project.company &&
+                    ` — ${invoice.project.company.name}`}
+                </div>
+              )}
+              {invoice.contact && (
+                <div className="mt-0.5 text-xs text-muted-foreground">
+                  {invoice.contact.firstName} {invoice.contact.lastName}
+                  {invoice.contact.mobile && ` • ${invoice.contact.mobile}`}
+                </div>
+              )}
+            </div>
+            <div className="text-right">
+              <Badge
+                variant={
+                  invoice.status === "PAID"
+                    ? "default"
+                    : invoice.status === "REJECTED"
+                      ? "destructive"
+                      : "secondary"
+                }
+                className="text-sm"
+              >
+                {invoice.status}
+              </Badge>
+              <div className="mt-2 text-2xl font-bold tabular-nums">
+                {Number(invoice.total).toLocaleString()}{" "}
+                <span className="text-sm text-muted-foreground">
+                  {invoice.currency}
+                </span>
+              </div>
+            </div>
+          </SurfaceCard>
+
+          <SurfaceCard>
+            <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Line Items
+            </div>
+            <div className="space-y-2">
+              {invoice.items.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between text-sm"
+                >
+                  <span>{item.description}</span>
+                  <span className="tabular-nums text-muted-foreground">
+                    {item.quantity} &times;{" "}
+                    {Number(item.unitPrice).toLocaleString()}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 border-t border-border/40 pt-3 space-y-1">
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>Subtotal</span>
+                <span className="tabular-nums">
+                  {Number(invoice.subtotal).toLocaleString()}
+                </span>
+              </div>
+              {Number(invoice.taxAmount) > 0 && (
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>Tax</span>
+                  <span className="tabular-nums">
+                    {Number(invoice.taxAmount).toLocaleString()}
+                  </span>
+                </div>
+              )}
+              <div className="flex justify-between font-semibold text-sm">
+                <span>Total</span>
+                <span className="tabular-nums">
+                  {Number(invoice.total).toLocaleString()} {invoice.currency}
+                </span>
+              </div>
+            </div>
+          </SurfaceCard>
+
+          <SurfaceCard>
+            <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Timeline
+            </div>
+            <div className="space-y-1 text-sm text-muted-foreground">
+              <div>
+                Created:{" "}
+                {new Date(invoice.createdAt).toLocaleDateString()}
+              </div>
+              {invoice.sentAt && (
+                <div>
+                  Sent: {new Date(invoice.sentAt).toLocaleDateString()}
+                </div>
+              )}
+              {invoice.acceptedAt && (
+                <div>
+                  Accepted:{" "}
+                  {new Date(invoice.acceptedAt).toLocaleDateString()}
+                </div>
+              )}
+              {invoice.paidAt && (
+                <div>
+                  Paid: {new Date(invoice.paidAt).toLocaleDateString()}
+                </div>
+              )}
+              {invoice.rejectedAt && (
+                <div className="text-destructive">
+                  Rejected:{" "}
+                  {new Date(invoice.rejectedAt).toLocaleDateString()}
+                  {invoice.rejectionNote && ` — ${invoice.rejectionNote}`}
+                </div>
+              )}
+            </div>
+          </SurfaceCard>
+
+          <InvoiceActions
+            invoiceId={invoice.id}
+            status={invoice.status}
+          />
+        </div>
+      </main>
+    </>
+  );
+}
