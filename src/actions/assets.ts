@@ -24,6 +24,17 @@ export async function getProjectAssets(projectId: string, folderId?: string | nu
   return { folders, assets };
 }
 
+export async function getAllProjectFolders(projectId: string) {
+  const access = await getProjectAccess(projectId);
+  if (!access.hasAccess || !access.project) throw new Error("Project not found");
+
+  return db.projectFolder.findMany({
+    where: { projectId },
+    orderBy: { name: "asc" },
+    select: { id: true, name: true, parentId: true },
+  });
+}
+
 export async function createFolder(projectId: string, name: string, parentId?: string | null) {
   await requireProjectWork(projectId);
 
