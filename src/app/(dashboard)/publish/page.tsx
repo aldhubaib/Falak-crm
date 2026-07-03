@@ -1,28 +1,38 @@
-import { getPublishableProjects } from "@/actions/publish";
-import { AppHeader } from "@/components/app-header";
-import { EmptyState } from "@/components/empty-state";
-import { CalendarDays } from "lucide-react";
+import { getPublishableProjects, getDeliveryTasks } from "@/actions/publish";
+import { PublishClient } from "./publish-client";
+import { toISODate, type Item } from "@/components/publish/types";
 
 export default async function PublishPage() {
-  const projects = await getPublishableProjects();
+  const [projects, tasks] = await Promise.all([
+    getPublishableProjects(),
+    getDeliveryTasks(null),
+  ]);
+
+  const items: Item[] = tasks.map((t) => {
+    const pi = t.publishItem;
+    const status: Item["status"] = pi
+      ? pi.published
+        ? "published"
+        : "scheduled"
+      : "queued";
+    return {
+      id: t.id,
+      taskId: t.id,
+      publishItemId: pi?.id,
+      title: t.title,
+      projectId: t.projectId,
+      project: { id: t.project.id, name: t.project.name },
+      handle: `#${t.taskNumber}`,
+      deliveredOn: toISODate(t.completedAt ?? t.updatedAt),
+      publishOn: pi?.scheduledDate ? toISODate(new Date(pi.scheduledDate)) : undefined,
+      status,
+    };
+  });
 
   return (
-    <>
-      <AppHeader title="Publish" />
-      <main className="min-h-0 flex-1 overflow-y-auto">
-        <div className="flex flex-col items-center justify-center p-10">
-          <EmptyState
-            icon={CalendarDays}
-            title="Calendar View"
-            message={
-              projects.length > 0
-                ? `${projects.length} project${projects.length > 1 ? "s" : ""} ready for publishing. Calendar view coming soon.`
-                : "No projects with publishing enabled yet."
-            }
-            className="max-w-md"
-          />
-        </div>
-      </main>
-    </>
+    <PublishClient
+      items={items}
+      projects={projects.map((p) => ({ id: p.id, name: p.name }))}
+    />
   );
 }

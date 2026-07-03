@@ -10,6 +10,38 @@ Lovable owns the design. The Lovable project uses the **exact same design tokens
 as this repo (`src/styles.css` there == `src/app/globals.css` here: same oklch
 colors, spacing, radius, text tokens). So the visual layer transfers **1:1**.
 
+Lovable project id: `c518057a-e525-4963-8ead-f4a5e3f535b9`. Read the real source
+with the Lovable MCP (`list_files`, `read_file`) — never reconstruct a screen from a
+screenshot or memory.
+
+## Import completeness — do NOT skip parts
+
+A single "page" in Lovable is almost always a **cluster** of route files + child
+components, not one file. Skipping happens when you port only the main screen and
+rebuild the rest from memory. Prevent it with this process, every time:
+
+1. **Inventory first.** `list_files` on the Lovable project and list EVERY file that
+   belongs to the feature before writing any code:
+   - the layout route (holds tab menus/nav) and ALL of its child routes
+     (`.index`, `.new`, `.settings`, `.dashboard`, `.$id`, nested `tasks.*`, etc.)
+   - every component imported by those routes (cards, dialogs, pickers, chips, sheets)
+2. **Make a checklist** (use a todo list) with one item per route AND per component.
+   Nothing gets marked done until its file is actually ported.
+3. **Read each file with `read_file` and port it 1:1.** Don't summarize, don't merge,
+   don't drop dialogs/empty-states/menus.
+4. **Verify at the end**: re-list the feature's Lovable files and confirm every one has
+   a Falak counterpart. Report anything intentionally skipped.
+
+### Example: the "project" feature is 9 routes + ~9 components
+Routes: `projects.index`, `projects.new`, `projects.$projectId` (tab menu/layout),
+`projects.$projectId.index`, `projects.$projectId.dashboard`, `projects.$projectId.assets`,
+`projects.$projectId.settings`, `projects.$projectId.tasks.new`,
+`projects.$projectId.tasks.$taskId`.
+Components: `board/task-card`, `board/confirm-status-dialog`, `board/decline-dialog`,
+`projects/dynamic-field`, `projects/priority-picker`, `projects/task-type-chip`,
+`surface-card`, `task-type-visuals`, `add-item-input`.
+Porting only the board = skipping the tab menu, settings page, create-task page, and card design.
+
 ## Golden rule: keep every Tailwind class verbatim
 
 Do **NOT** rewrite Lovable's utility classes. Copy them exactly as-is:

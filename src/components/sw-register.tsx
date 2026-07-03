@@ -55,7 +55,10 @@ export function ServiceWorkerRegister() {
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
 
+    let reg: ServiceWorkerRegistration | null = null;
+
     navigator.serviceWorker.register("/sw.js").then((registration) => {
+      reg = registration;
       subscribeToPush(registration);
 
       if (registration.waiting) {
@@ -80,6 +83,12 @@ export function ServiceWorkerRegister() {
     navigator.serviceWorker.addEventListener("controllerchange", () => {
       window.location.reload();
     });
+
+    const interval = setInterval(() => {
+      reg?.update().catch(() => {});
+    }, 60_000);
+
+    return () => clearInterval(interval);
   }, []);
 
   if (!showUpdate) return null;
