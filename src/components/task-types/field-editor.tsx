@@ -26,6 +26,7 @@ type Draft = {
   aspectRatio: string | null;
   visibleFromStageId: string | null;
   requiredBeforeStageId: string | null;
+  lockedFromStageId: string | null;
 };
 
 function toDraft(f: Partial<TTField>): Draft {
@@ -39,6 +40,7 @@ function toDraft(f: Partial<TTField>): Draft {
     aspectRatio: f.aspectRatio ?? null,
     visibleFromStageId: f.visibleFromStageId ?? null,
     requiredBeforeStageId: f.requiredBeforeStageId ?? null,
+    lockedFromStageId: f.lockedFromStageId ?? null,
   };
 }
 
@@ -106,7 +108,7 @@ export function FieldEditor({
         className="h-10"
       />
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <LabeledField label="Type">
           <Select
             value={draft.kind}
@@ -165,6 +167,26 @@ export function FieldEditor({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="no_gate">No gate</SelectItem>
+              {statuses.map((s) => (
+                <SelectItem key={s.id} value={s.id}>
+                  {s.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </LabeledField>
+        <LabeledField label="Locked From">
+          <Select
+            value={draft.lockedFromStageId ?? "auto"}
+            onValueChange={(v) =>
+              setField({ lockedFromStageId: v === "auto" ? null : v })
+            }
+          >
+            <SelectTrigger className="h-10">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="auto">Auto</SelectItem>
               {statuses.map((s) => (
                 <SelectItem key={s.id} value={s.id}>
                   {s.name}
@@ -328,6 +350,7 @@ export function FieldEditor({
                 aspectRatio: draft.aspectRatio,
                 visibleFromStageId: draft.visibleFromStageId,
                 requiredBeforeStageId: draft.requiredBeforeStageId,
+                lockedFromStageId: draft.lockedFromStageId,
               })
             }
             disabled={!draft.label.trim() || !dirty}

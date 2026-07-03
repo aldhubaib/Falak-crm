@@ -144,6 +144,11 @@ export type TaskStatus = $Result.DefaultSelection<Prisma.$TaskStatusPayload>
  */
 export type Task = $Result.DefaultSelection<Prisma.$TaskPayload>
 /**
+ * Model TaskStatusChange
+ * 
+ */
+export type TaskStatusChange = $Result.DefaultSelection<Prisma.$TaskStatusChangePayload>
+/**
  * Model TaskComment
  * 
  */
@@ -735,6 +740,16 @@ export class PrismaClient<
     * ```
     */
   get task(): Prisma.TaskDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.taskStatusChange`: Exposes CRUD operations for the **TaskStatusChange** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TaskStatusChanges
+    * const taskStatusChanges = await prisma.taskStatusChange.findMany()
+    * ```
+    */
+  get taskStatusChange(): Prisma.TaskStatusChangeDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.taskComment`: Exposes CRUD operations for the **TaskComment** model.
@@ -1355,6 +1370,7 @@ export namespace Prisma {
     TaskChecklistItem: 'TaskChecklistItem',
     TaskStatus: 'TaskStatus',
     Task: 'Task',
+    TaskStatusChange: 'TaskStatusChange',
     TaskComment: 'TaskComment',
     CommentMention: 'CommentMention',
     Notification: 'Notification',
@@ -1386,7 +1402,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskComment" | "commentMention" | "notification" | "pushSubscription" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "publishItem"
+      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "taskComment" | "commentMention" | "notification" | "pushSubscription" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "publishItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3314,6 +3330,80 @@ export namespace Prisma {
           }
         }
       }
+      TaskStatusChange: {
+        payload: Prisma.$TaskStatusChangePayload<ExtArgs>
+        fields: Prisma.TaskStatusChangeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TaskStatusChangeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskStatusChangePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TaskStatusChangeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskStatusChangePayload>
+          }
+          findFirst: {
+            args: Prisma.TaskStatusChangeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskStatusChangePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TaskStatusChangeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskStatusChangePayload>
+          }
+          findMany: {
+            args: Prisma.TaskStatusChangeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskStatusChangePayload>[]
+          }
+          create: {
+            args: Prisma.TaskStatusChangeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskStatusChangePayload>
+          }
+          createMany: {
+            args: Prisma.TaskStatusChangeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TaskStatusChangeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskStatusChangePayload>[]
+          }
+          delete: {
+            args: Prisma.TaskStatusChangeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskStatusChangePayload>
+          }
+          update: {
+            args: Prisma.TaskStatusChangeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskStatusChangePayload>
+          }
+          deleteMany: {
+            args: Prisma.TaskStatusChangeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TaskStatusChangeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TaskStatusChangeUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskStatusChangePayload>[]
+          }
+          upsert: {
+            args: Prisma.TaskStatusChangeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskStatusChangePayload>
+          }
+          aggregate: {
+            args: Prisma.TaskStatusChangeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTaskStatusChange>
+          }
+          groupBy: {
+            args: Prisma.TaskStatusChangeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TaskStatusChangeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TaskStatusChangeCountArgs<ExtArgs>
+            result: $Utils.Optional<TaskStatusChangeCountAggregateOutputType> | number
+          }
+        }
+      }
       TaskComment: {
         payload: Prisma.$TaskCommentPayload<ExtArgs>
         fields: Prisma.TaskCommentFieldRefs
@@ -4632,6 +4722,7 @@ export namespace Prisma {
     taskChecklistItem?: TaskChecklistItemOmit
     taskStatus?: TaskStatusOmit
     task?: TaskOmit
+    taskStatusChange?: TaskStatusChangeOmit
     taskComment?: TaskCommentOmit
     commentMention?: CommentMentionOmit
     notification?: NotificationOmit
@@ -4946,6 +5037,7 @@ export namespace Prisma {
     pushSubscriptions: number
     scheduledItems: number
     projectMemberships: number
+    statusChanges: number
   }
 
   export type WorkspaceMemberCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4956,6 +5048,7 @@ export namespace Prisma {
     pushSubscriptions?: boolean | WorkspaceMemberCountOutputTypeCountPushSubscriptionsArgs
     scheduledItems?: boolean | WorkspaceMemberCountOutputTypeCountScheduledItemsArgs
     projectMemberships?: boolean | WorkspaceMemberCountOutputTypeCountProjectMembershipsArgs
+    statusChanges?: boolean | WorkspaceMemberCountOutputTypeCountStatusChangesArgs
   }
 
   // Custom InputTypes
@@ -5016,6 +5109,13 @@ export namespace Prisma {
    */
   export type WorkspaceMemberCountOutputTypeCountProjectMembershipsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectMemberWhereInput
+  }
+
+  /**
+   * WorkspaceMemberCountOutputType without action
+   */
+  export type WorkspaceMemberCountOutputTypeCountStatusChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskStatusChangeWhereInput
   }
 
 
@@ -5561,12 +5661,14 @@ export namespace Prisma {
     tasks: number
     visibleFromItems: number
     requiredBeforeItems: number
+    lockedFromItems: number
   }
 
   export type TaskStatusCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tasks?: boolean | TaskStatusCountOutputTypeCountTasksArgs
     visibleFromItems?: boolean | TaskStatusCountOutputTypeCountVisibleFromItemsArgs
     requiredBeforeItems?: boolean | TaskStatusCountOutputTypeCountRequiredBeforeItemsArgs
+    lockedFromItems?: boolean | TaskStatusCountOutputTypeCountLockedFromItemsArgs
   }
 
   // Custom InputTypes
@@ -5601,6 +5703,13 @@ export namespace Prisma {
     where?: ChecklistTemplateItemWhereInput
   }
 
+  /**
+   * TaskStatusCountOutputType without action
+   */
+  export type TaskStatusCountOutputTypeCountLockedFromItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChecklistTemplateItemWhereInput
+  }
+
 
   /**
    * Count Type TaskCountOutputType
@@ -5609,11 +5718,13 @@ export namespace Prisma {
   export type TaskCountOutputType = {
     checklistItems: number
     comments: number
+    statusChanges: number
   }
 
   export type TaskCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     checklistItems?: boolean | TaskCountOutputTypeCountChecklistItemsArgs
     comments?: boolean | TaskCountOutputTypeCountCommentsArgs
+    statusChanges?: boolean | TaskCountOutputTypeCountStatusChangesArgs
   }
 
   // Custom InputTypes
@@ -5639,6 +5750,13 @@ export namespace Prisma {
    */
   export type TaskCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TaskCommentWhereInput
+  }
+
+  /**
+   * TaskCountOutputType without action
+   */
+  export type TaskCountOutputTypeCountStatusChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskStatusChangeWhereInput
   }
 
 
@@ -9861,6 +9979,7 @@ export namespace Prisma {
     pushSubscriptions?: boolean | WorkspaceMember$pushSubscriptionsArgs<ExtArgs>
     scheduledItems?: boolean | WorkspaceMember$scheduledItemsArgs<ExtArgs>
     projectMemberships?: boolean | WorkspaceMember$projectMembershipsArgs<ExtArgs>
+    statusChanges?: boolean | WorkspaceMember$statusChangesArgs<ExtArgs>
     _count?: boolean | WorkspaceMemberCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workspaceMember"]>
 
@@ -9912,6 +10031,7 @@ export namespace Prisma {
     pushSubscriptions?: boolean | WorkspaceMember$pushSubscriptionsArgs<ExtArgs>
     scheduledItems?: boolean | WorkspaceMember$scheduledItemsArgs<ExtArgs>
     projectMemberships?: boolean | WorkspaceMember$projectMembershipsArgs<ExtArgs>
+    statusChanges?: boolean | WorkspaceMember$statusChangesArgs<ExtArgs>
     _count?: boolean | WorkspaceMemberCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type WorkspaceMemberIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9935,6 +10055,7 @@ export namespace Prisma {
       pushSubscriptions: Prisma.$PushSubscriptionPayload<ExtArgs>[]
       scheduledItems: Prisma.$PublishItemPayload<ExtArgs>[]
       projectMemberships: Prisma.$ProjectMemberPayload<ExtArgs>[]
+      statusChanges: Prisma.$TaskStatusChangePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10348,6 +10469,7 @@ export namespace Prisma {
     pushSubscriptions<T extends WorkspaceMember$pushSubscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$pushSubscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PushSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     scheduledItems<T extends WorkspaceMember$scheduledItemsArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$scheduledItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PublishItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     projectMemberships<T extends WorkspaceMember$projectMembershipsArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$projectMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    statusChanges<T extends WorkspaceMember$statusChangesArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$statusChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10970,6 +11092,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProjectMemberScalarFieldEnum | ProjectMemberScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceMember.statusChanges
+   */
+  export type WorkspaceMember$statusChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatusChange
+     */
+    select?: TaskStatusChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatusChange
+     */
+    omit?: TaskStatusChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusChangeInclude<ExtArgs> | null
+    where?: TaskStatusChangeWhereInput
+    orderBy?: TaskStatusChangeOrderByWithRelationInput | TaskStatusChangeOrderByWithRelationInput[]
+    cursor?: TaskStatusChangeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskStatusChangeScalarFieldEnum | TaskStatusChangeScalarFieldEnum[]
   }
 
   /**
@@ -31436,6 +31582,7 @@ export namespace Prisma {
     phase: string | null
     visibleFromStageId: string | null
     requiredBeforeStageId: string | null
+    lockedFromStageId: string | null
     order: number | null
   }
 
@@ -31453,6 +31600,7 @@ export namespace Prisma {
     phase: string | null
     visibleFromStageId: string | null
     requiredBeforeStageId: string | null
+    lockedFromStageId: string | null
     order: number | null
   }
 
@@ -31470,6 +31618,7 @@ export namespace Prisma {
     phase: number
     visibleFromStageId: number
     requiredBeforeStageId: number
+    lockedFromStageId: number
     order: number
     _all: number
   }
@@ -31497,6 +31646,7 @@ export namespace Prisma {
     phase?: true
     visibleFromStageId?: true
     requiredBeforeStageId?: true
+    lockedFromStageId?: true
     order?: true
   }
 
@@ -31514,6 +31664,7 @@ export namespace Prisma {
     phase?: true
     visibleFromStageId?: true
     requiredBeforeStageId?: true
+    lockedFromStageId?: true
     order?: true
   }
 
@@ -31531,6 +31682,7 @@ export namespace Prisma {
     phase?: true
     visibleFromStageId?: true
     requiredBeforeStageId?: true
+    lockedFromStageId?: true
     order?: true
     _all?: true
   }
@@ -31635,6 +31787,7 @@ export namespace Prisma {
     phase: string
     visibleFromStageId: string | null
     requiredBeforeStageId: string | null
+    lockedFromStageId: string | null
     order: number
     _count: ChecklistTemplateItemCountAggregateOutputType | null
     _avg: ChecklistTemplateItemAvgAggregateOutputType | null
@@ -31671,10 +31824,12 @@ export namespace Prisma {
     phase?: boolean
     visibleFromStageId?: boolean
     requiredBeforeStageId?: boolean
+    lockedFromStageId?: boolean
     order?: boolean
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
     requiredBeforeStage?: boolean | ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs>
+    lockedFromStage?: boolean | ChecklistTemplateItem$lockedFromStageArgs<ExtArgs>
     taskItems?: boolean | ChecklistTemplateItem$taskItemsArgs<ExtArgs>
     _count?: boolean | ChecklistTemplateItemCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["checklistTemplateItem"]>
@@ -31693,10 +31848,12 @@ export namespace Prisma {
     phase?: boolean
     visibleFromStageId?: boolean
     requiredBeforeStageId?: boolean
+    lockedFromStageId?: boolean
     order?: boolean
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
     requiredBeforeStage?: boolean | ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs>
+    lockedFromStage?: boolean | ChecklistTemplateItem$lockedFromStageArgs<ExtArgs>
   }, ExtArgs["result"]["checklistTemplateItem"]>
 
   export type ChecklistTemplateItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -31713,10 +31870,12 @@ export namespace Prisma {
     phase?: boolean
     visibleFromStageId?: boolean
     requiredBeforeStageId?: boolean
+    lockedFromStageId?: boolean
     order?: boolean
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
     requiredBeforeStage?: boolean | ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs>
+    lockedFromStage?: boolean | ChecklistTemplateItem$lockedFromStageArgs<ExtArgs>
   }, ExtArgs["result"]["checklistTemplateItem"]>
 
   export type ChecklistTemplateItemSelectScalar = {
@@ -31733,14 +31892,16 @@ export namespace Prisma {
     phase?: boolean
     visibleFromStageId?: boolean
     requiredBeforeStageId?: boolean
+    lockedFromStageId?: boolean
     order?: boolean
   }
 
-  export type ChecklistTemplateItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "templateId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "visibleFromStageId" | "requiredBeforeStageId" | "order", ExtArgs["result"]["checklistTemplateItem"]>
+  export type ChecklistTemplateItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "templateId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "visibleFromStageId" | "requiredBeforeStageId" | "lockedFromStageId" | "order", ExtArgs["result"]["checklistTemplateItem"]>
   export type ChecklistTemplateItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
     requiredBeforeStage?: boolean | ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs>
+    lockedFromStage?: boolean | ChecklistTemplateItem$lockedFromStageArgs<ExtArgs>
     taskItems?: boolean | ChecklistTemplateItem$taskItemsArgs<ExtArgs>
     _count?: boolean | ChecklistTemplateItemCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -31748,11 +31909,13 @@ export namespace Prisma {
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
     requiredBeforeStage?: boolean | ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs>
+    lockedFromStage?: boolean | ChecklistTemplateItem$lockedFromStageArgs<ExtArgs>
   }
   export type ChecklistTemplateItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
     requiredBeforeStage?: boolean | ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs>
+    lockedFromStage?: boolean | ChecklistTemplateItem$lockedFromStageArgs<ExtArgs>
   }
 
   export type $ChecklistTemplateItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -31761,6 +31924,7 @@ export namespace Prisma {
       template: Prisma.$ChecklistTemplatePayload<ExtArgs>
       visibleFromStage: Prisma.$TaskStatusPayload<ExtArgs> | null
       requiredBeforeStage: Prisma.$TaskStatusPayload<ExtArgs> | null
+      lockedFromStage: Prisma.$TaskStatusPayload<ExtArgs> | null
       taskItems: Prisma.$TaskChecklistItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -31777,6 +31941,7 @@ export namespace Prisma {
       phase: string
       visibleFromStageId: string | null
       requiredBeforeStageId: string | null
+      lockedFromStageId: string | null
       order: number
     }, ExtArgs["result"]["checklistTemplateItem"]>
     composites: {}
@@ -32175,6 +32340,7 @@ export namespace Prisma {
     template<T extends ChecklistTemplateDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateDefaultArgs<ExtArgs>>): Prisma__ChecklistTemplateClient<$Result.GetResult<Prisma.$ChecklistTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     visibleFromStage<T extends ChecklistTemplateItem$visibleFromStageArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>>): Prisma__TaskStatusClient<$Result.GetResult<Prisma.$TaskStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     requiredBeforeStage<T extends ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs>>): Prisma__TaskStatusClient<$Result.GetResult<Prisma.$TaskStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    lockedFromStage<T extends ChecklistTemplateItem$lockedFromStageArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateItem$lockedFromStageArgs<ExtArgs>>): Prisma__TaskStatusClient<$Result.GetResult<Prisma.$TaskStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     taskItems<T extends ChecklistTemplateItem$taskItemsArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateItem$taskItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskChecklistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -32218,6 +32384,7 @@ export namespace Prisma {
     readonly phase: FieldRef<"ChecklistTemplateItem", 'String'>
     readonly visibleFromStageId: FieldRef<"ChecklistTemplateItem", 'String'>
     readonly requiredBeforeStageId: FieldRef<"ChecklistTemplateItem", 'String'>
+    readonly lockedFromStageId: FieldRef<"ChecklistTemplateItem", 'String'>
     readonly order: FieldRef<"ChecklistTemplateItem", 'Int'>
   }
     
@@ -32642,6 +32809,25 @@ export namespace Prisma {
    * ChecklistTemplateItem.requiredBeforeStage
    */
   export type ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatus
+     */
+    select?: TaskStatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatus
+     */
+    omit?: TaskStatusOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusInclude<ExtArgs> | null
+    where?: TaskStatusWhereInput
+  }
+
+  /**
+   * ChecklistTemplateItem.lockedFromStage
+   */
+  export type ChecklistTemplateItem$lockedFromStageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the TaskStatus
      */
@@ -33780,6 +33966,7 @@ export namespace Prisma {
     phase: string | null
     visibleFromStageId: string | null
     requiredBeforeStageId: string | null
+    lockedFromStageId: string | null
     completed: boolean | null
     attachmentId: string | null
     textValue: string | null
@@ -33803,6 +33990,7 @@ export namespace Prisma {
     phase: string | null
     visibleFromStageId: string | null
     requiredBeforeStageId: string | null
+    lockedFromStageId: string | null
     completed: boolean | null
     attachmentId: string | null
     textValue: string | null
@@ -33826,6 +34014,7 @@ export namespace Prisma {
     phase: number
     visibleFromStageId: number
     requiredBeforeStageId: number
+    lockedFromStageId: number
     completed: number
     attachmentId: number
     textValue: number
@@ -33859,6 +34048,7 @@ export namespace Prisma {
     phase?: true
     visibleFromStageId?: true
     requiredBeforeStageId?: true
+    lockedFromStageId?: true
     completed?: true
     attachmentId?: true
     textValue?: true
@@ -33882,6 +34072,7 @@ export namespace Prisma {
     phase?: true
     visibleFromStageId?: true
     requiredBeforeStageId?: true
+    lockedFromStageId?: true
     completed?: true
     attachmentId?: true
     textValue?: true
@@ -33905,6 +34096,7 @@ export namespace Prisma {
     phase?: true
     visibleFromStageId?: true
     requiredBeforeStageId?: true
+    lockedFromStageId?: true
     completed?: true
     attachmentId?: true
     textValue?: true
@@ -34015,6 +34207,7 @@ export namespace Prisma {
     phase: string
     visibleFromStageId: string | null
     requiredBeforeStageId: string | null
+    lockedFromStageId: string | null
     completed: boolean
     attachmentId: string | null
     textValue: string | null
@@ -34057,6 +34250,7 @@ export namespace Prisma {
     phase?: boolean
     visibleFromStageId?: boolean
     requiredBeforeStageId?: boolean
+    lockedFromStageId?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
@@ -34082,6 +34276,7 @@ export namespace Prisma {
     phase?: boolean
     visibleFromStageId?: boolean
     requiredBeforeStageId?: boolean
+    lockedFromStageId?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
@@ -34107,6 +34302,7 @@ export namespace Prisma {
     phase?: boolean
     visibleFromStageId?: boolean
     requiredBeforeStageId?: boolean
+    lockedFromStageId?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
@@ -34132,6 +34328,7 @@ export namespace Prisma {
     phase?: boolean
     visibleFromStageId?: boolean
     requiredBeforeStageId?: boolean
+    lockedFromStageId?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
@@ -34140,7 +34337,7 @@ export namespace Prisma {
     order?: boolean
   }
 
-  export type TaskChecklistItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "templateItemId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "visibleFromStageId" | "requiredBeforeStageId" | "completed" | "attachmentId" | "textValue" | "completedAt" | "completedBy" | "order", ExtArgs["result"]["taskChecklistItem"]>
+  export type TaskChecklistItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "templateItemId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "visibleFromStageId" | "requiredBeforeStageId" | "lockedFromStageId" | "completed" | "attachmentId" | "textValue" | "completedAt" | "completedBy" | "order", ExtArgs["result"]["taskChecklistItem"]>
   export type TaskChecklistItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     task?: boolean | TaskDefaultArgs<ExtArgs>
     templateItem?: boolean | TaskChecklistItem$templateItemArgs<ExtArgs>
@@ -34175,6 +34372,7 @@ export namespace Prisma {
       phase: string
       visibleFromStageId: string | null
       requiredBeforeStageId: string | null
+      lockedFromStageId: string | null
       completed: boolean
       attachmentId: string | null
       textValue: string | null
@@ -34620,6 +34818,7 @@ export namespace Prisma {
     readonly phase: FieldRef<"TaskChecklistItem", 'String'>
     readonly visibleFromStageId: FieldRef<"TaskChecklistItem", 'String'>
     readonly requiredBeforeStageId: FieldRef<"TaskChecklistItem", 'String'>
+    readonly lockedFromStageId: FieldRef<"TaskChecklistItem", 'String'>
     readonly completed: FieldRef<"TaskChecklistItem", 'Boolean'>
     readonly attachmentId: FieldRef<"TaskChecklistItem", 'String'>
     readonly textValue: FieldRef<"TaskChecklistItem", 'String'>
@@ -35274,6 +35473,7 @@ export namespace Prisma {
     tasks?: boolean | TaskStatus$tasksArgs<ExtArgs>
     visibleFromItems?: boolean | TaskStatus$visibleFromItemsArgs<ExtArgs>
     requiredBeforeItems?: boolean | TaskStatus$requiredBeforeItemsArgs<ExtArgs>
+    lockedFromItems?: boolean | TaskStatus$lockedFromItemsArgs<ExtArgs>
     _count?: boolean | TaskStatusCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["taskStatus"]>
 
@@ -35312,6 +35512,7 @@ export namespace Prisma {
     tasks?: boolean | TaskStatus$tasksArgs<ExtArgs>
     visibleFromItems?: boolean | TaskStatus$visibleFromItemsArgs<ExtArgs>
     requiredBeforeItems?: boolean | TaskStatus$requiredBeforeItemsArgs<ExtArgs>
+    lockedFromItems?: boolean | TaskStatus$lockedFromItemsArgs<ExtArgs>
     _count?: boolean | TaskStatusCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TaskStatusIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -35328,6 +35529,7 @@ export namespace Prisma {
       tasks: Prisma.$TaskPayload<ExtArgs>[]
       visibleFromItems: Prisma.$ChecklistTemplateItemPayload<ExtArgs>[]
       requiredBeforeItems: Prisma.$ChecklistTemplateItemPayload<ExtArgs>[]
+      lockedFromItems: Prisma.$ChecklistTemplateItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -35734,6 +35936,7 @@ export namespace Prisma {
     tasks<T extends TaskStatus$tasksArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     visibleFromItems<T extends TaskStatus$visibleFromItemsArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$visibleFromItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     requiredBeforeItems<T extends TaskStatus$requiredBeforeItemsArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$requiredBeforeItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    lockedFromItems<T extends TaskStatus$lockedFromItemsArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$lockedFromItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -36242,6 +36445,30 @@ export namespace Prisma {
   }
 
   /**
+   * TaskStatus.lockedFromItems
+   */
+  export type TaskStatus$lockedFromItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistTemplateItem
+     */
+    select?: ChecklistTemplateItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistTemplateItem
+     */
+    omit?: ChecklistTemplateItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistTemplateItemInclude<ExtArgs> | null
+    where?: ChecklistTemplateItemWhereInput
+    orderBy?: ChecklistTemplateItemOrderByWithRelationInput | ChecklistTemplateItemOrderByWithRelationInput[]
+    cursor?: ChecklistTemplateItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChecklistTemplateItemScalarFieldEnum | ChecklistTemplateItemScalarFieldEnum[]
+  }
+
+  /**
    * TaskStatus without action
    */
   export type TaskStatusDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -36613,6 +36840,7 @@ export namespace Prisma {
     checklistItems?: boolean | Task$checklistItemsArgs<ExtArgs>
     comments?: boolean | Task$commentsArgs<ExtArgs>
     publishItem?: boolean | Task$publishItemArgs<ExtArgs>
+    statusChanges?: boolean | Task$statusChangesArgs<ExtArgs>
     _count?: boolean | TaskCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
@@ -36708,6 +36936,7 @@ export namespace Prisma {
     checklistItems?: boolean | Task$checklistItemsArgs<ExtArgs>
     comments?: boolean | Task$commentsArgs<ExtArgs>
     publishItem?: boolean | Task$publishItemArgs<ExtArgs>
+    statusChanges?: boolean | Task$statusChangesArgs<ExtArgs>
     _count?: boolean | TaskCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TaskIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -36733,6 +36962,7 @@ export namespace Prisma {
       checklistItems: Prisma.$TaskChecklistItemPayload<ExtArgs>[]
       comments: Prisma.$TaskCommentPayload<ExtArgs>[]
       publishItem: Prisma.$PublishItemPayload<ExtArgs> | null
+      statusChanges: Prisma.$TaskStatusChangePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -37158,6 +37388,7 @@ export namespace Prisma {
     checklistItems<T extends Task$checklistItemsArgs<ExtArgs> = {}>(args?: Subset<T, Task$checklistItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskChecklistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends Task$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Task$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     publishItem<T extends Task$publishItemArgs<ExtArgs> = {}>(args?: Subset<T, Task$publishItemArgs<ExtArgs>>): Prisma__PublishItemClient<$Result.GetResult<Prisma.$PublishItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    statusChanges<T extends Task$statusChangesArgs<ExtArgs> = {}>(args?: Subset<T, Task$statusChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -37734,6 +37965,30 @@ export namespace Prisma {
   }
 
   /**
+   * Task.statusChanges
+   */
+  export type Task$statusChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatusChange
+     */
+    select?: TaskStatusChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatusChange
+     */
+    omit?: TaskStatusChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusChangeInclude<ExtArgs> | null
+    where?: TaskStatusChangeWhereInput
+    orderBy?: TaskStatusChangeOrderByWithRelationInput | TaskStatusChangeOrderByWithRelationInput[]
+    cursor?: TaskStatusChangeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskStatusChangeScalarFieldEnum | TaskStatusChangeScalarFieldEnum[]
+  }
+
+  /**
    * Task without action
    */
   export type TaskDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -37749,6 +38004,1195 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: TaskInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TaskStatusChange
+   */
+
+  export type AggregateTaskStatusChange = {
+    _count: TaskStatusChangeCountAggregateOutputType | null
+    _avg: TaskStatusChangeAvgAggregateOutputType | null
+    _sum: TaskStatusChangeSumAggregateOutputType | null
+    _min: TaskStatusChangeMinAggregateOutputType | null
+    _max: TaskStatusChangeMaxAggregateOutputType | null
+  }
+
+  export type TaskStatusChangeAvgAggregateOutputType = {
+    durationMs: number | null
+  }
+
+  export type TaskStatusChangeSumAggregateOutputType = {
+    durationMs: number | null
+  }
+
+  export type TaskStatusChangeMinAggregateOutputType = {
+    id: string | null
+    taskId: string | null
+    memberId: string | null
+    action: string | null
+    fromStatusId: string | null
+    fromStatusName: string | null
+    toStatusId: string | null
+    toStatusName: string | null
+    durationMs: number | null
+    createdAt: Date | null
+  }
+
+  export type TaskStatusChangeMaxAggregateOutputType = {
+    id: string | null
+    taskId: string | null
+    memberId: string | null
+    action: string | null
+    fromStatusId: string | null
+    fromStatusName: string | null
+    toStatusId: string | null
+    toStatusName: string | null
+    durationMs: number | null
+    createdAt: Date | null
+  }
+
+  export type TaskStatusChangeCountAggregateOutputType = {
+    id: number
+    taskId: number
+    memberId: number
+    action: number
+    fromStatusId: number
+    fromStatusName: number
+    toStatusId: number
+    toStatusName: number
+    durationMs: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TaskStatusChangeAvgAggregateInputType = {
+    durationMs?: true
+  }
+
+  export type TaskStatusChangeSumAggregateInputType = {
+    durationMs?: true
+  }
+
+  export type TaskStatusChangeMinAggregateInputType = {
+    id?: true
+    taskId?: true
+    memberId?: true
+    action?: true
+    fromStatusId?: true
+    fromStatusName?: true
+    toStatusId?: true
+    toStatusName?: true
+    durationMs?: true
+    createdAt?: true
+  }
+
+  export type TaskStatusChangeMaxAggregateInputType = {
+    id?: true
+    taskId?: true
+    memberId?: true
+    action?: true
+    fromStatusId?: true
+    fromStatusName?: true
+    toStatusId?: true
+    toStatusName?: true
+    durationMs?: true
+    createdAt?: true
+  }
+
+  export type TaskStatusChangeCountAggregateInputType = {
+    id?: true
+    taskId?: true
+    memberId?: true
+    action?: true
+    fromStatusId?: true
+    fromStatusName?: true
+    toStatusId?: true
+    toStatusName?: true
+    durationMs?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TaskStatusChangeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TaskStatusChange to aggregate.
+     */
+    where?: TaskStatusChangeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskStatusChanges to fetch.
+     */
+    orderBy?: TaskStatusChangeOrderByWithRelationInput | TaskStatusChangeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TaskStatusChangeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskStatusChanges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskStatusChanges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TaskStatusChanges
+    **/
+    _count?: true | TaskStatusChangeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TaskStatusChangeAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TaskStatusChangeSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TaskStatusChangeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TaskStatusChangeMaxAggregateInputType
+  }
+
+  export type GetTaskStatusChangeAggregateType<T extends TaskStatusChangeAggregateArgs> = {
+        [P in keyof T & keyof AggregateTaskStatusChange]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTaskStatusChange[P]>
+      : GetScalarType<T[P], AggregateTaskStatusChange[P]>
+  }
+
+
+
+
+  export type TaskStatusChangeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskStatusChangeWhereInput
+    orderBy?: TaskStatusChangeOrderByWithAggregationInput | TaskStatusChangeOrderByWithAggregationInput[]
+    by: TaskStatusChangeScalarFieldEnum[] | TaskStatusChangeScalarFieldEnum
+    having?: TaskStatusChangeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TaskStatusChangeCountAggregateInputType | true
+    _avg?: TaskStatusChangeAvgAggregateInputType
+    _sum?: TaskStatusChangeSumAggregateInputType
+    _min?: TaskStatusChangeMinAggregateInputType
+    _max?: TaskStatusChangeMaxAggregateInputType
+  }
+
+  export type TaskStatusChangeGroupByOutputType = {
+    id: string
+    taskId: string
+    memberId: string | null
+    action: string
+    fromStatusId: string | null
+    fromStatusName: string | null
+    toStatusId: string | null
+    toStatusName: string | null
+    durationMs: number | null
+    createdAt: Date
+    _count: TaskStatusChangeCountAggregateOutputType | null
+    _avg: TaskStatusChangeAvgAggregateOutputType | null
+    _sum: TaskStatusChangeSumAggregateOutputType | null
+    _min: TaskStatusChangeMinAggregateOutputType | null
+    _max: TaskStatusChangeMaxAggregateOutputType | null
+  }
+
+  type GetTaskStatusChangeGroupByPayload<T extends TaskStatusChangeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TaskStatusChangeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TaskStatusChangeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TaskStatusChangeGroupByOutputType[P]>
+            : GetScalarType<T[P], TaskStatusChangeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TaskStatusChangeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    taskId?: boolean
+    memberId?: boolean
+    action?: boolean
+    fromStatusId?: boolean
+    fromStatusName?: boolean
+    toStatusId?: boolean
+    toStatusName?: boolean
+    durationMs?: boolean
+    createdAt?: boolean
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+    member?: boolean | TaskStatusChange$memberArgs<ExtArgs>
+  }, ExtArgs["result"]["taskStatusChange"]>
+
+  export type TaskStatusChangeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    taskId?: boolean
+    memberId?: boolean
+    action?: boolean
+    fromStatusId?: boolean
+    fromStatusName?: boolean
+    toStatusId?: boolean
+    toStatusName?: boolean
+    durationMs?: boolean
+    createdAt?: boolean
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+    member?: boolean | TaskStatusChange$memberArgs<ExtArgs>
+  }, ExtArgs["result"]["taskStatusChange"]>
+
+  export type TaskStatusChangeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    taskId?: boolean
+    memberId?: boolean
+    action?: boolean
+    fromStatusId?: boolean
+    fromStatusName?: boolean
+    toStatusId?: boolean
+    toStatusName?: boolean
+    durationMs?: boolean
+    createdAt?: boolean
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+    member?: boolean | TaskStatusChange$memberArgs<ExtArgs>
+  }, ExtArgs["result"]["taskStatusChange"]>
+
+  export type TaskStatusChangeSelectScalar = {
+    id?: boolean
+    taskId?: boolean
+    memberId?: boolean
+    action?: boolean
+    fromStatusId?: boolean
+    fromStatusName?: boolean
+    toStatusId?: boolean
+    toStatusName?: boolean
+    durationMs?: boolean
+    createdAt?: boolean
+  }
+
+  export type TaskStatusChangeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "memberId" | "action" | "fromStatusId" | "fromStatusName" | "toStatusId" | "toStatusName" | "durationMs" | "createdAt", ExtArgs["result"]["taskStatusChange"]>
+  export type TaskStatusChangeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+    member?: boolean | TaskStatusChange$memberArgs<ExtArgs>
+  }
+  export type TaskStatusChangeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+    member?: boolean | TaskStatusChange$memberArgs<ExtArgs>
+  }
+  export type TaskStatusChangeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+    member?: boolean | TaskStatusChange$memberArgs<ExtArgs>
+  }
+
+  export type $TaskStatusChangePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TaskStatusChange"
+    objects: {
+      task: Prisma.$TaskPayload<ExtArgs>
+      member: Prisma.$WorkspaceMemberPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      taskId: string
+      memberId: string | null
+      action: string
+      fromStatusId: string | null
+      fromStatusName: string | null
+      toStatusId: string | null
+      toStatusName: string | null
+      durationMs: number | null
+      createdAt: Date
+    }, ExtArgs["result"]["taskStatusChange"]>
+    composites: {}
+  }
+
+  type TaskStatusChangeGetPayload<S extends boolean | null | undefined | TaskStatusChangeDefaultArgs> = $Result.GetResult<Prisma.$TaskStatusChangePayload, S>
+
+  type TaskStatusChangeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TaskStatusChangeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TaskStatusChangeCountAggregateInputType | true
+    }
+
+  export interface TaskStatusChangeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TaskStatusChange'], meta: { name: 'TaskStatusChange' } }
+    /**
+     * Find zero or one TaskStatusChange that matches the filter.
+     * @param {TaskStatusChangeFindUniqueArgs} args - Arguments to find a TaskStatusChange
+     * @example
+     * // Get one TaskStatusChange
+     * const taskStatusChange = await prisma.taskStatusChange.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TaskStatusChangeFindUniqueArgs>(args: SelectSubset<T, TaskStatusChangeFindUniqueArgs<ExtArgs>>): Prisma__TaskStatusChangeClient<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TaskStatusChange that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TaskStatusChangeFindUniqueOrThrowArgs} args - Arguments to find a TaskStatusChange
+     * @example
+     * // Get one TaskStatusChange
+     * const taskStatusChange = await prisma.taskStatusChange.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TaskStatusChangeFindUniqueOrThrowArgs>(args: SelectSubset<T, TaskStatusChangeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TaskStatusChangeClient<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TaskStatusChange that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskStatusChangeFindFirstArgs} args - Arguments to find a TaskStatusChange
+     * @example
+     * // Get one TaskStatusChange
+     * const taskStatusChange = await prisma.taskStatusChange.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TaskStatusChangeFindFirstArgs>(args?: SelectSubset<T, TaskStatusChangeFindFirstArgs<ExtArgs>>): Prisma__TaskStatusChangeClient<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TaskStatusChange that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskStatusChangeFindFirstOrThrowArgs} args - Arguments to find a TaskStatusChange
+     * @example
+     * // Get one TaskStatusChange
+     * const taskStatusChange = await prisma.taskStatusChange.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TaskStatusChangeFindFirstOrThrowArgs>(args?: SelectSubset<T, TaskStatusChangeFindFirstOrThrowArgs<ExtArgs>>): Prisma__TaskStatusChangeClient<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TaskStatusChanges that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskStatusChangeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TaskStatusChanges
+     * const taskStatusChanges = await prisma.taskStatusChange.findMany()
+     * 
+     * // Get first 10 TaskStatusChanges
+     * const taskStatusChanges = await prisma.taskStatusChange.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const taskStatusChangeWithIdOnly = await prisma.taskStatusChange.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TaskStatusChangeFindManyArgs>(args?: SelectSubset<T, TaskStatusChangeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TaskStatusChange.
+     * @param {TaskStatusChangeCreateArgs} args - Arguments to create a TaskStatusChange.
+     * @example
+     * // Create one TaskStatusChange
+     * const TaskStatusChange = await prisma.taskStatusChange.create({
+     *   data: {
+     *     // ... data to create a TaskStatusChange
+     *   }
+     * })
+     * 
+     */
+    create<T extends TaskStatusChangeCreateArgs>(args: SelectSubset<T, TaskStatusChangeCreateArgs<ExtArgs>>): Prisma__TaskStatusChangeClient<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TaskStatusChanges.
+     * @param {TaskStatusChangeCreateManyArgs} args - Arguments to create many TaskStatusChanges.
+     * @example
+     * // Create many TaskStatusChanges
+     * const taskStatusChange = await prisma.taskStatusChange.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TaskStatusChangeCreateManyArgs>(args?: SelectSubset<T, TaskStatusChangeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TaskStatusChanges and returns the data saved in the database.
+     * @param {TaskStatusChangeCreateManyAndReturnArgs} args - Arguments to create many TaskStatusChanges.
+     * @example
+     * // Create many TaskStatusChanges
+     * const taskStatusChange = await prisma.taskStatusChange.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TaskStatusChanges and only return the `id`
+     * const taskStatusChangeWithIdOnly = await prisma.taskStatusChange.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TaskStatusChangeCreateManyAndReturnArgs>(args?: SelectSubset<T, TaskStatusChangeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TaskStatusChange.
+     * @param {TaskStatusChangeDeleteArgs} args - Arguments to delete one TaskStatusChange.
+     * @example
+     * // Delete one TaskStatusChange
+     * const TaskStatusChange = await prisma.taskStatusChange.delete({
+     *   where: {
+     *     // ... filter to delete one TaskStatusChange
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TaskStatusChangeDeleteArgs>(args: SelectSubset<T, TaskStatusChangeDeleteArgs<ExtArgs>>): Prisma__TaskStatusChangeClient<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TaskStatusChange.
+     * @param {TaskStatusChangeUpdateArgs} args - Arguments to update one TaskStatusChange.
+     * @example
+     * // Update one TaskStatusChange
+     * const taskStatusChange = await prisma.taskStatusChange.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TaskStatusChangeUpdateArgs>(args: SelectSubset<T, TaskStatusChangeUpdateArgs<ExtArgs>>): Prisma__TaskStatusChangeClient<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TaskStatusChanges.
+     * @param {TaskStatusChangeDeleteManyArgs} args - Arguments to filter TaskStatusChanges to delete.
+     * @example
+     * // Delete a few TaskStatusChanges
+     * const { count } = await prisma.taskStatusChange.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TaskStatusChangeDeleteManyArgs>(args?: SelectSubset<T, TaskStatusChangeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TaskStatusChanges.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskStatusChangeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TaskStatusChanges
+     * const taskStatusChange = await prisma.taskStatusChange.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TaskStatusChangeUpdateManyArgs>(args: SelectSubset<T, TaskStatusChangeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TaskStatusChanges and returns the data updated in the database.
+     * @param {TaskStatusChangeUpdateManyAndReturnArgs} args - Arguments to update many TaskStatusChanges.
+     * @example
+     * // Update many TaskStatusChanges
+     * const taskStatusChange = await prisma.taskStatusChange.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TaskStatusChanges and only return the `id`
+     * const taskStatusChangeWithIdOnly = await prisma.taskStatusChange.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TaskStatusChangeUpdateManyAndReturnArgs>(args: SelectSubset<T, TaskStatusChangeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TaskStatusChange.
+     * @param {TaskStatusChangeUpsertArgs} args - Arguments to update or create a TaskStatusChange.
+     * @example
+     * // Update or create a TaskStatusChange
+     * const taskStatusChange = await prisma.taskStatusChange.upsert({
+     *   create: {
+     *     // ... data to create a TaskStatusChange
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TaskStatusChange we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TaskStatusChangeUpsertArgs>(args: SelectSubset<T, TaskStatusChangeUpsertArgs<ExtArgs>>): Prisma__TaskStatusChangeClient<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TaskStatusChanges.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskStatusChangeCountArgs} args - Arguments to filter TaskStatusChanges to count.
+     * @example
+     * // Count the number of TaskStatusChanges
+     * const count = await prisma.taskStatusChange.count({
+     *   where: {
+     *     // ... the filter for the TaskStatusChanges we want to count
+     *   }
+     * })
+    **/
+    count<T extends TaskStatusChangeCountArgs>(
+      args?: Subset<T, TaskStatusChangeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TaskStatusChangeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TaskStatusChange.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskStatusChangeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TaskStatusChangeAggregateArgs>(args: Subset<T, TaskStatusChangeAggregateArgs>): Prisma.PrismaPromise<GetTaskStatusChangeAggregateType<T>>
+
+    /**
+     * Group by TaskStatusChange.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskStatusChangeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TaskStatusChangeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TaskStatusChangeGroupByArgs['orderBy'] }
+        : { orderBy?: TaskStatusChangeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TaskStatusChangeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTaskStatusChangeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TaskStatusChange model
+   */
+  readonly fields: TaskStatusChangeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TaskStatusChange.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TaskStatusChangeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    task<T extends TaskDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TaskDefaultArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    member<T extends TaskStatusChange$memberArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatusChange$memberArgs<ExtArgs>>): Prisma__WorkspaceMemberClient<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TaskStatusChange model
+   */
+  interface TaskStatusChangeFieldRefs {
+    readonly id: FieldRef<"TaskStatusChange", 'String'>
+    readonly taskId: FieldRef<"TaskStatusChange", 'String'>
+    readonly memberId: FieldRef<"TaskStatusChange", 'String'>
+    readonly action: FieldRef<"TaskStatusChange", 'String'>
+    readonly fromStatusId: FieldRef<"TaskStatusChange", 'String'>
+    readonly fromStatusName: FieldRef<"TaskStatusChange", 'String'>
+    readonly toStatusId: FieldRef<"TaskStatusChange", 'String'>
+    readonly toStatusName: FieldRef<"TaskStatusChange", 'String'>
+    readonly durationMs: FieldRef<"TaskStatusChange", 'Int'>
+    readonly createdAt: FieldRef<"TaskStatusChange", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TaskStatusChange findUnique
+   */
+  export type TaskStatusChangeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatusChange
+     */
+    select?: TaskStatusChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatusChange
+     */
+    omit?: TaskStatusChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusChangeInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskStatusChange to fetch.
+     */
+    where: TaskStatusChangeWhereUniqueInput
+  }
+
+  /**
+   * TaskStatusChange findUniqueOrThrow
+   */
+  export type TaskStatusChangeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatusChange
+     */
+    select?: TaskStatusChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatusChange
+     */
+    omit?: TaskStatusChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusChangeInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskStatusChange to fetch.
+     */
+    where: TaskStatusChangeWhereUniqueInput
+  }
+
+  /**
+   * TaskStatusChange findFirst
+   */
+  export type TaskStatusChangeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatusChange
+     */
+    select?: TaskStatusChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatusChange
+     */
+    omit?: TaskStatusChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusChangeInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskStatusChange to fetch.
+     */
+    where?: TaskStatusChangeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskStatusChanges to fetch.
+     */
+    orderBy?: TaskStatusChangeOrderByWithRelationInput | TaskStatusChangeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TaskStatusChanges.
+     */
+    cursor?: TaskStatusChangeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskStatusChanges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskStatusChanges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TaskStatusChanges.
+     */
+    distinct?: TaskStatusChangeScalarFieldEnum | TaskStatusChangeScalarFieldEnum[]
+  }
+
+  /**
+   * TaskStatusChange findFirstOrThrow
+   */
+  export type TaskStatusChangeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatusChange
+     */
+    select?: TaskStatusChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatusChange
+     */
+    omit?: TaskStatusChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusChangeInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskStatusChange to fetch.
+     */
+    where?: TaskStatusChangeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskStatusChanges to fetch.
+     */
+    orderBy?: TaskStatusChangeOrderByWithRelationInput | TaskStatusChangeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TaskStatusChanges.
+     */
+    cursor?: TaskStatusChangeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskStatusChanges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskStatusChanges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TaskStatusChanges.
+     */
+    distinct?: TaskStatusChangeScalarFieldEnum | TaskStatusChangeScalarFieldEnum[]
+  }
+
+  /**
+   * TaskStatusChange findMany
+   */
+  export type TaskStatusChangeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatusChange
+     */
+    select?: TaskStatusChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatusChange
+     */
+    omit?: TaskStatusChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusChangeInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskStatusChanges to fetch.
+     */
+    where?: TaskStatusChangeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskStatusChanges to fetch.
+     */
+    orderBy?: TaskStatusChangeOrderByWithRelationInput | TaskStatusChangeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TaskStatusChanges.
+     */
+    cursor?: TaskStatusChangeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskStatusChanges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskStatusChanges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TaskStatusChanges.
+     */
+    distinct?: TaskStatusChangeScalarFieldEnum | TaskStatusChangeScalarFieldEnum[]
+  }
+
+  /**
+   * TaskStatusChange create
+   */
+  export type TaskStatusChangeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatusChange
+     */
+    select?: TaskStatusChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatusChange
+     */
+    omit?: TaskStatusChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusChangeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TaskStatusChange.
+     */
+    data: XOR<TaskStatusChangeCreateInput, TaskStatusChangeUncheckedCreateInput>
+  }
+
+  /**
+   * TaskStatusChange createMany
+   */
+  export type TaskStatusChangeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TaskStatusChanges.
+     */
+    data: TaskStatusChangeCreateManyInput | TaskStatusChangeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TaskStatusChange createManyAndReturn
+   */
+  export type TaskStatusChangeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatusChange
+     */
+    select?: TaskStatusChangeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatusChange
+     */
+    omit?: TaskStatusChangeOmit<ExtArgs> | null
+    /**
+     * The data used to create many TaskStatusChanges.
+     */
+    data: TaskStatusChangeCreateManyInput | TaskStatusChangeCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusChangeIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TaskStatusChange update
+   */
+  export type TaskStatusChangeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatusChange
+     */
+    select?: TaskStatusChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatusChange
+     */
+    omit?: TaskStatusChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusChangeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TaskStatusChange.
+     */
+    data: XOR<TaskStatusChangeUpdateInput, TaskStatusChangeUncheckedUpdateInput>
+    /**
+     * Choose, which TaskStatusChange to update.
+     */
+    where: TaskStatusChangeWhereUniqueInput
+  }
+
+  /**
+   * TaskStatusChange updateMany
+   */
+  export type TaskStatusChangeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TaskStatusChanges.
+     */
+    data: XOR<TaskStatusChangeUpdateManyMutationInput, TaskStatusChangeUncheckedUpdateManyInput>
+    /**
+     * Filter which TaskStatusChanges to update
+     */
+    where?: TaskStatusChangeWhereInput
+    /**
+     * Limit how many TaskStatusChanges to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TaskStatusChange updateManyAndReturn
+   */
+  export type TaskStatusChangeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatusChange
+     */
+    select?: TaskStatusChangeSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatusChange
+     */
+    omit?: TaskStatusChangeOmit<ExtArgs> | null
+    /**
+     * The data used to update TaskStatusChanges.
+     */
+    data: XOR<TaskStatusChangeUpdateManyMutationInput, TaskStatusChangeUncheckedUpdateManyInput>
+    /**
+     * Filter which TaskStatusChanges to update
+     */
+    where?: TaskStatusChangeWhereInput
+    /**
+     * Limit how many TaskStatusChanges to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusChangeIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TaskStatusChange upsert
+   */
+  export type TaskStatusChangeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatusChange
+     */
+    select?: TaskStatusChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatusChange
+     */
+    omit?: TaskStatusChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusChangeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TaskStatusChange to update in case it exists.
+     */
+    where: TaskStatusChangeWhereUniqueInput
+    /**
+     * In case the TaskStatusChange found by the `where` argument doesn't exist, create a new TaskStatusChange with this data.
+     */
+    create: XOR<TaskStatusChangeCreateInput, TaskStatusChangeUncheckedCreateInput>
+    /**
+     * In case the TaskStatusChange was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TaskStatusChangeUpdateInput, TaskStatusChangeUncheckedUpdateInput>
+  }
+
+  /**
+   * TaskStatusChange delete
+   */
+  export type TaskStatusChangeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatusChange
+     */
+    select?: TaskStatusChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatusChange
+     */
+    omit?: TaskStatusChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusChangeInclude<ExtArgs> | null
+    /**
+     * Filter which TaskStatusChange to delete.
+     */
+    where: TaskStatusChangeWhereUniqueInput
+  }
+
+  /**
+   * TaskStatusChange deleteMany
+   */
+  export type TaskStatusChangeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TaskStatusChanges to delete
+     */
+    where?: TaskStatusChangeWhereInput
+    /**
+     * Limit how many TaskStatusChanges to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TaskStatusChange.member
+   */
+  export type TaskStatusChange$memberArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceMember
+     */
+    omit?: WorkspaceMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberInclude<ExtArgs> | null
+    where?: WorkspaceMemberWhereInput
+  }
+
+  /**
+   * TaskStatusChange without action
+   */
+  export type TaskStatusChangeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatusChange
+     */
+    select?: TaskStatusChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatusChange
+     */
+    omit?: TaskStatusChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusChangeInclude<ExtArgs> | null
   }
 
 
@@ -56256,6 +57700,7 @@ export namespace Prisma {
     phase: 'phase',
     visibleFromStageId: 'visibleFromStageId',
     requiredBeforeStageId: 'requiredBeforeStageId',
+    lockedFromStageId: 'lockedFromStageId',
     order: 'order'
   };
 
@@ -56286,6 +57731,7 @@ export namespace Prisma {
     phase: 'phase',
     visibleFromStageId: 'visibleFromStageId',
     requiredBeforeStageId: 'requiredBeforeStageId',
+    lockedFromStageId: 'lockedFromStageId',
     completed: 'completed',
     attachmentId: 'attachmentId',
     textValue: 'textValue',
@@ -56335,6 +57781,22 @@ export namespace Prisma {
   };
 
   export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
+
+
+  export const TaskStatusChangeScalarFieldEnum: {
+    id: 'id',
+    taskId: 'taskId',
+    memberId: 'memberId',
+    action: 'action',
+    fromStatusId: 'fromStatusId',
+    fromStatusName: 'fromStatusName',
+    toStatusId: 'toStatusId',
+    toStatusName: 'toStatusName',
+    durationMs: 'durationMs',
+    createdAt: 'createdAt'
+  };
+
+  export type TaskStatusChangeScalarFieldEnum = (typeof TaskStatusChangeScalarFieldEnum)[keyof typeof TaskStatusChangeScalarFieldEnum]
 
 
   export const TaskCommentScalarFieldEnum: {
@@ -57142,6 +58604,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionListRelationFilter
     scheduledItems?: PublishItemListRelationFilter
     projectMemberships?: ProjectMemberListRelationFilter
+    statusChanges?: TaskStatusChangeListRelationFilter
   }
 
   export type WorkspaceMemberOrderByWithRelationInput = {
@@ -57162,6 +58625,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionOrderByRelationAggregateInput
     scheduledItems?: PublishItemOrderByRelationAggregateInput
     projectMemberships?: ProjectMemberOrderByRelationAggregateInput
+    statusChanges?: TaskStatusChangeOrderByRelationAggregateInput
   }
 
   export type WorkspaceMemberWhereUniqueInput = Prisma.AtLeast<{
@@ -57186,6 +58650,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionListRelationFilter
     scheduledItems?: PublishItemListRelationFilter
     projectMemberships?: ProjectMemberListRelationFilter
+    statusChanges?: TaskStatusChangeListRelationFilter
   }, "id" | "workspaceId_userId">
 
   export type WorkspaceMemberOrderByWithAggregationInput = {
@@ -58711,10 +60176,12 @@ export namespace Prisma {
     phase?: StringFilter<"ChecklistTemplateItem"> | string
     visibleFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     requiredBeforeStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
+    lockedFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     order?: IntFilter<"ChecklistTemplateItem"> | number
     template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
     visibleFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     requiredBeforeStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
+    lockedFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     taskItems?: TaskChecklistItemListRelationFilter
   }
 
@@ -58732,10 +60199,12 @@ export namespace Prisma {
     phase?: SortOrder
     visibleFromStageId?: SortOrderInput | SortOrder
     requiredBeforeStageId?: SortOrderInput | SortOrder
+    lockedFromStageId?: SortOrderInput | SortOrder
     order?: SortOrder
     template?: ChecklistTemplateOrderByWithRelationInput
     visibleFromStage?: TaskStatusOrderByWithRelationInput
     requiredBeforeStage?: TaskStatusOrderByWithRelationInput
+    lockedFromStage?: TaskStatusOrderByWithRelationInput
     taskItems?: TaskChecklistItemOrderByRelationAggregateInput
   }
 
@@ -58756,10 +60225,12 @@ export namespace Prisma {
     phase?: StringFilter<"ChecklistTemplateItem"> | string
     visibleFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     requiredBeforeStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
+    lockedFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     order?: IntFilter<"ChecklistTemplateItem"> | number
     template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
     visibleFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     requiredBeforeStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
+    lockedFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     taskItems?: TaskChecklistItemListRelationFilter
   }, "id">
 
@@ -58777,6 +60248,7 @@ export namespace Prisma {
     phase?: SortOrder
     visibleFromStageId?: SortOrderInput | SortOrder
     requiredBeforeStageId?: SortOrderInput | SortOrder
+    lockedFromStageId?: SortOrderInput | SortOrder
     order?: SortOrder
     _count?: ChecklistTemplateItemCountOrderByAggregateInput
     _avg?: ChecklistTemplateItemAvgOrderByAggregateInput
@@ -58802,6 +60274,7 @@ export namespace Prisma {
     phase?: StringWithAggregatesFilter<"ChecklistTemplateItem"> | string
     visibleFromStageId?: StringNullableWithAggregatesFilter<"ChecklistTemplateItem"> | string | null
     requiredBeforeStageId?: StringNullableWithAggregatesFilter<"ChecklistTemplateItem"> | string | null
+    lockedFromStageId?: StringNullableWithAggregatesFilter<"ChecklistTemplateItem"> | string | null
     order?: IntWithAggregatesFilter<"ChecklistTemplateItem"> | number
   }
 
@@ -58872,6 +60345,7 @@ export namespace Prisma {
     phase?: StringFilter<"TaskChecklistItem"> | string
     visibleFromStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     requiredBeforeStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
+    lockedFromStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     completed?: BoolFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableFilter<"TaskChecklistItem"> | string | null
@@ -58897,6 +60371,7 @@ export namespace Prisma {
     phase?: SortOrder
     visibleFromStageId?: SortOrderInput | SortOrder
     requiredBeforeStageId?: SortOrderInput | SortOrder
+    lockedFromStageId?: SortOrderInput | SortOrder
     completed?: SortOrder
     attachmentId?: SortOrderInput | SortOrder
     textValue?: SortOrderInput | SortOrder
@@ -58925,6 +60400,7 @@ export namespace Prisma {
     phase?: StringFilter<"TaskChecklistItem"> | string
     visibleFromStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     requiredBeforeStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
+    lockedFromStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     completed?: BoolFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableFilter<"TaskChecklistItem"> | string | null
@@ -58950,6 +60426,7 @@ export namespace Prisma {
     phase?: SortOrder
     visibleFromStageId?: SortOrderInput | SortOrder
     requiredBeforeStageId?: SortOrderInput | SortOrder
+    lockedFromStageId?: SortOrderInput | SortOrder
     completed?: SortOrder
     attachmentId?: SortOrderInput | SortOrder
     textValue?: SortOrderInput | SortOrder
@@ -58981,6 +60458,7 @@ export namespace Prisma {
     phase?: StringWithAggregatesFilter<"TaskChecklistItem"> | string
     visibleFromStageId?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
     requiredBeforeStageId?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
+    lockedFromStageId?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
     completed?: BoolWithAggregatesFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
@@ -59003,6 +60481,7 @@ export namespace Prisma {
     tasks?: TaskListRelationFilter
     visibleFromItems?: ChecklistTemplateItemListRelationFilter
     requiredBeforeItems?: ChecklistTemplateItemListRelationFilter
+    lockedFromItems?: ChecklistTemplateItemListRelationFilter
   }
 
   export type TaskStatusOrderByWithRelationInput = {
@@ -59016,6 +60495,7 @@ export namespace Prisma {
     tasks?: TaskOrderByRelationAggregateInput
     visibleFromItems?: ChecklistTemplateItemOrderByRelationAggregateInput
     requiredBeforeItems?: ChecklistTemplateItemOrderByRelationAggregateInput
+    lockedFromItems?: ChecklistTemplateItemOrderByRelationAggregateInput
   }
 
   export type TaskStatusWhereUniqueInput = Prisma.AtLeast<{
@@ -59033,6 +60513,7 @@ export namespace Prisma {
     tasks?: TaskListRelationFilter
     visibleFromItems?: ChecklistTemplateItemListRelationFilter
     requiredBeforeItems?: ChecklistTemplateItemListRelationFilter
+    lockedFromItems?: ChecklistTemplateItemListRelationFilter
   }, "id" | "workspaceId_order">
 
   export type TaskStatusOrderByWithAggregationInput = {
@@ -59094,6 +60575,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemListRelationFilter
     comments?: TaskCommentListRelationFilter
     publishItem?: XOR<PublishItemNullableScalarRelationFilter, PublishItemWhereInput> | null
+    statusChanges?: TaskStatusChangeListRelationFilter
   }
 
   export type TaskOrderByWithRelationInput = {
@@ -59126,6 +60608,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemOrderByRelationAggregateInput
     comments?: TaskCommentOrderByRelationAggregateInput
     publishItem?: PublishItemOrderByWithRelationInput
+    statusChanges?: TaskStatusChangeOrderByRelationAggregateInput
   }
 
   export type TaskWhereUniqueInput = Prisma.AtLeast<{
@@ -59161,6 +60644,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemListRelationFilter
     comments?: TaskCommentListRelationFilter
     publishItem?: XOR<PublishItemNullableScalarRelationFilter, PublishItemWhereInput> | null
+    statusChanges?: TaskStatusChangeListRelationFilter
   }, "id">
 
   export type TaskOrderByWithAggregationInput = {
@@ -59219,6 +60703,91 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
+  }
+
+  export type TaskStatusChangeWhereInput = {
+    AND?: TaskStatusChangeWhereInput | TaskStatusChangeWhereInput[]
+    OR?: TaskStatusChangeWhereInput[]
+    NOT?: TaskStatusChangeWhereInput | TaskStatusChangeWhereInput[]
+    id?: StringFilter<"TaskStatusChange"> | string
+    taskId?: StringFilter<"TaskStatusChange"> | string
+    memberId?: StringNullableFilter<"TaskStatusChange"> | string | null
+    action?: StringFilter<"TaskStatusChange"> | string
+    fromStatusId?: StringNullableFilter<"TaskStatusChange"> | string | null
+    fromStatusName?: StringNullableFilter<"TaskStatusChange"> | string | null
+    toStatusId?: StringNullableFilter<"TaskStatusChange"> | string | null
+    toStatusName?: StringNullableFilter<"TaskStatusChange"> | string | null
+    durationMs?: IntNullableFilter<"TaskStatusChange"> | number | null
+    createdAt?: DateTimeFilter<"TaskStatusChange"> | Date | string
+    task?: XOR<TaskScalarRelationFilter, TaskWhereInput>
+    member?: XOR<WorkspaceMemberNullableScalarRelationFilter, WorkspaceMemberWhereInput> | null
+  }
+
+  export type TaskStatusChangeOrderByWithRelationInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    memberId?: SortOrderInput | SortOrder
+    action?: SortOrder
+    fromStatusId?: SortOrderInput | SortOrder
+    fromStatusName?: SortOrderInput | SortOrder
+    toStatusId?: SortOrderInput | SortOrder
+    toStatusName?: SortOrderInput | SortOrder
+    durationMs?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    task?: TaskOrderByWithRelationInput
+    member?: WorkspaceMemberOrderByWithRelationInput
+  }
+
+  export type TaskStatusChangeWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: TaskStatusChangeWhereInput | TaskStatusChangeWhereInput[]
+    OR?: TaskStatusChangeWhereInput[]
+    NOT?: TaskStatusChangeWhereInput | TaskStatusChangeWhereInput[]
+    taskId?: StringFilter<"TaskStatusChange"> | string
+    memberId?: StringNullableFilter<"TaskStatusChange"> | string | null
+    action?: StringFilter<"TaskStatusChange"> | string
+    fromStatusId?: StringNullableFilter<"TaskStatusChange"> | string | null
+    fromStatusName?: StringNullableFilter<"TaskStatusChange"> | string | null
+    toStatusId?: StringNullableFilter<"TaskStatusChange"> | string | null
+    toStatusName?: StringNullableFilter<"TaskStatusChange"> | string | null
+    durationMs?: IntNullableFilter<"TaskStatusChange"> | number | null
+    createdAt?: DateTimeFilter<"TaskStatusChange"> | Date | string
+    task?: XOR<TaskScalarRelationFilter, TaskWhereInput>
+    member?: XOR<WorkspaceMemberNullableScalarRelationFilter, WorkspaceMemberWhereInput> | null
+  }, "id">
+
+  export type TaskStatusChangeOrderByWithAggregationInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    memberId?: SortOrderInput | SortOrder
+    action?: SortOrder
+    fromStatusId?: SortOrderInput | SortOrder
+    fromStatusName?: SortOrderInput | SortOrder
+    toStatusId?: SortOrderInput | SortOrder
+    toStatusName?: SortOrderInput | SortOrder
+    durationMs?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: TaskStatusChangeCountOrderByAggregateInput
+    _avg?: TaskStatusChangeAvgOrderByAggregateInput
+    _max?: TaskStatusChangeMaxOrderByAggregateInput
+    _min?: TaskStatusChangeMinOrderByAggregateInput
+    _sum?: TaskStatusChangeSumOrderByAggregateInput
+  }
+
+  export type TaskStatusChangeScalarWhereWithAggregatesInput = {
+    AND?: TaskStatusChangeScalarWhereWithAggregatesInput | TaskStatusChangeScalarWhereWithAggregatesInput[]
+    OR?: TaskStatusChangeScalarWhereWithAggregatesInput[]
+    NOT?: TaskStatusChangeScalarWhereWithAggregatesInput | TaskStatusChangeScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TaskStatusChange"> | string
+    taskId?: StringWithAggregatesFilter<"TaskStatusChange"> | string
+    memberId?: StringNullableWithAggregatesFilter<"TaskStatusChange"> | string | null
+    action?: StringWithAggregatesFilter<"TaskStatusChange"> | string
+    fromStatusId?: StringNullableWithAggregatesFilter<"TaskStatusChange"> | string | null
+    fromStatusName?: StringNullableWithAggregatesFilter<"TaskStatusChange"> | string | null
+    toStatusId?: StringNullableWithAggregatesFilter<"TaskStatusChange"> | string | null
+    toStatusName?: StringNullableWithAggregatesFilter<"TaskStatusChange"> | string | null
+    durationMs?: IntNullableWithAggregatesFilter<"TaskStatusChange"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"TaskStatusChange"> | Date | string
   }
 
   export type TaskCommentWhereInput = {
@@ -60780,6 +62349,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateInput = {
@@ -60798,6 +62368,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUpdateInput = {
@@ -60816,6 +62387,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateInput = {
@@ -60834,6 +62406,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberCreateManyInput = {
@@ -62477,6 +64050,7 @@ export namespace Prisma {
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
     requiredBeforeStage?: TaskStatusCreateNestedOneWithoutRequiredBeforeItemsInput
+    lockedFromStage?: TaskStatusCreateNestedOneWithoutLockedFromItemsInput
     taskItems?: TaskChecklistItemCreateNestedManyWithoutTemplateItemInput
   }
 
@@ -62494,6 +64068,7 @@ export namespace Prisma {
     phase?: string
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
   }
@@ -62513,6 +64088,7 @@ export namespace Prisma {
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
     requiredBeforeStage?: TaskStatusUpdateOneWithoutRequiredBeforeItemsNestedInput
+    lockedFromStage?: TaskStatusUpdateOneWithoutLockedFromItemsNestedInput
     taskItems?: TaskChecklistItemUpdateManyWithoutTemplateItemNestedInput
   }
 
@@ -62530,6 +64106,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
@@ -62548,6 +64125,7 @@ export namespace Prisma {
     phase?: string
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     order?: number
   }
 
@@ -62579,6 +64157,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -62635,6 +64214,7 @@ export namespace Prisma {
     phase?: string
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -62660,6 +64240,7 @@ export namespace Prisma {
     phase?: string
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -62681,6 +64262,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62706,6 +64288,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62729,6 +64312,7 @@ export namespace Prisma {
     phase?: string
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -62750,6 +64334,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62773,6 +64358,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62791,6 +64377,7 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
+    lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
   }
 
   export type TaskStatusUncheckedCreateInput = {
@@ -62803,6 +64390,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
+    lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
   }
 
   export type TaskStatusUpdateInput = {
@@ -62815,6 +64403,7 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
+    lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
   }
 
   export type TaskStatusUncheckedUpdateInput = {
@@ -62827,6 +64416,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
+    lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
   }
 
   export type TaskStatusCreateManyInput = {
@@ -62881,6 +64471,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: TaskCommentCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateInput = {
@@ -62909,6 +64500,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUpdateInput = {
@@ -62937,6 +64529,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateInput = {
@@ -62965,6 +64558,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskCreateManyInput = {
@@ -63036,6 +64630,95 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type TaskStatusChangeCreateInput = {
+    id?: string
+    action: string
+    fromStatusId?: string | null
+    fromStatusName?: string | null
+    toStatusId?: string | null
+    toStatusName?: string | null
+    durationMs?: number | null
+    createdAt?: Date | string
+    task: TaskCreateNestedOneWithoutStatusChangesInput
+    member?: WorkspaceMemberCreateNestedOneWithoutStatusChangesInput
+  }
+
+  export type TaskStatusChangeUncheckedCreateInput = {
+    id?: string
+    taskId: string
+    memberId?: string | null
+    action: string
+    fromStatusId?: string | null
+    fromStatusName?: string | null
+    toStatusId?: string | null
+    toStatusName?: string | null
+    durationMs?: number | null
+    createdAt?: Date | string
+  }
+
+  export type TaskStatusChangeUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    fromStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    fromStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    task?: TaskUpdateOneRequiredWithoutStatusChangesNestedInput
+    member?: WorkspaceMemberUpdateOneWithoutStatusChangesNestedInput
+  }
+
+  export type TaskStatusChangeUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskId?: StringFieldUpdateOperationsInput | string
+    memberId?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    fromStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    fromStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskStatusChangeCreateManyInput = {
+    id?: string
+    taskId: string
+    memberId?: string | null
+    action: string
+    fromStatusId?: string | null
+    fromStatusName?: string | null
+    toStatusId?: string | null
+    toStatusName?: string | null
+    durationMs?: number | null
+    createdAt?: Date | string
+  }
+
+  export type TaskStatusChangeUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    fromStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    fromStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskStatusChangeUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskId?: StringFieldUpdateOperationsInput | string
+    memberId?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    fromStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    fromStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskCommentCreateInput = {
@@ -64875,6 +66558,12 @@ export namespace Prisma {
     none?: ProjectMemberWhereInput
   }
 
+  export type TaskStatusChangeListRelationFilter = {
+    every?: TaskStatusChangeWhereInput
+    some?: TaskStatusChangeWhereInput
+    none?: TaskStatusChangeWhereInput
+  }
+
   export type TaskOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -64896,6 +66585,10 @@ export namespace Prisma {
   }
 
   export type ProjectMemberOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TaskStatusChangeOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -66105,6 +67798,7 @@ export namespace Prisma {
     phase?: SortOrder
     visibleFromStageId?: SortOrder
     requiredBeforeStageId?: SortOrder
+    lockedFromStageId?: SortOrder
     order?: SortOrder
   }
 
@@ -66126,6 +67820,7 @@ export namespace Prisma {
     phase?: SortOrder
     visibleFromStageId?: SortOrder
     requiredBeforeStageId?: SortOrder
+    lockedFromStageId?: SortOrder
     order?: SortOrder
   }
 
@@ -66143,6 +67838,7 @@ export namespace Prisma {
     phase?: SortOrder
     visibleFromStageId?: SortOrder
     requiredBeforeStageId?: SortOrder
+    lockedFromStageId?: SortOrder
     order?: SortOrder
   }
 
@@ -66198,6 +67894,7 @@ export namespace Prisma {
     phase?: SortOrder
     visibleFromStageId?: SortOrder
     requiredBeforeStageId?: SortOrder
+    lockedFromStageId?: SortOrder
     completed?: SortOrder
     attachmentId?: SortOrder
     textValue?: SortOrder
@@ -66225,6 +67922,7 @@ export namespace Prisma {
     phase?: SortOrder
     visibleFromStageId?: SortOrder
     requiredBeforeStageId?: SortOrder
+    lockedFromStageId?: SortOrder
     completed?: SortOrder
     attachmentId?: SortOrder
     textValue?: SortOrder
@@ -66248,6 +67946,7 @@ export namespace Prisma {
     phase?: SortOrder
     visibleFromStageId?: SortOrder
     requiredBeforeStageId?: SortOrder
+    lockedFromStageId?: SortOrder
     completed?: SortOrder
     attachmentId?: SortOrder
     textValue?: SortOrder
@@ -66429,6 +68128,53 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type TaskStatusChangeCountOrderByAggregateInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    memberId?: SortOrder
+    action?: SortOrder
+    fromStatusId?: SortOrder
+    fromStatusName?: SortOrder
+    toStatusId?: SortOrder
+    toStatusName?: SortOrder
+    durationMs?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TaskStatusChangeAvgOrderByAggregateInput = {
+    durationMs?: SortOrder
+  }
+
+  export type TaskStatusChangeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    memberId?: SortOrder
+    action?: SortOrder
+    fromStatusId?: SortOrder
+    fromStatusName?: SortOrder
+    toStatusId?: SortOrder
+    toStatusName?: SortOrder
+    durationMs?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TaskStatusChangeMinOrderByAggregateInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    memberId?: SortOrder
+    action?: SortOrder
+    fromStatusId?: SortOrder
+    fromStatusName?: SortOrder
+    toStatusId?: SortOrder
+    toStatusName?: SortOrder
+    durationMs?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TaskStatusChangeSumOrderByAggregateInput = {
+    durationMs?: SortOrder
   }
 
   export type TaskCommentCountOrderByAggregateInput = {
@@ -68221,6 +69967,13 @@ export namespace Prisma {
     connect?: ProjectMemberWhereUniqueInput | ProjectMemberWhereUniqueInput[]
   }
 
+  export type TaskStatusChangeCreateNestedManyWithoutMemberInput = {
+    create?: XOR<TaskStatusChangeCreateWithoutMemberInput, TaskStatusChangeUncheckedCreateWithoutMemberInput> | TaskStatusChangeCreateWithoutMemberInput[] | TaskStatusChangeUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: TaskStatusChangeCreateOrConnectWithoutMemberInput | TaskStatusChangeCreateOrConnectWithoutMemberInput[]
+    createMany?: TaskStatusChangeCreateManyMemberInputEnvelope
+    connect?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+  }
+
   export type TaskUncheckedCreateNestedManyWithoutAssigneeInput = {
     create?: XOR<TaskCreateWithoutAssigneeInput, TaskUncheckedCreateWithoutAssigneeInput> | TaskCreateWithoutAssigneeInput[] | TaskUncheckedCreateWithoutAssigneeInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutAssigneeInput | TaskCreateOrConnectWithoutAssigneeInput[]
@@ -68268,6 +70021,13 @@ export namespace Prisma {
     connectOrCreate?: ProjectMemberCreateOrConnectWithoutMemberInput | ProjectMemberCreateOrConnectWithoutMemberInput[]
     createMany?: ProjectMemberCreateManyMemberInputEnvelope
     connect?: ProjectMemberWhereUniqueInput | ProjectMemberWhereUniqueInput[]
+  }
+
+  export type TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput = {
+    create?: XOR<TaskStatusChangeCreateWithoutMemberInput, TaskStatusChangeUncheckedCreateWithoutMemberInput> | TaskStatusChangeCreateWithoutMemberInput[] | TaskStatusChangeUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: TaskStatusChangeCreateOrConnectWithoutMemberInput | TaskStatusChangeCreateOrConnectWithoutMemberInput[]
+    createMany?: TaskStatusChangeCreateManyMemberInputEnvelope
+    connect?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
   }
 
   export type EnumMemberTypeFieldUpdateOperationsInput = {
@@ -68390,6 +70150,20 @@ export namespace Prisma {
     deleteMany?: ProjectMemberScalarWhereInput | ProjectMemberScalarWhereInput[]
   }
 
+  export type TaskStatusChangeUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<TaskStatusChangeCreateWithoutMemberInput, TaskStatusChangeUncheckedCreateWithoutMemberInput> | TaskStatusChangeCreateWithoutMemberInput[] | TaskStatusChangeUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: TaskStatusChangeCreateOrConnectWithoutMemberInput | TaskStatusChangeCreateOrConnectWithoutMemberInput[]
+    upsert?: TaskStatusChangeUpsertWithWhereUniqueWithoutMemberInput | TaskStatusChangeUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: TaskStatusChangeCreateManyMemberInputEnvelope
+    set?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    disconnect?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    delete?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    connect?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    update?: TaskStatusChangeUpdateWithWhereUniqueWithoutMemberInput | TaskStatusChangeUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: TaskStatusChangeUpdateManyWithWhereWithoutMemberInput | TaskStatusChangeUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: TaskStatusChangeScalarWhereInput | TaskStatusChangeScalarWhereInput[]
+  }
+
   export type TaskUncheckedUpdateManyWithoutAssigneeNestedInput = {
     create?: XOR<TaskCreateWithoutAssigneeInput, TaskUncheckedCreateWithoutAssigneeInput> | TaskCreateWithoutAssigneeInput[] | TaskUncheckedCreateWithoutAssigneeInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutAssigneeInput | TaskCreateOrConnectWithoutAssigneeInput[]
@@ -68486,6 +70260,20 @@ export namespace Prisma {
     update?: ProjectMemberUpdateWithWhereUniqueWithoutMemberInput | ProjectMemberUpdateWithWhereUniqueWithoutMemberInput[]
     updateMany?: ProjectMemberUpdateManyWithWhereWithoutMemberInput | ProjectMemberUpdateManyWithWhereWithoutMemberInput[]
     deleteMany?: ProjectMemberScalarWhereInput | ProjectMemberScalarWhereInput[]
+  }
+
+  export type TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<TaskStatusChangeCreateWithoutMemberInput, TaskStatusChangeUncheckedCreateWithoutMemberInput> | TaskStatusChangeCreateWithoutMemberInput[] | TaskStatusChangeUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: TaskStatusChangeCreateOrConnectWithoutMemberInput | TaskStatusChangeCreateOrConnectWithoutMemberInput[]
+    upsert?: TaskStatusChangeUpsertWithWhereUniqueWithoutMemberInput | TaskStatusChangeUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: TaskStatusChangeCreateManyMemberInputEnvelope
+    set?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    disconnect?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    delete?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    connect?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    update?: TaskStatusChangeUpdateWithWhereUniqueWithoutMemberInput | TaskStatusChangeUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: TaskStatusChangeUpdateManyWithWhereWithoutMemberInput | TaskStatusChangeUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: TaskStatusChangeScalarWhereInput | TaskStatusChangeScalarWhereInput[]
   }
 
   export type WorkspaceCreateNestedOneWithoutRolesInput = {
@@ -70224,6 +72012,12 @@ export namespace Prisma {
     connect?: TaskStatusWhereUniqueInput
   }
 
+  export type TaskStatusCreateNestedOneWithoutLockedFromItemsInput = {
+    create?: XOR<TaskStatusCreateWithoutLockedFromItemsInput, TaskStatusUncheckedCreateWithoutLockedFromItemsInput>
+    connectOrCreate?: TaskStatusCreateOrConnectWithoutLockedFromItemsInput
+    connect?: TaskStatusWhereUniqueInput
+  }
+
   export type TaskChecklistItemCreateNestedManyWithoutTemplateItemInput = {
     create?: XOR<TaskChecklistItemCreateWithoutTemplateItemInput, TaskChecklistItemUncheckedCreateWithoutTemplateItemInput> | TaskChecklistItemCreateWithoutTemplateItemInput[] | TaskChecklistItemUncheckedCreateWithoutTemplateItemInput[]
     connectOrCreate?: TaskChecklistItemCreateOrConnectWithoutTemplateItemInput | TaskChecklistItemCreateOrConnectWithoutTemplateItemInput[]
@@ -70264,6 +72058,16 @@ export namespace Prisma {
     delete?: TaskStatusWhereInput | boolean
     connect?: TaskStatusWhereUniqueInput
     update?: XOR<XOR<TaskStatusUpdateToOneWithWhereWithoutRequiredBeforeItemsInput, TaskStatusUpdateWithoutRequiredBeforeItemsInput>, TaskStatusUncheckedUpdateWithoutRequiredBeforeItemsInput>
+  }
+
+  export type TaskStatusUpdateOneWithoutLockedFromItemsNestedInput = {
+    create?: XOR<TaskStatusCreateWithoutLockedFromItemsInput, TaskStatusUncheckedCreateWithoutLockedFromItemsInput>
+    connectOrCreate?: TaskStatusCreateOrConnectWithoutLockedFromItemsInput
+    upsert?: TaskStatusUpsertWithoutLockedFromItemsInput
+    disconnect?: TaskStatusWhereInput | boolean
+    delete?: TaskStatusWhereInput | boolean
+    connect?: TaskStatusWhereUniqueInput
+    update?: XOR<XOR<TaskStatusUpdateToOneWithWhereWithoutLockedFromItemsInput, TaskStatusUpdateWithoutLockedFromItemsInput>, TaskStatusUncheckedUpdateWithoutLockedFromItemsInput>
   }
 
   export type TaskChecklistItemUpdateManyWithoutTemplateItemNestedInput = {
@@ -70379,6 +72183,13 @@ export namespace Prisma {
     connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
   }
 
+  export type ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput = {
+    create?: XOR<ChecklistTemplateItemCreateWithoutLockedFromStageInput, ChecklistTemplateItemUncheckedCreateWithoutLockedFromStageInput> | ChecklistTemplateItemCreateWithoutLockedFromStageInput[] | ChecklistTemplateItemUncheckedCreateWithoutLockedFromStageInput[]
+    connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutLockedFromStageInput | ChecklistTemplateItemCreateOrConnectWithoutLockedFromStageInput[]
+    createMany?: ChecklistTemplateItemCreateManyLockedFromStageInputEnvelope
+    connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+  }
+
   export type TaskUncheckedCreateNestedManyWithoutStatusInput = {
     create?: XOR<TaskCreateWithoutStatusInput, TaskUncheckedCreateWithoutStatusInput> | TaskCreateWithoutStatusInput[] | TaskUncheckedCreateWithoutStatusInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutStatusInput | TaskCreateOrConnectWithoutStatusInput[]
@@ -70397,6 +72208,13 @@ export namespace Prisma {
     create?: XOR<ChecklistTemplateItemCreateWithoutRequiredBeforeStageInput, ChecklistTemplateItemUncheckedCreateWithoutRequiredBeforeStageInput> | ChecklistTemplateItemCreateWithoutRequiredBeforeStageInput[] | ChecklistTemplateItemUncheckedCreateWithoutRequiredBeforeStageInput[]
     connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutRequiredBeforeStageInput | ChecklistTemplateItemCreateOrConnectWithoutRequiredBeforeStageInput[]
     createMany?: ChecklistTemplateItemCreateManyRequiredBeforeStageInputEnvelope
+    connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+  }
+
+  export type ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput = {
+    create?: XOR<ChecklistTemplateItemCreateWithoutLockedFromStageInput, ChecklistTemplateItemUncheckedCreateWithoutLockedFromStageInput> | ChecklistTemplateItemCreateWithoutLockedFromStageInput[] | ChecklistTemplateItemUncheckedCreateWithoutLockedFromStageInput[]
+    connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutLockedFromStageInput | ChecklistTemplateItemCreateOrConnectWithoutLockedFromStageInput[]
+    createMany?: ChecklistTemplateItemCreateManyLockedFromStageInputEnvelope
     connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
   }
 
@@ -70450,6 +72268,20 @@ export namespace Prisma {
     deleteMany?: ChecklistTemplateItemScalarWhereInput | ChecklistTemplateItemScalarWhereInput[]
   }
 
+  export type ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput = {
+    create?: XOR<ChecklistTemplateItemCreateWithoutLockedFromStageInput, ChecklistTemplateItemUncheckedCreateWithoutLockedFromStageInput> | ChecklistTemplateItemCreateWithoutLockedFromStageInput[] | ChecklistTemplateItemUncheckedCreateWithoutLockedFromStageInput[]
+    connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutLockedFromStageInput | ChecklistTemplateItemCreateOrConnectWithoutLockedFromStageInput[]
+    upsert?: ChecklistTemplateItemUpsertWithWhereUniqueWithoutLockedFromStageInput | ChecklistTemplateItemUpsertWithWhereUniqueWithoutLockedFromStageInput[]
+    createMany?: ChecklistTemplateItemCreateManyLockedFromStageInputEnvelope
+    set?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    disconnect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    delete?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    update?: ChecklistTemplateItemUpdateWithWhereUniqueWithoutLockedFromStageInput | ChecklistTemplateItemUpdateWithWhereUniqueWithoutLockedFromStageInput[]
+    updateMany?: ChecklistTemplateItemUpdateManyWithWhereWithoutLockedFromStageInput | ChecklistTemplateItemUpdateManyWithWhereWithoutLockedFromStageInput[]
+    deleteMany?: ChecklistTemplateItemScalarWhereInput | ChecklistTemplateItemScalarWhereInput[]
+  }
+
   export type TaskUncheckedUpdateManyWithoutStatusNestedInput = {
     create?: XOR<TaskCreateWithoutStatusInput, TaskUncheckedCreateWithoutStatusInput> | TaskCreateWithoutStatusInput[] | TaskUncheckedCreateWithoutStatusInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutStatusInput | TaskCreateOrConnectWithoutStatusInput[]
@@ -70489,6 +72321,20 @@ export namespace Prisma {
     connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
     update?: ChecklistTemplateItemUpdateWithWhereUniqueWithoutRequiredBeforeStageInput | ChecklistTemplateItemUpdateWithWhereUniqueWithoutRequiredBeforeStageInput[]
     updateMany?: ChecklistTemplateItemUpdateManyWithWhereWithoutRequiredBeforeStageInput | ChecklistTemplateItemUpdateManyWithWhereWithoutRequiredBeforeStageInput[]
+    deleteMany?: ChecklistTemplateItemScalarWhereInput | ChecklistTemplateItemScalarWhereInput[]
+  }
+
+  export type ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput = {
+    create?: XOR<ChecklistTemplateItemCreateWithoutLockedFromStageInput, ChecklistTemplateItemUncheckedCreateWithoutLockedFromStageInput> | ChecklistTemplateItemCreateWithoutLockedFromStageInput[] | ChecklistTemplateItemUncheckedCreateWithoutLockedFromStageInput[]
+    connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutLockedFromStageInput | ChecklistTemplateItemCreateOrConnectWithoutLockedFromStageInput[]
+    upsert?: ChecklistTemplateItemUpsertWithWhereUniqueWithoutLockedFromStageInput | ChecklistTemplateItemUpsertWithWhereUniqueWithoutLockedFromStageInput[]
+    createMany?: ChecklistTemplateItemCreateManyLockedFromStageInputEnvelope
+    set?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    disconnect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    delete?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    update?: ChecklistTemplateItemUpdateWithWhereUniqueWithoutLockedFromStageInput | ChecklistTemplateItemUpdateWithWhereUniqueWithoutLockedFromStageInput[]
+    updateMany?: ChecklistTemplateItemUpdateManyWithWhereWithoutLockedFromStageInput | ChecklistTemplateItemUpdateManyWithWhereWithoutLockedFromStageInput[]
     deleteMany?: ChecklistTemplateItemScalarWhereInput | ChecklistTemplateItemScalarWhereInput[]
   }
 
@@ -70536,6 +72382,13 @@ export namespace Prisma {
     connect?: PublishItemWhereUniqueInput
   }
 
+  export type TaskStatusChangeCreateNestedManyWithoutTaskInput = {
+    create?: XOR<TaskStatusChangeCreateWithoutTaskInput, TaskStatusChangeUncheckedCreateWithoutTaskInput> | TaskStatusChangeCreateWithoutTaskInput[] | TaskStatusChangeUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: TaskStatusChangeCreateOrConnectWithoutTaskInput | TaskStatusChangeCreateOrConnectWithoutTaskInput[]
+    createMany?: TaskStatusChangeCreateManyTaskInputEnvelope
+    connect?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+  }
+
   export type TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput = {
     create?: XOR<TaskChecklistItemCreateWithoutTaskInput, TaskChecklistItemUncheckedCreateWithoutTaskInput> | TaskChecklistItemCreateWithoutTaskInput[] | TaskChecklistItemUncheckedCreateWithoutTaskInput[]
     connectOrCreate?: TaskChecklistItemCreateOrConnectWithoutTaskInput | TaskChecklistItemCreateOrConnectWithoutTaskInput[]
@@ -70554,6 +72407,13 @@ export namespace Prisma {
     create?: XOR<PublishItemCreateWithoutTaskInput, PublishItemUncheckedCreateWithoutTaskInput>
     connectOrCreate?: PublishItemCreateOrConnectWithoutTaskInput
     connect?: PublishItemWhereUniqueInput
+  }
+
+  export type TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput = {
+    create?: XOR<TaskStatusChangeCreateWithoutTaskInput, TaskStatusChangeUncheckedCreateWithoutTaskInput> | TaskStatusChangeCreateWithoutTaskInput[] | TaskStatusChangeUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: TaskStatusChangeCreateOrConnectWithoutTaskInput | TaskStatusChangeCreateOrConnectWithoutTaskInput[]
+    createMany?: TaskStatusChangeCreateManyTaskInputEnvelope
+    connect?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -70640,6 +72500,20 @@ export namespace Prisma {
     update?: XOR<XOR<PublishItemUpdateToOneWithWhereWithoutTaskInput, PublishItemUpdateWithoutTaskInput>, PublishItemUncheckedUpdateWithoutTaskInput>
   }
 
+  export type TaskStatusChangeUpdateManyWithoutTaskNestedInput = {
+    create?: XOR<TaskStatusChangeCreateWithoutTaskInput, TaskStatusChangeUncheckedCreateWithoutTaskInput> | TaskStatusChangeCreateWithoutTaskInput[] | TaskStatusChangeUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: TaskStatusChangeCreateOrConnectWithoutTaskInput | TaskStatusChangeCreateOrConnectWithoutTaskInput[]
+    upsert?: TaskStatusChangeUpsertWithWhereUniqueWithoutTaskInput | TaskStatusChangeUpsertWithWhereUniqueWithoutTaskInput[]
+    createMany?: TaskStatusChangeCreateManyTaskInputEnvelope
+    set?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    disconnect?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    delete?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    connect?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    update?: TaskStatusChangeUpdateWithWhereUniqueWithoutTaskInput | TaskStatusChangeUpdateWithWhereUniqueWithoutTaskInput[]
+    updateMany?: TaskStatusChangeUpdateManyWithWhereWithoutTaskInput | TaskStatusChangeUpdateManyWithWhereWithoutTaskInput[]
+    deleteMany?: TaskStatusChangeScalarWhereInput | TaskStatusChangeScalarWhereInput[]
+  }
+
   export type TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput = {
     create?: XOR<TaskChecklistItemCreateWithoutTaskInput, TaskChecklistItemUncheckedCreateWithoutTaskInput> | TaskChecklistItemCreateWithoutTaskInput[] | TaskChecklistItemUncheckedCreateWithoutTaskInput[]
     connectOrCreate?: TaskChecklistItemCreateOrConnectWithoutTaskInput | TaskChecklistItemCreateOrConnectWithoutTaskInput[]
@@ -70676,6 +72550,50 @@ export namespace Prisma {
     delete?: PublishItemWhereInput | boolean
     connect?: PublishItemWhereUniqueInput
     update?: XOR<XOR<PublishItemUpdateToOneWithWhereWithoutTaskInput, PublishItemUpdateWithoutTaskInput>, PublishItemUncheckedUpdateWithoutTaskInput>
+  }
+
+  export type TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput = {
+    create?: XOR<TaskStatusChangeCreateWithoutTaskInput, TaskStatusChangeUncheckedCreateWithoutTaskInput> | TaskStatusChangeCreateWithoutTaskInput[] | TaskStatusChangeUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: TaskStatusChangeCreateOrConnectWithoutTaskInput | TaskStatusChangeCreateOrConnectWithoutTaskInput[]
+    upsert?: TaskStatusChangeUpsertWithWhereUniqueWithoutTaskInput | TaskStatusChangeUpsertWithWhereUniqueWithoutTaskInput[]
+    createMany?: TaskStatusChangeCreateManyTaskInputEnvelope
+    set?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    disconnect?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    delete?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    connect?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+    update?: TaskStatusChangeUpdateWithWhereUniqueWithoutTaskInput | TaskStatusChangeUpdateWithWhereUniqueWithoutTaskInput[]
+    updateMany?: TaskStatusChangeUpdateManyWithWhereWithoutTaskInput | TaskStatusChangeUpdateManyWithWhereWithoutTaskInput[]
+    deleteMany?: TaskStatusChangeScalarWhereInput | TaskStatusChangeScalarWhereInput[]
+  }
+
+  export type TaskCreateNestedOneWithoutStatusChangesInput = {
+    create?: XOR<TaskCreateWithoutStatusChangesInput, TaskUncheckedCreateWithoutStatusChangesInput>
+    connectOrCreate?: TaskCreateOrConnectWithoutStatusChangesInput
+    connect?: TaskWhereUniqueInput
+  }
+
+  export type WorkspaceMemberCreateNestedOneWithoutStatusChangesInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutStatusChangesInput, WorkspaceMemberUncheckedCreateWithoutStatusChangesInput>
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutStatusChangesInput
+    connect?: WorkspaceMemberWhereUniqueInput
+  }
+
+  export type TaskUpdateOneRequiredWithoutStatusChangesNestedInput = {
+    create?: XOR<TaskCreateWithoutStatusChangesInput, TaskUncheckedCreateWithoutStatusChangesInput>
+    connectOrCreate?: TaskCreateOrConnectWithoutStatusChangesInput
+    upsert?: TaskUpsertWithoutStatusChangesInput
+    connect?: TaskWhereUniqueInput
+    update?: XOR<XOR<TaskUpdateToOneWithWhereWithoutStatusChangesInput, TaskUpdateWithoutStatusChangesInput>, TaskUncheckedUpdateWithoutStatusChangesInput>
+  }
+
+  export type WorkspaceMemberUpdateOneWithoutStatusChangesNestedInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutStatusChangesInput, WorkspaceMemberUncheckedCreateWithoutStatusChangesInput>
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutStatusChangesInput
+    upsert?: WorkspaceMemberUpsertWithoutStatusChangesInput
+    disconnect?: WorkspaceMemberWhereInput | boolean
+    delete?: WorkspaceMemberWhereInput | boolean
+    connect?: WorkspaceMemberWhereUniqueInput
+    update?: XOR<XOR<WorkspaceMemberUpdateToOneWithWhereWithoutStatusChangesInput, WorkspaceMemberUpdateWithoutStatusChangesInput>, WorkspaceMemberUncheckedUpdateWithoutStatusChangesInput>
   }
 
   export type TaskCreateNestedOneWithoutCommentsInput = {
@@ -71563,6 +73481,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutWorkspaceInput = {
@@ -71580,6 +73499,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutWorkspaceInput = {
@@ -72089,6 +74009,7 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
+    lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
   }
 
   export type TaskStatusUncheckedCreateWithoutWorkspaceInput = {
@@ -72100,6 +74021,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
+    lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
   }
 
   export type TaskStatusCreateOrConnectWithoutWorkspaceInput = {
@@ -73526,6 +75448,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: TaskCommentCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutAssigneeInput = {
@@ -73553,6 +75476,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutAssigneeInput = {
@@ -73726,6 +75650,40 @@ export namespace Prisma {
 
   export type ProjectMemberCreateManyMemberInputEnvelope = {
     data: ProjectMemberCreateManyMemberInput | ProjectMemberCreateManyMemberInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TaskStatusChangeCreateWithoutMemberInput = {
+    id?: string
+    action: string
+    fromStatusId?: string | null
+    fromStatusName?: string | null
+    toStatusId?: string | null
+    toStatusName?: string | null
+    durationMs?: number | null
+    createdAt?: Date | string
+    task: TaskCreateNestedOneWithoutStatusChangesInput
+  }
+
+  export type TaskStatusChangeUncheckedCreateWithoutMemberInput = {
+    id?: string
+    taskId: string
+    action: string
+    fromStatusId?: string | null
+    fromStatusName?: string | null
+    toStatusId?: string | null
+    toStatusName?: string | null
+    durationMs?: number | null
+    createdAt?: Date | string
+  }
+
+  export type TaskStatusChangeCreateOrConnectWithoutMemberInput = {
+    where: TaskStatusChangeWhereUniqueInput
+    create: XOR<TaskStatusChangeCreateWithoutMemberInput, TaskStatusChangeUncheckedCreateWithoutMemberInput>
+  }
+
+  export type TaskStatusChangeCreateManyMemberInputEnvelope = {
+    data: TaskStatusChangeCreateManyMemberInput | TaskStatusChangeCreateManyMemberInput[]
     skipDuplicates?: boolean
   }
 
@@ -74031,6 +75989,38 @@ export namespace Prisma {
     addedAt?: DateTimeFilter<"ProjectMember"> | Date | string
   }
 
+  export type TaskStatusChangeUpsertWithWhereUniqueWithoutMemberInput = {
+    where: TaskStatusChangeWhereUniqueInput
+    update: XOR<TaskStatusChangeUpdateWithoutMemberInput, TaskStatusChangeUncheckedUpdateWithoutMemberInput>
+    create: XOR<TaskStatusChangeCreateWithoutMemberInput, TaskStatusChangeUncheckedCreateWithoutMemberInput>
+  }
+
+  export type TaskStatusChangeUpdateWithWhereUniqueWithoutMemberInput = {
+    where: TaskStatusChangeWhereUniqueInput
+    data: XOR<TaskStatusChangeUpdateWithoutMemberInput, TaskStatusChangeUncheckedUpdateWithoutMemberInput>
+  }
+
+  export type TaskStatusChangeUpdateManyWithWhereWithoutMemberInput = {
+    where: TaskStatusChangeScalarWhereInput
+    data: XOR<TaskStatusChangeUpdateManyMutationInput, TaskStatusChangeUncheckedUpdateManyWithoutMemberInput>
+  }
+
+  export type TaskStatusChangeScalarWhereInput = {
+    AND?: TaskStatusChangeScalarWhereInput | TaskStatusChangeScalarWhereInput[]
+    OR?: TaskStatusChangeScalarWhereInput[]
+    NOT?: TaskStatusChangeScalarWhereInput | TaskStatusChangeScalarWhereInput[]
+    id?: StringFilter<"TaskStatusChange"> | string
+    taskId?: StringFilter<"TaskStatusChange"> | string
+    memberId?: StringNullableFilter<"TaskStatusChange"> | string | null
+    action?: StringFilter<"TaskStatusChange"> | string
+    fromStatusId?: StringNullableFilter<"TaskStatusChange"> | string | null
+    fromStatusName?: StringNullableFilter<"TaskStatusChange"> | string | null
+    toStatusId?: StringNullableFilter<"TaskStatusChange"> | string | null
+    toStatusName?: StringNullableFilter<"TaskStatusChange"> | string | null
+    durationMs?: IntNullableFilter<"TaskStatusChange"> | number | null
+    createdAt?: DateTimeFilter<"TaskStatusChange"> | Date | string
+  }
+
   export type WorkspaceCreateWithoutRolesInput = {
     id?: string
     name: string
@@ -74115,6 +76105,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutRoleInput = {
@@ -74132,6 +76123,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutRoleInput = {
@@ -75521,6 +77513,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: TaskCommentCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutServiceInput = {
@@ -75548,6 +77541,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutServiceInput = {
@@ -77589,6 +79583,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: TaskCommentCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutProjectInput = {
@@ -77616,6 +79611,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutProjectInput = {
@@ -78335,6 +80331,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutProjectMembershipsInput = {
@@ -78352,6 +80349,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutProjectMembershipsInput = {
@@ -78475,6 +80473,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutProjectMembershipsInput = {
@@ -78492,6 +80491,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type RoleUpsertWithoutProjectMembersInput = {
@@ -79058,6 +81058,7 @@ export namespace Prisma {
     order?: number
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
     requiredBeforeStage?: TaskStatusCreateNestedOneWithoutRequiredBeforeItemsInput
+    lockedFromStage?: TaskStatusCreateNestedOneWithoutLockedFromItemsInput
     taskItems?: TaskChecklistItemCreateNestedManyWithoutTemplateItemInput
   }
 
@@ -79074,6 +81075,7 @@ export namespace Prisma {
     phase?: string
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
   }
@@ -79216,6 +81218,7 @@ export namespace Prisma {
     phase?: StringFilter<"ChecklistTemplateItem"> | string
     visibleFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     requiredBeforeStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
+    lockedFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     order?: IntFilter<"ChecklistTemplateItem"> | number
   }
 
@@ -79273,6 +81276,7 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutTaskStatusesInput
     tasks?: TaskCreateNestedManyWithoutStatusInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
+    lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
   }
 
   export type TaskStatusUncheckedCreateWithoutVisibleFromItemsInput = {
@@ -79284,6 +81288,7 @@ export namespace Prisma {
     createdAt?: Date | string
     tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
+    lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
   }
 
   export type TaskStatusCreateOrConnectWithoutVisibleFromItemsInput = {
@@ -79300,6 +81305,7 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutTaskStatusesInput
     tasks?: TaskCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
+    lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
   }
 
   export type TaskStatusUncheckedCreateWithoutRequiredBeforeItemsInput = {
@@ -79311,11 +81317,41 @@ export namespace Prisma {
     createdAt?: Date | string
     tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
+    lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
   }
 
   export type TaskStatusCreateOrConnectWithoutRequiredBeforeItemsInput = {
     where: TaskStatusWhereUniqueInput
     create: XOR<TaskStatusCreateWithoutRequiredBeforeItemsInput, TaskStatusUncheckedCreateWithoutRequiredBeforeItemsInput>
+  }
+
+  export type TaskStatusCreateWithoutLockedFromItemsInput = {
+    id?: string
+    name: string
+    order: number
+    color?: string
+    createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutTaskStatusesInput
+    tasks?: TaskCreateNestedManyWithoutStatusInput
+    visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
+    requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
+  }
+
+  export type TaskStatusUncheckedCreateWithoutLockedFromItemsInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    order: number
+    color?: string
+    createdAt?: Date | string
+    tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
+    visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
+    requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
+  }
+
+  export type TaskStatusCreateOrConnectWithoutLockedFromItemsInput = {
+    where: TaskStatusWhereUniqueInput
+    create: XOR<TaskStatusCreateWithoutLockedFromItemsInput, TaskStatusUncheckedCreateWithoutLockedFromItemsInput>
   }
 
   export type TaskChecklistItemCreateWithoutTemplateItemInput = {
@@ -79331,6 +81367,7 @@ export namespace Prisma {
     phase?: string
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -79354,6 +81391,7 @@ export namespace Prisma {
     phase?: string
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -79427,6 +81465,7 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutTaskStatusesNestedInput
     tasks?: TaskUpdateManyWithoutStatusNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
+    lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutVisibleFromItemsInput = {
@@ -79438,6 +81477,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
+    lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
   }
 
   export type TaskStatusUpsertWithoutRequiredBeforeItemsInput = {
@@ -79460,6 +81500,7 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutTaskStatusesNestedInput
     tasks?: TaskUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
+    lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutRequiredBeforeItemsInput = {
@@ -79471,6 +81512,42 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
+    lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
+  }
+
+  export type TaskStatusUpsertWithoutLockedFromItemsInput = {
+    update: XOR<TaskStatusUpdateWithoutLockedFromItemsInput, TaskStatusUncheckedUpdateWithoutLockedFromItemsInput>
+    create: XOR<TaskStatusCreateWithoutLockedFromItemsInput, TaskStatusUncheckedCreateWithoutLockedFromItemsInput>
+    where?: TaskStatusWhereInput
+  }
+
+  export type TaskStatusUpdateToOneWithWhereWithoutLockedFromItemsInput = {
+    where?: TaskStatusWhereInput
+    data: XOR<TaskStatusUpdateWithoutLockedFromItemsInput, TaskStatusUncheckedUpdateWithoutLockedFromItemsInput>
+  }
+
+  export type TaskStatusUpdateWithoutLockedFromItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutTaskStatusesNestedInput
+    tasks?: TaskUpdateManyWithoutStatusNestedInput
+    visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
+    requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
+  }
+
+  export type TaskStatusUncheckedUpdateWithoutLockedFromItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
+    visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
+    requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
   }
 
   export type TaskChecklistItemUpsertWithWhereUniqueWithoutTemplateItemInput = {
@@ -79507,6 +81584,7 @@ export namespace Prisma {
     phase?: StringFilter<"TaskChecklistItem"> | string
     visibleFromStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     requiredBeforeStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
+    lockedFromStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     completed?: BoolFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableFilter<"TaskChecklistItem"> | string | null
@@ -79732,6 +81810,7 @@ export namespace Prisma {
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     comments?: TaskCommentCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutChecklistItemsInput = {
@@ -79759,6 +81838,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutChecklistItemsInput = {
@@ -79781,6 +81861,7 @@ export namespace Prisma {
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
     requiredBeforeStage?: TaskStatusCreateNestedOneWithoutRequiredBeforeItemsInput
+    lockedFromStage?: TaskStatusCreateNestedOneWithoutLockedFromItemsInput
   }
 
   export type ChecklistTemplateItemUncheckedCreateWithoutTaskItemsInput = {
@@ -79797,6 +81878,7 @@ export namespace Prisma {
     phase?: string
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     order?: number
   }
 
@@ -79841,6 +81923,7 @@ export namespace Prisma {
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     comments?: TaskCommentUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutChecklistItemsInput = {
@@ -79868,6 +81951,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type ChecklistTemplateItemUpsertWithoutTaskItemsInput = {
@@ -79896,6 +81980,7 @@ export namespace Prisma {
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
     requiredBeforeStage?: TaskStatusUpdateOneWithoutRequiredBeforeItemsNestedInput
+    lockedFromStage?: TaskStatusUpdateOneWithoutLockedFromItemsNestedInput
   }
 
   export type ChecklistTemplateItemUncheckedUpdateWithoutTaskItemsInput = {
@@ -79912,6 +81997,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -80009,6 +82095,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: TaskCommentCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutStatusInput = {
@@ -80036,6 +82123,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutStatusInput = {
@@ -80062,6 +82150,7 @@ export namespace Prisma {
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     requiredBeforeStage?: TaskStatusCreateNestedOneWithoutRequiredBeforeItemsInput
+    lockedFromStage?: TaskStatusCreateNestedOneWithoutLockedFromItemsInput
     taskItems?: TaskChecklistItemCreateNestedManyWithoutTemplateItemInput
   }
 
@@ -80078,6 +82167,7 @@ export namespace Prisma {
     mandatory?: boolean
     phase?: string
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
   }
@@ -80106,6 +82196,7 @@ export namespace Prisma {
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
+    lockedFromStage?: TaskStatusCreateNestedOneWithoutLockedFromItemsInput
     taskItems?: TaskChecklistItemCreateNestedManyWithoutTemplateItemInput
   }
 
@@ -80122,6 +82213,7 @@ export namespace Prisma {
     mandatory?: boolean
     phase?: string
     visibleFromStageId?: string | null
+    lockedFromStageId?: string | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
   }
@@ -80133,6 +82225,52 @@ export namespace Prisma {
 
   export type ChecklistTemplateItemCreateManyRequiredBeforeStageInputEnvelope = {
     data: ChecklistTemplateItemCreateManyRequiredBeforeStageInput | ChecklistTemplateItemCreateManyRequiredBeforeStageInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ChecklistTemplateItemCreateWithoutLockedFromStageInput = {
+    id?: string
+    name: string
+    type?: string
+    role?: string
+    options?: string | null
+    allowedFileTypes?: string | null
+    allowedFormats?: string | null
+    aspectRatio?: string | null
+    mandatory?: boolean
+    phase?: string
+    order?: number
+    template: ChecklistTemplateCreateNestedOneWithoutItemsInput
+    visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
+    requiredBeforeStage?: TaskStatusCreateNestedOneWithoutRequiredBeforeItemsInput
+    taskItems?: TaskChecklistItemCreateNestedManyWithoutTemplateItemInput
+  }
+
+  export type ChecklistTemplateItemUncheckedCreateWithoutLockedFromStageInput = {
+    id?: string
+    templateId: string
+    name: string
+    type?: string
+    role?: string
+    options?: string | null
+    allowedFileTypes?: string | null
+    allowedFormats?: string | null
+    aspectRatio?: string | null
+    mandatory?: boolean
+    phase?: string
+    visibleFromStageId?: string | null
+    requiredBeforeStageId?: string | null
+    order?: number
+    taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
+  }
+
+  export type ChecklistTemplateItemCreateOrConnectWithoutLockedFromStageInput = {
+    where: ChecklistTemplateItemWhereUniqueInput
+    create: XOR<ChecklistTemplateItemCreateWithoutLockedFromStageInput, ChecklistTemplateItemUncheckedCreateWithoutLockedFromStageInput>
+  }
+
+  export type ChecklistTemplateItemCreateManyLockedFromStageInputEnvelope = {
+    data: ChecklistTemplateItemCreateManyLockedFromStageInput | ChecklistTemplateItemCreateManyLockedFromStageInput[]
     skipDuplicates?: boolean
   }
 
@@ -80259,6 +82397,22 @@ export namespace Prisma {
     data: XOR<ChecklistTemplateItemUpdateManyMutationInput, ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageInput>
   }
 
+  export type ChecklistTemplateItemUpsertWithWhereUniqueWithoutLockedFromStageInput = {
+    where: ChecklistTemplateItemWhereUniqueInput
+    update: XOR<ChecklistTemplateItemUpdateWithoutLockedFromStageInput, ChecklistTemplateItemUncheckedUpdateWithoutLockedFromStageInput>
+    create: XOR<ChecklistTemplateItemCreateWithoutLockedFromStageInput, ChecklistTemplateItemUncheckedCreateWithoutLockedFromStageInput>
+  }
+
+  export type ChecklistTemplateItemUpdateWithWhereUniqueWithoutLockedFromStageInput = {
+    where: ChecklistTemplateItemWhereUniqueInput
+    data: XOR<ChecklistTemplateItemUpdateWithoutLockedFromStageInput, ChecklistTemplateItemUncheckedUpdateWithoutLockedFromStageInput>
+  }
+
+  export type ChecklistTemplateItemUpdateManyWithWhereWithoutLockedFromStageInput = {
+    where: ChecklistTemplateItemScalarWhereInput
+    data: XOR<ChecklistTemplateItemUpdateManyMutationInput, ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageInput>
+  }
+
   export type ProjectCreateWithoutTasksInput = {
     id?: string
     contactId?: string | null
@@ -80364,6 +82518,7 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutTaskStatusesInput
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
+    lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
   }
 
   export type TaskStatusUncheckedCreateWithoutTasksInput = {
@@ -80375,6 +82530,7 @@ export namespace Prisma {
     createdAt?: Date | string
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
+    lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
   }
 
   export type TaskStatusCreateOrConnectWithoutTasksInput = {
@@ -80397,6 +82553,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutAssignedTasksInput = {
@@ -80414,6 +82571,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutAssignedTasksInput = {
@@ -80434,6 +82592,7 @@ export namespace Prisma {
     phase?: string
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -80457,6 +82616,7 @@ export namespace Prisma {
     phase?: string
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -80532,6 +82692,40 @@ export namespace Prisma {
   export type PublishItemCreateOrConnectWithoutTaskInput = {
     where: PublishItemWhereUniqueInput
     create: XOR<PublishItemCreateWithoutTaskInput, PublishItemUncheckedCreateWithoutTaskInput>
+  }
+
+  export type TaskStatusChangeCreateWithoutTaskInput = {
+    id?: string
+    action: string
+    fromStatusId?: string | null
+    fromStatusName?: string | null
+    toStatusId?: string | null
+    toStatusName?: string | null
+    durationMs?: number | null
+    createdAt?: Date | string
+    member?: WorkspaceMemberCreateNestedOneWithoutStatusChangesInput
+  }
+
+  export type TaskStatusChangeUncheckedCreateWithoutTaskInput = {
+    id?: string
+    memberId?: string | null
+    action: string
+    fromStatusId?: string | null
+    fromStatusName?: string | null
+    toStatusId?: string | null
+    toStatusName?: string | null
+    durationMs?: number | null
+    createdAt?: Date | string
+  }
+
+  export type TaskStatusChangeCreateOrConnectWithoutTaskInput = {
+    where: TaskStatusChangeWhereUniqueInput
+    create: XOR<TaskStatusChangeCreateWithoutTaskInput, TaskStatusChangeUncheckedCreateWithoutTaskInput>
+  }
+
+  export type TaskStatusChangeCreateManyTaskInputEnvelope = {
+    data: TaskStatusChangeCreateManyTaskInput | TaskStatusChangeCreateManyTaskInput[]
+    skipDuplicates?: boolean
   }
 
   export type ProjectUpsertWithoutTasksInput = {
@@ -80662,6 +82856,7 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutTaskStatusesNestedInput
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
+    lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutTasksInput = {
@@ -80673,6 +82868,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
+    lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
   }
 
   export type WorkspaceMemberUpsertWithoutAssignedTasksInput = {
@@ -80701,6 +82897,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutAssignedTasksInput = {
@@ -80718,6 +82915,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type TaskChecklistItemUpsertWithWhereUniqueWithoutTaskInput = {
@@ -80789,6 +82987,238 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TaskStatusChangeUpsertWithWhereUniqueWithoutTaskInput = {
+    where: TaskStatusChangeWhereUniqueInput
+    update: XOR<TaskStatusChangeUpdateWithoutTaskInput, TaskStatusChangeUncheckedUpdateWithoutTaskInput>
+    create: XOR<TaskStatusChangeCreateWithoutTaskInput, TaskStatusChangeUncheckedCreateWithoutTaskInput>
+  }
+
+  export type TaskStatusChangeUpdateWithWhereUniqueWithoutTaskInput = {
+    where: TaskStatusChangeWhereUniqueInput
+    data: XOR<TaskStatusChangeUpdateWithoutTaskInput, TaskStatusChangeUncheckedUpdateWithoutTaskInput>
+  }
+
+  export type TaskStatusChangeUpdateManyWithWhereWithoutTaskInput = {
+    where: TaskStatusChangeScalarWhereInput
+    data: XOR<TaskStatusChangeUpdateManyMutationInput, TaskStatusChangeUncheckedUpdateManyWithoutTaskInput>
+  }
+
+  export type TaskCreateWithoutStatusChangesInput = {
+    id?: string
+    taskNumber?: number
+    title: string
+    description?: string | null
+    billable?: boolean
+    price?: Decimal | DecimalJsLike | number | string | null
+    priority?: number | null
+    estimateMin?: number | null
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
+    rejectionCount?: number
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    project: ProjectCreateNestedOneWithoutTasksInput
+    service?: ServiceCreateNestedOneWithoutTasksInput
+    status?: TaskStatusCreateNestedOneWithoutTasksInput
+    assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
+    checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
+    comments?: TaskCommentCreateNestedManyWithoutTaskInput
+    publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+  }
+
+  export type TaskUncheckedCreateWithoutStatusChangesInput = {
+    id?: string
+    projectId: string
+    taskNumber?: number
+    serviceId?: string | null
+    statusId?: string | null
+    assigneeId?: string | null
+    title: string
+    description?: string | null
+    billable?: boolean
+    price?: Decimal | DecimalJsLike | number | string | null
+    priority?: number | null
+    estimateMin?: number | null
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
+    rejectionCount?: number
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
+    comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
+    publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+  }
+
+  export type TaskCreateOrConnectWithoutStatusChangesInput = {
+    where: TaskWhereUniqueInput
+    create: XOR<TaskCreateWithoutStatusChangesInput, TaskUncheckedCreateWithoutStatusChangesInput>
+  }
+
+  export type WorkspaceMemberCreateWithoutStatusChangesInput = {
+    id?: string
+    userId: string
+    email: string
+    name?: string | null
+    type?: $Enums.MemberType
+    joinedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutMembersInput
+    role?: RoleCreateNestedOneWithoutMembersInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    comments?: TaskCommentCreateNestedManyWithoutAuthorInput
+    mentionedIn?: CommentMentionCreateNestedManyWithoutMemberInput
+    notifications?: NotificationCreateNestedManyWithoutRecipientInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
+    scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
+    projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
+  }
+
+  export type WorkspaceMemberUncheckedCreateWithoutStatusChangesInput = {
+    id?: string
+    workspaceId: string
+    userId: string
+    email: string
+    name?: string | null
+    type?: $Enums.MemberType
+    roleId?: string | null
+    joinedAt?: Date | string
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    comments?: TaskCommentUncheckedCreateNestedManyWithoutAuthorInput
+    mentionedIn?: CommentMentionUncheckedCreateNestedManyWithoutMemberInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
+    scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
+    projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
+  }
+
+  export type WorkspaceMemberCreateOrConnectWithoutStatusChangesInput = {
+    where: WorkspaceMemberWhereUniqueInput
+    create: XOR<WorkspaceMemberCreateWithoutStatusChangesInput, WorkspaceMemberUncheckedCreateWithoutStatusChangesInput>
+  }
+
+  export type TaskUpsertWithoutStatusChangesInput = {
+    update: XOR<TaskUpdateWithoutStatusChangesInput, TaskUncheckedUpdateWithoutStatusChangesInput>
+    create: XOR<TaskCreateWithoutStatusChangesInput, TaskUncheckedCreateWithoutStatusChangesInput>
+    where?: TaskWhereInput
+  }
+
+  export type TaskUpdateToOneWithWhereWithoutStatusChangesInput = {
+    where?: TaskWhereInput
+    data: XOR<TaskUpdateWithoutStatusChangesInput, TaskUncheckedUpdateWithoutStatusChangesInput>
+  }
+
+  export type TaskUpdateWithoutStatusChangesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskNumber?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionCount?: IntFieldUpdateOperationsInput | number
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    service?: ServiceUpdateOneWithoutTasksNestedInput
+    status?: TaskStatusUpdateOneWithoutTasksNestedInput
+    assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
+    checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
+    comments?: TaskCommentUpdateManyWithoutTaskNestedInput
+    publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutStatusChangesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    taskNumber?: IntFieldUpdateOperationsInput | number
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    statusId?: NullableStringFieldUpdateOperationsInput | string | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionCount?: IntFieldUpdateOperationsInput | number
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
+    comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
+    publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+  }
+
+  export type WorkspaceMemberUpsertWithoutStatusChangesInput = {
+    update: XOR<WorkspaceMemberUpdateWithoutStatusChangesInput, WorkspaceMemberUncheckedUpdateWithoutStatusChangesInput>
+    create: XOR<WorkspaceMemberCreateWithoutStatusChangesInput, WorkspaceMemberUncheckedCreateWithoutStatusChangesInput>
+    where?: WorkspaceMemberWhereInput
+  }
+
+  export type WorkspaceMemberUpdateToOneWithWhereWithoutStatusChangesInput = {
+    where?: WorkspaceMemberWhereInput
+    data: XOR<WorkspaceMemberUpdateWithoutStatusChangesInput, WorkspaceMemberUncheckedUpdateWithoutStatusChangesInput>
+  }
+
+  export type WorkspaceMemberUpdateWithoutStatusChangesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
+    role?: RoleUpdateOneWithoutMembersNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    comments?: TaskCommentUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: CommentMentionUpdateManyWithoutMemberNestedInput
+    notifications?: NotificationUpdateManyWithoutRecipientNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
+    scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
+    projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
+  }
+
+  export type WorkspaceMemberUncheckedUpdateWithoutStatusChangesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    comments?: TaskCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: CommentMentionUncheckedUpdateManyWithoutMemberNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
+    scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
+    projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
+  }
+
   export type TaskCreateWithoutCommentsInput = {
     id?: string
     taskNumber?: number
@@ -80814,6 +83244,7 @@ export namespace Prisma {
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutCommentsInput = {
@@ -80841,6 +83272,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutCommentsInput = {
@@ -80863,6 +83295,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutCommentsInput = {
@@ -80880,6 +83313,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutCommentsInput = {
@@ -80943,6 +83377,7 @@ export namespace Prisma {
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutCommentsInput = {
@@ -80970,6 +83405,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type WorkspaceMemberUpsertWithoutCommentsInput = {
@@ -80998,6 +83434,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutCommentsInput = {
@@ -81015,6 +83452,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type CommentMentionUpsertWithWhereUniqueWithoutCommentInput = {
@@ -81071,6 +83509,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutMentionedInInput = {
@@ -81088,6 +83527,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutMentionedInInput = {
@@ -81150,6 +83590,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutMentionedInInput = {
@@ -81167,6 +83608,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberCreateWithoutNotificationsInput = {
@@ -81184,6 +83626,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutNotificationsInput = {
@@ -81201,6 +83644,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutNotificationsInput = {
@@ -81234,6 +83678,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutNotificationsInput = {
@@ -81251,6 +83696,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberCreateWithoutPushSubscriptionsInput = {
@@ -81268,6 +83714,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutRecipientInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutPushSubscriptionsInput = {
@@ -81285,6 +83732,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutPushSubscriptionsInput = {
@@ -81318,6 +83766,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutRecipientNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutPushSubscriptionsInput = {
@@ -81335,6 +83784,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceCreateWithoutInvoicesInput = {
@@ -83158,6 +85608,7 @@ export namespace Prisma {
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: TaskCommentCreateNestedManyWithoutTaskInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutPublishItemInput = {
@@ -83185,6 +85636,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutPublishItemInput = {
@@ -83207,6 +85659,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutScheduledItemsInput = {
@@ -83224,6 +85677,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutScheduledItemsInput = {
@@ -83409,6 +85863,7 @@ export namespace Prisma {
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUpdateManyWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutPublishItemInput = {
@@ -83436,6 +85891,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type WorkspaceMemberUpsertWithoutScheduledItemsInput = {
@@ -83464,6 +85920,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutScheduledItemsInput = {
@@ -83481,6 +85938,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberCreateManyWorkspaceInput = {
@@ -83767,6 +86225,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutWorkspaceInput = {
@@ -83784,6 +86243,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -84348,6 +86808,7 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
+    lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutWorkspaceInput = {
@@ -84359,6 +86820,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
+    lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
   }
 
   export type TaskStatusUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -84710,6 +87172,18 @@ export namespace Prisma {
     addedAt?: Date | string
   }
 
+  export type TaskStatusChangeCreateManyMemberInput = {
+    id?: string
+    taskId: string
+    action: string
+    fromStatusId?: string | null
+    fromStatusName?: string | null
+    toStatusId?: string | null
+    toStatusName?: string | null
+    durationMs?: number | null
+    createdAt?: Date | string
+  }
+
   export type TaskUpdateWithoutAssigneeInput = {
     id?: StringFieldUpdateOperationsInput | string
     taskNumber?: IntFieldUpdateOperationsInput | number
@@ -84735,6 +87209,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutAssigneeInput = {
@@ -84762,6 +87237,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateManyWithoutAssigneeInput = {
@@ -84943,6 +87419,42 @@ export namespace Prisma {
     addedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TaskStatusChangeUpdateWithoutMemberInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    fromStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    fromStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    task?: TaskUpdateOneRequiredWithoutStatusChangesNestedInput
+  }
+
+  export type TaskStatusChangeUncheckedUpdateWithoutMemberInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskId?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    fromStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    fromStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskStatusChangeUncheckedUpdateManyWithoutMemberInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskId?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    fromStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    fromStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type WorkspaceMemberCreateManyRoleInput = {
     id?: string
     workspaceId: string
@@ -84975,6 +87487,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutRoleInput = {
@@ -84992,6 +87505,7 @@ export namespace Prisma {
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateManyWithoutRoleInput = {
@@ -85632,6 +88146,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutServiceInput = {
@@ -85659,6 +88174,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateManyWithoutServiceInput = {
@@ -86227,6 +88743,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutProjectInput = {
@@ -86254,6 +88771,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateManyWithoutProjectInput = {
@@ -86600,6 +89118,7 @@ export namespace Prisma {
     phase?: string
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     order?: number
   }
 
@@ -86622,6 +89141,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
     requiredBeforeStage?: TaskStatusUpdateOneWithoutRequiredBeforeItemsNestedInput
+    lockedFromStage?: TaskStatusUpdateOneWithoutLockedFromItemsNestedInput
     taskItems?: TaskChecklistItemUpdateManyWithoutTemplateItemNestedInput
   }
 
@@ -86638,6 +89158,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
@@ -86655,6 +89176,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -86687,6 +89209,7 @@ export namespace Prisma {
     phase?: string
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -86708,6 +89231,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -86731,6 +89255,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -86753,6 +89278,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -86798,6 +89324,7 @@ export namespace Prisma {
     mandatory?: boolean
     phase?: string
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     order?: number
   }
 
@@ -86814,6 +89341,24 @@ export namespace Prisma {
     mandatory?: boolean
     phase?: string
     visibleFromStageId?: string | null
+    lockedFromStageId?: string | null
+    order?: number
+  }
+
+  export type ChecklistTemplateItemCreateManyLockedFromStageInput = {
+    id?: string
+    templateId: string
+    name: string
+    type?: string
+    role?: string
+    options?: string | null
+    allowedFileTypes?: string | null
+    allowedFormats?: string | null
+    aspectRatio?: string | null
+    mandatory?: boolean
+    phase?: string
+    visibleFromStageId?: string | null
+    requiredBeforeStageId?: string | null
     order?: number
   }
 
@@ -86842,6 +89387,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutStatusInput = {
@@ -86869,6 +89415,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateManyWithoutStatusInput = {
@@ -86909,6 +89456,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     requiredBeforeStage?: TaskStatusUpdateOneWithoutRequiredBeforeItemsNestedInput
+    lockedFromStage?: TaskStatusUpdateOneWithoutLockedFromItemsNestedInput
     taskItems?: TaskChecklistItemUpdateManyWithoutTemplateItemNestedInput
   }
 
@@ -86925,6 +89473,7 @@ export namespace Prisma {
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
@@ -86942,6 +89491,7 @@ export namespace Prisma {
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -86959,6 +89509,7 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
+    lockedFromStage?: TaskStatusUpdateOneWithoutLockedFromItemsNestedInput
     taskItems?: TaskChecklistItemUpdateManyWithoutTemplateItemNestedInput
   }
 
@@ -86975,6 +89526,7 @@ export namespace Prisma {
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
@@ -86992,6 +89544,60 @@ export namespace Prisma {
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ChecklistTemplateItemUpdateWithoutLockedFromStageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    options?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFileTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFormats?: NullableStringFieldUpdateOperationsInput | string | null
+    aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
+    mandatory?: BoolFieldUpdateOperationsInput | boolean
+    phase?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
+    visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
+    requiredBeforeStage?: TaskStatusUpdateOneWithoutRequiredBeforeItemsNestedInput
+    taskItems?: TaskChecklistItemUpdateManyWithoutTemplateItemNestedInput
+  }
+
+  export type ChecklistTemplateItemUncheckedUpdateWithoutLockedFromStageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    options?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFileTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFormats?: NullableStringFieldUpdateOperationsInput | string | null
+    aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
+    mandatory?: BoolFieldUpdateOperationsInput | boolean
+    phase?: StringFieldUpdateOperationsInput | string
+    visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: IntFieldUpdateOperationsInput | number
+    taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
+  }
+
+  export type ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    options?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFileTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFormats?: NullableStringFieldUpdateOperationsInput | string | null
+    aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
+    mandatory?: BoolFieldUpdateOperationsInput | boolean
+    phase?: StringFieldUpdateOperationsInput | string
+    visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -87009,6 +89615,7 @@ export namespace Prisma {
     phase?: string
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -87025,6 +89632,18 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type TaskStatusChangeCreateManyTaskInput = {
+    id?: string
+    memberId?: string | null
+    action: string
+    fromStatusId?: string | null
+    fromStatusName?: string | null
+    toStatusId?: string | null
+    toStatusName?: string | null
+    durationMs?: number | null
+    createdAt?: Date | string
+  }
+
   export type TaskChecklistItemUpdateWithoutTaskInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -87038,6 +89657,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -87061,6 +89681,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -87083,6 +89704,7 @@ export namespace Prisma {
     phase?: StringFieldUpdateOperationsInput | string
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -87115,6 +89737,42 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskStatusChangeUpdateWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    fromStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    fromStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    member?: WorkspaceMemberUpdateOneWithoutStatusChangesNestedInput
+  }
+
+  export type TaskStatusChangeUncheckedUpdateWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    memberId?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    fromStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    fromStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskStatusChangeUncheckedUpdateManyWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    memberId?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    fromStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    fromStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusId?: NullableStringFieldUpdateOperationsInput | string | null
+    toStatusName?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CommentMentionCreateManyCommentInput = {

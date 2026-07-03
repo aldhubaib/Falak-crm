@@ -12,20 +12,44 @@ export async function POST(
   const { id, partNumber } = await params;
   const body = await request.json();
   const { etag } = body as { etag: string };
+  const pn = parseInt(partNumber, 10);
 
-  const attachment = await db.attachment.findUnique({ where: { id } });
-  if (!attachment) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!etag) return NextResponse.json({ error: "Missing etag" }, { status: 400 });
 
-  const existing = Array.isArray(attachment.uploadedParts) ? attachment.uploadedParts : [];
-  const parts = [...(existing as { PartNumber: number; ETag: string }[]), { PartNumber: parseInt(partNumber), ETag: etag }];
+  type Part = { PartNumber: number; ETag: string };
 
-  await db.attachment.update({
-    where: { id },
-    data: { uploadedParts: parts as unknown as import("@/generated/prisma").Prisma.InputJsonValue },
+  // Register this part's ETag atomically. Concurrent part uploads (up to
+  // MAX_CONCURRENT_PARTS on the client) would otherwise race on this JSON
+  // array and silently drop a part via a lost update — producing a corrupt,
+  // truncated file. A row-level lock (SELECT ... FOR UPDATE) serializes the
+  // read-modify-write so every part is recorded exactly once.
+  let total = 1;
+  const merged = await db.$transaction(async (tx) => {
+    const rows = await tx.$queryRaw<{ uploadedParts: unknown; totalParts: number }[]>`
+      SELECT "uploadedParts", "totalParts" FROM "Attachment" WHERE id = ${id} FOR UPDATE
+    `;
+    if (rows.length === 0) return null;
+
+    total = rows[0].totalParts;
+    const existing = Array.isArray(rows[0].uploadedParts)
+      ? (rows[0].uploadedParts as Part[])
+      : [];
+    // Drop any prior entry for this part (retries) so the latest ETag wins and
+    // we never store duplicate part numbers.
+    const next = existing.filter((p) => p.PartNumber !== pn);
+    next.push({ PartNumber: pn, ETag: etag });
+
+    await tx.attachment.update({
+      where: { id },
+      data: {
+        uploadedParts:
+          next as unknown as import("@/generated/prisma").Prisma.InputJsonValue,
+      },
+    });
+    return next;
   });
 
-  return NextResponse.json({
-    uploaded: parts.length,
-    total: attachment.totalParts,
-  });
+  if (!merged) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  return NextResponse.json({ uploaded: merged.length, total });
 }

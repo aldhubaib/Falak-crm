@@ -35,7 +35,7 @@ class UploadManager {
   }
 
   private notify() {
-    this.snapshot = [...this.queue];
+    this.snapshot = this.queue.map((item) => ({ ...item }));
     this.listeners.forEach((fn) => fn());
     this.updateBeforeUnload();
   }
@@ -182,6 +182,33 @@ class UploadManager {
     }
   }
 
+  // Durably register a finished part's ETag with the server, retrying on
+  // failure. A dropped registration would cause the final assembly to omit the
+  // part and produce a corrupt, truncated file — so this MUST succeed before we
+  // consider the part done.
+  private async registerPart(
+    attachmentId: string,
+    partNumber: number,
+    etag: string
+  ): Promise<void> {
+    let lastErr: unknown;
+    for (let attempt = 0; attempt < 4; attempt++) {
+      try {
+        const res = await fetch(`/api/files/${attachmentId}/parts/${partNumber}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ etag }),
+        });
+        if (!res.ok) throw new Error(`Register part ${partNumber} failed: ${res.status}`);
+        return;
+      } catch (e) {
+        lastErr = e;
+        await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
+      }
+    }
+    throw lastErr;
+  }
+
   // --- Single-part direct upload via presigned URL ---
 
   private uploadSingleDirect(item: UploadItem, presignedUrl: string): Promise<void> {
@@ -200,12 +227,7 @@ class UploadManager {
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           const etag = xhr.getResponseHeader("ETag") || '"single"';
-          fetch(`/api/files/${item.attachmentId}/parts/1`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ etag }),
-          }).catch(() => {});
-          resolve();
+          this.registerPart(item.attachmentId!, 1, etag).then(resolve).catch(reject);
         } else {
           reject(new Error(`Upload failed: ${xhr.status}`));
         }
@@ -252,15 +274,15 @@ class UploadManager {
         xhr.onload = () => {
           if (xhr.status >= 200 && xhr.status < 300) {
             const etag = xhr.getResponseHeader("ETag") || `"part-${part.number}"`;
-            fetch(`/api/files/${item.attachmentId}/parts/${part.number}`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ etag }),
-            }).catch(() => {});
-            completedParts++;
-            item.progress = 5 + Math.round((completedParts / totalParts) * 85);
-            this.notify();
-            resolve();
+            // Only count the part as done once its ETag is durably registered.
+            this.registerPart(item.attachmentId!, part.number, etag)
+              .then(() => {
+                completedParts++;
+                item.progress = 5 + Math.round((completedParts / totalParts) * 85);
+                this.notify();
+                resolve();
+              })
+              .catch(reject);
           } else {
             reject(new Error(`Part ${part.number} failed: ${xhr.status}`));
           }
@@ -338,7 +360,11 @@ class UploadManager {
             item.progress = 90;
             item.status = "completing";
             this.notify();
-            await fetch(`/api/files/${attachmentId}/complete`, { method: "POST" });
+            const completeRes = await fetch(`/api/files/${attachmentId}/complete`, { method: "POST" });
+            if (!completeRes.ok) {
+              const err = await completeRes.json().catch(() => ({}));
+              throw new Error(err.error || `Failed to finalize upload: ${completeRes.status}`);
+            }
             await this.finalizeTarget(item);
             item.progress = 100;
             item.status = "done";
@@ -431,8 +457,14 @@ class UploadManager {
       item.status = "completing";
       this.notify();
 
-      // Finalize
-      await fetch(`/api/files/${attachmentId}/complete`, { method: "POST" });
+      // Finalize — a non-OK response means the server refused to assemble the
+      // file (e.g. a missing part). Surface it as an error so the upload can be
+      // retried/resumed instead of silently binding a corrupt object.
+      const completeRes = await fetch(`/api/files/${attachmentId}/complete`, { method: "POST" });
+      if (!completeRes.ok) {
+        const err = await completeRes.json().catch(() => ({}));
+        throw new Error(err.error || `Failed to finalize upload: ${completeRes.status}`);
+      }
       await this.finalizeTarget(item);
 
       item.progress = 100;

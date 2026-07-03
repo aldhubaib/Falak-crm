@@ -13,6 +13,7 @@ export type TTField = {
   aspectRatio: string | null;
   visibleFromStageId: string | null;
   requiredBeforeStageId: string | null;
+  lockedFromStageId: string | null;
 };
 
 export type TaskTypeVM = {
@@ -36,4 +37,5 @@ export type FieldPatch = {
   aspectRatio?: string | null;
   visibleFromStageId?: string | null;
   requiredBeforeStageId?: string | null;
+  lockedFromStageId?: string | null;
 };

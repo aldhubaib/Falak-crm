@@ -95,6 +95,7 @@ model WorkspaceMember {
   pushSubscriptions  PushSubscription[]
   scheduledItems     PublishItem[]      @relation("PublishScheduler")
   projectMemberships ProjectMember[]    @relation("ProjectTeam")
+  statusChanges      TaskStatusChange[] @relation("StatusChangeMember")
 
   @@unique([workspaceId, userId])
   @@index([userId])
@@ -479,11 +480,13 @@ model ChecklistTemplateItem {
   phase                 String  @default("create") // "create" or "delivery"
   visibleFromStageId    String?
   requiredBeforeStageId String?
+  lockedFromStageId     String?
   order                 Int     @default(0)
 
   template            ChecklistTemplate   @relation(fields: [templateId], references: [id], onDelete: Cascade)
   visibleFromStage    TaskStatus?         @relation("VisibleFromStage", fields: [visibleFromStageId], references: [id], onDelete: SetNull)
   requiredBeforeStage TaskStatus?         @relation("RequiredBeforeStage", fields: [requiredBeforeStageId], references: [id], onDelete: SetNull)
+  lockedFromStage     TaskStatus?         @relation("LockedFromStage", fields: [lockedFromStageId], references: [id], onDelete: SetNull)
   taskItems           TaskChecklistItem[]
 
   @@index([templateId])
@@ -515,6 +518,7 @@ model TaskChecklistItem {
   phase                 String    @default("create") // "create" or "delivery"
   visibleFromStageId    String?
   requiredBeforeStageId String?
+  lockedFromStageId     String?
   completed             Boolean   @default(false)
   attachmentId          String?
   textValue             String?
@@ -542,6 +546,7 @@ model TaskStatus {
   tasks               Task[]
   visibleFromItems    ChecklistTemplateItem[] @relation("VisibleFromStage")
   requiredBeforeItems ChecklistTemplateItem[] @relation("RequiredBeforeStage")
+  lockedFromItems     ChecklistTemplateItem[] @relation("LockedFromStage")
 
   @@unique([workspaceId, order])
 }
@@ -578,9 +583,29 @@ model Task {
   comments       TaskComment[]
   publishItem    PublishItem?
 
+  statusChanges TaskStatusChange[]
+
   @@index([projectId, statusId])
   @@index([projectId, order])
   @@index([projectId, deletedAt])
+}
+
+model TaskStatusChange {
+  id             String   @id @default(cuid())
+  taskId         String
+  memberId       String?
+  action         String // "created", "status_change"
+  fromStatusId   String?
+  fromStatusName String?
+  toStatusId     String?
+  toStatusName   String?
+  durationMs     Int? // time spent in fromStatus before this move
+  createdAt      DateTime @default(now())
+
+  task   Task             @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  member WorkspaceMember? @relation("StatusChangeMember", fields: [memberId], references: [id], onDelete: SetNull)
+
+  @@index([taskId, createdAt])
 }
 
 // ─── Comments ─────────────────────────────────────────────────────────────────

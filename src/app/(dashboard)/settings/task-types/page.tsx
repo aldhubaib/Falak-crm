@@ -34,6 +34,7 @@ type RawItem = {
   aspectRatio: string | null;
   visibleFromStageId: string | null;
   requiredBeforeStageId: string | null;
+  lockedFromStageId: string | null;
 };
 
 function toField(i: RawItem): TTField {
@@ -50,6 +51,7 @@ function toField(i: RawItem): TTField {
     aspectRatio: i.aspectRatio,
     visibleFromStageId: i.visibleFromStageId,
     requiredBeforeStageId: i.requiredBeforeStageId,
+    lockedFromStageId: i.lockedFromStageId,
   };
 }
 

@@ -15,6 +15,7 @@ import { PriorityPicker } from "@/components/projects/priority-picker";
 import {
   DynamicField,
   serializeYesNo,
+  isFieldFilled,
   type CreateField,
   type FieldAnswer,
 } from "@/components/projects/dynamic-field";
@@ -42,7 +43,12 @@ export function NewTaskClient({
   const { execute, loading } = useAction(createFullTask);
 
   const type = taskTypes.find((t) => t.id === typeId);
-  const canSave = !!typeId && title.trim().length > 0 && !!defaultStatusId;
+  const mandatoryFilled =
+    type?.fields
+      .filter((f) => f.mandatory)
+      .every((f) => isFieldFilled(f, answers[f.id])) ?? true;
+  const canSave =
+    !!typeId && title.trim().length > 0 && !!defaultStatusId && mandatoryFilled;
 
   const create = async () => {
     if (!canSave) return;
@@ -108,7 +114,7 @@ export function NewTaskClient({
             <span className="font-semibold text-foreground">New Task</span>
           </div>
         }
-        actions={<SaveButton onClick={create} disabled={!canSave || loading} />}
+        actions={<SaveButton onClick={create} disabled={!canSave || loading} ready={canSave && !loading} />}
       />
       <main className="min-h-0 flex-1 overflow-y-auto">
         <PageContainer className="mx-auto max-w-3xl">

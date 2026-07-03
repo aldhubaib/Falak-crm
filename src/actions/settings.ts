@@ -216,6 +216,7 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
   const aspectRatio = (formData.get("aspectRatio") as string)?.trim() || null;
   const visibleFromStageId = (formData.get("visibleFromStageId") as string) || null;
   const requiredBeforeStageId = (formData.get("requiredBeforeStageId") as string) || null;
+  const lockedFromStageId = (formData.get("lockedFromStageId") as string) || null;
   const mandatory = formData.get("mandatory") === "true";
   const phase = (formData.get("phase") as string) || "create";
   const options = (formData.get("options") as string)?.trim() || null;
@@ -239,6 +240,7 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
       phase,
       visibleFromStageId,
       requiredBeforeStageId,
+      lockedFromStageId,
       order: (last?.order ?? 0) + 1,
     },
   });
@@ -253,12 +255,12 @@ export async function deleteChecklistTemplateItem(id: string) {
 
 export async function updateChecklistTemplateItem(
   id: string,
-  data: { name?: string; type?: string; role?: string; options?: string | null; allowedFileTypes?: string | null; allowedFormats?: string | null; aspectRatio?: string | null; mandatory?: boolean; phase?: string; visibleFromStageId?: string | null; requiredBeforeStageId?: string | null }
+  data: { name?: string; type?: string; role?: string; options?: string | null; allowedFileTypes?: string | null; allowedFormats?: string | null; aspectRatio?: string | null; mandatory?: boolean; phase?: string; visibleFromStageId?: string | null; requiredBeforeStageId?: string | null; lockedFromStageId?: string | null }
 ) {
   const { member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");
 
-  const { visibleFromStageId, requiredBeforeStageId, ...rest } = data;
+  const { visibleFromStageId, requiredBeforeStageId, lockedFromStageId, ...rest } = data;
 
   const prismaData: Record<string, unknown> = { ...rest };
 
@@ -270,6 +272,11 @@ export async function updateChecklistTemplateItem(
   if (requiredBeforeStageId !== undefined) {
     prismaData.requiredBeforeStage = requiredBeforeStageId
       ? { connect: { id: requiredBeforeStageId } }
+      : { disconnect: true };
+  }
+  if (lockedFromStageId !== undefined) {
+    prismaData.lockedFromStage = lockedFromStageId
+      ? { connect: { id: lockedFromStageId } }
       : { disconnect: true };
   }
 
@@ -286,6 +293,7 @@ export async function updateChecklistTemplateItem(
   if (data.phase !== undefined) syncFields.phase = data.phase;
   if (visibleFromStageId !== undefined) syncFields.visibleFromStageId = visibleFromStageId;
   if (requiredBeforeStageId !== undefined) syncFields.requiredBeforeStageId = requiredBeforeStageId;
+  if (lockedFromStageId !== undefined) syncFields.lockedFromStageId = lockedFromStageId;
 
   if (Object.keys(syncFields).length > 0) {
     await db.taskChecklistItem.updateMany({

@@ -67,6 +67,11 @@ type Target =
   | { kind: "folder"; id: string; name: string }
   | { kind: "asset"; id: string; name: string };
 
+function isPreviewable(contentType: string | null): boolean {
+  const ct = contentType ?? "";
+  return ct.startsWith("image/") || ct.startsWith("video/") || ct.startsWith("audio/");
+}
+
 function formatBytes(bytes: number | null): string {
   if (!bytes || bytes <= 0) return "—";
   const units = ["B", "KB", "MB", "GB", "TB"];
@@ -138,6 +143,7 @@ export function AssetsClient({
   const [renameValue, setRenameValue] = useState("");
   const [moveTarget, setMoveTarget] = useState<Target | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Target | null>(null);
+  const [previewAsset, setPreviewAsset] = useState<AssetVM | null>(null);
 
   useUploadRefresh(projectId);
 
@@ -317,10 +323,15 @@ export function AssetsClient({
             ))}
             {assets.map((a) => {
               const Icon = iconFor(a.contentType);
+              const canPreview = isPreviewable(a.contentType) && a.url;
               return (
                 <div
                   key={a.id}
-                  className="group flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-surface/60"
+                  className={cn(
+                    "group flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-surface/60",
+                    canPreview && "cursor-pointer",
+                  )}
+                  onClick={() => canPreview && setPreviewAsset(a)}
                 >
                   <Icon className="h-5 w-5 shrink-0 text-muted-foreground" />
                   <span className="flex-1 truncate text-sm">{a.name}</span>
@@ -445,6 +456,68 @@ export function AssetsClient({
             <Button variant="destructive" onClick={submitDelete}>
               Delete
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Asset preview dialog */}
+      <Dialog
+        open={!!previewAsset}
+        onOpenChange={(o) => !o && setPreviewAsset(null)}
+      >
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="truncate">
+              {previewAsset?.name}
+            </DialogTitle>
+          </DialogHeader>
+          {previewAsset?.url && (
+            <div className="flex items-center justify-center">
+              {previewAsset.contentType?.startsWith("image/") && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={previewAsset.url}
+                  alt={previewAsset.name}
+                  className="max-h-[70vh] rounded object-contain"
+                />
+              )}
+              {previewAsset.contentType?.startsWith("video/") && (
+                <video
+                  controls
+                  autoPlay
+                  preload="metadata"
+                  src={`/api/files/${previewAsset.id}/stream`}
+                  className="max-h-[70vh] w-full rounded"
+                />
+              )}
+              {previewAsset.contentType?.startsWith("audio/") && (
+                <audio
+                  controls
+                  autoPlay
+                  preload="metadata"
+                  src={`/api/files/${previewAsset.id}/stream`}
+                  className="w-full"
+                />
+              )}
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setPreviewAsset(null)}>
+              Close
+            </Button>
+            {previewAsset?.url && (
+              <Button asChild>
+                <a
+                  href={previewAsset.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  download
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                </a>
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

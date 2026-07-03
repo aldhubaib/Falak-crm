@@ -9,10 +9,16 @@ const globalForPrisma = globalThis as unknown as {
   pool: pg.Pool | undefined;
 };
 
+// Pool size for the Postgres connection pool. Kept modest by default; raise via
+// DB_POOL_MAX for higher concurrency (e.g. ~100 active users). SSE stream
+// connections do NOT hold a pooled connection — they only query briefly at
+// subscribe time — so they don't count against this budget.
+const POOL_MAX = Number(process.env.DB_POOL_MAX ?? 20);
+
 function createClient() {
   const pool = globalForPrisma.pool ?? new pg.Pool({
     connectionString,
-    max: 10,
+    max: POOL_MAX,
   });
   globalForPrisma.pool = pool;
 

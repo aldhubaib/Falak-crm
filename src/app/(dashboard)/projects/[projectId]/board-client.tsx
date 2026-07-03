@@ -1,9 +1,22 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Clock, Eye, EyeOff, Plus, Timer } from "lucide-react";
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  pointerWithin,
+  useDraggable,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AlertCircle, Clock, Eye, EyeOff, Plus, RotateCcw, Timer } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,42 +26,33 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { PriorityBadge } from "@/components/priority-badge";
-import { TaskTypeChip } from "@/components/task-type-chip";
+import { TaskTypeIcon } from "@/components/task-type-chip";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ConfirmStatusDialog } from "@/components/board/confirm-status-dialog";
 import { DeclineDialog } from "@/components/board/decline-dialog";
 import { cn } from "@/lib/utils";
 import { updateTaskStatus } from "@/actions/projects";
-
-type TaskCard = {
-  id: string;
-  title: string;
-  statusId: string | null;
-  statusName: string;
-  statusColor: string;
-  assigneeName: string | null;
-  assigneeAvatar: string | null;
-  serviceName: string | null;
-  priority: number | null;
-  estimateMin: number | null;
-  stageEnteredAt: string | null;
-  completedAt: string | null;
-  createdAt: string;
-  checklistTotal: number;
-  checklistDone: number;
-};
+import { addTaskComment } from "@/actions/comments";
+import type { BoardData, BoardStatus, BoardTask } from "@/actions/board";
+import { boardQueryKey, useBoardData, useBoardStream } from "./use-board";
 
 // Completed tasks auto-archive after this many days; archived tasks are hidden
 // in their column until the eye toggle reveals them.
 const ARCHIVE_AFTER_DAYS = 10;
 
-type Status = {
-  id: string;
-  name: string;
-  color: string;
-  order: number;
-};
-
 type PendingMove = { taskId: string; toStatusId: string } | null;
+
+type Column = BoardStatus & {
+  tasks: BoardTask[];
+  total: number;
+  archivedCount: number;
+};
 
 const CONFIRM_MESSAGES: Record<
   string,
@@ -77,108 +81,439 @@ const CONFIRM_MESSAGES: Record<
   },
 };
 
-function formatSince(iso: string) {
-  const ms = Date.now() - new Date(iso).getTime();
-  const m = Math.max(1, Math.floor(ms / 60000));
-  if (m < 60) return `${m}m`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h`;
-  const d = Math.floor(h / 24);
-  return `${d}d`;
+function formatDuration(ms: number): string {
+  if (ms < 0) return "0s";
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  if (days > 0) return `${days}d ${hours % 24}h`;
+  if (hours > 0) return `${hours}h ${minutes % 60}m`;
+  if (minutes > 0) return `${minutes}m`;
+  return `${seconds}s`;
 }
+
+function formatSince(iso: string) {
+  return formatDuration(Date.now() - new Date(iso).getTime());
+}
+
+// ─── Card ────────────────────────────────────────────────────────────────────
+
+function CardBody({ task }: { task: BoardTask }) {
+  return (
+    <div className="min-w-0">
+      <span className="text-[10px] font-mono text-muted-foreground/60">
+        T-{String(task.taskNumber).padStart(3, "0")}
+      </span>
+      <p className="text-[13px] font-medium leading-snug text-foreground">
+        {task.title || "Untitled"}
+      </p>
+
+      <div className="mt-2 flex items-center gap-1.5">
+        {task.serviceName && <TaskTypeIcon name={task.serviceName} />}
+        <PriorityBadge value={task.priority} />
+        {task.rejectionCount > 0 && (
+          <span
+            className="inline-flex items-center gap-1 rounded-md bg-destructive/15 px-1.5 py-0.5 text-[10px] font-semibold text-destructive"
+            title={`Rejected ${task.rejectionCount} time${task.rejectionCount > 1 ? "s" : ""}`}
+          >
+            <RotateCcw className="h-3 w-3" />
+            {task.rejectionCount}
+          </span>
+        )}
+        <div className="ml-auto flex items-center gap-1">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Avatar className="h-5 w-5">
+                <AvatarImage
+                  src={
+                    task.assigneeAvatar ??
+                    (task.assigneeName
+                      ? `https://i.pravatar.cc/48?u=${encodeURIComponent(task.assigneeName)}`
+                      : undefined)
+                  }
+                  alt={task.assigneeName ?? "Unassigned"}
+                />
+                <AvatarFallback className="bg-muted text-[9px] font-semibold text-muted-foreground">
+                  {(task.assigneeName ?? "?").charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </TooltipTrigger>
+            <TooltipContent>{task.assigneeName ?? "Unassigned"}</TooltipContent>
+          </Tooltip>
+        </div>
+      </div>
+
+      {(task.totalTimeMs > 0 || task.stageEnteredAt) && (
+        <div className="mt-2 flex items-center gap-3 text-[10px] font-mono tabular-nums text-muted-foreground/60">
+          {task.totalTimeMs > 0 && (
+            <span className="flex items-center gap-1" title="Total time">
+              <Clock className="h-3 w-3" />
+              {formatDuration(task.totalTimeMs)}
+            </span>
+          )}
+          {task.stageEnteredAt && (
+            <span className="flex items-center gap-1" title="Time in current stage">
+              <Timer className="h-3 w-3" />
+              {formatSince(task.stageEnteredAt)}
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const BoardCard = memo(function BoardCard({
+  task,
+  onOpen,
+}: {
+  task: BoardTask;
+  onOpen: (taskId: string) => void;
+}) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: task.id,
+    data: { statusId: task.statusId },
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      onClick={() => onOpen(task.id)}
+      style={{ opacity: isDragging ? 0.4 : 1 }}
+      className="group/card block cursor-grab touch-none select-none rounded-lg border border-border/60 bg-background p-3 text-left transition-colors hover:border-muted-foreground/20 active:cursor-grabbing"
+    >
+      <CardBody task={task} />
+    </div>
+  );
+});
+
+// ─── Column ──────────────────────────────────────────────────────────────────
+
+const BoardColumn = memo(function BoardColumn({
+  col,
+  projectId,
+  isFirst,
+  showArchived,
+  onToggleArchived,
+  onOpen,
+  highlight,
+}: {
+  col: Column;
+  projectId: string;
+  isFirst: boolean;
+  showArchived: boolean;
+  onToggleArchived: () => void;
+  onOpen: (taskId: string) => void;
+  highlight: boolean;
+}) {
+  const { setNodeRef, isOver } = useDroppable({ id: col.id });
+
+  return (
+    <div className="flex min-w-0 flex-col">
+      <div className="mb-3 flex h-6 items-center gap-2 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.14em]">
+        <span
+          className="h-1.5 w-1.5 shrink-0 rounded-full"
+          style={{ backgroundColor: col.color }}
+        />
+        <span className="text-foreground">{col.name}</span>
+        <span className="text-muted-foreground">
+          {col.archivedCount > 0 && !showArchived
+            ? `${col.tasks.length} of ${col.total}`
+            : col.tasks.length}
+        </span>
+        {isFirst && (
+          <Button
+            asChild
+            size="icon"
+            className="ml-auto h-6 w-6 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+            aria-label="New task"
+          >
+            <Link href={`/projects/${projectId}/tasks/new`}>
+              <Plus className="h-3.5 w-3.5" />
+            </Link>
+          </Button>
+        )}
+        {col.archivedCount > 0 && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-auto h-6 w-6 rounded-full text-muted-foreground hover:text-foreground"
+            onClick={onToggleArchived}
+            aria-label={
+              showArchived
+                ? `Hide ${col.archivedCount} archived`
+                : `Show ${col.archivedCount} archived`
+            }
+            title={
+              showArchived
+                ? `Hide archived (${col.archivedCount})`
+                : `Show archived (${col.archivedCount})`
+            }
+          >
+            {showArchived ? (
+              <Eye className="h-3.5 w-3.5" />
+            ) : (
+              <EyeOff className="h-3.5 w-3.5" />
+            )}
+          </Button>
+        )}
+      </div>
+
+      <div
+        ref={setNodeRef}
+        className={cn(
+          "flex-1 space-y-2 rounded-lg border border-dotted p-2 min-h-24 transition-colors",
+          highlight ? "border-primary/40 bg-primary/5" : "border-transparent",
+          isOver && "border-primary bg-primary/10",
+        )}
+      >
+        {col.tasks.length === 0 ? (
+          <div className="grid h-24 place-items-center text-xs text-muted-foreground">
+            No tasks
+          </div>
+        ) : (
+          col.tasks.map((task) => (
+            <BoardCard key={task.id} task={task} onOpen={onOpen} />
+          ))
+        )}
+      </div>
+    </div>
+  );
+});
+
+// ─── Board ───────────────────────────────────────────────────────────────────
 
 export function ProjectBoardClient({
   projectId,
-  tasks,
-  statuses,
+  initialData,
 }: {
   projectId: string;
-  tasks: TaskCard[];
-  statuses: Status[];
+  initialData: BoardData;
 }) {
   const router = useRouter();
-  const [, startTransition] = useTransition();
+  const queryClient = useQueryClient();
 
-  const [dragOver, setDragOver] = useState<string | null>(null);
-  const [dragSource, setDragSource] = useState<string | null>(null);
+  // Stable per-tab id so this client can ignore the SSE echo of its own moves.
+  const [clientId] = useState(() =>
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : Math.random().toString(36).slice(2),
+  );
+
+  const { data } = useBoardData(projectId, initialData);
+  useBoardStream(projectId, clientId);
+
+  const tasks = data.tasks;
+  const statuses = data.statuses;
+
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [showArchived, setShowArchived] = useState(false);
   const [confirmMove, setConfirmMove] = useState<PendingMove>(null);
+  const [moveError, setMoveError] = useState<string | null>(null);
   const [declineMove, setDeclineMove] = useState<{
     taskId: string;
     toStatusId: string;
     fromName: string;
     toName: string;
+    mentionId: string | null;
+    mentionName: string | null;
   } | null>(null);
 
-  const moveTask = (taskId: string, statusId: string) => {
-    startTransition(async () => {
-      await updateTaskStatus(taskId, statusId, projectId);
-      router.refresh();
-    });
-  };
+  // Suppress the synthetic click that fires right after a drag so a drop
+  // doesn't also navigate into the task.
+  const justDraggedRef = useRef(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  );
+
+  const moveMutation = useMutation({
+    mutationFn: (vars: { taskId: string; statusId: string }) =>
+      updateTaskStatus(vars.taskId, vars.statusId, projectId, undefined, clientId),
+    onMutate: async (vars) => {
+      const key = boardQueryKey(projectId);
+      await queryClient.cancelQueries({ queryKey: key });
+      const prev = queryClient.getQueryData<BoardData>(key);
+      queryClient.setQueryData<BoardData>(key, (old) => {
+        if (!old) return old;
+        const target = old.statuses.find((s) => s.id === vars.statusId);
+        return {
+          ...old,
+          tasks: old.tasks.map((t) =>
+            t.id === vars.taskId
+              ? {
+                  ...t,
+                  statusId: vars.statusId,
+                  statusName: target?.name ?? t.statusName,
+                  statusColor: target?.color ?? t.statusColor,
+                  stageEnteredAt: new Date().toISOString(),
+                }
+              : t,
+          ),
+        };
+      });
+      return { prev };
+    },
+    onError: (err, _vars, ctx) => {
+      if (ctx?.prev) queryClient.setQueryData(boardQueryKey(projectId), ctx.prev);
+      setMoveError(err instanceof Error ? err.message : "Failed to move task");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
+    },
+  });
+
+  const moveTask = useCallback(
+    (taskId: string, statusId: string) => {
+      moveMutation.mutate({ taskId, statusId });
+    },
+    [moveMutation],
+  );
+
+  // Decline a task backward: record the reason as a comment that @mentions the
+  // person who submitted it (locked in the dialog), then move it back.
+  const declineTask = useCallback(
+    async (
+      taskId: string,
+      statusId: string,
+      reason: string,
+      mention: { id: string | null; name: string | null },
+    ) => {
+      const prefix =
+        mention.id && mention.name ? `@[${mention.name}](${mention.id}) ` : "";
+      const body = `${prefix}${reason}`.trim();
+      try {
+        if (body) await addTaskComment(taskId, body, projectId);
+      } catch {
+        // Comment failure shouldn't block the move.
+      }
+      moveMutation.mutate({ taskId, statusId });
+    },
+    [moveMutation, projectId],
+  );
 
   const archiveCutoff = Date.now() - ARCHIVE_AFTER_DAYS * 24 * 60 * 60 * 1000;
-  const isArchived = (t: TaskCard) =>
-    t.completedAt != null && new Date(t.completedAt).getTime() < archiveCutoff;
-
-  const groupTasks = (all: TaskCard[]) => {
-    const archivedCount = all.filter(isArchived).length;
-    const visible = showArchived ? all : all.filter((t) => !isArchived(t));
-    return { tasks: visible, total: all.length, archivedCount };
-  };
-
-  const grouped = statuses.map((s) => ({
-    ...s,
-    ...groupTasks(tasks.filter((t) => t.statusId === s.id)),
-  }));
-
-  const unassigned = tasks.filter(
-    (t) => !statuses.some((s) => s.id === t.statusId),
+  const isArchived = useCallback(
+    (t: BoardTask) =>
+      t.completedAt != null && new Date(t.completedAt).getTime() < archiveCutoff,
+    [archiveCutoff],
   );
-  if (unassigned.length > 0) {
-    grouped.unshift({
-      id: "unassigned",
-      name: "Unassigned",
-      color: "#6b7280",
-      order: -1,
-      ...groupTasks(unassigned),
-    });
-  }
 
-  const statusOrderMap = new Map(statuses.map((s) => [s.id, s.order]));
+  const grouped: Column[] = useMemo(() => {
+    const groupTasks = (all: BoardTask[]) => {
+      const archivedCount = all.filter(isArchived).length;
+      const visible = showArchived ? all : all.filter((t) => !isArchived(t));
+      return { tasks: visible, total: all.length, archivedCount };
+    };
 
-  const handleDrop = (taskId: string, targetStatusId: string) => {
-    if (targetStatusId === "unassigned") return;
+    const cols: Column[] = statuses.map((s) => ({
+      ...s,
+      ...groupTasks(tasks.filter((t) => t.statusId === s.id)),
+    }));
 
-    const task = tasks.find((t) => t.id === taskId);
-    if (!task) return;
-
-    const fromOrder = task.statusId
-      ? (statusOrderMap.get(task.statusId) ?? -1)
-      : -1;
-    const toOrder = statusOrderMap.get(targetStatusId) ?? -1;
-    const targetStatus = statuses.find((s) => s.id === targetStatusId);
-    const targetName = targetStatus?.name ?? "";
-
-    if (toOrder > fromOrder) {
-      const msg = CONFIRM_MESSAGES[targetName];
-      if (msg) {
-        setConfirmMove({ taskId, toStatusId: targetStatusId });
-      } else {
-        moveTask(taskId, targetStatusId);
-      }
-    } else if (toOrder < fromOrder) {
-      const fromStatus = task.statusId
-        ? statuses.find((s) => s.id === task.statusId)
-        : null;
-      setDeclineMove({
-        taskId,
-        toStatusId: targetStatusId,
-        fromName: fromStatus?.name ?? "Unknown",
-        toName: targetName,
+    const unassigned = tasks.filter(
+      (t) => !statuses.some((s) => s.id === t.statusId),
+    );
+    if (unassigned.length > 0) {
+      cols.unshift({
+        id: "unassigned",
+        name: "Unassigned",
+        color: "#6b7280",
+        order: -1,
+        ...groupTasks(unassigned),
       });
     }
-  };
+    return cols;
+  }, [statuses, tasks, showArchived, isArchived]);
+
+  const statusOrderMap = useMemo(
+    () => new Map(statuses.map((s) => [s.id, s.order])),
+    [statuses],
+  );
+
+  const handleDrop = useCallback(
+    (taskId: string, targetStatusId: string) => {
+      if (targetStatusId === "unassigned") return;
+
+      const task = tasks.find((t) => t.id === taskId);
+      if (!task) return;
+      if (task.statusId === targetStatusId) return;
+
+      const fromOrder = task.statusId
+        ? (statusOrderMap.get(task.statusId) ?? -1)
+        : -1;
+      const toOrder = statusOrderMap.get(targetStatusId) ?? -1;
+      const targetStatus = statuses.find((s) => s.id === targetStatusId);
+      const targetName = targetStatus?.name ?? "";
+
+      if (toOrder > fromOrder) {
+        // Delivery items are produced during In Progress and only need to be
+        // complete when submitting for Internal Review — not on earlier forward
+        // moves like Todo → In Progress.
+        if (
+          targetName.toLowerCase() === "internal review" &&
+          task.deliveryIncomplete.length > 0
+        ) {
+          const names = task.deliveryIncomplete.map((n) => `"${n}"`).join(", ");
+          setMoveError(`Complete delivery items first: ${names}`);
+          return;
+        }
+        const msg = CONFIRM_MESSAGES[targetName];
+        if (msg) {
+          setConfirmMove({ taskId, toStatusId: targetStatusId });
+        } else {
+          moveTask(taskId, targetStatusId);
+        }
+      } else if (toOrder < fromOrder) {
+        const fromStatus = task.statusId
+          ? statuses.find((s) => s.id === task.statusId)
+          : null;
+        setDeclineMove({
+          taskId,
+          toStatusId: targetStatusId,
+          fromName: fromStatus?.name ?? "Unknown",
+          toName: targetName,
+          mentionId: task.submittedById,
+          mentionName: task.submittedByName,
+        });
+      }
+    },
+    [tasks, statuses, statusOrderMap, moveTask],
+  );
+
+  const openTask = useCallback(
+    (taskId: string) => {
+      if (justDraggedRef.current) return;
+      router.push(`/projects/${projectId}/tasks/${taskId}`);
+    },
+    [router, projectId],
+  );
+
+  const onDragStart = useCallback((e: DragStartEvent) => {
+    setActiveId(String(e.active.id));
+  }, []);
+
+  const onDragEnd = useCallback(
+    (e: DragEndEvent) => {
+      justDraggedRef.current = true;
+      setTimeout(() => {
+        justDraggedRef.current = false;
+      }, 0);
+      const overId = e.over ? String(e.over.id) : null;
+      const taskId = String(e.active.id);
+      setActiveId(null);
+      if (overId) handleDrop(taskId, overId);
+    },
+    [handleDrop],
+  );
+
+  const onDragCancel = useCallback(() => setActiveId(null), []);
+
+  const activeTask = activeId ? tasks.find((t) => t.id === activeId) ?? null : null;
+  const activeSourceCol = activeTask?.statusId ?? "unassigned";
 
   const confirmTarget = confirmMove
     ? statuses.find((s) => s.id === confirmMove.toStatusId)
@@ -192,168 +527,43 @@ export function ProjectBoardClient({
 
   return (
     <TooltipProvider delayDuration={150}>
-      <div
-        className={cn(
-          "grid min-h-[calc(100vh-3.5rem)] gap-4 p-5",
-          grouped.length <= 3
-            ? "grid-cols-1 sm:grid-cols-3"
-            : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5",
-        )}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={pointerWithin}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        onDragCancel={onDragCancel}
       >
-        {grouped.map((col) => (
-          <div key={col.id} className="flex min-w-0 flex-col">
-            <div className="mb-3 flex h-6 items-center gap-2 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.14em]">
-              <span
-                className="h-1.5 w-1.5 shrink-0 rounded-full"
-                style={{ backgroundColor: col.color }}
-              />
-              <span className="text-foreground">{col.name}</span>
-              <span className="text-muted-foreground">
-                {col.archivedCount > 0 && !showArchived
-                  ? `${col.tasks.length} of ${col.total}`
-                  : col.tasks.length}
-              </span>
-              {col === grouped[0] && (
-                <Button
-                  asChild
-                  size="icon"
-                  className="ml-auto h-6 w-6 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
-                  aria-label="New task"
-                >
-                  <Link href={`/projects/${projectId}/tasks/new`}>
-                    <Plus className="h-3.5 w-3.5" />
-                  </Link>
-                </Button>
-              )}
-              {col.archivedCount > 0 && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="ml-auto h-6 w-6 rounded-full text-muted-foreground hover:text-foreground"
-                  onClick={() => setShowArchived((v) => !v)}
-                  aria-label={
-                    showArchived
-                      ? `Hide ${col.archivedCount} archived`
-                      : `Show ${col.archivedCount} archived`
-                  }
-                  title={
-                    showArchived
-                      ? `Hide archived (${col.archivedCount})`
-                      : `Show archived (${col.archivedCount})`
-                  }
-                >
-                  {showArchived ? (
-                    <Eye className="h-3.5 w-3.5" />
-                  ) : (
-                    <EyeOff className="h-3.5 w-3.5" />
-                  )}
-                </Button>
-              )}
+        <div
+          className={cn(
+            "grid min-h-[calc(100vh-3.5rem)] gap-4 p-5",
+            grouped.length <= 3
+              ? "grid-cols-1 sm:grid-cols-3"
+              : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5",
+          )}
+        >
+          {grouped.map((col, i) => (
+            <BoardColumn
+              key={col.id}
+              col={col}
+              projectId={projectId}
+              isFirst={i === 0}
+              showArchived={showArchived}
+              onToggleArchived={() => setShowArchived((v) => !v)}
+              onOpen={openTask}
+              highlight={activeId != null && activeSourceCol !== col.id}
+            />
+          ))}
+        </div>
+
+        <DragOverlay>
+          {activeTask ? (
+            <div className="w-full cursor-grabbing rounded-lg border border-primary/40 bg-background p-3 shadow-lg">
+              <CardBody task={activeTask} />
             </div>
-
-            <div
-              className={cn(
-                "flex-1 space-y-2 rounded-lg border border-dotted p-2 min-h-24 transition-colors",
-                dragSource && dragSource !== col.id
-                  ? "border-primary/40 bg-primary/5"
-                  : "border-transparent",
-                dragOver === col.id && "border-primary bg-primary/10",
-              )}
-              onDragOver={(e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = "move";
-                if (dragOver !== col.id) setDragOver(col.id);
-              }}
-              onDragLeave={(e) => {
-                if (e.currentTarget.contains(e.relatedTarget as Node)) return;
-                setDragOver((s) => (s === col.id ? null : s));
-              }}
-              onDrop={(e) => {
-                e.preventDefault();
-                const taskId = e.dataTransfer.getData("text/task-id");
-                setDragOver(null);
-                setDragSource(null);
-                if (!taskId) return;
-                handleDrop(taskId, col.id);
-              }}
-            >
-              {col.tasks.length === 0 ? (
-                <div className="grid h-24 place-items-center text-xs text-muted-foreground">
-                  No tasks
-                </div>
-              ) : (
-                col.tasks.map((task) => (
-                  <Link
-                    key={task.id}
-                    href={`/projects/${projectId}/tasks/${task.id}`}
-                    draggable
-                    onDragStart={(e) => {
-                      e.dataTransfer.setData("text/task-id", task.id);
-                      e.dataTransfer.effectAllowed = "move";
-                      setDragSource(task.statusId ?? "unassigned");
-                    }}
-                    onDragEnd={() => {
-                      setDragSource(null);
-                      setDragOver(null);
-                    }}
-                    className="block cursor-grab rounded-md border border-border/60 bg-surface p-3 text-left transition-colors hover:border-border active:cursor-grabbing"
-                  >
-                    {task.serviceName && (
-                      <div className="mb-2">
-                        <TaskTypeChip name={task.serviceName} />
-                      </div>
-                    )}
-
-                    <div className="text-xs font-medium text-foreground">
-                      {task.title || "Untitled"}
-                    </div>
-
-                    <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-                      {task.estimateMin != null && (
-                        <span className="inline-flex items-center gap-1">
-                          <Clock className="h-3.5 w-3.5" strokeWidth={1.5} />
-                          {task.estimateMin}m
-                        </span>
-                      )}
-                      <span className="inline-flex items-center gap-1">
-                        <Timer className="h-3.5 w-3.5" strokeWidth={1.5} />
-                        {formatSince(task.stageEnteredAt ?? task.createdAt)}
-                      </span>
-                    </div>
-
-                    <div className="mt-3 flex items-center justify-between">
-                      <PriorityBadge value={task.priority} />
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Avatar className="ml-auto h-6 w-6 ring-1 ring-primary/30">
-                            <AvatarImage
-                              src={
-                                task.assigneeAvatar ??
-                                (task.assigneeName
-                                  ? `https://i.pravatar.cc/48?u=${encodeURIComponent(task.assigneeName)}`
-                                  : undefined)
-                              }
-                              alt={task.assigneeName ?? "Unassigned"}
-                            />
-                            <AvatarFallback className="bg-primary/20 text-xxs font-semibold text-primary">
-                              {(task.assigneeName ?? "?")
-                                .charAt(0)
-                                .toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          {task.assigneeName ?? "Unassigned"}
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-                  </Link>
-                ))
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
 
       {/* Forward move confirmation */}
       <ConfirmStatusDialog
@@ -373,13 +583,33 @@ export function ProjectBoardClient({
         open={declineMove !== null}
         fromLabel={declineMove?.fromName ?? ""}
         toLabel={declineMove?.toName ?? ""}
+        mentionName={declineMove?.mentionName ?? null}
         onClose={() => setDeclineMove(null)}
-        onConfirm={() => {
+        onConfirm={(reason) => {
           if (declineMove)
-            moveTask(declineMove.taskId, declineMove.toStatusId);
+            declineTask(declineMove.taskId, declineMove.toStatusId, reason, {
+              id: declineMove.mentionId,
+              name: declineMove.mentionName,
+            });
           setDeclineMove(null);
         }}
       />
+
+      {/* Move error dialog */}
+      <Dialog open={!!moveError} onOpenChange={(o) => !o && setMoveError(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5 text-destructive" />
+              Cannot move task
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">{moveError}</p>
+          <DialogFooter>
+            <Button onClick={() => setMoveError(null)}>OK</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </TooltipProvider>
   );
 }

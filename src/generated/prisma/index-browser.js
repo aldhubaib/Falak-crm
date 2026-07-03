@@ -392,6 +392,7 @@ exports.Prisma.ChecklistTemplateItemScalarFieldEnum = {
   phase: 'phase',
   visibleFromStageId: 'visibleFromStageId',
   requiredBeforeStageId: 'requiredBeforeStageId',
+  lockedFromStageId: 'lockedFromStageId',
   order: 'order'
 };
 
@@ -416,6 +417,7 @@ exports.Prisma.TaskChecklistItemScalarFieldEnum = {
   phase: 'phase',
   visibleFromStageId: 'visibleFromStageId',
   requiredBeforeStageId: 'requiredBeforeStageId',
+  lockedFromStageId: 'lockedFromStageId',
   completed: 'completed',
   attachmentId: 'attachmentId',
   textValue: 'textValue',
@@ -456,6 +458,19 @@ exports.Prisma.TaskScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
+};
+
+exports.Prisma.TaskStatusChangeScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  memberId: 'memberId',
+  action: 'action',
+  fromStatusId: 'fromStatusId',
+  fromStatusName: 'fromStatusName',
+  toStatusId: 'toStatusId',
+  toStatusName: 'toStatusName',
+  durationMs: 'durationMs',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.TaskCommentScalarFieldEnum = {
@@ -767,6 +782,7 @@ exports.Prisma.ModelName = {
   TaskChecklistItem: 'TaskChecklistItem',
   TaskStatus: 'TaskStatus',
   Task: 'Task',
+  TaskStatusChange: 'TaskStatusChange',
   TaskComment: 'TaskComment',
   CommentMention: 'CommentMention',
   Notification: 'Notification',

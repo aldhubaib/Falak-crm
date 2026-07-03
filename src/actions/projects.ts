@@ -9,6 +9,7 @@ import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
 import { deleteObject } from "@/lib/storage";
 import { sendNotification } from "@/lib/push";
+import { publishTaskEvent } from "@/lib/realtime";
 
 export async function getProjects() {
   const { workspace, member } = await requireWorkspaceWithMember();
@@ -58,6 +59,7 @@ export async function getProject(id: string) {
             orderBy: { order: "asc" },
             select: {
               id: true, name: true, type: true, role: true, completed: true,
+              phase: true, mandatory: true,
               attachmentId: true, order: true,
               templateItem: {
                 select: { template: { select: { id: true, name: true, icon: true, color: true } } },
@@ -202,6 +204,11 @@ export async function createFullTask(data: {
       }),
     ]);
 
+    const initialStatus = await db.taskStatus.findUnique({
+      where: { id: data.statusId },
+      select: { name: true },
+    });
+
     const task = await db.task.create({
       data: {
         projectId: data.projectId,
@@ -212,6 +219,14 @@ export async function createFullTask(data: {
         assigneeId: member.id,
         order: (lastTask?.order ?? 0) + 1,
         stageEnteredAt: new Date(),
+        statusChanges: {
+          create: {
+            memberId: member.id,
+            action: "created",
+            toStatusId: data.statusId,
+            toStatusName: initialStatus?.name ?? null,
+          },
+        },
       },
     });
 
@@ -241,6 +256,7 @@ export async function createFullTask(data: {
               phase: item.phase,
               visibleFromStageId: item.visibleFromStageId,
               requiredBeforeStageId: item.requiredBeforeStageId,
+              lockedFromStageId: item.lockedFromStageId,
               order: item.order,
               textValue: hasAnswer ? answer : null,
               completed: hasAnswer,
@@ -257,6 +273,7 @@ export async function createFullTask(data: {
     });
 
     revalidatePath(`/projects/${data.projectId}`);
+    publishTaskEvent(data.projectId, { type: "task.created", taskId: task.id });
     return { id: task.id, items: createdItems };
   });
 }
@@ -310,30 +327,59 @@ export async function createTask(projectId: string, formData: FormData, dealId?:
     });
   }
 
+  publishTaskEvent(projectId, { type: "task.created", taskId: task.id });
+
   revalidatePath(`/projects/${projectId}`);
   if (dealId) revalidatePath(`/deals/${dealId}`);
 }
 
-export async function updateTaskStatus(taskId: string, statusId: string, projectId: string, dealId?: string) {
+export async function updateTaskStatus(
+  taskId: string,
+  statusId: string,
+  projectId: string,
+  dealId?: string,
+  actorClientId?: string | null,
+) {
   const { workspace, member } = await requireProjectWork(projectId);
 
-  const blockers = await getStageGateBlockers(taskId, statusId);
+  // Independent reads run concurrently to shave latency off the drag response.
+  const [blockers, task, targetStatus, allStatuses] = await Promise.all([
+    getStageGateBlockers(taskId, statusId),
+    db.task.findUnique({
+      where: { id: taskId },
+      include: {
+        status: true,
+        checklistItems: { select: { name: true, phase: true, mandatory: true, completed: true } },
+      },
+    }),
+    db.taskStatus.findUnique({ where: { id: statusId } }),
+    db.taskStatus.findMany({
+      where: { workspaceId: workspace.id },
+      orderBy: { order: "asc" },
+    }),
+  ]);
+
   if (blockers.length > 0) {
     const names = blockers.map((b) => `"${b.itemName}"`).join(", ");
     throw new Error(`Complete these checklist items first: ${names}`);
   }
 
-  const task = await db.task.findUnique({ where: { id: taskId }, include: { status: true } });
-  const targetStatus = await db.taskStatus.findUnique({ where: { id: statusId } });
-
-  const allStatuses = await db.taskStatus.findMany({
-    where: { workspaceId: workspace.id },
-    orderBy: { order: "asc" },
-  });
-
   const fromOrder = task?.status ? allStatuses.find((s) => s.id === task.status!.id)?.order ?? 0 : 0;
   const toOrder = allStatuses.find((s) => s.id === statusId)?.order ?? 0;
   const isForward = toOrder > fromOrder;
+
+  // Block submission for Internal Review if mandatory delivery items are still
+  // incomplete. Delivery items only need to be done at this gate — earlier
+  // forward moves (e.g. Todo → In Progress) must not be blocked.
+  if (task && isForward && targetStatus?.name?.toLowerCase() === "internal review") {
+    const incomplete = task.checklistItems.filter(
+      (ci) => ci.phase === "delivery" && ci.mandatory && !ci.completed,
+    );
+    if (incomplete.length > 0) {
+      const names = incomplete.map((i) => `"${i.name}"`).join(", ");
+      throw new Error(`Complete delivery items first: ${names}`);
+    }
+  }
 
   const history: Record<string, string> = (task?.assignmentHistory as Record<string, string>) ?? {};
 
@@ -373,27 +419,50 @@ export async function updateTaskStatus(taskId: string, statusId: string, project
     timings[task.statusId] = (timings[task.statusId] ?? 0) + elapsed;
   }
 
-  await db.task.update({
-    where: { id: taskId },
-    data: {
-      statusId,
-      assigneeId: newAssigneeId,
-      assignmentHistory: history,
-      stageTimings: timings,
-      stageEnteredAt: now,
-      rejectionCount: !isForward ? { increment: 1 } : undefined,
-      completedAt: targetStatus?.name === "Completed" || targetStatus?.name === "Published" ? now : null,
-    },
-  });
+  const durationMs =
+    task?.statusId && task.stageEnteredAt
+      ? now.getTime() - new Date(task.stageEnteredAt).getTime()
+      : null;
 
-  await logActivity({
+  await db.$transaction([
+    db.task.update({
+      where: { id: taskId },
+      data: {
+        statusId,
+        assigneeId: newAssigneeId,
+        assignmentHistory: history,
+        stageTimings: timings,
+        stageEnteredAt: now,
+        rejectionCount: !isForward ? { increment: 1 } : undefined,
+        completedAt: targetStatus?.name === "Completed" || targetStatus?.name === "Published" ? now : null,
+      },
+    }),
+    db.taskStatusChange.create({
+      data: {
+        taskId,
+        memberId: member.id,
+        action: "status_change",
+        fromStatusId: task?.statusId ?? null,
+        fromStatusName: task?.status?.name ?? null,
+        toStatusId: statusId,
+        toStatusName: targetStatus?.name ?? null,
+        durationMs: durationMs != null ? Math.max(0, Math.round(durationMs)) : null,
+      },
+    }),
+  ]);
+
+  // Broadcast to other connected board clients immediately after the commit.
+  publishTaskEvent(projectId, { type: "task.moved", taskId, actorClientId: actorClientId ?? null });
+
+  // Activity log is non-critical to the move response — fire and forget.
+  void logActivity({
     entityType: "task",
     entityId: taskId,
     entityName: task?.title ?? undefined,
     action: "updated",
     changes: { status: { from: task?.status?.name, to: targetStatus?.name } },
     metadata: { projectId },
-  });
+  }).catch(() => {});
 
   if (newAssigneeId !== member.id) {
     const moverName = member.permissions
@@ -424,6 +493,8 @@ export async function updateTaskStatus(taskId: string, statusId: string, project
 
   revalidatePath(`/projects/${projectId}`);
   if (dealId) revalidatePath(`/deals/${dealId}`);
+
+  return { taskId, statusId, assigneeId: newAssigneeId };
 }
 
 export async function assignTaskToMe(taskId: string, projectId: string) {
@@ -452,6 +523,8 @@ export async function deleteTask(taskId: string, projectId: string, dealId?: str
     where: { id: taskId },
     data: { deletedAt: new Date() },
   });
+
+  publishTaskEvent(projectId, { type: "task.deleted", taskId });
 
   revalidatePath(`/projects/${projectId}`);
   if (dealId) revalidatePath(`/deals/${dealId}`);
@@ -743,6 +816,7 @@ export async function syncTaskTemplates(taskId: string, templateIds: string[], p
         phase: item.phase,
         visibleFromStageId: item.visibleFromStageId,
         requiredBeforeStageId: item.requiredBeforeStageId,
+        lockedFromStageId: item.lockedFromStageId,
         order: nextOrder++,
       })),
     });

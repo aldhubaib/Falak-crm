@@ -46,6 +46,25 @@ export function isYesNoField(type: string) {
   return YESNO_KINDS.has(type);
 }
 
+export function isFieldFilled(
+  field: CreateField,
+  answer: FieldAnswer | undefined,
+): boolean {
+  if (!answer) return false;
+  if (isFileField(field.type)) {
+    return answer.kind === "file" && answer.file !== null;
+  }
+  if (isYesNoField(field.type)) {
+    if (answer.kind !== "yesno" || answer.value === null) return false;
+    if (answer.value === "yes") {
+      const followUp = yesFollowUp(field.type);
+      if (followUp?.text && !(answer.text ?? "").trim()) return false;
+    }
+    return true;
+  }
+  return answer.kind === "text" && answer.value.trim().length > 0;
+}
+
 // Follow-up inputs revealed when a Yes/No field is answered "Yes". Mention asks
 // for an account name; Copyright asks for the copyright text plus an optional
 // file. Other yes/no kinds have no follow-up.

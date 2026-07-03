@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { ErrorToast } from "@/components/error-toast";
 import { ServiceWorkerRegister } from "@/components/sw-register";
+import { Providers } from "./providers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -54,9 +55,11 @@ export default function RootLayout({
           afterSignOutUrl="/sign-in"
           appearance={{ baseTheme: dark }}
         >
-          {children}
-          <ErrorToast />
-          <ServiceWorkerRegister />
+          <Providers>
+            {children}
+            <ErrorToast />
+            <ServiceWorkerRegister />
+          </Providers>
         </ClerkProvider>
       </body>
     </html>

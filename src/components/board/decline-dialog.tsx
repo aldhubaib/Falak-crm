@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { AlertTriangle, Paperclip, Undo2, X } from "lucide-react";
+import { AlertTriangle, AtSign, Paperclip, Undo2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -18,12 +18,15 @@ export function DeclineDialog({
   open,
   fromLabel,
   toLabel,
+  mentionName,
   onClose,
   onConfirm,
 }: {
   open: boolean;
   fromLabel: string;
   toLabel: string;
+  /** Person who submitted the task — @mentioned by default and not editable. */
+  mentionName?: string | null;
   onClose: () => void;
   onConfirm: (reason: string) => void;
 }) {
@@ -59,6 +62,15 @@ export function DeclineDialog({
           <label className="text-sm font-medium">
             Reason for declining <span className="text-destructive">*</span>
           </label>
+          {mentionName && (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span>Notifying</span>
+              <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 font-medium text-primary">
+                <AtSign className="h-3 w-3" />
+                {mentionName}
+              </span>
+            </div>
+          )}
           <Textarea
             placeholder="Explain what needs to be fixed or changed..."
             value={reason}

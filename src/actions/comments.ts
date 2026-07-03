@@ -101,6 +101,18 @@ export async function getTaskComments(taskId: string) {
   });
 }
 
+export async function getTaskHistory(taskId: string) {
+  await requireWorkspaceWithMember();
+
+  return db.taskStatusChange.findMany({
+    where: { taskId },
+    include: {
+      member: { select: { id: true, name: true, email: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
 export async function getWorkspaceMembers() {
   const { workspace } = await requireWorkspaceWithMember();
 
