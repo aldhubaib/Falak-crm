@@ -15,6 +15,7 @@ import {
   Download,
   Trash2,
   Loader2,
+  Paperclip,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +40,9 @@ import {
   validateFile,
   isFileField,
   isYesNoField,
+  yesFollowUp,
+  parseYesNo,
+  serializeYesNo,
 } from "@/components/projects/dynamic-field";
 import { uploadManager, type UploadItem } from "@/lib/upload-manager";
 
@@ -255,36 +259,13 @@ function TaskFieldControl({
   }
 
   if (isYesNoField(item.type)) {
-    const value = item.textValue;
     return (
-      <div className="grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          disabled={readOnly}
-          onClick={() => saveText(value === "yes" ? "" : "yes")}
-          className={cn(
-            "h-11 rounded-md border text-sm font-medium transition-colors disabled:opacity-60",
-            value === "yes"
-              ? "border-green-500/60 bg-green-500/10 text-green-400"
-              : "border-border/60 bg-surface text-muted-foreground hover:text-foreground",
-          )}
-        >
-          Yes
-        </button>
-        <button
-          type="button"
-          disabled={readOnly}
-          onClick={() => saveText(value === "no" ? "" : "no")}
-          className={cn(
-            "h-11 rounded-md border text-sm font-medium transition-colors disabled:opacity-60",
-            value === "no"
-              ? "border-destructive/60 bg-destructive/10 text-destructive"
-              : "border-border/60 bg-surface text-muted-foreground hover:text-foreground",
-          )}
-        >
-          No
-        </button>
-      </div>
+      <TaskYesNoField
+        item={item}
+        projectId={projectId}
+        readOnly={readOnly}
+        onSaveText={saveText}
+      />
     );
   }
 
@@ -360,6 +341,212 @@ function TextAnswer({
       onBlur={commit}
       className="h-11 rounded-xl border-border/60 bg-background/60"
     />
+  );
+}
+
+function TaskYesNoField({
+  item,
+  projectId,
+  readOnly,
+  onSaveText,
+}: {
+  item: ChecklistItem;
+  projectId: string;
+  readOnly: boolean;
+  onSaveText: (value: string) => void;
+}) {
+  const parsed = parseYesNo(item.textValue);
+  const followUp = yesFollowUp(item.type);
+  const value = parsed.value;
+
+  const chooseYes = () =>
+    onSaveText(value === "yes" ? "" : serializeYesNo("yes", parsed.text));
+  const chooseNo = () => onSaveText(value === "no" ? "" : "no");
+
+  return (
+    <div className="space-y-2">
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          disabled={readOnly}
+          onClick={chooseYes}
+          className={cn(
+            "h-11 rounded-md border text-sm font-medium transition-colors disabled:opacity-60",
+            value === "yes"
+              ? "border-green-500/60 bg-green-500/10 text-green-400"
+              : "border-border/60 bg-surface text-muted-foreground hover:text-foreground",
+          )}
+        >
+          Yes
+        </button>
+        <button
+          type="button"
+          disabled={readOnly}
+          onClick={chooseNo}
+          className={cn(
+            "h-11 rounded-md border text-sm font-medium transition-colors disabled:opacity-60",
+            value === "no"
+              ? "border-destructive/60 bg-destructive/10 text-destructive"
+              : "border-border/60 bg-surface text-muted-foreground hover:text-foreground",
+          )}
+        >
+          No
+        </button>
+      </div>
+      {value === "yes" && followUp?.text && (
+        <FollowUpText
+          key={`${item.id}-text`}
+          placeholder={followUp.text.placeholder}
+          initial={parsed.text}
+          readOnly={readOnly}
+          onSave={(t) => onSaveText(serializeYesNo("yes", t))}
+        />
+      )}
+      {value === "yes" && followUp?.file && (
+        <FollowUpFile item={item} projectId={projectId} readOnly={readOnly} />
+      )}
+    </div>
+  );
+}
+
+function FollowUpText({
+  placeholder,
+  initial,
+  readOnly,
+  onSave,
+}: {
+  placeholder: string;
+  initial: string;
+  readOnly: boolean;
+  onSave: (value: string) => void;
+}) {
+  const [v, setV] = useState(initial);
+  useEffect(() => setV(initial), [initial]);
+  return (
+    <Input
+      value={v}
+      readOnly={readOnly}
+      placeholder={`${placeholder} *`}
+      onChange={(e) => setV(e.target.value)}
+      onBlur={() => {
+        if (v !== initial) onSave(v);
+      }}
+      className={cn(
+        "h-11 rounded-xl border-border/60 bg-background/60",
+        !v.trim() && "border-destructive/50",
+      )}
+    />
+  );
+}
+
+function FollowUpFile({
+  item,
+  projectId,
+  readOnly,
+}: {
+  item: ChecklistItem;
+  projectId: string;
+  readOnly: boolean;
+}) {
+  const router = useRouter();
+  const [, startTransition] = useTransition();
+  const upload = useChecklistUpload(item.id);
+
+  useEffect(() => {
+    if (upload?.status === "done") router.refresh();
+  }, [upload?.status, router]);
+
+  const pick = (f: File | null) => {
+    if (!f) return;
+    uploadManager.enqueueChecklist(f, {
+      checklistItemId: item.id,
+      projectId,
+      label: item.name,
+    });
+  };
+  const remove = () =>
+    startTransition(async () => {
+      await removeChecklistItemAttachment(item.id, projectId);
+      router.refresh();
+    });
+
+  if (item.attachmentId && item.attachmentUrl) {
+    return (
+      <div className="flex items-center justify-between rounded-xl border border-green-500/50 bg-green-500/5 px-3 py-2 text-sm">
+        <div className="flex min-w-0 items-center gap-2 text-green-400">
+          <Paperclip className="h-4 w-4 shrink-0" />
+          <span className="truncate text-foreground">{item.attachmentName}</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <a
+            href={item.attachmentUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="grid h-8 w-8 place-items-center rounded-md text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+            aria-label="Download"
+          >
+            <Download className="h-4 w-4" />
+          </a>
+          {!readOnly && (
+            <button
+              type="button"
+              onClick={remove}
+              aria-label="Remove file"
+              className="grid h-8 w-8 place-items-center rounded-md text-muted-foreground hover:bg-destructive/15 hover:text-destructive"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (
+    upload &&
+    (upload.status === "uploading" ||
+      upload.status === "completing" ||
+      upload.status === "queued")
+  ) {
+    return (
+      <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-surface/40 px-3 py-2">
+        <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" />
+        <span className="truncate text-sm text-foreground">
+          {upload.file.name}
+        </span>
+        <span className="ml-auto shrink-0 text-xs text-muted-foreground">
+          {upload.progress}%
+        </span>
+      </div>
+    );
+  }
+
+  if (readOnly) {
+    return (
+      <div className="rounded-xl border border-dashed border-border/60 bg-surface/40 px-3 py-3 text-center text-xs text-muted-foreground">
+        No file uploaded.
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => document.getElementById(`yfile-${item.id}`)?.click()}
+        className="flex w-full items-center gap-2 rounded-xl border border-dashed border-border/70 bg-surface/40 px-3 py-3 text-left text-sm text-muted-foreground transition-colors hover:border-border hover:bg-surface"
+      >
+        <Paperclip className="h-4 w-4" />
+        <span>Attach file</span>
+        <span className="ml-auto text-xs text-muted-foreground/70">Any file</span>
+      </button>
+      <input
+        id={`yfile-${item.id}`}
+        type="file"
+        className="hidden"
+        onChange={(e) => pick(e.target.files?.[0] ?? null)}
+      />
+    </>
   );
 }
 

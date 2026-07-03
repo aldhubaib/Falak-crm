@@ -6,6 +6,7 @@ import {
   MoreVertical,
   LayoutGrid,
   Paperclip,
+  LayoutDashboard,
   Settings2,
   Check,
 } from "lucide-react";
@@ -23,6 +24,7 @@ export function ProjectViewMenu({ projectId }: { projectId: string }) {
   const path = usePathname();
   const boardHref = `/projects/${projectId}`;
   const assetsHref = `/projects/${projectId}/assets`;
+  const dashboardHref = `/projects/${projectId}/dashboard`;
   const settingsHref = `/projects/${projectId}/settings`;
 
   const views = [
@@ -37,6 +39,12 @@ export function ProjectViewMenu({ projectId }: { projectId: string }) {
       label: "Assets",
       icon: Paperclip,
       active: path.startsWith(assetsHref),
+    },
+    {
+      href: dashboardHref,
+      label: "Dashboard",
+      icon: LayoutDashboard,
+      active: path.startsWith(dashboardHref),
     },
   ];
 

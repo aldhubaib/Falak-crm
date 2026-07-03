@@ -34,7 +34,7 @@ export type CreateField = {
 
 export type FieldAnswer =
   | { kind: "text"; value: string }
-  | { kind: "yesno"; value: "yes" | "no" | null }
+  | { kind: "yesno"; value: "yes" | "no" | null; text?: string; file?: File | null }
   | { kind: "file"; file: File | null };
 
 const YESNO_KINDS = new Set(["yes_no", "mention", "copyright", "checkbox"]);
@@ -44,6 +44,50 @@ export function isFileField(type: string) {
 }
 export function isYesNoField(type: string) {
   return YESNO_KINDS.has(type);
+}
+
+// Follow-up inputs revealed when a Yes/No field is answered "Yes". Mention asks
+// for an account name; Copyright asks for the copyright text plus an optional
+// file. Other yes/no kinds have no follow-up.
+export function yesFollowUp(
+  type: string,
+): { text?: { placeholder: string }; file?: { accept: string } } | null {
+  if (type === "mention")
+    return { text: { placeholder: "Enter account name (e.g. @username)" } };
+  if (type === "copyright")
+    return {
+      text: { placeholder: "Enter copyright text" },
+      file: { accept: "Any file" },
+    };
+  return null;
+}
+
+export type YesNoParsed = { value: "yes" | "no" | null; text: string };
+
+// Yes/No answers are stored in the checklist item's textValue. Plain toggles use
+// "yes"/"no"; follow-up answers use JSON so the value and text stay distinct.
+export function parseYesNo(raw: string | null | undefined): YesNoParsed {
+  if (!raw) return { value: null, text: "" };
+  if (raw === "yes") return { value: "yes", text: "" };
+  if (raw === "no") return { value: "no", text: "" };
+  try {
+    const o = JSON.parse(raw) as { v?: string; t?: string };
+    if (o?.v === "yes" || o?.v === "no")
+      return { value: o.v, text: o.t ?? "" };
+  } catch {
+    // not JSON — treat as a plain "yes" with text
+  }
+  return { value: "yes", text: raw };
+}
+
+export function serializeYesNo(
+  value: "yes" | "no" | null,
+  text: string,
+): string {
+  if (value === "yes")
+    return text.trim() ? JSON.stringify({ v: "yes", t: text }) : "yes";
+  if (value === "no") return "no";
+  return "";
 }
 
 export function DynamicField({
@@ -85,33 +129,72 @@ function FieldControl({
   }
 
   if (isYesNoField(field.type)) {
-    const value = answer?.kind === "yesno" ? answer.value : null;
+    const cur =
+      answer?.kind === "yesno"
+        ? answer
+        : { kind: "yesno" as const, value: null, text: "", file: null };
+    const value = cur.value;
+    const followUp = yesFollowUp(field.type);
+    const setYesno = (
+      patch: Partial<{
+        value: "yes" | "no" | null;
+        text: string;
+        file: File | null;
+      }>,
+    ) =>
+      onChange({
+        kind: "yesno",
+        value: patch.value !== undefined ? patch.value : cur.value,
+        text: patch.text !== undefined ? patch.text : (cur.text ?? ""),
+        file: patch.file !== undefined ? patch.file : (cur.file ?? null),
+      });
     return (
-      <div className="grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          onClick={() => onChange({ kind: "yesno", value: "yes" })}
-          className={cn(
-            "h-11 rounded-md border text-sm font-medium transition-colors",
-            value === "yes"
-              ? "border-green-500/60 bg-green-500/10 text-green-400"
-              : "border-border/60 bg-surface text-muted-foreground hover:text-foreground",
-          )}
-        >
-          Yes
-        </button>
-        <button
-          type="button"
-          onClick={() => onChange({ kind: "yesno", value: "no" })}
-          className={cn(
-            "h-11 rounded-md border text-sm font-medium transition-colors",
-            value === "no"
-              ? "border-destructive/60 bg-destructive/10 text-destructive"
-              : "border-border/60 bg-surface text-muted-foreground hover:text-foreground",
-          )}
-        >
-          No
-        </button>
+      <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => setYesno({ value: "yes" })}
+            className={cn(
+              "h-11 rounded-md border text-sm font-medium transition-colors",
+              value === "yes"
+                ? "border-green-500/60 bg-green-500/10 text-green-400"
+                : "border-border/60 bg-surface text-muted-foreground hover:text-foreground",
+            )}
+          >
+            Yes
+          </button>
+          <button
+            type="button"
+            onClick={() => setYesno({ value: "no", text: "", file: null })}
+            className={cn(
+              "h-11 rounded-md border text-sm font-medium transition-colors",
+              value === "no"
+                ? "border-destructive/60 bg-destructive/10 text-destructive"
+                : "border-border/60 bg-surface text-muted-foreground hover:text-foreground",
+            )}
+          >
+            No
+          </button>
+        </div>
+        {value === "yes" && followUp?.text && (
+          <Input
+            placeholder={`${followUp.text.placeholder} *`}
+            value={cur.text ?? ""}
+            onChange={(e) => setYesno({ text: e.target.value })}
+            className={cn(
+              "h-11 rounded-xl border-border/60 bg-background/60",
+              !cur.text?.trim() && "border-destructive/50",
+            )}
+          />
+        )}
+        {value === "yes" && followUp?.file && (
+          <YesnoFileDrop
+            accept={followUp.file.accept}
+            file={cur.file ?? null}
+            onChange={(f) => setYesno({ file: f })}
+            required={!cur.file}
+          />
+        )}
       </div>
     );
   }
@@ -220,6 +303,68 @@ export function validateFile(
     }
   }
   return null;
+}
+
+function YesnoFileDrop({
+  accept,
+  file,
+  onChange,
+  required,
+}: {
+  accept?: string;
+  file: File | null;
+  onChange: (f: File | null) => void;
+  required?: boolean;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  if (file) {
+    return (
+      <div className="flex items-center justify-between rounded-xl border border-green-500/50 bg-green-500/5 px-3 py-2 text-sm">
+        <div className="flex min-w-0 items-center gap-2 text-green-400">
+          <Paperclip className="h-4 w-4 shrink-0" />
+          <span className="truncate text-foreground">{file.name}</span>
+        </div>
+        <button
+          type="button"
+          onClick={() => onChange(null)}
+          aria-label="Remove file"
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      </div>
+    );
+  }
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        className={cn(
+          "flex w-full items-center gap-2 rounded-xl border border-dashed px-3 py-3 text-left text-sm text-muted-foreground transition-colors hover:border-border hover:bg-surface",
+          required ? "border-destructive/50 bg-surface/40" : "border-border/70 bg-surface/40",
+        )}
+      >
+        <Paperclip className="h-4 w-4" />
+        <span>
+          Attach file{required && <span className="ml-1 text-destructive">*</span>}
+        </span>
+        {accept && (
+          <span className="ml-auto text-xs text-muted-foreground/70">{accept}</span>
+        )}
+      </button>
+      <input
+        ref={inputRef}
+        type="file"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0] ?? null;
+          if (f) onChange(f);
+          e.target.value = "";
+        }}
+      />
+    </>
+  );
 }
 
 function FileDrop({

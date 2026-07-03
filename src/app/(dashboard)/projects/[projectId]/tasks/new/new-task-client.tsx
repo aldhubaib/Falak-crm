@@ -14,6 +14,7 @@ import { createFullTask } from "@/actions/projects";
 import { PriorityPicker } from "@/components/projects/priority-picker";
 import {
   DynamicField,
+  serializeYesNo,
   type CreateField,
   type FieldAnswer,
 } from "@/components/projects/dynamic-field";
@@ -57,7 +58,11 @@ export function NewTaskClient({
       if (a.kind === "text" && a.value.trim()) {
         textAnswers[field.id] = a.value.trim();
       } else if (a.kind === "yesno" && a.value) {
-        textAnswers[field.id] = a.value;
+        textAnswers[field.id] = serializeYesNo(a.value, a.text ?? "");
+        // Copyright's "Yes" follow-up file attaches to this same checklist item.
+        if (a.file) {
+          fileFields.push({ fieldId: field.id, name: field.name, file: a.file });
+        }
       } else if (a.kind === "file" && a.file) {
         fileFields.push({ fieldId: field.id, name: field.name, file: a.file });
       }
