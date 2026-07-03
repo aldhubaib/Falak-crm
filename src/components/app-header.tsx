@@ -2,9 +2,10 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { ArrowLeft, Bell } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { NotificationsBell } from "@/components/notifications-bell";
 
 interface AppHeaderProps {
   title?: ReactNode;
@@ -60,16 +61,7 @@ export function AppHeader({
       </div>
 
       <div className="ml-auto flex shrink-0 items-center gap-1">
-        {!hideNotifications && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative rounded-full"
-            aria-label="Notifications"
-          >
-            <Bell className="size-[18px]" />
-          </Button>
-        )}
+        {!hideNotifications && <NotificationsBell />}
         {actions}
       </div>
     </header>
