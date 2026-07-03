@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getProject } from "@/actions/projects";
 import { getProjectStatuses, getChecklistTemplates } from "@/actions/settings";
 import { AppHeader } from "@/components/app-header";
+import { ProjectPhotoButton } from "@/components/projects/project-photo-button";
 import { ProjectSettingsClient } from "./settings-client";
 
 export default async function ProjectSettingsPage({
@@ -23,6 +24,13 @@ export default async function ProjectSettingsPage({
       <AppHeader
         backHref={`/projects/${projectId}`}
         title="Project Settings"
+        leading={
+          <ProjectPhotoButton
+            projectId={project.id}
+            name={project.name}
+            thumbnailId={project.thumbnailId ?? null}
+          />
+        }
       />
       <main className="min-h-0 flex-1 overflow-y-auto">
         <ProjectSettingsClient

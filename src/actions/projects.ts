@@ -7,7 +7,7 @@ import { canEdit } from "@/lib/permissions";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
-import { deleteObject } from "@/lib/storage";
+import { deleteObject, uploadBytes, generateR2Key } from "@/lib/storage";
 import { sendNotification } from "@/lib/push";
 import { publishTaskEvent } from "@/lib/realtime";
 
@@ -731,6 +731,68 @@ export async function updateProjectThumbnail(projectId: string, thumbnailId: str
     where: { id: projectId, workspaceId: workspace.id },
     data: { thumbnailId },
   });
+
+  revalidatePath(`/projects/${projectId}`);
+  revalidatePath(`/projects/${projectId}/settings`);
+}
+
+// Upload a project photo directly (small image) and set it as the project
+// thumbnail. Stores the file as an Attachment so it's served through the
+// existing /api/files/[id]/download-url endpoint like other thumbnails.
+export async function uploadProjectThumbnail(formData: FormData): Promise<void> {
+  const projectId = String(formData.get("projectId") ?? "");
+  if (!projectId) throw new Error("Missing project");
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    throw new Error("No file provided");
+  }
+  if (!(file.type || "").startsWith("image/")) {
+    throw new Error("Only image files are allowed");
+  }
+  const MAX_BYTES = 10 * 1024 * 1024;
+  if (file.size > MAX_BYTES) {
+    throw new Error("Image must be 10MB or smaller");
+  }
+
+  const { workspace } = await requireProjectEdit(projectId);
+
+  const key = generateR2Key("project_thumbnail", file.name || "photo.jpg");
+  const bytes = Buffer.from(await file.arrayBuffer());
+  await uploadBytes(bytes, key, file.type || "application/octet-stream");
+
+  const attachment = await db.attachment.create({
+    data: {
+      workspaceId: workspace.id,
+      entityType: "project_thumbnail",
+      entityId: projectId,
+      name: file.name || "photo.jpg",
+      sizeBytes: file.size,
+      contentType: file.type || null,
+      r2Key: key,
+      status: "uploaded",
+    },
+  });
+
+  const prev = await db.project.findFirst({
+    where: { id: projectId, workspaceId: workspace.id },
+    select: { thumbnailId: true },
+  });
+
+  await db.project.update({
+    where: { id: projectId, workspaceId: workspace.id },
+    data: { thumbnailId: attachment.id },
+  });
+
+  // Best-effort cleanup of the previous thumbnail's object + record.
+  if (prev?.thumbnailId) {
+    const old = await db.attachment.findUnique({
+      where: { id: prev.thumbnailId },
+      select: { r2Key: true },
+    });
+    if (old?.r2Key) await deleteObject(old.r2Key).catch(() => {});
+    await db.attachment.delete({ where: { id: prev.thumbnailId } }).catch(() => {});
+  }
 
   revalidatePath(`/projects/${projectId}`);
   revalidatePath(`/projects/${projectId}/settings`);
