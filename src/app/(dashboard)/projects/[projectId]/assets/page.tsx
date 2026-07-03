@@ -38,6 +38,7 @@ export default async function ProjectAssetsPage({
       fileSize: a.fileSize,
       contentType: a.contentType,
       url: a.r2Key ? await createPresignedGet(a.r2Key) : null,
+      downloadUrl: a.r2Key ? await createPresignedGet(a.r2Key, a.name) : null,
     })),
   );
 

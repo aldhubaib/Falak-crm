@@ -51,12 +51,40 @@ export async function createPresignedPut(
   );
 }
 
-export async function createPresignedGet(key: string): Promise<string> {
+export async function createPresignedGet(
+  key: string,
+  downloadName?: string
+): Promise<string> {
+  // When a filename is supplied, force the browser to save the file instead of
+  // rendering it inline. This is what makes downloads reliable on iOS Safari,
+  // where the anchor `download` attribute is ignored for cross-origin URLs.
+  const responseContentDisposition = downloadName
+    ? `attachment; filename="${asciiFallback(downloadName)}"; filename*=UTF-8''${encodeRFC5987(downloadName)}`
+    : undefined;
+
   return getSignedUrl(
     s3,
-    new GetObjectCommand({ Bucket: BUCKET, Key: key }),
+    new GetObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+      ResponseContentDisposition: responseContentDisposition,
+    }),
     { expiresIn: PRESIGNED_EXPIRY }
   );
+}
+
+// Strip characters that can't live in a quoted `filename=` value so the plain
+// (non-UTF-8) fallback is always safe.
+function asciiFallback(name: string): string {
+  // eslint-disable-next-line no-control-regex
+  return name.replace(/["\\\r\n]/g, "_").replace(/[^\x20-\x7E]/g, "_");
+}
+
+// RFC 5987 encoding for the `filename*` parameter (preserves unicode names).
+function encodeRFC5987(name: string): string {
+  return encodeURIComponent(name)
+    .replace(/['()*]/g, (c) => "%" + c.charCodeAt(0).toString(16).toUpperCase())
+    .replace(/%(7C|60|5E)/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
 }
 
 export async function createMultipartUpload(

@@ -60,7 +60,10 @@ export type AssetVM = {
   name: string;
   fileSize: number | null;
   contentType: string | null;
+  /** Presigned URL for inline preview (image/video/audio). */
   url: string | null;
+  /** Presigned URL that forces a file save (Content-Disposition: attachment). */
+  downloadUrl: string | null;
 };
 type Crumb = { id: string | null; name: string };
 type Target =
@@ -339,7 +342,7 @@ export function AssetsClient({
                     {formatBytes(a.fileSize)}
                   </span>
                   <RowMenu
-                    downloadUrl={a.url}
+                    downloadUrl={a.downloadUrl}
                     onMove={() =>
                       setMoveTarget({ kind: "asset", id: a.id, name: a.name })
                     }
@@ -505,11 +508,10 @@ export function AssetsClient({
             <Button variant="ghost" onClick={() => setPreviewAsset(null)}>
               Close
             </Button>
-            {previewAsset?.url && (
+            {previewAsset?.downloadUrl && (
               <Button asChild>
                 <a
-                  href={previewAsset.url}
-                  target="_blank"
+                  href={previewAsset.downloadUrl}
                   rel="noreferrer"
                   download
                 >
@@ -550,7 +552,7 @@ function RowMenu({
       <DropdownMenuContent align="end">
         {downloadUrl && (
           <DropdownMenuItem asChild>
-            <a href={downloadUrl} target="_blank" rel="noreferrer" download className="gap-2">
+            <a href={downloadUrl} rel="noreferrer" download className="gap-2">
               <Download className="h-4 w-4" />
               Download
             </a>

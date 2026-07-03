@@ -833,8 +833,7 @@ function FollowUpFile({
           </div>
           <div className="flex items-center gap-1">
             <a
-              href={item.attachmentUrl}
-              target="_blank"
+              href={`/api/files/${item.attachmentId}/download`}
               rel="noreferrer"
               className="grid h-8 w-8 place-items-center rounded-md text-muted-foreground hover:bg-muted/40 hover:text-foreground"
               aria-label="Download"
@@ -996,8 +995,7 @@ function TaskFileField({
           </div>
           <div className="flex items-center gap-1">
             <a
-              href={item.attachmentUrl}
-              target="_blank"
+              href={`/api/files/${item.attachmentId}/download`}
               rel="noreferrer"
               className="grid h-8 w-8 place-items-center rounded-md text-muted-foreground hover:bg-muted/40 hover:text-foreground"
               aria-label="Download"
