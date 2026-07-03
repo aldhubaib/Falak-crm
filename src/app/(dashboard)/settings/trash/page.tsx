@@ -1,19 +1,14 @@
-import { AppHeader } from "@/components/app-header";
-import { EmptyState } from "@/components/empty-state";
-import { Trash2 } from "lucide-react";
+import { getTrashItems } from "@/actions/delete";
+import { TrashClient, type TrashItem } from "./trash-client";
 
-export default function TrashPage() {
-  return (
-    <>
-      <AppHeader title="Trash" />
-      <main className="min-h-0 flex-1 overflow-y-auto flex items-center justify-center">
-        <EmptyState
-          icon={Trash2}
-          title="Trash"
-          message="Deleted items will appear here. Trash management coming soon."
-          className="max-w-md"
-        />
-      </main>
-    </>
-  );
+export default async function TrashPage() {
+  const raw = await getTrashItems();
+  const items: TrashItem[] = raw.map((i) => ({
+    id: i.id,
+    type: i.type,
+    name: i.name,
+    deletedAt: i.deletedAt.toISOString(),
+  }));
+
+  return <TrashClient items={items} />;
 }

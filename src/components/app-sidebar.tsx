@@ -6,29 +6,25 @@ import { useClerk, useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import {
   LayoutGrid,
+  Building2,
+  Users,
+  Handshake,
   FolderKanban,
+  FileText,
   CalendarDays,
   Settings,
   LogOut,
-  Briefcase,
-  Users,
-  Building2,
-  FileText,
-  MessageCircle,
 } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-  SidebarSeparator,
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
@@ -42,21 +38,14 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-const mainItems = [
+const items = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
-  { title: "Projects", url: "/projects", icon: FolderKanban },
-  { title: "Deals", url: "/deals", icon: Briefcase },
-  { title: "Publish", url: "/publish", icon: CalendarDays },
-];
-
-const crmItems = [
-  { title: "Contacts", url: "/contacts", icon: Users },
   { title: "Companies", url: "/companies", icon: Building2 },
+  { title: "Contacts", url: "/contacts", icon: Users },
+  { title: "Deals", url: "/deals", icon: Handshake },
+  { title: "Projects", url: "/projects", icon: FolderKanban },
   { title: "Invoices", url: "/invoices", icon: FileText },
-  { title: "Messages", url: "/messages", icon: MessageCircle },
-];
-
-const bottomItems = [
+  { title: "Publish", url: "/publish", icon: CalendarDays },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
@@ -89,57 +78,9 @@ export function AppSidebar() {
 
       <SidebarContent className="px-2 pt-2">
         <SidebarMenu className="gap-1">
-          {mainItems.map((item) => {
-            const active = pathname === item.url || pathname.startsWith(item.url + "/");
-            return (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={active}
-                  tooltip={item.title}
-                  className="h-10 rounded-lg text-[14px] font-medium text-muted-foreground data-[active=true]:!bg-transparent data-[active=true]:text-primary hover:bg-accent/60 hover:text-foreground"
-                >
-                  <Link href={item.url} onClick={handleNav} className="flex items-center gap-3">
-                    <item.icon className="h-[18px] w-[18px]" />
-                    <span>{item.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            );
-          })}
-        </SidebarMenu>
-
-        <SidebarSeparator />
-
-        <SidebarGroup className="px-0 py-0">
-          <SidebarGroupLabel>CRM</SidebarGroupLabel>
-          <SidebarMenu className="gap-1">
-            {crmItems.map((item) => {
-              const active = pathname === item.url || pathname.startsWith(item.url + "/");
-              return (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={active}
-                    tooltip={item.title}
-                    className="h-10 rounded-lg text-[14px] font-medium text-muted-foreground data-[active=true]:!bg-transparent data-[active=true]:text-primary hover:bg-accent/60 hover:text-foreground"
-                  >
-                    <Link href={item.url} onClick={handleNav} className="flex items-center gap-3">
-                      <item.icon className="h-[18px] w-[18px]" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              );
-            })}
-          </SidebarMenu>
-        </SidebarGroup>
-
-        <SidebarSeparator />
-
-        <SidebarMenu className="gap-1">
-          {bottomItems.map((item) => {
-            const active = pathname === item.url || pathname.startsWith(item.url + "/");
+          {items.map((item) => {
+            const active =
+              pathname === item.url || pathname.startsWith(item.url + "/");
             return (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
@@ -166,7 +107,7 @@ export function AppSidebar() {
           aria-label="Sign out"
           className="flex items-center gap-2.5 rounded-lg p-1 text-left transition-colors hover:bg-accent/60 group-data-[collapsible=icon]:justify-center"
         >
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/80 text-sm font-semibold text-primary-foreground">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-500/80 text-sm font-semibold text-white">
             {initials}
           </div>
           {!collapsed && (
