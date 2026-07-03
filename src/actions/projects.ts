@@ -181,7 +181,12 @@ export async function createFullTask(data: {
   priority: number | null;
   templateIds: string[];
   answers?: Record<string, string>;
-}): Promise<ActionResult<{ id: string }>> {
+}): Promise<
+  ActionResult<{
+    id: string;
+    items: { id: string; templateItemId: string | null }[];
+  }>
+> {
   return safeAction("Create Task", async () => {
     const { member } = await requireProjectWork(data.projectId);
 
@@ -246,8 +251,13 @@ export async function createFullTask(data: {
       }
     }
 
+    const createdItems = await db.taskChecklistItem.findMany({
+      where: { taskId: task.id },
+      select: { id: true, templateItemId: true },
+    });
+
     revalidatePath(`/projects/${data.projectId}`);
-    return { id: task.id };
+    return { id: task.id, items: createdItems };
   });
 }
 

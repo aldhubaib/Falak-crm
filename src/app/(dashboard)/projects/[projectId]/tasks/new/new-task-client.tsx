@@ -8,17 +8,18 @@ import { AppHeader } from "@/components/app-header";
 import { PageContainer } from "@/components/page-container";
 import { SaveButton } from "@/components/save-button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { useAction } from "@/hooks/use-action";
 import { createFullTask } from "@/actions/projects";
 import { PriorityPicker } from "@/components/projects/priority-picker";
+import {
+  DynamicField,
+  type CreateField,
+  type FieldAnswer,
+} from "@/components/projects/dynamic-field";
+import { uploadManager } from "@/lib/upload-manager";
 
-type Field = { id: string; name: string; type: string; mandatory: boolean };
-type TaskType = { id: string; name: string; count: number; fields: Field[] };
-
-const isTextField = (type: string) =>
-  type === "textarea" || type === "text" || type === "link";
+type TaskType = { id: string; name: string; count: number; fields: CreateField[] };
 
 export function NewTaskClient({
   projectId,
@@ -35,7 +36,7 @@ export function NewTaskClient({
   const [typeId, setTypeId] = useState<string>(taskTypes[0]?.id ?? "");
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState<number | null>(null);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [answers, setAnswers] = useState<Record<string, FieldAnswer>>({});
 
   const { execute, loading } = useAction(createFullTask);
 
@@ -44,16 +45,52 @@ export function NewTaskClient({
 
   const create = async () => {
     if (!canSave) return;
+
+    // Text + yes/no answers are stored on the checklist item at creation.
+    const textAnswers: Record<string, string> = {};
+    // File answers upload after the task (and its checklist items) exist.
+    const fileFields: { fieldId: string; name: string; file: File }[] = [];
+
+    for (const field of type?.fields ?? []) {
+      const a = answers[field.id];
+      if (!a) continue;
+      if (a.kind === "text" && a.value.trim()) {
+        textAnswers[field.id] = a.value.trim();
+      } else if (a.kind === "yesno" && a.value) {
+        textAnswers[field.id] = a.value;
+      } else if (a.kind === "file" && a.file) {
+        fileFields.push({ fieldId: field.id, name: field.name, file: a.file });
+      }
+    }
+
     const res = await execute({
       projectId,
       title: title.trim(),
       statusId: defaultStatusId!,
       priority,
       templateIds: [typeId],
-      answers,
+      answers: textAnswers,
     });
-    if (res) router.push(`/projects/${projectId}/tasks/${res.id}`);
+
+    if (!res) return;
+
+    // Map each selected file to its freshly-created checklist item and enqueue
+    // the upload — the global UploadIndicator shows progress.
+    for (const ff of fileFields) {
+      const item = res.items.find((it) => it.templateItemId === ff.fieldId);
+      if (!item) continue;
+      uploadManager.enqueueChecklist(ff.file, {
+        checklistItemId: item.id,
+        projectId,
+        label: ff.name,
+      });
+    }
+
+    router.push(`/projects/${projectId}/tasks/${res.id}`);
   };
+
+  const setAnswer = (fieldId: string, value: FieldAnswer) =>
+    setAnswers((prev) => ({ ...prev, [fieldId]: value }));
 
   return (
     <>
@@ -127,11 +164,6 @@ export function NewTaskClient({
             hint="1 is highest priority. Leave empty if unsure."
           >
             <PriorityPicker value={priority} onChange={setPriority} />
-            {priority === null && (
-              <div className="mt-2 text-xs text-muted-foreground">
-                No priority selected
-              </div>
-            )}
           </Section>
 
           {type && type.fields.length > 0 && (
@@ -142,29 +174,13 @@ export function NewTaskClient({
             >
               <div className="space-y-4">
                 {type.fields.map((f, i) => (
-                  <div key={f.id}>
-                    <label className="mb-1.5 flex items-center gap-2 text-xs font-medium text-foreground">
-                      <span className="grid size-5 place-items-center rounded-md bg-surface text-tiny text-muted-foreground">
-                        {i + 1}
-                      </span>
-                      {f.name}
-                      {f.mandatory && <span className="text-destructive">*</span>}
-                    </label>
-                    {isTextField(f.type) ? (
-                      <Textarea
-                        placeholder="Type your answer…"
-                        value={answers[f.id] ?? ""}
-                        onChange={(e) =>
-                          setAnswers((prev) => ({ ...prev, [f.id]: e.target.value }))
-                        }
-                        className="min-h-20 rounded-xl border-border/60 bg-background/60"
-                      />
-                    ) : (
-                      <div className="rounded-xl border border-dashed border-border/60 bg-surface/40 px-3 py-2.5 text-xs text-muted-foreground">
-                        You&apos;ll complete this on the task page after creating.
-                      </div>
-                    )}
-                  </div>
+                  <DynamicField
+                    key={f.id}
+                    field={f}
+                    index={i + 1}
+                    answer={answers[f.id]}
+                    onChange={(v) => setAnswer(f.id, v)}
+                  />
                 ))}
               </div>
             </Section>

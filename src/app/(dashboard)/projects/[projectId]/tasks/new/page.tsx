@@ -45,6 +45,19 @@ export default async function NewTaskPage({
     statuses[0]?.id ??
     null;
 
+  const parseArray = (raw: string | null): string[] => {
+    if (!raw) return [];
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.map(String) : [];
+    } catch {
+      return raw
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+  };
+
   const taskTypes = project.projectTemplates.map((pt) => ({
     id: pt.template.id,
     name: pt.template.name,
@@ -56,6 +69,10 @@ export default async function NewTaskPage({
         name: it.name,
         type: it.type,
         mandatory: it.mandatory,
+        options: parseArray(it.options),
+        allowedFileTypes: it.allowedFileTypes,
+        allowedFormats: parseArray(it.allowedFormats),
+        aspectRatio: it.aspectRatio,
       })),
   }));
 

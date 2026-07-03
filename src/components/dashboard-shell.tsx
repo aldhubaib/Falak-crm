@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { UploadIndicator } from "@/components/upload-indicator";
 
 export function DashboardShell({ children }: { children: ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
           {children}
         </div>
       </div>
+      <UploadIndicator />
     </SidebarProvider>
   );
 }
