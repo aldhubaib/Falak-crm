@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Clock, Plus, Timer } from "lucide-react";
+import { Clock, Eye, EyeOff, Plus, Timer } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,10 +31,15 @@ type TaskCard = {
   priority: number | null;
   estimateMin: number | null;
   stageEnteredAt: string | null;
+  completedAt: string | null;
   createdAt: string;
   checklistTotal: number;
   checklistDone: number;
 };
+
+// Completed tasks auto-archive after this many days; archived tasks are hidden
+// in their column until the eye toggle reveals them.
+const ARCHIVE_AFTER_DAYS = 10;
 
 type Status = {
   id: string;
@@ -96,6 +101,7 @@ export function ProjectBoardClient({
 
   const [dragOver, setDragOver] = useState<string | null>(null);
   const [dragSource, setDragSource] = useState<string | null>(null);
+  const [showArchived, setShowArchived] = useState(false);
   const [confirmMove, setConfirmMove] = useState<PendingMove>(null);
   const [declineMove, setDeclineMove] = useState<{
     taskId: string;
@@ -111,9 +117,19 @@ export function ProjectBoardClient({
     });
   };
 
+  const archiveCutoff = Date.now() - ARCHIVE_AFTER_DAYS * 24 * 60 * 60 * 1000;
+  const isArchived = (t: TaskCard) =>
+    t.completedAt != null && new Date(t.completedAt).getTime() < archiveCutoff;
+
+  const groupTasks = (all: TaskCard[]) => {
+    const archivedCount = all.filter(isArchived).length;
+    const visible = showArchived ? all : all.filter((t) => !isArchived(t));
+    return { tasks: visible, total: all.length, archivedCount };
+  };
+
   const grouped = statuses.map((s) => ({
     ...s,
-    tasks: tasks.filter((t) => t.statusId === s.id),
+    ...groupTasks(tasks.filter((t) => t.statusId === s.id)),
   }));
 
   const unassigned = tasks.filter(
@@ -125,7 +141,7 @@ export function ProjectBoardClient({
       name: "Unassigned",
       color: "#6b7280",
       order: -1,
-      tasks: unassigned,
+      ...groupTasks(unassigned),
     });
   }
 
@@ -192,7 +208,11 @@ export function ProjectBoardClient({
                 style={{ backgroundColor: col.color }}
               />
               <span className="text-foreground">{col.name}</span>
-              <span className="text-muted-foreground">{col.tasks.length}</span>
+              <span className="text-muted-foreground">
+                {col.archivedCount > 0 && !showArchived
+                  ? `${col.tasks.length} of ${col.total}`
+                  : col.tasks.length}
+              </span>
               {col === grouped[0] && (
                 <Button
                   asChild
@@ -203,6 +223,30 @@ export function ProjectBoardClient({
                   <Link href={`/projects/${projectId}/tasks/new`}>
                     <Plus className="h-3.5 w-3.5" />
                   </Link>
+                </Button>
+              )}
+              {col.archivedCount > 0 && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="ml-auto h-6 w-6 rounded-full text-muted-foreground hover:text-foreground"
+                  onClick={() => setShowArchived((v) => !v)}
+                  aria-label={
+                    showArchived
+                      ? `Hide ${col.archivedCount} archived`
+                      : `Show ${col.archivedCount} archived`
+                  }
+                  title={
+                    showArchived
+                      ? `Hide archived (${col.archivedCount})`
+                      : `Show archived (${col.archivedCount})`
+                  }
+                >
+                  {showArchived ? (
+                    <Eye className="h-3.5 w-3.5" />
+                  ) : (
+                    <EyeOff className="h-3.5 w-3.5" />
+                  )}
                 </Button>
               )}
             </div>

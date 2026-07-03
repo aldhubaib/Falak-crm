@@ -40,6 +40,7 @@ export default async function ProjectDetailPage({
             priority: t.priority,
             estimateMin: t.estimateMin,
             stageEnteredAt: t.stageEnteredAt?.toISOString() ?? null,
+            completedAt: t.completedAt?.toISOString() ?? null,
             createdAt: t.createdAt.toISOString(),
             checklistTotal: t.checklistItems.length,
             checklistDone: t.checklistItems.filter((i) => i.completed).length,
