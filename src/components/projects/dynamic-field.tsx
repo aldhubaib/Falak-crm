@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Mic,
   Video as VideoIcon,
@@ -320,6 +320,47 @@ export function validateFile(
   return null;
 }
 
+function FilePreview({ file }: { file: File }) {
+  const [url, setUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const u = URL.createObjectURL(file);
+    setUrl(u);
+    return () => URL.revokeObjectURL(u);
+  }, [file]);
+
+  if (!url) return null;
+
+  if (file.type.startsWith("image/")) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={url}
+        alt={file.name}
+        className="mb-2 max-h-64 rounded"
+      />
+    );
+  }
+
+  if (file.type.startsWith("video/")) {
+    return (
+      <video
+        controls
+        src={url}
+        className="mb-2 max-h-64 w-full max-w-md rounded"
+      />
+    );
+  }
+
+  if (file.type.startsWith("audio/")) {
+    return (
+      <audio controls src={url} className="mb-2 w-full max-w-md" />
+    );
+  }
+
+  return null;
+}
+
 function YesnoFileDrop({
   accept,
   file,
@@ -334,19 +375,22 @@ function YesnoFileDrop({
   const inputRef = useRef<HTMLInputElement>(null);
   if (file) {
     return (
-      <div className="flex items-center justify-between rounded-xl border border-green-500/50 bg-green-500/5 px-3 py-2 text-sm">
-        <div className="flex min-w-0 items-center gap-2 text-green-400">
-          <Paperclip className="h-4 w-4 shrink-0" />
-          <span className="truncate text-foreground">{file.name}</span>
+      <div className="rounded-xl border border-green-500/50 bg-green-500/5 px-3 py-2 text-sm">
+        <FilePreview file={file} />
+        <div className="flex items-center justify-between">
+          <div className="flex min-w-0 items-center gap-2 text-green-400">
+            <Paperclip className="h-4 w-4 shrink-0" />
+            <span className="truncate text-foreground">{file.name}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => onChange(null)}
+            aria-label="Remove file"
+            className="grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={() => onChange(null)}
-          aria-label="Remove file"
-          className="grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-muted/40 hover:text-foreground"
-        >
-          <Trash2 className="h-4 w-4" />
-        </button>
       </div>
     );
   }
@@ -425,7 +469,8 @@ function FileDrop({
   if (file) {
     return (
       <div className="rounded-xl border border-green-500/50 bg-green-500/5 p-4">
-        <div className="flex items-center justify-between">
+        <FilePreview file={file} />
+        <div className="mt-2 flex items-center justify-between">
           <div className="flex min-w-0 items-center gap-2">
             <CircleCheck className="h-4 w-4 shrink-0 text-green-400" />
             <span className="truncate text-sm text-foreground">{file.name}</span>
