@@ -70,7 +70,16 @@ export function UploadIndicator() {
 
         <div className="flex items-center gap-1 shrink-0">
           {expanded ? <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" />}
-          {activeCount === 0 && (
+          {activeCount > 0 ? (
+            <button
+              onClick={(e) => { e.stopPropagation(); uploadManager.cancelAll(); }}
+              className="h-7 rounded px-2 flex items-center justify-center text-[11px] font-medium text-muted-foreground hover:text-red-400 hover:bg-muted/40 transition-colors"
+              title={`Stop ${activeCount} upload${activeCount > 1 ? "s" : ""}`}
+              aria-label="Stop all uploads"
+            >
+              Stop
+            </button>
+          ) : (
             <button
               onClick={(e) => { e.stopPropagation(); handleDismiss(); }}
               className="w-7 h-7 rounded flex items-center justify-center text-muted-foreground hover:text-foreground"
@@ -103,6 +112,21 @@ export function UploadIndicator() {
               </div>
               {(item.status === "uploading" || item.status === "completing") && (
                 <span className="text-muted-foreground shrink-0">{item.progress}%</span>
+              )}
+              {(item.status === "uploading" ||
+                item.status === "completing" ||
+                item.status === "queued") && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    uploadManager.cancel(item.id);
+                  }}
+                  className="shrink-0 w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-red-400 hover:bg-muted/40 transition-colors"
+                  title="Stop upload"
+                  aria-label="Stop upload"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
               )}
               {item.status === "error" && (
                 <button

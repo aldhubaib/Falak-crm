@@ -18,6 +18,15 @@ export type UploadItem = {
 
 type Listener = () => void;
 
+// Thrown internally when a user stops an in-flight upload so it can be
+// distinguished from a genuine failure (no error state, no retry).
+class UploadCancelledError extends Error {
+  constructor() {
+    super("Upload cancelled");
+    this.name = "UploadCancelledError";
+  }
+}
+
 const CONCURRENT_UPLOADS = 5;
 const MAX_CONCURRENT_PARTS = 4;
 const PART_SIZE = 10 * 1024 * 1024; // 10 MB — must match server PART_SIZE
@@ -28,6 +37,27 @@ class UploadManager {
   private listeners: Set<Listener> = new Set();
   private activeCount = 0;
   private snapshot: UploadItem[] = [];
+  // In-flight XHRs per upload item, so a stop request can abort them.
+  private controllers = new Map<string, Set<XMLHttpRequest>>();
+  // Items the user has stopped — checked throughout the pipeline to bail out.
+  private cancelledIds = new Set<string>();
+
+  private isCancelled(itemId: string): boolean {
+    return this.cancelledIds.has(itemId);
+  }
+
+  private track(itemId: string, xhr: XMLHttpRequest) {
+    let set = this.controllers.get(itemId);
+    if (!set) {
+      set = new Set();
+      this.controllers.set(itemId, set);
+    }
+    set.add(xhr);
+  }
+
+  private untrack(itemId: string, xhr: XMLHttpRequest) {
+    this.controllers.get(itemId)?.delete(xhr);
+  }
 
   subscribe(listener: Listener): () => void {
     this.listeners.add(listener);
@@ -129,6 +159,50 @@ class UploadManager {
     return match;
   }
 
+  // Stop an upload (queued or in-flight): abort any active requests, best-effort
+  // clean up the partial object server-side, and drop it from the list.
+  cancel(itemId: string) {
+    const item = this.queue.find((i) => i.id === itemId);
+    if (!item) return;
+
+    this.cancelledIds.add(itemId);
+
+    const xhrs = this.controllers.get(itemId);
+    if (xhrs) {
+      for (const xhr of xhrs) {
+        try {
+          xhr.abort();
+        } catch {
+          // ignore
+        }
+      }
+    }
+    this.controllers.delete(itemId);
+
+    // Free the partial multipart upload / stored object on the server.
+    if (item.attachmentId) {
+      fetch(`/api/files/${item.attachmentId}/abort`, { method: "POST" }).catch(
+        () => {},
+      );
+    }
+
+    this.queue = this.queue.filter((i) => i.id !== itemId);
+    this.notify();
+  }
+
+  // Stop every queued / in-flight upload at once.
+  cancelAll() {
+    const activeIds = this.queue
+      .filter(
+        (i) =>
+          i.status === "queued" ||
+          i.status === "uploading" ||
+          i.status === "completing",
+      )
+      .map((i) => i.id);
+    for (const id of activeIds) this.cancel(id);
+  }
+
   retry(itemId: string) {
     const item = this.queue.find((i) => i.id === itemId);
     if (!item || item.status !== "error") return;
@@ -189,10 +263,12 @@ class UploadManager {
   private async registerPart(
     attachmentId: string,
     partNumber: number,
-    etag: string
+    etag: string,
+    itemId: string
   ): Promise<void> {
     let lastErr: unknown;
     for (let attempt = 0; attempt < 4; attempt++) {
+      if (this.isCancelled(itemId)) throw new UploadCancelledError();
       try {
         const res = await fetch(`/api/files/${attachmentId}/parts/${partNumber}`, {
           method: "POST",
@@ -214,6 +290,8 @@ class UploadManager {
   private uploadSingleDirect(item: UploadItem, presignedUrl: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
+      this.track(item.id, xhr);
+      const done = () => this.untrack(item.id, xhr);
       xhr.open("PUT", presignedUrl);
       xhr.setRequestHeader("Content-Type", item.file.type || "application/octet-stream");
 
@@ -225,15 +303,23 @@ class UploadManager {
       };
 
       xhr.onload = () => {
+        done();
         if (xhr.status >= 200 && xhr.status < 300) {
           const etag = xhr.getResponseHeader("ETag") || '"single"';
-          this.registerPart(item.attachmentId!, 1, etag).then(resolve).catch(reject);
+          this.registerPart(item.attachmentId!, 1, etag, item.id).then(resolve).catch(reject);
         } else {
           reject(new Error(`Upload failed: ${xhr.status}`));
         }
       };
 
-      xhr.onerror = () => reject(new Error("Network error during upload"));
+      xhr.onabort = () => {
+        done();
+        reject(new UploadCancelledError());
+      };
+      xhr.onerror = () => {
+        done();
+        reject(new Error("Network error during upload"));
+      };
       xhr.send(item.file);
     });
   }
@@ -259,6 +345,8 @@ class UploadManager {
 
       return new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
+        this.track(item.id, xhr);
+        const done = () => this.untrack(item.id, xhr);
         xhr.open("PUT", part.url);
         xhr.setRequestHeader("Content-Type", item.file.type || "application/octet-stream");
 
@@ -272,10 +360,11 @@ class UploadManager {
         };
 
         xhr.onload = () => {
+          done();
           if (xhr.status >= 200 && xhr.status < 300) {
             const etag = xhr.getResponseHeader("ETag") || `"part-${part.number}"`;
             // Only count the part as done once its ETag is durably registered.
-            this.registerPart(item.attachmentId!, part.number, etag)
+            this.registerPart(item.attachmentId!, part.number, etag, item.id)
               .then(() => {
                 completedParts++;
                 item.progress = 5 + Math.round((completedParts / totalParts) * 85);
@@ -288,7 +377,14 @@ class UploadManager {
           }
         };
 
-        xhr.onerror = () => reject(new Error(`Part ${part.number}: network error`));
+        xhr.onabort = () => {
+          done();
+          reject(new UploadCancelledError());
+        };
+        xhr.onerror = () => {
+          done();
+          reject(new Error(`Part ${part.number}: network error`));
+        };
         xhr.send(blob);
       });
     };
@@ -296,10 +392,13 @@ class UploadManager {
     const uploadPart = async (part: { number: number; url: string }): Promise<void> => {
       let lastErr: unknown;
       for (let attempt = 0; attempt < 3; attempt++) {
+        // Stop cleanly if the user cancelled — don't retry an aborted part.
+        if (this.isCancelled(item.id)) return;
         try {
           await attemptPart(part);
           return;
         } catch (e) {
+          if (this.isCancelled(item.id) || e instanceof UploadCancelledError) return;
           lastErr = e;
           await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
         }
@@ -308,6 +407,11 @@ class UploadManager {
     };
 
     while (queue.length > 0 || active.size > 0) {
+      if (this.isCancelled(item.id)) {
+        queue.length = 0;
+        if (active.size > 0) await Promise.allSettled(active);
+        throw new UploadCancelledError();
+      }
       while (queue.length > 0 && active.size < MAX_CONCURRENT_PARTS) {
         const part = queue.shift()!;
         const p = uploadPart(part).finally(() => active.delete(p));
@@ -436,22 +540,28 @@ class UploadManager {
       item.progress = 5;
       this.notify();
 
+      if (this.isCancelled(item.id)) throw new UploadCancelledError();
+
       // Upload bytes directly to R2, with proxy fallback if CORS blocks
       if (uploadUrl) {
         try {
           await this.uploadSingleDirect(item, uploadUrl);
-        } catch {
+        } catch (e) {
+          if (this.isCancelled(item.id) || e instanceof UploadCancelledError) throw e;
           await this.uploadViaProxy(item);
         }
       } else if (parts.length > 0) {
         try {
           await this.uploadMultipartDirect(item, parts, skipParts);
-        } catch {
+        } catch (e) {
+          if (this.isCancelled(item.id) || e instanceof UploadCancelledError) throw e;
           await this.uploadViaProxy(item);
         }
       } else {
         throw new Error("No upload URL or parts received from server");
       }
+
+      if (this.isCancelled(item.id)) throw new UploadCancelledError();
 
       item.progress = 90;
       item.status = "completing";
@@ -471,15 +581,25 @@ class UploadManager {
       item.status = "done";
       this.notify();
     } catch (err) {
+      // A stopped upload was already removed from the queue in cancel() — don't
+      // resurrect it as an error entry.
+      if (err instanceof UploadCancelledError || this.isCancelled(item.id)) {
+        return;
+      }
       item.status = "error";
       item.error = err instanceof Error ? err.message : "Upload failed";
       this.notify();
+    } finally {
+      this.controllers.delete(item.id);
+      this.cancelledIds.delete(item.id);
     }
   }
 
   private uploadViaProxy(item: UploadItem): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
+      this.track(item.id, xhr);
+      const done = () => this.untrack(item.id, xhr);
       xhr.open("PUT", `/api/files/${item.attachmentId}/upload`);
       xhr.setRequestHeader("Content-Type", item.file.type || "application/octet-stream");
 
@@ -491,11 +611,19 @@ class UploadManager {
       };
 
       xhr.onload = () => {
+        done();
         if (xhr.status >= 200 && xhr.status < 300) resolve();
         else reject(new Error(`Proxy upload failed: ${xhr.status}`));
       };
 
-      xhr.onerror = () => reject(new Error("Network error during proxy upload"));
+      xhr.onabort = () => {
+        done();
+        reject(new UploadCancelledError());
+      };
+      xhr.onerror = () => {
+        done();
+        reject(new Error("Network error during proxy upload"));
+      };
       xhr.send(item.file);
     });
   }
