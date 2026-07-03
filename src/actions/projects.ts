@@ -525,6 +525,7 @@ export async function updateTask(taskId: string, data: {
   description?: string | null;
   assigneeId?: string | null;
   priority?: number | null;
+  estimateMin?: number | null;
 }) {
   await requireWorkspaceWithMember();
 

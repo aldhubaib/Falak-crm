@@ -445,6 +445,7 @@ exports.Prisma.TaskScalarFieldEnum = {
   billable: 'billable',
   price: 'price',
   priority: 'priority',
+  estimateMin: 'estimateMin',
   dueDate: 'dueDate',
   completedAt: 'completedAt',
   assignmentHistory: 'assignmentHistory',

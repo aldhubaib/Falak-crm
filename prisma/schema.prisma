@@ -558,6 +558,7 @@ model Task {
   billable          Boolean  @default(true)
   price             Decimal? @db.Decimal(12, 2)
   priority          Int?
+  estimateMin       Int?
   dueDate           DateTime?
   completedAt       DateTime?
   assignmentHistory Json?

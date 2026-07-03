@@ -36185,6 +36185,7 @@ export namespace Prisma {
     taskNumber: number | null
     price: Decimal | null
     priority: number | null
+    estimateMin: number | null
     rejectionCount: number | null
     order: number | null
   }
@@ -36193,6 +36194,7 @@ export namespace Prisma {
     taskNumber: number | null
     price: Decimal | null
     priority: number | null
+    estimateMin: number | null
     rejectionCount: number | null
     order: number | null
   }
@@ -36209,6 +36211,7 @@ export namespace Prisma {
     billable: boolean | null
     price: Decimal | null
     priority: number | null
+    estimateMin: number | null
     dueDate: Date | null
     completedAt: Date | null
     stageEnteredAt: Date | null
@@ -36231,6 +36234,7 @@ export namespace Prisma {
     billable: boolean | null
     price: Decimal | null
     priority: number | null
+    estimateMin: number | null
     dueDate: Date | null
     completedAt: Date | null
     stageEnteredAt: Date | null
@@ -36253,6 +36257,7 @@ export namespace Prisma {
     billable: number
     price: number
     priority: number
+    estimateMin: number
     dueDate: number
     completedAt: number
     assignmentHistory: number
@@ -36271,6 +36276,7 @@ export namespace Prisma {
     taskNumber?: true
     price?: true
     priority?: true
+    estimateMin?: true
     rejectionCount?: true
     order?: true
   }
@@ -36279,6 +36285,7 @@ export namespace Prisma {
     taskNumber?: true
     price?: true
     priority?: true
+    estimateMin?: true
     rejectionCount?: true
     order?: true
   }
@@ -36295,6 +36302,7 @@ export namespace Prisma {
     billable?: true
     price?: true
     priority?: true
+    estimateMin?: true
     dueDate?: true
     completedAt?: true
     stageEnteredAt?: true
@@ -36317,6 +36325,7 @@ export namespace Prisma {
     billable?: true
     price?: true
     priority?: true
+    estimateMin?: true
     dueDate?: true
     completedAt?: true
     stageEnteredAt?: true
@@ -36339,6 +36348,7 @@ export namespace Prisma {
     billable?: true
     price?: true
     priority?: true
+    estimateMin?: true
     dueDate?: true
     completedAt?: true
     assignmentHistory?: true
@@ -36450,6 +36460,7 @@ export namespace Prisma {
     billable: boolean
     price: Decimal | null
     priority: number | null
+    estimateMin: number | null
     dueDate: Date | null
     completedAt: Date | null
     assignmentHistory: JsonValue | null
@@ -36493,6 +36504,7 @@ export namespace Prisma {
     billable?: boolean
     price?: boolean
     priority?: boolean
+    estimateMin?: boolean
     dueDate?: boolean
     completedAt?: boolean
     assignmentHistory?: boolean
@@ -36525,6 +36537,7 @@ export namespace Prisma {
     billable?: boolean
     price?: boolean
     priority?: boolean
+    estimateMin?: boolean
     dueDate?: boolean
     completedAt?: boolean
     assignmentHistory?: boolean
@@ -36553,6 +36566,7 @@ export namespace Prisma {
     billable?: boolean
     price?: boolean
     priority?: boolean
+    estimateMin?: boolean
     dueDate?: boolean
     completedAt?: boolean
     assignmentHistory?: boolean
@@ -36581,6 +36595,7 @@ export namespace Prisma {
     billable?: boolean
     price?: boolean
     priority?: boolean
+    estimateMin?: boolean
     dueDate?: boolean
     completedAt?: boolean
     assignmentHistory?: boolean
@@ -36593,7 +36608,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "taskNumber" | "serviceId" | "statusId" | "assigneeId" | "title" | "description" | "billable" | "price" | "priority" | "dueDate" | "completedAt" | "assignmentHistory" | "stageTimings" | "stageEnteredAt" | "rejectionCount" | "order" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["task"]>
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "taskNumber" | "serviceId" | "statusId" | "assigneeId" | "title" | "description" | "billable" | "price" | "priority" | "estimateMin" | "dueDate" | "completedAt" | "assignmentHistory" | "stageTimings" | "stageEnteredAt" | "rejectionCount" | "order" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
@@ -36640,6 +36655,7 @@ export namespace Prisma {
       billable: boolean
       price: Prisma.Decimal | null
       priority: number | null
+      estimateMin: number | null
       dueDate: Date | null
       completedAt: Date | null
       assignmentHistory: Prisma.JsonValue | null
@@ -37091,6 +37107,7 @@ export namespace Prisma {
     readonly billable: FieldRef<"Task", 'Boolean'>
     readonly price: FieldRef<"Task", 'Decimal'>
     readonly priority: FieldRef<"Task", 'Int'>
+    readonly estimateMin: FieldRef<"Task", 'Int'>
     readonly dueDate: FieldRef<"Task", 'DateTime'>
     readonly completedAt: FieldRef<"Task", 'DateTime'>
     readonly assignmentHistory: FieldRef<"Task", 'Json'>
@@ -55166,6 +55183,7 @@ export namespace Prisma {
     billable: 'billable',
     price: 'price',
     priority: 'priority',
+    estimateMin: 'estimateMin',
     dueDate: 'dueDate',
     completedAt: 'completedAt',
     assignmentHistory: 'assignmentHistory',
@@ -57908,6 +57926,7 @@ export namespace Prisma {
     billable?: BoolFilter<"Task"> | boolean
     price?: DecimalNullableFilter<"Task"> | Decimal | DecimalJsLike | number | string | null
     priority?: IntNullableFilter<"Task"> | number | null
+    estimateMin?: IntNullableFilter<"Task"> | number | null
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     assignmentHistory?: JsonNullableFilter<"Task">
@@ -57939,6 +57958,7 @@ export namespace Prisma {
     billable?: SortOrder
     price?: SortOrderInput | SortOrder
     priority?: SortOrderInput | SortOrder
+    estimateMin?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
     assignmentHistory?: SortOrderInput | SortOrder
@@ -57973,6 +57993,7 @@ export namespace Prisma {
     billable?: BoolFilter<"Task"> | boolean
     price?: DecimalNullableFilter<"Task"> | Decimal | DecimalJsLike | number | string | null
     priority?: IntNullableFilter<"Task"> | number | null
+    estimateMin?: IntNullableFilter<"Task"> | number | null
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     assignmentHistory?: JsonNullableFilter<"Task">
@@ -58004,6 +58025,7 @@ export namespace Prisma {
     billable?: SortOrder
     price?: SortOrderInput | SortOrder
     priority?: SortOrderInput | SortOrder
+    estimateMin?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
     assignmentHistory?: SortOrderInput | SortOrder
@@ -58036,6 +58058,7 @@ export namespace Prisma {
     billable?: BoolWithAggregatesFilter<"Task"> | boolean
     price?: DecimalNullableWithAggregatesFilter<"Task"> | Decimal | DecimalJsLike | number | string | null
     priority?: IntNullableWithAggregatesFilter<"Task"> | number | null
+    estimateMin?: IntNullableWithAggregatesFilter<"Task"> | number | null
     dueDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     assignmentHistory?: JsonNullableWithAggregatesFilter<"Task">
@@ -61631,6 +61654,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -61662,6 +61686,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -61685,6 +61710,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -61716,6 +61742,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -61743,6 +61770,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -61763,6 +61791,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -61787,6 +61816,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -65036,6 +65066,7 @@ export namespace Prisma {
     billable?: SortOrder
     price?: SortOrder
     priority?: SortOrder
+    estimateMin?: SortOrder
     dueDate?: SortOrder
     completedAt?: SortOrder
     assignmentHistory?: SortOrder
@@ -65052,6 +65083,7 @@ export namespace Prisma {
     taskNumber?: SortOrder
     price?: SortOrder
     priority?: SortOrder
+    estimateMin?: SortOrder
     rejectionCount?: SortOrder
     order?: SortOrder
   }
@@ -65068,6 +65100,7 @@ export namespace Prisma {
     billable?: SortOrder
     price?: SortOrder
     priority?: SortOrder
+    estimateMin?: SortOrder
     dueDate?: SortOrder
     completedAt?: SortOrder
     stageEnteredAt?: SortOrder
@@ -65090,6 +65123,7 @@ export namespace Prisma {
     billable?: SortOrder
     price?: SortOrder
     priority?: SortOrder
+    estimateMin?: SortOrder
     dueDate?: SortOrder
     completedAt?: SortOrder
     stageEnteredAt?: SortOrder
@@ -65104,6 +65138,7 @@ export namespace Prisma {
     taskNumber?: SortOrder
     price?: SortOrder
     priority?: SortOrder
+    estimateMin?: SortOrder
     rejectionCount?: SortOrder
     order?: SortOrder
   }
@@ -72167,6 +72202,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -72196,6 +72232,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -72520,6 +72557,7 @@ export namespace Prisma {
     billable?: BoolFilter<"Task"> | boolean
     price?: DecimalNullableFilter<"Task"> | Decimal | DecimalJsLike | number | string | null
     priority?: IntNullableFilter<"Task"> | number | null
+    estimateMin?: IntNullableFilter<"Task"> | number | null
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     assignmentHistory?: JsonNullableFilter<"Task">
@@ -74159,6 +74197,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -74188,6 +74227,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -76225,6 +76265,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -76254,6 +76295,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -78366,6 +78408,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -78396,6 +78439,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -78473,6 +78517,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -78503,6 +78548,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -78639,6 +78685,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -78668,6 +78715,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -79442,6 +79490,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -79472,6 +79521,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -79569,6 +79619,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -79599,6 +79650,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -81782,6 +81834,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -81812,6 +81865,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -82031,6 +82085,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -82061,6 +82116,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -83283,6 +83339,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -83354,6 +83411,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -83383,6 +83441,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -83409,6 +83468,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -84203,6 +84263,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -84247,6 +84308,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -84276,6 +84338,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -84302,6 +84365,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -84743,6 +84807,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -84838,6 +84903,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -84867,6 +84933,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -84893,6 +84960,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -85397,6 +85465,7 @@ export namespace Prisma {
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
     priority?: number | null
+    estimateMin?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -85449,6 +85518,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -85478,6 +85548,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -85504,6 +85575,7 @@ export namespace Prisma {
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue

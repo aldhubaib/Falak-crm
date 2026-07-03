@@ -68,7 +68,7 @@ export default async function ProjectDetailPage({
             assigneeAvatar: null,
             serviceName: t.service?.name ?? null,
             priority: t.priority,
-            estimateMin: null,
+            estimateMin: t.estimateMin,
             stageEnteredAt: t.stageEnteredAt?.toISOString() ?? null,
             createdAt: t.createdAt.toISOString(),
             checklistTotal: t.checklistItems.length,
