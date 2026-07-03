@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { getProject } from "@/actions/projects";
 import { getTaskStatuses } from "@/actions/settings";
 import { AppHeader } from "@/components/app-header";
-import { ProjectAvatar } from "@/components/project-avatar";
 import { ProjectViewMenu } from "@/components/projects/project-view-menu";
 import { ProjectBoardClient } from "./board-client";
 
@@ -23,7 +22,6 @@ export default async function ProjectDetailPage({
     <>
       <AppHeader
         backHref="/projects"
-        leading={<ProjectAvatar name={project.name} size={28} />}
         title={project.name}
         actions={<ProjectViewMenu projectId={projectId} />}
       />

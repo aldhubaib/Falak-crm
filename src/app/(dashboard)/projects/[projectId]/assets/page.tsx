@@ -3,7 +3,6 @@ import { getProject } from "@/actions/projects";
 import { getProjectAssets, getFolderBreadcrumbs } from "@/actions/assets";
 import { createPresignedGet } from "@/lib/storage";
 import { AppHeader } from "@/components/app-header";
-import { ProjectAvatar } from "@/components/project-avatar";
 import { ProjectViewMenu } from "@/components/projects/project-view-menu";
 import { AssetsClient, type AssetVM, type FolderVM } from "./assets-client";
 
@@ -51,7 +50,6 @@ export default async function ProjectAssetsPage({
     <>
       <AppHeader
         backHref="/projects"
-        leading={<ProjectAvatar name={project.name} size={28} />}
         title={project.name}
         actions={<ProjectViewMenu projectId={projectId} />}
       />
