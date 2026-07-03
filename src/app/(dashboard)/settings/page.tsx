@@ -10,6 +10,7 @@ import {
   Coins,
   Receipt,
   MessageCircle,
+  LogIn,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { AppHeader } from "@/components/app-header";
@@ -81,6 +82,15 @@ export default function SettingsPage() {
               icon={Trash2}
               title="Trash"
               desc="Restore deleted items or empty the trash."
+            />
+          </Group>
+
+          <Group title="Appearance">
+            <Tile
+              href="/settings/login"
+              icon={LogIn}
+              title="Login Page"
+              desc="Add photos shown on the sign-in page's scrolling gallery."
             />
           </Group>
 

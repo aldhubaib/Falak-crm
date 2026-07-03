@@ -2,147 +2,142 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ClipboardList, Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { Layers, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { PageContainer } from "@/components/page-container";
 import { SurfaceCard } from "@/components/surface-card";
 import { EmptyState } from "@/components/empty-state";
-import { IconButton } from "@/components/icon-button";
 import { AddItemInput } from "@/components/add-item-input";
+import { TypeCard } from "@/components/task-types/type-card";
+import { cn } from "@/lib/utils";
 import {
   createChecklistTemplate,
   deleteChecklistTemplate,
 } from "@/actions/settings";
-
-type Template = {
-  id: string;
-  name: string;
-  description: string | null;
-  items: { id: string; name: string; type: string; role: string }[];
-};
-
-type Status = {
-  id: string;
-  name: string;
-  color: string;
-};
+import type { StatusOpt, TaskTypeVM } from "@/components/task-types/types";
 
 export function TaskTypesClient({
   templates,
-  statuses: _statuses,
+  statuses,
 }: {
-  templates: Template[];
-  statuses: Status[];
+  templates: TaskTypeVM[];
+  statuses: StatusOpt[];
 }) {
   const router = useRouter();
-  const [pending, startTransition] = useTransition();
-  const [newName, setNewName] = useState("");
+  const [, startTransition] = useTransition();
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [newName, setNewName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [shake, setShake] = useState(0);
+  const [toDelete, setToDelete] = useState<TaskTypeVM | null>(null);
 
-  const add = () => {
-    const v = newName.trim();
-    if (!v) return;
+  const addType = () => {
+    const n = newName.trim();
+    if (!n) {
+      setError("Enter a type name");
+      setShake((s) => s + 1);
+      return;
+    }
+    if (templates.some((t) => t.name.toLowerCase() === n.toLowerCase())) {
+      setError("A type with this name already exists");
+      setShake((s) => s + 1);
+      return;
+    }
     const fd = new FormData();
-    fd.set("name", v);
+    fd.set("name", n);
     startTransition(async () => {
       await createChecklistTemplate(fd);
       setNewName("");
+      setError(null);
       router.refresh();
     });
   };
 
-  const remove = (id: string) => {
+  const confirmDelete = () => {
+    if (!toDelete) return;
+    const id = toDelete.id;
     startTransition(async () => {
       await deleteChecklistTemplate(id);
+      if (expanded === id) setExpanded(null);
+      setToDelete(null);
       router.refresh();
     });
   };
 
   return (
-    <PageContainer className="mx-auto w-full max-w-2xl">
+    <PageContainer className="mx-auto w-full max-w-5xl space-y-field-gap">
+      <p className="text-sm text-muted-foreground">
+        These questions apply to all projects. Changes here affect every project
+        immediately.
+      </p>
+
       <SurfaceCard padding="sm">
         <div className="mb-2 flex items-center gap-2 text-hint text-muted-foreground">
-          <ClipboardList className="h-3.5 w-3.5" />
+          <Layers className="h-3.5 w-3.5" />
           Add a new task type
         </div>
         <AddItemInput
+          key={shake}
           value={newName}
-          onChange={setNewName}
-          onAdd={add}
-          addLabel="Add"
-          placeholder="Task type name (e.g. Social Post)"
+          onChange={(v) => {
+            setNewName(v);
+            if (error) setError(null);
+          }}
+          onAdd={addType}
+          addLabel="Add task type"
+          placeholder="Type name (e.g. Ai Video 9:16)"
+          inputClassName={cn(
+            error &&
+              "border-destructive text-destructive animate-shake focus-visible:ring-destructive/40",
+          )}
         />
+        {error && <div className="mt-2 text-hint text-destructive">{error}</div>}
       </SurfaceCard>
 
       <div className="space-y-field-gap">
-        {templates.map((t) => {
-          const isExpanded = expanded === t.id;
-          return (
-            <SurfaceCard key={t.id} padding="none">
-              <button
-                type="button"
-                onClick={() => setExpanded(isExpanded ? null : t.id)}
-                className="flex w-full items-center gap-3 p-3 text-left sm:p-4"
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="font-medium">{t.name}</div>
-                  <div className="mt-0.5 text-xs text-muted-foreground">
-                    {t.items.length} checklist item
-                    {t.items.length !== 1 ? "s" : ""}
-                  </div>
-                </div>
-                {isExpanded ? (
-                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                ) : (
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                )}
-              </button>
-
-              {isExpanded && (
-                <div className="border-t border-border/40 p-3 sm:p-4">
-                  {t.items.length > 0 ? (
-                    <ul className="space-y-1.5">
-                      {t.items.map((item) => (
-                        <li
-                          key={item.id}
-                          className="flex items-center gap-2 text-sm"
-                        >
-                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground" />
-                          <span className="flex-1 truncate">{item.name}</span>
-                          <span className="shrink-0 text-xs text-muted-foreground capitalize">
-                            {item.type}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-xs text-muted-foreground">
-                      No checklist items yet.
-                    </p>
-                  )}
-                  <div className="mt-3 flex justify-end">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-destructive hover:text-destructive"
-                      onClick={() => remove(t.id)}
-                      disabled={pending}
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                      Delete
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </SurfaceCard>
-          );
-        })}
-
-        {templates.length === 0 && (
-          <EmptyState message="No task types yet. Create your first one." />
-        )}
+        {templates.map((t) => (
+          <TypeCard
+            key={t.id}
+            type={t}
+            statuses={statuses}
+            expanded={expanded === t.id}
+            onToggle={() => setExpanded(expanded === t.id ? null : t.id)}
+            onDelete={() => setToDelete(t)}
+          />
+        ))}
+        {templates.length === 0 && <EmptyState message="No task types yet." />}
       </div>
+
+      <Dialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-full bg-destructive/15">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+            </div>
+            <DialogTitle>Delete type &quot;{toDelete?.name}&quot;?</DialogTitle>
+            <DialogDescription>
+              This type will be removed from every project. This action cannot be
+              undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setToDelete(null)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </PageContainer>
   );
 }

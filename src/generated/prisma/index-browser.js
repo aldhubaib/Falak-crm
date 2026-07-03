@@ -625,6 +625,15 @@ exports.Prisma.AttachmentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.LoginPhotoScalarFieldEnum = {
+  id: 'id',
+  r2Key: 'r2Key',
+  contentType: 'contentType',
+  column: 'column',
+  order: 'order',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.PublishItemScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -772,6 +781,7 @@ exports.Prisma.ModelName = {
   Referral: 'Referral',
   CustomFieldDef: 'CustomFieldDef',
   Attachment: 'Attachment',
+  LoginPhoto: 'LoginPhoto',
   PublishItem: 'PublishItem'
 };
 

@@ -295,6 +295,27 @@ export async function updateChecklistTemplateItem(
   }
 
   revalidatePath("/settings/checklists");
+  revalidatePath("/settings/task-types");
+}
+
+// Reorder + move items across sections (phase) in one transaction.
+export async function reorderChecklistItems(
+  _templateId: string,
+  items: { id: string; phase: string; order: number }[],
+) {
+  const { member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
+  await db.$transaction(
+    items.map((it) =>
+      db.checklistTemplateItem.update({
+        where: { id: it.id },
+        data: { phase: it.phase, order: it.order },
+      }),
+    ),
+  );
+
+  revalidatePath("/settings/task-types");
 }
 
 // ─── Roles ────────────────────────────────────────────────────────────────────
