@@ -254,11 +254,11 @@ export function ProjectBoardClient({
                     }}
                     className="block cursor-grab rounded-md border border-border/60 bg-surface p-3 text-left transition-colors hover:border-border active:cursor-grabbing"
                   >
-                    <div className="mb-2">
-                      {task.serviceName && (
+                    {task.serviceName && (
+                      <div className="mb-2">
                         <TaskTypeChip name={task.serviceName} />
-                      )}
-                    </div>
+                      </div>
+                    )}
 
                     <div className="text-xs font-medium text-foreground">
                       {task.title || "Untitled"}
@@ -281,7 +281,7 @@ export function ProjectBoardClient({
                       <PriorityBadge value={task.priority} />
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Avatar className="h-6 w-6 ring-1 ring-primary/30">
+                          <Avatar className="ml-auto h-6 w-6 ring-1 ring-primary/30">
                             <AvatarImage
                               src={
                                 task.assigneeAvatar ??

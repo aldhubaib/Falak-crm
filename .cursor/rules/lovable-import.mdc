@@ -1,45 +1,66 @@
 ---
-description: Import Lovable designs into Falak CRM — adopt their design, apply our tokens
+description: Import Lovable designs into Falak CRM — keep the design pixel-identical, only rewire the framework
 globs: src/**/*.tsx
 alwaysApply: false
 ---
 
 # Importing from Lovable
 
-Lovable owns the design language. When importing, **keep their visual choices** (colors, spacing, layout, component structure). Only apply our technical infrastructure.
+Lovable owns the design. The Lovable project uses the **exact same design tokens**
+as this repo (`src/styles.css` there == `src/app/globals.css` here: same oklch
+colors, spacing, radius, text tokens). So the visual layer transfers **1:1**.
 
-## What to convert (technical only)
+## Golden rule: keep every Tailwind class verbatim
 
-### Breakpoints → container queries
-| Lovable | Falak |
-|---------|-------|
-| `sm:` | remove or `@md:` |
-| `md:` | `@md:` (640px container) |
-| `lg:` / `xl:` / `2xl:` | `@lg:` (896px container) |
+Do **NOT** rewrite Lovable's utility classes. Copy them exactly as-is:
 
-### Hardcoded sizes → tokens
-| Lovable | Falak |
-|---------|-------|
-| `h-8` / `h-9` / `h-10` on inputs | `h-input` |
-| `w-8 h-8` / `w-10 h-10` on icon buttons | `w-icon-btn h-icon-btn` |
-| `w-4 h-4` on icons in buttons | `w-icon-sm h-icon-sm` |
-| `w-5 h-5` on icons | `w-icon-md h-icon-md` |
+- Keep colors/semantic classes (`bg-card`, `text-muted-foreground`, `bg-primary`, `border-border`) — identical tokens exist here.
+- Keep sizes exactly (`h-9`, `w-4 h-4`, `px-3`, `gap-2`, `rounded-lg`).
+- Keep breakpoints exactly (`sm:`, `md:`, `lg:`). Lovable uses viewport breakpoints and they work.
+- Keep spacing tokens (`p-card-pad`, `gap-section-gap`), radius (`rounded-card`), and text tokens (`text-label`, `text-hint`, `text-xxs`, `text-tiny`) — all defined in `globals.css`.
+- Keep component structure, hierarchy, animations, gradients, shadows.
 
-### Container setup
-- Add `style={{ containerType: "inline-size" }}` to layout wrappers
-- Add `cq-adapt` to cards that need container-responsive sizing
+Do **NOT** convert classes to `text-body` / `min-h-touch` / `w-icon-sm` / `h-input` /
+`@md:` / `cq-adapt`. Those tokens are **not defined** in `globals.css`, so they render
+as no-ops and will visually break the imported design. (See note below.)
 
-## What to keep from Lovable
-- Colors, gradients, shadows
-- Spacing values, padding, gaps
-- Border radius, opacity
-- Component structure and hierarchy
-- Animations and transitions
-- Typography choices (convert to nearest token: text-label/text-sub/text-body/text-heading)
-- Layout patterns, grid structures
+## What to actually change: the framework layer only
 
-## What to wire up
-- Replace mock data with server actions from `src/actions/`
-- Replace Lovable's routing with Next.js App Router
-- Use existing shared components where they exist (`data-table`, `action-menu`, `related-table`)
-- Integrate Clerk auth where needed
+The Lovable project is **TanStack Start**; this repo is **Next.js App Router**.
+Only rewire the plumbing:
+
+### Routing
+| Lovable (TanStack Start) | Falak (Next.js) |
+|---|---|
+| `src/routes/foo.tsx` | `src/app/foo/page.tsx` |
+| `src/routes/projects.$projectId.tsx` | `src/app/(dashboard)/projects/[projectId]/page.tsx` |
+| `src/routes/projects.$projectId.tasks.$taskId.tsx` | `.../projects/[projectId]/tasks/[taskId]/page.tsx` |
+| `src/routes/__root.tsx` | `src/app/layout.tsx` + `(dashboard)/layout.tsx` |
+| `src/routes/login.tsx` | Clerk sign-in route |
+
+### Navigation & params
+| Lovable (`@tanstack/react-router`) | Falak (`next/*`) |
+|---|---|
+| `import { Link } from "@tanstack/react-router"` | `import Link from "next/link"` (use `href=`) |
+| `useNavigate()` | `useRouter()` from `next/navigation` |
+| `useParams()` | `useParams()` from `next/navigation` |
+
+### Data
+- Replace zustand stores that hold **server data** (`src/lib/*-store.ts`) and mock data (`src/components/home/data.ts`) with **server actions** from `src/actions/` backed by Prisma.
+- Pure UI/client state (open/closed, drafts) may stay as zustand — this repo uses zustand too.
+
+### Server vs client
+- Data-fetching pages → keep as **server components**, fetch via server actions/Prisma.
+- Interactive pieces (state, effects, event handlers) → add `"use client"` at the top.
+
+### Reuse existing infra
+- Use existing shared components where equivalents exist.
+- Integrate Clerk auth where the Lovable route assumed a logged-in user.
+
+## Note: don't invent tokens that don't exist
+
+Tokens like `text-body`, `min-h-touch`, `w-icon-sm`, `h-input`, `@md:`, and `cq-adapt`
+are **not defined** in `globals.css` and there is no Tailwind config, so those classes
+render as no-ops. Always use the raw Tailwind classes Lovable outputs (`h-9`, `w-4 h-4`,
+`md:`, etc.) plus the semantic tokens that *are* defined in `globals.css`
+(`bg-card`, `text-muted-foreground`, `p-card-pad`, `rounded-card`, `text-label`).
