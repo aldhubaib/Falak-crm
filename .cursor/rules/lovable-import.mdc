@@ -1,0 +1,45 @@
+---
+description: Import Lovable designs into Falak CRM — adopt their design, apply our tokens
+globs: src/**/*.tsx
+alwaysApply: false
+---
+
+# Importing from Lovable
+
+Lovable owns the design language. When importing, **keep their visual choices** (colors, spacing, layout, component structure). Only apply our technical infrastructure.
+
+## What to convert (technical only)
+
+### Breakpoints → container queries
+| Lovable | Falak |
+|---------|-------|
+| `sm:` | remove or `@md:` |
+| `md:` | `@md:` (640px container) |
+| `lg:` / `xl:` / `2xl:` | `@lg:` (896px container) |
+
+### Hardcoded sizes → tokens
+| Lovable | Falak |
+|---------|-------|
+| `h-8` / `h-9` / `h-10` on inputs | `h-input` |
+| `w-8 h-8` / `w-10 h-10` on icon buttons | `w-icon-btn h-icon-btn` |
+| `w-4 h-4` on icons in buttons | `w-icon-sm h-icon-sm` |
+| `w-5 h-5` on icons | `w-icon-md h-icon-md` |
+
+### Container setup
+- Add `style={{ containerType: "inline-size" }}` to layout wrappers
+- Add `cq-adapt` to cards that need container-responsive sizing
+
+## What to keep from Lovable
+- Colors, gradients, shadows
+- Spacing values, padding, gaps
+- Border radius, opacity
+- Component structure and hierarchy
+- Animations and transitions
+- Typography choices (convert to nearest token: text-label/text-sub/text-body/text-heading)
+- Layout patterns, grid structures
+
+## What to wire up
+- Replace mock data with server actions from `src/actions/`
+- Replace Lovable's routing with Next.js App Router
+- Use existing shared components where they exist (`data-table`, `action-menu`, `related-table`)
+- Integrate Clerk auth where needed

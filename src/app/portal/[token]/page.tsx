@@ -1,16 +1,7 @@
-import { getPortalDeal } from "@/actions/deal-access";
-import { notFound } from "next/navigation";
-import { PortalClient } from "./portal-client";
-
-interface Props {
-  params: Promise<{ token: string }>;
-}
-
-export default async function PortalPage({ params }: Props) {
-  const { token } = await params;
-  const data = await getPortalDeal(token);
-
-  if (!data) notFound();
-
-  return <PortalClient data={JSON.parse(JSON.stringify(data))} />;
+export default function PortalPage() {
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-background">
+      <p className="text-muted-foreground">Client portal — rebuilding</p>
+    </div>
+  );
 }

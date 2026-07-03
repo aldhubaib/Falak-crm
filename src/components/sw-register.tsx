@@ -88,10 +88,10 @@ export function ServiceWorkerRegister() {
     <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[9999] animate-in slide-in-from-bottom-4 fade-in duration-300">
       <div className="flex items-center gap-3 bg-primary text-primary-foreground px-5 py-3 rounded-2xl shadow-2xl shadow-primary/20">
         <RefreshCw className="w-4 h-4 shrink-0" />
-        <span className="text-body font-medium">A new version is available</span>
+        <span className="text-sm font-medium">A new version is available</span>
         <button
           onClick={handleUpdate}
-          className="text-body font-bold bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg transition-colors min-h-touch flex items-center"
+          className="text-sm font-bold bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg transition-colors h-8 flex items-center"
         >
           Update
         </button>

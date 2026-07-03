@@ -4,289 +4,129 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-  --font-heading: "Inter", system-ui, sans-serif;
-
-  /* Container query breakpoints — 3 tiers: mobile (base) / laptop / desktop */
-  --container-md: 40rem; /* 640px — laptop */
-  --container-lg: 56rem; /* 896px — desktop */
-
-  /* Responsive font sizes — use as text-body, text-sub, etc. */
-  --font-size-body: var(--text-body);
-  --font-size-sub: var(--text-secondary);
-  --font-size-label: var(--text-label);
-  --font-size-button: var(--text-button);
-  --font-size-heading: var(--text-heading);
-  --font-size-subheading: var(--text-subheading);
-
-  /* Responsive sizing — use as min-h-touch, w-icon-btn, h-input, etc. */
-  --spacing-touch: var(--size-touch);
-  --spacing-touch-lg: var(--size-touch-lg);
-  --spacing-icon-btn: var(--size-icon-btn);
-  --spacing-input: var(--size-input);
-  --spacing-list-item: var(--size-list-item);
-  --spacing-icon-sm: var(--size-icon-sm);
-  --spacing-icon-md: var(--size-icon-md);
-  --spacing-icon-lg: var(--size-icon-lg);
-  --spacing-card: var(--space-card);
-  --spacing-card-sm: var(--space-card-sm);
-  --spacing-section: var(--space-section);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
-  --color-purple: var(--purple);
-  --color-purple-foreground: var(--purple-foreground);
-  --color-orange: var(--orange);
-  --color-orange-foreground: var(--orange-foreground);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-}
+  --color-warning: var(--warning);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 
-/* ──────────────────────────────────────────────
-   Fluid Design Tokens
-   Scales smoothly between small (320px) and
-   large (1280px) viewports via clamp().
-   Touch devices get a floor boost via pointer:coarse.
-   ────────────────────────────────────────────── */
-:root {
-  /* Typography — fluid between desktop min and mobile max */
-  --text-body: clamp(14px, 0.75rem + 0.25vw, 16px);
-  --text-secondary: clamp(12px, 0.625rem + 0.25vw, 14px);
-  --text-label: clamp(10px, 0.5rem + 0.25vw, 12px);
-  --text-button: clamp(12px, 0.625rem + 0.25vw, 14px);
-  --text-heading: clamp(18px, 1rem + 0.25vw, 20px);
-  --text-subheading: clamp(14px, 0.75rem + 0.25vw, 16px);
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 
-  /* Touch targets — fluid between compact and spacious */
-  --size-touch: clamp(32px, 1.5rem + 1.5vw, 44px);
-  --size-touch-lg: clamp(36px, 1.75rem + 1.5vw, 48px);
-  --size-icon-btn: clamp(28px, 1.25rem + 1.5vw, 40px);
-  --size-input: clamp(36px, 1.75rem + 1.5vw, 48px);
-  --size-list-item: clamp(36px, 1.75rem + 1.5vw, 48px);
+  --spacing-page-x: 1rem;
+  --spacing-page-x-md: 1.25rem;
+  --spacing-card-pad: 0.75rem;
+  --spacing-card-pad-lg: 1.25rem;
+  --spacing-section-gap: 1rem;
+  --spacing-field-gap: 0.5rem;
+  --spacing-control-h: 2.25rem;
+  --spacing-control-h-sm: 2rem;
 
-  /* Icons */
-  --size-icon-sm: clamp(14px, 0.75rem + 0.5vw, 18px);
-  --size-icon-md: clamp(16px, 0.875rem + 0.5vw, 20px);
-  --size-icon-lg: clamp(20px, 1.125rem + 0.5vw, 24px);
+  --radius-card: var(--radius-lg);
+  --radius-control: var(--radius-md);
 
-  /* Spacing */
-  --space-card: clamp(12px, 0.625rem + 0.5vw, 16px);
-  --space-card-sm: clamp(8px, 0.375rem + 0.5vw, 12px);
-  --space-section: clamp(16px, 0.875rem + 1vw, 24px);
-}
+  --text-label: 0.75rem;
+  --text-hint: 0.75rem;
+  --text-xxs: 0.625rem;
+  --text-tiny: 0.6875rem;
 
-/* Touch devices: lock to spacious mobile sizes */
-@media (pointer: coarse) {
-  :root {
-    --text-body: 16px;
-    --text-secondary: 14px;
-    --text-label: 12px;
-    --text-button: 14px;
-    --text-heading: 20px;
-    --text-subheading: 16px;
-
-    --size-touch: 44px;
-    --size-touch-lg: 48px;
-    --size-icon-btn: 40px;
-    --size-input: 48px;
-    --size-list-item: 48px;
-
-    --size-icon-sm: 18px;
-    --size-icon-md: 20px;
-    --size-icon-lg: 24px;
-
-    --space-card: 16px;
-    --space-card-sm: 12px;
-    --space-section: 24px;
-  }
-}
-
-/* ──────────────────────────────────────────────
-   Container Query Token Overrides
-   Only typography, icons, and spacing adapt to
-   container width. Touch targets (buttons, inputs,
-   list items) are NEVER reduced — they stay at the
-   pointer:coarse floor on touch devices.
-   ────────────────────────────────────────────── */
-@container (max-width: 320px) {
-  .cq-adapt {
-    --text-body: 14px;
-    --text-secondary: 12px;
-    --text-label: 10px;
-    --text-button: 12px;
-    --text-heading: 18px;
-    --text-subheading: 14px;
-    --size-icon-sm: 14px;
-    --size-icon-md: 16px;
-    --size-icon-lg: 20px;
-    --space-card: 12px;
-    --space-card-sm: 8px;
-    --space-section: 16px;
-  }
-}
-
-@container (min-width: 321px) and (max-width: 639px) {
-  .cq-adapt {
-    --text-body: 15px;
-    --text-secondary: 13px;
-    --text-label: 11px;
-    --text-button: 13px;
-    --text-heading: 18px;
-    --text-subheading: 14px;
-    --size-icon-sm: 16px;
-    --size-icon-md: 18px;
-    --size-icon-lg: 22px;
-    --space-card: 12px;
-    --space-card-sm: 8px;
-    --space-section: 16px;
-  }
-}
-
-@container (min-width: 640px) {
-  .cq-adapt {
-    --text-body: 16px;
-    --text-secondary: 14px;
-    --text-label: 12px;
-    --text-button: 14px;
-    --text-heading: 20px;
-    --text-subheading: 16px;
-    --size-icon-sm: 18px;
-    --size-icon-md: 20px;
-    --size-icon-lg: 24px;
-    --space-card: 16px;
-    --space-card-sm: 12px;
-    --space-section: 24px;
-  }
+  --color-avatar-fallback: #334155;
+  --color-surface-dim: #090909;
+  --color-surface-dim-hover: #0d0d0d;
 }
 
 :root {
-  --background: #0e0e10;
-  --foreground: hsl(0 0% 93%);
-  --card: hsl(0 0% 4%);
-  --card-foreground: hsl(0 0% 93%);
-  --popover: hsl(0 0% 4%);
-  --popover-foreground: hsl(0 0% 93%);
-  --primary: hsl(217 72% 56%);
-  --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(0 0% 10%);
-  --secondary-foreground: hsl(0 0% 93%);
-  --muted: hsl(0 0% 10%);
-  --muted-foreground: hsl(0 0% 45%);
-  --accent: hsl(0 0% 10%);
-  --accent-foreground: hsl(0 0% 93%);
-  --destructive: hsl(0 72% 51%);
-  --destructive-foreground: hsl(0 0% 100%);
-  --success: hsl(142 50% 45%);
-  --success-foreground: hsl(0 0% 100%);
-  --purple: hsl(258 60% 59%);
-  --purple-foreground: hsl(0 0% 100%);
-  --orange: hsl(25 90% 55%);
-  --orange-foreground: hsl(0 0% 100%);
-  --border: hsl(228 8% 9%);
-  --input: hsl(228 8% 14%);
-  --ring: hsl(217 72% 56%);
-  --chart-1: hsl(217 72% 56%);
-  --chart-2: hsl(258 60% 59%);
-  --chart-3: hsl(142 50% 45%);
-  --chart-4: hsl(25 90% 55%);
-  --chart-5: hsl(0 72% 51%);
-  --radius: 0.5rem;
-  --sidebar: hsl(0 0% 4%);
-  --sidebar-foreground: hsl(0 0% 45%);
-  --sidebar-primary: hsl(258 60% 59%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(0 0% 10%);
-  --sidebar-accent-foreground: hsl(0 0% 93%);
-  --sidebar-border: hsl(0 0% 12%);
-  --sidebar-ring: hsl(258 60% 59%);
-}
-
-.dark {
-  --background: #0e0e10;
-  --foreground: hsl(0 0% 93%);
-  --card: hsl(0 0% 4%);
-  --card-foreground: hsl(0 0% 93%);
-  --popover: hsl(0 0% 4%);
-  --popover-foreground: hsl(0 0% 93%);
-  --primary: hsl(217 72% 56%);
-  --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(0 0% 10%);
-  --secondary-foreground: hsl(0 0% 93%);
-  --muted: hsl(0 0% 10%);
-  --muted-foreground: hsl(0 0% 45%);
-  --accent: hsl(0 0% 10%);
-  --accent-foreground: hsl(0 0% 93%);
-  --destructive: hsl(0 72% 51%);
-  --border: hsl(228 8% 9%);
-  --input: hsl(228 8% 14%);
-  --ring: hsl(217 72% 56%);
-  --chart-1: hsl(217 72% 56%);
-  --chart-2: hsl(258 60% 59%);
-  --chart-3: hsl(142 50% 45%);
-  --chart-4: hsl(25 90% 55%);
-  --chart-5: hsl(0 72% 51%);
-  --sidebar: hsl(0 0% 4%);
-  --sidebar-foreground: hsl(0 0% 45%);
-  --sidebar-primary: hsl(258 60% 59%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(0 0% 10%);
-  --sidebar-accent-foreground: hsl(0 0% 93%);
-  --sidebar-border: hsl(0 0% 12%);
-  --sidebar-ring: hsl(258 60% 59%);
+  --radius: 0.625rem;
+  --background: oklch(0 0 0);
+  --surface: oklch(0.15 0.005 260);
+  --surface-2: oklch(0.2 0.006 260);
+  --foreground: oklch(0.97 0.003 247);
+  --card: oklch(0.19 0.006 260);
+  --card-foreground: oklch(0.97 0.003 247);
+  --popover: oklch(0.2 0.007 260);
+  --popover-foreground: oklch(0.97 0.003 247);
+  --primary: oklch(0.68 0.17 255);
+  --primary-foreground: oklch(0.98 0.003 247);
+  --secondary: oklch(0.25 0.008 260);
+  --secondary-foreground: oklch(0.97 0.003 247);
+  --muted: oklch(0.24 0.008 260);
+  --muted-foreground: oklch(0.62 0.015 260);
+  --accent: oklch(0.28 0.01 260);
+  --accent-foreground: oklch(0.97 0.003 247);
+  --destructive: oklch(0.65 0.2 25);
+  --destructive-foreground: oklch(0.98 0.003 247);
+  --success: oklch(0.72 0.17 155);
+  --success-foreground: oklch(0.98 0.003 247);
+  --warning: oklch(0.78 0.15 85);
+  --border: oklch(0.28 0.008 260);
+  --input: oklch(0.28 0.008 260);
+  --ring: oklch(0.68 0.17 255);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0 0 0);
+  --sidebar-foreground: oklch(0.97 0.003 247);
+  --sidebar-primary: oklch(0.68 0.17 255);
+  --sidebar-primary-foreground: oklch(0.98 0.003 247);
+  --sidebar-accent: oklch(0.28 0.01 260);
+  --sidebar-accent-foreground: oklch(0.97 0.003 247);
+  --sidebar-border: oklch(0.28 0.008 260);
+  --sidebar-ring: oklch(0.68 0.17 255);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--color-border);
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
   }
   html {
     @apply font-sans;
     color-scheme: dark;
-  }
-
-  input,
-  textarea,
-  select {
-    background-color: #000 !important;
   }
 
   ::-webkit-scrollbar {
@@ -297,11 +137,11 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: hsl(228 8% 9%);
+    background: oklch(0.28 0.008 260);
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(0 0% 20%);
+    background: oklch(0.35 0.01 260);
   }
 
   .scrollbar-hidden::-webkit-scrollbar {
@@ -320,4 +160,16 @@
   input[type="number"] {
     -moz-appearance: textfield;
   }
+}
+
+@keyframes shake-x {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@utility animate-shake {
+  animation: shake-x 0.35s ease-in-out;
 }
