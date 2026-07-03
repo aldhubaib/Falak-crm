@@ -42,6 +42,47 @@ Components: `board/task-card`, `board/confirm-status-dialog`, `board/decline-dia
 `surface-card`, `task-type-visuals`, `add-item-input`.
 Porting only the board = skipping the tab menu, settings page, create-task page, and card design.
 
+## Port the behavior too — not just the visuals
+
+A screen is not "imported" until it **does everything the Lovable version does**. The
+visual layer transfers 1:1; the behavior layer must be **re-implemented against the real
+backend** but must feel identical to the user. Walk every interactive element in the
+Lovable source and reproduce it. Nothing that reacts to the user may be dropped.
+
+Port ALL of these (check each one against the Lovable file):
+
+- **Clicks / taps** — every `onClick`, button, link, tab, chip, row, and card that
+  navigates or triggers something. If Lovable's card opens a detail view, yours must too.
+- **Create / edit / save** — forms and inline edits. Wire to the matching server action;
+  keep the same fields, validation, and disabled/enabled logic for the submit button.
+- **Delete / remove / archive** — every destructive action, including its
+  **confirmation dialog** (title, body copy, confirm/cancel labels) exactly as Lovable wrote it.
+- **Drag & drop, reorder, toggle, expand/collapse, tabs, filters, search, sort** — reproduce
+  the full state machine, including guard rails (e.g. Lovable's confirm-on-forward /
+  decline-on-backward board moves).
+- **Optimistic updates** — if Lovable updates local state immediately, do the same, then
+  call the server action and `router.refresh()` to reconcile. The UI must not feel slower.
+- **Error messages** — surface failures. Server actions throw or return `ActionResult`;
+  drive them with `useAction` / `useActionHandler` (from `@/hooks/use-action`) so errors go
+  to the shared error store / toast. Preserve any specific Lovable error/warning copy.
+- **Empty, loading, success, and disabled states** — port the empty-state text, skeletons/
+  spinners, "Saved"/"Added" confirmations, and disabled conditions verbatim.
+- **Toasts / notifications / inline validation** — keep the same messages and triggers.
+
+Interaction wiring map (Lovable → Falak):
+
+| Lovable | Falak |
+|---|---|
+| local zustand mutation (`store.deleteX`, `store.setStatus`) | server action in `src/actions/*` + `router.refresh()` |
+| optimistic `setState` then store call | optimistic `setState`, then `await` action, then `router.refresh()` |
+| throw / try-catch in handler | `useAction` / `useActionHandler` → shared error store toast |
+| confirm/decline dialogs | port the dialog component 1:1; keep title/body/labels |
+| file pick / upload | real upload (`uploadManager.enqueueChecklist` / project uploads) |
+
+Verify behavior at the end: for each screen, list every interactive element from the
+Lovable source and confirm the Falak version wires it to real data (not a dead handler,
+not a `TODO`, not a no-op). Report any interaction intentionally stubbed.
+
 ## Golden rule: keep every Tailwind class verbatim
 
 Do **NOT** rewrite Lovable's utility classes. Copy them exactly as-is:

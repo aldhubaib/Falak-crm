@@ -1,19 +1,12 @@
-import { AppHeader } from "@/components/app-header";
-import { EmptyState } from "@/components/empty-state";
-import { MessageCircle } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
-export default function MessagesPage() {
+export default function MessagesIndexPage() {
   return (
-    <>
-      <AppHeader title="Messages" />
-      <main className="min-h-0 flex-1 overflow-y-auto flex items-center justify-center">
-        <EmptyState
-          icon={MessageCircle}
-          title="Messages"
-          message="Team messaging is coming soon."
-          className="max-w-md"
-        />
-      </main>
-    </>
+    <div className="grid flex-1 place-items-center text-center text-sm text-muted-foreground">
+      <div className="flex flex-col items-center gap-3">
+        <MessageSquare className="h-8 w-8 opacity-60" />
+        <div>Select a conversation to start messaging</div>
+      </div>
+    </div>
   );
 }
