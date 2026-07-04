@@ -28,6 +28,13 @@ export default async function DealsPage() {
     );
   }
 
+  // Prisma Decimal isn't serializable across the Server→Client boundary, so
+  // convert deal values to plain numbers before handing them to the board.
+  const serializedPipeline = {
+    ...pipeline,
+    deals: pipeline.deals.map((d) => ({ ...d, value: Number(d.value) })),
+  };
+
   return (
     <>
       <AppHeader
@@ -42,7 +49,7 @@ export default async function DealsPage() {
         }
       />
       <main className="min-h-0 flex-1 overflow-x-auto overflow-y-auto">
-        <DealsBoard pipeline={pipeline} />
+        <DealsBoard pipeline={serializedPipeline} />
       </main>
     </>
   );
