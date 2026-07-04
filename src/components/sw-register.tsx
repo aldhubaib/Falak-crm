@@ -94,13 +94,15 @@ export function ServiceWorkerRegister() {
   if (!showUpdate) return null;
 
   return (
-    <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[9999] animate-in slide-in-from-bottom-4 fade-in duration-300">
-      <div className="flex items-center gap-3 bg-primary text-primary-foreground px-5 py-3 rounded-2xl shadow-2xl shadow-primary/20">
-        <RefreshCw className="w-4 h-4 shrink-0" />
-        <span className="text-sm font-medium">A new version is available</span>
+    <div className="fixed inset-x-3 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-[9999] flex justify-center animate-in slide-in-from-bottom-4 fade-in duration-300 sm:inset-x-0 sm:bottom-6">
+      <div className="flex w-full max-w-sm items-center gap-3 rounded-2xl bg-primary px-4 py-3 text-primary-foreground shadow-2xl shadow-primary/20">
+        <RefreshCw className="h-5 w-5 shrink-0" />
+        <span className="min-w-0 flex-1 text-sm font-medium">
+          A new version is available
+        </span>
         <button
           onClick={handleUpdate}
-          className="text-sm font-bold bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg transition-colors h-8 flex items-center"
+          className="flex h-9 shrink-0 items-center rounded-xl bg-white/20 px-4 text-sm font-bold transition-colors hover:bg-white/30 active:bg-white/40"
         >
           Update
         </button>
