@@ -14,6 +14,7 @@ import {
   CalendarDays,
   Settings,
   LogOut,
+  UserCog,
 } from "lucide-react";
 
 import {
@@ -36,6 +37,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
 const items = [
@@ -101,35 +109,54 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="px-2 pb-4 group-data-[collapsible=icon]:px-0">
-        <button
-          type="button"
-          onClick={() => setSignOutOpen(true)}
-          aria-label="Sign out"
-          className="flex items-center gap-2.5 rounded-lg p-1 text-left transition-colors hover:bg-accent/60 group-data-[collapsible=icon]:justify-center"
-        >
-          {user?.imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={user.imageUrl}
-              alt={user.fullName ?? "You"}
-              className="h-8 w-8 shrink-0 rounded-full object-cover"
-            />
-          ) : (
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-500/80 text-sm font-semibold text-white">
-              {initials}
-            </div>
-          )}
-          {!collapsed && (
-            <div className="min-w-0 leading-tight">
-              <div className="truncate text-sm font-medium text-foreground">
-                {user?.fullName || "User"}
-              </div>
-              <div className="truncate text-xs text-muted-foreground">
-                {user?.primaryEmailAddress?.emailAddress || "Signed in"}
-              </div>
-            </div>
-          )}
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              aria-label="Account menu"
+              className="flex items-center gap-2.5 rounded-lg p-1 text-left transition-colors hover:bg-accent/60 group-data-[collapsible=icon]:justify-center"
+            >
+              {user?.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={user.imageUrl}
+                  alt={user.fullName ?? "You"}
+                  className="h-8 w-8 shrink-0 rounded-full object-cover"
+                />
+              ) : (
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-500/80 text-sm font-semibold text-white">
+                  {initials}
+                </div>
+              )}
+              {!collapsed && (
+                <div className="min-w-0 leading-tight">
+                  <div className="truncate text-sm font-medium text-foreground">
+                    {user?.fullName || "User"}
+                  </div>
+                  <div className="truncate text-xs text-muted-foreground">
+                    {user?.primaryEmailAddress?.emailAddress || "Signed in"}
+                  </div>
+                </div>
+              )}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="top" align="start" className="w-56">
+            <DropdownMenuItem asChild>
+              <Link href="/account" onClick={handleNav} className="gap-2.5">
+                <UserCog className="h-4 w-4" />
+                Account settings
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="gap-2.5 text-destructive focus:text-destructive [&_svg]:text-destructive"
+              onSelect={() => setSignOutOpen(true)}
+            >
+              <LogOut className="h-4 w-4" />
+              Sign out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <Dialog open={signOutOpen} onOpenChange={setSignOutOpen}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>

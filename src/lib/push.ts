@@ -16,10 +16,12 @@ interface NotifyPayload {
   body?: string;
   url?: string;
   tag?: string;
+  /** Notification icon: sender avatar or project thumbnail. */
+  icon?: string;
 }
 
 export async function sendNotification(payload: NotifyPayload) {
-  const { recipientId, type, title, body, url, tag } = payload;
+  const { recipientId, type, title, body, url, tag, icon } = payload;
 
   const notification = await db.notification.create({
     data: {
@@ -45,6 +47,7 @@ export async function sendNotification(payload: NotifyPayload) {
     url: url || "/dashboard",
     badge: unreadCount,
     tag: tag || notification.id,
+    icon,
   });
 
   const results = await Promise.allSettled(

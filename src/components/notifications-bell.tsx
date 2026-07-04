@@ -67,6 +67,19 @@ export function NotificationsBell() {
     return () => clearInterval(interval);
   }, [refresh]);
 
+  // Mirror the unread count on the OS app icon (installed PWA). The service
+  // worker sets it when a push arrives while the app is closed; this keeps it
+  // in sync (and clears it) while the app is in use.
+  useEffect(() => {
+    const nav = navigator as Navigator & {
+      setAppBadge?: (count: number) => Promise<void>;
+      clearAppBadge?: () => Promise<void>;
+    };
+    if (!nav.setAppBadge) return;
+    if (unreadCount > 0) nav.setAppBadge(unreadCount).catch(() => {});
+    else nav.clearAppBadge?.().catch(() => {});
+  }, [unreadCount]);
+
   // Instant updates: refresh the moment something lands on our user channel.
   const cent = useCentrifugo();
   useChannel(cent ? userChannel(cent.memberId) : null, () => refresh());

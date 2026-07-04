@@ -65,6 +65,11 @@ export function CentrifugoProvider({
   const subsRef = useRef<
     Map<string, { sub: Subscription; handlers: Set<MessageHandler> }>
   >(new Map());
+  // Channels that must stay subscribed for the whole session (the workspace
+  // presence channel). Without pinning, a page that watches the same channel
+  // would tear it down on unmount and the user would drop out of presence —
+  // showing as "Offline" to everyone while still using the app.
+  const pinnedRef = useRef<Set<string>>(new Set());
   const ensureSubRef = useRef<((channel: string) => unknown) | null>(null);
 
   useEffect(() => {
@@ -79,7 +84,9 @@ export function CentrifugoProvider({
       setConnected(true);
       // Join the workspace presence channel so this user counts as online for
       // the whole session (independent of which page/thread is open).
-      ensureSubRef.current?.(workspacePresenceChannel(workspaceId));
+      const presenceChannel = workspacePresenceChannel(workspaceId);
+      pinnedRef.current.add(presenceChannel);
+      ensureSubRef.current?.(presenceChannel);
     });
     client.on("disconnected", () => setConnected(false));
     client.connect();
@@ -131,7 +138,7 @@ export function CentrifugoProvider({
       entry.handlers.add(onMessage);
       return () => {
         entry.handlers.delete(onMessage);
-        if (entry.handlers.size === 0) {
+        if (entry.handlers.size === 0 && !pinnedRef.current.has(channel)) {
           try {
             entry.sub.unsubscribe();
             clientRef.current?.removeSubscription(entry.sub);

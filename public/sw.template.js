@@ -41,13 +41,13 @@ self.addEventListener("push", (event) => {
   if (!event.data) return;
 
   const data = event.data.json();
-  const { title, body, url, badge } = data;
+  const { title, body, url, badge, icon } = data;
 
   event.waitUntil(
     Promise.all([
       self.registration.showNotification(title, {
         body: body || "",
-        icon: "/icons/icon-192.png",
+        icon: icon || "/icons/icon-192.png",
         badge: "/icons/icon-192.png",
         data: { url: url || "/dashboard" },
         vibrate: [200, 100, 200],

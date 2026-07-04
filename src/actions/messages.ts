@@ -8,6 +8,7 @@ import {
 } from "@/lib/workspace";
 import { safeAction, type ActionResult } from "@/lib/action";
 import { sendNotification } from "@/lib/push";
+import { createPresignedGet } from "@/lib/storage";
 import {
   broadcast,
   taskChannel,
@@ -222,6 +223,7 @@ export async function sendMessage(
     const conversationId = input.conversationId ?? null;
     let taskTitle = "";
     let projectName = "";
+    let projectThumbnailId: string | null = null;
     let participantIds: string[] = [];
 
     if (conversationId) {
@@ -240,7 +242,12 @@ export async function sendMessage(
     } else if (taskId) {
       const task = await db.task.findFirst({
         where: { id: taskId },
-        select: { id: true, title: true, projectId: true, project: { select: { name: true } } },
+        select: {
+          id: true,
+          title: true,
+          projectId: true,
+          project: { select: { name: true, thumbnailId: true } },
+        },
       });
       if (!task) throw new Error("Task not found");
       const access = await getProjectAccess(task.projectId);
@@ -248,14 +255,16 @@ export async function sendMessage(
       projectId = task.projectId;
       taskTitle = task.title;
       projectName = task.project.name;
+      projectThumbnailId = task.project.thumbnailId;
     } else if (projectId) {
       const access = await getProjectAccess(projectId);
       if (!access.hasAccess) throw new Error("Permission denied");
       const project = await db.project.findFirst({
         where: { id: projectId, workspaceId: workspace.id },
-        select: { name: true },
+        select: { name: true, thumbnailId: true },
       });
       projectName = project?.name ?? "";
+      projectThumbnailId = project?.thumbnailId ?? null;
     } else {
       throw new Error("No thread specified");
     }
@@ -275,7 +284,9 @@ export async function sendMessage(
           ? { create: mentionedIds.map((id) => ({ memberId: id })) }
           : undefined,
       },
-      include: { author: { select: { id: true, name: true, email: true } } },
+      include: {
+        author: { select: { id: true, name: true, email: true, imageUrl: true } },
+      },
     });
 
     // Link any pre-uploaded attachments to this message.
@@ -354,6 +365,22 @@ export async function sendMessage(
         ? `${authorName} declined "${taskTitle}"`
         : `${authorName} mentioned you${taskTitle ? ` in "${taskTitle}"` : projectName ? ` in ${projectName}` : ""}`;
 
+    // Notification icon: project thumbnail for project/task threads, otherwise
+    // the sender's profile photo. Thumbnails live in R2, so mint a presigned
+    // URL the OS can fetch when it displays the notification.
+    let notifyIcon = message.author.imageUrl ?? undefined;
+    if (!conversationId && projectThumbnailId) {
+      try {
+        const thumb = await db.attachment.findUnique({
+          where: { id: projectThumbnailId },
+          select: { r2Key: true },
+        });
+        if (thumb?.r2Key) notifyIcon = await createPresignedGet(thumb.r2Key);
+      } catch {
+        // fall back to the author's photo
+      }
+    }
+
     for (const rid of new Set(recipients)) {
       void sendNotification({
         recipientId: rid,
@@ -362,6 +389,7 @@ export async function sendMessage(
         body: preview,
         url,
         tag: `msg-${message.id}`,
+        icon: notifyIcon,
       });
     }
 

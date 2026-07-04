@@ -11,6 +11,9 @@ import {
   UploadCloud,
   Search,
   Files as FilesIcon,
+  Mic,
+  Pause,
+  Play,
   MoreVertical,
   ChevronDown,
   Reply,
@@ -53,6 +56,9 @@ import {
 import { uploadManager, type UploadItem } from "@/lib/upload-manager";
 
 const QUICK_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🙏"];
+
+// Number of bars in the live recording waveform.
+const VOICE_BAR_COUNT = 40;
 
 export type ChatMessage = {
   id: string;
@@ -465,6 +471,209 @@ export function ThreadChat({
     };
     setOutbox((prev) => [...prev, entry]);
   };
+
+  // --- Voice messages ---
+  const [recording, setRecording] = useState(false);
+  const [recordPaused, setRecordPaused] = useState(false);
+  const [recordSecs, setRecordSecs] = useState(0);
+  const [recordLevels, setRecordLevels] = useState<number[]>(() =>
+    new Array(VOICE_BAR_COUNT).fill(0),
+  );
+  const [recordError, setRecordError] = useState<string | null>(null);
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const recordChunksRef = useRef<Blob[]>([]);
+  const recordTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const discardRecordingRef = useRef(false);
+  // Elapsed-time bookkeeping that survives pause/resume.
+  const recordStartedAtRef = useRef(0);
+  const recordAccumulatedRef = useRef(0);
+  // Live waveform visualizer.
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const levelsRef = useRef<number[]>(new Array(VOICE_BAR_COUNT).fill(0));
+  const recordPausedRef = useRef(false);
+
+  // Send a finished recording through the normal attachment pipeline, so it
+  // gets the optimistic bubble, upload progress, retry, reactions and replies
+  // exactly like any other message.
+  const sendVoice = useCallback(
+    (file: File) => {
+      const ids = uploadManager.enqueueMessage([file]);
+      const entry: OutboxEntry = {
+        tempId: `out-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        body: "",
+        replyToId: replyTo,
+        createdAt: new Date().toISOString(),
+        files: [
+          {
+            uploadId: ids[0],
+            name: file.name,
+            contentType: file.type || null,
+            previewUrl: null,
+          },
+        ],
+        status: "uploading",
+      };
+      setReplyTo(null);
+      setOutbox((prev) => [...prev, entry]);
+    },
+    [replyTo],
+  );
+
+  // Scrolls the waveform: samples the mic level each frame, shifts the bar
+  // buffer left and appends the newest peak.
+  const runVisualizer = useCallback(() => {
+    const analyser = analyserRef.current;
+    if (!analyser) return;
+    const data = new Uint8Array(analyser.fftSize);
+    const loop = () => {
+      if (!recordPausedRef.current) {
+        analyser.getByteTimeDomainData(data);
+        let peak = 0;
+        for (let i = 0; i < data.length; i++) {
+          const v = Math.abs(data[i] - 128) / 128;
+          if (v > peak) peak = v;
+        }
+        // Amplify so quiet speech is visible.
+        const level = Math.min(1, peak * 2.5);
+        const shifted = levelsRef.current.slice(1);
+        shifted.push(level);
+        levelsRef.current = shifted;
+        setRecordLevels([...shifted]);
+      }
+      rafRef.current = requestAnimationFrame(loop);
+    };
+    rafRef.current = requestAnimationFrame(loop);
+  }, []);
+
+  const cleanupRecordingResources = () => {
+    if (recordTimerRef.current) {
+      clearInterval(recordTimerRef.current);
+      recordTimerRef.current = null;
+    }
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    audioCtxRef.current?.close().catch(() => {});
+    audioCtxRef.current = null;
+    analyserRef.current = null;
+  };
+
+  const startRecording = async () => {
+    if (recording) return;
+    if (typeof MediaRecorder === "undefined" || !navigator.mediaDevices?.getUserMedia) {
+      setRecordError("Voice recording is not supported in this browser.");
+      setTimeout(() => setRecordError(null), 4000);
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Safari (iOS) records AAC in mp4; Chrome/Firefox record Opus in webm.
+      const mimeType = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"].find(
+        (t) => MediaRecorder.isTypeSupported(t),
+      );
+      const rec = mimeType
+        ? new MediaRecorder(stream, { mimeType })
+        : new MediaRecorder(stream);
+      recordChunksRef.current = [];
+      discardRecordingRef.current = false;
+      recordAccumulatedRef.current = 0;
+      recordPausedRef.current = false;
+      levelsRef.current = new Array(VOICE_BAR_COUNT).fill(0);
+      setRecordLevels(levelsRef.current);
+      setRecordPaused(false);
+      rec.ondataavailable = (e) => {
+        if (e.data.size > 0) recordChunksRef.current.push(e.data);
+      };
+      rec.onstop = () => {
+        stream.getTracks().forEach((t) => t.stop());
+        cleanupRecordingResources();
+        if (!discardRecordingRef.current && recordChunksRef.current.length > 0) {
+          const type = rec.mimeType || "audio/webm";
+          const ext = type.includes("mp4") ? "m4a" : type.includes("ogg") ? "ogg" : "webm";
+          const stamp = new Date();
+          const name = `Voice message ${stamp.toLocaleDateString()} ${stamp
+            .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+            .replace(/:/g, ".")}.${ext}`;
+          const file = new File([new Blob(recordChunksRef.current, { type })], name, { type });
+          sendVoice(file);
+        }
+        recordChunksRef.current = [];
+      };
+      // Visualizer setup — recording continues fine without it.
+      try {
+        const AC =
+          window.AudioContext ??
+          (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        const ctx = new AC();
+        const src = ctx.createMediaStreamSource(stream);
+        const analyser = ctx.createAnalyser();
+        analyser.fftSize = 256;
+        src.connect(analyser);
+        audioCtxRef.current = ctx;
+        analyserRef.current = analyser;
+        runVisualizer();
+      } catch {}
+      recorderRef.current = rec;
+      rec.start(250);
+      recordStartedAtRef.current = Date.now();
+      setRecordSecs(0);
+      setRecording(true);
+      recordTimerRef.current = setInterval(() => {
+        const running = recordStartedAtRef.current
+          ? Date.now() - recordStartedAtRef.current
+          : 0;
+        setRecordSecs(Math.floor((recordAccumulatedRef.current + running) / 1000));
+      }, 250);
+    } catch {
+      setRecordError("Microphone access was denied. Allow it in your browser settings to send voice messages.");
+      setTimeout(() => setRecordError(null), 5000);
+    }
+  };
+
+  const togglePauseRecording = () => {
+    const rec = recorderRef.current;
+    if (!rec) return;
+    if (rec.state === "recording") {
+      rec.pause();
+      recordAccumulatedRef.current += Date.now() - recordStartedAtRef.current;
+      recordStartedAtRef.current = 0;
+      recordPausedRef.current = true;
+      setRecordPaused(true);
+    } else if (rec.state === "paused") {
+      rec.resume();
+      recordStartedAtRef.current = Date.now();
+      recordPausedRef.current = false;
+      setRecordPaused(false);
+    }
+  };
+
+  const stopRecording = (sendIt: boolean) => {
+    discardRecordingRef.current = !sendIt;
+    try {
+      if (recorderRef.current?.state === "paused") recorderRef.current.resume();
+      recorderRef.current?.stop();
+    } catch {}
+    recorderRef.current = null;
+    setRecording(false);
+    setRecordPaused(false);
+    recordPausedRef.current = false;
+  };
+
+  // Don't leave the mic on if the user navigates away mid-recording.
+  useEffect(() => {
+    return () => {
+      discardRecordingRef.current = true;
+      if (recordTimerRef.current) clearInterval(recordTimerRef.current);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      audioCtxRef.current?.close().catch(() => {});
+      try {
+        recorderRef.current?.stop();
+      } catch {}
+    };
+  }, []);
 
   const retryOutbox = (tempId: string) => {
     const entry = outbox.find((o) => o.tempId === tempId);
@@ -931,6 +1140,69 @@ export function ThreadChat({
               ))}
             </div>
           )}
+          {recordError && (
+            <div className="mb-2 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+              {recordError}
+            </div>
+          )}
+          {recording ? (
+            <div className="flex items-center gap-2 rounded-2xl border border-border/60 bg-surface/40 p-2 sm:gap-3">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="shrink-0 rounded-full text-muted-foreground hover:text-destructive"
+                aria-label="Discard recording"
+                onClick={() => stopRecording(false)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+              <div className="flex shrink-0 items-center gap-1.5 text-sm">
+                <span
+                  className={cn(
+                    "h-2 w-2 rounded-full bg-destructive",
+                    !recordPaused && "animate-pulse",
+                  )}
+                  aria-hidden
+                />
+                <span className="font-medium tabular-nums">
+                  {Math.floor(recordSecs / 60)}:{String(recordSecs % 60).padStart(2, "0")}
+                </span>
+              </div>
+              <div
+                className="flex min-w-0 flex-1 items-center justify-center gap-[2px]"
+                aria-hidden
+              >
+                {recordLevels.map((v, i) => (
+                  <span
+                    key={i}
+                    className="w-[2px] rounded-full bg-muted-foreground/70"
+                    style={{
+                      height: `${Math.max(3, Math.round(v * 26))}px`,
+                      opacity: recordPaused ? 0.35 : 0.5 + v * 0.5,
+                      transition: "height 90ms linear",
+                    }}
+                  />
+                ))}
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="shrink-0 rounded-full text-destructive hover:text-destructive"
+                onClick={togglePauseRecording}
+                aria-label={recordPaused ? "Resume recording" : "Pause recording"}
+              >
+                {recordPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+              </Button>
+              <Button
+                size="icon"
+                className="shrink-0 rounded-full bg-success text-background hover:bg-success/90"
+                onClick={() => stopRecording(true)}
+                aria-label="Send voice message"
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
+          ) : (
           <div className="flex items-end gap-2 rounded-2xl border border-border/60 bg-surface/40 p-2">
             <input
               ref={fileInputRef}
@@ -972,16 +1244,28 @@ export function ThreadChat({
               className="min-h-10 flex-1 resize-none border-0 bg-transparent p-2 text-sm shadow-none focus-visible:ring-0"
               rows={1}
             />
-            <Button
-              size="icon"
-              className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
-              onClick={send}
-              disabled={!draft.trim() && pending.length === 0}
-              aria-label="Send"
-            >
-              <Send className="h-4 w-4" />
-            </Button>
+            {draft.trim() || pending.length > 0 ? (
+              <Button
+                size="icon"
+                className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+                onClick={send}
+                aria-label="Send"
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full"
+                onClick={startRecording}
+                aria-label="Record voice message"
+              >
+                <Mic className="h-4 w-4" />
+              </Button>
+            )}
           </div>
+          )}
         </div>
       </div>
 
