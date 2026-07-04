@@ -107,9 +107,18 @@ export function AppSidebar() {
           aria-label="Sign out"
           className="flex items-center gap-2.5 rounded-lg p-1 text-left transition-colors hover:bg-accent/60 group-data-[collapsible=icon]:justify-center"
         >
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-500/80 text-sm font-semibold text-white">
-            {initials}
-          </div>
+          {user?.imageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={user.imageUrl}
+              alt={user.fullName ?? "You"}
+              className="h-8 w-8 shrink-0 rounded-full object-cover"
+            />
+          ) : (
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-500/80 text-sm font-semibold text-white">
+              {initials}
+            </div>
+          )}
           {!collapsed && (
             <div className="min-w-0 leading-tight">
               <div className="truncate text-sm font-medium text-foreground">

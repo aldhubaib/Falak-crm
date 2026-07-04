@@ -101,6 +101,33 @@ export default async function ThreadPage({
     orderBy: { createdAt: "asc" },
   });
 
+  // Load attachments for these messages (polymorphic: entityType "message").
+  const attachmentRows =
+    rows.length > 0
+      ? await db.attachment.findMany({
+          where: {
+            workspaceId: workspace.id,
+            entityType: "message",
+            entityId: { in: rows.map((r) => r.id) },
+            status: "uploaded",
+          },
+          select: {
+            id: true,
+            name: true,
+            contentType: true,
+            sizeBytes: true,
+            entityId: true,
+          },
+          orderBy: { createdAt: "asc" },
+        })
+      : [];
+  const attachmentsByMessage = new Map<string, typeof attachmentRows>();
+  for (const a of attachmentRows) {
+    const list = attachmentsByMessage.get(a.entityId) ?? [];
+    list.push(a);
+    attachmentsByMessage.set(a.entityId, list);
+  }
+
   // Mark this thread's notifications as read.
   const linkUrl =
     target.conversationId
@@ -119,6 +146,13 @@ export default async function ThreadPage({
     authorName: c.author.name ?? c.author.email,
     body: c.body.replace(MENTION_RE, "@$1"),
     createdAt: c.createdAt.toISOString(),
+    attachments: (attachmentsByMessage.get(c.id) ?? []).map((a) => ({
+      id: a.id,
+      name: a.name,
+      contentType: a.contentType,
+      sizeBytes: a.sizeBytes,
+      isImage: Boolean(a.contentType && a.contentType.startsWith("image/")),
+    })),
   }));
 
   return (

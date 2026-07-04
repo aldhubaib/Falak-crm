@@ -8,6 +8,7 @@ import {
 } from "@/lib/workspace";
 import { safeAction, type ActionResult } from "@/lib/action";
 import { sendNotification } from "@/lib/push";
+import { uploadBytes, generateR2Key } from "@/lib/storage";
 import {
   broadcast,
   taskChannel,
@@ -32,6 +33,14 @@ function toDisplayBody(body: string): string {
   return body.replace(MENTION_RE, "@$1");
 }
 
+export type MessageAttachment = {
+  id: string;
+  name: string;
+  contentType: string | null;
+  sizeBytes: number | null;
+  isImage: boolean;
+};
+
 export type MessageDTO = {
   id: string;
   taskId: string | null;
@@ -42,6 +51,7 @@ export type MessageDTO = {
   authorName: string;
   body: string; // display body (mentions collapsed to @Name)
   createdAt: string;
+  attachments: MessageAttachment[];
 };
 
 type SendMessageInput = {
@@ -50,7 +60,58 @@ type SendMessageInput = {
   projectId?: string | null;
   conversationId?: string | null;
   kind?: string;
+  attachmentIds?: string[];
 };
+
+const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
+
+function isImageType(contentType: string | null): boolean {
+  return Boolean(contentType && contentType.startsWith("image/"));
+}
+
+// Uploads a chat attachment to R2 and returns a pending Attachment record. It is
+// linked to its message when sendMessage runs with the returned id.
+export async function uploadMessageAttachment(
+  formData: FormData,
+): Promise<ActionResult<MessageAttachment>> {
+  return safeAction("Upload Attachment", async () => {
+    const { workspace } = await requireWorkspaceWithMember();
+
+    const file = formData.get("file");
+    if (!(file instanceof File) || file.size === 0) {
+      throw new Error("No file provided");
+    }
+    if (file.size > MAX_ATTACHMENT_BYTES) {
+      throw new Error("File must be 25MB or smaller");
+    }
+
+    const name = file.name || "file";
+    const key = generateR2Key("message_attachment", name);
+    const bytes = Buffer.from(await file.arrayBuffer());
+    await uploadBytes(bytes, key, file.type || "application/octet-stream");
+
+    const attachment = await db.attachment.create({
+      data: {
+        workspaceId: workspace.id,
+        entityType: "message_pending",
+        entityId: "",
+        name,
+        sizeBytes: file.size,
+        contentType: file.type || null,
+        r2Key: key,
+        status: "uploaded",
+      },
+    });
+
+    return {
+      id: attachment.id,
+      name: attachment.name,
+      contentType: attachment.contentType,
+      sizeBytes: attachment.sizeBytes,
+      isImage: isImageType(attachment.contentType),
+    };
+  });
+}
 
 // Single write path for every message surface: task comments, rejections,
 // project chat, and direct messages. Persists to Postgres (source of truth),
@@ -62,7 +123,10 @@ export async function sendMessage(
     const { workspace, member } = await requireWorkspaceWithMember();
 
     const body = input.body.trim();
-    if (!body) throw new Error("Message is empty");
+    const attachmentIds = [...new Set(input.attachmentIds ?? [])];
+    if (!body && attachmentIds.length === 0) {
+      throw new Error("Message is empty");
+    }
 
     let taskId = input.taskId ?? null;
     let projectId = input.projectId ?? null;
@@ -124,10 +188,36 @@ export async function sendMessage(
       include: { author: { select: { id: true, name: true, email: true } } },
     });
 
+    // Link any pre-uploaded attachments to this message.
+    let attachments: MessageAttachment[] = [];
+    if (attachmentIds.length > 0) {
+      await db.attachment.updateMany({
+        where: {
+          id: { in: attachmentIds },
+          workspaceId: workspace.id,
+          entityType: "message_pending",
+        },
+        data: { entityType: "message", entityId: message.id },
+      });
+      const rows = await db.attachment.findMany({
+        where: { entityType: "message", entityId: message.id },
+        select: { id: true, name: true, contentType: true, sizeBytes: true },
+      });
+      attachments = rows.map((a) => ({
+        id: a.id,
+        name: a.name,
+        contentType: a.contentType,
+        sizeBytes: a.sizeBytes,
+        isImage: isImageType(a.contentType),
+      }));
+    }
+
     const authorName =
       message.author.name ?? message.author.email ?? "Someone";
     const display = toDisplayBody(body);
-    const preview = display.length > 80 ? display.slice(0, 80) + "…" : display;
+    const previewText = display || (attachments.length > 0 ? `📎 ${attachments[0].name}` : "");
+    const preview =
+      previewText.length > 80 ? previewText.slice(0, 80) + "…" : previewText;
 
     const dto: MessageDTO = {
       id: message.id,
@@ -139,6 +229,7 @@ export async function sendMessage(
       authorName,
       body: display,
       createdAt: message.createdAt.toISOString(),
+      attachments,
     };
 
     // Recipients + notification (mention-driven; DMs notify all participants).
@@ -294,7 +385,7 @@ export async function getInboxThreads(): Promise<InboxThread[]> {
       conversationId: null,
       thumbnailId: p.thumbnailId ?? null,
       peerMemberIds: [],
-      lastMessage: last ? toDisplayBody(last.body) : "",
+      lastMessage: last ? toDisplayBody(last.body) || "📎 Attachment" : "",
       lastAuthor: last ? (last.author.name ?? last.author.email) : "",
       lastAt: last ? last.createdAt.toISOString() : "",
       unread,
@@ -322,7 +413,7 @@ export async function getInboxThreads(): Promise<InboxThread[]> {
         conversationId: c.id,
         thumbnailId: null,
         peerMemberIds: others.map((m) => m.id),
-        lastMessage: last ? toDisplayBody(last.body) : "",
+        lastMessage: last ? toDisplayBody(last.body) || "📎 Attachment" : "",
         lastAuthor: last ? (last.author.name ?? last.author.email) : "",
         lastAt: last ? last.createdAt.toISOString() : "",
         unread: unreadMap.get(`/messages/conv-${c.id}`) ?? 0,

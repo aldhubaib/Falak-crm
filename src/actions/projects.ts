@@ -1,6 +1,6 @@
 "use server";
 
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { requireWorkspace, requireWorkspaceWithMember, requireProjectEdit, requireProjectWork, getProjectAccess } from "@/lib/workspace";
 import { canEdit } from "@/lib/permissions";
@@ -100,14 +100,14 @@ export async function getProjectTeam(projectId: string) {
         memberId: true,
         roleId: true,
         addedAt: true,
-        member: { select: { id: true, userId: true, name: true, email: true, type: true } },
+        member: { select: { id: true, userId: true, name: true, email: true, imageUrl: true, type: true } },
         role: { select: { id: true, name: true } },
       },
       orderBy: { addedAt: "asc" },
     }),
     db.workspaceMember.findMany({
       where: { workspaceId: workspace.id },
-      select: { id: true, userId: true, name: true, email: true, type: true },
+      select: { id: true, userId: true, name: true, email: true, imageUrl: true, type: true },
       orderBy: [{ name: "asc" }, { email: "asc" }],
     }),
     db.role.findMany({
@@ -116,6 +116,42 @@ export async function getProjectTeam(projectId: string) {
       orderBy: { name: "asc" },
     }),
   ]);
+
+  // Backfill missing Google/Clerk photos for members who haven't loaded the
+  // dashboard since we started caching avatars. One bulk Clerk lookup, best-effort.
+  const missing = allMembers.filter(
+    (m) => !m.imageUrl && !m.userId.startsWith("pending_"),
+  );
+  if (missing.length > 0) {
+    try {
+      const client = await clerkClient();
+      const { data } = await client.users.getUserList({
+        userId: missing.map((m) => m.userId),
+        limit: missing.length,
+      });
+      const imageByUserId = new Map(data.map((u) => [u.id, u.imageUrl]));
+      const updates: { memberId: string; imageUrl: string }[] = [];
+      for (const m of missing) {
+        const url = imageByUserId.get(m.userId);
+        if (url) {
+          m.imageUrl = url;
+          updates.push({ memberId: m.id, imageUrl: url });
+          const pm = members.find((x) => x.member.id === m.id);
+          if (pm) pm.member.imageUrl = url;
+        }
+      }
+      await Promise.all(
+        updates.map((u) =>
+          db.workspaceMember.update({
+            where: { id: u.memberId },
+            data: { imageUrl: u.imageUrl },
+          }),
+        ),
+      );
+    } catch {
+      // ignore — avatars gracefully fall back to initials
+    }
+  }
 
   return { members, allMembers, roles };
 }

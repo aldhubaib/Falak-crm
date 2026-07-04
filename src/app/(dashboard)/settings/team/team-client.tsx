@@ -52,6 +52,8 @@ export function TeamClient({
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [shake, setShake] = useState(0);
   const [toDelete, setToDelete] = useState<Member | null>(null);
@@ -63,6 +65,12 @@ export function TeamClient({
 
   const invite = () => {
     const value = email.trim();
+    const first = firstName.trim();
+    const last = lastName.trim();
+    if (!first || !last) {
+      flagError("First name and last name are required");
+      return;
+    }
     if (!value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
       flagError(value ? "Enter a valid email address" : "Email is required");
       return;
@@ -74,12 +82,14 @@ export function TeamClient({
 
     const fd = new FormData();
     fd.set("email", value);
-    fd.set("name", value.split("@")[0]);
+    fd.set("name", `${first} ${last}`);
     fd.set("type", "MEMBER");
 
     startTransition(async () => {
       await inviteMember(fd);
       setEmail("");
+      setFirstName("");
+      setLastName("");
       setError(null);
       router.refresh();
     });
@@ -108,33 +118,57 @@ export function TeamClient({
           <UserPlus className="h-3.5 w-3.5" />
           Invite by email
         </div>
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2 sm:flex">
-          <Input
-            key={shake}
-            type="email"
-            placeholder="name@company.com"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              if (error) setError(null);
-            }}
-            onKeyDown={(e) => e.key === "Enter" && invite()}
-            aria-invalid={!!error}
-            className={cn(
-              "col-span-2 min-w-0 sm:col-span-1 sm:flex-1",
-              error &&
-                "border-destructive text-destructive animate-shake focus-visible:ring-destructive/40",
-            )}
-          />
-          <Button
-            size="icon"
-            onClick={invite}
-            aria-label="Send invite"
-            className="shrink-0"
-            disabled={pending}
-          >
-            <Mail className="h-4 w-4" />
-          </Button>
+        <div className="grid gap-2">
+          <div className="grid grid-cols-2 gap-2">
+            <Input
+              type="text"
+              placeholder="First name"
+              value={firstName}
+              onChange={(e) => {
+                setFirstName(e.target.value);
+                if (error) setError(null);
+              }}
+              className="min-w-0"
+            />
+            <Input
+              type="text"
+              placeholder="Last name"
+              value={lastName}
+              onChange={(e) => {
+                setLastName(e.target.value);
+                if (error) setError(null);
+              }}
+              className="min-w-0"
+            />
+          </div>
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+            <Input
+              key={shake}
+              type="email"
+              placeholder="name@company.com"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) setError(null);
+              }}
+              onKeyDown={(e) => e.key === "Enter" && invite()}
+              aria-invalid={!!error}
+              className={cn(
+                "min-w-0",
+                error &&
+                  "border-destructive text-destructive animate-shake focus-visible:ring-destructive/40",
+              )}
+            />
+            <Button
+              size="icon"
+              onClick={invite}
+              aria-label="Send invite"
+              className="shrink-0"
+              disabled={pending}
+            >
+              <Mail className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
         {error && (
           <div className="mt-2 text-hint text-destructive">{error}</div>

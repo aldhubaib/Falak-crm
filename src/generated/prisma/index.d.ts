@@ -10075,6 +10075,7 @@ export namespace Prisma {
     userId: string | null
     email: string | null
     name: string | null
+    imageUrl: string | null
     type: $Enums.MemberType | null
     roleId: string | null
     joinedAt: Date | null
@@ -10086,6 +10087,7 @@ export namespace Prisma {
     userId: string | null
     email: string | null
     name: string | null
+    imageUrl: string | null
     type: $Enums.MemberType | null
     roleId: string | null
     joinedAt: Date | null
@@ -10097,6 +10099,7 @@ export namespace Prisma {
     userId: number
     email: number
     name: number
+    imageUrl: number
     type: number
     roleId: number
     joinedAt: number
@@ -10110,6 +10113,7 @@ export namespace Prisma {
     userId?: true
     email?: true
     name?: true
+    imageUrl?: true
     type?: true
     roleId?: true
     joinedAt?: true
@@ -10121,6 +10125,7 @@ export namespace Prisma {
     userId?: true
     email?: true
     name?: true
+    imageUrl?: true
     type?: true
     roleId?: true
     joinedAt?: true
@@ -10132,6 +10137,7 @@ export namespace Prisma {
     userId?: true
     email?: true
     name?: true
+    imageUrl?: true
     type?: true
     roleId?: true
     joinedAt?: true
@@ -10216,6 +10222,7 @@ export namespace Prisma {
     userId: string
     email: string
     name: string | null
+    imageUrl: string | null
     type: $Enums.MemberType
     roleId: string | null
     joinedAt: Date
@@ -10244,6 +10251,7 @@ export namespace Prisma {
     userId?: boolean
     email?: boolean
     name?: boolean
+    imageUrl?: boolean
     type?: boolean
     roleId?: boolean
     joinedAt?: boolean
@@ -10267,6 +10275,7 @@ export namespace Prisma {
     userId?: boolean
     email?: boolean
     name?: boolean
+    imageUrl?: boolean
     type?: boolean
     roleId?: boolean
     joinedAt?: boolean
@@ -10280,6 +10289,7 @@ export namespace Prisma {
     userId?: boolean
     email?: boolean
     name?: boolean
+    imageUrl?: boolean
     type?: boolean
     roleId?: boolean
     joinedAt?: boolean
@@ -10293,12 +10303,13 @@ export namespace Prisma {
     userId?: boolean
     email?: boolean
     name?: boolean
+    imageUrl?: boolean
     type?: boolean
     roleId?: boolean
     joinedAt?: boolean
   }
 
-  export type WorkspaceMemberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "userId" | "email" | "name" | "type" | "roleId" | "joinedAt", ExtArgs["result"]["workspaceMember"]>
+  export type WorkspaceMemberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "userId" | "email" | "name" | "imageUrl" | "type" | "roleId" | "joinedAt", ExtArgs["result"]["workspaceMember"]>
   export type WorkspaceMemberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     role?: boolean | WorkspaceMember$roleArgs<ExtArgs>
@@ -10343,6 +10354,7 @@ export namespace Prisma {
       userId: string
       email: string
       name: string | null
+      imageUrl: string | null
       type: $Enums.MemberType
       roleId: string | null
       joinedAt: Date
@@ -10785,6 +10797,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"WorkspaceMember", 'String'>
     readonly email: FieldRef<"WorkspaceMember", 'String'>
     readonly name: FieldRef<"WorkspaceMember", 'String'>
+    readonly imageUrl: FieldRef<"WorkspaceMember", 'String'>
     readonly type: FieldRef<"WorkspaceMember", 'MemberType'>
     readonly roleId: FieldRef<"WorkspaceMember", 'String'>
     readonly joinedAt: FieldRef<"WorkspaceMember", 'DateTime'>
@@ -60062,6 +60075,7 @@ export namespace Prisma {
     userId: 'userId',
     email: 'email',
     name: 'name',
+    imageUrl: 'imageUrl',
     type: 'type',
     roleId: 'roleId',
     joinedAt: 'joinedAt'
@@ -61271,6 +61285,7 @@ export namespace Prisma {
     userId?: StringFilter<"WorkspaceMember"> | string
     email?: StringFilter<"WorkspaceMember"> | string
     name?: StringNullableFilter<"WorkspaceMember"> | string | null
+    imageUrl?: StringNullableFilter<"WorkspaceMember"> | string | null
     type?: EnumMemberTypeFilter<"WorkspaceMember"> | $Enums.MemberType
     roleId?: StringNullableFilter<"WorkspaceMember"> | string | null
     joinedAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
@@ -61293,6 +61308,7 @@ export namespace Prisma {
     userId?: SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
+    imageUrl?: SortOrderInput | SortOrder
     type?: SortOrder
     roleId?: SortOrderInput | SortOrder
     joinedAt?: SortOrder
@@ -61319,6 +61335,7 @@ export namespace Prisma {
     userId?: StringFilter<"WorkspaceMember"> | string
     email?: StringFilter<"WorkspaceMember"> | string
     name?: StringNullableFilter<"WorkspaceMember"> | string | null
+    imageUrl?: StringNullableFilter<"WorkspaceMember"> | string | null
     type?: EnumMemberTypeFilter<"WorkspaceMember"> | $Enums.MemberType
     roleId?: StringNullableFilter<"WorkspaceMember"> | string | null
     joinedAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
@@ -61341,6 +61358,7 @@ export namespace Prisma {
     userId?: SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
+    imageUrl?: SortOrderInput | SortOrder
     type?: SortOrder
     roleId?: SortOrderInput | SortOrder
     joinedAt?: SortOrder
@@ -61358,6 +61376,7 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"WorkspaceMember"> | string
     email?: StringWithAggregatesFilter<"WorkspaceMember"> | string
     name?: StringNullableWithAggregatesFilter<"WorkspaceMember"> | string | null
+    imageUrl?: StringNullableWithAggregatesFilter<"WorkspaceMember"> | string | null
     type?: EnumMemberTypeWithAggregatesFilter<"WorkspaceMember"> | $Enums.MemberType
     roleId?: StringNullableWithAggregatesFilter<"WorkspaceMember"> | string | null
     joinedAt?: DateTimeWithAggregatesFilter<"WorkspaceMember"> | Date | string
@@ -65173,6 +65192,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
@@ -65194,6 +65214,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
@@ -65213,6 +65234,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
@@ -65234,6 +65256,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65254,6 +65277,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
@@ -65264,6 +65288,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -65274,6 +65299,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -69609,6 +69635,7 @@ export namespace Prisma {
     userId?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    imageUrl?: SortOrder
     type?: SortOrder
     roleId?: SortOrder
     joinedAt?: SortOrder
@@ -69620,6 +69647,7 @@ export namespace Prisma {
     userId?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    imageUrl?: SortOrder
     type?: SortOrder
     roleId?: SortOrder
     joinedAt?: SortOrder
@@ -69631,6 +69659,7 @@ export namespace Prisma {
     userId?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    imageUrl?: SortOrder
     type?: SortOrder
     roleId?: SortOrder
     joinedAt?: SortOrder
@@ -76843,6 +76872,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     joinedAt?: Date | string
     role?: RoleCreateNestedOneWithoutMembersInput
@@ -76862,6 +76892,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
@@ -77752,6 +77783,7 @@ export namespace Prisma {
     userId?: StringFilter<"WorkspaceMember"> | string
     email?: StringFilter<"WorkspaceMember"> | string
     name?: StringNullableFilter<"WorkspaceMember"> | string | null
+    imageUrl?: StringNullableFilter<"WorkspaceMember"> | string | null
     type?: EnumMemberTypeFilter<"WorkspaceMember"> | $Enums.MemberType
     roleId?: StringNullableFilter<"WorkspaceMember"> | string | null
     joinedAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
@@ -79603,6 +79635,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
@@ -79623,6 +79656,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -83925,6 +83959,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
@@ -83945,6 +83980,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
@@ -84071,6 +84107,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
@@ -84091,6 +84128,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86175,6 +86213,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
@@ -86195,6 +86234,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
@@ -86529,6 +86569,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
@@ -86549,6 +86590,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86713,6 +86755,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
@@ -86733,6 +86776,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
@@ -86834,6 +86878,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
@@ -86854,6 +86899,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -87021,6 +87067,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
@@ -87041,6 +87088,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
@@ -87262,6 +87310,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
@@ -87282,6 +87331,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -87345,6 +87395,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
@@ -87365,6 +87416,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
@@ -87434,6 +87486,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
@@ -87454,6 +87507,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -87735,6 +87789,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
@@ -87755,6 +87810,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
@@ -87820,6 +87876,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
@@ -87840,6 +87897,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -87858,6 +87916,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
@@ -87878,6 +87937,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
@@ -87912,6 +87972,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
@@ -87932,6 +87993,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -87950,6 +88012,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
@@ -87970,6 +88033,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
@@ -88004,6 +88068,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
@@ -88024,6 +88089,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89939,6 +90005,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
@@ -89959,6 +90026,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
@@ -90206,6 +90274,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
@@ -90226,6 +90295,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90244,6 +90314,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
@@ -90521,6 +90592,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: RoleUpdateOneWithoutMembersNestedInput
@@ -90540,6 +90612,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90559,6 +90632,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91839,6 +91913,7 @@ export namespace Prisma {
     userId: string
     email: string
     name?: string | null
+    imageUrl?: string | null
     type?: $Enums.MemberType
     joinedAt?: Date | string
   }
@@ -91855,6 +91930,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
@@ -91875,6 +91951,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -91894,6 +91971,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

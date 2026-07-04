@@ -92,6 +92,7 @@ export const getOrCreateWorkspace = cache(async () => {
           userId,
           email: user?.emailAddresses[0]?.emailAddress ?? "",
           name: user?.fullName ?? undefined,
+          imageUrl: user?.imageUrl ?? undefined,
           type: "OWNER",
         },
       },
@@ -150,6 +151,46 @@ export const requireWorkspace = cache(async () => {
   if (!workspace) throw new Error("No workspace found");
   return workspace;
 });
+
+// Best-effort: keep the current member's cached profile (name + Google photo)
+// in sync with Clerk. Only writes when something actually changed so it's cheap
+// to call on every dashboard load. Swallows all errors — it's non-critical.
+export const syncCurrentMemberProfile = async () => {
+  try {
+    const { userId } = await auth();
+    if (!userId) return;
+    const user = await currentUser();
+    if (!user) return;
+
+    const imageUrl = user.imageUrl ?? null;
+    const name = user.fullName ?? null;
+    const email =
+      user.primaryEmailAddress?.emailAddress ??
+      user.emailAddresses?.[0]?.emailAddress ??
+      null;
+
+    const rows = await db.workspaceMember.findMany({
+      where: { userId },
+      select: { id: true, imageUrl: true, name: true },
+    });
+    await Promise.all(
+      rows
+        .filter((r) => r.imageUrl !== imageUrl || (name && r.name !== name))
+        .map((r) =>
+          db.workspaceMember.update({
+            where: { id: r.id },
+            data: {
+              imageUrl,
+              ...(name ? { name } : {}),
+              ...(email ? { email } : {}),
+            },
+          }),
+        ),
+    );
+  } catch {
+    // ignore — profile sync is opportunistic
+  }
+};
 
 export const requireWorkspaceWithMember = cache(async () => {
   const workspace = await requireWorkspace();

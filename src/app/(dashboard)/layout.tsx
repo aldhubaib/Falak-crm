@@ -5,7 +5,10 @@ import { PermissionsProvider } from "@/components/permissions-provider";
 import { CentrifugoProvider } from "@/components/realtime/centrifugo-provider";
 import { ServiceWorkerRegister } from "@/components/sw-register";
 import { getCurrentPermissions } from "@/actions/permissions";
-import { requireWorkspaceWithMember } from "@/lib/workspace";
+import {
+  requireWorkspaceWithMember,
+  syncCurrentMemberProfile,
+} from "@/lib/workspace";
 
 export default async function DashboardLayout({
   children,
@@ -21,6 +24,7 @@ export default async function DashboardLayout({
   const [permissions, { workspace, member }] = await Promise.all([
     getCurrentPermissions(),
     requireWorkspaceWithMember(),
+    syncCurrentMemberProfile(),
   ]);
 
   return (

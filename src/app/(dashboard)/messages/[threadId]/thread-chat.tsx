@@ -1,11 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { Paperclip, Send } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Paperclip, Send, X, FileText, Loader2, Download, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { sendMessage, type MessageDTO } from "@/actions/messages";
+import {
+  sendMessage,
+  uploadMessageAttachment,
+  type MessageDTO,
+  type MessageAttachment,
+} from "@/actions/messages";
 import { useChannel, usePresence, useTyping } from "@/components/realtime/hooks";
 
 export type ChatMessage = {
@@ -14,7 +20,23 @@ export type ChatMessage = {
   authorName: string;
   body: string;
   createdAt: string;
+  attachments: MessageAttachment[];
 };
+
+type PendingAttachment = {
+  tempId: string;
+  name: string;
+  uploading: boolean;
+  attachment?: MessageAttachment;
+  error?: boolean;
+};
+
+function formatSize(bytes: number | null): string {
+  if (!bytes) return "";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 export type ThreadTarget = {
   taskId?: string | null;
@@ -84,8 +106,13 @@ export function ThreadChat({
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [draft, setDraft] = useState("");
+  const [pending, setPending] = useState<PendingAttachment[]>([]);
   const [, startTransition] = useTransition();
+  const [dragging, setDragging] = useState(false);
+  const dragDepth = useRef(0);
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   const online = usePresence(presenceChannel);
   const { typing, notifyTyping } = useTyping(channel);
@@ -109,6 +136,7 @@ export function ThreadChat({
           authorName: m.authorName,
           body: m.body,
           createdAt: m.createdAt,
+          attachments: m.attachments ?? [],
         },
       ];
     });
@@ -119,12 +147,79 @@ export function ThreadChat({
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages.length, typing.length]);
 
+  const pickFiles = (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    const toUpload = Array.from(files);
+    for (const file of toUpload) {
+      const tempId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      setPending((prev) => [
+        ...prev,
+        { tempId, name: file.name, uploading: true },
+      ]);
+      const fd = new FormData();
+      fd.append("file", file);
+      uploadMessageAttachment(fd).then((res) => {
+        setPending((prev) =>
+          prev.map((p) =>
+            p.tempId === tempId
+              ? res.ok
+                ? { ...p, uploading: false, attachment: res.data }
+                : { ...p, uploading: false, error: true }
+              : p,
+          ),
+        );
+      });
+    }
+  };
+
+  const removePending = (tempId: string) =>
+    setPending((prev) => prev.filter((p) => p.tempId !== tempId));
+
+  const hasFiles = (e: React.DragEvent) =>
+    Array.from(e.dataTransfer?.types ?? []).includes("Files");
+
+  const onDragEnter = (e: React.DragEvent) => {
+    if (!hasFiles(e)) return;
+    e.preventDefault();
+    dragDepth.current += 1;
+    setDragging(true);
+  };
+  const onDragOver = (e: React.DragEvent) => {
+    if (!hasFiles(e)) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+  };
+  const onDragLeave = (e: React.DragEvent) => {
+    if (!hasFiles(e)) return;
+    dragDepth.current -= 1;
+    if (dragDepth.current <= 0) {
+      dragDepth.current = 0;
+      setDragging(false);
+    }
+  };
+  const onDrop = (e: React.DragEvent) => {
+    if (!hasFiles(e)) return;
+    e.preventDefault();
+    dragDepth.current = 0;
+    setDragging(false);
+    pickFiles(e.dataTransfer.files);
+  };
+
+  const anyUploading = pending.some((p) => p.uploading);
+
   const send = () => {
     const text = draft.trim();
-    if (!text) return;
+    const ready = pending.filter((p) => p.attachment).map((p) => p.attachment!);
+    if (!text && ready.length === 0) return;
+    if (anyUploading) return;
     setDraft("");
+    setPending([]);
     startTransition(async () => {
-      const res = await sendMessage({ ...target, body: text });
+      const res = await sendMessage({
+        ...target,
+        body: text,
+        attachmentIds: ready.map((a) => a.id),
+      });
       if (res.ok) {
         const m = res.data;
         setMessages((prev) =>
@@ -138,9 +233,11 @@ export function ThreadChat({
                   authorName: m.authorName,
                   body: m.body,
                   createdAt: m.createdAt,
+                  attachments: m.attachments,
                 },
               ],
         );
+        router.refresh();
       }
     });
   };
@@ -155,7 +252,21 @@ export function ThreadChat({
   }, [typing, memberNames]);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div
+      className="relative flex min-h-0 flex-1 flex-col"
+      onDragEnter={onDragEnter}
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+    >
+      {dragging && (
+        <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-primary/60 bg-surface/80 px-10 py-8 text-primary">
+            <UploadCloud className="h-8 w-8" />
+            <span className="text-sm font-semibold">Drop files to upload</span>
+          </div>
+        </div>
+      )}
       {/* Thread header */}
       <div className="flex h-14 items-center gap-3 border-b border-border/60 px-4">
         <div className="min-w-0">
@@ -236,28 +347,37 @@ export function ThreadChat({
                         {m.authorName}
                       </div>
                     )}
-                    <div
-                      className={cn(
-                        "flex max-w-full items-end gap-2 rounded-2xl px-3.5 py-2 text-sm leading-relaxed",
-                        mine
-                          ? "rounded-br-md bg-primary text-primary-foreground"
-                          : "rounded-bl-md bg-surface text-foreground",
-                      )}
-                    >
-                      <span className="whitespace-pre-wrap break-words">
-                        {m.body}
-                      </span>
-                      <span
+                    {m.attachments.length > 0 && (
+                      <div className="flex max-w-full flex-col gap-1.5">
+                        {m.attachments.map((a) => (
+                          <AttachmentBubble key={a.id} attachment={a} mine={mine} />
+                        ))}
+                      </div>
+                    )}
+                    {m.body && (
+                      <div
                         className={cn(
-                          "ml-1 shrink-0 translate-y-0.5 text-xxs leading-none",
+                          "flex max-w-full items-end gap-2 rounded-2xl px-3.5 py-2 text-sm leading-relaxed",
                           mine
-                            ? "text-primary-foreground/70"
-                            : "text-muted-foreground",
+                            ? "rounded-br-md bg-primary text-primary-foreground"
+                            : "rounded-bl-md bg-surface text-foreground",
                         )}
                       >
-                        {formatTime(m.createdAt)}
-                      </span>
-                    </div>
+                        <span className="whitespace-pre-wrap break-words">
+                          {m.body}
+                        </span>
+                        <span
+                          className={cn(
+                            "ml-1.5 shrink-0 translate-y-1 text-[9px] leading-none",
+                            mine
+                              ? "text-primary-foreground/60"
+                              : "text-muted-foreground/70",
+                          )}
+                        >
+                          {formatTime(m.createdAt)}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -278,16 +398,56 @@ export function ThreadChat({
 
       {/* Composer */}
       <div className="shrink-0 border-t border-border/60 p-3">
-        <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-2xl border border-border/60 bg-surface/40 p-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            aria-label="Attach"
-          >
-            <Paperclip className="h-4 w-4" />
-          </Button>
-          <Textarea
+        <div className="mx-auto max-w-3xl">
+          {pending.length > 0 && (
+            <div className="mb-2 flex flex-wrap gap-2">
+              {pending.map((p) => (
+                <div
+                  key={p.tempId}
+                  className={cn(
+                    "flex items-center gap-2 rounded-lg border border-border/60 bg-surface/60 px-2.5 py-1.5 text-xs",
+                    p.error && "border-destructive/50 text-destructive",
+                  )}
+                >
+                  {p.uploading ? (
+                    <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin" />
+                  ) : (
+                    <FileText className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                  )}
+                  <span className="max-w-40 truncate">{p.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => removePending(p.tempId)}
+                    aria-label="Remove"
+                    className="shrink-0 text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="flex items-end gap-2 rounded-2xl border border-border/60 bg-surface/40 p-2">
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              className="hidden"
+              onChange={(e) => {
+                pickFiles(e.target.files);
+                e.target.value = "";
+              }}
+            />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              aria-label="Attach"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Paperclip className="h-4 w-4" />
+            </Button>
+            <Textarea
             value={draft}
             onChange={(e) => {
               setDraft(e.target.value);
@@ -303,17 +463,71 @@ export function ThreadChat({
             className="min-h-10 flex-1 resize-none border-0 bg-transparent p-2 text-sm shadow-none focus-visible:ring-0"
             rows={1}
           />
-          <Button
-            size="icon"
-            className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
-            onClick={send}
-            disabled={!draft.trim()}
-            aria-label="Send"
-          >
-            <Send className="h-4 w-4" />
-          </Button>
+            <Button
+              size="icon"
+              className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+              onClick={send}
+              disabled={(!draft.trim() && pending.length === 0) || anyUploading}
+              aria-label="Send"
+            >
+              <Send className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>
+  );
+}
+
+function AttachmentBubble({
+  attachment,
+  mine,
+}: {
+  attachment: MessageAttachment;
+  mine: boolean;
+}) {
+  if (attachment.isImage) {
+    return (
+      <a
+        href={`/api/files/${attachment.id}/download`}
+        className="block overflow-hidden rounded-xl border border-border/50"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`/api/files/${attachment.id}/stream`}
+          alt={attachment.name}
+          className="max-h-60 w-auto max-w-[240px] object-cover"
+        />
+      </a>
+    );
+  }
+  return (
+    <a
+      href={`/api/files/${attachment.id}/download`}
+      className={cn(
+        "flex items-center gap-2.5 rounded-xl border px-3 py-2 text-sm transition-colors",
+        mine
+          ? "border-primary-foreground/20 bg-primary text-primary-foreground hover:bg-primary/90"
+          : "border-border/60 bg-surface text-foreground hover:bg-surface/70",
+      )}
+    >
+      <FileText className="h-5 w-5 shrink-0 opacity-80" />
+      <span className="min-w-0 flex-1">
+        <span className="block max-w-[200px] truncate font-medium">
+          {attachment.name}
+        </span>
+        {attachment.sizeBytes ? (
+          <span
+            className={cn(
+              "block text-[10px]",
+              mine ? "text-primary-foreground/70" : "text-muted-foreground",
+            )}
+          >
+            {formatSize(attachment.sizeBytes)}
+          </span>
+        ) : null}
+      </span>
+      <Download className="h-4 w-4 shrink-0 opacity-70" />
+    </a>
   );
 }

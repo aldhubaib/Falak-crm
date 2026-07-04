@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
       dynamic: 30,
       static: 180,
     },
+    serverActions: {
+      // Allow chat attachments and image uploads via server actions (default 1MB).
+      bodySizeLimit: "25mb",
+    },
   },
 };
 

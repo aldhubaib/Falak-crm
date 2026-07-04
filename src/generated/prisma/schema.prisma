@@ -83,6 +83,7 @@ model WorkspaceMember {
   userId      String // Clerk user ID
   email       String
   name        String?
+  imageUrl    String? // Clerk/Google profile photo
   type        MemberType @default(MEMBER)
   roleId      String?
   joinedAt    DateTime   @default(now())

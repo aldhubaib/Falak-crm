@@ -292,9 +292,6 @@ function ComposeDialog({
                   </div>
                   <div className="min-w-0">
                     <div className="truncate text-sm font-medium">{name}</div>
-                    <div className="truncate text-xs text-muted-foreground">
-                      {m.email}
-                    </div>
                   </div>
                 </button>
               </li>

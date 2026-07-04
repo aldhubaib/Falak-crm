@@ -158,6 +158,7 @@ exports.Prisma.WorkspaceMemberScalarFieldEnum = {
   userId: 'userId',
   email: 'email',
   name: 'name',
+  imageUrl: 'imageUrl',
   type: 'type',
   roleId: 'roleId',
   joinedAt: 'joinedAt'
