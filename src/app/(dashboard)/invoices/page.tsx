@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
 import { SurfaceCard } from "@/components/surface-card";
 import { Badge } from "@/components/ui/badge";
+import { ListPager } from "@/components/list-pager";
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
   DRAFT: "secondary",
@@ -15,8 +16,14 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive" | "
   PAID: "default",
 };
 
-export default async function InvoicesPage() {
-  const invoices = await getInvoices();
+export default async function InvoicesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, Number(pageParam) || 1);
+  const { items: invoices, hasMore } = await getInvoices({ page });
 
   return (
     <>
@@ -67,7 +74,9 @@ export default async function InvoicesPage() {
             </Link>
           ))}
 
-          {invoices.length === 0 && (
+          <ListPager basePath="/invoices" page={page} hasMore={hasMore} />
+
+          {invoices.length === 0 && page === 1 && (
             <EmptyState message="No invoices yet." />
           )}
         </div>

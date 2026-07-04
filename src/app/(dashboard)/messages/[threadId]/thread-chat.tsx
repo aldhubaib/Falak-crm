@@ -38,6 +38,7 @@ import {
   sendMessage,
   toggleReaction,
   deleteMessage as deleteMessageAction,
+  getThreadMessages,
   type MessageDTO,
   type MessageAttachment,
   type ReactionSummary,
@@ -136,6 +137,7 @@ export function ThreadChat({
   subtitle,
   currentMemberId,
   messages: initialMessages,
+  hasMoreOlder = false,
   memberNames = {},
   peerMemberIds = [],
 }: {
@@ -146,10 +148,14 @@ export function ThreadChat({
   subtitle: string;
   currentMemberId: string;
   messages: ChatMessage[];
+  hasMoreOlder?: boolean;
   memberNames?: Record<string, string>;
   peerMemberIds?: string[];
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const [hasMore, setHasMore] = useState(hasMoreOlder);
+  const [loadingOlder, setLoadingOlder] = useState(false);
+  const skipAutoScrollRef = useRef(false);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState<PendingFile[]>([]);
   const [outbox, setOutbox] = useState<OutboxEntry[]>([]);
@@ -183,7 +189,42 @@ export function ThreadChat({
 
   useEffect(() => {
     setMessages(initialMessages);
-  }, [initialMessages]);
+    setHasMore(hasMoreOlder);
+  }, [initialMessages, hasMoreOlder]);
+
+  // Fetch the previous page (older messages) and prepend it, keeping the
+  // viewport anchored so the list doesn't jump.
+  const loadOlder = useCallback(async () => {
+    if (loadingOlder || !hasMore || messages.length === 0) return;
+    const el = scrollerRef.current;
+    const prevHeight = el?.scrollHeight ?? 0;
+    const prevTop = el?.scrollTop ?? 0;
+    setLoadingOlder(true);
+    try {
+      const page = await getThreadMessages({
+        ...target,
+        cursorId: messages[0].id,
+      });
+      skipAutoScrollRef.current = true;
+      setMessages((prev) => {
+        const existing = new Set(prev.map((m) => m.id));
+        const older = page.messages.filter((m) => !existing.has(m.id));
+        return [...older, ...prev];
+      });
+      setHasMore(page.hasMore);
+      requestAnimationFrame(() => {
+        const scroller = scrollerRef.current;
+        if (scroller) {
+          scroller.scrollTop = scroller.scrollHeight - prevHeight + prevTop;
+        }
+      });
+    } catch {
+      // Best-effort — the button stays available for a retry.
+    } finally {
+      setLoadingOlder(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingOlder, hasMore, messages, target.taskId, target.projectId, target.conversationId]);
 
   // Free preview object URLs if the user leaves the thread without sending.
   const pendingRef = useRef(pending);
@@ -235,6 +276,11 @@ export function ThreadChat({
   });
 
   useEffect(() => {
+    // Prepending older pages must not yank the user to the bottom.
+    if (skipAutoScrollRef.current) {
+      skipAutoScrollRef.current = false;
+      return;
+    }
     const el = scrollerRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages.length, typing.length, outbox.length]);
@@ -603,6 +649,19 @@ export function ThreadChat({
       {/* Messages */}
       <div ref={scrollerRef} className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
         <div className="mx-auto flex max-w-3xl flex-col gap-1.5">
+          {hasMore && (
+            <div className="flex justify-center pb-2">
+              <button
+                type="button"
+                onClick={loadOlder}
+                disabled={loadingOlder}
+                className="flex items-center gap-2 rounded-full border border-border/60 bg-surface/60 px-4 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-surface hover:text-foreground disabled:opacity-60"
+              >
+                {loadingOlder && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                {loadingOlder ? "Loading…" : "Load earlier messages"}
+              </button>
+            </div>
+          )}
           {messages.map((m, i) => {
             const mine = m.authorId === currentMemberId;
             const prev = messages[i - 1];

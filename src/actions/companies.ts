@@ -7,9 +7,12 @@ import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
 
-export async function getCompanies() {
+const LIST_PAGE_SIZE = 50;
+
+export async function getCompanies(opts?: { page?: number }) {
   const workspace = await requireWorkspace();
-  return db.company.findMany({
+  const page = Math.max(1, opts?.page ?? 1);
+  const rows = await db.company.findMany({
     where: { workspaceId: workspace.id, deletedAt: null },
     select: {
       id: true,
@@ -30,6 +33,23 @@ export async function getCompanies() {
       },
     },
     orderBy: { createdAt: "desc" },
+    skip: (page - 1) * LIST_PAGE_SIZE,
+    take: LIST_PAGE_SIZE + 1,
+  });
+  return {
+    items: rows.slice(0, LIST_PAGE_SIZE),
+    page,
+    hasMore: rows.length > LIST_PAGE_SIZE,
+  };
+}
+
+// Slim id/name list for pickers (selects, comboboxes) — no counts or details.
+export async function getCompanyOptions() {
+  const workspace = await requireWorkspace();
+  return db.company.findMany({
+    where: { workspaceId: workspace.id, deletedAt: null },
+    select: { id: true, name: true },
+    orderBy: { name: "asc" },
   });
 }
 

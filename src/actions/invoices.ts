@@ -8,9 +8,12 @@ import { getLatestRateForCurrency } from "@/actions/currencies";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
 
-export async function getInvoices() {
+const LIST_PAGE_SIZE = 50;
+
+export async function getInvoices(opts?: { page?: number }) {
   const workspace = await requireWorkspace();
-  return db.invoice.findMany({
+  const page = Math.max(1, opts?.page ?? 1);
+  const rows = await db.invoice.findMany({
     where: { workspaceId: workspace.id },
     select: {
       id: true,
@@ -33,7 +36,14 @@ export async function getInvoices() {
       },
     },
     orderBy: { createdAt: "desc" },
+    skip: (page - 1) * LIST_PAGE_SIZE,
+    take: LIST_PAGE_SIZE + 1,
   });
+  return {
+    items: rows.slice(0, LIST_PAGE_SIZE),
+    page,
+    hasMore: rows.length > LIST_PAGE_SIZE,
+  };
 }
 
 export async function getInvoice(id: string) {

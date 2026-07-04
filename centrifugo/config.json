@@ -49,6 +49,9 @@
     ]
   },
   "engine": {
-    "type": "memory"
+    "type": "redis",
+    "redis": {
+      "address": "redis://localhost:6379"
+    }
   }
 }

@@ -10,6 +10,7 @@ import { safeAction, type ActionResult } from "@/lib/action";
 import { deleteObject, uploadBytes, generateR2Key } from "@/lib/storage";
 import { sendNotification } from "@/lib/push";
 import { publishTaskEvent } from "@/lib/realtime";
+import { invalidateCache, claimThrottle } from "@/lib/cache";
 
 export async function getProjects() {
   const { workspace, member } = await requireWorkspaceWithMember();
@@ -41,45 +42,76 @@ export async function getProjects() {
   });
 }
 
-export async function getProject(id: string) {
+// Lightweight project metadata for pages that don't render the task graph
+// (assets, settings, headers). Never include tasks/checklists here — that's
+// what made the old monolithic getProject slow on every navigation.
+export async function getProjectMeta(id: string) {
   const workspace = await requireWorkspace();
   return db.project.findFirst({
     where: { id, workspaceId: workspace.id },
-    include: {
-      company: true,
-      status: true,
-      deal: true,
-      tasks: {
-        where: { deletedAt: null },
-        include: {
-          status: true,
-          service: true,
-          assignee: true,
-          checklistItems: {
-            orderBy: { order: "asc" },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      thumbnailId: true,
+      statusId: true,
+      requirePublishing: true,
+      workspaceId: true,
+      dealId: true,
+      companyId: true,
+      projectTemplates: { select: { templateId: true } },
+    },
+  });
+}
+
+// New-task page: project name plus attached checklist templates with items.
+export async function getProjectTaskTemplates(id: string) {
+  const workspace = await requireWorkspace();
+  return db.project.findFirst({
+    where: { id, workspaceId: workspace.id },
+    select: {
+      id: true,
+      name: true,
+      projectTemplates: {
+        select: {
+          template: {
             select: {
-              id: true, name: true, type: true, role: true, completed: true,
-              phase: true, mandatory: true,
-              attachmentId: true, order: true,
-              templateItem: {
-                select: { template: { select: { id: true, name: true, icon: true, color: true } } },
-              },
+              id: true,
+              name: true,
+              items: { orderBy: { order: "asc" } },
             },
           },
         },
-        orderBy: { order: "asc" },
       },
-      invoices: {
-        select: { id: true, number: true, status: true, total: true, currency: true, createdAt: true },
-        orderBy: { createdAt: "desc" },
-      },
-      collaborators: true,
-      projectTemplates: {
-        include: {
-          template: {
-            include: { items: { orderBy: { order: "asc" } } },
-          },
+    },
+  });
+}
+
+// Dashboard page: only the per-task fields needed to compute KPIs and team
+// performance — no checklist items, invoices, or template graphs.
+export async function getProjectDashboard(id: string) {
+  const workspace = await requireWorkspace();
+  return db.project.findFirst({
+    where: { id, workspaceId: workspace.id },
+    select: {
+      id: true,
+      name: true,
+      workspaceId: true,
+      tasks: {
+        where: { deletedAt: null },
+        select: {
+          id: true,
+          statusId: true,
+          assigneeId: true,
+          stageTimings: true,
+          assignmentHistory: true,
+          stageEnteredAt: true,
+          rejectionCount: true,
+          completedAt: true,
+          status: { select: { id: true, name: true } },
+          assignee: { select: { id: true, name: true } },
         },
+        orderBy: { order: "asc" },
       },
     },
   });
@@ -118,11 +150,13 @@ export async function getProjectTeam(projectId: string) {
   ]);
 
   // Backfill missing Google/Clerk photos for members who haven't loaded the
-  // dashboard since we started caching avatars. One bulk Clerk lookup, best-effort.
+  // dashboard since we started caching avatars. One bulk Clerk lookup,
+  // best-effort, throttled to once per hour per workspace so page loads don't
+  // repeatedly hit the Clerk API for members who simply have no photo.
   const missing = allMembers.filter(
     (m) => !m.imageUrl && !m.userId.startsWith("pending_"),
   );
-  if (missing.length > 0) {
+  if (missing.length > 0 && (await claimThrottle(`clerk-backfill:${workspace.id}`, 3600))) {
     try {
       const client = await clerkClient();
       const { data } = await client.users.getUserList({
@@ -173,6 +207,7 @@ export async function addProjectMember(projectId: string, memberId: string, role
     update: { roleId: resolvedRoleId },
   });
 
+  await invalidateCache(`perms:${memberId}`);
   revalidatePath(`/projects/${projectId}`);
 }
 
@@ -189,6 +224,7 @@ export async function setProjectMemberRole(projectId: string, memberId: string, 
     data: { roleId },
   });
 
+  await invalidateCache(`perms:${memberId}`);
   revalidatePath(`/projects/${projectId}`);
 }
 
@@ -197,6 +233,7 @@ export async function removeProjectMember(projectId: string, memberId: string) {
 
   await db.projectMember.deleteMany({ where: { projectId, memberId } });
 
+  await invalidateCache(`perms:${memberId}`);
   revalidatePath(`/projects/${projectId}`);
 }
 

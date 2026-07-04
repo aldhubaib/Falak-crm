@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getProject } from "@/actions/projects";
+import { getProjectMeta } from "@/actions/projects";
 import { getProjectStatuses, getChecklistTemplates } from "@/actions/settings";
 import { AppHeader } from "@/components/app-header";
 import { ProjectPhotoButton } from "@/components/projects/project-photo-button";
@@ -12,7 +12,7 @@ export default async function ProjectSettingsPage({
 }) {
   const { projectId } = await params;
   const [project, projectStatuses, templates] = await Promise.all([
-    getProject(projectId),
+    getProjectMeta(projectId),
     getProjectStatuses(),
     getChecklistTemplates(),
   ]);

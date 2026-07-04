@@ -2,6 +2,7 @@ import { cache } from "react";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
+import { cached } from "@/lib/cache";
 import { DEFAULT_PERMISSIONS, ROLE_PRESETS, mergePermissions, type MemberWithPermissions, type Permissions } from "@/lib/permissions";
 
 export const getWorkspace = cache(async () => {
@@ -211,26 +212,31 @@ export const requireWorkspaceWithMember = cache(async () => {
     // A member's global module access is derived from the role(s) they hold
     // across the projects they're assigned to (merged, most permissive). A
     // legacy workspace-level role, if any, is merged in for backwards compat.
-    const [projectRoles, assignedCount] = await Promise.all([
-      db.projectMember.findMany({
-        where: { memberId: dbMember.id, roleId: { not: null } },
-        select: { role: { select: { permissions: true } } },
-      }),
-      db.projectMember.count({ where: { memberId: dbMember.id } }),
-    ]);
-    const roleList: Permissions[] = projectRoles
-      .map((pr) => pr.role?.permissions as unknown as Permissions | undefined)
-      .filter((p): p is Permissions => !!p);
-    if (dbMember.role?.permissions) {
-      roleList.push(dbMember.role.permissions as unknown as Permissions);
-    }
-    permissions = mergePermissions(roleList);
+    // The derivation costs two extra queries on every single server action, so
+    // it's cached in Redis with a short TTL (invalidated on role changes).
+    permissions = await cached(`perms:${dbMember.id}`, 30, async () => {
+      const [projectRoles, assignedCount] = await Promise.all([
+        db.projectMember.findMany({
+          where: { memberId: dbMember.id, roleId: { not: null } },
+          select: { role: { select: { permissions: true } } },
+        }),
+        db.projectMember.count({ where: { memberId: dbMember.id } }),
+      ]);
+      const roleList: Permissions[] = projectRoles
+        .map((pr) => pr.role?.permissions as unknown as Permissions | undefined)
+        .filter((p): p is Permissions => !!p);
+      if (dbMember.role?.permissions) {
+        roleList.push(dbMember.role.permissions as unknown as Permissions);
+      }
+      let merged = mergePermissions(roleList);
 
-    // Being assigned to a project grants at least read access to the Projects
-    // module so the member can find and open their project(s).
-    if (assignedCount > 0 && permissions.projects === "none") {
-      permissions = { ...permissions, projects: "view" };
-    }
+      // Being assigned to a project grants at least read access to the
+      // Projects module so the member can find and open their project(s).
+      if (assignedCount > 0 && merged.projects === "none") {
+        merged = { ...merged, projects: "view" };
+      }
+      return merged;
+    });
   }
 
   const cookieStore = await cookies();

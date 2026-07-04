@@ -74,34 +74,46 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
       orderBy: { order: "asc" },
       select: { id: true, name: true, color: true, order: true },
     }),
-    db.taskStatusChange.findMany({
-      where: {
-        action: "status_change",
-        task: { projectId, deletedAt: null },
-      },
-      orderBy: { createdAt: "desc" },
-      select: {
-        taskId: true,
-        toStatusId: true,
-        member: { select: { id: true, name: true, email: true } },
-      },
-    }),
+    // One row per task: the latest status change INTO the task's current
+    // status, resolved in the database (DISTINCT ON) instead of loading the
+    // project's entire unbounded status-change history into memory.
+    db.$queryRaw<
+      {
+        taskId: string;
+        memberId: string | null;
+        memberName: string | null;
+        memberEmail: string | null;
+      }[]
+    >`
+      SELECT DISTINCT ON (c."taskId")
+        c."taskId" AS "taskId",
+        m."id" AS "memberId",
+        m."name" AS "memberName",
+        m."email" AS "memberEmail"
+      FROM "TaskStatusChange" c
+      JOIN "Task" t ON t."id" = c."taskId"
+      JOIN "WorkspaceMember" m ON m."id" = c."memberId"
+      WHERE c."action" = 'status_change'
+        AND c."toStatusId" = t."statusId"
+        AND t."projectId" = ${projectId}
+        AND t."deletedAt" IS NULL
+      ORDER BY c."taskId", c."createdAt" DESC
+    `,
   ]);
 
   // Resolve who to @mention (and cannot be changed) when a task is declined.
   // Primary: whoever last moved the task INTO its current status — the
   // "submitter". Fallback: the current assignee, so every rejection popup always
   // has someone to notify even when no status-change record exists.
+  const changeByTask = new Map(changes.map((c) => [c.taskId, c]));
   const submittedBy = new Map<string, { id: string; name: string }>();
   for (const t of tasks) {
     if (!t.statusId) continue;
-    const c = changes.find(
-      (ch) => ch.taskId === t.id && ch.toStatusId === t.statusId && ch.member,
-    );
-    if (c?.member) {
+    const c = changeByTask.get(t.id);
+    if (c?.memberId) {
       submittedBy.set(t.id, {
-        id: c.member.id,
-        name: c.member.name ?? c.member.email,
+        id: c.memberId,
+        name: c.memberName ?? c.memberEmail ?? "Unknown",
       });
     } else if (t.assignee) {
       submittedBy.set(t.id, {

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getProject } from "@/actions/projects";
+import { getProjectTaskTemplates } from "@/actions/projects";
 import { getTaskStatuses } from "@/actions/settings";
 import { db } from "@/lib/db";
 import { NewTaskClient } from "./new-task-client";
@@ -11,7 +11,7 @@ export default async function NewTaskPage({
 }) {
   const { projectId } = await params;
   const [project, statuses, tasks] = await Promise.all([
-    getProject(projectId),
+    getProjectTaskTemplates(projectId),
     getTaskStatuses(),
     db.task.findMany({
       where: { projectId, deletedAt: null },

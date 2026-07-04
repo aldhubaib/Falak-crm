@@ -7,9 +7,8 @@ import {
   conversationChannel,
   workspacePresenceChannel,
 } from "@/lib/channels";
-import { ThreadChat, type ChatMessage, type ThreadTarget } from "./thread-chat";
-
-const MENTION_RE = /@\[([^\]]+)\]\([^)]+\)/g;
+import { getThreadMessages } from "@/actions/messages";
+import { ThreadChat, type ThreadTarget } from "./thread-chat";
 
 export default async function ThreadPage({
   params,
@@ -27,7 +26,6 @@ export default async function ThreadPage({
   let subtitle = "";
   let peerMemberIds: string[] = [];
   const memberNames: Record<string, string> = {};
-  let where: { taskId?: string; projectId?: string; conversationId?: string };
 
   if (threadId.startsWith("task-")) {
     const taskId = threadId.slice(5);
@@ -43,7 +41,6 @@ export default async function ThreadPage({
     presenceChannel = taskChannel(task.id);
     title = task.title;
     subtitle = task.project.name;
-    where = { taskId: task.id };
   } else if (threadId.startsWith("project-")) {
     const projectId = threadId.slice(8);
     const access = await getProjectAccess(projectId);
@@ -58,7 +55,6 @@ export default async function ThreadPage({
     presenceChannel = projectChannel(project.id);
     title = project.name;
     subtitle = "Project chat";
-    where = { projectId: project.id };
   } else if (threadId.startsWith("conv-")) {
     const conversationId = threadId.slice(5);
     const convo = await db.conversation.findFirst({
@@ -88,46 +84,12 @@ export default async function ThreadPage({
       convo.title ??
       (others.map((m) => m.name ?? m.email).join(", ") || "Direct message");
     subtitle = convo.isGroup ? `${convo.participants.length} members` : "Direct message";
-    where = { conversationId: convo.id };
   } else {
     notFound();
   }
 
-  const rows = await db.message.findMany({
-    where,
-    include: {
-      author: { select: { id: true, userId: true, name: true, email: true } },
-      reactions: { select: { emoji: true, memberId: true }, orderBy: { createdAt: "asc" } },
-    },
-    orderBy: { createdAt: "asc" },
-  });
-
-  // Load attachments for these messages (polymorphic: entityType "message").
-  const attachmentRows =
-    rows.length > 0
-      ? await db.attachment.findMany({
-          where: {
-            workspaceId: workspace.id,
-            entityType: "message",
-            entityId: { in: rows.map((r) => r.id) },
-            status: "uploaded",
-          },
-          select: {
-            id: true,
-            name: true,
-            contentType: true,
-            sizeBytes: true,
-            entityId: true,
-          },
-          orderBy: { createdAt: "asc" },
-        })
-      : [];
-  const attachmentsByMessage = new Map<string, typeof attachmentRows>();
-  for (const a of attachmentRows) {
-    const list = attachmentsByMessage.get(a.entityId) ?? [];
-    list.push(a);
-    attachmentsByMessage.set(a.entityId, list);
-  }
+  // Latest page only (50 messages) — older pages load on demand in the client.
+  const page = await getThreadMessages(target);
 
   // Mark this thread's notifications as read.
   const linkUrl =
@@ -141,34 +103,6 @@ export default async function ThreadPage({
     data: { read: true },
   });
 
-  const messages: ChatMessage[] = rows.map((c) => {
-    const byEmoji = new Map<string, string[]>();
-    for (const r of c.reactions) {
-      const list = byEmoji.get(r.emoji) ?? [];
-      list.push(r.memberId);
-      byEmoji.set(r.emoji, list);
-    }
-    return {
-      id: c.id,
-      authorId: c.author.id,
-      authorName: c.author.name ?? c.author.email,
-      body: c.body.replace(MENTION_RE, "@$1"),
-      createdAt: c.createdAt.toISOString(),
-      replyToId: c.replyToId ?? null,
-      attachments: (attachmentsByMessage.get(c.id) ?? []).map((a) => ({
-        id: a.id,
-        name: a.name,
-        contentType: a.contentType,
-        sizeBytes: a.sizeBytes,
-        isImage: Boolean(a.contentType && a.contentType.startsWith("image/")),
-      })),
-      reactions: [...byEmoji.entries()].map(([emoji, memberIds]) => ({
-        emoji,
-        memberIds,
-      })),
-    };
-  });
-
   return (
     <ThreadChat
       channel={channel}
@@ -177,7 +111,8 @@ export default async function ThreadPage({
       title={title}
       subtitle={subtitle}
       currentMemberId={member.id}
-      messages={messages}
+      messages={page.messages}
+      hasMoreOlder={page.hasMore}
       memberNames={memberNames}
       peerMemberIds={peerMemberIds}
     />

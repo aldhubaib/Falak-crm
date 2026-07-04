@@ -56,9 +56,12 @@ export async function getPipelineStages() {
   return pipeline;
 }
 
-export async function getDeals() {
+const LIST_PAGE_SIZE = 50;
+
+export async function getDeals(opts?: { page?: number }) {
   const workspace = await requireWorkspace();
-  return db.deal.findMany({
+  const page = Math.max(1, opts?.page ?? 1);
+  const rows = await db.deal.findMany({
     where: { workspaceId: workspace.id, deletedAt: null },
     select: {
       id: true,
@@ -74,7 +77,14 @@ export async function getDeals() {
       stage: true,
     },
     orderBy: { createdAt: "desc" },
+    skip: (page - 1) * LIST_PAGE_SIZE,
+    take: LIST_PAGE_SIZE + 1,
   });
+  return {
+    items: rows.slice(0, LIST_PAGE_SIZE),
+    page,
+    hasMore: rows.length > LIST_PAGE_SIZE,
+  };
 }
 
 export async function getDeal(id: string) {

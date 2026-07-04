@@ -5,9 +5,16 @@ import { AppHeader } from "@/components/app-header";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
 import { SurfaceCard } from "@/components/surface-card";
+import { ListPager } from "@/components/list-pager";
 
-export default async function ContactsPage() {
-  const contacts = await getContacts();
+export default async function ContactsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, Number(pageParam) || 1);
+  const { items: contacts, hasMore } = await getContacts({ page });
 
   return (
     <>
@@ -71,7 +78,9 @@ export default async function ContactsPage() {
             );
           })}
 
-          {contacts.length === 0 && (
+          <ListPager basePath="/contacts" page={page} hasMore={hasMore} />
+
+          {contacts.length === 0 && page === 1 && (
             <EmptyState
               message="No contacts yet."
               action={

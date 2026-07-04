@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getProject } from "@/actions/projects";
+import { getProjectMeta } from "@/actions/projects";
 import { getProjectAssets, getFolderBreadcrumbs } from "@/actions/assets";
 import { createPresignedGet } from "@/lib/storage";
 import { AppHeader } from "@/components/app-header";
@@ -18,7 +18,7 @@ export default async function ProjectAssetsPage({
   const folderId = folder || null;
 
   const [project, data, crumbs] = await Promise.all([
-    getProject(projectId),
+    getProjectMeta(projectId),
     getProjectAssets(projectId, folderId),
     folderId ? getFolderBreadcrumbs(folderId) : Promise.resolve([]),
   ]);
@@ -31,15 +31,25 @@ export default async function ProjectAssetsPage({
     itemCount: f._count.assets + f._count.children,
   }));
 
+  // Sign all URLs in one parallel batch (two per asset) instead of awaiting
+  // them one at a time per asset.
   const assets: AssetVM[] = await Promise.all(
-    data.assets.map(async (a) => ({
-      id: a.id,
-      name: a.name,
-      fileSize: a.fileSize,
-      contentType: a.contentType,
-      url: a.r2Key ? await createPresignedGet(a.r2Key) : null,
-      downloadUrl: a.r2Key ? await createPresignedGet(a.r2Key, a.name) : null,
-    })),
+    data.assets.map(async (a) => {
+      const [url, downloadUrl] = a.r2Key
+        ? await Promise.all([
+            createPresignedGet(a.r2Key),
+            createPresignedGet(a.r2Key, a.name),
+          ])
+        : [null, null];
+      return {
+        id: a.id,
+        name: a.name,
+        fileSize: a.fileSize,
+        contentType: a.contentType,
+        url,
+        downloadUrl,
+      };
+    }),
   );
 
   const breadcrumbs = [

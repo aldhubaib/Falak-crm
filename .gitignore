@@ -39,8 +39,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# prisma
-/prisma/migrations/**/migration_lock.toml
-
 # generated service worker (built by scripts/generate-sw.mjs)
 /public/sw.js

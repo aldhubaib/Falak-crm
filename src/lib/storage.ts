@@ -157,6 +157,17 @@ export async function getObject(key: string): Promise<ArrayBuffer | null> {
   return bytes.buffer as ArrayBuffer;
 }
 
+// Streaming read — use this instead of getObject() whenever the bytes are
+// piped somewhere (zip building, proxying), so large media files never have to
+// fit in server memory.
+export async function getObjectStream(
+  key: string,
+): Promise<NodeJS.ReadableStream | null> {
+  const res = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: key }));
+  if (!res.Body) return null;
+  return res.Body as unknown as NodeJS.ReadableStream;
+}
+
 export async function deleteObject(key: string): Promise<void> {
   try {
     await s3.send(new DeleteObjectCommand({ Bucket: BUCKET, Key: key }));

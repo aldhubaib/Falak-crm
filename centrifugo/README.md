@@ -32,6 +32,7 @@ events. It never stores business data and never creates notifications.
    | `CENTRIFUGO_HTTP_API_KEY` | long random string (shared with the app as `CENTRIFUGO_API_KEY`) |
    | `CENTRIFUGO_CLIENT_ALLOWED_ORIGINS` | `https://panel.falak.media` (space/comma separated; add localhost for dev) |
    | `CENTRIFUGO_HTTP_SERVER_PORT` | `8000` (Railway will inject `PORT`; map it) |
+   | `CENTRIFUGO_ENGINE_REDIS_ADDRESS` | private Redis URL, e.g. `redis://default:<password>@redis.railway.internal:6379` |
 
 4. Give the service a **public domain** (browsers connect over WSS) and note the
    internal/private URL (the app publishes to it server-side).
@@ -49,11 +50,23 @@ Add to the Next.js service (see `.env.example`):
 - `NEXT_PUBLIC_CENTRIFUGO_WS` — public WebSocket URL, e.g.
   `wss://centrifugo-production.up.railway.app/connection/websocket`.
 
+## Redis (required in production)
+
+The engine is set to `redis` in `config.json` so realtime state (history,
+presence) survives restarts and works across multiple Centrifugo replicas.
+
+1. Add a **Redis** service to the same Railway project (the app's SSE bus uses
+   the same instance via `REDIS_URL`).
+2. Set `CENTRIFUGO_ENGINE_REDIS_ADDRESS` on the Centrifugo service to the
+   private Redis URL (env vars override the localhost default in the config).
+
 ## Deploy order
 
-1. Deploy Centrifugo service + its secrets and public domain.
-2. Add the four app env vars above.
-3. Deploy the app.
+1. Deploy the Redis service.
+2. Deploy Centrifugo service + its secrets (including the Redis address) and
+   public domain.
+3. Add the app env vars above plus `REDIS_URL`.
+4. Deploy the app.
 
 The app degrades gracefully: if the Centrifugo vars are missing, publishes are
 skipped and the client stays on its polling/refresh fallbacks. Nothing breaks.
@@ -67,8 +80,12 @@ docker run -it --rm -p 8000:8000 \
   -v "$(pwd)/centrifugo/config.json:/app/config.json" \
   -e CENTRIFUGO_CLIENT_TOKEN_HMAC_SECRET_KEY=dev-secret \
   -e CENTRIFUGO_HTTP_API_KEY=dev-api-key \
+  -e CENTRIFUGO_ENGINE_TYPE=memory \
   centrifugo/centrifugo:v6 centrifugo -c /app/config.json
 ```
+
+(`CENTRIFUGO_ENGINE_TYPE=memory` avoids needing a local Redis; drop it if you
+run Redis locally.)
 
 Then in `.env.local`:
 
@@ -81,7 +98,7 @@ NEXT_PUBLIC_CENTRIFUGO_WS=ws://localhost:8000/connection/websocket
 
 ## Scaling (100+ users)
 
-A single Centrifugo node with the in-memory engine handles far more than 100
-concurrent connections. For zero-downtime restarts / multiple replicas, switch
-`engine.type` to `redis` and add a Redis service (see
-https://centrifugal.dev/docs/server/engines). No app code changes are needed.
+The engine is already Redis-backed, so you can run multiple Centrifugo
+replicas behind Railway for zero-downtime restarts — they share state through
+Redis (see https://centrifugal.dev/docs/server/engines). No app code changes
+are needed.

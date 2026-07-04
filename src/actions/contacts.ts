@@ -7,9 +7,12 @@ import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
 
-export async function getContacts() {
+const LIST_PAGE_SIZE = 50;
+
+export async function getContacts(opts?: { page?: number }) {
   const workspace = await requireWorkspace();
-  return db.contact.findMany({
+  const page = Math.max(1, opts?.page ?? 1);
+  const rows = await db.contact.findMany({
     where: { workspaceId: workspace.id, deletedAt: null },
     select: {
       id: true,
@@ -27,6 +30,23 @@ export async function getContacts() {
       },
     },
     orderBy: { createdAt: "desc" },
+    skip: (page - 1) * LIST_PAGE_SIZE,
+    take: LIST_PAGE_SIZE + 1,
+  });
+  return {
+    items: rows.slice(0, LIST_PAGE_SIZE),
+    page,
+    hasMore: rows.length > LIST_PAGE_SIZE,
+  };
+}
+
+// Slim id/name list for pickers — avoids paying for the full contact graph.
+export async function getContactOptions() {
+  const workspace = await requireWorkspace();
+  return db.contact.findMany({
+    where: { workspaceId: workspace.id, deletedAt: null },
+    select: { id: true, firstName: true, lastName: true },
+    orderBy: [{ firstName: "asc" }, { lastName: "asc" }],
   });
 }
 

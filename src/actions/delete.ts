@@ -81,17 +81,26 @@ export async function permanentDeleteRecord(type: EntityType, id: string): Promi
 
 export async function emptyTrash(): Promise<ActionResult> {
   return safeAction("Empty trash", async () => {
-    const workspace = await requireWorkspace();
+    await requireWorkspace();
 
-    const items = await getTrashItems();
-    for (const item of items) {
-      await permanentDelete(item.type, item.id);
+    // getTrashItems is bounded per entity type, so drain in batches until the
+    // trash is actually empty.
+    for (;;) {
+      const items = await getTrashItems();
+      if (items.length === 0) break;
+      for (const item of items) {
+        await permanentDelete(item.type, item.id);
+      }
     }
 
     revalidatePath("/settings/trash");
     revalidatePath("/dashboard");
   });
 }
+
+// Bounded to the most recent deletions per entity type so the trash page never
+// loads an unbounded workspace history in one query.
+const TRASH_PAGE_SIZE = 50;
 
 export async function getTrashItems() {
   const workspace = await requireWorkspace();
@@ -101,26 +110,31 @@ export async function getTrashItems() {
       where: { workspaceId: workspace.id, deletedAt: { not: null } },
       select: { id: true, name: true, deletedAt: true },
       orderBy: { deletedAt: "desc" },
+      take: TRASH_PAGE_SIZE,
     }),
     db.contact.findMany({
       where: { workspaceId: workspace.id, deletedAt: { not: null } },
       select: { id: true, firstName: true, lastName: true, deletedAt: true },
       orderBy: { deletedAt: "desc" },
+      take: TRASH_PAGE_SIZE,
     }),
     db.deal.findMany({
       where: { workspaceId: workspace.id, deletedAt: { not: null } },
       select: { id: true, title: true, deletedAt: true },
       orderBy: { deletedAt: "desc" },
+      take: TRASH_PAGE_SIZE,
     }),
     db.project.findMany({
       where: { workspaceId: workspace.id, deletedAt: { not: null } },
       select: { id: true, name: true, deletedAt: true },
       orderBy: { deletedAt: "desc" },
+      take: TRASH_PAGE_SIZE,
     }),
     db.task.findMany({
       where: { project: { workspaceId: workspace.id }, deletedAt: { not: null } },
       select: { id: true, title: true, deletedAt: true, project: { select: { name: true } } },
       orderBy: { deletedAt: "desc" },
+      take: TRASH_PAGE_SIZE,
     }),
   ]);
 

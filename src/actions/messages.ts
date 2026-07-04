@@ -8,7 +8,6 @@ import {
 } from "@/lib/workspace";
 import { safeAction, type ActionResult } from "@/lib/action";
 import { sendNotification } from "@/lib/push";
-import { uploadBytes, generateR2Key } from "@/lib/storage";
 import {
   broadcast,
   taskChannel,
@@ -72,54 +71,135 @@ type SendMessageInput = {
   replyToId?: string;
 };
 
-const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
+// ─── Thread messages (paginated) ─────────────────────────────────────────────
+
+const THREAD_PAGE_SIZE = 50;
+
+export type ThreadMessage = {
+  id: string;
+  authorId: string;
+  authorName: string;
+  body: string;
+  createdAt: string;
+  replyToId: string | null;
+  attachments: MessageAttachment[];
+  reactions: ReactionSummary[];
+};
+
+export type ThreadMessagesPage = {
+  messages: ThreadMessage[]; // oldest → newest
+  hasMore: boolean; // older messages exist before the first one returned
+};
+
+// Loads one page of a thread's messages, newest-first window rendered oldest →
+// newest. Pass `cursorId` (the id of the oldest loaded message) to fetch the
+// previous page. Threads used to load their full history in one query, which
+// made busy chats slower with every message ever sent.
+export async function getThreadMessages(input: {
+  taskId?: string | null;
+  projectId?: string | null;
+  conversationId?: string | null;
+  cursorId?: string;
+}): Promise<ThreadMessagesPage> {
+  const { workspace, member } = await requireWorkspaceWithMember();
+
+  let where: { taskId?: string; projectId?: string; conversationId?: string };
+  if (input.conversationId) {
+    const convo = await db.conversation.findFirst({
+      where: {
+        id: input.conversationId,
+        workspaceId: workspace.id,
+        participants: { some: { memberId: member.id } },
+      },
+      select: { id: true },
+    });
+    if (!convo) throw new Error("Permission denied");
+    where = { conversationId: input.conversationId };
+  } else if (input.taskId) {
+    const task = await db.task.findFirst({
+      where: { id: input.taskId, project: { workspaceId: workspace.id } },
+      select: { projectId: true },
+    });
+    if (!task) throw new Error("Not found");
+    const access = await getProjectAccess(task.projectId);
+    if (!access.hasAccess) throw new Error("Permission denied");
+    where = { taskId: input.taskId };
+  } else if (input.projectId) {
+    const access = await getProjectAccess(input.projectId);
+    if (!access.hasAccess) throw new Error("Permission denied");
+    where = { projectId: input.projectId };
+  } else {
+    throw new Error("No thread specified");
+  }
+
+  const rows = await db.message.findMany({
+    where,
+    include: {
+      author: { select: { id: true, name: true, email: true } },
+      reactions: { select: { emoji: true, memberId: true }, orderBy: { createdAt: "asc" } },
+    },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    take: THREAD_PAGE_SIZE + 1,
+    ...(input.cursorId ? { cursor: { id: input.cursorId }, skip: 1 } : {}),
+  });
+
+  const hasMore = rows.length > THREAD_PAGE_SIZE;
+  const page = rows.slice(0, THREAD_PAGE_SIZE).reverse();
+
+  const attachmentRows =
+    page.length > 0
+      ? await db.attachment.findMany({
+          where: {
+            workspaceId: workspace.id,
+            entityType: "message",
+            entityId: { in: page.map((r) => r.id) },
+            status: "uploaded",
+          },
+          select: { id: true, name: true, contentType: true, sizeBytes: true, entityId: true },
+          orderBy: { createdAt: "asc" },
+        })
+      : [];
+  const attachmentsByMessage = new Map<string, typeof attachmentRows>();
+  for (const a of attachmentRows) {
+    const list = attachmentsByMessage.get(a.entityId) ?? [];
+    list.push(a);
+    attachmentsByMessage.set(a.entityId, list);
+  }
+
+  const messages: ThreadMessage[] = page.map((c) => {
+    const byEmoji = new Map<string, string[]>();
+    for (const r of c.reactions) {
+      const list = byEmoji.get(r.emoji) ?? [];
+      list.push(r.memberId);
+      byEmoji.set(r.emoji, list);
+    }
+    return {
+      id: c.id,
+      authorId: c.authorId,
+      authorName: c.author.name ?? c.author.email,
+      body: toDisplayBody(c.body),
+      createdAt: c.createdAt.toISOString(),
+      replyToId: c.replyToId ?? null,
+      attachments: (attachmentsByMessage.get(c.id) ?? []).map((a) => ({
+        id: a.id,
+        name: a.name,
+        contentType: a.contentType,
+        sizeBytes: a.sizeBytes,
+        isImage: isImageType(a.contentType),
+      })),
+      reactions: [...byEmoji.entries()].map(([emoji, memberIds]) => ({ emoji, memberIds })),
+    };
+  });
+
+  return { messages, hasMore };
+}
+
+// Chat attachments upload directly to R2 through the client upload manager
+// (multipart + resume, see src/lib/upload-manager.ts). No server action buffers
+// file bytes in memory anymore.
 
 function isImageType(contentType: string | null): boolean {
   return Boolean(contentType && contentType.startsWith("image/"));
-}
-
-// Uploads a chat attachment to R2 and returns a pending Attachment record. It is
-// linked to its message when sendMessage runs with the returned id.
-export async function uploadMessageAttachment(
-  formData: FormData,
-): Promise<ActionResult<MessageAttachment>> {
-  return safeAction("Upload Attachment", async () => {
-    const { workspace } = await requireWorkspaceWithMember();
-
-    const file = formData.get("file");
-    if (!(file instanceof File) || file.size === 0) {
-      throw new Error("No file provided");
-    }
-    if (file.size > MAX_ATTACHMENT_BYTES) {
-      throw new Error("File must be 25MB or smaller");
-    }
-
-    const name = file.name || "file";
-    const key = generateR2Key("message_attachment", name);
-    const bytes = Buffer.from(await file.arrayBuffer());
-    await uploadBytes(bytes, key, file.type || "application/octet-stream");
-
-    const attachment = await db.attachment.create({
-      data: {
-        workspaceId: workspace.id,
-        entityType: "message_pending",
-        entityId: "",
-        name,
-        sizeBytes: file.size,
-        contentType: file.type || null,
-        r2Key: key,
-        status: "uploaded",
-      },
-    });
-
-    return {
-      id: attachment.id,
-      name: attachment.name,
-      contentType: attachment.contentType,
-      sizeBytes: attachment.sizeBytes,
-      isImage: isImageType(attachment.contentType),
-    };
-  });
 }
 
 // Single write path for every message surface: task comments, rejections,

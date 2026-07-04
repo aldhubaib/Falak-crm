@@ -5,9 +5,16 @@ import { AppHeader } from "@/components/app-header";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
 import { SurfaceCard } from "@/components/surface-card";
+import { ListPager } from "@/components/list-pager";
 
-export default async function CompaniesPage() {
-  const companies = await getCompanies();
+export default async function CompaniesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, Number(pageParam) || 1);
+  const { items: companies, hasMore } = await getCompanies({ page });
 
   return (
     <>
@@ -53,7 +60,9 @@ export default async function CompaniesPage() {
             </Link>
           ))}
 
-          {companies.length === 0 && (
+          <ListPager basePath="/companies" page={page} hasMore={hasMore} />
+
+          {companies.length === 0 && page === 1 && (
             <EmptyState
               message="No companies yet."
               action={

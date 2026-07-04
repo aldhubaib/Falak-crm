@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getProject } from "@/actions/projects";
+import { getProjectDashboard } from "@/actions/projects";
 import { getTaskStatuses } from "@/actions/settings";
 import { db } from "@/lib/db";
 import { AppHeader } from "@/components/app-header";
@@ -8,7 +8,7 @@ import { ProjectViewMenu } from "@/components/projects/project-view-menu";
 import { cn } from "@/lib/utils";
 
 type TaskRow = NonNullable<
-  Awaited<ReturnType<typeof getProject>>
+  Awaited<ReturnType<typeof getProjectDashboard>>
 >["tasks"][number];
 
 export default async function ProjectDashboardPage({
@@ -19,7 +19,7 @@ export default async function ProjectDashboardPage({
   const { projectId } = await params;
 
   const [project, statuses] = await Promise.all([
-    getProject(projectId),
+    getProjectDashboard(projectId),
     getTaskStatuses(),
   ]);
   if (!project) notFound();
