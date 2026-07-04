@@ -2,7 +2,9 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { PermissionsProvider } from "@/components/permissions-provider";
+import { CentrifugoProvider } from "@/components/realtime/centrifugo-provider";
 import { getCurrentPermissions } from "@/actions/permissions";
+import { requireWorkspaceWithMember } from "@/lib/workspace";
 
 export default async function DashboardLayout({
   children,
@@ -15,11 +17,16 @@ export default async function DashboardLayout({
     redirect("/sign-in");
   }
 
-  const permissions = await getCurrentPermissions();
+  const [permissions, { workspace, member }] = await Promise.all([
+    getCurrentPermissions(),
+    requireWorkspaceWithMember(),
+  ]);
 
   return (
     <PermissionsProvider permissions={permissions}>
-      <DashboardShell>{children}</DashboardShell>
+      <CentrifugoProvider memberId={member.id} workspaceId={workspace.id}>
+        <DashboardShell>{children}</DashboardShell>
+      </CentrifugoProvider>
     </PermissionsProvider>
   );
 }

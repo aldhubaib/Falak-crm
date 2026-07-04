@@ -465,21 +465,10 @@ export async function updateTaskStatus(
   }).catch(() => {});
 
   if (newAssigneeId !== member.id) {
-    const moverName = member.permissions
-      ? (await db.workspaceMember.findUnique({ where: { id: member.id }, select: { name: true, email: true } }))
-      : null;
-    const name = (moverName as { name: string | null; email: string } | null)?.name || "Someone";
-
-    if (!isForward) {
-      sendNotification({
-        recipientId: newAssigneeId,
-        type: "rejection",
-        title: `"${task?.title}" was sent back to ${targetStatus?.name}`,
-        body: `${name} moved the task back`,
-        url: `/projects/${projectId}/tasks/${taskId}`,
-        tag: `rejection-${taskId}`,
-      }).catch(() => {});
-    } else {
+    // Rejections are notified once via the decline comment (sendMessage with
+    // kind "rejection" @mentions the person who moved the task forward), so we
+    // only fire an assignment notification on forward auto-assignment here.
+    if (isForward) {
       sendNotification({
         recipientId: newAssigneeId,
         type: "assignment",

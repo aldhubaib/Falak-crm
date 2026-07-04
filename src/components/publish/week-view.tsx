@@ -38,8 +38,10 @@ export function WeekView({
               </div>
               <div
                 className={cn(
-                  "mx-auto mt-1 grid size-8 place-items-center rounded-full text-sm font-semibold",
-                  isToday && "bg-primary text-primary-foreground",
+                  "mx-auto mt-1 grid size-8 place-items-center text-sm",
+                  isToday
+                    ? "font-bold text-foreground underline underline-offset-4 decoration-2 decoration-primary"
+                    : "font-semibold",
                 )}
               >
                 {d.getDate()}

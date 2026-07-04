@@ -386,7 +386,7 @@ export function ProjectBoardClient({
         mention.id && mention.name ? `@[${mention.name}](${mention.id}) ` : "";
       const body = `${prefix}${reason}`.trim();
       try {
-        if (body) await addTaskComment(taskId, body, projectId);
+        if (body) await addTaskComment(taskId, body, projectId, "rejection");
       } catch {
         // Comment failure shouldn't block the move.
       }

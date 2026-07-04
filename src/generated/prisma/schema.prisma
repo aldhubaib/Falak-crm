@@ -40,6 +40,7 @@ model Workspace {
   exchangeRates      ExchangeRate[]
   attachments        Attachment[]
   checklistTemplates ChecklistTemplate[]
+  conversations      Conversation[]
   publishItems       PublishItem[]
 }
 
@@ -86,16 +87,17 @@ model WorkspaceMember {
   roleId      String?
   joinedAt    DateTime   @default(now())
 
-  workspace          Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  role               Role?              @relation(fields: [roleId], references: [id])
-  assignedTasks      Task[]             @relation("TaskAssignee")
-  comments           TaskComment[]      @relation("CommentAuthor")
-  mentionedIn        CommentMention[]   @relation("MentionedIn")
-  notifications      Notification[]     @relation("NotificationRecipient")
+  workspace          Workspace                 @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  role               Role?                     @relation(fields: [roleId], references: [id])
+  assignedTasks      Task[]                    @relation("TaskAssignee")
+  messages           Message[]                 @relation("CommentAuthor")
+  mentionedIn        MessageMention[]          @relation("MentionedIn")
+  notifications      Notification[]            @relation("NotificationRecipient")
   pushSubscriptions  PushSubscription[]
-  scheduledItems     PublishItem[]      @relation("PublishScheduler")
-  projectMemberships ProjectMember[]    @relation("ProjectTeam")
-  statusChanges      TaskStatusChange[] @relation("StatusChangeMember")
+  scheduledItems     PublishItem[]             @relation("PublishScheduler")
+  projectMemberships ProjectMember[]           @relation("ProjectTeam")
+  statusChanges      TaskStatusChange[]        @relation("StatusChangeMember")
+  conversations      ConversationParticipant[] @relation("ConversationMember")
 
   @@unique([workspaceId, userId])
   @@index([userId])
@@ -396,6 +398,7 @@ model Project {
   assets           ProjectAsset[]
   publishItems     PublishItem[]
   members          ProjectMember[]
+  messages         Message[]
 
   @@index([workspaceId, deletedAt])
 }
@@ -580,7 +583,7 @@ model Task {
   status         TaskStatus?         @relation(fields: [statusId], references: [id])
   assignee       WorkspaceMember?    @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
   checklistItems TaskChecklistItem[]
-  comments       TaskComment[]
+  comments       Message[]
   publishItem    PublishItem?
 
   statusChanges TaskStatusChange[]
@@ -608,32 +611,78 @@ model TaskStatusChange {
   @@index([taskId, createdAt])
 }
 
-// ─── Comments ─────────────────────────────────────────────────────────────────
+// ─── Messages (unified: task comments, rejections, project chat, DMs) ──────────
+// One model backs every message surface. A message belongs to exactly one thread:
+//   - taskId set          → task thread (comments + rejections)
+//   - projectId always set for task/project messages → project "Everything" feed
+//   - conversationId set   → direct/group message
+// Centrifugo delivers these live; this table is the durable source of truth.
+// NOTE: kept mapped to the original "TaskComment" table so existing rows survive.
 
-model TaskComment {
-  id        String   @id @default(cuid())
-  taskId    String
-  authorId  String // WorkspaceMember ID
-  body      String // Plain text with @[Name](memberId) mentions
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Message {
+  id             String   @id @default(cuid())
+  taskId         String?
+  projectId      String?
+  conversationId String?
+  authorId       String // WorkspaceMember ID
+  body           String // Plain text with @[Name](memberId) mentions
+  kind           String   @default("message") // "message" | "rejection" | "system"
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  task     Task             @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  author   WorkspaceMember  @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
-  mentions CommentMention[]
+  task         Task?            @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  project      Project?         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  conversation Conversation?    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  author       WorkspaceMember  @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  mentions     MessageMention[]
 
   @@index([taskId, createdAt])
+  @@index([projectId, createdAt])
+  @@index([conversationId, createdAt])
+  @@map("TaskComment")
 }
 
-model CommentMention {
+model MessageMention {
   id        String @id @default(cuid())
-  commentId String
+  messageId String @map("commentId")
   memberId  String
 
-  comment TaskComment     @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  message Message         @relation(fields: [messageId], references: [id], onDelete: Cascade)
   member  WorkspaceMember @relation("MentionedIn", fields: [memberId], references: [id], onDelete: Cascade)
 
-  @@unique([commentId, memberId])
+  @@unique([messageId, memberId])
+  @@map("CommentMention")
+}
+
+// ─── Conversations (direct + group messages) ──────────────────────────────────
+
+model Conversation {
+  id          String   @id @default(cuid())
+  workspaceId String
+  isGroup     Boolean  @default(false)
+  title       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace    Workspace                 @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@index([workspaceId])
+}
+
+model ConversationParticipant {
+  id             String    @id @default(cuid())
+  conversationId String
+  memberId       String
+  lastReadAt     DateTime?
+  createdAt      DateTime  @default(now())
+
+  conversation Conversation    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  member       WorkspaceMember @relation("ConversationMember", fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, memberId])
+  @@index([memberId])
 }
 
 // ─── Notifications ────────────────────────────────────────────────────────────

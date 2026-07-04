@@ -1,19 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Paperclip, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { addTaskComment } from "@/actions/comments";
+import { sendMessage, type MessageDTO } from "@/actions/messages";
+import { useChannel, usePresence, useTyping } from "@/components/realtime/hooks";
 
-type Comment = {
+export type ChatMessage = {
   id: string;
   authorId: string;
   authorName: string;
   body: string;
   createdAt: string;
+};
+
+export type ThreadTarget = {
+  taskId?: string | null;
+  projectId?: string | null;
+  conversationId?: string | null;
 };
 
 function formatTime(iso: string) {
@@ -34,9 +40,7 @@ function formatDay(iso: string) {
     a.getDate() === b.getDate();
   if (same(d, today)) return "Today";
   if (same(d, yest)) return "Yesterday";
-  const diff = Math.round(
-    (today.getTime() - d.getTime()) / 86400000,
-  );
+  const diff = Math.round((today.getTime() - d.getTime()) / 86400000);
   if (diff < 7) return d.toLocaleDateString([], { weekday: "long" });
   return d.toLocaleDateString([], {
     month: "short",
@@ -56,65 +60,138 @@ function sameDay(a: string, b: string) {
 }
 
 export function ThreadChat({
-  taskId,
-  projectId,
-  taskTitle,
-  projectName,
+  channel,
+  presenceChannel,
+  target,
+  title,
+  subtitle,
   currentMemberId,
-  comments,
+  messages: initialMessages,
+  memberNames = {},
+  peerMemberIds = [],
 }: {
-  taskId: string;
-  projectId: string;
-  taskTitle: string;
-  projectName: string;
+  channel: string;
+  presenceChannel: string | null;
+  target: ThreadTarget;
+  title: string;
+  subtitle: string;
   currentMemberId: string;
-  comments: Comment[];
+  messages: ChatMessage[];
+  /** memberId -> display name, used to render "X is typing". */
+  memberNames?: Record<string, string>;
+  /** Other members to reflect online status for (DM peers). */
+  peerMemberIds?: string[];
 }) {
-  const router = useRouter();
+  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [draft, setDraft] = useState("");
   const [, startTransition] = useTransition();
   const scrollerRef = useRef<HTMLDivElement>(null);
 
+  const online = usePresence(presenceChannel);
+  const { typing, notifyTyping } = useTyping(channel);
+
+  useEffect(() => {
+    setMessages(initialMessages);
+  }, [initialMessages]);
+
+  // Live incoming messages.
+  useChannel(channel, (data) => {
+    const d = data as { type?: string; message?: MessageDTO } | null;
+    if (!d || d.type !== "message.new" || !d.message) return;
+    const m = d.message;
+    setMessages((prev) => {
+      if (prev.some((x) => x.id === m.id)) return prev;
+      return [
+        ...prev,
+        {
+          id: m.id,
+          authorId: m.authorId,
+          authorName: m.authorName,
+          body: m.body,
+          createdAt: m.createdAt,
+        },
+      ];
+    });
+  });
+
   useEffect(() => {
     const el = scrollerRef.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [comments.length]);
+  }, [messages.length, typing.length]);
 
   const send = () => {
     const text = draft.trim();
     if (!text) return;
     setDraft("");
     startTransition(async () => {
-      await addTaskComment(taskId, text, projectId);
-      router.refresh();
+      const res = await sendMessage({ ...target, body: text });
+      if (res.ok) {
+        const m = res.data;
+        setMessages((prev) =>
+          prev.some((x) => x.id === m.id)
+            ? prev
+            : [
+                ...prev,
+                {
+                  id: m.id,
+                  authorId: m.authorId,
+                  authorName: m.authorName,
+                  body: m.body,
+                  createdAt: m.createdAt,
+                },
+              ],
+        );
+      }
     });
   };
+
+  const peersOnline = peerMemberIds.some((id) => online.has(id));
+  const typingLabel = useMemo(() => {
+    const names = typing.map((id) => memberNames[id] ?? "Someone");
+    if (names.length === 0) return null;
+    if (names.length === 1) return `${names[0]} is typing…`;
+    if (names.length === 2) return `${names[0]} and ${names[1]} are typing…`;
+    return "Several people are typing…";
+  }, [typing, memberNames]);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       {/* Thread header */}
       <div className="flex h-14 items-center gap-3 border-b border-border/60 px-4">
         <div className="min-w-0">
-          <div className="truncate text-sm font-semibold">{taskTitle}</div>
+          <div className="flex items-center gap-2">
+            <span className="truncate text-sm font-semibold">{title}</span>
+            {peerMemberIds.length > 0 && (
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1 text-xxs",
+                  peersOnline ? "text-emerald-500" : "text-muted-foreground",
+                )}
+              >
+                <span
+                  className={cn(
+                    "h-1.5 w-1.5 rounded-full",
+                    peersOnline ? "bg-emerald-500" : "bg-muted-foreground/50",
+                  )}
+                />
+                {peersOnline ? "Online" : "Offline"}
+              </span>
+            )}
+          </div>
           <div className="truncate text-xs text-muted-foreground">
-            {projectName}
+            {subtitle}
           </div>
         </div>
       </div>
 
       {/* Messages */}
-      <div
-        ref={scrollerRef}
-        className="min-h-0 flex-1 overflow-y-auto px-4 py-4"
-      >
+      <div ref={scrollerRef} className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
         <div className="mx-auto flex max-w-3xl flex-col gap-3">
-          {comments.map((m, i) => {
+          {messages.map((m, i) => {
             const mine = m.authorId === currentMemberId;
-            const prev = comments[i - 1];
-            const showAuthor =
-              !mine && (!prev || prev.authorId !== m.authorId);
-            const showDay =
-              !prev || !sameDay(prev.createdAt, m.createdAt);
+            const prev = messages[i - 1];
+            const showAuthor = !mine && (!prev || prev.authorId !== m.authorId);
+            const showDay = !prev || !sameDay(prev.createdAt, m.createdAt);
 
             return (
               <div key={m.id} className="contents">
@@ -186,9 +263,14 @@ export function ThreadChat({
               </div>
             );
           })}
-          {comments.length === 0 && (
+          {messages.length === 0 && (
             <div className="py-16 text-center text-xs text-muted-foreground">
               No messages yet. Say hi!
+            </div>
+          )}
+          {typingLabel && (
+            <div className="px-1 text-tiny italic text-muted-foreground">
+              {typingLabel}
             </div>
           )}
         </div>
@@ -207,14 +289,17 @@ export function ThreadChat({
           </Button>
           <Textarea
             value={draft}
-            onChange={(e) => setDraft(e.target.value)}
+            onChange={(e) => {
+              setDraft(e.target.value);
+              notifyTyping();
+            }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 send();
               }
             }}
-            placeholder={`Message ${taskTitle}`}
+            placeholder={`Message ${title}`}
             className="min-h-10 flex-1 resize-none border-0 bg-transparent p-2 text-sm shadow-none focus-visible:ring-0"
             rows={1}
           />

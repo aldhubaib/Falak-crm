@@ -1,0 +1,195 @@
+"use client";
+
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { Centrifuge, Subscription } from "centrifuge";
+import { workspacePresenceChannel } from "@/lib/channels";
+
+// Single shared WebSocket connection to Centrifugo. Components subscribe to
+// channels through this context; the provider dedupes subscriptions by channel
+// so many components can watch the same channel over one Subscription.
+
+type MessageHandler = (data: unknown) => void;
+
+type CentrifugoContextValue = {
+  connected: boolean;
+  /** True when a Centrifugo WS URL is configured (realtime is available). */
+  enabled: boolean;
+  memberId: string;
+  workspaceId: string;
+  /** Subscribe to a channel. Returns an unsubscribe cleanup. */
+  subscribe: (channel: string, onMessage: MessageHandler) => () => void;
+  /** Publish an ephemeral event (e.g. typing) to a channel. */
+  publish: (channel: string, data: unknown) => void;
+  /** Fetch current presence (online members) for a channel. */
+  presence: (channel: string) => Promise<string[]>;
+  /** Get the Subscription instance for a channel (for join/leave listeners). */
+  getSubscription: (channel: string) => Subscription | null;
+};
+
+const CentrifugoContext = createContext<CentrifugoContextValue | null>(null);
+
+const WS_URL = process.env.NEXT_PUBLIC_CENTRIFUGO_WS ?? "";
+
+async function fetchToken(channel?: string): Promise<string> {
+  const res = await fetch("/api/centrifugo/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(channel ? { channel } : {}),
+  });
+  if (!res.ok) throw new Error(`token ${res.status}`);
+  const data = (await res.json()) as { token: string };
+  return data.token;
+}
+
+export function CentrifugoProvider({
+  memberId,
+  workspaceId,
+  children,
+}: {
+  memberId: string;
+  workspaceId: string;
+  children: ReactNode;
+}) {
+  const [connected, setConnected] = useState(false);
+  const clientRef = useRef<Centrifuge | null>(null);
+  // channel -> { sub, handlers } so multiple listeners share one Subscription.
+  const subsRef = useRef<
+    Map<string, { sub: Subscription; handlers: Set<MessageHandler> }>
+  >(new Map());
+  const ensureSubRef = useRef<((channel: string) => unknown) | null>(null);
+
+  useEffect(() => {
+    if (!WS_URL) return; // Realtime disabled — components use their fallbacks.
+
+    const client = new Centrifuge(WS_URL, {
+      getToken: () => fetchToken(),
+    });
+    clientRef.current = client;
+
+    client.on("connected", () => {
+      setConnected(true);
+      // Join the workspace presence channel so this user counts as online for
+      // the whole session (independent of which page/thread is open).
+      ensureSubRef.current?.(workspacePresenceChannel(workspaceId));
+    });
+    client.on("disconnected", () => setConnected(false));
+    client.connect();
+
+    return () => {
+      subsRef.current.forEach(({ sub }) => {
+        try {
+          sub.unsubscribe();
+          client.removeSubscription(sub);
+        } catch {}
+      });
+      subsRef.current.clear();
+      client.disconnect();
+      clientRef.current = null;
+    };
+  }, []);
+
+  const ensureSub = useCallback((channel: string) => {
+    const client = clientRef.current;
+    if (!client) return null;
+    let entry = subsRef.current.get(channel);
+    if (entry) return entry;
+
+    let sub = client.getSubscription(channel);
+    if (!sub) {
+      sub = client.newSubscription(channel, {
+        getToken: () => fetchToken(channel),
+      });
+    }
+    const handlers = new Set<MessageHandler>();
+    sub.on("publication", (ctx) => {
+      handlers.forEach((h) => {
+        try {
+          h(ctx.data);
+        } catch {}
+      });
+    });
+    entry = { sub, handlers };
+    subsRef.current.set(channel, entry);
+    sub.subscribe();
+    return entry;
+  }, []);
+  ensureSubRef.current = ensureSub;
+
+  const subscribe = useCallback(
+    (channel: string, onMessage: MessageHandler) => {
+      const entry = ensureSub(channel);
+      if (!entry) return () => {};
+      entry.handlers.add(onMessage);
+      return () => {
+        entry.handlers.delete(onMessage);
+        if (entry.handlers.size === 0) {
+          try {
+            entry.sub.unsubscribe();
+            clientRef.current?.removeSubscription(entry.sub);
+          } catch {}
+          subsRef.current.delete(channel);
+        }
+      };
+    },
+    [ensureSub],
+  );
+
+  const publish = useCallback((channel: string, data: unknown) => {
+    const client = clientRef.current;
+    if (!client) return;
+    client.publish(channel, data).catch(() => {});
+  }, []);
+
+  const presence = useCallback(
+    async (channel: string): Promise<string[]> => {
+      const entry = ensureSub(channel);
+      if (!entry) return [];
+      try {
+        const result = await entry.sub.presence();
+        const users = new Set<string>();
+        Object.values(result.clients).forEach((c) => users.add(c.user));
+        return [...users];
+      } catch {
+        return [];
+      }
+    },
+    [ensureSub],
+  );
+
+  const getSubscription = useCallback((channel: string) => {
+    return subsRef.current.get(channel)?.sub ?? null;
+  }, []);
+
+  const value = useMemo<CentrifugoContextValue>(
+    () => ({
+      connected,
+      enabled: Boolean(WS_URL),
+      memberId,
+      workspaceId,
+      subscribe,
+      publish,
+      presence,
+      getSubscription,
+    }),
+    [connected, memberId, workspaceId, subscribe, publish, presence, getSubscription],
+  );
+
+  return (
+    <CentrifugoContext.Provider value={value}>
+      {children}
+    </CentrifugoContext.Provider>
+  );
+}
+
+export function useCentrifugo(): CentrifugoContextValue | null {
+  return useContext(CentrifugoContext);
+}

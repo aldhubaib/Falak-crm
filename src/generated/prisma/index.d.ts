@@ -149,15 +149,25 @@ export type Task = $Result.DefaultSelection<Prisma.$TaskPayload>
  */
 export type TaskStatusChange = $Result.DefaultSelection<Prisma.$TaskStatusChangePayload>
 /**
- * Model TaskComment
+ * Model Message
  * 
  */
-export type TaskComment = $Result.DefaultSelection<Prisma.$TaskCommentPayload>
+export type Message = $Result.DefaultSelection<Prisma.$MessagePayload>
 /**
- * Model CommentMention
+ * Model MessageMention
  * 
  */
-export type CommentMention = $Result.DefaultSelection<Prisma.$CommentMentionPayload>
+export type MessageMention = $Result.DefaultSelection<Prisma.$MessageMentionPayload>
+/**
+ * Model Conversation
+ * 
+ */
+export type Conversation = $Result.DefaultSelection<Prisma.$ConversationPayload>
+/**
+ * Model ConversationParticipant
+ * 
+ */
+export type ConversationParticipant = $Result.DefaultSelection<Prisma.$ConversationParticipantPayload>
 /**
  * Model Notification
  * 
@@ -752,24 +762,44 @@ export class PrismaClient<
   get taskStatusChange(): Prisma.TaskStatusChangeDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.taskComment`: Exposes CRUD operations for the **TaskComment** model.
+   * `prisma.message`: Exposes CRUD operations for the **Message** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more TaskComments
-    * const taskComments = await prisma.taskComment.findMany()
+    * // Fetch zero or more Messages
+    * const messages = await prisma.message.findMany()
     * ```
     */
-  get taskComment(): Prisma.TaskCommentDelegate<ExtArgs, ClientOptions>;
+  get message(): Prisma.MessageDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.commentMention`: Exposes CRUD operations for the **CommentMention** model.
+   * `prisma.messageMention`: Exposes CRUD operations for the **MessageMention** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more CommentMentions
-    * const commentMentions = await prisma.commentMention.findMany()
+    * // Fetch zero or more MessageMentions
+    * const messageMentions = await prisma.messageMention.findMany()
     * ```
     */
-  get commentMention(): Prisma.CommentMentionDelegate<ExtArgs, ClientOptions>;
+  get messageMention(): Prisma.MessageMentionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.conversation`: Exposes CRUD operations for the **Conversation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Conversations
+    * const conversations = await prisma.conversation.findMany()
+    * ```
+    */
+  get conversation(): Prisma.ConversationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.conversationParticipant`: Exposes CRUD operations for the **ConversationParticipant** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ConversationParticipants
+    * const conversationParticipants = await prisma.conversationParticipant.findMany()
+    * ```
+    */
+  get conversationParticipant(): Prisma.ConversationParticipantDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
@@ -1371,8 +1401,10 @@ export namespace Prisma {
     TaskStatus: 'TaskStatus',
     Task: 'Task',
     TaskStatusChange: 'TaskStatusChange',
-    TaskComment: 'TaskComment',
-    CommentMention: 'CommentMention',
+    Message: 'Message',
+    MessageMention: 'MessageMention',
+    Conversation: 'Conversation',
+    ConversationParticipant: 'ConversationParticipant',
     Notification: 'Notification',
     PushSubscription: 'PushSubscription',
     Invoice: 'Invoice',
@@ -1402,7 +1434,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "taskComment" | "commentMention" | "notification" | "pushSubscription" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "publishItem"
+      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "message" | "messageMention" | "conversation" | "conversationParticipant" | "notification" | "pushSubscription" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "publishItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3404,151 +3436,299 @@ export namespace Prisma {
           }
         }
       }
-      TaskComment: {
-        payload: Prisma.$TaskCommentPayload<ExtArgs>
-        fields: Prisma.TaskCommentFieldRefs
+      Message: {
+        payload: Prisma.$MessagePayload<ExtArgs>
+        fields: Prisma.MessageFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.TaskCommentFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TaskCommentPayload> | null
+            args: Prisma.MessageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.TaskCommentFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TaskCommentPayload>
+            args: Prisma.MessageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>
           }
           findFirst: {
-            args: Prisma.TaskCommentFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TaskCommentPayload> | null
+            args: Prisma.MessageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.TaskCommentFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TaskCommentPayload>
+            args: Prisma.MessageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>
           }
           findMany: {
-            args: Prisma.TaskCommentFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TaskCommentPayload>[]
+            args: Prisma.MessageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>[]
           }
           create: {
-            args: Prisma.TaskCommentCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TaskCommentPayload>
+            args: Prisma.MessageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>
           }
           createMany: {
-            args: Prisma.TaskCommentCreateManyArgs<ExtArgs>
+            args: Prisma.MessageCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.TaskCommentCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TaskCommentPayload>[]
+            args: Prisma.MessageCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>[]
           }
           delete: {
-            args: Prisma.TaskCommentDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TaskCommentPayload>
+            args: Prisma.MessageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>
           }
           update: {
-            args: Prisma.TaskCommentUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TaskCommentPayload>
+            args: Prisma.MessageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>
           }
           deleteMany: {
-            args: Prisma.TaskCommentDeleteManyArgs<ExtArgs>
+            args: Prisma.MessageDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.TaskCommentUpdateManyArgs<ExtArgs>
+            args: Prisma.MessageUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.TaskCommentUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TaskCommentPayload>[]
+            args: Prisma.MessageUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>[]
           }
           upsert: {
-            args: Prisma.TaskCommentUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TaskCommentPayload>
+            args: Prisma.MessageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>
           }
           aggregate: {
-            args: Prisma.TaskCommentAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateTaskComment>
+            args: Prisma.MessageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMessage>
           }
           groupBy: {
-            args: Prisma.TaskCommentGroupByArgs<ExtArgs>
-            result: $Utils.Optional<TaskCommentGroupByOutputType>[]
+            args: Prisma.MessageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MessageGroupByOutputType>[]
           }
           count: {
-            args: Prisma.TaskCommentCountArgs<ExtArgs>
-            result: $Utils.Optional<TaskCommentCountAggregateOutputType> | number
+            args: Prisma.MessageCountArgs<ExtArgs>
+            result: $Utils.Optional<MessageCountAggregateOutputType> | number
           }
         }
       }
-      CommentMention: {
-        payload: Prisma.$CommentMentionPayload<ExtArgs>
-        fields: Prisma.CommentMentionFieldRefs
+      MessageMention: {
+        payload: Prisma.$MessageMentionPayload<ExtArgs>
+        fields: Prisma.MessageMentionFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.CommentMentionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommentMentionPayload> | null
+            args: Prisma.MessageMentionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageMentionPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.CommentMentionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommentMentionPayload>
+            args: Prisma.MessageMentionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageMentionPayload>
           }
           findFirst: {
-            args: Prisma.CommentMentionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommentMentionPayload> | null
+            args: Prisma.MessageMentionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageMentionPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.CommentMentionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommentMentionPayload>
+            args: Prisma.MessageMentionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageMentionPayload>
           }
           findMany: {
-            args: Prisma.CommentMentionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommentMentionPayload>[]
+            args: Prisma.MessageMentionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageMentionPayload>[]
           }
           create: {
-            args: Prisma.CommentMentionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommentMentionPayload>
+            args: Prisma.MessageMentionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageMentionPayload>
           }
           createMany: {
-            args: Prisma.CommentMentionCreateManyArgs<ExtArgs>
+            args: Prisma.MessageMentionCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.CommentMentionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommentMentionPayload>[]
+            args: Prisma.MessageMentionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageMentionPayload>[]
           }
           delete: {
-            args: Prisma.CommentMentionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommentMentionPayload>
+            args: Prisma.MessageMentionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageMentionPayload>
           }
           update: {
-            args: Prisma.CommentMentionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommentMentionPayload>
+            args: Prisma.MessageMentionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageMentionPayload>
           }
           deleteMany: {
-            args: Prisma.CommentMentionDeleteManyArgs<ExtArgs>
+            args: Prisma.MessageMentionDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.CommentMentionUpdateManyArgs<ExtArgs>
+            args: Prisma.MessageMentionUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.CommentMentionUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommentMentionPayload>[]
+            args: Prisma.MessageMentionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageMentionPayload>[]
           }
           upsert: {
-            args: Prisma.CommentMentionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommentMentionPayload>
+            args: Prisma.MessageMentionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageMentionPayload>
           }
           aggregate: {
-            args: Prisma.CommentMentionAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateCommentMention>
+            args: Prisma.MessageMentionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMessageMention>
           }
           groupBy: {
-            args: Prisma.CommentMentionGroupByArgs<ExtArgs>
-            result: $Utils.Optional<CommentMentionGroupByOutputType>[]
+            args: Prisma.MessageMentionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MessageMentionGroupByOutputType>[]
           }
           count: {
-            args: Prisma.CommentMentionCountArgs<ExtArgs>
-            result: $Utils.Optional<CommentMentionCountAggregateOutputType> | number
+            args: Prisma.MessageMentionCountArgs<ExtArgs>
+            result: $Utils.Optional<MessageMentionCountAggregateOutputType> | number
+          }
+        }
+      }
+      Conversation: {
+        payload: Prisma.$ConversationPayload<ExtArgs>
+        fields: Prisma.ConversationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ConversationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ConversationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>
+          }
+          findFirst: {
+            args: Prisma.ConversationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ConversationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>
+          }
+          findMany: {
+            args: Prisma.ConversationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>[]
+          }
+          create: {
+            args: Prisma.ConversationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>
+          }
+          createMany: {
+            args: Prisma.ConversationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ConversationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>[]
+          }
+          delete: {
+            args: Prisma.ConversationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>
+          }
+          update: {
+            args: Prisma.ConversationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>
+          }
+          deleteMany: {
+            args: Prisma.ConversationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ConversationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ConversationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>[]
+          }
+          upsert: {
+            args: Prisma.ConversationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>
+          }
+          aggregate: {
+            args: Prisma.ConversationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateConversation>
+          }
+          groupBy: {
+            args: Prisma.ConversationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ConversationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ConversationCountArgs<ExtArgs>
+            result: $Utils.Optional<ConversationCountAggregateOutputType> | number
+          }
+        }
+      }
+      ConversationParticipant: {
+        payload: Prisma.$ConversationParticipantPayload<ExtArgs>
+        fields: Prisma.ConversationParticipantFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ConversationParticipantFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationParticipantPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ConversationParticipantFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationParticipantPayload>
+          }
+          findFirst: {
+            args: Prisma.ConversationParticipantFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationParticipantPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ConversationParticipantFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationParticipantPayload>
+          }
+          findMany: {
+            args: Prisma.ConversationParticipantFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationParticipantPayload>[]
+          }
+          create: {
+            args: Prisma.ConversationParticipantCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationParticipantPayload>
+          }
+          createMany: {
+            args: Prisma.ConversationParticipantCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ConversationParticipantCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationParticipantPayload>[]
+          }
+          delete: {
+            args: Prisma.ConversationParticipantDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationParticipantPayload>
+          }
+          update: {
+            args: Prisma.ConversationParticipantUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationParticipantPayload>
+          }
+          deleteMany: {
+            args: Prisma.ConversationParticipantDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ConversationParticipantUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ConversationParticipantUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationParticipantPayload>[]
+          }
+          upsert: {
+            args: Prisma.ConversationParticipantUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationParticipantPayload>
+          }
+          aggregate: {
+            args: Prisma.ConversationParticipantAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateConversationParticipant>
+          }
+          groupBy: {
+            args: Prisma.ConversationParticipantGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ConversationParticipantGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ConversationParticipantCountArgs<ExtArgs>
+            result: $Utils.Optional<ConversationParticipantCountAggregateOutputType> | number
           }
         }
       }
@@ -4723,8 +4903,10 @@ export namespace Prisma {
     taskStatus?: TaskStatusOmit
     task?: TaskOmit
     taskStatusChange?: TaskStatusChangeOmit
-    taskComment?: TaskCommentOmit
-    commentMention?: CommentMentionOmit
+    message?: MessageOmit
+    messageMention?: MessageMentionOmit
+    conversation?: ConversationOmit
+    conversationParticipant?: ConversationParticipantOmit
     notification?: NotificationOmit
     pushSubscription?: PushSubscriptionOmit
     invoice?: InvoiceOmit
@@ -4839,6 +5021,7 @@ export namespace Prisma {
     exchangeRates: number
     attachments: number
     checklistTemplates: number
+    conversations: number
     publishItems: number
   }
 
@@ -4863,6 +5046,7 @@ export namespace Prisma {
     exchangeRates?: boolean | WorkspaceCountOutputTypeCountExchangeRatesArgs
     attachments?: boolean | WorkspaceCountOutputTypeCountAttachmentsArgs
     checklistTemplates?: boolean | WorkspaceCountOutputTypeCountChecklistTemplatesArgs
+    conversations?: boolean | WorkspaceCountOutputTypeCountConversationsArgs
     publishItems?: boolean | WorkspaceCountOutputTypeCountPublishItemsArgs
   }
 
@@ -5020,6 +5204,13 @@ export namespace Prisma {
   /**
    * WorkspaceCountOutputType without action
    */
+  export type WorkspaceCountOutputTypeCountConversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationWhereInput
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
   export type WorkspaceCountOutputTypeCountPublishItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PublishItemWhereInput
   }
@@ -5031,24 +5222,26 @@ export namespace Prisma {
 
   export type WorkspaceMemberCountOutputType = {
     assignedTasks: number
-    comments: number
+    messages: number
     mentionedIn: number
     notifications: number
     pushSubscriptions: number
     scheduledItems: number
     projectMemberships: number
     statusChanges: number
+    conversations: number
   }
 
   export type WorkspaceMemberCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     assignedTasks?: boolean | WorkspaceMemberCountOutputTypeCountAssignedTasksArgs
-    comments?: boolean | WorkspaceMemberCountOutputTypeCountCommentsArgs
+    messages?: boolean | WorkspaceMemberCountOutputTypeCountMessagesArgs
     mentionedIn?: boolean | WorkspaceMemberCountOutputTypeCountMentionedInArgs
     notifications?: boolean | WorkspaceMemberCountOutputTypeCountNotificationsArgs
     pushSubscriptions?: boolean | WorkspaceMemberCountOutputTypeCountPushSubscriptionsArgs
     scheduledItems?: boolean | WorkspaceMemberCountOutputTypeCountScheduledItemsArgs
     projectMemberships?: boolean | WorkspaceMemberCountOutputTypeCountProjectMembershipsArgs
     statusChanges?: boolean | WorkspaceMemberCountOutputTypeCountStatusChangesArgs
+    conversations?: boolean | WorkspaceMemberCountOutputTypeCountConversationsArgs
   }
 
   // Custom InputTypes
@@ -5072,15 +5265,15 @@ export namespace Prisma {
   /**
    * WorkspaceMemberCountOutputType without action
    */
-  export type WorkspaceMemberCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TaskCommentWhereInput
+  export type WorkspaceMemberCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageWhereInput
   }
 
   /**
    * WorkspaceMemberCountOutputType without action
    */
   export type WorkspaceMemberCountOutputTypeCountMentionedInArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CommentMentionWhereInput
+    where?: MessageMentionWhereInput
   }
 
   /**
@@ -5116,6 +5309,13 @@ export namespace Prisma {
    */
   export type WorkspaceMemberCountOutputTypeCountStatusChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TaskStatusChangeWhereInput
+  }
+
+  /**
+   * WorkspaceMemberCountOutputType without action
+   */
+  export type WorkspaceMemberCountOutputTypeCountConversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationParticipantWhereInput
   }
 
 
@@ -5461,6 +5661,7 @@ export namespace Prisma {
     assets: number
     publishItems: number
     members: number
+    messages: number
   }
 
   export type ProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5472,6 +5673,7 @@ export namespace Prisma {
     assets?: boolean | ProjectCountOutputTypeCountAssetsArgs
     publishItems?: boolean | ProjectCountOutputTypeCountPublishItemsArgs
     members?: boolean | ProjectCountOutputTypeCountMembersArgs
+    messages?: boolean | ProjectCountOutputTypeCountMessagesArgs
   }
 
   // Custom InputTypes
@@ -5539,6 +5741,13 @@ export namespace Prisma {
    */
   export type ProjectCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectMemberWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageWhereInput
   }
 
 
@@ -5749,7 +5958,7 @@ export namespace Prisma {
    * TaskCountOutputType without action
    */
   export type TaskCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TaskCommentWhereInput
+    where?: MessageWhereInput
   }
 
   /**
@@ -5761,33 +5970,73 @@ export namespace Prisma {
 
 
   /**
-   * Count Type TaskCommentCountOutputType
+   * Count Type MessageCountOutputType
    */
 
-  export type TaskCommentCountOutputType = {
+  export type MessageCountOutputType = {
     mentions: number
   }
 
-  export type TaskCommentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    mentions?: boolean | TaskCommentCountOutputTypeCountMentionsArgs
+  export type MessageCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    mentions?: boolean | MessageCountOutputTypeCountMentionsArgs
   }
 
   // Custom InputTypes
   /**
-   * TaskCommentCountOutputType without action
+   * MessageCountOutputType without action
    */
-  export type TaskCommentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskCommentCountOutputType
+     * Select specific fields to fetch from the MessageCountOutputType
      */
-    select?: TaskCommentCountOutputTypeSelect<ExtArgs> | null
+    select?: MessageCountOutputTypeSelect<ExtArgs> | null
   }
 
   /**
-   * TaskCommentCountOutputType without action
+   * MessageCountOutputType without action
    */
-  export type TaskCommentCountOutputTypeCountMentionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CommentMentionWhereInput
+  export type MessageCountOutputTypeCountMentionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageMentionWhereInput
+  }
+
+
+  /**
+   * Count Type ConversationCountOutputType
+   */
+
+  export type ConversationCountOutputType = {
+    participants: number
+    messages: number
+  }
+
+  export type ConversationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    participants?: boolean | ConversationCountOutputTypeCountParticipantsArgs
+    messages?: boolean | ConversationCountOutputTypeCountMessagesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ConversationCountOutputType without action
+   */
+  export type ConversationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationCountOutputType
+     */
+    select?: ConversationCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ConversationCountOutputType without action
+   */
+  export type ConversationCountOutputTypeCountParticipantsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationParticipantWhereInput
+  }
+
+  /**
+   * ConversationCountOutputType without action
+   */
+  export type ConversationCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageWhereInput
   }
 
 
@@ -6069,6 +6318,7 @@ export namespace Prisma {
     exchangeRates?: boolean | Workspace$exchangeRatesArgs<ExtArgs>
     attachments?: boolean | Workspace$attachmentsArgs<ExtArgs>
     checklistTemplates?: boolean | Workspace$checklistTemplatesArgs<ExtArgs>
+    conversations?: boolean | Workspace$conversationsArgs<ExtArgs>
     publishItems?: boolean | Workspace$publishItemsArgs<ExtArgs>
     _count?: boolean | WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workspace"]>
@@ -6129,6 +6379,7 @@ export namespace Prisma {
     exchangeRates?: boolean | Workspace$exchangeRatesArgs<ExtArgs>
     attachments?: boolean | Workspace$attachmentsArgs<ExtArgs>
     checklistTemplates?: boolean | Workspace$checklistTemplatesArgs<ExtArgs>
+    conversations?: boolean | Workspace$conversationsArgs<ExtArgs>
     publishItems?: boolean | Workspace$publishItemsArgs<ExtArgs>
     _count?: boolean | WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -6159,6 +6410,7 @@ export namespace Prisma {
       exchangeRates: Prisma.$ExchangeRatePayload<ExtArgs>[]
       attachments: Prisma.$AttachmentPayload<ExtArgs>[]
       checklistTemplates: Prisma.$ChecklistTemplatePayload<ExtArgs>[]
+      conversations: Prisma.$ConversationPayload<ExtArgs>[]
       publishItems: Prisma.$PublishItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -6585,6 +6837,7 @@ export namespace Prisma {
     exchangeRates<T extends Workspace$exchangeRatesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$exchangeRatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     attachments<T extends Workspace$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     checklistTemplates<T extends Workspace$checklistTemplatesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$checklistTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    conversations<T extends Workspace$conversationsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     publishItems<T extends Workspace$publishItemsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$publishItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PublishItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -7512,6 +7765,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ChecklistTemplateScalarFieldEnum | ChecklistTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * Workspace.conversations
+   */
+  export type Workspace$conversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    where?: ConversationWhereInput
+    orderBy?: ConversationOrderByWithRelationInput | ConversationOrderByWithRelationInput[]
+    cursor?: ConversationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConversationScalarFieldEnum | ConversationScalarFieldEnum[]
   }
 
   /**
@@ -9973,13 +10250,14 @@ export namespace Prisma {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     role?: boolean | WorkspaceMember$roleArgs<ExtArgs>
     assignedTasks?: boolean | WorkspaceMember$assignedTasksArgs<ExtArgs>
-    comments?: boolean | WorkspaceMember$commentsArgs<ExtArgs>
+    messages?: boolean | WorkspaceMember$messagesArgs<ExtArgs>
     mentionedIn?: boolean | WorkspaceMember$mentionedInArgs<ExtArgs>
     notifications?: boolean | WorkspaceMember$notificationsArgs<ExtArgs>
     pushSubscriptions?: boolean | WorkspaceMember$pushSubscriptionsArgs<ExtArgs>
     scheduledItems?: boolean | WorkspaceMember$scheduledItemsArgs<ExtArgs>
     projectMemberships?: boolean | WorkspaceMember$projectMembershipsArgs<ExtArgs>
     statusChanges?: boolean | WorkspaceMember$statusChangesArgs<ExtArgs>
+    conversations?: boolean | WorkspaceMember$conversationsArgs<ExtArgs>
     _count?: boolean | WorkspaceMemberCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workspaceMember"]>
 
@@ -10025,13 +10303,14 @@ export namespace Prisma {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     role?: boolean | WorkspaceMember$roleArgs<ExtArgs>
     assignedTasks?: boolean | WorkspaceMember$assignedTasksArgs<ExtArgs>
-    comments?: boolean | WorkspaceMember$commentsArgs<ExtArgs>
+    messages?: boolean | WorkspaceMember$messagesArgs<ExtArgs>
     mentionedIn?: boolean | WorkspaceMember$mentionedInArgs<ExtArgs>
     notifications?: boolean | WorkspaceMember$notificationsArgs<ExtArgs>
     pushSubscriptions?: boolean | WorkspaceMember$pushSubscriptionsArgs<ExtArgs>
     scheduledItems?: boolean | WorkspaceMember$scheduledItemsArgs<ExtArgs>
     projectMemberships?: boolean | WorkspaceMember$projectMembershipsArgs<ExtArgs>
     statusChanges?: boolean | WorkspaceMember$statusChangesArgs<ExtArgs>
+    conversations?: boolean | WorkspaceMember$conversationsArgs<ExtArgs>
     _count?: boolean | WorkspaceMemberCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type WorkspaceMemberIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10049,13 +10328,14 @@ export namespace Prisma {
       workspace: Prisma.$WorkspacePayload<ExtArgs>
       role: Prisma.$RolePayload<ExtArgs> | null
       assignedTasks: Prisma.$TaskPayload<ExtArgs>[]
-      comments: Prisma.$TaskCommentPayload<ExtArgs>[]
-      mentionedIn: Prisma.$CommentMentionPayload<ExtArgs>[]
+      messages: Prisma.$MessagePayload<ExtArgs>[]
+      mentionedIn: Prisma.$MessageMentionPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       pushSubscriptions: Prisma.$PushSubscriptionPayload<ExtArgs>[]
       scheduledItems: Prisma.$PublishItemPayload<ExtArgs>[]
       projectMemberships: Prisma.$ProjectMemberPayload<ExtArgs>[]
       statusChanges: Prisma.$TaskStatusChangePayload<ExtArgs>[]
+      conversations: Prisma.$ConversationParticipantPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10463,13 +10743,14 @@ export namespace Prisma {
     workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     role<T extends WorkspaceMember$roleArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$roleArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     assignedTasks<T extends WorkspaceMember$assignedTasksArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$assignedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    comments<T extends WorkspaceMember$commentsArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    mentionedIn<T extends WorkspaceMember$mentionedInArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$mentionedInArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentMentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    messages<T extends WorkspaceMember$messagesArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    mentionedIn<T extends WorkspaceMember$mentionedInArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$mentionedInArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageMentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends WorkspaceMember$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pushSubscriptions<T extends WorkspaceMember$pushSubscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$pushSubscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PushSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     scheduledItems<T extends WorkspaceMember$scheduledItemsArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$scheduledItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PublishItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     projectMemberships<T extends WorkspaceMember$projectMembershipsArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$projectMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     statusChanges<T extends WorkspaceMember$statusChangesArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$statusChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    conversations<T extends WorkspaceMember$conversationsArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10951,27 +11232,27 @@ export namespace Prisma {
   }
 
   /**
-   * WorkspaceMember.comments
+   * WorkspaceMember.messages
    */
-  export type WorkspaceMember$commentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type WorkspaceMember$messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskComment
+     * Select specific fields to fetch from the Message
      */
-    select?: TaskCommentSelect<ExtArgs> | null
+    select?: MessageSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the TaskComment
+     * Omit specific fields from the Message
      */
-    omit?: TaskCommentOmit<ExtArgs> | null
+    omit?: MessageOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskCommentInclude<ExtArgs> | null
-    where?: TaskCommentWhereInput
-    orderBy?: TaskCommentOrderByWithRelationInput | TaskCommentOrderByWithRelationInput[]
-    cursor?: TaskCommentWhereUniqueInput
+    include?: MessageInclude<ExtArgs> | null
+    where?: MessageWhereInput
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
+    cursor?: MessageWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: TaskCommentScalarFieldEnum | TaskCommentScalarFieldEnum[]
+    distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
   }
 
   /**
@@ -10979,23 +11260,23 @@ export namespace Prisma {
    */
   export type WorkspaceMember$mentionedInArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CommentMention
+     * Select specific fields to fetch from the MessageMention
      */
-    select?: CommentMentionSelect<ExtArgs> | null
+    select?: MessageMentionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the CommentMention
+     * Omit specific fields from the MessageMention
      */
-    omit?: CommentMentionOmit<ExtArgs> | null
+    omit?: MessageMentionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CommentMentionInclude<ExtArgs> | null
-    where?: CommentMentionWhereInput
-    orderBy?: CommentMentionOrderByWithRelationInput | CommentMentionOrderByWithRelationInput[]
-    cursor?: CommentMentionWhereUniqueInput
+    include?: MessageMentionInclude<ExtArgs> | null
+    where?: MessageMentionWhereInput
+    orderBy?: MessageMentionOrderByWithRelationInput | MessageMentionOrderByWithRelationInput[]
+    cursor?: MessageMentionWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: CommentMentionScalarFieldEnum | CommentMentionScalarFieldEnum[]
+    distinct?: MessageMentionScalarFieldEnum | MessageMentionScalarFieldEnum[]
   }
 
   /**
@@ -11116,6 +11397,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TaskStatusChangeScalarFieldEnum | TaskStatusChangeScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceMember.conversations
+   */
+  export type WorkspaceMember$conversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationParticipant
+     */
+    select?: ConversationParticipantSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationParticipant
+     */
+    omit?: ConversationParticipantOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationParticipantInclude<ExtArgs> | null
+    where?: ConversationParticipantWhereInput
+    orderBy?: ConversationParticipantOrderByWithRelationInput | ConversationParticipantOrderByWithRelationInput[]
+    cursor?: ConversationParticipantWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConversationParticipantScalarFieldEnum | ConversationParticipantScalarFieldEnum[]
   }
 
   /**
@@ -25707,6 +26012,7 @@ export namespace Prisma {
     assets?: boolean | Project$assetsArgs<ExtArgs>
     publishItems?: boolean | Project$publishItemsArgs<ExtArgs>
     members?: boolean | Project$membersArgs<ExtArgs>
+    messages?: boolean | Project$messagesArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -25795,6 +26101,7 @@ export namespace Prisma {
     assets?: boolean | Project$assetsArgs<ExtArgs>
     publishItems?: boolean | Project$publishItemsArgs<ExtArgs>
     members?: boolean | Project$membersArgs<ExtArgs>
+    messages?: boolean | Project$messagesArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -25825,6 +26132,7 @@ export namespace Prisma {
       assets: Prisma.$ProjectAssetPayload<ExtArgs>[]
       publishItems: Prisma.$PublishItemPayload<ExtArgs>[]
       members: Prisma.$ProjectMemberPayload<ExtArgs>[]
+      messages: Prisma.$MessagePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -26251,6 +26559,7 @@ export namespace Prisma {
     assets<T extends Project$assetsArgs<ExtArgs> = {}>(args?: Subset<T, Project$assetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     publishItems<T extends Project$publishItemsArgs<ExtArgs> = {}>(args?: Subset<T, Project$publishItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PublishItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     members<T extends Project$membersArgs<ExtArgs> = {}>(args?: Subset<T, Project$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    messages<T extends Project$messagesArgs<ExtArgs> = {}>(args?: Subset<T, Project$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -26945,6 +27254,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProjectMemberScalarFieldEnum | ProjectMemberScalarFieldEnum[]
+  }
+
+  /**
+   * Project.messages
+   */
+  export type Project$messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    where?: MessageWhereInput
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
+    cursor?: MessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
   }
 
   /**
@@ -36960,7 +37293,7 @@ export namespace Prisma {
       status: Prisma.$TaskStatusPayload<ExtArgs> | null
       assignee: Prisma.$WorkspaceMemberPayload<ExtArgs> | null
       checklistItems: Prisma.$TaskChecklistItemPayload<ExtArgs>[]
-      comments: Prisma.$TaskCommentPayload<ExtArgs>[]
+      comments: Prisma.$MessagePayload<ExtArgs>[]
       publishItem: Prisma.$PublishItemPayload<ExtArgs> | null
       statusChanges: Prisma.$TaskStatusChangePayload<ExtArgs>[]
     }
@@ -37386,7 +37719,7 @@ export namespace Prisma {
     status<T extends Task$statusArgs<ExtArgs> = {}>(args?: Subset<T, Task$statusArgs<ExtArgs>>): Prisma__TaskStatusClient<$Result.GetResult<Prisma.$TaskStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     assignee<T extends Task$assigneeArgs<ExtArgs> = {}>(args?: Subset<T, Task$assigneeArgs<ExtArgs>>): Prisma__WorkspaceMemberClient<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     checklistItems<T extends Task$checklistItemsArgs<ExtArgs> = {}>(args?: Subset<T, Task$checklistItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskChecklistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    comments<T extends Task$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Task$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    comments<T extends Task$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Task$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     publishItem<T extends Task$publishItemArgs<ExtArgs> = {}>(args?: Subset<T, Task$publishItemArgs<ExtArgs>>): Prisma__PublishItemClient<$Result.GetResult<Prisma.$PublishItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     statusChanges<T extends Task$statusChangesArgs<ExtArgs> = {}>(args?: Subset<T, Task$statusChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -37926,23 +38259,23 @@ export namespace Prisma {
    */
   export type Task$commentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskComment
+     * Select specific fields to fetch from the Message
      */
-    select?: TaskCommentSelect<ExtArgs> | null
+    select?: MessageSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the TaskComment
+     * Omit specific fields from the Message
      */
-    omit?: TaskCommentOmit<ExtArgs> | null
+    omit?: MessageOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskCommentInclude<ExtArgs> | null
-    where?: TaskCommentWhereInput
-    orderBy?: TaskCommentOrderByWithRelationInput | TaskCommentOrderByWithRelationInput[]
-    cursor?: TaskCommentWhereUniqueInput
+    include?: MessageInclude<ExtArgs> | null
+    where?: MessageWhereInput
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
+    cursor?: MessageWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: TaskCommentScalarFieldEnum | TaskCommentScalarFieldEnum[]
+    distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
   }
 
   /**
@@ -39197,374 +39530,424 @@ export namespace Prisma {
 
 
   /**
-   * Model TaskComment
+   * Model Message
    */
 
-  export type AggregateTaskComment = {
-    _count: TaskCommentCountAggregateOutputType | null
-    _min: TaskCommentMinAggregateOutputType | null
-    _max: TaskCommentMaxAggregateOutputType | null
+  export type AggregateMessage = {
+    _count: MessageCountAggregateOutputType | null
+    _min: MessageMinAggregateOutputType | null
+    _max: MessageMaxAggregateOutputType | null
   }
 
-  export type TaskCommentMinAggregateOutputType = {
+  export type MessageMinAggregateOutputType = {
     id: string | null
     taskId: string | null
+    projectId: string | null
+    conversationId: string | null
     authorId: string | null
     body: string | null
+    kind: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
-  export type TaskCommentMaxAggregateOutputType = {
+  export type MessageMaxAggregateOutputType = {
     id: string | null
     taskId: string | null
+    projectId: string | null
+    conversationId: string | null
     authorId: string | null
     body: string | null
+    kind: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
-  export type TaskCommentCountAggregateOutputType = {
+  export type MessageCountAggregateOutputType = {
     id: number
     taskId: number
+    projectId: number
+    conversationId: number
     authorId: number
     body: number
+    kind: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
 
-  export type TaskCommentMinAggregateInputType = {
+  export type MessageMinAggregateInputType = {
     id?: true
     taskId?: true
+    projectId?: true
+    conversationId?: true
     authorId?: true
     body?: true
+    kind?: true
     createdAt?: true
     updatedAt?: true
   }
 
-  export type TaskCommentMaxAggregateInputType = {
+  export type MessageMaxAggregateInputType = {
     id?: true
     taskId?: true
+    projectId?: true
+    conversationId?: true
     authorId?: true
     body?: true
+    kind?: true
     createdAt?: true
     updatedAt?: true
   }
 
-  export type TaskCommentCountAggregateInputType = {
+  export type MessageCountAggregateInputType = {
     id?: true
     taskId?: true
+    projectId?: true
+    conversationId?: true
     authorId?: true
     body?: true
+    kind?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
   }
 
-  export type TaskCommentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which TaskComment to aggregate.
+     * Filter which Message to aggregate.
      */
-    where?: TaskCommentWhereInput
+    where?: MessageWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of TaskComments to fetch.
+     * Determine the order of Messages to fetch.
      */
-    orderBy?: TaskCommentOrderByWithRelationInput | TaskCommentOrderByWithRelationInput[]
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: TaskCommentWhereUniqueInput
+    cursor?: MessageWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` TaskComments from the position of the cursor.
+     * Take `±n` Messages from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` TaskComments.
+     * Skip the first `n` Messages.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned TaskComments
+     * Count returned Messages
     **/
-    _count?: true | TaskCommentCountAggregateInputType
+    _count?: true | MessageCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: TaskCommentMinAggregateInputType
+    _min?: MessageMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: TaskCommentMaxAggregateInputType
+    _max?: MessageMaxAggregateInputType
   }
 
-  export type GetTaskCommentAggregateType<T extends TaskCommentAggregateArgs> = {
-        [P in keyof T & keyof AggregateTaskComment]: P extends '_count' | 'count'
+  export type GetMessageAggregateType<T extends MessageAggregateArgs> = {
+        [P in keyof T & keyof AggregateMessage]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateTaskComment[P]>
-      : GetScalarType<T[P], AggregateTaskComment[P]>
+        : GetScalarType<T[P], AggregateMessage[P]>
+      : GetScalarType<T[P], AggregateMessage[P]>
   }
 
 
 
 
-  export type TaskCommentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TaskCommentWhereInput
-    orderBy?: TaskCommentOrderByWithAggregationInput | TaskCommentOrderByWithAggregationInput[]
-    by: TaskCommentScalarFieldEnum[] | TaskCommentScalarFieldEnum
-    having?: TaskCommentScalarWhereWithAggregatesInput
+  export type MessageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageWhereInput
+    orderBy?: MessageOrderByWithAggregationInput | MessageOrderByWithAggregationInput[]
+    by: MessageScalarFieldEnum[] | MessageScalarFieldEnum
+    having?: MessageScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: TaskCommentCountAggregateInputType | true
-    _min?: TaskCommentMinAggregateInputType
-    _max?: TaskCommentMaxAggregateInputType
+    _count?: MessageCountAggregateInputType | true
+    _min?: MessageMinAggregateInputType
+    _max?: MessageMaxAggregateInputType
   }
 
-  export type TaskCommentGroupByOutputType = {
+  export type MessageGroupByOutputType = {
     id: string
-    taskId: string
+    taskId: string | null
+    projectId: string | null
+    conversationId: string | null
     authorId: string
     body: string
+    kind: string
     createdAt: Date
     updatedAt: Date
-    _count: TaskCommentCountAggregateOutputType | null
-    _min: TaskCommentMinAggregateOutputType | null
-    _max: TaskCommentMaxAggregateOutputType | null
+    _count: MessageCountAggregateOutputType | null
+    _min: MessageMinAggregateOutputType | null
+    _max: MessageMaxAggregateOutputType | null
   }
 
-  type GetTaskCommentGroupByPayload<T extends TaskCommentGroupByArgs> = Prisma.PrismaPromise<
+  type GetMessageGroupByPayload<T extends MessageGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<TaskCommentGroupByOutputType, T['by']> &
+      PickEnumerable<MessageGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof TaskCommentGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof MessageGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], TaskCommentGroupByOutputType[P]>
-            : GetScalarType<T[P], TaskCommentGroupByOutputType[P]>
+              : GetScalarType<T[P], MessageGroupByOutputType[P]>
+            : GetScalarType<T[P], MessageGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type TaskCommentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type MessageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     taskId?: boolean
+    projectId?: boolean
+    conversationId?: boolean
     authorId?: boolean
     body?: boolean
+    kind?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    task?: boolean | TaskDefaultArgs<ExtArgs>
+    task?: boolean | Message$taskArgs<ExtArgs>
+    project?: boolean | Message$projectArgs<ExtArgs>
+    conversation?: boolean | Message$conversationArgs<ExtArgs>
     author?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
-    mentions?: boolean | TaskComment$mentionsArgs<ExtArgs>
-    _count?: boolean | TaskCommentCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["taskComment"]>
+    mentions?: boolean | Message$mentionsArgs<ExtArgs>
+    _count?: boolean | MessageCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["message"]>
 
-  export type TaskCommentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type MessageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     taskId?: boolean
+    projectId?: boolean
+    conversationId?: boolean
     authorId?: boolean
     body?: boolean
+    kind?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    task?: boolean | TaskDefaultArgs<ExtArgs>
+    task?: boolean | Message$taskArgs<ExtArgs>
+    project?: boolean | Message$projectArgs<ExtArgs>
+    conversation?: boolean | Message$conversationArgs<ExtArgs>
     author?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["taskComment"]>
+  }, ExtArgs["result"]["message"]>
 
-  export type TaskCommentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type MessageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     taskId?: boolean
+    projectId?: boolean
+    conversationId?: boolean
     authorId?: boolean
     body?: boolean
+    kind?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    task?: boolean | TaskDefaultArgs<ExtArgs>
+    task?: boolean | Message$taskArgs<ExtArgs>
+    project?: boolean | Message$projectArgs<ExtArgs>
+    conversation?: boolean | Message$conversationArgs<ExtArgs>
     author?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["taskComment"]>
+  }, ExtArgs["result"]["message"]>
 
-  export type TaskCommentSelectScalar = {
+  export type MessageSelectScalar = {
     id?: boolean
     taskId?: boolean
+    projectId?: boolean
+    conversationId?: boolean
     authorId?: boolean
     body?: boolean
+    kind?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TaskCommentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "authorId" | "body" | "createdAt" | "updatedAt", ExtArgs["result"]["taskComment"]>
-  export type TaskCommentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    task?: boolean | TaskDefaultArgs<ExtArgs>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "projectId" | "conversationId" | "authorId" | "body" | "kind" | "createdAt" | "updatedAt", ExtArgs["result"]["message"]>
+  export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    task?: boolean | Message$taskArgs<ExtArgs>
+    project?: boolean | Message$projectArgs<ExtArgs>
+    conversation?: boolean | Message$conversationArgs<ExtArgs>
     author?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
-    mentions?: boolean | TaskComment$mentionsArgs<ExtArgs>
-    _count?: boolean | TaskCommentCountOutputTypeDefaultArgs<ExtArgs>
+    mentions?: boolean | Message$mentionsArgs<ExtArgs>
+    _count?: boolean | MessageCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type TaskCommentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    task?: boolean | TaskDefaultArgs<ExtArgs>
+  export type MessageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    task?: boolean | Message$taskArgs<ExtArgs>
+    project?: boolean | Message$projectArgs<ExtArgs>
+    conversation?: boolean | Message$conversationArgs<ExtArgs>
     author?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
   }
-  export type TaskCommentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    task?: boolean | TaskDefaultArgs<ExtArgs>
+  export type MessageIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    task?: boolean | Message$taskArgs<ExtArgs>
+    project?: boolean | Message$projectArgs<ExtArgs>
+    conversation?: boolean | Message$conversationArgs<ExtArgs>
     author?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
   }
 
-  export type $TaskCommentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "TaskComment"
+  export type $MessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Message"
     objects: {
-      task: Prisma.$TaskPayload<ExtArgs>
+      task: Prisma.$TaskPayload<ExtArgs> | null
+      project: Prisma.$ProjectPayload<ExtArgs> | null
+      conversation: Prisma.$ConversationPayload<ExtArgs> | null
       author: Prisma.$WorkspaceMemberPayload<ExtArgs>
-      mentions: Prisma.$CommentMentionPayload<ExtArgs>[]
+      mentions: Prisma.$MessageMentionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      taskId: string
+      taskId: string | null
+      projectId: string | null
+      conversationId: string | null
       authorId: string
       body: string
+      kind: string
       createdAt: Date
       updatedAt: Date
-    }, ExtArgs["result"]["taskComment"]>
+    }, ExtArgs["result"]["message"]>
     composites: {}
   }
 
-  type TaskCommentGetPayload<S extends boolean | null | undefined | TaskCommentDefaultArgs> = $Result.GetResult<Prisma.$TaskCommentPayload, S>
+  type MessageGetPayload<S extends boolean | null | undefined | MessageDefaultArgs> = $Result.GetResult<Prisma.$MessagePayload, S>
 
-  type TaskCommentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<TaskCommentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: TaskCommentCountAggregateInputType | true
+  type MessageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MessageFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MessageCountAggregateInputType | true
     }
 
-  export interface TaskCommentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TaskComment'], meta: { name: 'TaskComment' } }
+  export interface MessageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Message'], meta: { name: 'Message' } }
     /**
-     * Find zero or one TaskComment that matches the filter.
-     * @param {TaskCommentFindUniqueArgs} args - Arguments to find a TaskComment
+     * Find zero or one Message that matches the filter.
+     * @param {MessageFindUniqueArgs} args - Arguments to find a Message
      * @example
-     * // Get one TaskComment
-     * const taskComment = await prisma.taskComment.findUnique({
+     * // Get one Message
+     * const message = await prisma.message.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends TaskCommentFindUniqueArgs>(args: SelectSubset<T, TaskCommentFindUniqueArgs<ExtArgs>>): Prisma__TaskCommentClient<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends MessageFindUniqueArgs>(args: SelectSubset<T, MessageFindUniqueArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one TaskComment that matches the filter or throw an error with `error.code='P2025'`
+     * Find one Message that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {TaskCommentFindUniqueOrThrowArgs} args - Arguments to find a TaskComment
+     * @param {MessageFindUniqueOrThrowArgs} args - Arguments to find a Message
      * @example
-     * // Get one TaskComment
-     * const taskComment = await prisma.taskComment.findUniqueOrThrow({
+     * // Get one Message
+     * const message = await prisma.message.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends TaskCommentFindUniqueOrThrowArgs>(args: SelectSubset<T, TaskCommentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TaskCommentClient<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends MessageFindUniqueOrThrowArgs>(args: SelectSubset<T, MessageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first TaskComment that matches the filter.
+     * Find the first Message that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {TaskCommentFindFirstArgs} args - Arguments to find a TaskComment
+     * @param {MessageFindFirstArgs} args - Arguments to find a Message
      * @example
-     * // Get one TaskComment
-     * const taskComment = await prisma.taskComment.findFirst({
+     * // Get one Message
+     * const message = await prisma.message.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends TaskCommentFindFirstArgs>(args?: SelectSubset<T, TaskCommentFindFirstArgs<ExtArgs>>): Prisma__TaskCommentClient<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends MessageFindFirstArgs>(args?: SelectSubset<T, MessageFindFirstArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first TaskComment that matches the filter or
+     * Find the first Message that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {TaskCommentFindFirstOrThrowArgs} args - Arguments to find a TaskComment
+     * @param {MessageFindFirstOrThrowArgs} args - Arguments to find a Message
      * @example
-     * // Get one TaskComment
-     * const taskComment = await prisma.taskComment.findFirstOrThrow({
+     * // Get one Message
+     * const message = await prisma.message.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends TaskCommentFindFirstOrThrowArgs>(args?: SelectSubset<T, TaskCommentFindFirstOrThrowArgs<ExtArgs>>): Prisma__TaskCommentClient<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends MessageFindFirstOrThrowArgs>(args?: SelectSubset<T, MessageFindFirstOrThrowArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more TaskComments that matches the filter.
+     * Find zero or more Messages that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {TaskCommentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {MessageFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all TaskComments
-     * const taskComments = await prisma.taskComment.findMany()
+     * // Get all Messages
+     * const messages = await prisma.message.findMany()
      * 
-     * // Get first 10 TaskComments
-     * const taskComments = await prisma.taskComment.findMany({ take: 10 })
+     * // Get first 10 Messages
+     * const messages = await prisma.message.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const taskCommentWithIdOnly = await prisma.taskComment.findMany({ select: { id: true } })
+     * const messageWithIdOnly = await prisma.message.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends TaskCommentFindManyArgs>(args?: SelectSubset<T, TaskCommentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends MessageFindManyArgs>(args?: SelectSubset<T, MessageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a TaskComment.
-     * @param {TaskCommentCreateArgs} args - Arguments to create a TaskComment.
+     * Create a Message.
+     * @param {MessageCreateArgs} args - Arguments to create a Message.
      * @example
-     * // Create one TaskComment
-     * const TaskComment = await prisma.taskComment.create({
+     * // Create one Message
+     * const Message = await prisma.message.create({
      *   data: {
-     *     // ... data to create a TaskComment
+     *     // ... data to create a Message
      *   }
      * })
      * 
      */
-    create<T extends TaskCommentCreateArgs>(args: SelectSubset<T, TaskCommentCreateArgs<ExtArgs>>): Prisma__TaskCommentClient<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends MessageCreateArgs>(args: SelectSubset<T, MessageCreateArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many TaskComments.
-     * @param {TaskCommentCreateManyArgs} args - Arguments to create many TaskComments.
+     * Create many Messages.
+     * @param {MessageCreateManyArgs} args - Arguments to create many Messages.
      * @example
-     * // Create many TaskComments
-     * const taskComment = await prisma.taskComment.createMany({
+     * // Create many Messages
+     * const message = await prisma.message.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends TaskCommentCreateManyArgs>(args?: SelectSubset<T, TaskCommentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends MessageCreateManyArgs>(args?: SelectSubset<T, MessageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many TaskComments and returns the data saved in the database.
-     * @param {TaskCommentCreateManyAndReturnArgs} args - Arguments to create many TaskComments.
+     * Create many Messages and returns the data saved in the database.
+     * @param {MessageCreateManyAndReturnArgs} args - Arguments to create many Messages.
      * @example
-     * // Create many TaskComments
-     * const taskComment = await prisma.taskComment.createManyAndReturn({
+     * // Create many Messages
+     * const message = await prisma.message.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many TaskComments and only return the `id`
-     * const taskCommentWithIdOnly = await prisma.taskComment.createManyAndReturn({
+     * // Create many Messages and only return the `id`
+     * const messageWithIdOnly = await prisma.message.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -39574,28 +39957,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends TaskCommentCreateManyAndReturnArgs>(args?: SelectSubset<T, TaskCommentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends MessageCreateManyAndReturnArgs>(args?: SelectSubset<T, MessageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a TaskComment.
-     * @param {TaskCommentDeleteArgs} args - Arguments to delete one TaskComment.
+     * Delete a Message.
+     * @param {MessageDeleteArgs} args - Arguments to delete one Message.
      * @example
-     * // Delete one TaskComment
-     * const TaskComment = await prisma.taskComment.delete({
+     * // Delete one Message
+     * const Message = await prisma.message.delete({
      *   where: {
-     *     // ... filter to delete one TaskComment
+     *     // ... filter to delete one Message
      *   }
      * })
      * 
      */
-    delete<T extends TaskCommentDeleteArgs>(args: SelectSubset<T, TaskCommentDeleteArgs<ExtArgs>>): Prisma__TaskCommentClient<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends MessageDeleteArgs>(args: SelectSubset<T, MessageDeleteArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one TaskComment.
-     * @param {TaskCommentUpdateArgs} args - Arguments to update one TaskComment.
+     * Update one Message.
+     * @param {MessageUpdateArgs} args - Arguments to update one Message.
      * @example
-     * // Update one TaskComment
-     * const taskComment = await prisma.taskComment.update({
+     * // Update one Message
+     * const message = await prisma.message.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -39605,30 +39988,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends TaskCommentUpdateArgs>(args: SelectSubset<T, TaskCommentUpdateArgs<ExtArgs>>): Prisma__TaskCommentClient<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends MessageUpdateArgs>(args: SelectSubset<T, MessageUpdateArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more TaskComments.
-     * @param {TaskCommentDeleteManyArgs} args - Arguments to filter TaskComments to delete.
+     * Delete zero or more Messages.
+     * @param {MessageDeleteManyArgs} args - Arguments to filter Messages to delete.
      * @example
-     * // Delete a few TaskComments
-     * const { count } = await prisma.taskComment.deleteMany({
+     * // Delete a few Messages
+     * const { count } = await prisma.message.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends TaskCommentDeleteManyArgs>(args?: SelectSubset<T, TaskCommentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends MessageDeleteManyArgs>(args?: SelectSubset<T, MessageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more TaskComments.
+     * Update zero or more Messages.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {TaskCommentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {MessageUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many TaskComments
-     * const taskComment = await prisma.taskComment.updateMany({
+     * // Update many Messages
+     * const message = await prisma.message.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -39638,14 +40021,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends TaskCommentUpdateManyArgs>(args: SelectSubset<T, TaskCommentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends MessageUpdateManyArgs>(args: SelectSubset<T, MessageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more TaskComments and returns the data updated in the database.
-     * @param {TaskCommentUpdateManyAndReturnArgs} args - Arguments to update many TaskComments.
+     * Update zero or more Messages and returns the data updated in the database.
+     * @param {MessageUpdateManyAndReturnArgs} args - Arguments to update many Messages.
      * @example
-     * // Update many TaskComments
-     * const taskComment = await prisma.taskComment.updateManyAndReturn({
+     * // Update many Messages
+     * const message = await prisma.message.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -39654,8 +40037,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more TaskComments and only return the `id`
-     * const taskCommentWithIdOnly = await prisma.taskComment.updateManyAndReturn({
+     * // Update zero or more Messages and only return the `id`
+     * const messageWithIdOnly = await prisma.message.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -39668,56 +40051,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends TaskCommentUpdateManyAndReturnArgs>(args: SelectSubset<T, TaskCommentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends MessageUpdateManyAndReturnArgs>(args: SelectSubset<T, MessageUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one TaskComment.
-     * @param {TaskCommentUpsertArgs} args - Arguments to update or create a TaskComment.
+     * Create or update one Message.
+     * @param {MessageUpsertArgs} args - Arguments to update or create a Message.
      * @example
-     * // Update or create a TaskComment
-     * const taskComment = await prisma.taskComment.upsert({
+     * // Update or create a Message
+     * const message = await prisma.message.upsert({
      *   create: {
-     *     // ... data to create a TaskComment
+     *     // ... data to create a Message
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the TaskComment we want to update
+     *     // ... the filter for the Message we want to update
      *   }
      * })
      */
-    upsert<T extends TaskCommentUpsertArgs>(args: SelectSubset<T, TaskCommentUpsertArgs<ExtArgs>>): Prisma__TaskCommentClient<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends MessageUpsertArgs>(args: SelectSubset<T, MessageUpsertArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of TaskComments.
+     * Count the number of Messages.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {TaskCommentCountArgs} args - Arguments to filter TaskComments to count.
+     * @param {MessageCountArgs} args - Arguments to filter Messages to count.
      * @example
-     * // Count the number of TaskComments
-     * const count = await prisma.taskComment.count({
+     * // Count the number of Messages
+     * const count = await prisma.message.count({
      *   where: {
-     *     // ... the filter for the TaskComments we want to count
+     *     // ... the filter for the Messages we want to count
      *   }
      * })
     **/
-    count<T extends TaskCommentCountArgs>(
-      args?: Subset<T, TaskCommentCountArgs>,
+    count<T extends MessageCountArgs>(
+      args?: Subset<T, MessageCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], TaskCommentCountAggregateOutputType>
+          : GetScalarType<T['select'], MessageCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a TaskComment.
+     * Allows you to perform aggregations operations on a Message.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {TaskCommentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {MessageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -39737,13 +40120,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends TaskCommentAggregateArgs>(args: Subset<T, TaskCommentAggregateArgs>): Prisma.PrismaPromise<GetTaskCommentAggregateType<T>>
+    aggregate<T extends MessageAggregateArgs>(args: Subset<T, MessageAggregateArgs>): Prisma.PrismaPromise<GetMessageAggregateType<T>>
 
     /**
-     * Group by TaskComment.
+     * Group by Message.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {TaskCommentGroupByArgs} args - Group by arguments.
+     * @param {MessageGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -39758,14 +40141,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends TaskCommentGroupByArgs,
+      T extends MessageGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: TaskCommentGroupByArgs['orderBy'] }
-        : { orderBy?: TaskCommentGroupByArgs['orderBy'] },
+        ? { orderBy: MessageGroupByArgs['orderBy'] }
+        : { orderBy?: MessageGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -39814,24 +40197,26 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, TaskCommentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTaskCommentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, MessageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMessageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the TaskComment model
+   * Fields of the Message model
    */
-  readonly fields: TaskCommentFieldRefs;
+  readonly fields: MessageFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for TaskComment.
+   * The delegate class that acts as a "Promise-like" for Message.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__TaskCommentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__MessageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    task<T extends TaskDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TaskDefaultArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    task<T extends Message$taskArgs<ExtArgs> = {}>(args?: Subset<T, Message$taskArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    project<T extends Message$projectArgs<ExtArgs> = {}>(args?: Subset<T, Message$projectArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    conversation<T extends Message$conversationArgs<ExtArgs> = {}>(args?: Subset<T, Message$conversationArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     author<T extends WorkspaceMemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMemberDefaultArgs<ExtArgs>>): Prisma__WorkspaceMemberClient<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    mentions<T extends TaskComment$mentionsArgs<ExtArgs> = {}>(args?: Subset<T, TaskComment$mentionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentMentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    mentions<T extends Message$mentionsArgs<ExtArgs> = {}>(args?: Subset<T, Message$mentionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageMentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -39858,786 +40243,846 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the TaskComment model
+   * Fields of the Message model
    */
-  interface TaskCommentFieldRefs {
-    readonly id: FieldRef<"TaskComment", 'String'>
-    readonly taskId: FieldRef<"TaskComment", 'String'>
-    readonly authorId: FieldRef<"TaskComment", 'String'>
-    readonly body: FieldRef<"TaskComment", 'String'>
-    readonly createdAt: FieldRef<"TaskComment", 'DateTime'>
-    readonly updatedAt: FieldRef<"TaskComment", 'DateTime'>
+  interface MessageFieldRefs {
+    readonly id: FieldRef<"Message", 'String'>
+    readonly taskId: FieldRef<"Message", 'String'>
+    readonly projectId: FieldRef<"Message", 'String'>
+    readonly conversationId: FieldRef<"Message", 'String'>
+    readonly authorId: FieldRef<"Message", 'String'>
+    readonly body: FieldRef<"Message", 'String'>
+    readonly kind: FieldRef<"Message", 'String'>
+    readonly createdAt: FieldRef<"Message", 'DateTime'>
+    readonly updatedAt: FieldRef<"Message", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * TaskComment findUnique
+   * Message findUnique
    */
-  export type TaskCommentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskComment
+     * Select specific fields to fetch from the Message
      */
-    select?: TaskCommentSelect<ExtArgs> | null
+    select?: MessageSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the TaskComment
+     * Omit specific fields from the Message
      */
-    omit?: TaskCommentOmit<ExtArgs> | null
+    omit?: MessageOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskCommentInclude<ExtArgs> | null
+    include?: MessageInclude<ExtArgs> | null
     /**
-     * Filter, which TaskComment to fetch.
+     * Filter, which Message to fetch.
      */
-    where: TaskCommentWhereUniqueInput
+    where: MessageWhereUniqueInput
   }
 
   /**
-   * TaskComment findUniqueOrThrow
+   * Message findUniqueOrThrow
    */
-  export type TaskCommentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskComment
+     * Select specific fields to fetch from the Message
      */
-    select?: TaskCommentSelect<ExtArgs> | null
+    select?: MessageSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the TaskComment
+     * Omit specific fields from the Message
      */
-    omit?: TaskCommentOmit<ExtArgs> | null
+    omit?: MessageOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskCommentInclude<ExtArgs> | null
+    include?: MessageInclude<ExtArgs> | null
     /**
-     * Filter, which TaskComment to fetch.
+     * Filter, which Message to fetch.
      */
-    where: TaskCommentWhereUniqueInput
+    where: MessageWhereUniqueInput
   }
 
   /**
-   * TaskComment findFirst
+   * Message findFirst
    */
-  export type TaskCommentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskComment
+     * Select specific fields to fetch from the Message
      */
-    select?: TaskCommentSelect<ExtArgs> | null
+    select?: MessageSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the TaskComment
+     * Omit specific fields from the Message
      */
-    omit?: TaskCommentOmit<ExtArgs> | null
+    omit?: MessageOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskCommentInclude<ExtArgs> | null
+    include?: MessageInclude<ExtArgs> | null
     /**
-     * Filter, which TaskComment to fetch.
+     * Filter, which Message to fetch.
      */
-    where?: TaskCommentWhereInput
+    where?: MessageWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of TaskComments to fetch.
+     * Determine the order of Messages to fetch.
      */
-    orderBy?: TaskCommentOrderByWithRelationInput | TaskCommentOrderByWithRelationInput[]
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for TaskComments.
+     * Sets the position for searching for Messages.
      */
-    cursor?: TaskCommentWhereUniqueInput
+    cursor?: MessageWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` TaskComments from the position of the cursor.
+     * Take `±n` Messages from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` TaskComments.
+     * Skip the first `n` Messages.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of TaskComments.
+     * Filter by unique combinations of Messages.
      */
-    distinct?: TaskCommentScalarFieldEnum | TaskCommentScalarFieldEnum[]
+    distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
   }
 
   /**
-   * TaskComment findFirstOrThrow
+   * Message findFirstOrThrow
    */
-  export type TaskCommentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskComment
+     * Select specific fields to fetch from the Message
      */
-    select?: TaskCommentSelect<ExtArgs> | null
+    select?: MessageSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the TaskComment
+     * Omit specific fields from the Message
      */
-    omit?: TaskCommentOmit<ExtArgs> | null
+    omit?: MessageOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskCommentInclude<ExtArgs> | null
+    include?: MessageInclude<ExtArgs> | null
     /**
-     * Filter, which TaskComment to fetch.
+     * Filter, which Message to fetch.
      */
-    where?: TaskCommentWhereInput
+    where?: MessageWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of TaskComments to fetch.
+     * Determine the order of Messages to fetch.
      */
-    orderBy?: TaskCommentOrderByWithRelationInput | TaskCommentOrderByWithRelationInput[]
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for TaskComments.
+     * Sets the position for searching for Messages.
      */
-    cursor?: TaskCommentWhereUniqueInput
+    cursor?: MessageWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` TaskComments from the position of the cursor.
+     * Take `±n` Messages from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` TaskComments.
+     * Skip the first `n` Messages.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of TaskComments.
+     * Filter by unique combinations of Messages.
      */
-    distinct?: TaskCommentScalarFieldEnum | TaskCommentScalarFieldEnum[]
+    distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
   }
 
   /**
-   * TaskComment findMany
+   * Message findMany
    */
-  export type TaskCommentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskComment
+     * Select specific fields to fetch from the Message
      */
-    select?: TaskCommentSelect<ExtArgs> | null
+    select?: MessageSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the TaskComment
+     * Omit specific fields from the Message
      */
-    omit?: TaskCommentOmit<ExtArgs> | null
+    omit?: MessageOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskCommentInclude<ExtArgs> | null
+    include?: MessageInclude<ExtArgs> | null
     /**
-     * Filter, which TaskComments to fetch.
+     * Filter, which Messages to fetch.
      */
-    where?: TaskCommentWhereInput
+    where?: MessageWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of TaskComments to fetch.
+     * Determine the order of Messages to fetch.
      */
-    orderBy?: TaskCommentOrderByWithRelationInput | TaskCommentOrderByWithRelationInput[]
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing TaskComments.
+     * Sets the position for listing Messages.
      */
-    cursor?: TaskCommentWhereUniqueInput
+    cursor?: MessageWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` TaskComments from the position of the cursor.
+     * Take `±n` Messages from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` TaskComments.
+     * Skip the first `n` Messages.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of TaskComments.
+     * Filter by unique combinations of Messages.
      */
-    distinct?: TaskCommentScalarFieldEnum | TaskCommentScalarFieldEnum[]
+    distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
   }
 
   /**
-   * TaskComment create
+   * Message create
    */
-  export type TaskCommentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskComment
+     * Select specific fields to fetch from the Message
      */
-    select?: TaskCommentSelect<ExtArgs> | null
+    select?: MessageSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the TaskComment
+     * Omit specific fields from the Message
      */
-    omit?: TaskCommentOmit<ExtArgs> | null
+    omit?: MessageOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskCommentInclude<ExtArgs> | null
+    include?: MessageInclude<ExtArgs> | null
     /**
-     * The data needed to create a TaskComment.
+     * The data needed to create a Message.
      */
-    data: XOR<TaskCommentCreateInput, TaskCommentUncheckedCreateInput>
+    data: XOR<MessageCreateInput, MessageUncheckedCreateInput>
   }
 
   /**
-   * TaskComment createMany
+   * Message createMany
    */
-  export type TaskCommentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many TaskComments.
+     * The data used to create many Messages.
      */
-    data: TaskCommentCreateManyInput | TaskCommentCreateManyInput[]
+    data: MessageCreateManyInput | MessageCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * TaskComment createManyAndReturn
+   * Message createManyAndReturn
    */
-  export type TaskCommentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskComment
+     * Select specific fields to fetch from the Message
      */
-    select?: TaskCommentSelectCreateManyAndReturn<ExtArgs> | null
+    select?: MessageSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the TaskComment
+     * Omit specific fields from the Message
      */
-    omit?: TaskCommentOmit<ExtArgs> | null
+    omit?: MessageOmit<ExtArgs> | null
     /**
-     * The data used to create many TaskComments.
+     * The data used to create many Messages.
      */
-    data: TaskCommentCreateManyInput | TaskCommentCreateManyInput[]
+    data: MessageCreateManyInput | MessageCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskCommentIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: MessageIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * TaskComment update
+   * Message update
    */
-  export type TaskCommentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskComment
+     * Select specific fields to fetch from the Message
      */
-    select?: TaskCommentSelect<ExtArgs> | null
+    select?: MessageSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the TaskComment
+     * Omit specific fields from the Message
      */
-    omit?: TaskCommentOmit<ExtArgs> | null
+    omit?: MessageOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskCommentInclude<ExtArgs> | null
+    include?: MessageInclude<ExtArgs> | null
     /**
-     * The data needed to update a TaskComment.
+     * The data needed to update a Message.
      */
-    data: XOR<TaskCommentUpdateInput, TaskCommentUncheckedUpdateInput>
+    data: XOR<MessageUpdateInput, MessageUncheckedUpdateInput>
     /**
-     * Choose, which TaskComment to update.
+     * Choose, which Message to update.
      */
-    where: TaskCommentWhereUniqueInput
+    where: MessageWhereUniqueInput
   }
 
   /**
-   * TaskComment updateMany
+   * Message updateMany
    */
-  export type TaskCommentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update TaskComments.
+     * The data used to update Messages.
      */
-    data: XOR<TaskCommentUpdateManyMutationInput, TaskCommentUncheckedUpdateManyInput>
+    data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyInput>
     /**
-     * Filter which TaskComments to update
+     * Filter which Messages to update
      */
-    where?: TaskCommentWhereInput
+    where?: MessageWhereInput
     /**
-     * Limit how many TaskComments to update.
+     * Limit how many Messages to update.
      */
     limit?: number
   }
 
   /**
-   * TaskComment updateManyAndReturn
+   * Message updateManyAndReturn
    */
-  export type TaskCommentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskComment
+     * Select specific fields to fetch from the Message
      */
-    select?: TaskCommentSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: MessageSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the TaskComment
+     * Omit specific fields from the Message
      */
-    omit?: TaskCommentOmit<ExtArgs> | null
+    omit?: MessageOmit<ExtArgs> | null
     /**
-     * The data used to update TaskComments.
+     * The data used to update Messages.
      */
-    data: XOR<TaskCommentUpdateManyMutationInput, TaskCommentUncheckedUpdateManyInput>
+    data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyInput>
     /**
-     * Filter which TaskComments to update
+     * Filter which Messages to update
      */
-    where?: TaskCommentWhereInput
+    where?: MessageWhereInput
     /**
-     * Limit how many TaskComments to update.
+     * Limit how many Messages to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskCommentIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: MessageIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * TaskComment upsert
+   * Message upsert
    */
-  export type TaskCommentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskComment
+     * Select specific fields to fetch from the Message
      */
-    select?: TaskCommentSelect<ExtArgs> | null
+    select?: MessageSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the TaskComment
+     * Omit specific fields from the Message
      */
-    omit?: TaskCommentOmit<ExtArgs> | null
+    omit?: MessageOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskCommentInclude<ExtArgs> | null
+    include?: MessageInclude<ExtArgs> | null
     /**
-     * The filter to search for the TaskComment to update in case it exists.
+     * The filter to search for the Message to update in case it exists.
      */
-    where: TaskCommentWhereUniqueInput
+    where: MessageWhereUniqueInput
     /**
-     * In case the TaskComment found by the `where` argument doesn't exist, create a new TaskComment with this data.
+     * In case the Message found by the `where` argument doesn't exist, create a new Message with this data.
      */
-    create: XOR<TaskCommentCreateInput, TaskCommentUncheckedCreateInput>
+    create: XOR<MessageCreateInput, MessageUncheckedCreateInput>
     /**
-     * In case the TaskComment was found with the provided `where` argument, update it with this data.
+     * In case the Message was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<TaskCommentUpdateInput, TaskCommentUncheckedUpdateInput>
+    update: XOR<MessageUpdateInput, MessageUncheckedUpdateInput>
   }
 
   /**
-   * TaskComment delete
+   * Message delete
    */
-  export type TaskCommentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskComment
+     * Select specific fields to fetch from the Message
      */
-    select?: TaskCommentSelect<ExtArgs> | null
+    select?: MessageSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the TaskComment
+     * Omit specific fields from the Message
      */
-    omit?: TaskCommentOmit<ExtArgs> | null
+    omit?: MessageOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskCommentInclude<ExtArgs> | null
+    include?: MessageInclude<ExtArgs> | null
     /**
-     * Filter which TaskComment to delete.
+     * Filter which Message to delete.
      */
-    where: TaskCommentWhereUniqueInput
+    where: MessageWhereUniqueInput
   }
 
   /**
-   * TaskComment deleteMany
+   * Message deleteMany
    */
-  export type TaskCommentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which TaskComments to delete
+     * Filter which Messages to delete
      */
-    where?: TaskCommentWhereInput
+    where?: MessageWhereInput
     /**
-     * Limit how many TaskComments to delete.
+     * Limit how many Messages to delete.
      */
     limit?: number
   }
 
   /**
-   * TaskComment.mentions
+   * Message.task
    */
-  export type TaskComment$mentionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Message$taskArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CommentMention
+     * Select specific fields to fetch from the Task
      */
-    select?: CommentMentionSelect<ExtArgs> | null
+    select?: TaskSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the CommentMention
+     * Omit specific fields from the Task
      */
-    omit?: CommentMentionOmit<ExtArgs> | null
+    omit?: TaskOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CommentMentionInclude<ExtArgs> | null
-    where?: CommentMentionWhereInput
-    orderBy?: CommentMentionOrderByWithRelationInput | CommentMentionOrderByWithRelationInput[]
-    cursor?: CommentMentionWhereUniqueInput
+    include?: TaskInclude<ExtArgs> | null
+    where?: TaskWhereInput
+  }
+
+  /**
+   * Message.project
+   */
+  export type Message$projectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    where?: ProjectWhereInput
+  }
+
+  /**
+   * Message.conversation
+   */
+  export type Message$conversationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    where?: ConversationWhereInput
+  }
+
+  /**
+   * Message.mentions
+   */
+  export type Message$mentionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageMention
+     */
+    select?: MessageMentionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageMention
+     */
+    omit?: MessageMentionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageMentionInclude<ExtArgs> | null
+    where?: MessageMentionWhereInput
+    orderBy?: MessageMentionOrderByWithRelationInput | MessageMentionOrderByWithRelationInput[]
+    cursor?: MessageMentionWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: CommentMentionScalarFieldEnum | CommentMentionScalarFieldEnum[]
+    distinct?: MessageMentionScalarFieldEnum | MessageMentionScalarFieldEnum[]
   }
 
   /**
-   * TaskComment without action
+   * Message without action
    */
-  export type TaskCommentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TaskComment
+     * Select specific fields to fetch from the Message
      */
-    select?: TaskCommentSelect<ExtArgs> | null
+    select?: MessageSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the TaskComment
+     * Omit specific fields from the Message
      */
-    omit?: TaskCommentOmit<ExtArgs> | null
+    omit?: MessageOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TaskCommentInclude<ExtArgs> | null
+    include?: MessageInclude<ExtArgs> | null
   }
 
 
   /**
-   * Model CommentMention
+   * Model MessageMention
    */
 
-  export type AggregateCommentMention = {
-    _count: CommentMentionCountAggregateOutputType | null
-    _min: CommentMentionMinAggregateOutputType | null
-    _max: CommentMentionMaxAggregateOutputType | null
+  export type AggregateMessageMention = {
+    _count: MessageMentionCountAggregateOutputType | null
+    _min: MessageMentionMinAggregateOutputType | null
+    _max: MessageMentionMaxAggregateOutputType | null
   }
 
-  export type CommentMentionMinAggregateOutputType = {
+  export type MessageMentionMinAggregateOutputType = {
     id: string | null
-    commentId: string | null
+    messageId: string | null
     memberId: string | null
   }
 
-  export type CommentMentionMaxAggregateOutputType = {
+  export type MessageMentionMaxAggregateOutputType = {
     id: string | null
-    commentId: string | null
+    messageId: string | null
     memberId: string | null
   }
 
-  export type CommentMentionCountAggregateOutputType = {
+  export type MessageMentionCountAggregateOutputType = {
     id: number
-    commentId: number
+    messageId: number
     memberId: number
     _all: number
   }
 
 
-  export type CommentMentionMinAggregateInputType = {
+  export type MessageMentionMinAggregateInputType = {
     id?: true
-    commentId?: true
+    messageId?: true
     memberId?: true
   }
 
-  export type CommentMentionMaxAggregateInputType = {
+  export type MessageMentionMaxAggregateInputType = {
     id?: true
-    commentId?: true
+    messageId?: true
     memberId?: true
   }
 
-  export type CommentMentionCountAggregateInputType = {
+  export type MessageMentionCountAggregateInputType = {
     id?: true
-    commentId?: true
+    messageId?: true
     memberId?: true
     _all?: true
   }
 
-  export type CommentMentionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which CommentMention to aggregate.
+     * Filter which MessageMention to aggregate.
      */
-    where?: CommentMentionWhereInput
+    where?: MessageMentionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of CommentMentions to fetch.
+     * Determine the order of MessageMentions to fetch.
      */
-    orderBy?: CommentMentionOrderByWithRelationInput | CommentMentionOrderByWithRelationInput[]
+    orderBy?: MessageMentionOrderByWithRelationInput | MessageMentionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: CommentMentionWhereUniqueInput
+    cursor?: MessageMentionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` CommentMentions from the position of the cursor.
+     * Take `±n` MessageMentions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` CommentMentions.
+     * Skip the first `n` MessageMentions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned CommentMentions
+     * Count returned MessageMentions
     **/
-    _count?: true | CommentMentionCountAggregateInputType
+    _count?: true | MessageMentionCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: CommentMentionMinAggregateInputType
+    _min?: MessageMentionMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: CommentMentionMaxAggregateInputType
+    _max?: MessageMentionMaxAggregateInputType
   }
 
-  export type GetCommentMentionAggregateType<T extends CommentMentionAggregateArgs> = {
-        [P in keyof T & keyof AggregateCommentMention]: P extends '_count' | 'count'
+  export type GetMessageMentionAggregateType<T extends MessageMentionAggregateArgs> = {
+        [P in keyof T & keyof AggregateMessageMention]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateCommentMention[P]>
-      : GetScalarType<T[P], AggregateCommentMention[P]>
+        : GetScalarType<T[P], AggregateMessageMention[P]>
+      : GetScalarType<T[P], AggregateMessageMention[P]>
   }
 
 
 
 
-  export type CommentMentionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CommentMentionWhereInput
-    orderBy?: CommentMentionOrderByWithAggregationInput | CommentMentionOrderByWithAggregationInput[]
-    by: CommentMentionScalarFieldEnum[] | CommentMentionScalarFieldEnum
-    having?: CommentMentionScalarWhereWithAggregatesInput
+  export type MessageMentionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageMentionWhereInput
+    orderBy?: MessageMentionOrderByWithAggregationInput | MessageMentionOrderByWithAggregationInput[]
+    by: MessageMentionScalarFieldEnum[] | MessageMentionScalarFieldEnum
+    having?: MessageMentionScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: CommentMentionCountAggregateInputType | true
-    _min?: CommentMentionMinAggregateInputType
-    _max?: CommentMentionMaxAggregateInputType
+    _count?: MessageMentionCountAggregateInputType | true
+    _min?: MessageMentionMinAggregateInputType
+    _max?: MessageMentionMaxAggregateInputType
   }
 
-  export type CommentMentionGroupByOutputType = {
+  export type MessageMentionGroupByOutputType = {
     id: string
-    commentId: string
+    messageId: string
     memberId: string
-    _count: CommentMentionCountAggregateOutputType | null
-    _min: CommentMentionMinAggregateOutputType | null
-    _max: CommentMentionMaxAggregateOutputType | null
+    _count: MessageMentionCountAggregateOutputType | null
+    _min: MessageMentionMinAggregateOutputType | null
+    _max: MessageMentionMaxAggregateOutputType | null
   }
 
-  type GetCommentMentionGroupByPayload<T extends CommentMentionGroupByArgs> = Prisma.PrismaPromise<
+  type GetMessageMentionGroupByPayload<T extends MessageMentionGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<CommentMentionGroupByOutputType, T['by']> &
+      PickEnumerable<MessageMentionGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof CommentMentionGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof MessageMentionGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], CommentMentionGroupByOutputType[P]>
-            : GetScalarType<T[P], CommentMentionGroupByOutputType[P]>
+              : GetScalarType<T[P], MessageMentionGroupByOutputType[P]>
+            : GetScalarType<T[P], MessageMentionGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type CommentMentionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type MessageMentionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    commentId?: boolean
+    messageId?: boolean
     memberId?: boolean
-    comment?: boolean | TaskCommentDefaultArgs<ExtArgs>
+    message?: boolean | MessageDefaultArgs<ExtArgs>
     member?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["commentMention"]>
+  }, ExtArgs["result"]["messageMention"]>
 
-  export type CommentMentionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type MessageMentionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    commentId?: boolean
+    messageId?: boolean
     memberId?: boolean
-    comment?: boolean | TaskCommentDefaultArgs<ExtArgs>
+    message?: boolean | MessageDefaultArgs<ExtArgs>
     member?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["commentMention"]>
+  }, ExtArgs["result"]["messageMention"]>
 
-  export type CommentMentionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type MessageMentionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    commentId?: boolean
+    messageId?: boolean
     memberId?: boolean
-    comment?: boolean | TaskCommentDefaultArgs<ExtArgs>
+    message?: boolean | MessageDefaultArgs<ExtArgs>
     member?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["commentMention"]>
+  }, ExtArgs["result"]["messageMention"]>
 
-  export type CommentMentionSelectScalar = {
+  export type MessageMentionSelectScalar = {
     id?: boolean
-    commentId?: boolean
+    messageId?: boolean
     memberId?: boolean
   }
 
-  export type CommentMentionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "commentId" | "memberId", ExtArgs["result"]["commentMention"]>
-  export type CommentMentionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    comment?: boolean | TaskCommentDefaultArgs<ExtArgs>
+  export type MessageMentionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "messageId" | "memberId", ExtArgs["result"]["messageMention"]>
+  export type MessageMentionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    message?: boolean | MessageDefaultArgs<ExtArgs>
     member?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
   }
-  export type CommentMentionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    comment?: boolean | TaskCommentDefaultArgs<ExtArgs>
+  export type MessageMentionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    message?: boolean | MessageDefaultArgs<ExtArgs>
     member?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
   }
-  export type CommentMentionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    comment?: boolean | TaskCommentDefaultArgs<ExtArgs>
+  export type MessageMentionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    message?: boolean | MessageDefaultArgs<ExtArgs>
     member?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
   }
 
-  export type $CommentMentionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "CommentMention"
+  export type $MessageMentionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MessageMention"
     objects: {
-      comment: Prisma.$TaskCommentPayload<ExtArgs>
+      message: Prisma.$MessagePayload<ExtArgs>
       member: Prisma.$WorkspaceMemberPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      commentId: string
+      messageId: string
       memberId: string
-    }, ExtArgs["result"]["commentMention"]>
+    }, ExtArgs["result"]["messageMention"]>
     composites: {}
   }
 
-  type CommentMentionGetPayload<S extends boolean | null | undefined | CommentMentionDefaultArgs> = $Result.GetResult<Prisma.$CommentMentionPayload, S>
+  type MessageMentionGetPayload<S extends boolean | null | undefined | MessageMentionDefaultArgs> = $Result.GetResult<Prisma.$MessageMentionPayload, S>
 
-  type CommentMentionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<CommentMentionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: CommentMentionCountAggregateInputType | true
+  type MessageMentionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MessageMentionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MessageMentionCountAggregateInputType | true
     }
 
-  export interface CommentMentionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CommentMention'], meta: { name: 'CommentMention' } }
+  export interface MessageMentionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MessageMention'], meta: { name: 'MessageMention' } }
     /**
-     * Find zero or one CommentMention that matches the filter.
-     * @param {CommentMentionFindUniqueArgs} args - Arguments to find a CommentMention
+     * Find zero or one MessageMention that matches the filter.
+     * @param {MessageMentionFindUniqueArgs} args - Arguments to find a MessageMention
      * @example
-     * // Get one CommentMention
-     * const commentMention = await prisma.commentMention.findUnique({
+     * // Get one MessageMention
+     * const messageMention = await prisma.messageMention.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends CommentMentionFindUniqueArgs>(args: SelectSubset<T, CommentMentionFindUniqueArgs<ExtArgs>>): Prisma__CommentMentionClient<$Result.GetResult<Prisma.$CommentMentionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends MessageMentionFindUniqueArgs>(args: SelectSubset<T, MessageMentionFindUniqueArgs<ExtArgs>>): Prisma__MessageMentionClient<$Result.GetResult<Prisma.$MessageMentionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one CommentMention that matches the filter or throw an error with `error.code='P2025'`
+     * Find one MessageMention that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {CommentMentionFindUniqueOrThrowArgs} args - Arguments to find a CommentMention
+     * @param {MessageMentionFindUniqueOrThrowArgs} args - Arguments to find a MessageMention
      * @example
-     * // Get one CommentMention
-     * const commentMention = await prisma.commentMention.findUniqueOrThrow({
+     * // Get one MessageMention
+     * const messageMention = await prisma.messageMention.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends CommentMentionFindUniqueOrThrowArgs>(args: SelectSubset<T, CommentMentionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CommentMentionClient<$Result.GetResult<Prisma.$CommentMentionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends MessageMentionFindUniqueOrThrowArgs>(args: SelectSubset<T, MessageMentionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MessageMentionClient<$Result.GetResult<Prisma.$MessageMentionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first CommentMention that matches the filter.
+     * Find the first MessageMention that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommentMentionFindFirstArgs} args - Arguments to find a CommentMention
+     * @param {MessageMentionFindFirstArgs} args - Arguments to find a MessageMention
      * @example
-     * // Get one CommentMention
-     * const commentMention = await prisma.commentMention.findFirst({
+     * // Get one MessageMention
+     * const messageMention = await prisma.messageMention.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends CommentMentionFindFirstArgs>(args?: SelectSubset<T, CommentMentionFindFirstArgs<ExtArgs>>): Prisma__CommentMentionClient<$Result.GetResult<Prisma.$CommentMentionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends MessageMentionFindFirstArgs>(args?: SelectSubset<T, MessageMentionFindFirstArgs<ExtArgs>>): Prisma__MessageMentionClient<$Result.GetResult<Prisma.$MessageMentionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first CommentMention that matches the filter or
+     * Find the first MessageMention that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommentMentionFindFirstOrThrowArgs} args - Arguments to find a CommentMention
+     * @param {MessageMentionFindFirstOrThrowArgs} args - Arguments to find a MessageMention
      * @example
-     * // Get one CommentMention
-     * const commentMention = await prisma.commentMention.findFirstOrThrow({
+     * // Get one MessageMention
+     * const messageMention = await prisma.messageMention.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends CommentMentionFindFirstOrThrowArgs>(args?: SelectSubset<T, CommentMentionFindFirstOrThrowArgs<ExtArgs>>): Prisma__CommentMentionClient<$Result.GetResult<Prisma.$CommentMentionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends MessageMentionFindFirstOrThrowArgs>(args?: SelectSubset<T, MessageMentionFindFirstOrThrowArgs<ExtArgs>>): Prisma__MessageMentionClient<$Result.GetResult<Prisma.$MessageMentionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more CommentMentions that matches the filter.
+     * Find zero or more MessageMentions that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommentMentionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {MessageMentionFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all CommentMentions
-     * const commentMentions = await prisma.commentMention.findMany()
+     * // Get all MessageMentions
+     * const messageMentions = await prisma.messageMention.findMany()
      * 
-     * // Get first 10 CommentMentions
-     * const commentMentions = await prisma.commentMention.findMany({ take: 10 })
+     * // Get first 10 MessageMentions
+     * const messageMentions = await prisma.messageMention.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const commentMentionWithIdOnly = await prisma.commentMention.findMany({ select: { id: true } })
+     * const messageMentionWithIdOnly = await prisma.messageMention.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends CommentMentionFindManyArgs>(args?: SelectSubset<T, CommentMentionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentMentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends MessageMentionFindManyArgs>(args?: SelectSubset<T, MessageMentionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageMentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a CommentMention.
-     * @param {CommentMentionCreateArgs} args - Arguments to create a CommentMention.
+     * Create a MessageMention.
+     * @param {MessageMentionCreateArgs} args - Arguments to create a MessageMention.
      * @example
-     * // Create one CommentMention
-     * const CommentMention = await prisma.commentMention.create({
+     * // Create one MessageMention
+     * const MessageMention = await prisma.messageMention.create({
      *   data: {
-     *     // ... data to create a CommentMention
+     *     // ... data to create a MessageMention
      *   }
      * })
      * 
      */
-    create<T extends CommentMentionCreateArgs>(args: SelectSubset<T, CommentMentionCreateArgs<ExtArgs>>): Prisma__CommentMentionClient<$Result.GetResult<Prisma.$CommentMentionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends MessageMentionCreateArgs>(args: SelectSubset<T, MessageMentionCreateArgs<ExtArgs>>): Prisma__MessageMentionClient<$Result.GetResult<Prisma.$MessageMentionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many CommentMentions.
-     * @param {CommentMentionCreateManyArgs} args - Arguments to create many CommentMentions.
+     * Create many MessageMentions.
+     * @param {MessageMentionCreateManyArgs} args - Arguments to create many MessageMentions.
      * @example
-     * // Create many CommentMentions
-     * const commentMention = await prisma.commentMention.createMany({
+     * // Create many MessageMentions
+     * const messageMention = await prisma.messageMention.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends CommentMentionCreateManyArgs>(args?: SelectSubset<T, CommentMentionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends MessageMentionCreateManyArgs>(args?: SelectSubset<T, MessageMentionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many CommentMentions and returns the data saved in the database.
-     * @param {CommentMentionCreateManyAndReturnArgs} args - Arguments to create many CommentMentions.
+     * Create many MessageMentions and returns the data saved in the database.
+     * @param {MessageMentionCreateManyAndReturnArgs} args - Arguments to create many MessageMentions.
      * @example
-     * // Create many CommentMentions
-     * const commentMention = await prisma.commentMention.createManyAndReturn({
+     * // Create many MessageMentions
+     * const messageMention = await prisma.messageMention.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many CommentMentions and only return the `id`
-     * const commentMentionWithIdOnly = await prisma.commentMention.createManyAndReturn({
+     * // Create many MessageMentions and only return the `id`
+     * const messageMentionWithIdOnly = await prisma.messageMention.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -40647,28 +41092,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends CommentMentionCreateManyAndReturnArgs>(args?: SelectSubset<T, CommentMentionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentMentionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends MessageMentionCreateManyAndReturnArgs>(args?: SelectSubset<T, MessageMentionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageMentionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a CommentMention.
-     * @param {CommentMentionDeleteArgs} args - Arguments to delete one CommentMention.
+     * Delete a MessageMention.
+     * @param {MessageMentionDeleteArgs} args - Arguments to delete one MessageMention.
      * @example
-     * // Delete one CommentMention
-     * const CommentMention = await prisma.commentMention.delete({
+     * // Delete one MessageMention
+     * const MessageMention = await prisma.messageMention.delete({
      *   where: {
-     *     // ... filter to delete one CommentMention
+     *     // ... filter to delete one MessageMention
      *   }
      * })
      * 
      */
-    delete<T extends CommentMentionDeleteArgs>(args: SelectSubset<T, CommentMentionDeleteArgs<ExtArgs>>): Prisma__CommentMentionClient<$Result.GetResult<Prisma.$CommentMentionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends MessageMentionDeleteArgs>(args: SelectSubset<T, MessageMentionDeleteArgs<ExtArgs>>): Prisma__MessageMentionClient<$Result.GetResult<Prisma.$MessageMentionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one CommentMention.
-     * @param {CommentMentionUpdateArgs} args - Arguments to update one CommentMention.
+     * Update one MessageMention.
+     * @param {MessageMentionUpdateArgs} args - Arguments to update one MessageMention.
      * @example
-     * // Update one CommentMention
-     * const commentMention = await prisma.commentMention.update({
+     * // Update one MessageMention
+     * const messageMention = await prisma.messageMention.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -40678,30 +41123,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends CommentMentionUpdateArgs>(args: SelectSubset<T, CommentMentionUpdateArgs<ExtArgs>>): Prisma__CommentMentionClient<$Result.GetResult<Prisma.$CommentMentionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends MessageMentionUpdateArgs>(args: SelectSubset<T, MessageMentionUpdateArgs<ExtArgs>>): Prisma__MessageMentionClient<$Result.GetResult<Prisma.$MessageMentionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more CommentMentions.
-     * @param {CommentMentionDeleteManyArgs} args - Arguments to filter CommentMentions to delete.
+     * Delete zero or more MessageMentions.
+     * @param {MessageMentionDeleteManyArgs} args - Arguments to filter MessageMentions to delete.
      * @example
-     * // Delete a few CommentMentions
-     * const { count } = await prisma.commentMention.deleteMany({
+     * // Delete a few MessageMentions
+     * const { count } = await prisma.messageMention.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends CommentMentionDeleteManyArgs>(args?: SelectSubset<T, CommentMentionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends MessageMentionDeleteManyArgs>(args?: SelectSubset<T, MessageMentionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more CommentMentions.
+     * Update zero or more MessageMentions.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommentMentionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {MessageMentionUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many CommentMentions
-     * const commentMention = await prisma.commentMention.updateMany({
+     * // Update many MessageMentions
+     * const messageMention = await prisma.messageMention.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -40711,14 +41156,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends CommentMentionUpdateManyArgs>(args: SelectSubset<T, CommentMentionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends MessageMentionUpdateManyArgs>(args: SelectSubset<T, MessageMentionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more CommentMentions and returns the data updated in the database.
-     * @param {CommentMentionUpdateManyAndReturnArgs} args - Arguments to update many CommentMentions.
+     * Update zero or more MessageMentions and returns the data updated in the database.
+     * @param {MessageMentionUpdateManyAndReturnArgs} args - Arguments to update many MessageMentions.
      * @example
-     * // Update many CommentMentions
-     * const commentMention = await prisma.commentMention.updateManyAndReturn({
+     * // Update many MessageMentions
+     * const messageMention = await prisma.messageMention.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -40727,8 +41172,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more CommentMentions and only return the `id`
-     * const commentMentionWithIdOnly = await prisma.commentMention.updateManyAndReturn({
+     * // Update zero or more MessageMentions and only return the `id`
+     * const messageMentionWithIdOnly = await prisma.messageMention.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -40741,56 +41186,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends CommentMentionUpdateManyAndReturnArgs>(args: SelectSubset<T, CommentMentionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentMentionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends MessageMentionUpdateManyAndReturnArgs>(args: SelectSubset<T, MessageMentionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageMentionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one CommentMention.
-     * @param {CommentMentionUpsertArgs} args - Arguments to update or create a CommentMention.
+     * Create or update one MessageMention.
+     * @param {MessageMentionUpsertArgs} args - Arguments to update or create a MessageMention.
      * @example
-     * // Update or create a CommentMention
-     * const commentMention = await prisma.commentMention.upsert({
+     * // Update or create a MessageMention
+     * const messageMention = await prisma.messageMention.upsert({
      *   create: {
-     *     // ... data to create a CommentMention
+     *     // ... data to create a MessageMention
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the CommentMention we want to update
+     *     // ... the filter for the MessageMention we want to update
      *   }
      * })
      */
-    upsert<T extends CommentMentionUpsertArgs>(args: SelectSubset<T, CommentMentionUpsertArgs<ExtArgs>>): Prisma__CommentMentionClient<$Result.GetResult<Prisma.$CommentMentionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends MessageMentionUpsertArgs>(args: SelectSubset<T, MessageMentionUpsertArgs<ExtArgs>>): Prisma__MessageMentionClient<$Result.GetResult<Prisma.$MessageMentionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of CommentMentions.
+     * Count the number of MessageMentions.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommentMentionCountArgs} args - Arguments to filter CommentMentions to count.
+     * @param {MessageMentionCountArgs} args - Arguments to filter MessageMentions to count.
      * @example
-     * // Count the number of CommentMentions
-     * const count = await prisma.commentMention.count({
+     * // Count the number of MessageMentions
+     * const count = await prisma.messageMention.count({
      *   where: {
-     *     // ... the filter for the CommentMentions we want to count
+     *     // ... the filter for the MessageMentions we want to count
      *   }
      * })
     **/
-    count<T extends CommentMentionCountArgs>(
-      args?: Subset<T, CommentMentionCountArgs>,
+    count<T extends MessageMentionCountArgs>(
+      args?: Subset<T, MessageMentionCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], CommentMentionCountAggregateOutputType>
+          : GetScalarType<T['select'], MessageMentionCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a CommentMention.
+     * Allows you to perform aggregations operations on a MessageMention.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommentMentionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {MessageMentionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -40810,13 +41255,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends CommentMentionAggregateArgs>(args: Subset<T, CommentMentionAggregateArgs>): Prisma.PrismaPromise<GetCommentMentionAggregateType<T>>
+    aggregate<T extends MessageMentionAggregateArgs>(args: Subset<T, MessageMentionAggregateArgs>): Prisma.PrismaPromise<GetMessageMentionAggregateType<T>>
 
     /**
-     * Group by CommentMention.
+     * Group by MessageMention.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommentMentionGroupByArgs} args - Group by arguments.
+     * @param {MessageMentionGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -40831,14 +41276,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends CommentMentionGroupByArgs,
+      T extends MessageMentionGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: CommentMentionGroupByArgs['orderBy'] }
-        : { orderBy?: CommentMentionGroupByArgs['orderBy'] },
+        ? { orderBy: MessageMentionGroupByArgs['orderBy'] }
+        : { orderBy?: MessageMentionGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -40887,22 +41332,22 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, CommentMentionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCommentMentionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, MessageMentionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMessageMentionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the CommentMention model
+   * Fields of the MessageMention model
    */
-  readonly fields: CommentMentionFieldRefs;
+  readonly fields: MessageMentionFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for CommentMention.
+   * The delegate class that acts as a "Promise-like" for MessageMention.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__CommentMentionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__MessageMentionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    comment<T extends TaskCommentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TaskCommentDefaultArgs<ExtArgs>>): Prisma__TaskCommentClient<$Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    message<T extends MessageDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MessageDefaultArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     member<T extends WorkspaceMemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMemberDefaultArgs<ExtArgs>>): Prisma__WorkspaceMemberClient<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -40930,428 +41375,2633 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the CommentMention model
+   * Fields of the MessageMention model
    */
-  interface CommentMentionFieldRefs {
-    readonly id: FieldRef<"CommentMention", 'String'>
-    readonly commentId: FieldRef<"CommentMention", 'String'>
-    readonly memberId: FieldRef<"CommentMention", 'String'>
+  interface MessageMentionFieldRefs {
+    readonly id: FieldRef<"MessageMention", 'String'>
+    readonly messageId: FieldRef<"MessageMention", 'String'>
+    readonly memberId: FieldRef<"MessageMention", 'String'>
   }
     
 
   // Custom InputTypes
   /**
-   * CommentMention findUnique
+   * MessageMention findUnique
    */
-  export type CommentMentionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CommentMention
+     * Select specific fields to fetch from the MessageMention
      */
-    select?: CommentMentionSelect<ExtArgs> | null
+    select?: MessageMentionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the CommentMention
+     * Omit specific fields from the MessageMention
      */
-    omit?: CommentMentionOmit<ExtArgs> | null
+    omit?: MessageMentionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CommentMentionInclude<ExtArgs> | null
+    include?: MessageMentionInclude<ExtArgs> | null
     /**
-     * Filter, which CommentMention to fetch.
+     * Filter, which MessageMention to fetch.
      */
-    where: CommentMentionWhereUniqueInput
+    where: MessageMentionWhereUniqueInput
   }
 
   /**
-   * CommentMention findUniqueOrThrow
+   * MessageMention findUniqueOrThrow
    */
-  export type CommentMentionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CommentMention
+     * Select specific fields to fetch from the MessageMention
      */
-    select?: CommentMentionSelect<ExtArgs> | null
+    select?: MessageMentionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the CommentMention
+     * Omit specific fields from the MessageMention
      */
-    omit?: CommentMentionOmit<ExtArgs> | null
+    omit?: MessageMentionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CommentMentionInclude<ExtArgs> | null
+    include?: MessageMentionInclude<ExtArgs> | null
     /**
-     * Filter, which CommentMention to fetch.
+     * Filter, which MessageMention to fetch.
      */
-    where: CommentMentionWhereUniqueInput
+    where: MessageMentionWhereUniqueInput
   }
 
   /**
-   * CommentMention findFirst
+   * MessageMention findFirst
    */
-  export type CommentMentionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CommentMention
+     * Select specific fields to fetch from the MessageMention
      */
-    select?: CommentMentionSelect<ExtArgs> | null
+    select?: MessageMentionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the CommentMention
+     * Omit specific fields from the MessageMention
      */
-    omit?: CommentMentionOmit<ExtArgs> | null
+    omit?: MessageMentionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CommentMentionInclude<ExtArgs> | null
+    include?: MessageMentionInclude<ExtArgs> | null
     /**
-     * Filter, which CommentMention to fetch.
+     * Filter, which MessageMention to fetch.
      */
-    where?: CommentMentionWhereInput
+    where?: MessageMentionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of CommentMentions to fetch.
+     * Determine the order of MessageMentions to fetch.
      */
-    orderBy?: CommentMentionOrderByWithRelationInput | CommentMentionOrderByWithRelationInput[]
+    orderBy?: MessageMentionOrderByWithRelationInput | MessageMentionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for CommentMentions.
+     * Sets the position for searching for MessageMentions.
      */
-    cursor?: CommentMentionWhereUniqueInput
+    cursor?: MessageMentionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` CommentMentions from the position of the cursor.
+     * Take `±n` MessageMentions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` CommentMentions.
+     * Skip the first `n` MessageMentions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of CommentMentions.
+     * Filter by unique combinations of MessageMentions.
      */
-    distinct?: CommentMentionScalarFieldEnum | CommentMentionScalarFieldEnum[]
+    distinct?: MessageMentionScalarFieldEnum | MessageMentionScalarFieldEnum[]
   }
 
   /**
-   * CommentMention findFirstOrThrow
+   * MessageMention findFirstOrThrow
    */
-  export type CommentMentionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CommentMention
+     * Select specific fields to fetch from the MessageMention
      */
-    select?: CommentMentionSelect<ExtArgs> | null
+    select?: MessageMentionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the CommentMention
+     * Omit specific fields from the MessageMention
      */
-    omit?: CommentMentionOmit<ExtArgs> | null
+    omit?: MessageMentionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CommentMentionInclude<ExtArgs> | null
+    include?: MessageMentionInclude<ExtArgs> | null
     /**
-     * Filter, which CommentMention to fetch.
+     * Filter, which MessageMention to fetch.
      */
-    where?: CommentMentionWhereInput
+    where?: MessageMentionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of CommentMentions to fetch.
+     * Determine the order of MessageMentions to fetch.
      */
-    orderBy?: CommentMentionOrderByWithRelationInput | CommentMentionOrderByWithRelationInput[]
+    orderBy?: MessageMentionOrderByWithRelationInput | MessageMentionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for CommentMentions.
+     * Sets the position for searching for MessageMentions.
      */
-    cursor?: CommentMentionWhereUniqueInput
+    cursor?: MessageMentionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` CommentMentions from the position of the cursor.
+     * Take `±n` MessageMentions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` CommentMentions.
+     * Skip the first `n` MessageMentions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of CommentMentions.
+     * Filter by unique combinations of MessageMentions.
      */
-    distinct?: CommentMentionScalarFieldEnum | CommentMentionScalarFieldEnum[]
+    distinct?: MessageMentionScalarFieldEnum | MessageMentionScalarFieldEnum[]
   }
 
   /**
-   * CommentMention findMany
+   * MessageMention findMany
    */
-  export type CommentMentionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CommentMention
+     * Select specific fields to fetch from the MessageMention
      */
-    select?: CommentMentionSelect<ExtArgs> | null
+    select?: MessageMentionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the CommentMention
+     * Omit specific fields from the MessageMention
      */
-    omit?: CommentMentionOmit<ExtArgs> | null
+    omit?: MessageMentionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CommentMentionInclude<ExtArgs> | null
+    include?: MessageMentionInclude<ExtArgs> | null
     /**
-     * Filter, which CommentMentions to fetch.
+     * Filter, which MessageMentions to fetch.
      */
-    where?: CommentMentionWhereInput
+    where?: MessageMentionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of CommentMentions to fetch.
+     * Determine the order of MessageMentions to fetch.
      */
-    orderBy?: CommentMentionOrderByWithRelationInput | CommentMentionOrderByWithRelationInput[]
+    orderBy?: MessageMentionOrderByWithRelationInput | MessageMentionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing CommentMentions.
+     * Sets the position for listing MessageMentions.
      */
-    cursor?: CommentMentionWhereUniqueInput
+    cursor?: MessageMentionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` CommentMentions from the position of the cursor.
+     * Take `±n` MessageMentions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` CommentMentions.
+     * Skip the first `n` MessageMentions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of CommentMentions.
+     * Filter by unique combinations of MessageMentions.
      */
-    distinct?: CommentMentionScalarFieldEnum | CommentMentionScalarFieldEnum[]
+    distinct?: MessageMentionScalarFieldEnum | MessageMentionScalarFieldEnum[]
   }
 
   /**
-   * CommentMention create
+   * MessageMention create
    */
-  export type CommentMentionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CommentMention
+     * Select specific fields to fetch from the MessageMention
      */
-    select?: CommentMentionSelect<ExtArgs> | null
+    select?: MessageMentionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the CommentMention
+     * Omit specific fields from the MessageMention
      */
-    omit?: CommentMentionOmit<ExtArgs> | null
+    omit?: MessageMentionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CommentMentionInclude<ExtArgs> | null
+    include?: MessageMentionInclude<ExtArgs> | null
     /**
-     * The data needed to create a CommentMention.
+     * The data needed to create a MessageMention.
      */
-    data: XOR<CommentMentionCreateInput, CommentMentionUncheckedCreateInput>
+    data: XOR<MessageMentionCreateInput, MessageMentionUncheckedCreateInput>
   }
 
   /**
-   * CommentMention createMany
+   * MessageMention createMany
    */
-  export type CommentMentionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many CommentMentions.
+     * The data used to create many MessageMentions.
      */
-    data: CommentMentionCreateManyInput | CommentMentionCreateManyInput[]
+    data: MessageMentionCreateManyInput | MessageMentionCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * CommentMention createManyAndReturn
+   * MessageMention createManyAndReturn
    */
-  export type CommentMentionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CommentMention
+     * Select specific fields to fetch from the MessageMention
      */
-    select?: CommentMentionSelectCreateManyAndReturn<ExtArgs> | null
+    select?: MessageMentionSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the CommentMention
+     * Omit specific fields from the MessageMention
      */
-    omit?: CommentMentionOmit<ExtArgs> | null
+    omit?: MessageMentionOmit<ExtArgs> | null
     /**
-     * The data used to create many CommentMentions.
+     * The data used to create many MessageMentions.
      */
-    data: CommentMentionCreateManyInput | CommentMentionCreateManyInput[]
+    data: MessageMentionCreateManyInput | MessageMentionCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CommentMentionIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: MessageMentionIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * CommentMention update
+   * MessageMention update
    */
-  export type CommentMentionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CommentMention
+     * Select specific fields to fetch from the MessageMention
      */
-    select?: CommentMentionSelect<ExtArgs> | null
+    select?: MessageMentionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the CommentMention
+     * Omit specific fields from the MessageMention
      */
-    omit?: CommentMentionOmit<ExtArgs> | null
+    omit?: MessageMentionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CommentMentionInclude<ExtArgs> | null
+    include?: MessageMentionInclude<ExtArgs> | null
     /**
-     * The data needed to update a CommentMention.
+     * The data needed to update a MessageMention.
      */
-    data: XOR<CommentMentionUpdateInput, CommentMentionUncheckedUpdateInput>
+    data: XOR<MessageMentionUpdateInput, MessageMentionUncheckedUpdateInput>
     /**
-     * Choose, which CommentMention to update.
+     * Choose, which MessageMention to update.
      */
-    where: CommentMentionWhereUniqueInput
+    where: MessageMentionWhereUniqueInput
   }
 
   /**
-   * CommentMention updateMany
+   * MessageMention updateMany
    */
-  export type CommentMentionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update CommentMentions.
+     * The data used to update MessageMentions.
      */
-    data: XOR<CommentMentionUpdateManyMutationInput, CommentMentionUncheckedUpdateManyInput>
+    data: XOR<MessageMentionUpdateManyMutationInput, MessageMentionUncheckedUpdateManyInput>
     /**
-     * Filter which CommentMentions to update
+     * Filter which MessageMentions to update
      */
-    where?: CommentMentionWhereInput
+    where?: MessageMentionWhereInput
     /**
-     * Limit how many CommentMentions to update.
+     * Limit how many MessageMentions to update.
      */
     limit?: number
   }
 
   /**
-   * CommentMention updateManyAndReturn
+   * MessageMention updateManyAndReturn
    */
-  export type CommentMentionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CommentMention
+     * Select specific fields to fetch from the MessageMention
      */
-    select?: CommentMentionSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: MessageMentionSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the CommentMention
+     * Omit specific fields from the MessageMention
      */
-    omit?: CommentMentionOmit<ExtArgs> | null
+    omit?: MessageMentionOmit<ExtArgs> | null
     /**
-     * The data used to update CommentMentions.
+     * The data used to update MessageMentions.
      */
-    data: XOR<CommentMentionUpdateManyMutationInput, CommentMentionUncheckedUpdateManyInput>
+    data: XOR<MessageMentionUpdateManyMutationInput, MessageMentionUncheckedUpdateManyInput>
     /**
-     * Filter which CommentMentions to update
+     * Filter which MessageMentions to update
      */
-    where?: CommentMentionWhereInput
+    where?: MessageMentionWhereInput
     /**
-     * Limit how many CommentMentions to update.
+     * Limit how many MessageMentions to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CommentMentionIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: MessageMentionIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * CommentMention upsert
+   * MessageMention upsert
    */
-  export type CommentMentionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CommentMention
+     * Select specific fields to fetch from the MessageMention
      */
-    select?: CommentMentionSelect<ExtArgs> | null
+    select?: MessageMentionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the CommentMention
+     * Omit specific fields from the MessageMention
      */
-    omit?: CommentMentionOmit<ExtArgs> | null
+    omit?: MessageMentionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CommentMentionInclude<ExtArgs> | null
+    include?: MessageMentionInclude<ExtArgs> | null
     /**
-     * The filter to search for the CommentMention to update in case it exists.
+     * The filter to search for the MessageMention to update in case it exists.
      */
-    where: CommentMentionWhereUniqueInput
+    where: MessageMentionWhereUniqueInput
     /**
-     * In case the CommentMention found by the `where` argument doesn't exist, create a new CommentMention with this data.
+     * In case the MessageMention found by the `where` argument doesn't exist, create a new MessageMention with this data.
      */
-    create: XOR<CommentMentionCreateInput, CommentMentionUncheckedCreateInput>
+    create: XOR<MessageMentionCreateInput, MessageMentionUncheckedCreateInput>
     /**
-     * In case the CommentMention was found with the provided `where` argument, update it with this data.
+     * In case the MessageMention was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<CommentMentionUpdateInput, CommentMentionUncheckedUpdateInput>
+    update: XOR<MessageMentionUpdateInput, MessageMentionUncheckedUpdateInput>
   }
 
   /**
-   * CommentMention delete
+   * MessageMention delete
    */
-  export type CommentMentionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CommentMention
+     * Select specific fields to fetch from the MessageMention
      */
-    select?: CommentMentionSelect<ExtArgs> | null
+    select?: MessageMentionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the CommentMention
+     * Omit specific fields from the MessageMention
      */
-    omit?: CommentMentionOmit<ExtArgs> | null
+    omit?: MessageMentionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CommentMentionInclude<ExtArgs> | null
+    include?: MessageMentionInclude<ExtArgs> | null
     /**
-     * Filter which CommentMention to delete.
+     * Filter which MessageMention to delete.
      */
-    where: CommentMentionWhereUniqueInput
+    where: MessageMentionWhereUniqueInput
   }
 
   /**
-   * CommentMention deleteMany
+   * MessageMention deleteMany
    */
-  export type CommentMentionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which CommentMentions to delete
+     * Filter which MessageMentions to delete
      */
-    where?: CommentMentionWhereInput
+    where?: MessageMentionWhereInput
     /**
-     * Limit how many CommentMentions to delete.
+     * Limit how many MessageMentions to delete.
      */
     limit?: number
   }
 
   /**
-   * CommentMention without action
+   * MessageMention without action
    */
-  export type CommentMentionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type MessageMentionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CommentMention
+     * Select specific fields to fetch from the MessageMention
      */
-    select?: CommentMentionSelect<ExtArgs> | null
+    select?: MessageMentionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the CommentMention
+     * Omit specific fields from the MessageMention
      */
-    omit?: CommentMentionOmit<ExtArgs> | null
+    omit?: MessageMentionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CommentMentionInclude<ExtArgs> | null
+    include?: MessageMentionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Conversation
+   */
+
+  export type AggregateConversation = {
+    _count: ConversationCountAggregateOutputType | null
+    _min: ConversationMinAggregateOutputType | null
+    _max: ConversationMaxAggregateOutputType | null
+  }
+
+  export type ConversationMinAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    isGroup: boolean | null
+    title: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ConversationMaxAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    isGroup: boolean | null
+    title: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ConversationCountAggregateOutputType = {
+    id: number
+    workspaceId: number
+    isGroup: number
+    title: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ConversationMinAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    isGroup?: true
+    title?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ConversationMaxAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    isGroup?: true
+    title?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ConversationCountAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    isGroup?: true
+    title?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ConversationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Conversation to aggregate.
+     */
+    where?: ConversationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Conversations to fetch.
+     */
+    orderBy?: ConversationOrderByWithRelationInput | ConversationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ConversationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Conversations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Conversations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Conversations
+    **/
+    _count?: true | ConversationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ConversationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ConversationMaxAggregateInputType
+  }
+
+  export type GetConversationAggregateType<T extends ConversationAggregateArgs> = {
+        [P in keyof T & keyof AggregateConversation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateConversation[P]>
+      : GetScalarType<T[P], AggregateConversation[P]>
+  }
+
+
+
+
+  export type ConversationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationWhereInput
+    orderBy?: ConversationOrderByWithAggregationInput | ConversationOrderByWithAggregationInput[]
+    by: ConversationScalarFieldEnum[] | ConversationScalarFieldEnum
+    having?: ConversationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ConversationCountAggregateInputType | true
+    _min?: ConversationMinAggregateInputType
+    _max?: ConversationMaxAggregateInputType
+  }
+
+  export type ConversationGroupByOutputType = {
+    id: string
+    workspaceId: string
+    isGroup: boolean
+    title: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ConversationCountAggregateOutputType | null
+    _min: ConversationMinAggregateOutputType | null
+    _max: ConversationMaxAggregateOutputType | null
+  }
+
+  type GetConversationGroupByPayload<T extends ConversationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ConversationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ConversationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ConversationGroupByOutputType[P]>
+            : GetScalarType<T[P], ConversationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ConversationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    isGroup?: boolean
+    title?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    participants?: boolean | Conversation$participantsArgs<ExtArgs>
+    messages?: boolean | Conversation$messagesArgs<ExtArgs>
+    _count?: boolean | ConversationCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversation"]>
+
+  export type ConversationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    isGroup?: boolean
+    title?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversation"]>
+
+  export type ConversationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    isGroup?: boolean
+    title?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversation"]>
+
+  export type ConversationSelectScalar = {
+    id?: boolean
+    workspaceId?: boolean
+    isGroup?: boolean
+    title?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ConversationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "isGroup" | "title" | "createdAt" | "updatedAt", ExtArgs["result"]["conversation"]>
+  export type ConversationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    participants?: boolean | Conversation$participantsArgs<ExtArgs>
+    messages?: boolean | Conversation$messagesArgs<ExtArgs>
+    _count?: boolean | ConversationCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ConversationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+  export type ConversationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+
+  export type $ConversationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Conversation"
+    objects: {
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
+      participants: Prisma.$ConversationParticipantPayload<ExtArgs>[]
+      messages: Prisma.$MessagePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      workspaceId: string
+      isGroup: boolean
+      title: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["conversation"]>
+    composites: {}
+  }
+
+  type ConversationGetPayload<S extends boolean | null | undefined | ConversationDefaultArgs> = $Result.GetResult<Prisma.$ConversationPayload, S>
+
+  type ConversationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ConversationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ConversationCountAggregateInputType | true
+    }
+
+  export interface ConversationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Conversation'], meta: { name: 'Conversation' } }
+    /**
+     * Find zero or one Conversation that matches the filter.
+     * @param {ConversationFindUniqueArgs} args - Arguments to find a Conversation
+     * @example
+     * // Get one Conversation
+     * const conversation = await prisma.conversation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ConversationFindUniqueArgs>(args: SelectSubset<T, ConversationFindUniqueArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Conversation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ConversationFindUniqueOrThrowArgs} args - Arguments to find a Conversation
+     * @example
+     * // Get one Conversation
+     * const conversation = await prisma.conversation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ConversationFindUniqueOrThrowArgs>(args: SelectSubset<T, ConversationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Conversation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationFindFirstArgs} args - Arguments to find a Conversation
+     * @example
+     * // Get one Conversation
+     * const conversation = await prisma.conversation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ConversationFindFirstArgs>(args?: SelectSubset<T, ConversationFindFirstArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Conversation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationFindFirstOrThrowArgs} args - Arguments to find a Conversation
+     * @example
+     * // Get one Conversation
+     * const conversation = await prisma.conversation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ConversationFindFirstOrThrowArgs>(args?: SelectSubset<T, ConversationFindFirstOrThrowArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Conversations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Conversations
+     * const conversations = await prisma.conversation.findMany()
+     * 
+     * // Get first 10 Conversations
+     * const conversations = await prisma.conversation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const conversationWithIdOnly = await prisma.conversation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ConversationFindManyArgs>(args?: SelectSubset<T, ConversationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Conversation.
+     * @param {ConversationCreateArgs} args - Arguments to create a Conversation.
+     * @example
+     * // Create one Conversation
+     * const Conversation = await prisma.conversation.create({
+     *   data: {
+     *     // ... data to create a Conversation
+     *   }
+     * })
+     * 
+     */
+    create<T extends ConversationCreateArgs>(args: SelectSubset<T, ConversationCreateArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Conversations.
+     * @param {ConversationCreateManyArgs} args - Arguments to create many Conversations.
+     * @example
+     * // Create many Conversations
+     * const conversation = await prisma.conversation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ConversationCreateManyArgs>(args?: SelectSubset<T, ConversationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Conversations and returns the data saved in the database.
+     * @param {ConversationCreateManyAndReturnArgs} args - Arguments to create many Conversations.
+     * @example
+     * // Create many Conversations
+     * const conversation = await prisma.conversation.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Conversations and only return the `id`
+     * const conversationWithIdOnly = await prisma.conversation.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ConversationCreateManyAndReturnArgs>(args?: SelectSubset<T, ConversationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Conversation.
+     * @param {ConversationDeleteArgs} args - Arguments to delete one Conversation.
+     * @example
+     * // Delete one Conversation
+     * const Conversation = await prisma.conversation.delete({
+     *   where: {
+     *     // ... filter to delete one Conversation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ConversationDeleteArgs>(args: SelectSubset<T, ConversationDeleteArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Conversation.
+     * @param {ConversationUpdateArgs} args - Arguments to update one Conversation.
+     * @example
+     * // Update one Conversation
+     * const conversation = await prisma.conversation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ConversationUpdateArgs>(args: SelectSubset<T, ConversationUpdateArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Conversations.
+     * @param {ConversationDeleteManyArgs} args - Arguments to filter Conversations to delete.
+     * @example
+     * // Delete a few Conversations
+     * const { count } = await prisma.conversation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ConversationDeleteManyArgs>(args?: SelectSubset<T, ConversationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Conversations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Conversations
+     * const conversation = await prisma.conversation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ConversationUpdateManyArgs>(args: SelectSubset<T, ConversationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Conversations and returns the data updated in the database.
+     * @param {ConversationUpdateManyAndReturnArgs} args - Arguments to update many Conversations.
+     * @example
+     * // Update many Conversations
+     * const conversation = await prisma.conversation.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Conversations and only return the `id`
+     * const conversationWithIdOnly = await prisma.conversation.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ConversationUpdateManyAndReturnArgs>(args: SelectSubset<T, ConversationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Conversation.
+     * @param {ConversationUpsertArgs} args - Arguments to update or create a Conversation.
+     * @example
+     * // Update or create a Conversation
+     * const conversation = await prisma.conversation.upsert({
+     *   create: {
+     *     // ... data to create a Conversation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Conversation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ConversationUpsertArgs>(args: SelectSubset<T, ConversationUpsertArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Conversations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationCountArgs} args - Arguments to filter Conversations to count.
+     * @example
+     * // Count the number of Conversations
+     * const count = await prisma.conversation.count({
+     *   where: {
+     *     // ... the filter for the Conversations we want to count
+     *   }
+     * })
+    **/
+    count<T extends ConversationCountArgs>(
+      args?: Subset<T, ConversationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ConversationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Conversation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ConversationAggregateArgs>(args: Subset<T, ConversationAggregateArgs>): Prisma.PrismaPromise<GetConversationAggregateType<T>>
+
+    /**
+     * Group by Conversation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ConversationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ConversationGroupByArgs['orderBy'] }
+        : { orderBy?: ConversationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ConversationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConversationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Conversation model
+   */
+  readonly fields: ConversationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Conversation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ConversationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    participants<T extends Conversation$participantsArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$participantsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    messages<T extends Conversation$messagesArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Conversation model
+   */
+  interface ConversationFieldRefs {
+    readonly id: FieldRef<"Conversation", 'String'>
+    readonly workspaceId: FieldRef<"Conversation", 'String'>
+    readonly isGroup: FieldRef<"Conversation", 'Boolean'>
+    readonly title: FieldRef<"Conversation", 'String'>
+    readonly createdAt: FieldRef<"Conversation", 'DateTime'>
+    readonly updatedAt: FieldRef<"Conversation", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Conversation findUnique
+   */
+  export type ConversationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * Filter, which Conversation to fetch.
+     */
+    where: ConversationWhereUniqueInput
+  }
+
+  /**
+   * Conversation findUniqueOrThrow
+   */
+  export type ConversationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * Filter, which Conversation to fetch.
+     */
+    where: ConversationWhereUniqueInput
+  }
+
+  /**
+   * Conversation findFirst
+   */
+  export type ConversationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * Filter, which Conversation to fetch.
+     */
+    where?: ConversationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Conversations to fetch.
+     */
+    orderBy?: ConversationOrderByWithRelationInput | ConversationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Conversations.
+     */
+    cursor?: ConversationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Conversations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Conversations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Conversations.
+     */
+    distinct?: ConversationScalarFieldEnum | ConversationScalarFieldEnum[]
+  }
+
+  /**
+   * Conversation findFirstOrThrow
+   */
+  export type ConversationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * Filter, which Conversation to fetch.
+     */
+    where?: ConversationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Conversations to fetch.
+     */
+    orderBy?: ConversationOrderByWithRelationInput | ConversationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Conversations.
+     */
+    cursor?: ConversationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Conversations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Conversations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Conversations.
+     */
+    distinct?: ConversationScalarFieldEnum | ConversationScalarFieldEnum[]
+  }
+
+  /**
+   * Conversation findMany
+   */
+  export type ConversationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * Filter, which Conversations to fetch.
+     */
+    where?: ConversationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Conversations to fetch.
+     */
+    orderBy?: ConversationOrderByWithRelationInput | ConversationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Conversations.
+     */
+    cursor?: ConversationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Conversations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Conversations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Conversations.
+     */
+    distinct?: ConversationScalarFieldEnum | ConversationScalarFieldEnum[]
+  }
+
+  /**
+   * Conversation create
+   */
+  export type ConversationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Conversation.
+     */
+    data: XOR<ConversationCreateInput, ConversationUncheckedCreateInput>
+  }
+
+  /**
+   * Conversation createMany
+   */
+  export type ConversationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Conversations.
+     */
+    data: ConversationCreateManyInput | ConversationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Conversation createManyAndReturn
+   */
+  export type ConversationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * The data used to create many Conversations.
+     */
+    data: ConversationCreateManyInput | ConversationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Conversation update
+   */
+  export type ConversationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Conversation.
+     */
+    data: XOR<ConversationUpdateInput, ConversationUncheckedUpdateInput>
+    /**
+     * Choose, which Conversation to update.
+     */
+    where: ConversationWhereUniqueInput
+  }
+
+  /**
+   * Conversation updateMany
+   */
+  export type ConversationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Conversations.
+     */
+    data: XOR<ConversationUpdateManyMutationInput, ConversationUncheckedUpdateManyInput>
+    /**
+     * Filter which Conversations to update
+     */
+    where?: ConversationWhereInput
+    /**
+     * Limit how many Conversations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Conversation updateManyAndReturn
+   */
+  export type ConversationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * The data used to update Conversations.
+     */
+    data: XOR<ConversationUpdateManyMutationInput, ConversationUncheckedUpdateManyInput>
+    /**
+     * Filter which Conversations to update
+     */
+    where?: ConversationWhereInput
+    /**
+     * Limit how many Conversations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Conversation upsert
+   */
+  export type ConversationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Conversation to update in case it exists.
+     */
+    where: ConversationWhereUniqueInput
+    /**
+     * In case the Conversation found by the `where` argument doesn't exist, create a new Conversation with this data.
+     */
+    create: XOR<ConversationCreateInput, ConversationUncheckedCreateInput>
+    /**
+     * In case the Conversation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConversationUpdateInput, ConversationUncheckedUpdateInput>
+  }
+
+  /**
+   * Conversation delete
+   */
+  export type ConversationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * Filter which Conversation to delete.
+     */
+    where: ConversationWhereUniqueInput
+  }
+
+  /**
+   * Conversation deleteMany
+   */
+  export type ConversationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Conversations to delete
+     */
+    where?: ConversationWhereInput
+    /**
+     * Limit how many Conversations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Conversation.participants
+   */
+  export type Conversation$participantsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationParticipant
+     */
+    select?: ConversationParticipantSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationParticipant
+     */
+    omit?: ConversationParticipantOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationParticipantInclude<ExtArgs> | null
+    where?: ConversationParticipantWhereInput
+    orderBy?: ConversationParticipantOrderByWithRelationInput | ConversationParticipantOrderByWithRelationInput[]
+    cursor?: ConversationParticipantWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConversationParticipantScalarFieldEnum | ConversationParticipantScalarFieldEnum[]
+  }
+
+  /**
+   * Conversation.messages
+   */
+  export type Conversation$messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    where?: MessageWhereInput
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
+    cursor?: MessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
+  }
+
+  /**
+   * Conversation without action
+   */
+  export type ConversationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ConversationParticipant
+   */
+
+  export type AggregateConversationParticipant = {
+    _count: ConversationParticipantCountAggregateOutputType | null
+    _min: ConversationParticipantMinAggregateOutputType | null
+    _max: ConversationParticipantMaxAggregateOutputType | null
+  }
+
+  export type ConversationParticipantMinAggregateOutputType = {
+    id: string | null
+    conversationId: string | null
+    memberId: string | null
+    lastReadAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type ConversationParticipantMaxAggregateOutputType = {
+    id: string | null
+    conversationId: string | null
+    memberId: string | null
+    lastReadAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type ConversationParticipantCountAggregateOutputType = {
+    id: number
+    conversationId: number
+    memberId: number
+    lastReadAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ConversationParticipantMinAggregateInputType = {
+    id?: true
+    conversationId?: true
+    memberId?: true
+    lastReadAt?: true
+    createdAt?: true
+  }
+
+  export type ConversationParticipantMaxAggregateInputType = {
+    id?: true
+    conversationId?: true
+    memberId?: true
+    lastReadAt?: true
+    createdAt?: true
+  }
+
+  export type ConversationParticipantCountAggregateInputType = {
+    id?: true
+    conversationId?: true
+    memberId?: true
+    lastReadAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ConversationParticipantAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConversationParticipant to aggregate.
+     */
+    where?: ConversationParticipantWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationParticipants to fetch.
+     */
+    orderBy?: ConversationParticipantOrderByWithRelationInput | ConversationParticipantOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ConversationParticipantWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationParticipants from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationParticipants.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ConversationParticipants
+    **/
+    _count?: true | ConversationParticipantCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ConversationParticipantMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ConversationParticipantMaxAggregateInputType
+  }
+
+  export type GetConversationParticipantAggregateType<T extends ConversationParticipantAggregateArgs> = {
+        [P in keyof T & keyof AggregateConversationParticipant]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateConversationParticipant[P]>
+      : GetScalarType<T[P], AggregateConversationParticipant[P]>
+  }
+
+
+
+
+  export type ConversationParticipantGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationParticipantWhereInput
+    orderBy?: ConversationParticipantOrderByWithAggregationInput | ConversationParticipantOrderByWithAggregationInput[]
+    by: ConversationParticipantScalarFieldEnum[] | ConversationParticipantScalarFieldEnum
+    having?: ConversationParticipantScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ConversationParticipantCountAggregateInputType | true
+    _min?: ConversationParticipantMinAggregateInputType
+    _max?: ConversationParticipantMaxAggregateInputType
+  }
+
+  export type ConversationParticipantGroupByOutputType = {
+    id: string
+    conversationId: string
+    memberId: string
+    lastReadAt: Date | null
+    createdAt: Date
+    _count: ConversationParticipantCountAggregateOutputType | null
+    _min: ConversationParticipantMinAggregateOutputType | null
+    _max: ConversationParticipantMaxAggregateOutputType | null
+  }
+
+  type GetConversationParticipantGroupByPayload<T extends ConversationParticipantGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ConversationParticipantGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ConversationParticipantGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ConversationParticipantGroupByOutputType[P]>
+            : GetScalarType<T[P], ConversationParticipantGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ConversationParticipantSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    conversationId?: boolean
+    memberId?: boolean
+    lastReadAt?: boolean
+    createdAt?: boolean
+    conversation?: boolean | ConversationDefaultArgs<ExtArgs>
+    member?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversationParticipant"]>
+
+  export type ConversationParticipantSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    conversationId?: boolean
+    memberId?: boolean
+    lastReadAt?: boolean
+    createdAt?: boolean
+    conversation?: boolean | ConversationDefaultArgs<ExtArgs>
+    member?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversationParticipant"]>
+
+  export type ConversationParticipantSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    conversationId?: boolean
+    memberId?: boolean
+    lastReadAt?: boolean
+    createdAt?: boolean
+    conversation?: boolean | ConversationDefaultArgs<ExtArgs>
+    member?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversationParticipant"]>
+
+  export type ConversationParticipantSelectScalar = {
+    id?: boolean
+    conversationId?: boolean
+    memberId?: boolean
+    lastReadAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type ConversationParticipantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "memberId" | "lastReadAt" | "createdAt", ExtArgs["result"]["conversationParticipant"]>
+  export type ConversationParticipantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    conversation?: boolean | ConversationDefaultArgs<ExtArgs>
+    member?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
+  }
+  export type ConversationParticipantIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    conversation?: boolean | ConversationDefaultArgs<ExtArgs>
+    member?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
+  }
+  export type ConversationParticipantIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    conversation?: boolean | ConversationDefaultArgs<ExtArgs>
+    member?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
+  }
+
+  export type $ConversationParticipantPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ConversationParticipant"
+    objects: {
+      conversation: Prisma.$ConversationPayload<ExtArgs>
+      member: Prisma.$WorkspaceMemberPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      conversationId: string
+      memberId: string
+      lastReadAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["conversationParticipant"]>
+    composites: {}
+  }
+
+  type ConversationParticipantGetPayload<S extends boolean | null | undefined | ConversationParticipantDefaultArgs> = $Result.GetResult<Prisma.$ConversationParticipantPayload, S>
+
+  type ConversationParticipantCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ConversationParticipantFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ConversationParticipantCountAggregateInputType | true
+    }
+
+  export interface ConversationParticipantDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ConversationParticipant'], meta: { name: 'ConversationParticipant' } }
+    /**
+     * Find zero or one ConversationParticipant that matches the filter.
+     * @param {ConversationParticipantFindUniqueArgs} args - Arguments to find a ConversationParticipant
+     * @example
+     * // Get one ConversationParticipant
+     * const conversationParticipant = await prisma.conversationParticipant.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ConversationParticipantFindUniqueArgs>(args: SelectSubset<T, ConversationParticipantFindUniqueArgs<ExtArgs>>): Prisma__ConversationParticipantClient<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ConversationParticipant that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ConversationParticipantFindUniqueOrThrowArgs} args - Arguments to find a ConversationParticipant
+     * @example
+     * // Get one ConversationParticipant
+     * const conversationParticipant = await prisma.conversationParticipant.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ConversationParticipantFindUniqueOrThrowArgs>(args: SelectSubset<T, ConversationParticipantFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ConversationParticipantClient<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConversationParticipant that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationParticipantFindFirstArgs} args - Arguments to find a ConversationParticipant
+     * @example
+     * // Get one ConversationParticipant
+     * const conversationParticipant = await prisma.conversationParticipant.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ConversationParticipantFindFirstArgs>(args?: SelectSubset<T, ConversationParticipantFindFirstArgs<ExtArgs>>): Prisma__ConversationParticipantClient<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConversationParticipant that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationParticipantFindFirstOrThrowArgs} args - Arguments to find a ConversationParticipant
+     * @example
+     * // Get one ConversationParticipant
+     * const conversationParticipant = await prisma.conversationParticipant.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ConversationParticipantFindFirstOrThrowArgs>(args?: SelectSubset<T, ConversationParticipantFindFirstOrThrowArgs<ExtArgs>>): Prisma__ConversationParticipantClient<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ConversationParticipants that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationParticipantFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ConversationParticipants
+     * const conversationParticipants = await prisma.conversationParticipant.findMany()
+     * 
+     * // Get first 10 ConversationParticipants
+     * const conversationParticipants = await prisma.conversationParticipant.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const conversationParticipantWithIdOnly = await prisma.conversationParticipant.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ConversationParticipantFindManyArgs>(args?: SelectSubset<T, ConversationParticipantFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ConversationParticipant.
+     * @param {ConversationParticipantCreateArgs} args - Arguments to create a ConversationParticipant.
+     * @example
+     * // Create one ConversationParticipant
+     * const ConversationParticipant = await prisma.conversationParticipant.create({
+     *   data: {
+     *     // ... data to create a ConversationParticipant
+     *   }
+     * })
+     * 
+     */
+    create<T extends ConversationParticipantCreateArgs>(args: SelectSubset<T, ConversationParticipantCreateArgs<ExtArgs>>): Prisma__ConversationParticipantClient<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ConversationParticipants.
+     * @param {ConversationParticipantCreateManyArgs} args - Arguments to create many ConversationParticipants.
+     * @example
+     * // Create many ConversationParticipants
+     * const conversationParticipant = await prisma.conversationParticipant.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ConversationParticipantCreateManyArgs>(args?: SelectSubset<T, ConversationParticipantCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ConversationParticipants and returns the data saved in the database.
+     * @param {ConversationParticipantCreateManyAndReturnArgs} args - Arguments to create many ConversationParticipants.
+     * @example
+     * // Create many ConversationParticipants
+     * const conversationParticipant = await prisma.conversationParticipant.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ConversationParticipants and only return the `id`
+     * const conversationParticipantWithIdOnly = await prisma.conversationParticipant.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ConversationParticipantCreateManyAndReturnArgs>(args?: SelectSubset<T, ConversationParticipantCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ConversationParticipant.
+     * @param {ConversationParticipantDeleteArgs} args - Arguments to delete one ConversationParticipant.
+     * @example
+     * // Delete one ConversationParticipant
+     * const ConversationParticipant = await prisma.conversationParticipant.delete({
+     *   where: {
+     *     // ... filter to delete one ConversationParticipant
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ConversationParticipantDeleteArgs>(args: SelectSubset<T, ConversationParticipantDeleteArgs<ExtArgs>>): Prisma__ConversationParticipantClient<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ConversationParticipant.
+     * @param {ConversationParticipantUpdateArgs} args - Arguments to update one ConversationParticipant.
+     * @example
+     * // Update one ConversationParticipant
+     * const conversationParticipant = await prisma.conversationParticipant.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ConversationParticipantUpdateArgs>(args: SelectSubset<T, ConversationParticipantUpdateArgs<ExtArgs>>): Prisma__ConversationParticipantClient<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ConversationParticipants.
+     * @param {ConversationParticipantDeleteManyArgs} args - Arguments to filter ConversationParticipants to delete.
+     * @example
+     * // Delete a few ConversationParticipants
+     * const { count } = await prisma.conversationParticipant.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ConversationParticipantDeleteManyArgs>(args?: SelectSubset<T, ConversationParticipantDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConversationParticipants.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationParticipantUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ConversationParticipants
+     * const conversationParticipant = await prisma.conversationParticipant.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ConversationParticipantUpdateManyArgs>(args: SelectSubset<T, ConversationParticipantUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConversationParticipants and returns the data updated in the database.
+     * @param {ConversationParticipantUpdateManyAndReturnArgs} args - Arguments to update many ConversationParticipants.
+     * @example
+     * // Update many ConversationParticipants
+     * const conversationParticipant = await prisma.conversationParticipant.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ConversationParticipants and only return the `id`
+     * const conversationParticipantWithIdOnly = await prisma.conversationParticipant.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ConversationParticipantUpdateManyAndReturnArgs>(args: SelectSubset<T, ConversationParticipantUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ConversationParticipant.
+     * @param {ConversationParticipantUpsertArgs} args - Arguments to update or create a ConversationParticipant.
+     * @example
+     * // Update or create a ConversationParticipant
+     * const conversationParticipant = await prisma.conversationParticipant.upsert({
+     *   create: {
+     *     // ... data to create a ConversationParticipant
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ConversationParticipant we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ConversationParticipantUpsertArgs>(args: SelectSubset<T, ConversationParticipantUpsertArgs<ExtArgs>>): Prisma__ConversationParticipantClient<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ConversationParticipants.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationParticipantCountArgs} args - Arguments to filter ConversationParticipants to count.
+     * @example
+     * // Count the number of ConversationParticipants
+     * const count = await prisma.conversationParticipant.count({
+     *   where: {
+     *     // ... the filter for the ConversationParticipants we want to count
+     *   }
+     * })
+    **/
+    count<T extends ConversationParticipantCountArgs>(
+      args?: Subset<T, ConversationParticipantCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ConversationParticipantCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ConversationParticipant.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationParticipantAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ConversationParticipantAggregateArgs>(args: Subset<T, ConversationParticipantAggregateArgs>): Prisma.PrismaPromise<GetConversationParticipantAggregateType<T>>
+
+    /**
+     * Group by ConversationParticipant.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationParticipantGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ConversationParticipantGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ConversationParticipantGroupByArgs['orderBy'] }
+        : { orderBy?: ConversationParticipantGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ConversationParticipantGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConversationParticipantGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ConversationParticipant model
+   */
+  readonly fields: ConversationParticipantFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ConversationParticipant.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ConversationParticipantClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    conversation<T extends ConversationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ConversationDefaultArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    member<T extends WorkspaceMemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMemberDefaultArgs<ExtArgs>>): Prisma__WorkspaceMemberClient<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ConversationParticipant model
+   */
+  interface ConversationParticipantFieldRefs {
+    readonly id: FieldRef<"ConversationParticipant", 'String'>
+    readonly conversationId: FieldRef<"ConversationParticipant", 'String'>
+    readonly memberId: FieldRef<"ConversationParticipant", 'String'>
+    readonly lastReadAt: FieldRef<"ConversationParticipant", 'DateTime'>
+    readonly createdAt: FieldRef<"ConversationParticipant", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ConversationParticipant findUnique
+   */
+  export type ConversationParticipantFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationParticipant
+     */
+    select?: ConversationParticipantSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationParticipant
+     */
+    omit?: ConversationParticipantOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationParticipantInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationParticipant to fetch.
+     */
+    where: ConversationParticipantWhereUniqueInput
+  }
+
+  /**
+   * ConversationParticipant findUniqueOrThrow
+   */
+  export type ConversationParticipantFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationParticipant
+     */
+    select?: ConversationParticipantSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationParticipant
+     */
+    omit?: ConversationParticipantOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationParticipantInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationParticipant to fetch.
+     */
+    where: ConversationParticipantWhereUniqueInput
+  }
+
+  /**
+   * ConversationParticipant findFirst
+   */
+  export type ConversationParticipantFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationParticipant
+     */
+    select?: ConversationParticipantSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationParticipant
+     */
+    omit?: ConversationParticipantOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationParticipantInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationParticipant to fetch.
+     */
+    where?: ConversationParticipantWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationParticipants to fetch.
+     */
+    orderBy?: ConversationParticipantOrderByWithRelationInput | ConversationParticipantOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConversationParticipants.
+     */
+    cursor?: ConversationParticipantWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationParticipants from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationParticipants.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConversationParticipants.
+     */
+    distinct?: ConversationParticipantScalarFieldEnum | ConversationParticipantScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationParticipant findFirstOrThrow
+   */
+  export type ConversationParticipantFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationParticipant
+     */
+    select?: ConversationParticipantSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationParticipant
+     */
+    omit?: ConversationParticipantOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationParticipantInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationParticipant to fetch.
+     */
+    where?: ConversationParticipantWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationParticipants to fetch.
+     */
+    orderBy?: ConversationParticipantOrderByWithRelationInput | ConversationParticipantOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConversationParticipants.
+     */
+    cursor?: ConversationParticipantWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationParticipants from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationParticipants.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConversationParticipants.
+     */
+    distinct?: ConversationParticipantScalarFieldEnum | ConversationParticipantScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationParticipant findMany
+   */
+  export type ConversationParticipantFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationParticipant
+     */
+    select?: ConversationParticipantSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationParticipant
+     */
+    omit?: ConversationParticipantOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationParticipantInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationParticipants to fetch.
+     */
+    where?: ConversationParticipantWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationParticipants to fetch.
+     */
+    orderBy?: ConversationParticipantOrderByWithRelationInput | ConversationParticipantOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ConversationParticipants.
+     */
+    cursor?: ConversationParticipantWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationParticipants from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationParticipants.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConversationParticipants.
+     */
+    distinct?: ConversationParticipantScalarFieldEnum | ConversationParticipantScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationParticipant create
+   */
+  export type ConversationParticipantCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationParticipant
+     */
+    select?: ConversationParticipantSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationParticipant
+     */
+    omit?: ConversationParticipantOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationParticipantInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ConversationParticipant.
+     */
+    data: XOR<ConversationParticipantCreateInput, ConversationParticipantUncheckedCreateInput>
+  }
+
+  /**
+   * ConversationParticipant createMany
+   */
+  export type ConversationParticipantCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ConversationParticipants.
+     */
+    data: ConversationParticipantCreateManyInput | ConversationParticipantCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ConversationParticipant createManyAndReturn
+   */
+  export type ConversationParticipantCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationParticipant
+     */
+    select?: ConversationParticipantSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationParticipant
+     */
+    omit?: ConversationParticipantOmit<ExtArgs> | null
+    /**
+     * The data used to create many ConversationParticipants.
+     */
+    data: ConversationParticipantCreateManyInput | ConversationParticipantCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationParticipantIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ConversationParticipant update
+   */
+  export type ConversationParticipantUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationParticipant
+     */
+    select?: ConversationParticipantSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationParticipant
+     */
+    omit?: ConversationParticipantOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationParticipantInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ConversationParticipant.
+     */
+    data: XOR<ConversationParticipantUpdateInput, ConversationParticipantUncheckedUpdateInput>
+    /**
+     * Choose, which ConversationParticipant to update.
+     */
+    where: ConversationParticipantWhereUniqueInput
+  }
+
+  /**
+   * ConversationParticipant updateMany
+   */
+  export type ConversationParticipantUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ConversationParticipants.
+     */
+    data: XOR<ConversationParticipantUpdateManyMutationInput, ConversationParticipantUncheckedUpdateManyInput>
+    /**
+     * Filter which ConversationParticipants to update
+     */
+    where?: ConversationParticipantWhereInput
+    /**
+     * Limit how many ConversationParticipants to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConversationParticipant updateManyAndReturn
+   */
+  export type ConversationParticipantUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationParticipant
+     */
+    select?: ConversationParticipantSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationParticipant
+     */
+    omit?: ConversationParticipantOmit<ExtArgs> | null
+    /**
+     * The data used to update ConversationParticipants.
+     */
+    data: XOR<ConversationParticipantUpdateManyMutationInput, ConversationParticipantUncheckedUpdateManyInput>
+    /**
+     * Filter which ConversationParticipants to update
+     */
+    where?: ConversationParticipantWhereInput
+    /**
+     * Limit how many ConversationParticipants to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationParticipantIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ConversationParticipant upsert
+   */
+  export type ConversationParticipantUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationParticipant
+     */
+    select?: ConversationParticipantSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationParticipant
+     */
+    omit?: ConversationParticipantOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationParticipantInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ConversationParticipant to update in case it exists.
+     */
+    where: ConversationParticipantWhereUniqueInput
+    /**
+     * In case the ConversationParticipant found by the `where` argument doesn't exist, create a new ConversationParticipant with this data.
+     */
+    create: XOR<ConversationParticipantCreateInput, ConversationParticipantUncheckedCreateInput>
+    /**
+     * In case the ConversationParticipant was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConversationParticipantUpdateInput, ConversationParticipantUncheckedUpdateInput>
+  }
+
+  /**
+   * ConversationParticipant delete
+   */
+  export type ConversationParticipantDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationParticipant
+     */
+    select?: ConversationParticipantSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationParticipant
+     */
+    omit?: ConversationParticipantOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationParticipantInclude<ExtArgs> | null
+    /**
+     * Filter which ConversationParticipant to delete.
+     */
+    where: ConversationParticipantWhereUniqueInput
+  }
+
+  /**
+   * ConversationParticipant deleteMany
+   */
+  export type ConversationParticipantDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConversationParticipants to delete
+     */
+    where?: ConversationParticipantWhereInput
+    /**
+     * Limit how many ConversationParticipants to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConversationParticipant without action
+   */
+  export type ConversationParticipantDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationParticipant
+     */
+    select?: ConversationParticipantSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationParticipant
+     */
+    omit?: ConversationParticipantOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationParticipantInclude<ExtArgs> | null
   }
 
 
@@ -57799,25 +60449,51 @@ export namespace Prisma {
   export type TaskStatusChangeScalarFieldEnum = (typeof TaskStatusChangeScalarFieldEnum)[keyof typeof TaskStatusChangeScalarFieldEnum]
 
 
-  export const TaskCommentScalarFieldEnum: {
+  export const MessageScalarFieldEnum: {
     id: 'id',
     taskId: 'taskId',
+    projectId: 'projectId',
+    conversationId: 'conversationId',
     authorId: 'authorId',
     body: 'body',
+    kind: 'kind',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
-  export type TaskCommentScalarFieldEnum = (typeof TaskCommentScalarFieldEnum)[keyof typeof TaskCommentScalarFieldEnum]
+  export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
 
 
-  export const CommentMentionScalarFieldEnum: {
+  export const MessageMentionScalarFieldEnum: {
     id: 'id',
-    commentId: 'commentId',
+    messageId: 'messageId',
     memberId: 'memberId'
   };
 
-  export type CommentMentionScalarFieldEnum = (typeof CommentMentionScalarFieldEnum)[keyof typeof CommentMentionScalarFieldEnum]
+  export type MessageMentionScalarFieldEnum = (typeof MessageMentionScalarFieldEnum)[keyof typeof MessageMentionScalarFieldEnum]
+
+
+  export const ConversationScalarFieldEnum: {
+    id: 'id',
+    workspaceId: 'workspaceId',
+    isGroup: 'isGroup',
+    title: 'title',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ConversationScalarFieldEnum = (typeof ConversationScalarFieldEnum)[keyof typeof ConversationScalarFieldEnum]
+
+
+  export const ConversationParticipantScalarFieldEnum: {
+    id: 'id',
+    conversationId: 'conversationId',
+    memberId: 'memberId',
+    lastReadAt: 'lastReadAt',
+    createdAt: 'createdAt'
+  };
+
+  export type ConversationParticipantScalarFieldEnum = (typeof ConversationParticipantScalarFieldEnum)[keyof typeof ConversationParticipantScalarFieldEnum]
 
 
   export const NotificationScalarFieldEnum: {
@@ -58343,6 +61019,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateListRelationFilter
     attachments?: AttachmentListRelationFilter
     checklistTemplates?: ChecklistTemplateListRelationFilter
+    conversations?: ConversationListRelationFilter
     publishItems?: PublishItemListRelationFilter
   }
 
@@ -58376,6 +61053,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateOrderByRelationAggregateInput
     attachments?: AttachmentOrderByRelationAggregateInput
     checklistTemplates?: ChecklistTemplateOrderByRelationAggregateInput
+    conversations?: ConversationOrderByRelationAggregateInput
     publishItems?: PublishItemOrderByRelationAggregateInput
   }
 
@@ -58412,6 +61090,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateListRelationFilter
     attachments?: AttachmentListRelationFilter
     checklistTemplates?: ChecklistTemplateListRelationFilter
+    conversations?: ConversationListRelationFilter
     publishItems?: PublishItemListRelationFilter
   }, "id" | "slug">
 
@@ -58598,13 +61277,14 @@ export namespace Prisma {
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     role?: XOR<RoleNullableScalarRelationFilter, RoleWhereInput> | null
     assignedTasks?: TaskListRelationFilter
-    comments?: TaskCommentListRelationFilter
-    mentionedIn?: CommentMentionListRelationFilter
+    messages?: MessageListRelationFilter
+    mentionedIn?: MessageMentionListRelationFilter
     notifications?: NotificationListRelationFilter
     pushSubscriptions?: PushSubscriptionListRelationFilter
     scheduledItems?: PublishItemListRelationFilter
     projectMemberships?: ProjectMemberListRelationFilter
     statusChanges?: TaskStatusChangeListRelationFilter
+    conversations?: ConversationParticipantListRelationFilter
   }
 
   export type WorkspaceMemberOrderByWithRelationInput = {
@@ -58619,13 +61299,14 @@ export namespace Prisma {
     workspace?: WorkspaceOrderByWithRelationInput
     role?: RoleOrderByWithRelationInput
     assignedTasks?: TaskOrderByRelationAggregateInput
-    comments?: TaskCommentOrderByRelationAggregateInput
-    mentionedIn?: CommentMentionOrderByRelationAggregateInput
+    messages?: MessageOrderByRelationAggregateInput
+    mentionedIn?: MessageMentionOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
     pushSubscriptions?: PushSubscriptionOrderByRelationAggregateInput
     scheduledItems?: PublishItemOrderByRelationAggregateInput
     projectMemberships?: ProjectMemberOrderByRelationAggregateInput
     statusChanges?: TaskStatusChangeOrderByRelationAggregateInput
+    conversations?: ConversationParticipantOrderByRelationAggregateInput
   }
 
   export type WorkspaceMemberWhereUniqueInput = Prisma.AtLeast<{
@@ -58644,13 +61325,14 @@ export namespace Prisma {
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     role?: XOR<RoleNullableScalarRelationFilter, RoleWhereInput> | null
     assignedTasks?: TaskListRelationFilter
-    comments?: TaskCommentListRelationFilter
-    mentionedIn?: CommentMentionListRelationFilter
+    messages?: MessageListRelationFilter
+    mentionedIn?: MessageMentionListRelationFilter
     notifications?: NotificationListRelationFilter
     pushSubscriptions?: PushSubscriptionListRelationFilter
     scheduledItems?: PublishItemListRelationFilter
     projectMemberships?: ProjectMemberListRelationFilter
     statusChanges?: TaskStatusChangeListRelationFilter
+    conversations?: ConversationParticipantListRelationFilter
   }, "id" | "workspaceId_userId">
 
   export type WorkspaceMemberOrderByWithAggregationInput = {
@@ -59758,6 +62440,7 @@ export namespace Prisma {
     assets?: ProjectAssetListRelationFilter
     publishItems?: PublishItemListRelationFilter
     members?: ProjectMemberListRelationFilter
+    messages?: MessageListRelationFilter
   }
 
   export type ProjectOrderByWithRelationInput = {
@@ -59791,6 +62474,7 @@ export namespace Prisma {
     assets?: ProjectAssetOrderByRelationAggregateInput
     publishItems?: PublishItemOrderByRelationAggregateInput
     members?: ProjectMemberOrderByRelationAggregateInput
+    messages?: MessageOrderByRelationAggregateInput
   }
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -59827,6 +62511,7 @@ export namespace Prisma {
     assets?: ProjectAssetListRelationFilter
     publishItems?: PublishItemListRelationFilter
     members?: ProjectMemberListRelationFilter
+    messages?: MessageListRelationFilter
   }, "id" | "dealId">
 
   export type ProjectOrderByWithAggregationInput = {
@@ -60573,7 +63258,7 @@ export namespace Prisma {
     status?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     assignee?: XOR<WorkspaceMemberNullableScalarRelationFilter, WorkspaceMemberWhereInput> | null
     checklistItems?: TaskChecklistItemListRelationFilter
-    comments?: TaskCommentListRelationFilter
+    comments?: MessageListRelationFilter
     publishItem?: XOR<PublishItemNullableScalarRelationFilter, PublishItemWhereInput> | null
     statusChanges?: TaskStatusChangeListRelationFilter
   }
@@ -60606,7 +63291,7 @@ export namespace Prisma {
     status?: TaskStatusOrderByWithRelationInput
     assignee?: WorkspaceMemberOrderByWithRelationInput
     checklistItems?: TaskChecklistItemOrderByRelationAggregateInput
-    comments?: TaskCommentOrderByRelationAggregateInput
+    comments?: MessageOrderByRelationAggregateInput
     publishItem?: PublishItemOrderByWithRelationInput
     statusChanges?: TaskStatusChangeOrderByRelationAggregateInput
   }
@@ -60642,7 +63327,7 @@ export namespace Prisma {
     status?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     assignee?: XOR<WorkspaceMemberNullableScalarRelationFilter, WorkspaceMemberWhereInput> | null
     checklistItems?: TaskChecklistItemListRelationFilter
-    comments?: TaskCommentListRelationFilter
+    comments?: MessageListRelationFilter
     publishItem?: XOR<PublishItemNullableScalarRelationFilter, PublishItemWhereInput> | null
     statusChanges?: TaskStatusChangeListRelationFilter
   }, "id">
@@ -60790,119 +63475,265 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"TaskStatusChange"> | Date | string
   }
 
-  export type TaskCommentWhereInput = {
-    AND?: TaskCommentWhereInput | TaskCommentWhereInput[]
-    OR?: TaskCommentWhereInput[]
-    NOT?: TaskCommentWhereInput | TaskCommentWhereInput[]
-    id?: StringFilter<"TaskComment"> | string
-    taskId?: StringFilter<"TaskComment"> | string
-    authorId?: StringFilter<"TaskComment"> | string
-    body?: StringFilter<"TaskComment"> | string
-    createdAt?: DateTimeFilter<"TaskComment"> | Date | string
-    updatedAt?: DateTimeFilter<"TaskComment"> | Date | string
-    task?: XOR<TaskScalarRelationFilter, TaskWhereInput>
+  export type MessageWhereInput = {
+    AND?: MessageWhereInput | MessageWhereInput[]
+    OR?: MessageWhereInput[]
+    NOT?: MessageWhereInput | MessageWhereInput[]
+    id?: StringFilter<"Message"> | string
+    taskId?: StringNullableFilter<"Message"> | string | null
+    projectId?: StringNullableFilter<"Message"> | string | null
+    conversationId?: StringNullableFilter<"Message"> | string | null
+    authorId?: StringFilter<"Message"> | string
+    body?: StringFilter<"Message"> | string
+    kind?: StringFilter<"Message"> | string
+    createdAt?: DateTimeFilter<"Message"> | Date | string
+    updatedAt?: DateTimeFilter<"Message"> | Date | string
+    task?: XOR<TaskNullableScalarRelationFilter, TaskWhereInput> | null
+    project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
+    conversation?: XOR<ConversationNullableScalarRelationFilter, ConversationWhereInput> | null
     author?: XOR<WorkspaceMemberScalarRelationFilter, WorkspaceMemberWhereInput>
-    mentions?: CommentMentionListRelationFilter
+    mentions?: MessageMentionListRelationFilter
   }
 
-  export type TaskCommentOrderByWithRelationInput = {
+  export type MessageOrderByWithRelationInput = {
     id?: SortOrder
-    taskId?: SortOrder
+    taskId?: SortOrderInput | SortOrder
+    projectId?: SortOrderInput | SortOrder
+    conversationId?: SortOrderInput | SortOrder
     authorId?: SortOrder
     body?: SortOrder
+    kind?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     task?: TaskOrderByWithRelationInput
+    project?: ProjectOrderByWithRelationInput
+    conversation?: ConversationOrderByWithRelationInput
     author?: WorkspaceMemberOrderByWithRelationInput
-    mentions?: CommentMentionOrderByRelationAggregateInput
+    mentions?: MessageMentionOrderByRelationAggregateInput
   }
 
-  export type TaskCommentWhereUniqueInput = Prisma.AtLeast<{
+  export type MessageWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    AND?: TaskCommentWhereInput | TaskCommentWhereInput[]
-    OR?: TaskCommentWhereInput[]
-    NOT?: TaskCommentWhereInput | TaskCommentWhereInput[]
-    taskId?: StringFilter<"TaskComment"> | string
-    authorId?: StringFilter<"TaskComment"> | string
-    body?: StringFilter<"TaskComment"> | string
-    createdAt?: DateTimeFilter<"TaskComment"> | Date | string
-    updatedAt?: DateTimeFilter<"TaskComment"> | Date | string
-    task?: XOR<TaskScalarRelationFilter, TaskWhereInput>
+    AND?: MessageWhereInput | MessageWhereInput[]
+    OR?: MessageWhereInput[]
+    NOT?: MessageWhereInput | MessageWhereInput[]
+    taskId?: StringNullableFilter<"Message"> | string | null
+    projectId?: StringNullableFilter<"Message"> | string | null
+    conversationId?: StringNullableFilter<"Message"> | string | null
+    authorId?: StringFilter<"Message"> | string
+    body?: StringFilter<"Message"> | string
+    kind?: StringFilter<"Message"> | string
+    createdAt?: DateTimeFilter<"Message"> | Date | string
+    updatedAt?: DateTimeFilter<"Message"> | Date | string
+    task?: XOR<TaskNullableScalarRelationFilter, TaskWhereInput> | null
+    project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
+    conversation?: XOR<ConversationNullableScalarRelationFilter, ConversationWhereInput> | null
     author?: XOR<WorkspaceMemberScalarRelationFilter, WorkspaceMemberWhereInput>
-    mentions?: CommentMentionListRelationFilter
+    mentions?: MessageMentionListRelationFilter
   }, "id">
 
-  export type TaskCommentOrderByWithAggregationInput = {
+  export type MessageOrderByWithAggregationInput = {
     id?: SortOrder
-    taskId?: SortOrder
+    taskId?: SortOrderInput | SortOrder
+    projectId?: SortOrderInput | SortOrder
+    conversationId?: SortOrderInput | SortOrder
     authorId?: SortOrder
     body?: SortOrder
+    kind?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    _count?: TaskCommentCountOrderByAggregateInput
-    _max?: TaskCommentMaxOrderByAggregateInput
-    _min?: TaskCommentMinOrderByAggregateInput
+    _count?: MessageCountOrderByAggregateInput
+    _max?: MessageMaxOrderByAggregateInput
+    _min?: MessageMinOrderByAggregateInput
   }
 
-  export type TaskCommentScalarWhereWithAggregatesInput = {
-    AND?: TaskCommentScalarWhereWithAggregatesInput | TaskCommentScalarWhereWithAggregatesInput[]
-    OR?: TaskCommentScalarWhereWithAggregatesInput[]
-    NOT?: TaskCommentScalarWhereWithAggregatesInput | TaskCommentScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"TaskComment"> | string
-    taskId?: StringWithAggregatesFilter<"TaskComment"> | string
-    authorId?: StringWithAggregatesFilter<"TaskComment"> | string
-    body?: StringWithAggregatesFilter<"TaskComment"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"TaskComment"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"TaskComment"> | Date | string
+  export type MessageScalarWhereWithAggregatesInput = {
+    AND?: MessageScalarWhereWithAggregatesInput | MessageScalarWhereWithAggregatesInput[]
+    OR?: MessageScalarWhereWithAggregatesInput[]
+    NOT?: MessageScalarWhereWithAggregatesInput | MessageScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Message"> | string
+    taskId?: StringNullableWithAggregatesFilter<"Message"> | string | null
+    projectId?: StringNullableWithAggregatesFilter<"Message"> | string | null
+    conversationId?: StringNullableWithAggregatesFilter<"Message"> | string | null
+    authorId?: StringWithAggregatesFilter<"Message"> | string
+    body?: StringWithAggregatesFilter<"Message"> | string
+    kind?: StringWithAggregatesFilter<"Message"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
   }
 
-  export type CommentMentionWhereInput = {
-    AND?: CommentMentionWhereInput | CommentMentionWhereInput[]
-    OR?: CommentMentionWhereInput[]
-    NOT?: CommentMentionWhereInput | CommentMentionWhereInput[]
-    id?: StringFilter<"CommentMention"> | string
-    commentId?: StringFilter<"CommentMention"> | string
-    memberId?: StringFilter<"CommentMention"> | string
-    comment?: XOR<TaskCommentScalarRelationFilter, TaskCommentWhereInput>
+  export type MessageMentionWhereInput = {
+    AND?: MessageMentionWhereInput | MessageMentionWhereInput[]
+    OR?: MessageMentionWhereInput[]
+    NOT?: MessageMentionWhereInput | MessageMentionWhereInput[]
+    id?: StringFilter<"MessageMention"> | string
+    messageId?: StringFilter<"MessageMention"> | string
+    memberId?: StringFilter<"MessageMention"> | string
+    message?: XOR<MessageScalarRelationFilter, MessageWhereInput>
     member?: XOR<WorkspaceMemberScalarRelationFilter, WorkspaceMemberWhereInput>
   }
 
-  export type CommentMentionOrderByWithRelationInput = {
+  export type MessageMentionOrderByWithRelationInput = {
     id?: SortOrder
-    commentId?: SortOrder
+    messageId?: SortOrder
     memberId?: SortOrder
-    comment?: TaskCommentOrderByWithRelationInput
+    message?: MessageOrderByWithRelationInput
     member?: WorkspaceMemberOrderByWithRelationInput
   }
 
-  export type CommentMentionWhereUniqueInput = Prisma.AtLeast<{
+  export type MessageMentionWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    commentId_memberId?: CommentMentionCommentIdMemberIdCompoundUniqueInput
-    AND?: CommentMentionWhereInput | CommentMentionWhereInput[]
-    OR?: CommentMentionWhereInput[]
-    NOT?: CommentMentionWhereInput | CommentMentionWhereInput[]
-    commentId?: StringFilter<"CommentMention"> | string
-    memberId?: StringFilter<"CommentMention"> | string
-    comment?: XOR<TaskCommentScalarRelationFilter, TaskCommentWhereInput>
+    messageId_memberId?: MessageMentionMessageIdMemberIdCompoundUniqueInput
+    AND?: MessageMentionWhereInput | MessageMentionWhereInput[]
+    OR?: MessageMentionWhereInput[]
+    NOT?: MessageMentionWhereInput | MessageMentionWhereInput[]
+    messageId?: StringFilter<"MessageMention"> | string
+    memberId?: StringFilter<"MessageMention"> | string
+    message?: XOR<MessageScalarRelationFilter, MessageWhereInput>
     member?: XOR<WorkspaceMemberScalarRelationFilter, WorkspaceMemberWhereInput>
-  }, "id" | "commentId_memberId">
+  }, "id" | "messageId_memberId">
 
-  export type CommentMentionOrderByWithAggregationInput = {
+  export type MessageMentionOrderByWithAggregationInput = {
     id?: SortOrder
-    commentId?: SortOrder
+    messageId?: SortOrder
     memberId?: SortOrder
-    _count?: CommentMentionCountOrderByAggregateInput
-    _max?: CommentMentionMaxOrderByAggregateInput
-    _min?: CommentMentionMinOrderByAggregateInput
+    _count?: MessageMentionCountOrderByAggregateInput
+    _max?: MessageMentionMaxOrderByAggregateInput
+    _min?: MessageMentionMinOrderByAggregateInput
   }
 
-  export type CommentMentionScalarWhereWithAggregatesInput = {
-    AND?: CommentMentionScalarWhereWithAggregatesInput | CommentMentionScalarWhereWithAggregatesInput[]
-    OR?: CommentMentionScalarWhereWithAggregatesInput[]
-    NOT?: CommentMentionScalarWhereWithAggregatesInput | CommentMentionScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"CommentMention"> | string
-    commentId?: StringWithAggregatesFilter<"CommentMention"> | string
-    memberId?: StringWithAggregatesFilter<"CommentMention"> | string
+  export type MessageMentionScalarWhereWithAggregatesInput = {
+    AND?: MessageMentionScalarWhereWithAggregatesInput | MessageMentionScalarWhereWithAggregatesInput[]
+    OR?: MessageMentionScalarWhereWithAggregatesInput[]
+    NOT?: MessageMentionScalarWhereWithAggregatesInput | MessageMentionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"MessageMention"> | string
+    messageId?: StringWithAggregatesFilter<"MessageMention"> | string
+    memberId?: StringWithAggregatesFilter<"MessageMention"> | string
+  }
+
+  export type ConversationWhereInput = {
+    AND?: ConversationWhereInput | ConversationWhereInput[]
+    OR?: ConversationWhereInput[]
+    NOT?: ConversationWhereInput | ConversationWhereInput[]
+    id?: StringFilter<"Conversation"> | string
+    workspaceId?: StringFilter<"Conversation"> | string
+    isGroup?: BoolFilter<"Conversation"> | boolean
+    title?: StringNullableFilter<"Conversation"> | string | null
+    createdAt?: DateTimeFilter<"Conversation"> | Date | string
+    updatedAt?: DateTimeFilter<"Conversation"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    participants?: ConversationParticipantListRelationFilter
+    messages?: MessageListRelationFilter
+  }
+
+  export type ConversationOrderByWithRelationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    isGroup?: SortOrder
+    title?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    workspace?: WorkspaceOrderByWithRelationInput
+    participants?: ConversationParticipantOrderByRelationAggregateInput
+    messages?: MessageOrderByRelationAggregateInput
+  }
+
+  export type ConversationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ConversationWhereInput | ConversationWhereInput[]
+    OR?: ConversationWhereInput[]
+    NOT?: ConversationWhereInput | ConversationWhereInput[]
+    workspaceId?: StringFilter<"Conversation"> | string
+    isGroup?: BoolFilter<"Conversation"> | boolean
+    title?: StringNullableFilter<"Conversation"> | string | null
+    createdAt?: DateTimeFilter<"Conversation"> | Date | string
+    updatedAt?: DateTimeFilter<"Conversation"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    participants?: ConversationParticipantListRelationFilter
+    messages?: MessageListRelationFilter
+  }, "id">
+
+  export type ConversationOrderByWithAggregationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    isGroup?: SortOrder
+    title?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ConversationCountOrderByAggregateInput
+    _max?: ConversationMaxOrderByAggregateInput
+    _min?: ConversationMinOrderByAggregateInput
+  }
+
+  export type ConversationScalarWhereWithAggregatesInput = {
+    AND?: ConversationScalarWhereWithAggregatesInput | ConversationScalarWhereWithAggregatesInput[]
+    OR?: ConversationScalarWhereWithAggregatesInput[]
+    NOT?: ConversationScalarWhereWithAggregatesInput | ConversationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Conversation"> | string
+    workspaceId?: StringWithAggregatesFilter<"Conversation"> | string
+    isGroup?: BoolWithAggregatesFilter<"Conversation"> | boolean
+    title?: StringNullableWithAggregatesFilter<"Conversation"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Conversation"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Conversation"> | Date | string
+  }
+
+  export type ConversationParticipantWhereInput = {
+    AND?: ConversationParticipantWhereInput | ConversationParticipantWhereInput[]
+    OR?: ConversationParticipantWhereInput[]
+    NOT?: ConversationParticipantWhereInput | ConversationParticipantWhereInput[]
+    id?: StringFilter<"ConversationParticipant"> | string
+    conversationId?: StringFilter<"ConversationParticipant"> | string
+    memberId?: StringFilter<"ConversationParticipant"> | string
+    lastReadAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
+    createdAt?: DateTimeFilter<"ConversationParticipant"> | Date | string
+    conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
+    member?: XOR<WorkspaceMemberScalarRelationFilter, WorkspaceMemberWhereInput>
+  }
+
+  export type ConversationParticipantOrderByWithRelationInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    memberId?: SortOrder
+    lastReadAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    conversation?: ConversationOrderByWithRelationInput
+    member?: WorkspaceMemberOrderByWithRelationInput
+  }
+
+  export type ConversationParticipantWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    conversationId_memberId?: ConversationParticipantConversationIdMemberIdCompoundUniqueInput
+    AND?: ConversationParticipantWhereInput | ConversationParticipantWhereInput[]
+    OR?: ConversationParticipantWhereInput[]
+    NOT?: ConversationParticipantWhereInput | ConversationParticipantWhereInput[]
+    conversationId?: StringFilter<"ConversationParticipant"> | string
+    memberId?: StringFilter<"ConversationParticipant"> | string
+    lastReadAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
+    createdAt?: DateTimeFilter<"ConversationParticipant"> | Date | string
+    conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
+    member?: XOR<WorkspaceMemberScalarRelationFilter, WorkspaceMemberWhereInput>
+  }, "id" | "conversationId_memberId">
+
+  export type ConversationParticipantOrderByWithAggregationInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    memberId?: SortOrder
+    lastReadAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: ConversationParticipantCountOrderByAggregateInput
+    _max?: ConversationParticipantMaxOrderByAggregateInput
+    _min?: ConversationParticipantMinOrderByAggregateInput
+  }
+
+  export type ConversationParticipantScalarWhereWithAggregatesInput = {
+    AND?: ConversationParticipantScalarWhereWithAggregatesInput | ConversationParticipantScalarWhereWithAggregatesInput[]
+    OR?: ConversationParticipantScalarWhereWithAggregatesInput[]
+    NOT?: ConversationParticipantScalarWhereWithAggregatesInput | ConversationParticipantScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ConversationParticipant"> | string
+    conversationId?: StringWithAggregatesFilter<"ConversationParticipant"> | string
+    memberId?: StringWithAggregatesFilter<"ConversationParticipant"> | string
+    lastReadAt?: DateTimeNullableWithAggregatesFilter<"ConversationParticipant"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ConversationParticipant"> | Date | string
   }
 
   export type NotificationWhereInput = {
@@ -62053,6 +64884,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -62086,6 +64918,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -62119,6 +64952,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -62152,6 +64986,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -62343,13 +65178,14 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionCreateNestedManyWithoutMemberInput
+    messages?: MessageCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
     notifications?: NotificationCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateInput = {
@@ -62362,13 +65198,14 @@ export namespace Prisma {
     roleId?: string | null
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionUncheckedCreateNestedManyWithoutMemberInput
+    messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionUncheckedCreateNestedManyWithoutMemberInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUpdateInput = {
@@ -62381,13 +65218,14 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUpdateManyWithoutMemberNestedInput
+    messages?: MessageUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateInput = {
@@ -62400,13 +65238,14 @@ export namespace Prisma {
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUncheckedUpdateManyWithoutMemberNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUncheckedUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberCreateManyInput = {
@@ -63606,6 +66445,7 @@ export namespace Prisma {
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateInput = {
@@ -63635,6 +66475,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUpdateInput = {
@@ -63664,6 +66505,7 @@ export namespace Prisma {
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateInput = {
@@ -63693,6 +66535,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateManyInput = {
@@ -64469,7 +67312,7 @@ export namespace Prisma {
     status?: TaskStatusCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
-    comments?: TaskCommentCreateNestedManyWithoutTaskInput
+    comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
@@ -64498,7 +67341,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
+    comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
@@ -64527,7 +67370,7 @@ export namespace Prisma {
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
-    comments?: TaskCommentUpdateManyWithoutTaskNestedInput
+    comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
@@ -64556,7 +67399,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
+    comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
@@ -64721,109 +67564,252 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type TaskCommentCreateInput = {
+  export type MessageCreateInput = {
     id?: string
     body: string
+    kind?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    task: TaskCreateNestedOneWithoutCommentsInput
-    author: WorkspaceMemberCreateNestedOneWithoutCommentsInput
-    mentions?: CommentMentionCreateNestedManyWithoutCommentInput
+    task?: TaskCreateNestedOneWithoutCommentsInput
+    project?: ProjectCreateNestedOneWithoutMessagesInput
+    conversation?: ConversationCreateNestedOneWithoutMessagesInput
+    author: WorkspaceMemberCreateNestedOneWithoutMessagesInput
+    mentions?: MessageMentionCreateNestedManyWithoutMessageInput
   }
 
-  export type TaskCommentUncheckedCreateInput = {
+  export type MessageUncheckedCreateInput = {
     id?: string
-    taskId: string
+    taskId?: string | null
+    projectId?: string | null
+    conversationId?: string | null
     authorId: string
     body: string
+    kind?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    mentions?: CommentMentionUncheckedCreateNestedManyWithoutCommentInput
+    mentions?: MessageMentionUncheckedCreateNestedManyWithoutMessageInput
   }
 
-  export type TaskCommentUpdateInput = {
+  export type MessageUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    task?: TaskUpdateOneRequiredWithoutCommentsNestedInput
-    author?: WorkspaceMemberUpdateOneRequiredWithoutCommentsNestedInput
-    mentions?: CommentMentionUpdateManyWithoutCommentNestedInput
+    task?: TaskUpdateOneWithoutCommentsNestedInput
+    project?: ProjectUpdateOneWithoutMessagesNestedInput
+    conversation?: ConversationUpdateOneWithoutMessagesNestedInput
+    author?: WorkspaceMemberUpdateOneRequiredWithoutMessagesNestedInput
+    mentions?: MessageMentionUpdateManyWithoutMessageNestedInput
   }
 
-  export type TaskCommentUncheckedUpdateInput = {
+  export type MessageUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    taskId?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    mentions?: CommentMentionUncheckedUpdateManyWithoutCommentNestedInput
+    mentions?: MessageMentionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
-  export type TaskCommentCreateManyInput = {
+  export type MessageCreateManyInput = {
     id?: string
-    taskId: string
+    taskId?: string | null
+    projectId?: string | null
+    conversationId?: string | null
     authorId: string
     body: string
+    kind?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type TaskCommentUpdateManyMutationInput = {
+  export type MessageUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type TaskCommentUncheckedUpdateManyInput = {
+  export type MessageUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    taskId?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type CommentMentionCreateInput = {
+  export type MessageMentionCreateInput = {
     id?: string
-    comment: TaskCommentCreateNestedOneWithoutMentionsInput
+    message: MessageCreateNestedOneWithoutMentionsInput
     member: WorkspaceMemberCreateNestedOneWithoutMentionedInInput
   }
 
-  export type CommentMentionUncheckedCreateInput = {
+  export type MessageMentionUncheckedCreateInput = {
     id?: string
-    commentId: string
+    messageId: string
     memberId: string
   }
 
-  export type CommentMentionUpdateInput = {
+  export type MessageMentionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    comment?: TaskCommentUpdateOneRequiredWithoutMentionsNestedInput
+    message?: MessageUpdateOneRequiredWithoutMentionsNestedInput
     member?: WorkspaceMemberUpdateOneRequiredWithoutMentionedInNestedInput
   }
 
-  export type CommentMentionUncheckedUpdateInput = {
+  export type MessageMentionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    commentId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
     memberId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type CommentMentionCreateManyInput = {
+  export type MessageMentionCreateManyInput = {
     id?: string
-    commentId: string
+    messageId: string
     memberId: string
   }
 
-  export type CommentMentionUpdateManyMutationInput = {
+  export type MessageMentionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
   }
 
-  export type CommentMentionUncheckedUpdateManyInput = {
+  export type MessageMentionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    commentId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
     memberId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ConversationCreateInput = {
+    id?: string
+    isGroup?: boolean
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutConversationsInput
+    participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
+    messages?: MessageCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationUncheckedCreateInput = {
+    id?: string
+    workspaceId: string
+    isGroup?: boolean
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
+    messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isGroup?: BoolFieldUpdateOperationsInput | boolean
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutConversationsNestedInput
+    participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
+    messages?: MessageUpdateManyWithoutConversationNestedInput
+  }
+
+  export type ConversationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    isGroup?: BoolFieldUpdateOperationsInput | boolean
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+  }
+
+  export type ConversationCreateManyInput = {
+    id?: string
+    workspaceId: string
+    isGroup?: boolean
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConversationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isGroup?: BoolFieldUpdateOperationsInput | boolean
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    isGroup?: BoolFieldUpdateOperationsInput | boolean
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationParticipantCreateInput = {
+    id?: string
+    lastReadAt?: Date | string | null
+    createdAt?: Date | string
+    conversation: ConversationCreateNestedOneWithoutParticipantsInput
+    member: WorkspaceMemberCreateNestedOneWithoutConversationsInput
+  }
+
+  export type ConversationParticipantUncheckedCreateInput = {
+    id?: string
+    conversationId: string
+    memberId: string
+    lastReadAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ConversationParticipantUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversation?: ConversationUpdateOneRequiredWithoutParticipantsNestedInput
+    member?: WorkspaceMemberUpdateOneRequiredWithoutConversationsNestedInput
+  }
+
+  export type ConversationParticipantUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conversationId?: StringFieldUpdateOperationsInput | string
+    memberId?: StringFieldUpdateOperationsInput | string
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationParticipantCreateManyInput = {
+    id?: string
+    conversationId: string
+    memberId: string
+    lastReadAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ConversationParticipantUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationParticipantUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conversationId?: StringFieldUpdateOperationsInput | string
+    memberId?: StringFieldUpdateOperationsInput | string
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NotificationCreateInput = {
@@ -66214,6 +69200,12 @@ export namespace Prisma {
     none?: ChecklistTemplateWhereInput
   }
 
+  export type ConversationListRelationFilter = {
+    every?: ConversationWhereInput
+    some?: ConversationWhereInput
+    none?: ConversationWhereInput
+  }
+
   export type PublishItemListRelationFilter = {
     every?: PublishItemWhereInput
     some?: PublishItemWhereInput
@@ -66302,6 +69294,10 @@ export namespace Prisma {
   }
 
   export type ChecklistTemplateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ConversationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -66528,16 +69524,16 @@ export namespace Prisma {
     none?: TaskWhereInput
   }
 
-  export type TaskCommentListRelationFilter = {
-    every?: TaskCommentWhereInput
-    some?: TaskCommentWhereInput
-    none?: TaskCommentWhereInput
+  export type MessageListRelationFilter = {
+    every?: MessageWhereInput
+    some?: MessageWhereInput
+    none?: MessageWhereInput
   }
 
-  export type CommentMentionListRelationFilter = {
-    every?: CommentMentionWhereInput
-    some?: CommentMentionWhereInput
-    none?: CommentMentionWhereInput
+  export type MessageMentionListRelationFilter = {
+    every?: MessageMentionWhereInput
+    some?: MessageMentionWhereInput
+    none?: MessageMentionWhereInput
   }
 
   export type NotificationListRelationFilter = {
@@ -66564,15 +69560,21 @@ export namespace Prisma {
     none?: TaskStatusChangeWhereInput
   }
 
+  export type ConversationParticipantListRelationFilter = {
+    every?: ConversationParticipantWhereInput
+    some?: ConversationParticipantWhereInput
+    none?: ConversationParticipantWhereInput
+  }
+
   export type TaskOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type TaskCommentOrderByRelationAggregateInput = {
+  export type MessageOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type CommentMentionOrderByRelationAggregateInput = {
+  export type MessageMentionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -66589,6 +69591,10 @@ export namespace Prisma {
   }
 
   export type TaskStatusChangeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ConversationParticipantOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -68177,59 +71183,139 @@ export namespace Prisma {
     durationMs?: SortOrder
   }
 
-  export type TaskCommentCountOrderByAggregateInput = {
+  export type TaskNullableScalarRelationFilter = {
+    is?: TaskWhereInput | null
+    isNot?: TaskWhereInput | null
+  }
+
+  export type ConversationNullableScalarRelationFilter = {
+    is?: ConversationWhereInput | null
+    isNot?: ConversationWhereInput | null
+  }
+
+  export type MessageCountOrderByAggregateInput = {
     id?: SortOrder
     taskId?: SortOrder
+    projectId?: SortOrder
+    conversationId?: SortOrder
     authorId?: SortOrder
     body?: SortOrder
+    kind?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type TaskCommentMaxOrderByAggregateInput = {
+  export type MessageMaxOrderByAggregateInput = {
     id?: SortOrder
     taskId?: SortOrder
+    projectId?: SortOrder
+    conversationId?: SortOrder
     authorId?: SortOrder
     body?: SortOrder
+    kind?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type TaskCommentMinOrderByAggregateInput = {
+  export type MessageMinOrderByAggregateInput = {
     id?: SortOrder
     taskId?: SortOrder
+    projectId?: SortOrder
+    conversationId?: SortOrder
     authorId?: SortOrder
     body?: SortOrder
+    kind?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type TaskCommentScalarRelationFilter = {
-    is?: TaskCommentWhereInput
-    isNot?: TaskCommentWhereInput
+  export type MessageScalarRelationFilter = {
+    is?: MessageWhereInput
+    isNot?: MessageWhereInput
   }
 
-  export type CommentMentionCommentIdMemberIdCompoundUniqueInput = {
-    commentId: string
+  export type MessageMentionMessageIdMemberIdCompoundUniqueInput = {
+    messageId: string
     memberId: string
   }
 
-  export type CommentMentionCountOrderByAggregateInput = {
+  export type MessageMentionCountOrderByAggregateInput = {
     id?: SortOrder
-    commentId?: SortOrder
+    messageId?: SortOrder
     memberId?: SortOrder
   }
 
-  export type CommentMentionMaxOrderByAggregateInput = {
+  export type MessageMentionMaxOrderByAggregateInput = {
     id?: SortOrder
-    commentId?: SortOrder
+    messageId?: SortOrder
     memberId?: SortOrder
   }
 
-  export type CommentMentionMinOrderByAggregateInput = {
+  export type MessageMentionMinOrderByAggregateInput = {
     id?: SortOrder
-    commentId?: SortOrder
+    messageId?: SortOrder
     memberId?: SortOrder
+  }
+
+  export type ConversationCountOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    isGroup?: SortOrder
+    title?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConversationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    isGroup?: SortOrder
+    title?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConversationMinOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    isGroup?: SortOrder
+    title?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConversationScalarRelationFilter = {
+    is?: ConversationWhereInput
+    isNot?: ConversationWhereInput
+  }
+
+  export type ConversationParticipantConversationIdMemberIdCompoundUniqueInput = {
+    conversationId: string
+    memberId: string
+  }
+
+  export type ConversationParticipantCountOrderByAggregateInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    memberId?: SortOrder
+    lastReadAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ConversationParticipantMaxOrderByAggregateInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    memberId?: SortOrder
+    lastReadAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ConversationParticipantMinOrderByAggregateInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    memberId?: SortOrder
+    lastReadAt?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type NotificationCountOrderByAggregateInput = {
@@ -69086,6 +72172,13 @@ export namespace Prisma {
     connect?: ChecklistTemplateWhereUniqueInput | ChecklistTemplateWhereUniqueInput[]
   }
 
+  export type ConversationCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<ConversationCreateWithoutWorkspaceInput, ConversationUncheckedCreateWithoutWorkspaceInput> | ConversationCreateWithoutWorkspaceInput[] | ConversationUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutWorkspaceInput | ConversationCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: ConversationCreateManyWorkspaceInputEnvelope
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+  }
+
   export type PublishItemCreateNestedManyWithoutWorkspaceInput = {
     create?: XOR<PublishItemCreateWithoutWorkspaceInput, PublishItemUncheckedCreateWithoutWorkspaceInput> | PublishItemCreateWithoutWorkspaceInput[] | PublishItemUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: PublishItemCreateOrConnectWithoutWorkspaceInput | PublishItemCreateOrConnectWithoutWorkspaceInput[]
@@ -69237,6 +72330,13 @@ export namespace Prisma {
     connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutWorkspaceInput | ChecklistTemplateCreateOrConnectWithoutWorkspaceInput[]
     createMany?: ChecklistTemplateCreateManyWorkspaceInputEnvelope
     connect?: ChecklistTemplateWhereUniqueInput | ChecklistTemplateWhereUniqueInput[]
+  }
+
+  export type ConversationUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<ConversationCreateWithoutWorkspaceInput, ConversationUncheckedCreateWithoutWorkspaceInput> | ConversationCreateWithoutWorkspaceInput[] | ConversationUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutWorkspaceInput | ConversationCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: ConversationCreateManyWorkspaceInputEnvelope
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
   }
 
   export type PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput = {
@@ -69556,6 +72656,20 @@ export namespace Prisma {
     deleteMany?: ChecklistTemplateScalarWhereInput | ChecklistTemplateScalarWhereInput[]
   }
 
+  export type ConversationUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<ConversationCreateWithoutWorkspaceInput, ConversationUncheckedCreateWithoutWorkspaceInput> | ConversationCreateWithoutWorkspaceInput[] | ConversationUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutWorkspaceInput | ConversationCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: ConversationUpsertWithWhereUniqueWithoutWorkspaceInput | ConversationUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: ConversationCreateManyWorkspaceInputEnvelope
+    set?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    disconnect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    delete?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    update?: ConversationUpdateWithWhereUniqueWithoutWorkspaceInput | ConversationUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: ConversationUpdateManyWithWhereWithoutWorkspaceInput | ConversationUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+  }
+
   export type PublishItemUpdateManyWithoutWorkspaceNestedInput = {
     create?: XOR<PublishItemCreateWithoutWorkspaceInput, PublishItemUncheckedCreateWithoutWorkspaceInput> | PublishItemCreateWithoutWorkspaceInput[] | PublishItemUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: PublishItemCreateOrConnectWithoutWorkspaceInput | PublishItemCreateOrConnectWithoutWorkspaceInput[]
@@ -69860,6 +72974,20 @@ export namespace Prisma {
     deleteMany?: ChecklistTemplateScalarWhereInput | ChecklistTemplateScalarWhereInput[]
   }
 
+  export type ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<ConversationCreateWithoutWorkspaceInput, ConversationUncheckedCreateWithoutWorkspaceInput> | ConversationCreateWithoutWorkspaceInput[] | ConversationUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutWorkspaceInput | ConversationCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: ConversationUpsertWithWhereUniqueWithoutWorkspaceInput | ConversationUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: ConversationCreateManyWorkspaceInputEnvelope
+    set?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    disconnect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    delete?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    update?: ConversationUpdateWithWhereUniqueWithoutWorkspaceInput | ConversationUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: ConversationUpdateManyWithWhereWithoutWorkspaceInput | ConversationUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+  }
+
   export type PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput = {
     create?: XOR<PublishItemCreateWithoutWorkspaceInput, PublishItemUncheckedCreateWithoutWorkspaceInput> | PublishItemCreateWithoutWorkspaceInput[] | PublishItemUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: PublishItemCreateOrConnectWithoutWorkspaceInput | PublishItemCreateOrConnectWithoutWorkspaceInput[]
@@ -69925,18 +73053,18 @@ export namespace Prisma {
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
   }
 
-  export type TaskCommentCreateNestedManyWithoutAuthorInput = {
-    create?: XOR<TaskCommentCreateWithoutAuthorInput, TaskCommentUncheckedCreateWithoutAuthorInput> | TaskCommentCreateWithoutAuthorInput[] | TaskCommentUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: TaskCommentCreateOrConnectWithoutAuthorInput | TaskCommentCreateOrConnectWithoutAuthorInput[]
-    createMany?: TaskCommentCreateManyAuthorInputEnvelope
-    connect?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
+  export type MessageCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<MessageCreateWithoutAuthorInput, MessageUncheckedCreateWithoutAuthorInput> | MessageCreateWithoutAuthorInput[] | MessageUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutAuthorInput | MessageCreateOrConnectWithoutAuthorInput[]
+    createMany?: MessageCreateManyAuthorInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
-  export type CommentMentionCreateNestedManyWithoutMemberInput = {
-    create?: XOR<CommentMentionCreateWithoutMemberInput, CommentMentionUncheckedCreateWithoutMemberInput> | CommentMentionCreateWithoutMemberInput[] | CommentMentionUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: CommentMentionCreateOrConnectWithoutMemberInput | CommentMentionCreateOrConnectWithoutMemberInput[]
-    createMany?: CommentMentionCreateManyMemberInputEnvelope
-    connect?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
+  export type MessageMentionCreateNestedManyWithoutMemberInput = {
+    create?: XOR<MessageMentionCreateWithoutMemberInput, MessageMentionUncheckedCreateWithoutMemberInput> | MessageMentionCreateWithoutMemberInput[] | MessageMentionUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: MessageMentionCreateOrConnectWithoutMemberInput | MessageMentionCreateOrConnectWithoutMemberInput[]
+    createMany?: MessageMentionCreateManyMemberInputEnvelope
+    connect?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
   }
 
   export type NotificationCreateNestedManyWithoutRecipientInput = {
@@ -69974,6 +73102,13 @@ export namespace Prisma {
     connect?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
   }
 
+  export type ConversationParticipantCreateNestedManyWithoutMemberInput = {
+    create?: XOR<ConversationParticipantCreateWithoutMemberInput, ConversationParticipantUncheckedCreateWithoutMemberInput> | ConversationParticipantCreateWithoutMemberInput[] | ConversationParticipantUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: ConversationParticipantCreateOrConnectWithoutMemberInput | ConversationParticipantCreateOrConnectWithoutMemberInput[]
+    createMany?: ConversationParticipantCreateManyMemberInputEnvelope
+    connect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+  }
+
   export type TaskUncheckedCreateNestedManyWithoutAssigneeInput = {
     create?: XOR<TaskCreateWithoutAssigneeInput, TaskUncheckedCreateWithoutAssigneeInput> | TaskCreateWithoutAssigneeInput[] | TaskUncheckedCreateWithoutAssigneeInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutAssigneeInput | TaskCreateOrConnectWithoutAssigneeInput[]
@@ -69981,18 +73116,18 @@ export namespace Prisma {
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
   }
 
-  export type TaskCommentUncheckedCreateNestedManyWithoutAuthorInput = {
-    create?: XOR<TaskCommentCreateWithoutAuthorInput, TaskCommentUncheckedCreateWithoutAuthorInput> | TaskCommentCreateWithoutAuthorInput[] | TaskCommentUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: TaskCommentCreateOrConnectWithoutAuthorInput | TaskCommentCreateOrConnectWithoutAuthorInput[]
-    createMany?: TaskCommentCreateManyAuthorInputEnvelope
-    connect?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
+  export type MessageUncheckedCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<MessageCreateWithoutAuthorInput, MessageUncheckedCreateWithoutAuthorInput> | MessageCreateWithoutAuthorInput[] | MessageUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutAuthorInput | MessageCreateOrConnectWithoutAuthorInput[]
+    createMany?: MessageCreateManyAuthorInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
-  export type CommentMentionUncheckedCreateNestedManyWithoutMemberInput = {
-    create?: XOR<CommentMentionCreateWithoutMemberInput, CommentMentionUncheckedCreateWithoutMemberInput> | CommentMentionCreateWithoutMemberInput[] | CommentMentionUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: CommentMentionCreateOrConnectWithoutMemberInput | CommentMentionCreateOrConnectWithoutMemberInput[]
-    createMany?: CommentMentionCreateManyMemberInputEnvelope
-    connect?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
+  export type MessageMentionUncheckedCreateNestedManyWithoutMemberInput = {
+    create?: XOR<MessageMentionCreateWithoutMemberInput, MessageMentionUncheckedCreateWithoutMemberInput> | MessageMentionCreateWithoutMemberInput[] | MessageMentionUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: MessageMentionCreateOrConnectWithoutMemberInput | MessageMentionCreateOrConnectWithoutMemberInput[]
+    createMany?: MessageMentionCreateManyMemberInputEnvelope
+    connect?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
   }
 
   export type NotificationUncheckedCreateNestedManyWithoutRecipientInput = {
@@ -70028,6 +73163,13 @@ export namespace Prisma {
     connectOrCreate?: TaskStatusChangeCreateOrConnectWithoutMemberInput | TaskStatusChangeCreateOrConnectWithoutMemberInput[]
     createMany?: TaskStatusChangeCreateManyMemberInputEnvelope
     connect?: TaskStatusChangeWhereUniqueInput | TaskStatusChangeWhereUniqueInput[]
+  }
+
+  export type ConversationParticipantUncheckedCreateNestedManyWithoutMemberInput = {
+    create?: XOR<ConversationParticipantCreateWithoutMemberInput, ConversationParticipantUncheckedCreateWithoutMemberInput> | ConversationParticipantCreateWithoutMemberInput[] | ConversationParticipantUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: ConversationParticipantCreateOrConnectWithoutMemberInput | ConversationParticipantCreateOrConnectWithoutMemberInput[]
+    createMany?: ConversationParticipantCreateManyMemberInputEnvelope
+    connect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
   }
 
   export type EnumMemberTypeFieldUpdateOperationsInput = {
@@ -70066,32 +73208,32 @@ export namespace Prisma {
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
-  export type TaskCommentUpdateManyWithoutAuthorNestedInput = {
-    create?: XOR<TaskCommentCreateWithoutAuthorInput, TaskCommentUncheckedCreateWithoutAuthorInput> | TaskCommentCreateWithoutAuthorInput[] | TaskCommentUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: TaskCommentCreateOrConnectWithoutAuthorInput | TaskCommentCreateOrConnectWithoutAuthorInput[]
-    upsert?: TaskCommentUpsertWithWhereUniqueWithoutAuthorInput | TaskCommentUpsertWithWhereUniqueWithoutAuthorInput[]
-    createMany?: TaskCommentCreateManyAuthorInputEnvelope
-    set?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    disconnect?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    delete?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    connect?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    update?: TaskCommentUpdateWithWhereUniqueWithoutAuthorInput | TaskCommentUpdateWithWhereUniqueWithoutAuthorInput[]
-    updateMany?: TaskCommentUpdateManyWithWhereWithoutAuthorInput | TaskCommentUpdateManyWithWhereWithoutAuthorInput[]
-    deleteMany?: TaskCommentScalarWhereInput | TaskCommentScalarWhereInput[]
+  export type MessageUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<MessageCreateWithoutAuthorInput, MessageUncheckedCreateWithoutAuthorInput> | MessageCreateWithoutAuthorInput[] | MessageUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutAuthorInput | MessageCreateOrConnectWithoutAuthorInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutAuthorInput | MessageUpsertWithWhereUniqueWithoutAuthorInput[]
+    createMany?: MessageCreateManyAuthorInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutAuthorInput | MessageUpdateWithWhereUniqueWithoutAuthorInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutAuthorInput | MessageUpdateManyWithWhereWithoutAuthorInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
-  export type CommentMentionUpdateManyWithoutMemberNestedInput = {
-    create?: XOR<CommentMentionCreateWithoutMemberInput, CommentMentionUncheckedCreateWithoutMemberInput> | CommentMentionCreateWithoutMemberInput[] | CommentMentionUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: CommentMentionCreateOrConnectWithoutMemberInput | CommentMentionCreateOrConnectWithoutMemberInput[]
-    upsert?: CommentMentionUpsertWithWhereUniqueWithoutMemberInput | CommentMentionUpsertWithWhereUniqueWithoutMemberInput[]
-    createMany?: CommentMentionCreateManyMemberInputEnvelope
-    set?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    disconnect?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    delete?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    connect?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    update?: CommentMentionUpdateWithWhereUniqueWithoutMemberInput | CommentMentionUpdateWithWhereUniqueWithoutMemberInput[]
-    updateMany?: CommentMentionUpdateManyWithWhereWithoutMemberInput | CommentMentionUpdateManyWithWhereWithoutMemberInput[]
-    deleteMany?: CommentMentionScalarWhereInput | CommentMentionScalarWhereInput[]
+  export type MessageMentionUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<MessageMentionCreateWithoutMemberInput, MessageMentionUncheckedCreateWithoutMemberInput> | MessageMentionCreateWithoutMemberInput[] | MessageMentionUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: MessageMentionCreateOrConnectWithoutMemberInput | MessageMentionCreateOrConnectWithoutMemberInput[]
+    upsert?: MessageMentionUpsertWithWhereUniqueWithoutMemberInput | MessageMentionUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: MessageMentionCreateManyMemberInputEnvelope
+    set?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    disconnect?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    delete?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    connect?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    update?: MessageMentionUpdateWithWhereUniqueWithoutMemberInput | MessageMentionUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: MessageMentionUpdateManyWithWhereWithoutMemberInput | MessageMentionUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: MessageMentionScalarWhereInput | MessageMentionScalarWhereInput[]
   }
 
   export type NotificationUpdateManyWithoutRecipientNestedInput = {
@@ -70164,6 +73306,20 @@ export namespace Prisma {
     deleteMany?: TaskStatusChangeScalarWhereInput | TaskStatusChangeScalarWhereInput[]
   }
 
+  export type ConversationParticipantUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<ConversationParticipantCreateWithoutMemberInput, ConversationParticipantUncheckedCreateWithoutMemberInput> | ConversationParticipantCreateWithoutMemberInput[] | ConversationParticipantUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: ConversationParticipantCreateOrConnectWithoutMemberInput | ConversationParticipantCreateOrConnectWithoutMemberInput[]
+    upsert?: ConversationParticipantUpsertWithWhereUniqueWithoutMemberInput | ConversationParticipantUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: ConversationParticipantCreateManyMemberInputEnvelope
+    set?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    disconnect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    delete?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    connect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    update?: ConversationParticipantUpdateWithWhereUniqueWithoutMemberInput | ConversationParticipantUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: ConversationParticipantUpdateManyWithWhereWithoutMemberInput | ConversationParticipantUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: ConversationParticipantScalarWhereInput | ConversationParticipantScalarWhereInput[]
+  }
+
   export type TaskUncheckedUpdateManyWithoutAssigneeNestedInput = {
     create?: XOR<TaskCreateWithoutAssigneeInput, TaskUncheckedCreateWithoutAssigneeInput> | TaskCreateWithoutAssigneeInput[] | TaskUncheckedCreateWithoutAssigneeInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutAssigneeInput | TaskCreateOrConnectWithoutAssigneeInput[]
@@ -70178,32 +73334,32 @@ export namespace Prisma {
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
-  export type TaskCommentUncheckedUpdateManyWithoutAuthorNestedInput = {
-    create?: XOR<TaskCommentCreateWithoutAuthorInput, TaskCommentUncheckedCreateWithoutAuthorInput> | TaskCommentCreateWithoutAuthorInput[] | TaskCommentUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: TaskCommentCreateOrConnectWithoutAuthorInput | TaskCommentCreateOrConnectWithoutAuthorInput[]
-    upsert?: TaskCommentUpsertWithWhereUniqueWithoutAuthorInput | TaskCommentUpsertWithWhereUniqueWithoutAuthorInput[]
-    createMany?: TaskCommentCreateManyAuthorInputEnvelope
-    set?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    disconnect?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    delete?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    connect?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    update?: TaskCommentUpdateWithWhereUniqueWithoutAuthorInput | TaskCommentUpdateWithWhereUniqueWithoutAuthorInput[]
-    updateMany?: TaskCommentUpdateManyWithWhereWithoutAuthorInput | TaskCommentUpdateManyWithWhereWithoutAuthorInput[]
-    deleteMany?: TaskCommentScalarWhereInput | TaskCommentScalarWhereInput[]
+  export type MessageUncheckedUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<MessageCreateWithoutAuthorInput, MessageUncheckedCreateWithoutAuthorInput> | MessageCreateWithoutAuthorInput[] | MessageUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutAuthorInput | MessageCreateOrConnectWithoutAuthorInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutAuthorInput | MessageUpsertWithWhereUniqueWithoutAuthorInput[]
+    createMany?: MessageCreateManyAuthorInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutAuthorInput | MessageUpdateWithWhereUniqueWithoutAuthorInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutAuthorInput | MessageUpdateManyWithWhereWithoutAuthorInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
-  export type CommentMentionUncheckedUpdateManyWithoutMemberNestedInput = {
-    create?: XOR<CommentMentionCreateWithoutMemberInput, CommentMentionUncheckedCreateWithoutMemberInput> | CommentMentionCreateWithoutMemberInput[] | CommentMentionUncheckedCreateWithoutMemberInput[]
-    connectOrCreate?: CommentMentionCreateOrConnectWithoutMemberInput | CommentMentionCreateOrConnectWithoutMemberInput[]
-    upsert?: CommentMentionUpsertWithWhereUniqueWithoutMemberInput | CommentMentionUpsertWithWhereUniqueWithoutMemberInput[]
-    createMany?: CommentMentionCreateManyMemberInputEnvelope
-    set?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    disconnect?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    delete?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    connect?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    update?: CommentMentionUpdateWithWhereUniqueWithoutMemberInput | CommentMentionUpdateWithWhereUniqueWithoutMemberInput[]
-    updateMany?: CommentMentionUpdateManyWithWhereWithoutMemberInput | CommentMentionUpdateManyWithWhereWithoutMemberInput[]
-    deleteMany?: CommentMentionScalarWhereInput | CommentMentionScalarWhereInput[]
+  export type MessageMentionUncheckedUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<MessageMentionCreateWithoutMemberInput, MessageMentionUncheckedCreateWithoutMemberInput> | MessageMentionCreateWithoutMemberInput[] | MessageMentionUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: MessageMentionCreateOrConnectWithoutMemberInput | MessageMentionCreateOrConnectWithoutMemberInput[]
+    upsert?: MessageMentionUpsertWithWhereUniqueWithoutMemberInput | MessageMentionUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: MessageMentionCreateManyMemberInputEnvelope
+    set?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    disconnect?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    delete?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    connect?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    update?: MessageMentionUpdateWithWhereUniqueWithoutMemberInput | MessageMentionUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: MessageMentionUpdateManyWithWhereWithoutMemberInput | MessageMentionUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: MessageMentionScalarWhereInput | MessageMentionScalarWhereInput[]
   }
 
   export type NotificationUncheckedUpdateManyWithoutRecipientNestedInput = {
@@ -70274,6 +73430,20 @@ export namespace Prisma {
     update?: TaskStatusChangeUpdateWithWhereUniqueWithoutMemberInput | TaskStatusChangeUpdateWithWhereUniqueWithoutMemberInput[]
     updateMany?: TaskStatusChangeUpdateManyWithWhereWithoutMemberInput | TaskStatusChangeUpdateManyWithWhereWithoutMemberInput[]
     deleteMany?: TaskStatusChangeScalarWhereInput | TaskStatusChangeScalarWhereInput[]
+  }
+
+  export type ConversationParticipantUncheckedUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<ConversationParticipantCreateWithoutMemberInput, ConversationParticipantUncheckedCreateWithoutMemberInput> | ConversationParticipantCreateWithoutMemberInput[] | ConversationParticipantUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: ConversationParticipantCreateOrConnectWithoutMemberInput | ConversationParticipantCreateOrConnectWithoutMemberInput[]
+    upsert?: ConversationParticipantUpsertWithWhereUniqueWithoutMemberInput | ConversationParticipantUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: ConversationParticipantCreateManyMemberInputEnvelope
+    set?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    disconnect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    delete?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    connect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    update?: ConversationParticipantUpdateWithWhereUniqueWithoutMemberInput | ConversationParticipantUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: ConversationParticipantUpdateManyWithWhereWithoutMemberInput | ConversationParticipantUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: ConversationParticipantScalarWhereInput | ConversationParticipantScalarWhereInput[]
   }
 
   export type WorkspaceCreateNestedOneWithoutRolesInput = {
@@ -71390,6 +74560,13 @@ export namespace Prisma {
     connect?: ProjectMemberWhereUniqueInput | ProjectMemberWhereUniqueInput[]
   }
 
+  export type MessageCreateNestedManyWithoutProjectInput = {
+    create?: XOR<MessageCreateWithoutProjectInput, MessageUncheckedCreateWithoutProjectInput> | MessageCreateWithoutProjectInput[] | MessageUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutProjectInput | MessageCreateOrConnectWithoutProjectInput[]
+    createMany?: MessageCreateManyProjectInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
   export type TaskUncheckedCreateNestedManyWithoutProjectInput = {
     create?: XOR<TaskCreateWithoutProjectInput, TaskUncheckedCreateWithoutProjectInput> | TaskCreateWithoutProjectInput[] | TaskUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutProjectInput | TaskCreateOrConnectWithoutProjectInput[]
@@ -71444,6 +74621,13 @@ export namespace Prisma {
     connectOrCreate?: ProjectMemberCreateOrConnectWithoutProjectInput | ProjectMemberCreateOrConnectWithoutProjectInput[]
     createMany?: ProjectMemberCreateManyProjectInputEnvelope
     connect?: ProjectMemberWhereUniqueInput | ProjectMemberWhereUniqueInput[]
+  }
+
+  export type MessageUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<MessageCreateWithoutProjectInput, MessageUncheckedCreateWithoutProjectInput> | MessageCreateWithoutProjectInput[] | MessageUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutProjectInput | MessageCreateOrConnectWithoutProjectInput[]
+    createMany?: MessageCreateManyProjectInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
   export type WorkspaceUpdateOneRequiredWithoutProjectsNestedInput = {
@@ -71596,6 +74780,20 @@ export namespace Prisma {
     deleteMany?: ProjectMemberScalarWhereInput | ProjectMemberScalarWhereInput[]
   }
 
+  export type MessageUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<MessageCreateWithoutProjectInput, MessageUncheckedCreateWithoutProjectInput> | MessageCreateWithoutProjectInput[] | MessageUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutProjectInput | MessageCreateOrConnectWithoutProjectInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutProjectInput | MessageUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: MessageCreateManyProjectInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutProjectInput | MessageUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutProjectInput | MessageUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
   export type TaskUncheckedUpdateManyWithoutProjectNestedInput = {
     create?: XOR<TaskCreateWithoutProjectInput, TaskUncheckedCreateWithoutProjectInput> | TaskCreateWithoutProjectInput[] | TaskUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutProjectInput | TaskCreateOrConnectWithoutProjectInput[]
@@ -71706,6 +74904,20 @@ export namespace Prisma {
     update?: ProjectMemberUpdateWithWhereUniqueWithoutProjectInput | ProjectMemberUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: ProjectMemberUpdateManyWithWhereWithoutProjectInput | ProjectMemberUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: ProjectMemberScalarWhereInput | ProjectMemberScalarWhereInput[]
+  }
+
+  export type MessageUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<MessageCreateWithoutProjectInput, MessageUncheckedCreateWithoutProjectInput> | MessageCreateWithoutProjectInput[] | MessageUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutProjectInput | MessageCreateOrConnectWithoutProjectInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutProjectInput | MessageUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: MessageCreateManyProjectInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutProjectInput | MessageUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutProjectInput | MessageUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
   export type ProjectCreateNestedOneWithoutMembersInput = {
@@ -72369,11 +75581,11 @@ export namespace Prisma {
     connect?: TaskChecklistItemWhereUniqueInput | TaskChecklistItemWhereUniqueInput[]
   }
 
-  export type TaskCommentCreateNestedManyWithoutTaskInput = {
-    create?: XOR<TaskCommentCreateWithoutTaskInput, TaskCommentUncheckedCreateWithoutTaskInput> | TaskCommentCreateWithoutTaskInput[] | TaskCommentUncheckedCreateWithoutTaskInput[]
-    connectOrCreate?: TaskCommentCreateOrConnectWithoutTaskInput | TaskCommentCreateOrConnectWithoutTaskInput[]
-    createMany?: TaskCommentCreateManyTaskInputEnvelope
-    connect?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
+  export type MessageCreateNestedManyWithoutTaskInput = {
+    create?: XOR<MessageCreateWithoutTaskInput, MessageUncheckedCreateWithoutTaskInput> | MessageCreateWithoutTaskInput[] | MessageUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutTaskInput | MessageCreateOrConnectWithoutTaskInput[]
+    createMany?: MessageCreateManyTaskInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
   export type PublishItemCreateNestedOneWithoutTaskInput = {
@@ -72396,11 +75608,11 @@ export namespace Prisma {
     connect?: TaskChecklistItemWhereUniqueInput | TaskChecklistItemWhereUniqueInput[]
   }
 
-  export type TaskCommentUncheckedCreateNestedManyWithoutTaskInput = {
-    create?: XOR<TaskCommentCreateWithoutTaskInput, TaskCommentUncheckedCreateWithoutTaskInput> | TaskCommentCreateWithoutTaskInput[] | TaskCommentUncheckedCreateWithoutTaskInput[]
-    connectOrCreate?: TaskCommentCreateOrConnectWithoutTaskInput | TaskCommentCreateOrConnectWithoutTaskInput[]
-    createMany?: TaskCommentCreateManyTaskInputEnvelope
-    connect?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
+  export type MessageUncheckedCreateNestedManyWithoutTaskInput = {
+    create?: XOR<MessageCreateWithoutTaskInput, MessageUncheckedCreateWithoutTaskInput> | MessageCreateWithoutTaskInput[] | MessageUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutTaskInput | MessageCreateOrConnectWithoutTaskInput[]
+    createMany?: MessageCreateManyTaskInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
   export type PublishItemUncheckedCreateNestedOneWithoutTaskInput = {
@@ -72476,18 +75688,18 @@ export namespace Prisma {
     deleteMany?: TaskChecklistItemScalarWhereInput | TaskChecklistItemScalarWhereInput[]
   }
 
-  export type TaskCommentUpdateManyWithoutTaskNestedInput = {
-    create?: XOR<TaskCommentCreateWithoutTaskInput, TaskCommentUncheckedCreateWithoutTaskInput> | TaskCommentCreateWithoutTaskInput[] | TaskCommentUncheckedCreateWithoutTaskInput[]
-    connectOrCreate?: TaskCommentCreateOrConnectWithoutTaskInput | TaskCommentCreateOrConnectWithoutTaskInput[]
-    upsert?: TaskCommentUpsertWithWhereUniqueWithoutTaskInput | TaskCommentUpsertWithWhereUniqueWithoutTaskInput[]
-    createMany?: TaskCommentCreateManyTaskInputEnvelope
-    set?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    disconnect?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    delete?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    connect?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    update?: TaskCommentUpdateWithWhereUniqueWithoutTaskInput | TaskCommentUpdateWithWhereUniqueWithoutTaskInput[]
-    updateMany?: TaskCommentUpdateManyWithWhereWithoutTaskInput | TaskCommentUpdateManyWithWhereWithoutTaskInput[]
-    deleteMany?: TaskCommentScalarWhereInput | TaskCommentScalarWhereInput[]
+  export type MessageUpdateManyWithoutTaskNestedInput = {
+    create?: XOR<MessageCreateWithoutTaskInput, MessageUncheckedCreateWithoutTaskInput> | MessageCreateWithoutTaskInput[] | MessageUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutTaskInput | MessageCreateOrConnectWithoutTaskInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutTaskInput | MessageUpsertWithWhereUniqueWithoutTaskInput[]
+    createMany?: MessageCreateManyTaskInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutTaskInput | MessageUpdateWithWhereUniqueWithoutTaskInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutTaskInput | MessageUpdateManyWithWhereWithoutTaskInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
   export type PublishItemUpdateOneWithoutTaskNestedInput = {
@@ -72528,18 +75740,18 @@ export namespace Prisma {
     deleteMany?: TaskChecklistItemScalarWhereInput | TaskChecklistItemScalarWhereInput[]
   }
 
-  export type TaskCommentUncheckedUpdateManyWithoutTaskNestedInput = {
-    create?: XOR<TaskCommentCreateWithoutTaskInput, TaskCommentUncheckedCreateWithoutTaskInput> | TaskCommentCreateWithoutTaskInput[] | TaskCommentUncheckedCreateWithoutTaskInput[]
-    connectOrCreate?: TaskCommentCreateOrConnectWithoutTaskInput | TaskCommentCreateOrConnectWithoutTaskInput[]
-    upsert?: TaskCommentUpsertWithWhereUniqueWithoutTaskInput | TaskCommentUpsertWithWhereUniqueWithoutTaskInput[]
-    createMany?: TaskCommentCreateManyTaskInputEnvelope
-    set?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    disconnect?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    delete?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    connect?: TaskCommentWhereUniqueInput | TaskCommentWhereUniqueInput[]
-    update?: TaskCommentUpdateWithWhereUniqueWithoutTaskInput | TaskCommentUpdateWithWhereUniqueWithoutTaskInput[]
-    updateMany?: TaskCommentUpdateManyWithWhereWithoutTaskInput | TaskCommentUpdateManyWithWhereWithoutTaskInput[]
-    deleteMany?: TaskCommentScalarWhereInput | TaskCommentScalarWhereInput[]
+  export type MessageUncheckedUpdateManyWithoutTaskNestedInput = {
+    create?: XOR<MessageCreateWithoutTaskInput, MessageUncheckedCreateWithoutTaskInput> | MessageCreateWithoutTaskInput[] | MessageUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutTaskInput | MessageCreateOrConnectWithoutTaskInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutTaskInput | MessageUpsertWithWhereUniqueWithoutTaskInput[]
+    createMany?: MessageCreateManyTaskInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutTaskInput | MessageUpdateWithWhereUniqueWithoutTaskInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutTaskInput | MessageUpdateManyWithWhereWithoutTaskInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
   export type PublishItemUncheckedUpdateOneWithoutTaskNestedInput = {
@@ -72602,74 +75814,108 @@ export namespace Prisma {
     connect?: TaskWhereUniqueInput
   }
 
-  export type WorkspaceMemberCreateNestedOneWithoutCommentsInput = {
-    create?: XOR<WorkspaceMemberCreateWithoutCommentsInput, WorkspaceMemberUncheckedCreateWithoutCommentsInput>
-    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutCommentsInput
+  export type ProjectCreateNestedOneWithoutMessagesInput = {
+    create?: XOR<ProjectCreateWithoutMessagesInput, ProjectUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutMessagesInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type ConversationCreateNestedOneWithoutMessagesInput = {
+    create?: XOR<ConversationCreateWithoutMessagesInput, ConversationUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: ConversationCreateOrConnectWithoutMessagesInput
+    connect?: ConversationWhereUniqueInput
+  }
+
+  export type WorkspaceMemberCreateNestedOneWithoutMessagesInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutMessagesInput, WorkspaceMemberUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutMessagesInput
     connect?: WorkspaceMemberWhereUniqueInput
   }
 
-  export type CommentMentionCreateNestedManyWithoutCommentInput = {
-    create?: XOR<CommentMentionCreateWithoutCommentInput, CommentMentionUncheckedCreateWithoutCommentInput> | CommentMentionCreateWithoutCommentInput[] | CommentMentionUncheckedCreateWithoutCommentInput[]
-    connectOrCreate?: CommentMentionCreateOrConnectWithoutCommentInput | CommentMentionCreateOrConnectWithoutCommentInput[]
-    createMany?: CommentMentionCreateManyCommentInputEnvelope
-    connect?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
+  export type MessageMentionCreateNestedManyWithoutMessageInput = {
+    create?: XOR<MessageMentionCreateWithoutMessageInput, MessageMentionUncheckedCreateWithoutMessageInput> | MessageMentionCreateWithoutMessageInput[] | MessageMentionUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: MessageMentionCreateOrConnectWithoutMessageInput | MessageMentionCreateOrConnectWithoutMessageInput[]
+    createMany?: MessageMentionCreateManyMessageInputEnvelope
+    connect?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
   }
 
-  export type CommentMentionUncheckedCreateNestedManyWithoutCommentInput = {
-    create?: XOR<CommentMentionCreateWithoutCommentInput, CommentMentionUncheckedCreateWithoutCommentInput> | CommentMentionCreateWithoutCommentInput[] | CommentMentionUncheckedCreateWithoutCommentInput[]
-    connectOrCreate?: CommentMentionCreateOrConnectWithoutCommentInput | CommentMentionCreateOrConnectWithoutCommentInput[]
-    createMany?: CommentMentionCreateManyCommentInputEnvelope
-    connect?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
+  export type MessageMentionUncheckedCreateNestedManyWithoutMessageInput = {
+    create?: XOR<MessageMentionCreateWithoutMessageInput, MessageMentionUncheckedCreateWithoutMessageInput> | MessageMentionCreateWithoutMessageInput[] | MessageMentionUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: MessageMentionCreateOrConnectWithoutMessageInput | MessageMentionCreateOrConnectWithoutMessageInput[]
+    createMany?: MessageMentionCreateManyMessageInputEnvelope
+    connect?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
   }
 
-  export type TaskUpdateOneRequiredWithoutCommentsNestedInput = {
+  export type TaskUpdateOneWithoutCommentsNestedInput = {
     create?: XOR<TaskCreateWithoutCommentsInput, TaskUncheckedCreateWithoutCommentsInput>
     connectOrCreate?: TaskCreateOrConnectWithoutCommentsInput
     upsert?: TaskUpsertWithoutCommentsInput
+    disconnect?: TaskWhereInput | boolean
+    delete?: TaskWhereInput | boolean
     connect?: TaskWhereUniqueInput
     update?: XOR<XOR<TaskUpdateToOneWithWhereWithoutCommentsInput, TaskUpdateWithoutCommentsInput>, TaskUncheckedUpdateWithoutCommentsInput>
   }
 
-  export type WorkspaceMemberUpdateOneRequiredWithoutCommentsNestedInput = {
-    create?: XOR<WorkspaceMemberCreateWithoutCommentsInput, WorkspaceMemberUncheckedCreateWithoutCommentsInput>
-    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutCommentsInput
-    upsert?: WorkspaceMemberUpsertWithoutCommentsInput
+  export type ProjectUpdateOneWithoutMessagesNestedInput = {
+    create?: XOR<ProjectCreateWithoutMessagesInput, ProjectUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutMessagesInput
+    upsert?: ProjectUpsertWithoutMessagesInput
+    disconnect?: ProjectWhereInput | boolean
+    delete?: ProjectWhereInput | boolean
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutMessagesInput, ProjectUpdateWithoutMessagesInput>, ProjectUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type ConversationUpdateOneWithoutMessagesNestedInput = {
+    create?: XOR<ConversationCreateWithoutMessagesInput, ConversationUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: ConversationCreateOrConnectWithoutMessagesInput
+    upsert?: ConversationUpsertWithoutMessagesInput
+    disconnect?: ConversationWhereInput | boolean
+    delete?: ConversationWhereInput | boolean
+    connect?: ConversationWhereUniqueInput
+    update?: XOR<XOR<ConversationUpdateToOneWithWhereWithoutMessagesInput, ConversationUpdateWithoutMessagesInput>, ConversationUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type WorkspaceMemberUpdateOneRequiredWithoutMessagesNestedInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutMessagesInput, WorkspaceMemberUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutMessagesInput
+    upsert?: WorkspaceMemberUpsertWithoutMessagesInput
     connect?: WorkspaceMemberWhereUniqueInput
-    update?: XOR<XOR<WorkspaceMemberUpdateToOneWithWhereWithoutCommentsInput, WorkspaceMemberUpdateWithoutCommentsInput>, WorkspaceMemberUncheckedUpdateWithoutCommentsInput>
+    update?: XOR<XOR<WorkspaceMemberUpdateToOneWithWhereWithoutMessagesInput, WorkspaceMemberUpdateWithoutMessagesInput>, WorkspaceMemberUncheckedUpdateWithoutMessagesInput>
   }
 
-  export type CommentMentionUpdateManyWithoutCommentNestedInput = {
-    create?: XOR<CommentMentionCreateWithoutCommentInput, CommentMentionUncheckedCreateWithoutCommentInput> | CommentMentionCreateWithoutCommentInput[] | CommentMentionUncheckedCreateWithoutCommentInput[]
-    connectOrCreate?: CommentMentionCreateOrConnectWithoutCommentInput | CommentMentionCreateOrConnectWithoutCommentInput[]
-    upsert?: CommentMentionUpsertWithWhereUniqueWithoutCommentInput | CommentMentionUpsertWithWhereUniqueWithoutCommentInput[]
-    createMany?: CommentMentionCreateManyCommentInputEnvelope
-    set?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    disconnect?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    delete?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    connect?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    update?: CommentMentionUpdateWithWhereUniqueWithoutCommentInput | CommentMentionUpdateWithWhereUniqueWithoutCommentInput[]
-    updateMany?: CommentMentionUpdateManyWithWhereWithoutCommentInput | CommentMentionUpdateManyWithWhereWithoutCommentInput[]
-    deleteMany?: CommentMentionScalarWhereInput | CommentMentionScalarWhereInput[]
+  export type MessageMentionUpdateManyWithoutMessageNestedInput = {
+    create?: XOR<MessageMentionCreateWithoutMessageInput, MessageMentionUncheckedCreateWithoutMessageInput> | MessageMentionCreateWithoutMessageInput[] | MessageMentionUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: MessageMentionCreateOrConnectWithoutMessageInput | MessageMentionCreateOrConnectWithoutMessageInput[]
+    upsert?: MessageMentionUpsertWithWhereUniqueWithoutMessageInput | MessageMentionUpsertWithWhereUniqueWithoutMessageInput[]
+    createMany?: MessageMentionCreateManyMessageInputEnvelope
+    set?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    disconnect?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    delete?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    connect?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    update?: MessageMentionUpdateWithWhereUniqueWithoutMessageInput | MessageMentionUpdateWithWhereUniqueWithoutMessageInput[]
+    updateMany?: MessageMentionUpdateManyWithWhereWithoutMessageInput | MessageMentionUpdateManyWithWhereWithoutMessageInput[]
+    deleteMany?: MessageMentionScalarWhereInput | MessageMentionScalarWhereInput[]
   }
 
-  export type CommentMentionUncheckedUpdateManyWithoutCommentNestedInput = {
-    create?: XOR<CommentMentionCreateWithoutCommentInput, CommentMentionUncheckedCreateWithoutCommentInput> | CommentMentionCreateWithoutCommentInput[] | CommentMentionUncheckedCreateWithoutCommentInput[]
-    connectOrCreate?: CommentMentionCreateOrConnectWithoutCommentInput | CommentMentionCreateOrConnectWithoutCommentInput[]
-    upsert?: CommentMentionUpsertWithWhereUniqueWithoutCommentInput | CommentMentionUpsertWithWhereUniqueWithoutCommentInput[]
-    createMany?: CommentMentionCreateManyCommentInputEnvelope
-    set?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    disconnect?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    delete?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    connect?: CommentMentionWhereUniqueInput | CommentMentionWhereUniqueInput[]
-    update?: CommentMentionUpdateWithWhereUniqueWithoutCommentInput | CommentMentionUpdateWithWhereUniqueWithoutCommentInput[]
-    updateMany?: CommentMentionUpdateManyWithWhereWithoutCommentInput | CommentMentionUpdateManyWithWhereWithoutCommentInput[]
-    deleteMany?: CommentMentionScalarWhereInput | CommentMentionScalarWhereInput[]
+  export type MessageMentionUncheckedUpdateManyWithoutMessageNestedInput = {
+    create?: XOR<MessageMentionCreateWithoutMessageInput, MessageMentionUncheckedCreateWithoutMessageInput> | MessageMentionCreateWithoutMessageInput[] | MessageMentionUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: MessageMentionCreateOrConnectWithoutMessageInput | MessageMentionCreateOrConnectWithoutMessageInput[]
+    upsert?: MessageMentionUpsertWithWhereUniqueWithoutMessageInput | MessageMentionUpsertWithWhereUniqueWithoutMessageInput[]
+    createMany?: MessageMentionCreateManyMessageInputEnvelope
+    set?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    disconnect?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    delete?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    connect?: MessageMentionWhereUniqueInput | MessageMentionWhereUniqueInput[]
+    update?: MessageMentionUpdateWithWhereUniqueWithoutMessageInput | MessageMentionUpdateWithWhereUniqueWithoutMessageInput[]
+    updateMany?: MessageMentionUpdateManyWithWhereWithoutMessageInput | MessageMentionUpdateManyWithWhereWithoutMessageInput[]
+    deleteMany?: MessageMentionScalarWhereInput | MessageMentionScalarWhereInput[]
   }
 
-  export type TaskCommentCreateNestedOneWithoutMentionsInput = {
-    create?: XOR<TaskCommentCreateWithoutMentionsInput, TaskCommentUncheckedCreateWithoutMentionsInput>
-    connectOrCreate?: TaskCommentCreateOrConnectWithoutMentionsInput
-    connect?: TaskCommentWhereUniqueInput
+  export type MessageCreateNestedOneWithoutMentionsInput = {
+    create?: XOR<MessageCreateWithoutMentionsInput, MessageUncheckedCreateWithoutMentionsInput>
+    connectOrCreate?: MessageCreateOrConnectWithoutMentionsInput
+    connect?: MessageWhereUniqueInput
   }
 
   export type WorkspaceMemberCreateNestedOneWithoutMentionedInInput = {
@@ -72678,12 +75924,12 @@ export namespace Prisma {
     connect?: WorkspaceMemberWhereUniqueInput
   }
 
-  export type TaskCommentUpdateOneRequiredWithoutMentionsNestedInput = {
-    create?: XOR<TaskCommentCreateWithoutMentionsInput, TaskCommentUncheckedCreateWithoutMentionsInput>
-    connectOrCreate?: TaskCommentCreateOrConnectWithoutMentionsInput
-    upsert?: TaskCommentUpsertWithoutMentionsInput
-    connect?: TaskCommentWhereUniqueInput
-    update?: XOR<XOR<TaskCommentUpdateToOneWithWhereWithoutMentionsInput, TaskCommentUpdateWithoutMentionsInput>, TaskCommentUncheckedUpdateWithoutMentionsInput>
+  export type MessageUpdateOneRequiredWithoutMentionsNestedInput = {
+    create?: XOR<MessageCreateWithoutMentionsInput, MessageUncheckedCreateWithoutMentionsInput>
+    connectOrCreate?: MessageCreateOrConnectWithoutMentionsInput
+    upsert?: MessageUpsertWithoutMentionsInput
+    connect?: MessageWhereUniqueInput
+    update?: XOR<XOR<MessageUpdateToOneWithWhereWithoutMentionsInput, MessageUpdateWithoutMentionsInput>, MessageUncheckedUpdateWithoutMentionsInput>
   }
 
   export type WorkspaceMemberUpdateOneRequiredWithoutMentionedInNestedInput = {
@@ -72692,6 +75938,132 @@ export namespace Prisma {
     upsert?: WorkspaceMemberUpsertWithoutMentionedInInput
     connect?: WorkspaceMemberWhereUniqueInput
     update?: XOR<XOR<WorkspaceMemberUpdateToOneWithWhereWithoutMentionedInInput, WorkspaceMemberUpdateWithoutMentionedInInput>, WorkspaceMemberUncheckedUpdateWithoutMentionedInInput>
+  }
+
+  export type WorkspaceCreateNestedOneWithoutConversationsInput = {
+    create?: XOR<WorkspaceCreateWithoutConversationsInput, WorkspaceUncheckedCreateWithoutConversationsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutConversationsInput
+    connect?: WorkspaceWhereUniqueInput
+  }
+
+  export type ConversationParticipantCreateNestedManyWithoutConversationInput = {
+    create?: XOR<ConversationParticipantCreateWithoutConversationInput, ConversationParticipantUncheckedCreateWithoutConversationInput> | ConversationParticipantCreateWithoutConversationInput[] | ConversationParticipantUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: ConversationParticipantCreateOrConnectWithoutConversationInput | ConversationParticipantCreateOrConnectWithoutConversationInput[]
+    createMany?: ConversationParticipantCreateManyConversationInputEnvelope
+    connect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+  }
+
+  export type MessageCreateNestedManyWithoutConversationInput = {
+    create?: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput> | MessageCreateWithoutConversationInput[] | MessageUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
+    createMany?: MessageCreateManyConversationInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput = {
+    create?: XOR<ConversationParticipantCreateWithoutConversationInput, ConversationParticipantUncheckedCreateWithoutConversationInput> | ConversationParticipantCreateWithoutConversationInput[] | ConversationParticipantUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: ConversationParticipantCreateOrConnectWithoutConversationInput | ConversationParticipantCreateOrConnectWithoutConversationInput[]
+    createMany?: ConversationParticipantCreateManyConversationInputEnvelope
+    connect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+  }
+
+  export type MessageUncheckedCreateNestedManyWithoutConversationInput = {
+    create?: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput> | MessageCreateWithoutConversationInput[] | MessageUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
+    createMany?: MessageCreateManyConversationInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutConversationsNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutConversationsInput, WorkspaceUncheckedCreateWithoutConversationsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutConversationsInput
+    upsert?: WorkspaceUpsertWithoutConversationsInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutConversationsInput, WorkspaceUpdateWithoutConversationsInput>, WorkspaceUncheckedUpdateWithoutConversationsInput>
+  }
+
+  export type ConversationParticipantUpdateManyWithoutConversationNestedInput = {
+    create?: XOR<ConversationParticipantCreateWithoutConversationInput, ConversationParticipantUncheckedCreateWithoutConversationInput> | ConversationParticipantCreateWithoutConversationInput[] | ConversationParticipantUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: ConversationParticipantCreateOrConnectWithoutConversationInput | ConversationParticipantCreateOrConnectWithoutConversationInput[]
+    upsert?: ConversationParticipantUpsertWithWhereUniqueWithoutConversationInput | ConversationParticipantUpsertWithWhereUniqueWithoutConversationInput[]
+    createMany?: ConversationParticipantCreateManyConversationInputEnvelope
+    set?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    disconnect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    delete?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    connect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    update?: ConversationParticipantUpdateWithWhereUniqueWithoutConversationInput | ConversationParticipantUpdateWithWhereUniqueWithoutConversationInput[]
+    updateMany?: ConversationParticipantUpdateManyWithWhereWithoutConversationInput | ConversationParticipantUpdateManyWithWhereWithoutConversationInput[]
+    deleteMany?: ConversationParticipantScalarWhereInput | ConversationParticipantScalarWhereInput[]
+  }
+
+  export type MessageUpdateManyWithoutConversationNestedInput = {
+    create?: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput> | MessageCreateWithoutConversationInput[] | MessageUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutConversationInput | MessageUpsertWithWhereUniqueWithoutConversationInput[]
+    createMany?: MessageCreateManyConversationInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutConversationInput | MessageUpdateWithWhereUniqueWithoutConversationInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutConversationInput | MessageUpdateManyWithWhereWithoutConversationInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput = {
+    create?: XOR<ConversationParticipantCreateWithoutConversationInput, ConversationParticipantUncheckedCreateWithoutConversationInput> | ConversationParticipantCreateWithoutConversationInput[] | ConversationParticipantUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: ConversationParticipantCreateOrConnectWithoutConversationInput | ConversationParticipantCreateOrConnectWithoutConversationInput[]
+    upsert?: ConversationParticipantUpsertWithWhereUniqueWithoutConversationInput | ConversationParticipantUpsertWithWhereUniqueWithoutConversationInput[]
+    createMany?: ConversationParticipantCreateManyConversationInputEnvelope
+    set?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    disconnect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    delete?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    connect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
+    update?: ConversationParticipantUpdateWithWhereUniqueWithoutConversationInput | ConversationParticipantUpdateWithWhereUniqueWithoutConversationInput[]
+    updateMany?: ConversationParticipantUpdateManyWithWhereWithoutConversationInput | ConversationParticipantUpdateManyWithWhereWithoutConversationInput[]
+    deleteMany?: ConversationParticipantScalarWhereInput | ConversationParticipantScalarWhereInput[]
+  }
+
+  export type MessageUncheckedUpdateManyWithoutConversationNestedInput = {
+    create?: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput> | MessageCreateWithoutConversationInput[] | MessageUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutConversationInput | MessageUpsertWithWhereUniqueWithoutConversationInput[]
+    createMany?: MessageCreateManyConversationInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutConversationInput | MessageUpdateWithWhereUniqueWithoutConversationInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutConversationInput | MessageUpdateManyWithWhereWithoutConversationInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type ConversationCreateNestedOneWithoutParticipantsInput = {
+    create?: XOR<ConversationCreateWithoutParticipantsInput, ConversationUncheckedCreateWithoutParticipantsInput>
+    connectOrCreate?: ConversationCreateOrConnectWithoutParticipantsInput
+    connect?: ConversationWhereUniqueInput
+  }
+
+  export type WorkspaceMemberCreateNestedOneWithoutConversationsInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutConversationsInput, WorkspaceMemberUncheckedCreateWithoutConversationsInput>
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutConversationsInput
+    connect?: WorkspaceMemberWhereUniqueInput
+  }
+
+  export type ConversationUpdateOneRequiredWithoutParticipantsNestedInput = {
+    create?: XOR<ConversationCreateWithoutParticipantsInput, ConversationUncheckedCreateWithoutParticipantsInput>
+    connectOrCreate?: ConversationCreateOrConnectWithoutParticipantsInput
+    upsert?: ConversationUpsertWithoutParticipantsInput
+    connect?: ConversationWhereUniqueInput
+    update?: XOR<XOR<ConversationUpdateToOneWithWhereWithoutParticipantsInput, ConversationUpdateWithoutParticipantsInput>, ConversationUncheckedUpdateWithoutParticipantsInput>
+  }
+
+  export type WorkspaceMemberUpdateOneRequiredWithoutConversationsNestedInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutConversationsInput, WorkspaceMemberUncheckedCreateWithoutConversationsInput>
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutConversationsInput
+    upsert?: WorkspaceMemberUpsertWithoutConversationsInput
+    connect?: WorkspaceMemberWhereUniqueInput
+    update?: XOR<XOR<WorkspaceMemberUpdateToOneWithWhereWithoutConversationsInput, WorkspaceMemberUpdateWithoutConversationsInput>, WorkspaceMemberUncheckedUpdateWithoutConversationsInput>
   }
 
   export type WorkspaceMemberCreateNestedOneWithoutNotificationsInput = {
@@ -73475,13 +76847,14 @@ export namespace Prisma {
     joinedAt?: Date | string
     role?: RoleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionCreateNestedManyWithoutMemberInput
+    messages?: MessageCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
     notifications?: NotificationCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutWorkspaceInput = {
@@ -73493,13 +76866,14 @@ export namespace Prisma {
     roleId?: string | null
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionUncheckedCreateNestedManyWithoutMemberInput
+    messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionUncheckedCreateNestedManyWithoutMemberInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutWorkspaceInput = {
@@ -73844,6 +77218,7 @@ export namespace Prisma {
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutWorkspaceInput = {
@@ -73872,6 +77247,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutWorkspaceInput = {
@@ -74282,6 +77658,36 @@ export namespace Prisma {
 
   export type ChecklistTemplateCreateManyWorkspaceInputEnvelope = {
     data: ChecklistTemplateCreateManyWorkspaceInput | ChecklistTemplateCreateManyWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ConversationCreateWithoutWorkspaceInput = {
+    id?: string
+    isGroup?: boolean
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
+    messages?: MessageCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationUncheckedCreateWithoutWorkspaceInput = {
+    id?: string
+    isGroup?: boolean
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
+    messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationCreateOrConnectWithoutWorkspaceInput = {
+    where: ConversationWhereUniqueInput
+    create: XOR<ConversationCreateWithoutWorkspaceInput, ConversationUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type ConversationCreateManyWorkspaceInputEnvelope = {
+    data: ConversationCreateManyWorkspaceInput | ConversationCreateManyWorkspaceInput[]
     skipDuplicates?: boolean
   }
 
@@ -75010,6 +78416,34 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
   }
 
+  export type ConversationUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: ConversationWhereUniqueInput
+    update: XOR<ConversationUpdateWithoutWorkspaceInput, ConversationUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<ConversationCreateWithoutWorkspaceInput, ConversationUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type ConversationUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: ConversationWhereUniqueInput
+    data: XOR<ConversationUpdateWithoutWorkspaceInput, ConversationUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type ConversationUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: ConversationScalarWhereInput
+    data: XOR<ConversationUpdateManyMutationInput, ConversationUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type ConversationScalarWhereInput = {
+    AND?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+    OR?: ConversationScalarWhereInput[]
+    NOT?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+    id?: StringFilter<"Conversation"> | string
+    workspaceId?: StringFilter<"Conversation"> | string
+    isGroup?: BoolFilter<"Conversation"> | boolean
+    title?: StringNullableFilter<"Conversation"> | string | null
+    createdAt?: DateTimeFilter<"Conversation"> | Date | string
+    updatedAt?: DateTimeFilter<"Conversation"> | Date | string
+  }
+
   export type PublishItemUpsertWithWhereUniqueWithoutWorkspaceInput = {
     where: PublishItemWhereUniqueInput
     update: XOR<PublishItemUpdateWithoutWorkspaceInput, PublishItemUncheckedUpdateWithoutWorkspaceInput>
@@ -75072,6 +78506,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -75104,6 +78539,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -75152,6 +78588,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -75184,6 +78621,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -75216,6 +78654,7 @@ export namespace Prisma {
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -75248,6 +78687,7 @@ export namespace Prisma {
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -75296,6 +78736,7 @@ export namespace Prisma {
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -75328,6 +78769,7 @@ export namespace Prisma {
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -75360,6 +78802,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -75392,6 +78835,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -75446,7 +78890,7 @@ export namespace Prisma {
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
-    comments?: TaskCommentCreateNestedManyWithoutTaskInput
+    comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
@@ -75474,7 +78918,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
+    comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
@@ -75489,51 +78933,57 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type TaskCommentCreateWithoutAuthorInput = {
+  export type MessageCreateWithoutAuthorInput = {
     id?: string
     body: string
+    kind?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    task: TaskCreateNestedOneWithoutCommentsInput
-    mentions?: CommentMentionCreateNestedManyWithoutCommentInput
+    task?: TaskCreateNestedOneWithoutCommentsInput
+    project?: ProjectCreateNestedOneWithoutMessagesInput
+    conversation?: ConversationCreateNestedOneWithoutMessagesInput
+    mentions?: MessageMentionCreateNestedManyWithoutMessageInput
   }
 
-  export type TaskCommentUncheckedCreateWithoutAuthorInput = {
+  export type MessageUncheckedCreateWithoutAuthorInput = {
     id?: string
-    taskId: string
+    taskId?: string | null
+    projectId?: string | null
+    conversationId?: string | null
     body: string
+    kind?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    mentions?: CommentMentionUncheckedCreateNestedManyWithoutCommentInput
+    mentions?: MessageMentionUncheckedCreateNestedManyWithoutMessageInput
   }
 
-  export type TaskCommentCreateOrConnectWithoutAuthorInput = {
-    where: TaskCommentWhereUniqueInput
-    create: XOR<TaskCommentCreateWithoutAuthorInput, TaskCommentUncheckedCreateWithoutAuthorInput>
+  export type MessageCreateOrConnectWithoutAuthorInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutAuthorInput, MessageUncheckedCreateWithoutAuthorInput>
   }
 
-  export type TaskCommentCreateManyAuthorInputEnvelope = {
-    data: TaskCommentCreateManyAuthorInput | TaskCommentCreateManyAuthorInput[]
+  export type MessageCreateManyAuthorInputEnvelope = {
+    data: MessageCreateManyAuthorInput | MessageCreateManyAuthorInput[]
     skipDuplicates?: boolean
   }
 
-  export type CommentMentionCreateWithoutMemberInput = {
+  export type MessageMentionCreateWithoutMemberInput = {
     id?: string
-    comment: TaskCommentCreateNestedOneWithoutMentionsInput
+    message: MessageCreateNestedOneWithoutMentionsInput
   }
 
-  export type CommentMentionUncheckedCreateWithoutMemberInput = {
+  export type MessageMentionUncheckedCreateWithoutMemberInput = {
     id?: string
-    commentId: string
+    messageId: string
   }
 
-  export type CommentMentionCreateOrConnectWithoutMemberInput = {
-    where: CommentMentionWhereUniqueInput
-    create: XOR<CommentMentionCreateWithoutMemberInput, CommentMentionUncheckedCreateWithoutMemberInput>
+  export type MessageMentionCreateOrConnectWithoutMemberInput = {
+    where: MessageMentionWhereUniqueInput
+    create: XOR<MessageMentionCreateWithoutMemberInput, MessageMentionUncheckedCreateWithoutMemberInput>
   }
 
-  export type CommentMentionCreateManyMemberInputEnvelope = {
-    data: CommentMentionCreateManyMemberInput | CommentMentionCreateManyMemberInput[]
+  export type MessageMentionCreateManyMemberInputEnvelope = {
+    data: MessageMentionCreateManyMemberInput | MessageMentionCreateManyMemberInput[]
     skipDuplicates?: boolean
   }
 
@@ -75687,6 +79137,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ConversationParticipantCreateWithoutMemberInput = {
+    id?: string
+    lastReadAt?: Date | string | null
+    createdAt?: Date | string
+    conversation: ConversationCreateNestedOneWithoutParticipantsInput
+  }
+
+  export type ConversationParticipantUncheckedCreateWithoutMemberInput = {
+    id?: string
+    conversationId: string
+    lastReadAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ConversationParticipantCreateOrConnectWithoutMemberInput = {
+    where: ConversationParticipantWhereUniqueInput
+    create: XOR<ConversationParticipantCreateWithoutMemberInput, ConversationParticipantUncheckedCreateWithoutMemberInput>
+  }
+
+  export type ConversationParticipantCreateManyMemberInputEnvelope = {
+    data: ConversationParticipantCreateManyMemberInput | ConversationParticipantCreateManyMemberInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WorkspaceUpsertWithoutMembersInput = {
     update: XOR<WorkspaceUpdateWithoutMembersInput, WorkspaceUncheckedUpdateWithoutMembersInput>
     create: XOR<WorkspaceCreateWithoutMembersInput, WorkspaceUncheckedCreateWithoutMembersInput>
@@ -75727,6 +79201,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -75759,6 +79234,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -75835,57 +79311,60 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
   }
 
-  export type TaskCommentUpsertWithWhereUniqueWithoutAuthorInput = {
-    where: TaskCommentWhereUniqueInput
-    update: XOR<TaskCommentUpdateWithoutAuthorInput, TaskCommentUncheckedUpdateWithoutAuthorInput>
-    create: XOR<TaskCommentCreateWithoutAuthorInput, TaskCommentUncheckedCreateWithoutAuthorInput>
+  export type MessageUpsertWithWhereUniqueWithoutAuthorInput = {
+    where: MessageWhereUniqueInput
+    update: XOR<MessageUpdateWithoutAuthorInput, MessageUncheckedUpdateWithoutAuthorInput>
+    create: XOR<MessageCreateWithoutAuthorInput, MessageUncheckedCreateWithoutAuthorInput>
   }
 
-  export type TaskCommentUpdateWithWhereUniqueWithoutAuthorInput = {
-    where: TaskCommentWhereUniqueInput
-    data: XOR<TaskCommentUpdateWithoutAuthorInput, TaskCommentUncheckedUpdateWithoutAuthorInput>
+  export type MessageUpdateWithWhereUniqueWithoutAuthorInput = {
+    where: MessageWhereUniqueInput
+    data: XOR<MessageUpdateWithoutAuthorInput, MessageUncheckedUpdateWithoutAuthorInput>
   }
 
-  export type TaskCommentUpdateManyWithWhereWithoutAuthorInput = {
-    where: TaskCommentScalarWhereInput
-    data: XOR<TaskCommentUpdateManyMutationInput, TaskCommentUncheckedUpdateManyWithoutAuthorInput>
+  export type MessageUpdateManyWithWhereWithoutAuthorInput = {
+    where: MessageScalarWhereInput
+    data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutAuthorInput>
   }
 
-  export type TaskCommentScalarWhereInput = {
-    AND?: TaskCommentScalarWhereInput | TaskCommentScalarWhereInput[]
-    OR?: TaskCommentScalarWhereInput[]
-    NOT?: TaskCommentScalarWhereInput | TaskCommentScalarWhereInput[]
-    id?: StringFilter<"TaskComment"> | string
-    taskId?: StringFilter<"TaskComment"> | string
-    authorId?: StringFilter<"TaskComment"> | string
-    body?: StringFilter<"TaskComment"> | string
-    createdAt?: DateTimeFilter<"TaskComment"> | Date | string
-    updatedAt?: DateTimeFilter<"TaskComment"> | Date | string
+  export type MessageScalarWhereInput = {
+    AND?: MessageScalarWhereInput | MessageScalarWhereInput[]
+    OR?: MessageScalarWhereInput[]
+    NOT?: MessageScalarWhereInput | MessageScalarWhereInput[]
+    id?: StringFilter<"Message"> | string
+    taskId?: StringNullableFilter<"Message"> | string | null
+    projectId?: StringNullableFilter<"Message"> | string | null
+    conversationId?: StringNullableFilter<"Message"> | string | null
+    authorId?: StringFilter<"Message"> | string
+    body?: StringFilter<"Message"> | string
+    kind?: StringFilter<"Message"> | string
+    createdAt?: DateTimeFilter<"Message"> | Date | string
+    updatedAt?: DateTimeFilter<"Message"> | Date | string
   }
 
-  export type CommentMentionUpsertWithWhereUniqueWithoutMemberInput = {
-    where: CommentMentionWhereUniqueInput
-    update: XOR<CommentMentionUpdateWithoutMemberInput, CommentMentionUncheckedUpdateWithoutMemberInput>
-    create: XOR<CommentMentionCreateWithoutMemberInput, CommentMentionUncheckedCreateWithoutMemberInput>
+  export type MessageMentionUpsertWithWhereUniqueWithoutMemberInput = {
+    where: MessageMentionWhereUniqueInput
+    update: XOR<MessageMentionUpdateWithoutMemberInput, MessageMentionUncheckedUpdateWithoutMemberInput>
+    create: XOR<MessageMentionCreateWithoutMemberInput, MessageMentionUncheckedCreateWithoutMemberInput>
   }
 
-  export type CommentMentionUpdateWithWhereUniqueWithoutMemberInput = {
-    where: CommentMentionWhereUniqueInput
-    data: XOR<CommentMentionUpdateWithoutMemberInput, CommentMentionUncheckedUpdateWithoutMemberInput>
+  export type MessageMentionUpdateWithWhereUniqueWithoutMemberInput = {
+    where: MessageMentionWhereUniqueInput
+    data: XOR<MessageMentionUpdateWithoutMemberInput, MessageMentionUncheckedUpdateWithoutMemberInput>
   }
 
-  export type CommentMentionUpdateManyWithWhereWithoutMemberInput = {
-    where: CommentMentionScalarWhereInput
-    data: XOR<CommentMentionUpdateManyMutationInput, CommentMentionUncheckedUpdateManyWithoutMemberInput>
+  export type MessageMentionUpdateManyWithWhereWithoutMemberInput = {
+    where: MessageMentionScalarWhereInput
+    data: XOR<MessageMentionUpdateManyMutationInput, MessageMentionUncheckedUpdateManyWithoutMemberInput>
   }
 
-  export type CommentMentionScalarWhereInput = {
-    AND?: CommentMentionScalarWhereInput | CommentMentionScalarWhereInput[]
-    OR?: CommentMentionScalarWhereInput[]
-    NOT?: CommentMentionScalarWhereInput | CommentMentionScalarWhereInput[]
-    id?: StringFilter<"CommentMention"> | string
-    commentId?: StringFilter<"CommentMention"> | string
-    memberId?: StringFilter<"CommentMention"> | string
+  export type MessageMentionScalarWhereInput = {
+    AND?: MessageMentionScalarWhereInput | MessageMentionScalarWhereInput[]
+    OR?: MessageMentionScalarWhereInput[]
+    NOT?: MessageMentionScalarWhereInput | MessageMentionScalarWhereInput[]
+    id?: StringFilter<"MessageMention"> | string
+    messageId?: StringFilter<"MessageMention"> | string
+    memberId?: StringFilter<"MessageMention"> | string
   }
 
   export type NotificationUpsertWithWhereUniqueWithoutRecipientInput = {
@@ -76021,6 +79500,33 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"TaskStatusChange"> | Date | string
   }
 
+  export type ConversationParticipantUpsertWithWhereUniqueWithoutMemberInput = {
+    where: ConversationParticipantWhereUniqueInput
+    update: XOR<ConversationParticipantUpdateWithoutMemberInput, ConversationParticipantUncheckedUpdateWithoutMemberInput>
+    create: XOR<ConversationParticipantCreateWithoutMemberInput, ConversationParticipantUncheckedCreateWithoutMemberInput>
+  }
+
+  export type ConversationParticipantUpdateWithWhereUniqueWithoutMemberInput = {
+    where: ConversationParticipantWhereUniqueInput
+    data: XOR<ConversationParticipantUpdateWithoutMemberInput, ConversationParticipantUncheckedUpdateWithoutMemberInput>
+  }
+
+  export type ConversationParticipantUpdateManyWithWhereWithoutMemberInput = {
+    where: ConversationParticipantScalarWhereInput
+    data: XOR<ConversationParticipantUpdateManyMutationInput, ConversationParticipantUncheckedUpdateManyWithoutMemberInput>
+  }
+
+  export type ConversationParticipantScalarWhereInput = {
+    AND?: ConversationParticipantScalarWhereInput | ConversationParticipantScalarWhereInput[]
+    OR?: ConversationParticipantScalarWhereInput[]
+    NOT?: ConversationParticipantScalarWhereInput | ConversationParticipantScalarWhereInput[]
+    id?: StringFilter<"ConversationParticipant"> | string
+    conversationId?: StringFilter<"ConversationParticipant"> | string
+    memberId?: StringFilter<"ConversationParticipant"> | string
+    lastReadAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
+    createdAt?: DateTimeFilter<"ConversationParticipant"> | Date | string
+  }
+
   export type WorkspaceCreateWithoutRolesInput = {
     id?: string
     name: string
@@ -76050,6 +79556,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -76082,6 +79589,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -76099,13 +79607,14 @@ export namespace Prisma {
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionCreateNestedManyWithoutMemberInput
+    messages?: MessageCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
     notifications?: NotificationCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutRoleInput = {
@@ -76117,13 +79626,14 @@ export namespace Prisma {
     type?: $Enums.MemberType
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionUncheckedCreateNestedManyWithoutMemberInput
+    messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionUncheckedCreateNestedManyWithoutMemberInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutRoleInput = {
@@ -76200,6 +79710,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -76232,6 +79743,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -76293,6 +79805,7 @@ export namespace Prisma {
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutCollaboratorsInput = {
@@ -76321,6 +79834,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutCollaboratorsInput = {
@@ -76365,6 +79879,7 @@ export namespace Prisma {
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutCollaboratorsInput = {
@@ -76393,6 +79908,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type WorkspaceCreateWithoutCompaniesInput = {
@@ -76424,6 +79940,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -76456,6 +79973,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -76582,6 +80100,7 @@ export namespace Prisma {
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutCompanyInput = {
@@ -76610,6 +80129,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutCompanyInput = {
@@ -76662,6 +80182,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -76694,6 +80215,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -76786,6 +80308,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -76818,6 +80341,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -77056,6 +80580,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -77088,6 +80613,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -77422,6 +80948,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -77454,6 +80981,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -77511,7 +81039,7 @@ export namespace Prisma {
     status?: TaskStatusCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
-    comments?: TaskCommentCreateNestedManyWithoutTaskInput
+    comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
@@ -77539,7 +81067,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
+    comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
@@ -77594,6 +81122,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -77626,6 +81155,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -77702,6 +81232,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -77734,6 +81265,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -77878,6 +81410,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -77910,6 +81443,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -78121,6 +81655,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -78153,6 +81688,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -78365,6 +81901,7 @@ export namespace Prisma {
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutDealInput = {
@@ -78393,6 +81930,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutDealInput = {
@@ -78470,6 +82008,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -78502,6 +82041,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -78734,6 +82274,7 @@ export namespace Prisma {
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutDealInput = {
@@ -78762,6 +82303,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type DealAccessUpsertWithWhereUniqueWithoutDealInput = {
@@ -79155,6 +82697,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -79187,6 +82730,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -79221,6 +82765,7 @@ export namespace Prisma {
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutStatusInput = {
@@ -79249,6 +82794,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutStatusInput = {
@@ -79301,6 +82847,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -79333,6 +82880,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -79381,6 +82929,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -79413,6 +82962,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -79581,7 +83131,7 @@ export namespace Prisma {
     status?: TaskStatusCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
-    comments?: TaskCommentCreateNestedManyWithoutTaskInput
+    comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
@@ -79609,7 +83159,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
+    comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
@@ -79850,6 +83400,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MessageCreateWithoutProjectInput = {
+    id?: string
+    body: string
+    kind?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    task?: TaskCreateNestedOneWithoutCommentsInput
+    conversation?: ConversationCreateNestedOneWithoutMessagesInput
+    author: WorkspaceMemberCreateNestedOneWithoutMessagesInput
+    mentions?: MessageMentionCreateNestedManyWithoutMessageInput
+  }
+
+  export type MessageUncheckedCreateWithoutProjectInput = {
+    id?: string
+    taskId?: string | null
+    conversationId?: string | null
+    authorId: string
+    body: string
+    kind?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    mentions?: MessageMentionUncheckedCreateNestedManyWithoutMessageInput
+  }
+
+  export type MessageCreateOrConnectWithoutProjectInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutProjectInput, MessageUncheckedCreateWithoutProjectInput>
+  }
+
+  export type MessageCreateManyProjectInputEnvelope = {
+    data: MessageCreateManyProjectInput | MessageCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WorkspaceUpsertWithoutProjectsInput = {
     update: XOR<WorkspaceUpdateWithoutProjectsInput, WorkspaceUncheckedUpdateWithoutProjectsInput>
     create: XOR<WorkspaceCreateWithoutProjectsInput, WorkspaceUncheckedCreateWithoutProjectsInput>
@@ -79890,6 +83474,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -79922,6 +83507,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -80255,6 +83841,22 @@ export namespace Prisma {
     data: XOR<ProjectMemberUpdateManyMutationInput, ProjectMemberUncheckedUpdateManyWithoutProjectInput>
   }
 
+  export type MessageUpsertWithWhereUniqueWithoutProjectInput = {
+    where: MessageWhereUniqueInput
+    update: XOR<MessageUpdateWithoutProjectInput, MessageUncheckedUpdateWithoutProjectInput>
+    create: XOR<MessageCreateWithoutProjectInput, MessageUncheckedCreateWithoutProjectInput>
+  }
+
+  export type MessageUpdateWithWhereUniqueWithoutProjectInput = {
+    where: MessageWhereUniqueInput
+    data: XOR<MessageUpdateWithoutProjectInput, MessageUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type MessageUpdateManyWithWhereWithoutProjectInput = {
+    where: MessageScalarWhereInput
+    data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutProjectInput>
+  }
+
   export type ProjectCreateWithoutMembersInput = {
     id?: string
     contactId?: string | null
@@ -80281,6 +83883,7 @@ export namespace Prisma {
     folders?: ProjectFolderCreateNestedManyWithoutProjectInput
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutMembersInput = {
@@ -80309,6 +83912,7 @@ export namespace Prisma {
     folders?: ProjectFolderUncheckedCreateNestedManyWithoutProjectInput
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutMembersInput = {
@@ -80326,12 +83930,13 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionCreateNestedManyWithoutMemberInput
+    messages?: MessageCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
     notifications?: NotificationCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutProjectMembershipsInput = {
@@ -80344,12 +83949,13 @@ export namespace Prisma {
     roleId?: string | null
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionUncheckedCreateNestedManyWithoutMemberInput
+    messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionUncheckedCreateNestedManyWithoutMemberInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutProjectMembershipsInput = {
@@ -80417,6 +84023,7 @@ export namespace Prisma {
     folders?: ProjectFolderUpdateManyWithoutProjectNestedInput
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutMembersInput = {
@@ -80445,6 +84052,7 @@ export namespace Prisma {
     folders?: ProjectFolderUncheckedUpdateManyWithoutProjectNestedInput
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type WorkspaceMemberUpsertWithoutProjectMembershipsInput = {
@@ -80468,12 +84076,13 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUpdateManyWithoutMemberNestedInput
+    messages?: MessageUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutProjectMembershipsInput = {
@@ -80486,12 +84095,13 @@ export namespace Prisma {
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUncheckedUpdateManyWithoutMemberNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUncheckedUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type RoleUpsertWithoutProjectMembersInput = {
@@ -80549,6 +84159,7 @@ export namespace Prisma {
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutFoldersInput = {
@@ -80577,6 +84188,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutFoldersInput = {
@@ -80704,6 +84316,7 @@ export namespace Prisma {
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutFoldersInput = {
@@ -80732,6 +84345,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectFolderUpsertWithoutChildrenInput = {
@@ -80821,6 +84435,7 @@ export namespace Prisma {
     folders?: ProjectFolderCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutAssetsInput = {
@@ -80849,6 +84464,7 @@ export namespace Prisma {
     folders?: ProjectFolderUncheckedCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutAssetsInput = {
@@ -80916,6 +84532,7 @@ export namespace Prisma {
     folders?: ProjectFolderUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutAssetsInput = {
@@ -80944,6 +84561,7 @@ export namespace Prisma {
     folders?: ProjectFolderUncheckedUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectFolderUpsertWithoutAssetsInput = {
@@ -81004,6 +84622,7 @@ export namespace Prisma {
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -81036,6 +84655,7 @@ export namespace Prisma {
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -81150,6 +84770,7 @@ export namespace Prisma {
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -81182,6 +84803,7 @@ export namespace Prisma {
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -81619,6 +85241,7 @@ export namespace Prisma {
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutProjectTemplatesInput = {
@@ -81647,6 +85270,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutProjectTemplatesInput = {
@@ -81720,6 +85344,7 @@ export namespace Prisma {
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutProjectTemplatesInput = {
@@ -81748,6 +85373,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ChecklistTemplateUpsertWithoutProjectsInput = {
@@ -81808,7 +85434,7 @@ export namespace Prisma {
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
-    comments?: TaskCommentCreateNestedManyWithoutTaskInput
+    comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
@@ -81836,7 +85462,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
+    comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
@@ -81921,7 +85547,7 @@ export namespace Prisma {
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
-    comments?: TaskCommentUpdateManyWithoutTaskNestedInput
+    comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
@@ -81949,7 +85575,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
+    comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
@@ -82030,6 +85656,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -82062,6 +85689,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -82093,7 +85721,7 @@ export namespace Prisma {
     service?: ServiceCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
-    comments?: TaskCommentCreateNestedManyWithoutTaskInput
+    comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
@@ -82121,7 +85749,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
+    comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
@@ -82314,6 +85942,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -82346,6 +85975,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -82439,6 +86069,7 @@ export namespace Prisma {
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTasksInput = {
@@ -82467,6 +86098,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTasksInput = {
@@ -82547,13 +86179,14 @@ export namespace Prisma {
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
-    comments?: TaskCommentCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionCreateNestedManyWithoutMemberInput
+    messages?: MessageCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
     notifications?: NotificationCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutAssignedTasksInput = {
@@ -82565,13 +86198,14 @@ export namespace Prisma {
     type?: $Enums.MemberType
     roleId?: string | null
     joinedAt?: Date | string
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionUncheckedCreateNestedManyWithoutMemberInput
+    messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionUncheckedCreateNestedManyWithoutMemberInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutAssignedTasksInput = {
@@ -82635,31 +86269,37 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type TaskCommentCreateWithoutTaskInput = {
+  export type MessageCreateWithoutTaskInput = {
     id?: string
     body: string
+    kind?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    author: WorkspaceMemberCreateNestedOneWithoutCommentsInput
-    mentions?: CommentMentionCreateNestedManyWithoutCommentInput
+    project?: ProjectCreateNestedOneWithoutMessagesInput
+    conversation?: ConversationCreateNestedOneWithoutMessagesInput
+    author: WorkspaceMemberCreateNestedOneWithoutMessagesInput
+    mentions?: MessageMentionCreateNestedManyWithoutMessageInput
   }
 
-  export type TaskCommentUncheckedCreateWithoutTaskInput = {
+  export type MessageUncheckedCreateWithoutTaskInput = {
     id?: string
+    projectId?: string | null
+    conversationId?: string | null
     authorId: string
     body: string
+    kind?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    mentions?: CommentMentionUncheckedCreateNestedManyWithoutCommentInput
+    mentions?: MessageMentionUncheckedCreateNestedManyWithoutMessageInput
   }
 
-  export type TaskCommentCreateOrConnectWithoutTaskInput = {
-    where: TaskCommentWhereUniqueInput
-    create: XOR<TaskCommentCreateWithoutTaskInput, TaskCommentUncheckedCreateWithoutTaskInput>
+  export type MessageCreateOrConnectWithoutTaskInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutTaskInput, MessageUncheckedCreateWithoutTaskInput>
   }
 
-  export type TaskCommentCreateManyTaskInputEnvelope = {
-    data: TaskCommentCreateManyTaskInput | TaskCommentCreateManyTaskInput[]
+  export type MessageCreateManyTaskInputEnvelope = {
+    data: MessageCreateManyTaskInput | MessageCreateManyTaskInput[]
     skipDuplicates?: boolean
   }
 
@@ -82765,6 +86405,7 @@ export namespace Prisma {
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTasksInput = {
@@ -82793,6 +86434,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ServiceUpsertWithoutTasksInput = {
@@ -82891,13 +86533,14 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
-    comments?: TaskCommentUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUpdateManyWithoutMemberNestedInput
+    messages?: MessageUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutAssignedTasksInput = {
@@ -82909,13 +86552,14 @@ export namespace Prisma {
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    comments?: TaskCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUncheckedUpdateManyWithoutMemberNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUncheckedUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type TaskChecklistItemUpsertWithWhereUniqueWithoutTaskInput = {
@@ -82934,20 +86578,20 @@ export namespace Prisma {
     data: XOR<TaskChecklistItemUpdateManyMutationInput, TaskChecklistItemUncheckedUpdateManyWithoutTaskInput>
   }
 
-  export type TaskCommentUpsertWithWhereUniqueWithoutTaskInput = {
-    where: TaskCommentWhereUniqueInput
-    update: XOR<TaskCommentUpdateWithoutTaskInput, TaskCommentUncheckedUpdateWithoutTaskInput>
-    create: XOR<TaskCommentCreateWithoutTaskInput, TaskCommentUncheckedCreateWithoutTaskInput>
+  export type MessageUpsertWithWhereUniqueWithoutTaskInput = {
+    where: MessageWhereUniqueInput
+    update: XOR<MessageUpdateWithoutTaskInput, MessageUncheckedUpdateWithoutTaskInput>
+    create: XOR<MessageCreateWithoutTaskInput, MessageUncheckedCreateWithoutTaskInput>
   }
 
-  export type TaskCommentUpdateWithWhereUniqueWithoutTaskInput = {
-    where: TaskCommentWhereUniqueInput
-    data: XOR<TaskCommentUpdateWithoutTaskInput, TaskCommentUncheckedUpdateWithoutTaskInput>
+  export type MessageUpdateWithWhereUniqueWithoutTaskInput = {
+    where: MessageWhereUniqueInput
+    data: XOR<MessageUpdateWithoutTaskInput, MessageUncheckedUpdateWithoutTaskInput>
   }
 
-  export type TaskCommentUpdateManyWithWhereWithoutTaskInput = {
-    where: TaskCommentScalarWhereInput
-    data: XOR<TaskCommentUpdateManyMutationInput, TaskCommentUncheckedUpdateManyWithoutTaskInput>
+  export type MessageUpdateManyWithWhereWithoutTaskInput = {
+    where: MessageScalarWhereInput
+    data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutTaskInput>
   }
 
   export type PublishItemUpsertWithoutTaskInput = {
@@ -83027,7 +86671,7 @@ export namespace Prisma {
     status?: TaskStatusCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
-    comments?: TaskCommentCreateNestedManyWithoutTaskInput
+    comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
   }
 
@@ -83055,7 +86699,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
+    comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
   }
 
@@ -83074,12 +86718,13 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionCreateNestedManyWithoutMemberInput
+    messages?: MessageCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
     notifications?: NotificationCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutStatusChangesInput = {
@@ -83092,12 +86737,13 @@ export namespace Prisma {
     roleId?: string | null
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionUncheckedCreateNestedManyWithoutMemberInput
+    messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionUncheckedCreateNestedManyWithoutMemberInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutStatusChangesInput = {
@@ -83140,7 +86786,7 @@ export namespace Prisma {
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
-    comments?: TaskCommentUpdateManyWithoutTaskNestedInput
+    comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
   }
 
@@ -83168,7 +86814,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
+    comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
   }
 
@@ -83193,12 +86839,13 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUpdateManyWithoutMemberNestedInput
+    messages?: MessageUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutStatusChangesInput = {
@@ -83211,12 +86858,13 @@ export namespace Prisma {
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUncheckedUpdateManyWithoutMemberNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUncheckedUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type TaskCreateWithoutCommentsInput = {
@@ -83280,7 +86928,95 @@ export namespace Prisma {
     create: XOR<TaskCreateWithoutCommentsInput, TaskUncheckedCreateWithoutCommentsInput>
   }
 
-  export type WorkspaceMemberCreateWithoutCommentsInput = {
+  export type ProjectCreateWithoutMessagesInput = {
+    id?: string
+    contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
+    name: string
+    type?: string
+    thumbnailId?: string | null
+    description?: string | null
+    requirePublishing?: boolean
+    startDate?: Date | string | null
+    deadline?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    workspace: WorkspaceCreateNestedOneWithoutProjectsInput
+    deal?: DealCreateNestedOneWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    status?: ProjectStatusCreateNestedOneWithoutProjectsInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    invoices?: InvoiceCreateNestedManyWithoutProjectInput
+    collaborators?: ProjectCollaboratorCreateNestedManyWithoutProjectInput
+    projectTemplates?: ProjectTemplateCreateNestedManyWithoutProjectInput
+    folders?: ProjectFolderCreateNestedManyWithoutProjectInput
+    assets?: ProjectAssetCreateNestedManyWithoutProjectInput
+    publishItems?: PublishItemCreateNestedManyWithoutProjectInput
+    members?: ProjectMemberCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutMessagesInput = {
+    id?: string
+    workspaceId: string
+    dealId?: string | null
+    companyId?: string | null
+    contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
+    statusId?: string | null
+    name: string
+    type?: string
+    thumbnailId?: string | null
+    description?: string | null
+    requirePublishing?: boolean
+    startDate?: Date | string | null
+    deadline?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
+    collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
+    projectTemplates?: ProjectTemplateUncheckedCreateNestedManyWithoutProjectInput
+    folders?: ProjectFolderUncheckedCreateNestedManyWithoutProjectInput
+    assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
+    publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
+    members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutMessagesInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutMessagesInput, ProjectUncheckedCreateWithoutMessagesInput>
+  }
+
+  export type ConversationCreateWithoutMessagesInput = {
+    id?: string
+    isGroup?: boolean
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutConversationsInput
+    participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationUncheckedCreateWithoutMessagesInput = {
+    id?: string
+    workspaceId: string
+    isGroup?: boolean
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationCreateOrConnectWithoutMessagesInput = {
+    where: ConversationWhereUniqueInput
+    create: XOR<ConversationCreateWithoutMessagesInput, ConversationUncheckedCreateWithoutMessagesInput>
+  }
+
+  export type WorkspaceMemberCreateWithoutMessagesInput = {
     id?: string
     userId: string
     email: string
@@ -83290,15 +87026,16 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
-    mentionedIn?: CommentMentionCreateNestedManyWithoutMemberInput
+    mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
     notifications?: NotificationCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantCreateNestedManyWithoutMemberInput
   }
 
-  export type WorkspaceMemberUncheckedCreateWithoutCommentsInput = {
+  export type WorkspaceMemberUncheckedCreateWithoutMessagesInput = {
     id?: string
     workspaceId: string
     userId: string
@@ -83308,36 +87045,37 @@ export namespace Prisma {
     roleId?: string | null
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
-    mentionedIn?: CommentMentionUncheckedCreateNestedManyWithoutMemberInput
+    mentionedIn?: MessageMentionUncheckedCreateNestedManyWithoutMemberInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantUncheckedCreateNestedManyWithoutMemberInput
   }
 
-  export type WorkspaceMemberCreateOrConnectWithoutCommentsInput = {
+  export type WorkspaceMemberCreateOrConnectWithoutMessagesInput = {
     where: WorkspaceMemberWhereUniqueInput
-    create: XOR<WorkspaceMemberCreateWithoutCommentsInput, WorkspaceMemberUncheckedCreateWithoutCommentsInput>
+    create: XOR<WorkspaceMemberCreateWithoutMessagesInput, WorkspaceMemberUncheckedCreateWithoutMessagesInput>
   }
 
-  export type CommentMentionCreateWithoutCommentInput = {
+  export type MessageMentionCreateWithoutMessageInput = {
     id?: string
     member: WorkspaceMemberCreateNestedOneWithoutMentionedInInput
   }
 
-  export type CommentMentionUncheckedCreateWithoutCommentInput = {
+  export type MessageMentionUncheckedCreateWithoutMessageInput = {
     id?: string
     memberId: string
   }
 
-  export type CommentMentionCreateOrConnectWithoutCommentInput = {
-    where: CommentMentionWhereUniqueInput
-    create: XOR<CommentMentionCreateWithoutCommentInput, CommentMentionUncheckedCreateWithoutCommentInput>
+  export type MessageMentionCreateOrConnectWithoutMessageInput = {
+    where: MessageMentionWhereUniqueInput
+    create: XOR<MessageMentionCreateWithoutMessageInput, MessageMentionUncheckedCreateWithoutMessageInput>
   }
 
-  export type CommentMentionCreateManyCommentInputEnvelope = {
-    data: CommentMentionCreateManyCommentInput | CommentMentionCreateManyCommentInput[]
+  export type MessageMentionCreateManyMessageInputEnvelope = {
+    data: MessageMentionCreateManyMessageInput | MessageMentionCreateManyMessageInput[]
     skipDuplicates?: boolean
   }
 
@@ -83408,18 +87146,118 @@ export namespace Prisma {
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
-  export type WorkspaceMemberUpsertWithoutCommentsInput = {
-    update: XOR<WorkspaceMemberUpdateWithoutCommentsInput, WorkspaceMemberUncheckedUpdateWithoutCommentsInput>
-    create: XOR<WorkspaceMemberCreateWithoutCommentsInput, WorkspaceMemberUncheckedCreateWithoutCommentsInput>
+  export type ProjectUpsertWithoutMessagesInput = {
+    update: XOR<ProjectUpdateWithoutMessagesInput, ProjectUncheckedUpdateWithoutMessagesInput>
+    create: XOR<ProjectCreateWithoutMessagesInput, ProjectUncheckedCreateWithoutMessagesInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutMessagesInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutMessagesInput, ProjectUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type ProjectUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
+    deal?: DealUpdateOneWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    status?: ProjectStatusUpdateOneWithoutProjectsNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    invoices?: InvoiceUpdateManyWithoutProjectNestedInput
+    collaborators?: ProjectCollaboratorUpdateManyWithoutProjectNestedInput
+    projectTemplates?: ProjectTemplateUpdateManyWithoutProjectNestedInput
+    folders?: ProjectFolderUpdateManyWithoutProjectNestedInput
+    assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
+    publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
+    members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    dealId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
+    statusId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
+    collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
+    projectTemplates?: ProjectTemplateUncheckedUpdateManyWithoutProjectNestedInput
+    folders?: ProjectFolderUncheckedUpdateManyWithoutProjectNestedInput
+    assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
+    publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
+    members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ConversationUpsertWithoutMessagesInput = {
+    update: XOR<ConversationUpdateWithoutMessagesInput, ConversationUncheckedUpdateWithoutMessagesInput>
+    create: XOR<ConversationCreateWithoutMessagesInput, ConversationUncheckedCreateWithoutMessagesInput>
+    where?: ConversationWhereInput
+  }
+
+  export type ConversationUpdateToOneWithWhereWithoutMessagesInput = {
+    where?: ConversationWhereInput
+    data: XOR<ConversationUpdateWithoutMessagesInput, ConversationUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type ConversationUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isGroup?: BoolFieldUpdateOperationsInput | boolean
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutConversationsNestedInput
+    participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
+  }
+
+  export type ConversationUncheckedUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    isGroup?: BoolFieldUpdateOperationsInput | boolean
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
+  }
+
+  export type WorkspaceMemberUpsertWithoutMessagesInput = {
+    update: XOR<WorkspaceMemberUpdateWithoutMessagesInput, WorkspaceMemberUncheckedUpdateWithoutMessagesInput>
+    create: XOR<WorkspaceMemberCreateWithoutMessagesInput, WorkspaceMemberUncheckedCreateWithoutMessagesInput>
     where?: WorkspaceMemberWhereInput
   }
 
-  export type WorkspaceMemberUpdateToOneWithWhereWithoutCommentsInput = {
+  export type WorkspaceMemberUpdateToOneWithWhereWithoutMessagesInput = {
     where?: WorkspaceMemberWhereInput
-    data: XOR<WorkspaceMemberUpdateWithoutCommentsInput, WorkspaceMemberUncheckedUpdateWithoutCommentsInput>
+    data: XOR<WorkspaceMemberUpdateWithoutMessagesInput, WorkspaceMemberUncheckedUpdateWithoutMessagesInput>
   }
 
-  export type WorkspaceMemberUpdateWithoutCommentsInput = {
+  export type WorkspaceMemberUpdateWithoutMessagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -83429,15 +87267,16 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
-    mentionedIn?: CommentMentionUpdateManyWithoutMemberNestedInput
+    mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUpdateManyWithoutMemberNestedInput
   }
 
-  export type WorkspaceMemberUncheckedUpdateWithoutCommentsInput = {
+  export type WorkspaceMemberUncheckedUpdateWithoutMessagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -83447,51 +87286,58 @@ export namespace Prisma {
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-    mentionedIn?: CommentMentionUncheckedUpdateManyWithoutMemberNestedInput
+    mentionedIn?: MessageMentionUncheckedUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUncheckedUpdateManyWithoutMemberNestedInput
   }
 
-  export type CommentMentionUpsertWithWhereUniqueWithoutCommentInput = {
-    where: CommentMentionWhereUniqueInput
-    update: XOR<CommentMentionUpdateWithoutCommentInput, CommentMentionUncheckedUpdateWithoutCommentInput>
-    create: XOR<CommentMentionCreateWithoutCommentInput, CommentMentionUncheckedCreateWithoutCommentInput>
+  export type MessageMentionUpsertWithWhereUniqueWithoutMessageInput = {
+    where: MessageMentionWhereUniqueInput
+    update: XOR<MessageMentionUpdateWithoutMessageInput, MessageMentionUncheckedUpdateWithoutMessageInput>
+    create: XOR<MessageMentionCreateWithoutMessageInput, MessageMentionUncheckedCreateWithoutMessageInput>
   }
 
-  export type CommentMentionUpdateWithWhereUniqueWithoutCommentInput = {
-    where: CommentMentionWhereUniqueInput
-    data: XOR<CommentMentionUpdateWithoutCommentInput, CommentMentionUncheckedUpdateWithoutCommentInput>
+  export type MessageMentionUpdateWithWhereUniqueWithoutMessageInput = {
+    where: MessageMentionWhereUniqueInput
+    data: XOR<MessageMentionUpdateWithoutMessageInput, MessageMentionUncheckedUpdateWithoutMessageInput>
   }
 
-  export type CommentMentionUpdateManyWithWhereWithoutCommentInput = {
-    where: CommentMentionScalarWhereInput
-    data: XOR<CommentMentionUpdateManyMutationInput, CommentMentionUncheckedUpdateManyWithoutCommentInput>
+  export type MessageMentionUpdateManyWithWhereWithoutMessageInput = {
+    where: MessageMentionScalarWhereInput
+    data: XOR<MessageMentionUpdateManyMutationInput, MessageMentionUncheckedUpdateManyWithoutMessageInput>
   }
 
-  export type TaskCommentCreateWithoutMentionsInput = {
+  export type MessageCreateWithoutMentionsInput = {
     id?: string
     body: string
+    kind?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    task: TaskCreateNestedOneWithoutCommentsInput
-    author: WorkspaceMemberCreateNestedOneWithoutCommentsInput
+    task?: TaskCreateNestedOneWithoutCommentsInput
+    project?: ProjectCreateNestedOneWithoutMessagesInput
+    conversation?: ConversationCreateNestedOneWithoutMessagesInput
+    author: WorkspaceMemberCreateNestedOneWithoutMessagesInput
   }
 
-  export type TaskCommentUncheckedCreateWithoutMentionsInput = {
+  export type MessageUncheckedCreateWithoutMentionsInput = {
     id?: string
-    taskId: string
+    taskId?: string | null
+    projectId?: string | null
+    conversationId?: string | null
     authorId: string
     body: string
+    kind?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type TaskCommentCreateOrConnectWithoutMentionsInput = {
-    where: TaskCommentWhereUniqueInput
-    create: XOR<TaskCommentCreateWithoutMentionsInput, TaskCommentUncheckedCreateWithoutMentionsInput>
+  export type MessageCreateOrConnectWithoutMentionsInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutMentionsInput, MessageUncheckedCreateWithoutMentionsInput>
   }
 
   export type WorkspaceMemberCreateWithoutMentionedInInput = {
@@ -83504,12 +87350,13 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentCreateNestedManyWithoutAuthorInput
+    messages?: MessageCreateNestedManyWithoutAuthorInput
     notifications?: NotificationCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutMentionedInInput = {
@@ -83522,12 +87369,13 @@ export namespace Prisma {
     roleId?: string | null
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutAuthorInput
+    messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutMentionedInInput = {
@@ -83535,31 +87383,37 @@ export namespace Prisma {
     create: XOR<WorkspaceMemberCreateWithoutMentionedInInput, WorkspaceMemberUncheckedCreateWithoutMentionedInInput>
   }
 
-  export type TaskCommentUpsertWithoutMentionsInput = {
-    update: XOR<TaskCommentUpdateWithoutMentionsInput, TaskCommentUncheckedUpdateWithoutMentionsInput>
-    create: XOR<TaskCommentCreateWithoutMentionsInput, TaskCommentUncheckedCreateWithoutMentionsInput>
-    where?: TaskCommentWhereInput
+  export type MessageUpsertWithoutMentionsInput = {
+    update: XOR<MessageUpdateWithoutMentionsInput, MessageUncheckedUpdateWithoutMentionsInput>
+    create: XOR<MessageCreateWithoutMentionsInput, MessageUncheckedCreateWithoutMentionsInput>
+    where?: MessageWhereInput
   }
 
-  export type TaskCommentUpdateToOneWithWhereWithoutMentionsInput = {
-    where?: TaskCommentWhereInput
-    data: XOR<TaskCommentUpdateWithoutMentionsInput, TaskCommentUncheckedUpdateWithoutMentionsInput>
+  export type MessageUpdateToOneWithWhereWithoutMentionsInput = {
+    where?: MessageWhereInput
+    data: XOR<MessageUpdateWithoutMentionsInput, MessageUncheckedUpdateWithoutMentionsInput>
   }
 
-  export type TaskCommentUpdateWithoutMentionsInput = {
+  export type MessageUpdateWithoutMentionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    task?: TaskUpdateOneRequiredWithoutCommentsNestedInput
-    author?: WorkspaceMemberUpdateOneRequiredWithoutCommentsNestedInput
+    task?: TaskUpdateOneWithoutCommentsNestedInput
+    project?: ProjectUpdateOneWithoutMessagesNestedInput
+    conversation?: ConversationUpdateOneWithoutMessagesNestedInput
+    author?: WorkspaceMemberUpdateOneRequiredWithoutMessagesNestedInput
   }
 
-  export type TaskCommentUncheckedUpdateWithoutMentionsInput = {
+  export type MessageUncheckedUpdateWithoutMentionsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    taskId?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -83585,12 +87439,13 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUpdateManyWithoutAuthorNestedInput
+    messages?: MessageUpdateManyWithoutAuthorNestedInput
     notifications?: NotificationUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutMentionedInInput = {
@@ -83603,7 +87458,394 @@ export namespace Prisma {
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
+    scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
+    projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUncheckedUpdateManyWithoutMemberNestedInput
+  }
+
+  export type WorkspaceCreateWithoutConversationsInput = {
+    id?: string
+    name: string
+    slug: string
+    baseCurrency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
+    referrals?: ReferralCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceCreateNestedManyWithoutWorkspaceInput
+    deals?: DealCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
+    checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutConversationsInput = {
+    id?: string
+    name: string
+    slug: string
+    baseCurrency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
+    checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutConversationsInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutConversationsInput, WorkspaceUncheckedCreateWithoutConversationsInput>
+  }
+
+  export type ConversationParticipantCreateWithoutConversationInput = {
+    id?: string
+    lastReadAt?: Date | string | null
+    createdAt?: Date | string
+    member: WorkspaceMemberCreateNestedOneWithoutConversationsInput
+  }
+
+  export type ConversationParticipantUncheckedCreateWithoutConversationInput = {
+    id?: string
+    memberId: string
+    lastReadAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ConversationParticipantCreateOrConnectWithoutConversationInput = {
+    where: ConversationParticipantWhereUniqueInput
+    create: XOR<ConversationParticipantCreateWithoutConversationInput, ConversationParticipantUncheckedCreateWithoutConversationInput>
+  }
+
+  export type ConversationParticipantCreateManyConversationInputEnvelope = {
+    data: ConversationParticipantCreateManyConversationInput | ConversationParticipantCreateManyConversationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MessageCreateWithoutConversationInput = {
+    id?: string
+    body: string
+    kind?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    task?: TaskCreateNestedOneWithoutCommentsInput
+    project?: ProjectCreateNestedOneWithoutMessagesInput
+    author: WorkspaceMemberCreateNestedOneWithoutMessagesInput
+    mentions?: MessageMentionCreateNestedManyWithoutMessageInput
+  }
+
+  export type MessageUncheckedCreateWithoutConversationInput = {
+    id?: string
+    taskId?: string | null
+    projectId?: string | null
+    authorId: string
+    body: string
+    kind?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    mentions?: MessageMentionUncheckedCreateNestedManyWithoutMessageInput
+  }
+
+  export type MessageCreateOrConnectWithoutConversationInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput>
+  }
+
+  export type MessageCreateManyConversationInputEnvelope = {
+    data: MessageCreateManyConversationInput | MessageCreateManyConversationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WorkspaceUpsertWithoutConversationsInput = {
+    update: XOR<WorkspaceUpdateWithoutConversationsInput, WorkspaceUncheckedUpdateWithoutConversationsInput>
+    create: XOR<WorkspaceCreateWithoutConversationsInput, WorkspaceUncheckedCreateWithoutConversationsInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutConversationsInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutConversationsInput, WorkspaceUncheckedUpdateWithoutConversationsInput>
+  }
+
+  export type WorkspaceUpdateWithoutConversationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
+    referrals?: ReferralUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
+    checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutConversationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
+    checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type ConversationParticipantUpsertWithWhereUniqueWithoutConversationInput = {
+    where: ConversationParticipantWhereUniqueInput
+    update: XOR<ConversationParticipantUpdateWithoutConversationInput, ConversationParticipantUncheckedUpdateWithoutConversationInput>
+    create: XOR<ConversationParticipantCreateWithoutConversationInput, ConversationParticipantUncheckedCreateWithoutConversationInput>
+  }
+
+  export type ConversationParticipantUpdateWithWhereUniqueWithoutConversationInput = {
+    where: ConversationParticipantWhereUniqueInput
+    data: XOR<ConversationParticipantUpdateWithoutConversationInput, ConversationParticipantUncheckedUpdateWithoutConversationInput>
+  }
+
+  export type ConversationParticipantUpdateManyWithWhereWithoutConversationInput = {
+    where: ConversationParticipantScalarWhereInput
+    data: XOR<ConversationParticipantUpdateManyMutationInput, ConversationParticipantUncheckedUpdateManyWithoutConversationInput>
+  }
+
+  export type MessageUpsertWithWhereUniqueWithoutConversationInput = {
+    where: MessageWhereUniqueInput
+    update: XOR<MessageUpdateWithoutConversationInput, MessageUncheckedUpdateWithoutConversationInput>
+    create: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput>
+  }
+
+  export type MessageUpdateWithWhereUniqueWithoutConversationInput = {
+    where: MessageWhereUniqueInput
+    data: XOR<MessageUpdateWithoutConversationInput, MessageUncheckedUpdateWithoutConversationInput>
+  }
+
+  export type MessageUpdateManyWithWhereWithoutConversationInput = {
+    where: MessageScalarWhereInput
+    data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutConversationInput>
+  }
+
+  export type ConversationCreateWithoutParticipantsInput = {
+    id?: string
+    isGroup?: boolean
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutConversationsInput
+    messages?: MessageCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationUncheckedCreateWithoutParticipantsInput = {
+    id?: string
+    workspaceId: string
+    isGroup?: boolean
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationCreateOrConnectWithoutParticipantsInput = {
+    where: ConversationWhereUniqueInput
+    create: XOR<ConversationCreateWithoutParticipantsInput, ConversationUncheckedCreateWithoutParticipantsInput>
+  }
+
+  export type WorkspaceMemberCreateWithoutConversationsInput = {
+    id?: string
+    userId: string
+    email: string
+    name?: string | null
+    type?: $Enums.MemberType
+    joinedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutMembersInput
+    role?: RoleCreateNestedOneWithoutMembersInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    messages?: MessageCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
+    notifications?: NotificationCreateNestedManyWithoutRecipientInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
+    scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
+    projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
+  }
+
+  export type WorkspaceMemberUncheckedCreateWithoutConversationsInput = {
+    id?: string
+    workspaceId: string
+    userId: string
+    email: string
+    name?: string | null
+    type?: $Enums.MemberType
+    roleId?: string | null
+    joinedAt?: Date | string
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionUncheckedCreateNestedManyWithoutMemberInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
+    scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
+    projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
+  }
+
+  export type WorkspaceMemberCreateOrConnectWithoutConversationsInput = {
+    where: WorkspaceMemberWhereUniqueInput
+    create: XOR<WorkspaceMemberCreateWithoutConversationsInput, WorkspaceMemberUncheckedCreateWithoutConversationsInput>
+  }
+
+  export type ConversationUpsertWithoutParticipantsInput = {
+    update: XOR<ConversationUpdateWithoutParticipantsInput, ConversationUncheckedUpdateWithoutParticipantsInput>
+    create: XOR<ConversationCreateWithoutParticipantsInput, ConversationUncheckedCreateWithoutParticipantsInput>
+    where?: ConversationWhereInput
+  }
+
+  export type ConversationUpdateToOneWithWhereWithoutParticipantsInput = {
+    where?: ConversationWhereInput
+    data: XOR<ConversationUpdateWithoutParticipantsInput, ConversationUncheckedUpdateWithoutParticipantsInput>
+  }
+
+  export type ConversationUpdateWithoutParticipantsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isGroup?: BoolFieldUpdateOperationsInput | boolean
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutConversationsNestedInput
+    messages?: MessageUpdateManyWithoutConversationNestedInput
+  }
+
+  export type ConversationUncheckedUpdateWithoutParticipantsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    isGroup?: BoolFieldUpdateOperationsInput | boolean
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+  }
+
+  export type WorkspaceMemberUpsertWithoutConversationsInput = {
+    update: XOR<WorkspaceMemberUpdateWithoutConversationsInput, WorkspaceMemberUncheckedUpdateWithoutConversationsInput>
+    create: XOR<WorkspaceMemberCreateWithoutConversationsInput, WorkspaceMemberUncheckedCreateWithoutConversationsInput>
+    where?: WorkspaceMemberWhereInput
+  }
+
+  export type WorkspaceMemberUpdateToOneWithWhereWithoutConversationsInput = {
+    where?: WorkspaceMemberWhereInput
+    data: XOR<WorkspaceMemberUpdateWithoutConversationsInput, WorkspaceMemberUncheckedUpdateWithoutConversationsInput>
+  }
+
+  export type WorkspaceMemberUpdateWithoutConversationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
+    role?: RoleUpdateOneWithoutMembersNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    messages?: MessageUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
+    notifications?: NotificationUpdateManyWithoutRecipientNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
+    scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
+    projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
+  }
+
+  export type WorkspaceMemberUncheckedUpdateWithoutConversationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUncheckedUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
@@ -83621,12 +87863,13 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionCreateNestedManyWithoutMemberInput
+    messages?: MessageCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutNotificationsInput = {
@@ -83639,12 +87882,13 @@ export namespace Prisma {
     roleId?: string | null
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionUncheckedCreateNestedManyWithoutMemberInput
+    messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionUncheckedCreateNestedManyWithoutMemberInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutNotificationsInput = {
@@ -83673,12 +87917,13 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUpdateManyWithoutMemberNestedInput
+    messages?: MessageUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutNotificationsInput = {
@@ -83691,12 +87936,13 @@ export namespace Prisma {
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUncheckedUpdateManyWithoutMemberNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUncheckedUpdateManyWithoutMemberNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberCreateWithoutPushSubscriptionsInput = {
@@ -83709,12 +87955,13 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionCreateNestedManyWithoutMemberInput
+    messages?: MessageCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
     notifications?: NotificationCreateNestedManyWithoutRecipientInput
     scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutPushSubscriptionsInput = {
@@ -83727,12 +87974,13 @@ export namespace Prisma {
     roleId?: string | null
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionUncheckedCreateNestedManyWithoutMemberInput
+    messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionUncheckedCreateNestedManyWithoutMemberInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
     scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutPushSubscriptionsInput = {
@@ -83761,12 +88009,13 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUpdateManyWithoutMemberNestedInput
+    messages?: MessageUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUpdateManyWithoutRecipientNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutPushSubscriptionsInput = {
@@ -83779,12 +88028,13 @@ export namespace Prisma {
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUncheckedUpdateManyWithoutMemberNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUncheckedUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceCreateWithoutInvoicesInput = {
@@ -83816,6 +88066,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -83848,6 +88099,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -83882,6 +88134,7 @@ export namespace Prisma {
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutInvoicesInput = {
@@ -83910,6 +88163,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutInvoicesInput = {
@@ -84034,6 +88288,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -84066,6 +88321,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -84106,6 +88362,7 @@ export namespace Prisma {
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutInvoicesInput = {
@@ -84134,6 +88391,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ContactUpsertWithoutInvoicesInput = {
@@ -84366,6 +88624,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -84398,6 +88657,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -84446,6 +88706,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -84478,6 +88739,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -84510,6 +88772,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -84542,6 +88805,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -84590,6 +88854,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -84622,6 +88887,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -84762,6 +89028,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -84794,6 +89061,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -84842,6 +89110,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -84874,6 +89143,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -84906,6 +89176,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -84938,6 +89209,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -84986,6 +89258,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -85018,6 +89291,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -85050,6 +89324,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -85082,6 +89357,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -85130,6 +89406,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -85162,6 +89439,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -85194,6 +89472,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -85226,6 +89505,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -85274,6 +89554,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -85306,6 +89587,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -85338,6 +89620,7 @@ export namespace Prisma {
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -85370,6 +89653,7 @@ export namespace Prisma {
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
@@ -85418,6 +89702,7 @@ export namespace Prisma {
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -85450,6 +89735,7 @@ export namespace Prisma {
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
@@ -85483,6 +89769,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutPublishItemsInput = {
@@ -85515,6 +89802,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutPublishItemsInput = {
@@ -85548,6 +89836,7 @@ export namespace Prisma {
     folders?: ProjectFolderCreateNestedManyWithoutProjectInput
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutPublishItemsInput = {
@@ -85576,6 +89865,7 @@ export namespace Prisma {
     folders?: ProjectFolderUncheckedCreateNestedManyWithoutProjectInput
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutPublishItemsInput = {
@@ -85607,7 +89897,7 @@ export namespace Prisma {
     status?: TaskStatusCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
-    comments?: TaskCommentCreateNestedManyWithoutTaskInput
+    comments?: MessageCreateNestedManyWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
@@ -85635,7 +89925,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutTaskInput
+    comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
@@ -85654,12 +89944,13 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionCreateNestedManyWithoutMemberInput
+    messages?: MessageCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
     notifications?: NotificationCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
     projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberUncheckedCreateWithoutScheduledItemsInput = {
@@ -85672,12 +89963,13 @@ export namespace Prisma {
     roleId?: string | null
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
-    comments?: TaskCommentUncheckedCreateNestedManyWithoutAuthorInput
-    mentionedIn?: CommentMentionUncheckedCreateNestedManyWithoutMemberInput
+    messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionUncheckedCreateNestedManyWithoutMemberInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
     pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type WorkspaceMemberCreateOrConnectWithoutScheduledItemsInput = {
@@ -85726,6 +90018,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutPublishItemsInput = {
@@ -85758,6 +90051,7 @@ export namespace Prisma {
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type ProjectUpsertWithoutPublishItemsInput = {
@@ -85797,6 +90091,7 @@ export namespace Prisma {
     folders?: ProjectFolderUpdateManyWithoutProjectNestedInput
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutPublishItemsInput = {
@@ -85825,6 +90120,7 @@ export namespace Prisma {
     folders?: ProjectFolderUncheckedUpdateManyWithoutProjectNestedInput
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type TaskUpsertWithoutPublishItemInput = {
@@ -85862,7 +90158,7 @@ export namespace Prisma {
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
-    comments?: TaskCommentUpdateManyWithoutTaskNestedInput
+    comments?: MessageUpdateManyWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
@@ -85890,7 +90186,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
+    comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
@@ -85915,12 +90211,13 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUpdateManyWithoutMemberNestedInput
+    messages?: MessageUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutScheduledItemsInput = {
@@ -85933,12 +90230,13 @@ export namespace Prisma {
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUncheckedUpdateManyWithoutMemberNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUncheckedUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberCreateManyWorkspaceInput = {
@@ -86197,6 +90495,14 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ConversationCreateManyWorkspaceInput = {
+    id?: string
+    isGroup?: boolean
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type PublishItemCreateManyWorkspaceInput = {
     id?: string
     projectId: string
@@ -86219,13 +90525,14 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: RoleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUpdateManyWithoutMemberNestedInput
+    messages?: MessageUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutWorkspaceInput = {
@@ -86237,13 +90544,14 @@ export namespace Prisma {
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUncheckedUpdateManyWithoutMemberNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUncheckedUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -86624,6 +90932,7 @@ export namespace Prisma {
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutWorkspaceInput = {
@@ -86652,6 +90961,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -87058,6 +91368,34 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ConversationUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isGroup?: BoolFieldUpdateOperationsInput | boolean
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
+    messages?: MessageUpdateManyWithoutConversationNestedInput
+  }
+
+  export type ConversationUncheckedUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isGroup?: BoolFieldUpdateOperationsInput | boolean
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+  }
+
+  export type ConversationUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isGroup?: BoolFieldUpdateOperationsInput | boolean
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type PublishItemUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
     scheduledDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -87121,17 +91459,20 @@ export namespace Prisma {
     deletedAt?: Date | string | null
   }
 
-  export type TaskCommentCreateManyAuthorInput = {
+  export type MessageCreateManyAuthorInput = {
     id?: string
-    taskId: string
+    taskId?: string | null
+    projectId?: string | null
+    conversationId?: string | null
     body: string
+    kind?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type CommentMentionCreateManyMemberInput = {
+  export type MessageMentionCreateManyMemberInput = {
     id?: string
-    commentId: string
+    messageId: string
   }
 
   export type NotificationCreateManyRecipientInput = {
@@ -87184,6 +91525,13 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type ConversationParticipantCreateManyMemberInput = {
+    id?: string
+    conversationId: string
+    lastReadAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
   export type TaskUpdateWithoutAssigneeInput = {
     id?: StringFieldUpdateOperationsInput | string
     taskNumber?: IntFieldUpdateOperationsInput | number
@@ -87207,7 +91555,7 @@ export namespace Prisma {
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
-    comments?: TaskCommentUpdateManyWithoutTaskNestedInput
+    comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
@@ -87235,7 +91583,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
+    comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
@@ -87264,45 +91612,54 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type TaskCommentUpdateWithoutAuthorInput = {
+  export type MessageUpdateWithoutAuthorInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    task?: TaskUpdateOneRequiredWithoutCommentsNestedInput
-    mentions?: CommentMentionUpdateManyWithoutCommentNestedInput
+    task?: TaskUpdateOneWithoutCommentsNestedInput
+    project?: ProjectUpdateOneWithoutMessagesNestedInput
+    conversation?: ConversationUpdateOneWithoutMessagesNestedInput
+    mentions?: MessageMentionUpdateManyWithoutMessageNestedInput
   }
 
-  export type TaskCommentUncheckedUpdateWithoutAuthorInput = {
+  export type MessageUncheckedUpdateWithoutAuthorInput = {
     id?: StringFieldUpdateOperationsInput | string
-    taskId?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    mentions?: CommentMentionUncheckedUpdateManyWithoutCommentNestedInput
+    mentions?: MessageMentionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
-  export type TaskCommentUncheckedUpdateManyWithoutAuthorInput = {
+  export type MessageUncheckedUpdateManyWithoutAuthorInput = {
     id?: StringFieldUpdateOperationsInput | string
-    taskId?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type CommentMentionUpdateWithoutMemberInput = {
+  export type MessageMentionUpdateWithoutMemberInput = {
     id?: StringFieldUpdateOperationsInput | string
-    comment?: TaskCommentUpdateOneRequiredWithoutMentionsNestedInput
+    message?: MessageUpdateOneRequiredWithoutMentionsNestedInput
   }
 
-  export type CommentMentionUncheckedUpdateWithoutMemberInput = {
+  export type MessageMentionUncheckedUpdateWithoutMemberInput = {
     id?: StringFieldUpdateOperationsInput | string
-    commentId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type CommentMentionUncheckedUpdateManyWithoutMemberInput = {
+  export type MessageMentionUncheckedUpdateManyWithoutMemberInput = {
     id?: StringFieldUpdateOperationsInput | string
-    commentId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
   }
 
   export type NotificationUpdateWithoutRecipientInput = {
@@ -87455,6 +91812,27 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ConversationParticipantUpdateWithoutMemberInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversation?: ConversationUpdateOneRequiredWithoutParticipantsNestedInput
+  }
+
+  export type ConversationParticipantUncheckedUpdateWithoutMemberInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conversationId?: StringFieldUpdateOperationsInput | string
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationParticipantUncheckedUpdateManyWithoutMemberInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conversationId?: StringFieldUpdateOperationsInput | string
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type WorkspaceMemberCreateManyRoleInput = {
     id?: string
     workspaceId: string
@@ -87481,13 +91859,14 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUpdateManyWithoutMemberNestedInput
+    messages?: MessageUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateWithoutRoleInput = {
@@ -87499,13 +91878,14 @@ export namespace Prisma {
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    mentionedIn?: CommentMentionUncheckedUpdateManyWithoutMemberNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUncheckedUpdateManyWithoutMemberNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
     pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
     scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type WorkspaceMemberUncheckedUpdateManyWithoutRoleInput = {
@@ -87723,6 +92103,7 @@ export namespace Prisma {
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutCompanyInput = {
@@ -87751,6 +92132,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutCompanyInput = {
@@ -88144,7 +92526,7 @@ export namespace Prisma {
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
-    comments?: TaskCommentUpdateManyWithoutTaskNestedInput
+    comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
@@ -88172,7 +92554,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
+    comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
@@ -88569,6 +92951,7 @@ export namespace Prisma {
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutStatusInput = {
@@ -88597,6 +92980,7 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutStatusInput = {
@@ -88718,6 +93102,17 @@ export namespace Prisma {
     addedAt?: Date | string
   }
 
+  export type MessageCreateManyProjectInput = {
+    id?: string
+    taskId?: string | null
+    conversationId?: string | null
+    authorId: string
+    body: string
+    kind?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type TaskUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     taskNumber?: IntFieldUpdateOperationsInput | number
@@ -88741,7 +93136,7 @@ export namespace Prisma {
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
-    comments?: TaskCommentUpdateManyWithoutTaskNestedInput
+    comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
@@ -88769,7 +93164,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
+    comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
@@ -89027,6 +93422,41 @@ export namespace Prisma {
     memberId?: StringFieldUpdateOperationsInput | string
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     addedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    task?: TaskUpdateOneWithoutCommentsNestedInput
+    conversation?: ConversationUpdateOneWithoutMessagesNestedInput
+    author?: WorkspaceMemberUpdateOneRequiredWithoutMessagesNestedInput
+    mentions?: MessageMentionUpdateManyWithoutMessageNestedInput
+  }
+
+  export type MessageUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
+    authorId?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    mentions?: MessageMentionUncheckedUpdateManyWithoutMessageNestedInput
+  }
+
+  export type MessageUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
+    authorId?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectFolderCreateManyParentInput = {
@@ -89385,7 +93815,7 @@ export namespace Prisma {
     service?: ServiceUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
-    comments?: TaskCommentUpdateManyWithoutTaskNestedInput
+    comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
@@ -89413,7 +93843,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
-    comments?: TaskCommentUncheckedUpdateManyWithoutTaskNestedInput
+    comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
@@ -89624,10 +94054,13 @@ export namespace Prisma {
     order?: number
   }
 
-  export type TaskCommentCreateManyTaskInput = {
+  export type MessageCreateManyTaskInput = {
     id?: string
+    projectId?: string | null
+    conversationId?: string | null
     authorId: string
     body: string
+    kind?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -89713,28 +94146,37 @@ export namespace Prisma {
     order?: IntFieldUpdateOperationsInput | number
   }
 
-  export type TaskCommentUpdateWithoutTaskInput = {
+  export type MessageUpdateWithoutTaskInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    author?: WorkspaceMemberUpdateOneRequiredWithoutCommentsNestedInput
-    mentions?: CommentMentionUpdateManyWithoutCommentNestedInput
+    project?: ProjectUpdateOneWithoutMessagesNestedInput
+    conversation?: ConversationUpdateOneWithoutMessagesNestedInput
+    author?: WorkspaceMemberUpdateOneRequiredWithoutMessagesNestedInput
+    mentions?: MessageMentionUpdateManyWithoutMessageNestedInput
   }
 
-  export type TaskCommentUncheckedUpdateWithoutTaskInput = {
+  export type MessageUncheckedUpdateWithoutTaskInput = {
     id?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    mentions?: CommentMentionUncheckedUpdateManyWithoutCommentNestedInput
+    mentions?: MessageMentionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
-  export type TaskCommentUncheckedUpdateManyWithoutTaskInput = {
+  export type MessageUncheckedUpdateManyWithoutTaskInput = {
     id?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -89775,24 +94217,98 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type CommentMentionCreateManyCommentInput = {
+  export type MessageMentionCreateManyMessageInput = {
     id?: string
     memberId: string
   }
 
-  export type CommentMentionUpdateWithoutCommentInput = {
+  export type MessageMentionUpdateWithoutMessageInput = {
     id?: StringFieldUpdateOperationsInput | string
     member?: WorkspaceMemberUpdateOneRequiredWithoutMentionedInNestedInput
   }
 
-  export type CommentMentionUncheckedUpdateWithoutCommentInput = {
+  export type MessageMentionUncheckedUpdateWithoutMessageInput = {
     id?: StringFieldUpdateOperationsInput | string
     memberId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type CommentMentionUncheckedUpdateManyWithoutCommentInput = {
+  export type MessageMentionUncheckedUpdateManyWithoutMessageInput = {
     id?: StringFieldUpdateOperationsInput | string
     memberId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ConversationParticipantCreateManyConversationInput = {
+    id?: string
+    memberId: string
+    lastReadAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type MessageCreateManyConversationInput = {
+    id?: string
+    taskId?: string | null
+    projectId?: string | null
+    authorId: string
+    body: string
+    kind?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConversationParticipantUpdateWithoutConversationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    member?: WorkspaceMemberUpdateOneRequiredWithoutConversationsNestedInput
+  }
+
+  export type ConversationParticipantUncheckedUpdateWithoutConversationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    memberId?: StringFieldUpdateOperationsInput | string
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationParticipantUncheckedUpdateManyWithoutConversationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    memberId?: StringFieldUpdateOperationsInput | string
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageUpdateWithoutConversationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    task?: TaskUpdateOneWithoutCommentsNestedInput
+    project?: ProjectUpdateOneWithoutMessagesNestedInput
+    author?: WorkspaceMemberUpdateOneRequiredWithoutMessagesNestedInput
+    mentions?: MessageMentionUpdateManyWithoutMessageNestedInput
+  }
+
+  export type MessageUncheckedUpdateWithoutConversationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    authorId?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    mentions?: MessageMentionUncheckedUpdateManyWithoutMessageNestedInput
+  }
+
+  export type MessageUncheckedUpdateManyWithoutConversationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    authorId?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type InvoiceItemCreateManyInvoiceInput = {

@@ -16,6 +16,9 @@ import {
   markNotificationRead,
   markAllNotificationsRead,
 } from "@/actions/notifications";
+import { useCentrifugo } from "@/components/realtime/centrifugo-provider";
+import { useChannel } from "@/components/realtime/hooks";
+import { userChannel } from "@/lib/channels";
 
 type Notification = {
   id: string;
@@ -63,6 +66,10 @@ export function NotificationsBell() {
     const interval = setInterval(refresh, 30_000);
     return () => clearInterval(interval);
   }, [refresh]);
+
+  // Instant updates: refresh the moment something lands on our user channel.
+  const cent = useCentrifugo();
+  useChannel(cent ? userChannel(cent.memberId) : null, () => refresh());
 
   useEffect(() => {
     if (open) refresh();

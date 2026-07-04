@@ -54,14 +54,14 @@ export function MonthView({
               <div className="mb-1 flex items-center justify-end sm:justify-start">
                 <span
                   className={cn(
-                    "grid size-6 place-items-center rounded-full text-tiny font-medium sm:text-xs",
+                    "grid size-6 place-items-center text-tiny sm:text-xs",
                     isToday
-                      ? "bg-primary text-primary-foreground"
+                      ? "font-bold text-foreground underline underline-offset-4 decoration-2 decoration-primary"
                       : inMonth
                         ? dayItems.length > 0
-                          ? "text-primary"
-                          : "text-foreground/90"
-                      : "text-muted-foreground/30",
+                          ? "font-medium text-primary"
+                          : "font-medium text-foreground/90"
+                      : "font-medium text-muted-foreground/30",
                   )}
                 >
                   {d.getDate()}

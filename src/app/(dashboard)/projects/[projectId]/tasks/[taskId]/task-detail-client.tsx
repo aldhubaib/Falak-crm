@@ -44,6 +44,8 @@ import {
   removeChecklistItemAttachment,
 } from "@/actions/projects";
 import { addTaskComment } from "@/actions/comments";
+import { useChannel } from "@/components/realtime/hooks";
+import { taskChannel } from "@/lib/channels";
 import {
   categoryIcon,
   validateFile,
@@ -156,6 +158,12 @@ export function TaskDetailClient({
       router.refresh();
     });
   };
+
+  // Live comments/rejections: refresh when a new message lands on this task.
+  useChannel(taskChannel(taskId), (data) => {
+    const d = data as { type?: string } | null;
+    if (d?.type === "message.new") router.refresh();
+  });
 
   return (
     <>

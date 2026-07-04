@@ -473,19 +473,39 @@ exports.Prisma.TaskStatusChangeScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.TaskCommentScalarFieldEnum = {
+exports.Prisma.MessageScalarFieldEnum = {
   id: 'id',
   taskId: 'taskId',
+  projectId: 'projectId',
+  conversationId: 'conversationId',
   authorId: 'authorId',
   body: 'body',
+  kind: 'kind',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.CommentMentionScalarFieldEnum = {
+exports.Prisma.MessageMentionScalarFieldEnum = {
   id: 'id',
-  commentId: 'commentId',
+  messageId: 'messageId',
   memberId: 'memberId'
+};
+
+exports.Prisma.ConversationScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  isGroup: 'isGroup',
+  title: 'title',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ConversationParticipantScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  memberId: 'memberId',
+  lastReadAt: 'lastReadAt',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.NotificationScalarFieldEnum = {
@@ -783,8 +803,10 @@ exports.Prisma.ModelName = {
   TaskStatus: 'TaskStatus',
   Task: 'Task',
   TaskStatusChange: 'TaskStatusChange',
-  TaskComment: 'TaskComment',
-  CommentMention: 'CommentMention',
+  Message: 'Message',
+  MessageMention: 'MessageMention',
+  Conversation: 'Conversation',
+  ConversationParticipant: 'ConversationParticipant',
   Notification: 'Notification',
   PushSubscription: 'PushSubscription',
   Invoice: 'Invoice',
