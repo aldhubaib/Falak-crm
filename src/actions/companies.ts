@@ -2,10 +2,16 @@
 
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
-import { requireWorkspace } from "@/lib/workspace";
+import { requireWorkspace, requireWorkspaceWithMember } from "@/lib/workspace";
+import { canEdit } from "@/lib/permissions";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
+
+async function requireCompaniesEdit() {
+  const { member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "companies")) throw new Error("Permission denied");
+}
 
 const LIST_PAGE_SIZE = 50;
 
@@ -82,6 +88,7 @@ export async function getCompany(id: string) {
 
 export async function createCompany(formData: FormData): Promise<ActionResult<{ id: string }>> {
   return safeAction("Create Company", async () => {
+    await requireCompaniesEdit();
     const workspace = await requireWorkspace();
     const { userId } = await auth();
     const user = await currentUser();
@@ -127,6 +134,7 @@ export async function createCompany(formData: FormData): Promise<ActionResult<{ 
 
 export async function updateCompany(id: string, formData: FormData): Promise<ActionResult> {
   return safeAction("Update Company", async () => {
+    await requireCompaniesEdit();
     const workspace = await requireWorkspace();
 
     const existing = await db.company.findFirst({ where: { id, workspaceId: workspace.id } });
@@ -165,6 +173,7 @@ export async function updateCompany(id: string, formData: FormData): Promise<Act
 
 export async function deleteCompany(id: string): Promise<ActionResult> {
   return safeAction("Delete Company", async () => {
+    await requireCompaniesEdit();
     const workspace = await requireWorkspace();
     const company = await db.company.findFirst({ where: { id, workspaceId: workspace.id } });
     await db.company.update({ where: { id, workspaceId: workspace.id }, data: { deletedAt: new Date() } });

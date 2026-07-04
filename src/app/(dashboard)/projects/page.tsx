@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Plus, Users, ListTodo } from "lucide-react";
 import { getProjects } from "@/actions/projects";
+import { requireWorkspaceWithMember } from "@/lib/workspace";
+import { canEdit } from "@/lib/permissions";
 import { AppHeader } from "@/components/app-header";
 import { EmptyState } from "@/components/empty-state";
 import { Button } from "@/components/ui/button";
@@ -12,18 +14,24 @@ function hueFor(id: string) {
 }
 
 export default async function ProjectsPage() {
-  const projects = await getProjects();
+  const [projects, { member }] = await Promise.all([
+    getProjects(),
+    requireWorkspaceWithMember(),
+  ]);
+  const editable = canEdit(member, "projects");
 
   return (
     <>
       <AppHeader
         title="Projects"
         actions={
-          <Button asChild size="icon" className="rounded-full" aria-label="New Project">
-            <Link href="/projects/new">
-              <Plus className="h-4 w-4" />
-            </Link>
-          </Button>
+          editable ? (
+            <Button asChild size="icon" className="rounded-full" aria-label="New Project">
+              <Link href="/projects/new">
+                <Plus className="h-4 w-4" />
+              </Link>
+            </Button>
+          ) : undefined
         }
       />
       <main className="min-h-0 flex-1 overflow-y-auto">
@@ -102,12 +110,14 @@ export default async function ProjectsPage() {
               className="col-span-full p-10"
               message="No projects yet. Create your first one."
               action={
-                <Button asChild size="sm">
-                  <Link href="/projects/new">
-                    <Plus className="h-4 w-4" />
-                    New Project
-                  </Link>
-                </Button>
+                editable ? (
+                  <Button asChild size="sm">
+                    <Link href="/projects/new">
+                      <Plus className="h-4 w-4" />
+                      New Project
+                    </Link>
+                  </Button>
+                ) : undefined
               }
             />
           )}

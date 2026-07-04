@@ -15,7 +15,10 @@ import {
   Settings,
   LogOut,
   UserCog,
+  type LucideIcon,
 } from "lucide-react";
+import { MODULES, type ModuleKey } from "@/lib/permissions";
+import { usePermissions } from "@/components/permissions-provider";
 
 import {
   Sidebar,
@@ -46,16 +49,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-const items = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
-  { title: "Companies", url: "/companies", icon: Building2 },
-  { title: "Contacts", url: "/contacts", icon: Users },
-  { title: "Deals", url: "/deals", icon: Handshake },
-  { title: "Projects", url: "/projects", icon: FolderKanban },
-  { title: "Invoices", url: "/invoices", icon: FileText },
-  { title: "Publish", url: "/publish", icon: CalendarDays },
-  { title: "Settings", url: "/settings", icon: Settings },
-];
+// Icons are presentation-only; which items exist and who sees them is driven
+// by the module registry in src/lib/permissions.ts.
+const MODULE_ICONS: Partial<Record<ModuleKey, LucideIcon>> = {
+  companies: Building2,
+  contacts: Users,
+  deals: Handshake,
+  projects: FolderKanban,
+  invoices: FileText,
+  publish: CalendarDays,
+  settings: Settings,
+};
 
 export function AppSidebar() {
   const { state, setOpenMobile, isMobile } = useSidebar();
@@ -64,6 +68,21 @@ export function AppSidebar() {
   const { signOut } = useClerk();
   const { user } = useUser();
   const [signOutOpen, setSignOutOpen] = useState(false);
+  const permissions = usePermissions();
+
+  // Dashboard is always visible; module entries are hidden entirely when the
+  // member's level for that module is "none" (route guards enforce the same
+  // rule server-side).
+  const items = [
+    { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
+    ...MODULES.filter(
+      (m) => m.href && MODULE_ICONS[m.key] && permissions[m.key] !== "none",
+    ).map((m) => ({
+      title: m.label,
+      url: m.href!,
+      icon: MODULE_ICONS[m.key]!,
+    })),
+  ];
 
   const handleSignOut = () => {
     setSignOutOpen(false);

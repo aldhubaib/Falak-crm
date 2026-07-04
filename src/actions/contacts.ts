@@ -2,10 +2,16 @@
 
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
-import { requireWorkspace } from "@/lib/workspace";
+import { requireWorkspace, requireWorkspaceWithMember } from "@/lib/workspace";
+import { canEdit } from "@/lib/permissions";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
+
+async function requireContactsEdit() {
+  const { member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "contacts")) throw new Error("Permission denied");
+}
 
 const LIST_PAGE_SIZE = 50;
 
@@ -67,6 +73,7 @@ export async function getContact(id: string) {
 
 export async function createContact(formData: FormData): Promise<ActionResult<{ id: string }>> {
   return safeAction("Create Contact", async () => {
+    await requireContactsEdit();
     const workspace = await requireWorkspace();
     const { userId } = await auth();
     const user = await currentUser();
@@ -117,6 +124,7 @@ export async function createContact(formData: FormData): Promise<ActionResult<{ 
 
 export async function updateContact(id: string, formData: FormData): Promise<ActionResult> {
   return safeAction("Update Contact", async () => {
+    await requireContactsEdit();
     const workspace = await requireWorkspace();
 
     const existing = await db.contact.findFirst({ where: { id, workspaceId: workspace.id } });
@@ -161,6 +169,7 @@ export async function addContactCompany(
   role?: string
 ): Promise<ActionResult> {
   return safeAction("Link Contact to Company", async () => {
+    await requireContactsEdit();
     const workspace = await requireWorkspace();
     const contact = await db.contact.findFirst({ where: { id: contactId, workspaceId: workspace.id } });
     if (!contact) throw new Error("Contact not found");
@@ -179,6 +188,7 @@ export async function addContactCompany(
 
 export async function removeContactCompany(contactId: string, companyId: string): Promise<ActionResult> {
   return safeAction("Unlink Contact from Company", async () => {
+    await requireContactsEdit();
     await db.contactCompany.delete({
       where: { contactId_companyId: { contactId, companyId } },
     });
@@ -194,6 +204,7 @@ export async function updateContactCompanyRole(
   role: string
 ): Promise<ActionResult> {
   return safeAction("Update Contact Role", async () => {
+    await requireContactsEdit();
     await db.contactCompany.update({
       where: { contactId_companyId: { contactId, companyId } },
       data: { role: role || null },
@@ -208,6 +219,7 @@ export async function setContactPrimaryCompany(
   companyId: string
 ): Promise<ActionResult> {
   return safeAction("Set Primary Company", async () => {
+    await requireContactsEdit();
     await db.contactCompany.updateMany({
       where: { contactId },
       data: { primary: false },
@@ -223,6 +235,7 @@ export async function setContactPrimaryCompany(
 
 export async function deleteContact(id: string): Promise<ActionResult> {
   return safeAction("Delete Contact", async () => {
+    await requireContactsEdit();
     const workspace = await requireWorkspace();
     const contact = await db.contact.findFirst({ where: { id, workspaceId: workspace.id } });
     await db.contact.update({ where: { id, workspaceId: workspace.id }, data: { deletedAt: new Date() } });

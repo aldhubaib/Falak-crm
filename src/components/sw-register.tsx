@@ -51,6 +51,7 @@ export function ServiceWorkerRegister() {
     if (!("serviceWorker" in navigator)) return;
 
     let reg: ServiceWorkerRegistration | null = null;
+    let lastCheckAt = Date.now();
 
     navigator.serviceWorker.register("/sw.js").then((r) => {
       reg = r;
@@ -92,15 +93,35 @@ export function ServiceWorkerRegister() {
       });
     }).catch(() => {});
 
-    navigator.serviceWorker.addEventListener("controllerchange", () => {
+    // Guard against reload loops: controllerchange also fires on the very
+    // first install (clients.claim), and we only want to reload after the
+    // user accepted an update.
+    let refreshing = false;
+    const onControllerChange = () => {
+      if (refreshing) return;
+      refreshing = true;
       window.location.reload();
-    });
+    };
+    navigator.serviceWorker.addEventListener("controllerchange", onControllerChange);
 
-    const interval = setInterval(() => {
+    // Check for updates only when the app is (re)opened — initial load (the
+    // register() call above already triggers a check) and when the PWA comes
+    // back to the foreground. No mid-session polling: it made every deploy
+    // pop its own banner while people were working. Several deploys between
+    // two opens collapse into a single waiting worker → a single banner.
+    const FOREGROUND_CHECK_MIN_MS = 5 * 60 * 1000;
+    const onVisible = () => {
+      if (document.visibilityState !== "visible") return;
+      if (Date.now() - lastCheckAt < FOREGROUND_CHECK_MIN_MS) return;
+      lastCheckAt = Date.now();
       reg?.update().catch(() => {});
-    }, 60_000);
+    };
+    document.addEventListener("visibilitychange", onVisible);
 
-    return () => clearInterval(interval);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisible);
+      navigator.serviceWorker.removeEventListener("controllerchange", onControllerChange);
+    };
   }, []);
 
   if (showUpdate) {

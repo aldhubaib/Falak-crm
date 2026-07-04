@@ -20,9 +20,12 @@ export const metadata: Metadata = {
   title: "Falak CRM",
   description: "CRM & Bookkeeping for marketing agencies",
   manifest: "/manifest.json",
+  // iOS reads the apple icon; Android reads the manifest icons — separate
+  // files so each platform can have its own artwork. Bump ?v= together with
+  // the manifest whenever the logo changes so installed PWAs refresh it.
   icons: {
     icon: "/favicon.png",
-    apple: "/apple-touch-icon.png",
+    apple: "/icons/ios-180.png?v=2",
   },
   appleWebApp: {
     capable: true,

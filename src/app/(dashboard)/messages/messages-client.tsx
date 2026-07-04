@@ -3,7 +3,16 @@
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { Search, Users, Folder, MessageSquare, X, PenSquare } from "lucide-react";
+import {
+  Search,
+  Users,
+  Folder,
+  MessageSquare,
+  X,
+  PenSquare,
+  Archive,
+  ChevronDown,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -20,6 +29,7 @@ import {
 } from "@/actions/messages";
 import { useCentrifugo } from "@/components/realtime/centrifugo-provider";
 import { useChannel, usePresence } from "@/components/realtime/hooks";
+import { usePermissions } from "@/components/permissions-provider";
 import { userChannel, workspacePresenceChannel } from "@/lib/channels";
 
 function formatRelative(iso: string) {
@@ -36,12 +46,38 @@ function formatRelative(iso: string) {
 
 type Member = { id: string; name: string | null; email: string };
 
+// True when the user is viewing a specific thread (not the inbox index).
+function useOnThread() {
+  const pathname = usePathname();
+  return pathname.startsWith("/messages/") && pathname !== "/messages";
+}
+
+// Client wrapper for the thread pane: full-screen on mobile only when a
+// thread is open, always visible on desktop.
+export function MessagesMain({ children }: { children: React.ReactNode }) {
+  const onThread = useOnThread();
+  return (
+    <main
+      className={cn(
+        "min-w-0 flex-1 flex-col",
+        onThread ? "flex" : "hidden lg:flex",
+      )}
+    >
+      {children}
+    </main>
+  );
+}
+
 export function ThreadSidebar({ threads }: { threads: InboxThread[] }) {
   const pathname = usePathname();
   const router = useRouter();
+  const onThread = useOnThread();
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<"all" | "project" | "direct">("all");
   const [composeOpen, setComposeOpen] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
+  const permissions = usePermissions();
+  const canCompose = permissions.chat === "full";
 
   const cent = useCentrifugo();
   const online = usePresence(
@@ -55,7 +91,7 @@ export function ThreadSidebar({ threads }: { threads: InboxThread[] }) {
     if (d?.type === "inbox") router.refresh();
   });
 
-  const rows = useMemo(() => {
+  const allRows = useMemo(() => {
     return threads
       .filter((t) => (tab === "all" ? true : t.kind === tab))
       .filter((t) =>
@@ -69,8 +105,21 @@ export function ThreadSidebar({ threads }: { threads: InboxThread[] }) {
       );
   }, [threads, tab, q]);
 
+  // Non-active projects collapse into an "Archived projects" section.
+  const rows = useMemo(() => allRows.filter((t) => !t.archived), [allRows]);
+  const archivedRows = useMemo(
+    () => allRows.filter((t) => t.archived),
+    [allRows],
+  );
+  const showArchivedSection = tab !== "direct" && archivedRows.length > 0;
+
   return (
-    <aside className="flex w-80 shrink-0 flex-col border-r border-border/60">
+    <aside
+      className={cn(
+        "flex-col border-r border-border/60 lg:flex lg:w-80 lg:shrink-0",
+        onThread ? "hidden lg:flex" : "flex w-full",
+      )}
+    >
       <div className="flex h-14 items-center gap-2 border-b border-border/60 px-3">
         <Button
           asChild
@@ -84,15 +133,17 @@ export function ThreadSidebar({ threads }: { threads: InboxThread[] }) {
           </Link>
         </Button>
         <div className="text-sm font-semibold">Inbox</div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="ml-auto rounded-full"
-          aria-label="New message"
-          onClick={() => setComposeOpen(true)}
-        >
-          <PenSquare className="h-4 w-4" />
-        </Button>
+        {canCompose && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-auto rounded-full"
+            aria-label="New message"
+            onClick={() => setComposeOpen(true)}
+          >
+            <PenSquare className="h-4 w-4" />
+          </Button>
+        )}
       </div>
 
       <div className="border-b border-border/60 p-3">
@@ -131,63 +182,59 @@ export function ThreadSidebar({ threads }: { threads: InboxThread[] }) {
       </div>
 
       <ul className="min-h-0 flex-1 overflow-y-auto">
-        {rows.length === 0 && (
+        {rows.length === 0 && !showArchivedSection && (
           <li className="p-6 text-center text-xs text-muted-foreground">
             No conversations
           </li>
         )}
-        {rows.map((thread) => {
-          const href = `/messages/${thread.id}`;
-          const active = pathname === href;
-          const isOnline =
-            thread.kind === "direct" &&
-            thread.peerMemberIds.some((id) => online.has(id));
-          return (
-            <li key={thread.id}>
-              <Link
-                href={href}
+        {rows.map((thread) => (
+          <li key={thread.id}>
+            <ThreadRow
+              thread={thread}
+              active={pathname === `/messages/${thread.id}`}
+              isOnline={
+                thread.kind === "direct" &&
+                thread.peerMemberIds.some((id) => online.has(id))
+              }
+            />
+          </li>
+        ))}
+        {showArchivedSection && (
+          <li>
+            <button
+              type="button"
+              onClick={() => setShowArchived((v) => !v)}
+              className="flex w-full items-center gap-2 border-y border-border/40 bg-surface/30 px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-surface/60"
+              aria-expanded={showArchived}
+            >
+              <Archive className="h-3.5 w-3.5" />
+              <span>Archived projects</span>
+              <span className="ml-1 rounded-full bg-surface px-1.5 text-tiny">
+                {archivedRows.length}
+              </span>
+              <ChevronDown
                 className={cn(
-                  "flex items-start gap-3 border-b border-border/40 px-3 py-3 transition-colors hover:bg-surface/60",
-                  active && "bg-surface/80",
-                  thread.unread > 0 && !active && "bg-primary/[0.05]",
+                  "ml-auto h-3.5 w-3.5 transition-transform",
+                  showArchived && "rotate-180",
                 )}
-              >
-                <div className="relative shrink-0">
-                  <div
-                    className="grid h-9 w-9 place-items-center rounded-full text-tiny font-semibold text-white"
-                    style={{ background: thread.avatar }}
-                    aria-hidden
-                  >
-                    {thread.initials}
-                  </div>
-                  {isOnline && (
-                    <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-background bg-emerald-500" />
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="truncate text-sm font-medium">
-                      {thread.name}
-                    </span>
-                    <span className="ml-auto shrink-0 text-xxs text-muted-foreground">
-                      {formatRelative(thread.lastAt)}
-                    </span>
-                  </div>
-                  <div className="truncate text-xs text-muted-foreground">
-                    {thread.lastAuthor
-                      ? `${thread.lastAuthor}: ${thread.lastMessage}`
-                      : thread.subtitle}
-                  </div>
-                </div>
-                {thread.unread > 0 && (
-                  <span className="mt-2 grid h-4 min-w-4 place-items-center rounded-full bg-primary px-1 text-xxs font-semibold text-primary-foreground">
-                    {thread.unread}
-                  </span>
-                )}
-              </Link>
-            </li>
-          );
-        })}
+              />
+            </button>
+            {showArchived && (
+              <ul>
+                {archivedRows.map((thread) => (
+                  <li key={thread.id}>
+                    <ThreadRow
+                      thread={thread}
+                      active={pathname === `/messages/${thread.id}`}
+                      isOnline={false}
+                      archived
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        )}
       </ul>
 
       <ComposeDialog
@@ -196,6 +243,78 @@ export function ThreadSidebar({ threads }: { threads: InboxThread[] }) {
         online={online}
       />
     </aside>
+  );
+}
+
+function ThreadRow({
+  thread,
+  active,
+  isOnline,
+  archived = false,
+}: {
+  thread: InboxThread;
+  active: boolean;
+  isOnline: boolean;
+  archived?: boolean;
+}) {
+  return (
+    <Link
+      href={`/messages/${thread.id}`}
+      className={cn(
+        "flex items-start gap-3 border-b border-border/40 px-3 py-3 transition-colors hover:bg-surface/60",
+        active && "bg-surface/80",
+        !archived && thread.unread > 0 && !active && "bg-primary/[0.05]",
+        archived && "opacity-60 hover:opacity-80",
+        archived && active && "opacity-100",
+      )}
+    >
+      <div className="relative shrink-0">
+        <div
+          className="grid h-9 w-9 place-items-center rounded-full text-tiny font-semibold text-white"
+          style={{ background: thread.avatar }}
+          aria-hidden
+        >
+          {thread.initials}
+        </div>
+        {isOnline && (
+          <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-background bg-emerald-500" />
+        )}
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          {archived && (
+            <span
+              className="grid size-5 shrink-0 place-items-center rounded-md bg-surface/80 text-muted-foreground"
+              title="Archived project"
+              aria-label="Archived project"
+            >
+              <Archive className="h-3.5 w-3.5" />
+            </span>
+          )}
+          <span className="truncate text-sm font-medium">{thread.name}</span>
+          <span className="ml-auto shrink-0 text-xxs text-muted-foreground">
+            {formatRelative(thread.lastAt)}
+          </span>
+        </div>
+        <div className="truncate text-xs text-muted-foreground">
+          {thread.lastAuthor
+            ? `${thread.lastAuthor}: ${thread.lastMessage}`
+            : thread.subtitle}
+        </div>
+      </div>
+      {thread.unread > 0 && (
+        <span
+          className={cn(
+            "mt-2 grid h-4 min-w-4 place-items-center rounded-full px-1 text-xxs font-semibold",
+            archived
+              ? "bg-muted text-muted-foreground"
+              : "bg-primary text-primary-foreground",
+          )}
+        >
+          {thread.unread}
+        </span>
+      )}
+    </Link>
   );
 }
 

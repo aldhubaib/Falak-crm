@@ -2,10 +2,32 @@
 
 import { db } from "@/lib/db";
 import { requireWorkspaceWithMember } from "@/lib/workspace";
-import { canEdit } from "@/lib/permissions";
+import { canEdit, newRolePermissions, normalizePermissions } from "@/lib/permissions";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { safeAction, type ActionResult } from "@/lib/action";
+import { invalidateCache } from "@/lib/cache";
+
+// Permission changes must take effect immediately — drop the cached derived
+// permissions of every member who holds this role (workspace-level or via a
+// project assignment).
+async function invalidateRoleMembersPerms(workspaceId: string, roleId: string) {
+  const [direct, viaProjects] = await Promise.all([
+    db.workspaceMember.findMany({
+      where: { workspaceId, roleId },
+      select: { id: true },
+    }),
+    db.projectMember.findMany({
+      where: { roleId, member: { workspaceId } },
+      select: { memberId: true },
+    }),
+  ]);
+  const ids = new Set<string>([
+    ...direct.map((m) => m.id),
+    ...viaProjects.map((m) => m.memberId),
+  ]);
+  await Promise.all([...ids].map((id) => invalidateCache(`perms:${id}`)));
+}
 
 export async function getTeamMembers() {
   const { workspace } = await requireWorkspaceWithMember();
@@ -33,6 +55,7 @@ export async function assignRole(memberId: string, roleId: string | null): Promi
       data: { roleId: roleId || null },
     });
 
+    await invalidateCache(`perms:${memberId}`);
     revalidatePath("/settings/team");
   }, { memberId, roleId });
 }
@@ -77,14 +100,7 @@ export async function createRole(name: string): Promise<ActionResult<string>> {
       data: {
         workspaceId: workspace.id,
         name: trimmed,
-        permissions: {
-          deals: "view",
-          pipeline: "none",
-          projects: "view",
-          invoices: "none",
-          settings: "none",
-          team: "none",
-        },
+        permissions: JSON.parse(JSON.stringify(newRolePermissions())),
       },
     });
 
@@ -112,10 +128,17 @@ export async function updateRole(roleId: string, data: { name?: string; permissi
       where: { id: roleId, workspaceId: workspace.id },
       data: {
         ...(data.name !== undefined && { name: data.name }),
-        ...(data.permissions !== undefined && { permissions: data.permissions as object }),
+        // Never trust the client payload for something this sensitive:
+        // normalize to known modules/levels before storing.
+        ...(data.permissions !== undefined && {
+          permissions: JSON.parse(JSON.stringify(normalizePermissions(data.permissions))),
+        }),
       },
     });
 
+    if (data.permissions !== undefined) {
+      await invalidateRoleMembersPerms(workspace.id, roleId);
+    }
     revalidatePath("/settings/team");
   });
 }
@@ -124,6 +147,9 @@ export async function deleteRole(roleId: string): Promise<ActionResult> {
   return safeAction("Delete Role", async () => {
     const { workspace, member } = await requireWorkspaceWithMember();
     if (!canEdit(member, "team")) throw new Error("Permission denied");
+
+    // Capture affected members before the role links are severed.
+    await invalidateRoleMembersPerms(workspace.id, roleId);
 
     await db.workspaceMember.updateMany({
       where: { workspaceId: workspace.id, roleId },

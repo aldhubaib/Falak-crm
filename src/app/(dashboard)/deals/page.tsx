@@ -1,13 +1,19 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { getPipeline } from "@/actions/deals";
+import { requireWorkspaceWithMember } from "@/lib/workspace";
+import { canEdit } from "@/lib/permissions";
 import { AppHeader } from "@/components/app-header";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
 import { DealsBoard } from "./deals-board";
 
 export default async function DealsPage() {
-  const pipeline = await getPipeline();
+  const [pipeline, { member }] = await Promise.all([
+    getPipeline(),
+    requireWorkspaceWithMember(),
+  ]);
+  const editable = canEdit(member, "deals");
 
   if (!pipeline) {
     return (
@@ -40,12 +46,14 @@ export default async function DealsPage() {
       <AppHeader
         title="Deals"
         actions={
-          <Button asChild size="sm" className="rounded-full">
-            <Link href="/deals/new">
-              <Plus className="h-4 w-4" />
-              New Deal
-            </Link>
-          </Button>
+          editable ? (
+            <Button asChild size="sm" className="rounded-full">
+              <Link href="/deals/new">
+                <Plus className="h-4 w-4" />
+                New Deal
+              </Link>
+            </Button>
+          ) : undefined
         }
       />
       <main className="min-h-0 flex-1 overflow-x-auto overflow-y-auto">

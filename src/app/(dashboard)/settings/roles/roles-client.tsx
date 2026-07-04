@@ -19,6 +19,7 @@ import { AddItemInput } from "@/components/add-item-input";
 import { IconButton } from "@/components/icon-button";
 import { Switch } from "@/components/ui/switch";
 import { createRole, updateRole, deleteRole } from "@/actions/team";
+import { MODULES, normalizeLevel, normalizePermissions } from "@/lib/permissions";
 import { cn } from "@/lib/utils";
 
 type Role = {
@@ -27,16 +28,13 @@ type Role = {
   permissions: unknown;
 };
 
-const PERMISSION_KEYS = [
-  { key: "deals", label: "Deals" },
-  { key: "pipeline", label: "Pipeline" },
-  { key: "projects", label: "Projects" },
-  { key: "invoices", label: "Invoices" },
-  { key: "settings", label: "Settings" },
-  { key: "team", label: "Team" },
+// Rows come straight from the module registry, so adding a module to
+// MODULES in src/lib/permissions.ts automatically shows up here.
+const LEVELS = [
+  { value: "none", label: "None" },
+  { value: "view", label: "View" },
+  { value: "full", label: "Edit" },
 ] as const;
-
-const LEVELS = ["none", "view", "edit"] as const;
 
 export function RolesClient({
   roles,
@@ -81,8 +79,9 @@ export function RolesClient({
     key: string,
     level: string,
   ) => {
-    const perms = (role.permissions as Record<string, string>) || {};
-    const updated = { ...perms, [key]: level };
+    // Save the full normalized set: heals legacy values ("edit" → "full")
+    // and materializes defaults for modules added after the role was created.
+    const updated = { ...normalizePermissions(role.permissions), [key]: level };
     startTransition(async () => {
       await updateRole(role.id, { permissions: updated });
       router.refresh();
@@ -155,32 +154,35 @@ export function RolesClient({
             {isExpanded && (
               <div className="border-t border-border/40 p-3 sm:p-4">
                 <div className="space-y-3">
-                  {PERMISSION_KEYS.map(({ key, label }) => (
-                    <div
-                      key={key}
-                      className="flex items-center justify-between gap-4"
-                    >
-                      <span className="text-sm">{label}</span>
-                      <div className="flex gap-1">
-                        {LEVELS.map((level) => (
-                          <button
-                            key={level}
-                            type="button"
-                            onClick={() => updatePermission(r, key, level)}
-                            disabled={pending}
-                            className={cn(
-                              "rounded-md px-3 py-1 text-xs font-medium capitalize transition-colors",
-                              perms[key] === level
-                                ? "bg-primary text-primary-foreground"
-                                : "bg-muted/40 text-muted-foreground hover:bg-muted",
-                            )}
-                          >
-                            {level}
-                          </button>
-                        ))}
+                  {MODULES.map(({ key, label, legacyDefault }) => {
+                    const current = normalizeLevel(perms[key], legacyDefault);
+                    return (
+                      <div
+                        key={key}
+                        className="flex items-center justify-between gap-4"
+                      >
+                        <span className="text-sm">{label}</span>
+                        <div className="flex gap-1">
+                          {LEVELS.map((level) => (
+                            <button
+                              key={level.value}
+                              type="button"
+                              onClick={() => updatePermission(r, key, level.value)}
+                              disabled={pending}
+                              className={cn(
+                                "rounded-md px-3 py-1 text-xs font-medium transition-colors",
+                                current === level.value
+                                  ? "bg-primary text-primary-foreground"
+                                  : "bg-muted/40 text-muted-foreground hover:bg-muted",
+                              )}
+                            >
+                              {level.label}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
                 <div className="mt-4 flex justify-end">
                   <Button

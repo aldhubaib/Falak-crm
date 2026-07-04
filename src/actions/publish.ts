@@ -2,7 +2,15 @@
 
 import { db } from "@/lib/db";
 import { requireWorkspaceWithMember, getAccessibleProjectScope, getProjectAccess } from "@/lib/workspace";
+import { canEdit } from "@/lib/permissions";
 import { revalidatePath } from "next/cache";
+
+// Publish mutations need module-level edit rights on top of project access —
+// "view" members can browse the calendar but not change the schedule.
+async function requirePublishEdit() {
+  const { member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "publish")) throw new Error("Permission denied");
+}
 
 export async function getPublishableProjects() {
   const scope = await getAccessibleProjectScope();
@@ -149,6 +157,7 @@ export async function scheduleTask(data: {
   scheduledDate: string;
   notes?: string;
 }) {
+  await requirePublishEdit();
   const access = await getProjectAccess(data.projectId);
   if (!access.hasAccess) throw new Error("Permission denied");
 
@@ -172,6 +181,7 @@ export async function scheduleTask(data: {
 }
 
 async function requirePublishItemAccess(publishItemId: string) {
+  await requirePublishEdit();
   const { workspace } = await requireWorkspaceWithMember();
   const item = await db.publishItem.findFirst({
     where: { id: publishItemId, workspaceId: workspace.id },

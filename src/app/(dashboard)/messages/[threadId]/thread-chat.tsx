@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
+  ArrowLeft,
   Paperclip,
   Send,
   X,
@@ -49,6 +51,7 @@ import {
 import { useChannel, usePresence, useTyping } from "@/components/realtime/hooks";
 import {
   AttachmentBubble,
+  isVoiceAttachment,
   Lightbox,
   useLightbox,
   FilesPanel,
@@ -146,6 +149,8 @@ export function ThreadChat({
   hasMoreOlder = false,
   memberNames = {},
   peerMemberIds = [],
+  archived = false,
+  readOnly = false,
 }: {
   channel: string;
   presenceChannel: string | null;
@@ -157,6 +162,8 @@ export function ThreadChat({
   hasMoreOlder?: boolean;
   memberNames?: Record<string, string>;
   peerMemberIds?: string[];
+  archived?: boolean;
+  readOnly?: boolean;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [hasMore, setHasMore] = useState(hasMoreOlder);
@@ -813,7 +820,18 @@ export function ThreadChat({
       )}
 
       {/* Thread header */}
-      <div className="flex h-14 items-center gap-3 border-b border-border/60 px-4">
+      <div className="flex h-14 items-center gap-2 border-b border-border/60 px-3 sm:gap-3 sm:px-4">
+        <Button
+          asChild
+          variant="ghost"
+          size="icon"
+          className="shrink-0 rounded-full lg:hidden"
+          aria-label="Back to inbox"
+        >
+          <Link href="/messages">
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+        </Button>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className="truncate text-sm font-semibold">{title}</span>
@@ -1014,6 +1032,9 @@ export function ThreadChat({
                             attachment={a}
                             mine={mine}
                             onOpenImage={openImage}
+                            timeLabel={
+                              isVoiceAttachment(a) ? formatTime(m.createdAt) : undefined
+                            }
                             menu={
                               <FileCaretMenu
                                 onReact={(emoji) => react(m.id, emoji)}
@@ -1089,6 +1110,14 @@ export function ThreadChat({
       {/* Composer */}
       <div className="shrink-0 border-t border-border/60 p-3">
         <div className="mx-auto max-w-3xl">
+          {archived || readOnly ? (
+            <div className="flex items-center justify-center gap-2 rounded-2xl border border-dashed border-border/60 bg-surface/30 px-4 py-3 text-xs text-muted-foreground">
+              {archived
+                ? "This project is archived. The channel is read-only."
+                : "You have read-only access to this chat."}
+            </div>
+          ) : (
+          <>
           {replyingTo && (
             <div className="mb-2 flex items-start gap-2 rounded-t-2xl border border-b-0 border-border/60 bg-surface/60 px-3 py-2">
               <Reply className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
@@ -1265,6 +1294,8 @@ export function ThreadChat({
               </Button>
             )}
           </div>
+          )}
+          </>
           )}
         </div>
       </div>

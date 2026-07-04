@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Plus, Phone, Mail } from "lucide-react";
 import { getContacts } from "@/actions/contacts";
+import { requireWorkspaceWithMember } from "@/lib/workspace";
+import { canEdit } from "@/lib/permissions";
 import { AppHeader } from "@/components/app-header";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
@@ -14,19 +16,25 @@ export default async function ContactsPage({
 }) {
   const { page: pageParam } = await searchParams;
   const page = Math.max(1, Number(pageParam) || 1);
-  const { items: contacts, hasMore } = await getContacts({ page });
+  const [{ items: contacts, hasMore }, { member }] = await Promise.all([
+    getContacts({ page }),
+    requireWorkspaceWithMember(),
+  ]);
+  const editable = canEdit(member, "contacts");
 
   return (
     <>
       <AppHeader
         title="Contacts"
         actions={
-          <Button asChild size="sm" className="rounded-full">
-            <Link href="/contacts/new">
-              <Plus className="h-4 w-4" />
-              New Contact
-            </Link>
-          </Button>
+          editable ? (
+            <Button asChild size="sm" className="rounded-full">
+              <Link href="/contacts/new">
+                <Plus className="h-4 w-4" />
+                New Contact
+              </Link>
+            </Button>
+          ) : undefined
         }
       />
       <main className="min-h-0 flex-1 overflow-y-auto">
@@ -84,12 +92,14 @@ export default async function ContactsPage({
             <EmptyState
               message="No contacts yet."
               action={
-                <Button asChild size="sm">
-                  <Link href="/contacts/new">
-                    <Plus className="h-4 w-4" />
-                    Add Contact
-                  </Link>
-                </Button>
+                editable ? (
+                  <Button asChild size="sm">
+                    <Link href="/contacts/new">
+                      <Plus className="h-4 w-4" />
+                      Add Contact
+                    </Link>
+                  </Button>
+                ) : undefined
               }
             />
           )}

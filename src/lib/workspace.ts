@@ -1,9 +1,19 @@
 import { cache } from "react";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { cached } from "@/lib/cache";
-import { DEFAULT_PERMISSIONS, ROLE_PRESETS, mergePermissions, type MemberWithPermissions, type Permissions } from "@/lib/permissions";
+import {
+  DEFAULT_PERMISSIONS,
+  ROLE_PRESETS,
+  mergePermissions,
+  normalizePermissions,
+  canView,
+  type MemberWithPermissions,
+  type ModuleKey,
+  type Permissions,
+} from "@/lib/permissions";
 
 export const getWorkspace = cache(async () => {
   const { userId } = await auth();
@@ -222,11 +232,11 @@ export const requireWorkspaceWithMember = cache(async () => {
         }),
         db.projectMember.count({ where: { memberId: dbMember.id } }),
       ]);
-      const roleList: Permissions[] = projectRoles
-        .map((pr) => pr.role?.permissions as unknown as Permissions | undefined)
-        .filter((p): p is Permissions => !!p);
+      const roleList: unknown[] = projectRoles
+        .map((pr) => pr.role?.permissions)
+        .filter((p) => !!p);
       if (dbMember.role?.permissions) {
-        roleList.push(dbMember.role.permissions as unknown as Permissions);
+        roleList.push(dbMember.role.permissions);
       }
       let merged = mergePermissions(roleList);
 
@@ -246,7 +256,7 @@ export const requireWorkspaceWithMember = cache(async () => {
       where: { id: testRoleCookie, workspaceId: workspace.id },
     });
     if (testRole) {
-      permissions = (testRole.permissions as unknown as Permissions) ?? DEFAULT_PERMISSIONS;
+      permissions = normalizePermissions(testRole.permissions);
     }
   }
 
@@ -298,7 +308,9 @@ export const getProjectAccess = cache(async (projectId: string) => {
     };
   }
 
-  const rolePerms = (projectMember.role?.permissions as unknown as Permissions | null) ?? null;
+  const rolePerms = projectMember.role?.permissions
+    ? normalizePermissions(projectMember.role.permissions)
+    : null;
   const permissions: Permissions = {
     ...member.permissions,
     projects: rolePerms?.projects ?? "view",
@@ -346,6 +358,15 @@ function hasAnyTaskStagePermission(permissions: Permissions): boolean {
     (s) => s.create || s.modify || s.forward || s.rollback || s.delete
   );
 }
+
+// Server-side route guard for a permissioned module. Call from the module's
+// layout (or page) — members without at least view access never see the
+// module's routes, matching the sidebar which hides the entry entirely.
+export const requireModuleView = async (module: ModuleKey) => {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canView(member, module)) redirect("/dashboard");
+  return { workspace, member };
+};
 
 // Throws unless the current member can work on tasks/deliverables in the
 // project: either full project access, or a project role that grants at least

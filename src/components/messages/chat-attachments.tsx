@@ -161,16 +161,28 @@ export function Lightbox({
   );
 }
 
+// Recorded voice notes (named by the recorder in the composer) get a compact
+// player pill; other uploaded audio files keep the full file card below.
+export function isVoiceAttachment(attachment: MessageAttachment): boolean {
+  return (
+    (attachment.contentType ?? "").startsWith("audio/") &&
+    attachment.name.startsWith("Voice message")
+  );
+}
+
 export function AttachmentBubble({
   attachment,
   mine,
   onOpenImage,
   menu,
+  timeLabel,
 }: {
   attachment: MessageAttachment;
   mine: boolean;
   onOpenImage?: (att: MessageAttachment) => void;
   menu?: React.ReactNode;
+  /** Message time shown inline inside the voice pill (voice notes only). */
+  timeLabel?: string;
 }) {
   const ct = attachment.contentType ?? "";
 
@@ -233,6 +245,28 @@ export function AttachmentBubble({
         >
           <Download className="h-4 w-4" />
         </a>
+      </div>
+    );
+  }
+
+  if (isVoiceAttachment(attachment)) {
+    // Voice note: bare player + inline message time — no icon, no filename,
+    // no download button (matches the Lovable design). The actions caret
+    // still appears on hover so voice notes can be reacted/replied to.
+    return (
+      <div className="group flex w-full max-w-md items-center gap-2 rounded-xl border border-border/60 bg-surface/60 p-2">
+        <audio
+          src={`/api/files/${attachment.id}/stream`}
+          controls
+          preload="metadata"
+          className="h-9 min-w-0 flex-1"
+        />
+        {timeLabel && (
+          <span className="shrink-0 pr-1 text-[10px] leading-none text-muted-foreground">
+            {timeLabel}
+          </span>
+        )}
+        {menu && <div className="shrink-0">{menu}</div>}
       </div>
     );
   }

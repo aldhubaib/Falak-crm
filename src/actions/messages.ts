@@ -7,6 +7,8 @@ import {
   getAccessibleProjectScope,
 } from "@/lib/workspace";
 import { safeAction, type ActionResult } from "@/lib/action";
+import { canEdit } from "@/lib/permissions";
+import { isArchivedStatus } from "@/lib/utils";
 import { sendNotification } from "@/lib/push";
 import { createPresignedGet } from "@/lib/storage";
 import {
@@ -226,6 +228,13 @@ export async function sendMessage(
     let projectThumbnailId: string | null = null;
     let participantIds: string[] = [];
 
+    // Direct messages and project channels are governed by the Chat module —
+    // "view" members read but cannot send. Task comments stay governed by
+    // project/task permissions below.
+    if ((conversationId || (projectId && !taskId)) && !canEdit(member, "chat")) {
+      throw new Error("You have read-only access to chat");
+    }
+
     if (conversationId) {
       const convo = await db.conversation.findFirst({
         where: {
@@ -261,8 +270,11 @@ export async function sendMessage(
       if (!access.hasAccess) throw new Error("Permission denied");
       const project = await db.project.findFirst({
         where: { id: projectId, workspaceId: workspace.id },
-        select: { name: true, thumbnailId: true },
+        select: { name: true, thumbnailId: true, status: { select: { name: true } } },
       });
+      if (isArchivedStatus(project?.status?.name)) {
+        throw new Error("This project is archived — the channel is read-only");
+      }
       projectName = project?.name ?? "";
       projectThumbnailId = project?.thumbnailId ?? null;
     } else {
@@ -522,6 +534,8 @@ export type InboxThread = {
   unread: number;
   avatar: string;
   initials: string;
+  /** Project threads only: true when the project status is anything but Active. */
+  archived: boolean;
 };
 
 // Inbox = one "Everything feed" thread per accessible project (task comments +
@@ -548,6 +562,7 @@ export async function getInboxThreads(): Promise<InboxThread[]> {
         id: true,
         name: true,
         thumbnailId: true,
+        status: { select: { name: true } },
         messages: {
           orderBy: { createdAt: "desc" },
           take: 1,
@@ -607,6 +622,7 @@ export async function getInboxThreads(): Promise<InboxThread[]> {
       unread,
       avatar: generateColor(p.name),
       initials: p.name.charAt(0).toUpperCase(),
+      archived: isArchivedStatus(p.status?.name),
     };
   });
 
@@ -635,6 +651,7 @@ export async function getInboxThreads(): Promise<InboxThread[]> {
         unread: unreadMap.get(`/messages/conv-${c.id}`) ?? 0,
         avatar: generateColor(name),
         initials: name.charAt(0).toUpperCase(),
+        archived: false,
       };
     });
 
@@ -650,6 +667,7 @@ export async function getOrCreateDirectConversation(
 ): Promise<ActionResult<string>> {
   return safeAction("Open Conversation", async () => {
     const { workspace, member } = await requireWorkspaceWithMember();
+    if (!canEdit(member, "chat")) throw new Error("You have read-only access to chat");
     if (otherMemberId === member.id) throw new Error("Cannot message yourself");
 
     const other = await db.workspaceMember.findFirst({

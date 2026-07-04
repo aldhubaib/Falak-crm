@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Plus, Users, Briefcase, FolderKanban } from "lucide-react";
 import { getCompanies } from "@/actions/companies";
+import { requireWorkspaceWithMember } from "@/lib/workspace";
+import { canEdit } from "@/lib/permissions";
 import { AppHeader } from "@/components/app-header";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
@@ -14,19 +16,25 @@ export default async function CompaniesPage({
 }) {
   const { page: pageParam } = await searchParams;
   const page = Math.max(1, Number(pageParam) || 1);
-  const { items: companies, hasMore } = await getCompanies({ page });
+  const [{ items: companies, hasMore }, { member }] = await Promise.all([
+    getCompanies({ page }),
+    requireWorkspaceWithMember(),
+  ]);
+  const editable = canEdit(member, "companies");
 
   return (
     <>
       <AppHeader
         title="Companies"
         actions={
-          <Button asChild size="sm" className="rounded-full">
-            <Link href="/companies/new">
-              <Plus className="h-4 w-4" />
-              New Company
-            </Link>
-          </Button>
+          editable ? (
+            <Button asChild size="sm" className="rounded-full">
+              <Link href="/companies/new">
+                <Plus className="h-4 w-4" />
+                New Company
+              </Link>
+            </Button>
+          ) : undefined
         }
       />
       <main className="min-h-0 flex-1 overflow-y-auto">
@@ -66,12 +74,14 @@ export default async function CompaniesPage({
             <EmptyState
               message="No companies yet."
               action={
-                <Button asChild size="sm">
-                  <Link href="/companies/new">
-                    <Plus className="h-4 w-4" />
-                    Add Company
-                  </Link>
-                </Button>
+                editable ? (
+                  <Button asChild size="sm">
+                    <Link href="/companies/new">
+                      <Plus className="h-4 w-4" />
+                      Add Company
+                    </Link>
+                  </Button>
+                ) : undefined
               }
             />
           )}
