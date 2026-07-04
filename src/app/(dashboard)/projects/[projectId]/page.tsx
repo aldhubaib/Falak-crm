@@ -45,7 +45,8 @@ export default async function ProjectDetailPage({
       email: m.email,
       imageUrl: m.imageUrl ?? null,
     }));
-  const canEditTeam = access.permissions.projects === "full";
+  const canEditTeam =
+    access.permissions.projects === "full" || access.permissions.assignMembers === true;
 
   return (
     <>

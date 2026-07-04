@@ -54,6 +54,9 @@ export interface TaskPermissions {
 
 export type Permissions = { [K in ModuleKey]: ModulePermission } & {
   taskPermissions?: TaskPermissions;
+  /** Can add/remove members on projects they have access to, without
+   *  needing full Projects edit rights. */
+  assignMembers?: boolean;
 };
 
 export type PermissionModule = keyof Permissions;
@@ -82,12 +85,14 @@ export function normalizePermissions(raw: unknown): Permissions {
   }
   const tp = source.taskPermissions as TaskPermissions | undefined;
   if (tp && typeof tp === "object") result.taskPermissions = tp;
+  result.assignMembers = source.assignMembers === true;
   return result;
 }
 
 function fullPermissions(): Permissions {
   const result = {} as Permissions;
   for (const mod of MODULES) result[mod.key] = "full";
+  result.assignMembers = true;
   return result;
 }
 
@@ -191,6 +196,7 @@ export function mergePermissions(list: unknown[]): Permissions {
     result[mod.key] = "none";
   }
   result.taskPermissions = { stages: {} };
+  result.assignMembers = false;
 
   for (const p of normalized) {
     for (const key of MODULE_KEYS) {
@@ -198,6 +204,7 @@ export function mergePermissions(list: unknown[]): Permissions {
         result[key] = p[key];
       }
     }
+    if (p.assignMembers) result.assignMembers = true;
 
     const stages = p.taskPermissions?.stages ?? {};
     for (const [stageId, sp] of Object.entries(stages)) {

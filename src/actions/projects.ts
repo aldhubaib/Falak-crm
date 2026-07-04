@@ -2,7 +2,7 @@
 
 import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
-import { requireWorkspace, requireWorkspaceWithMember, requireProjectEdit, requireProjectWork, getProjectAccess } from "@/lib/workspace";
+import { requireWorkspace, requireWorkspaceWithMember, requireProjectEdit, requireProjectAssign, requireProjectWork, getProjectAccess } from "@/lib/workspace";
 import { canEdit } from "@/lib/permissions";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
@@ -191,7 +191,7 @@ export async function getProjectTeam(projectId: string) {
 }
 
 export async function addProjectMember(projectId: string, memberId: string, roleId?: string | null) {
-  const { workspace } = await requireProjectEdit(projectId);
+  const { workspace } = await requireProjectAssign(projectId);
 
   // Ensure member (and role, if any) belong to this workspace.
   const [target, role] = await Promise.all([
@@ -212,7 +212,7 @@ export async function addProjectMember(projectId: string, memberId: string, role
 }
 
 export async function setProjectMemberRole(projectId: string, memberId: string, roleId: string | null) {
-  const { workspace } = await requireProjectEdit(projectId);
+  const { workspace } = await requireProjectAssign(projectId);
 
   if (roleId) {
     const role = await db.role.findFirst({ where: { id: roleId, workspaceId: workspace.id }, select: { id: true } });
@@ -229,7 +229,7 @@ export async function setProjectMemberRole(projectId: string, memberId: string, 
 }
 
 export async function removeProjectMember(projectId: string, memberId: string) {
-  await requireProjectEdit(projectId);
+  await requireProjectAssign(projectId);
 
   await db.projectMember.deleteMany({ where: { projectId, memberId } });
 

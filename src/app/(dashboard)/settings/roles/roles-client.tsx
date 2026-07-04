@@ -88,6 +88,14 @@ export function RolesClient({
     });
   };
 
+  const toggleAssignMembers = (role: Role, enabled: boolean) => {
+    const updated = { ...normalizePermissions(role.permissions), assignMembers: enabled };
+    startTransition(async () => {
+      await updateRole(role.id, { permissions: updated });
+      router.refresh();
+    });
+  };
+
   const confirmDelete = () => {
     if (!toDelete) return;
     startTransition(async () => {
@@ -183,6 +191,19 @@ export function RolesClient({
                       </div>
                     );
                   })}
+                </div>
+                <div className="mt-3 flex items-center justify-between gap-4 border-t border-border/40 pt-3">
+                  <div>
+                    <div className="text-sm">Assign people to projects</div>
+                    <div className="mt-0.5 text-xs text-muted-foreground">
+                      Can add or remove members on projects they have access to
+                    </div>
+                  </div>
+                  <Switch
+                    checked={normalizePermissions(r.permissions).assignMembers === true}
+                    onCheckedChange={(v) => toggleAssignMembers(r, v)}
+                    disabled={pending}
+                  />
                 </div>
                 <div className="mt-4 flex justify-end">
                   <Button

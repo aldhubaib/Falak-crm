@@ -329,6 +329,17 @@ export const requireProjectEdit = async (projectId: string) => {
   return access;
 };
 
+// Throws unless the current member can manage the project's team: either
+// full project edit rights, or the role-level "assign members" grant
+// (Settings → Roles) combined with access to the project.
+export const requireProjectAssign = async (projectId: string) => {
+  const access = await getProjectAccess(projectId);
+  if (!access.hasAccess) throw new Error("Permission denied");
+  if (access.permissions.projects === "full") return access;
+  if (access.permissions.assignMembers) return access;
+  throw new Error("Permission denied");
+};
+
 // Returns the set of projects the current member may access. Owners (and the
 // workspace default) see everything (`all: true`); other members see only
 // projects they own the record for or are assigned to.
