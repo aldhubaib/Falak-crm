@@ -56,9 +56,10 @@ export type MessageDTO = {
   kind: string;
   authorId: string;
   authorName: string;
-  body: string; // display body (mentions collapsed to @Name)
+  body: string;
   createdAt: string;
   attachments: MessageAttachment[];
+  replyToId?: string | null;
 };
 
 type SendMessageInput = {
@@ -68,6 +69,7 @@ type SendMessageInput = {
   conversationId?: string | null;
   kind?: string;
   attachmentIds?: string[];
+  replyToId?: string;
 };
 
 const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
@@ -185,6 +187,7 @@ export async function sendMessage(
         taskId,
         projectId,
         conversationId,
+        replyToId: input.replyToId ?? null,
         authorId: member.id,
         body,
         kind: input.kind ?? "message",
@@ -202,7 +205,7 @@ export async function sendMessage(
         where: {
           id: { in: attachmentIds },
           workspaceId: workspace.id,
-          entityType: "message_pending",
+          entityType: { in: ["message_pending", "message_attachment"] },
         },
         data: { entityType: "message", entityId: message.id },
       });
@@ -237,6 +240,7 @@ export async function sendMessage(
       body: display,
       createdAt: message.createdAt.toISOString(),
       attachments,
+      replyToId: input.replyToId ?? null,
     };
 
     // Recipients + notification (mention-driven; DMs notify all participants).
@@ -375,6 +379,23 @@ export async function toggleReaction(
     });
 
     return { messageId, reactions };
+  });
+}
+
+export async function deleteMessage(
+  messageId: string,
+): Promise<ActionResult<void>> {
+  return safeAction("Delete message", async () => {
+    const { workspace, member } = await requireWorkspaceWithMember();
+
+    const message = await db.message.findFirst({
+      where: { id: messageId },
+      select: { id: true, authorId: true, conversationId: true, projectId: true, taskId: true },
+    });
+    if (!message) throw new Error("Message not found");
+    if (message.authorId !== member.id) throw new Error("You can only delete your own messages");
+
+    await db.message.delete({ where: { id: message.id } });
   });
 }
 

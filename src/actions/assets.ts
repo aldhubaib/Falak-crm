@@ -38,7 +38,7 @@ export async function getAllProjectFolders(projectId: string) {
 export async function createFolder(projectId: string, name: string, parentId?: string | null) {
   await requireProjectWork(projectId);
 
-  await db.projectFolder.create({
+  const folder = await db.projectFolder.create({
     data: {
       projectId,
       parentId: parentId || null,
@@ -47,6 +47,8 @@ export async function createFolder(projectId: string, name: string, parentId?: s
   });
 
   revalidatePath(`/projects/${projectId}`);
+
+  return folder.id;
 }
 
 export async function renameFolder(folderId: string, name: string) {

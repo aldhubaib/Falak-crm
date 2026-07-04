@@ -626,6 +626,7 @@ model Message {
   taskId         String?
   projectId      String?
   conversationId String?
+  replyToId      String?
   authorId       String   // WorkspaceMember ID
   body           String   // Plain text with @[Name](memberId) mentions
   kind           String   @default("message") // "message" | "rejection" | "system"

@@ -92,6 +92,57 @@ function iconFor(contentType: string | null) {
   return FileIcon;
 }
 
+// A file pulled from a drag-drop, with its folder path relative to the drop root.
+type DroppedFile = { file: File; path: string[] };
+
+function entryToFile(entry: FileSystemFileEntry): Promise<File | null> {
+  return new Promise((resolve) =>
+    entry.file(
+      (f) => resolve(f),
+      () => resolve(null),
+    ),
+  );
+}
+
+// readEntries returns children in batches; keep calling until it returns empty.
+function readAllDirEntries(
+  reader: FileSystemDirectoryReader,
+): Promise<FileSystemEntry[]> {
+  return new Promise((resolve) => {
+    const all: FileSystemEntry[] = [];
+    const read = () =>
+      reader.readEntries(
+        (batch) => {
+          if (batch.length === 0) resolve(all);
+          else {
+            all.push(...batch);
+            read();
+          }
+        },
+        () => resolve(all),
+      );
+    read();
+  });
+}
+
+// Recursively flatten a dropped file/directory entry into files + their paths.
+async function walkEntry(
+  entry: FileSystemEntry,
+  path: string[],
+  out: DroppedFile[],
+) {
+  if (entry.isFile) {
+    const file = await entryToFile(entry as FileSystemFileEntry);
+    if (file) out.push({ file, path });
+  } else if (entry.isDirectory) {
+    const children = await readAllDirEntries(
+      (entry as FileSystemDirectoryEntry).createReader(),
+    );
+    const dirPath = [...path, entry.name];
+    for (const child of children) await walkEntry(child, dirPath, out);
+  }
+}
+
 // Refresh the page when this project's asset uploads finish so new files show.
 function useUploadRefresh(projectId: string) {
   const router = useRouter();
@@ -156,6 +207,60 @@ export function AssetsClient({
     uploadManager.enqueue(list, projectId, folderId);
   };
 
+  // Handle a drop that may contain folders. Reads any directory entries,
+  // recreates their structure under the current folder, then uploads the files.
+  const handleDrop = async (dt: DataTransfer) => {
+    // Entries must be captured synchronously — the DataTransfer is only valid
+    // for the duration of the drop event.
+    const entries: FileSystemEntry[] = [];
+    const items = dt.items;
+    if (items && items.length && typeof items[0].webkitGetAsEntry === "function") {
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].kind !== "file") continue;
+        const entry = items[i].webkitGetAsEntry();
+        if (entry) entries.push(entry);
+      }
+    }
+
+    // Browser without the entry API: fall back to a flat file upload.
+    if (entries.length === 0) {
+      if (dt.files?.length) handleFiles(dt.files);
+      return;
+    }
+
+    const dropped: DroppedFile[] = [];
+    for (const entry of entries) await walkEntry(entry, [], dropped);
+    if (dropped.length === 0) return;
+
+    // No folders involved — behave exactly like a normal multi-file drop.
+    if (!dropped.some((d) => d.path.length > 0)) {
+      handleFiles(dropped.map((d) => d.file));
+      return;
+    }
+
+    // Recreate each folder once (memoized by path), then enqueue files into them.
+    const folderCache = new Map<string, string | null>([["", folderId]]);
+    const ensureFolder = async (path: string[]): Promise<string | null> => {
+      const key = path.join("/");
+      const cached = folderCache.get(key);
+      if (cached !== undefined) return cached;
+      const parentId = await ensureFolder(path.slice(0, -1));
+      const newId = await createFolder(
+        projectId,
+        path[path.length - 1],
+        parentId,
+      );
+      folderCache.set(key, newId);
+      return newId;
+    };
+
+    for (const d of dropped) {
+      const target = await ensureFolder(d.path);
+      uploadManager.enqueue([d.file], projectId, target);
+    }
+    router.refresh();
+  };
+
   const submitNewFolder = () => {
     const name = newFolderName.trim();
     if (!name) return;
@@ -217,7 +322,7 @@ export function AssetsClient({
         e.preventDefault();
         dragDepth.current = 0;
         setDragActive(false);
-        if (e.dataTransfer.files?.length) handleFiles(e.dataTransfer.files);
+        void handleDrop(e.dataTransfer);
       }}
     >
       <div className="mx-auto flex max-w-4xl flex-col gap-4 p-5">

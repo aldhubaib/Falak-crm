@@ -2,7 +2,8 @@ type UploadStatus = "queued" | "uploading" | "completing" | "done" | "error";
 
 export type UploadTarget =
   | { kind: "project_asset"; projectId: string; folderId: string | null }
-  | { kind: "checklist_item"; checklistItemId: string; projectId: string };
+  | { kind: "checklist_item"; checklistItemId: string; projectId: string }
+  | { kind: "message_attachment" };
 
 export type UploadItem = {
   id: string;
@@ -157,6 +158,36 @@ class UploadManager {
       }
     }
     return match;
+  }
+
+  enqueueMessage(files: File[]): string[] {
+    const ids: string[] = [];
+    for (const file of files) {
+      if (file.size === 0) continue;
+      const item: UploadItem = {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        file,
+        target: { kind: "message_attachment" },
+        label: file.name,
+        status: "queued",
+        progress: 0,
+      };
+      this.queue.push(item);
+      ids.push(item.id);
+    }
+    this.notify();
+    this.processQueue();
+    return ids;
+  }
+
+  getItemById(id: string): UploadItem | undefined {
+    return this.snapshot.find((i) => i.id === id);
+  }
+
+  removeItems(ids: string[]) {
+    const set = new Set(ids);
+    this.queue = this.queue.filter((i) => !set.has(i.id));
+    this.notify();
   }
 
   // Stop an upload (queued or in-flight): abort any active requests, best-effort
@@ -429,7 +460,9 @@ class UploadManager {
       const entityId =
         item.target.kind === "checklist_item"
           ? item.target.checklistItemId
-          : item.target.projectId;
+          : item.target.kind === "project_asset"
+            ? item.target.projectId
+            : "pending";
       const isResume = !!item.attachmentId;
       let attachmentId = item.attachmentId;
       let r2Key = item.r2Key;
@@ -630,6 +663,9 @@ class UploadManager {
 
   // Bind the finished upload to its target entity in the database.
   private async finalizeTarget(item: UploadItem) {
+    if (item.target.kind === "message_attachment") {
+      return;
+    }
     if (item.target.kind === "checklist_item") {
       if (!item.attachmentId) throw new Error("Missing attachment id");
       const { setChecklistItemAttachment } = await import("@/actions/projects");

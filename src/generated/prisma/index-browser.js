@@ -479,6 +479,7 @@ exports.Prisma.MessageScalarFieldEnum = {
   taskId: 'taskId',
   projectId: 'projectId',
   conversationId: 'conversationId',
+  replyToId: 'replyToId',
   authorId: 'authorId',
   body: 'body',
   kind: 'kind',

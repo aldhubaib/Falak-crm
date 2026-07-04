@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
+import { useState, useEffect, useCallback, useRef, useSyncExternalStore } from "react";
 import { uploadManager, type UploadItem } from "@/lib/upload-manager";
 import { Upload, CheckCircle2, AlertCircle, X, ChevronDown, ChevronUp, RotateCcw } from "lucide-react";
 
@@ -8,7 +8,24 @@ const EMPTY: UploadItem[] = [];
 
 function useUploadManager() {
   const subscribe = useCallback((cb: () => void) => uploadManager.subscribe(cb), []);
-  const getSnapshot = useCallback(() => uploadManager.getItems(), []);
+  // getItems() returns a stable reference that only changes when the manager
+  // notifies. Cache the filtered array keyed on that reference so each call
+  // returns the same array until the underlying snapshot actually changes —
+  // otherwise useSyncExternalStore loops (new array every render).
+  const cache = useRef<{ raw: UploadItem[]; filtered: UploadItem[] }>({
+    raw: EMPTY,
+    filtered: EMPTY,
+  });
+  const getSnapshot = useCallback(() => {
+    const raw = uploadManager.getItems();
+    if (raw !== cache.current.raw) {
+      cache.current = {
+        raw,
+        filtered: raw.filter((i) => i.target.kind !== "message_attachment"),
+      };
+    }
+    return cache.current.filtered;
+  }, []);
   const getServerSnapshot = useCallback(() => EMPTY, []);
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

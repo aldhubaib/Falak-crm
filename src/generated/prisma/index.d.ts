@@ -39694,6 +39694,7 @@ export namespace Prisma {
     taskId: string | null
     projectId: string | null
     conversationId: string | null
+    replyToId: string | null
     authorId: string | null
     body: string | null
     kind: string | null
@@ -39706,6 +39707,7 @@ export namespace Prisma {
     taskId: string | null
     projectId: string | null
     conversationId: string | null
+    replyToId: string | null
     authorId: string | null
     body: string | null
     kind: string | null
@@ -39718,6 +39720,7 @@ export namespace Prisma {
     taskId: number
     projectId: number
     conversationId: number
+    replyToId: number
     authorId: number
     body: number
     kind: number
@@ -39732,6 +39735,7 @@ export namespace Prisma {
     taskId?: true
     projectId?: true
     conversationId?: true
+    replyToId?: true
     authorId?: true
     body?: true
     kind?: true
@@ -39744,6 +39748,7 @@ export namespace Prisma {
     taskId?: true
     projectId?: true
     conversationId?: true
+    replyToId?: true
     authorId?: true
     body?: true
     kind?: true
@@ -39756,6 +39761,7 @@ export namespace Prisma {
     taskId?: true
     projectId?: true
     conversationId?: true
+    replyToId?: true
     authorId?: true
     body?: true
     kind?: true
@@ -39841,6 +39847,7 @@ export namespace Prisma {
     taskId: string | null
     projectId: string | null
     conversationId: string | null
+    replyToId: string | null
     authorId: string
     body: string
     kind: string
@@ -39870,6 +39877,7 @@ export namespace Prisma {
     taskId?: boolean
     projectId?: boolean
     conversationId?: boolean
+    replyToId?: boolean
     authorId?: boolean
     body?: boolean
     kind?: boolean
@@ -39889,6 +39897,7 @@ export namespace Prisma {
     taskId?: boolean
     projectId?: boolean
     conversationId?: boolean
+    replyToId?: boolean
     authorId?: boolean
     body?: boolean
     kind?: boolean
@@ -39905,6 +39914,7 @@ export namespace Prisma {
     taskId?: boolean
     projectId?: boolean
     conversationId?: boolean
+    replyToId?: boolean
     authorId?: boolean
     body?: boolean
     kind?: boolean
@@ -39921,6 +39931,7 @@ export namespace Prisma {
     taskId?: boolean
     projectId?: boolean
     conversationId?: boolean
+    replyToId?: boolean
     authorId?: boolean
     body?: boolean
     kind?: boolean
@@ -39928,7 +39939,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "projectId" | "conversationId" | "authorId" | "body" | "kind" | "createdAt" | "updatedAt", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "projectId" | "conversationId" | "replyToId" | "authorId" | "body" | "kind" | "createdAt" | "updatedAt", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     task?: boolean | Message$taskArgs<ExtArgs>
     project?: boolean | Message$projectArgs<ExtArgs>
@@ -39966,6 +39977,7 @@ export namespace Prisma {
       taskId: string | null
       projectId: string | null
       conversationId: string | null
+      replyToId: string | null
       authorId: string
       body: string
       kind: string
@@ -40404,6 +40416,7 @@ export namespace Prisma {
     readonly taskId: FieldRef<"Message", 'String'>
     readonly projectId: FieldRef<"Message", 'String'>
     readonly conversationId: FieldRef<"Message", 'String'>
+    readonly replyToId: FieldRef<"Message", 'String'>
     readonly authorId: FieldRef<"Message", 'String'>
     readonly body: FieldRef<"Message", 'String'>
     readonly kind: FieldRef<"Message", 'String'>
@@ -61704,6 +61717,7 @@ export namespace Prisma {
     taskId: 'taskId',
     projectId: 'projectId',
     conversationId: 'conversationId',
+    replyToId: 'replyToId',
     authorId: 'authorId',
     body: 'body',
     kind: 'kind',
@@ -64752,6 +64766,7 @@ export namespace Prisma {
     taskId?: StringNullableFilter<"Message"> | string | null
     projectId?: StringNullableFilter<"Message"> | string | null
     conversationId?: StringNullableFilter<"Message"> | string | null
+    replyToId?: StringNullableFilter<"Message"> | string | null
     authorId?: StringFilter<"Message"> | string
     body?: StringFilter<"Message"> | string
     kind?: StringFilter<"Message"> | string
@@ -64770,6 +64785,7 @@ export namespace Prisma {
     taskId?: SortOrderInput | SortOrder
     projectId?: SortOrderInput | SortOrder
     conversationId?: SortOrderInput | SortOrder
+    replyToId?: SortOrderInput | SortOrder
     authorId?: SortOrder
     body?: SortOrder
     kind?: SortOrder
@@ -64791,6 +64807,7 @@ export namespace Prisma {
     taskId?: StringNullableFilter<"Message"> | string | null
     projectId?: StringNullableFilter<"Message"> | string | null
     conversationId?: StringNullableFilter<"Message"> | string | null
+    replyToId?: StringNullableFilter<"Message"> | string | null
     authorId?: StringFilter<"Message"> | string
     body?: StringFilter<"Message"> | string
     kind?: StringFilter<"Message"> | string
@@ -64809,6 +64826,7 @@ export namespace Prisma {
     taskId?: SortOrderInput | SortOrder
     projectId?: SortOrderInput | SortOrder
     conversationId?: SortOrderInput | SortOrder
+    replyToId?: SortOrderInput | SortOrder
     authorId?: SortOrder
     body?: SortOrder
     kind?: SortOrder
@@ -64827,6 +64845,7 @@ export namespace Prisma {
     taskId?: StringNullableWithAggregatesFilter<"Message"> | string | null
     projectId?: StringNullableWithAggregatesFilter<"Message"> | string | null
     conversationId?: StringNullableWithAggregatesFilter<"Message"> | string | null
+    replyToId?: StringNullableWithAggregatesFilter<"Message"> | string | null
     authorId?: StringWithAggregatesFilter<"Message"> | string
     body?: StringWithAggregatesFilter<"Message"> | string
     kind?: StringWithAggregatesFilter<"Message"> | string
@@ -68908,6 +68927,7 @@ export namespace Prisma {
 
   export type MessageCreateInput = {
     id?: string
+    replyToId?: string | null
     body: string
     kind?: string
     createdAt?: Date | string
@@ -68925,6 +68945,7 @@ export namespace Prisma {
     taskId?: string | null
     projectId?: string | null
     conversationId?: string | null
+    replyToId?: string | null
     authorId: string
     body: string
     kind?: string
@@ -68936,6 +68957,7 @@ export namespace Prisma {
 
   export type MessageUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68953,6 +68975,7 @@ export namespace Prisma {
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
     conversationId?: NullableStringFieldUpdateOperationsInput | string | null
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
@@ -68967,6 +68990,7 @@ export namespace Prisma {
     taskId?: string | null
     projectId?: string | null
     conversationId?: string | null
+    replyToId?: string | null
     authorId: string
     body: string
     kind?: string
@@ -68976,6 +69000,7 @@ export namespace Prisma {
 
   export type MessageUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68987,6 +69012,7 @@ export namespace Prisma {
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
     conversationId?: NullableStringFieldUpdateOperationsInput | string | null
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
@@ -72611,6 +72637,7 @@ export namespace Prisma {
     taskId?: SortOrder
     projectId?: SortOrder
     conversationId?: SortOrder
+    replyToId?: SortOrder
     authorId?: SortOrder
     body?: SortOrder
     kind?: SortOrder
@@ -72623,6 +72650,7 @@ export namespace Prisma {
     taskId?: SortOrder
     projectId?: SortOrder
     conversationId?: SortOrder
+    replyToId?: SortOrder
     authorId?: SortOrder
     body?: SortOrder
     kind?: SortOrder
@@ -72635,6 +72663,7 @@ export namespace Prisma {
     taskId?: SortOrder
     projectId?: SortOrder
     conversationId?: SortOrder
+    replyToId?: SortOrder
     authorId?: SortOrder
     body?: SortOrder
     kind?: SortOrder
@@ -80495,6 +80524,7 @@ export namespace Prisma {
 
   export type MessageCreateWithoutAuthorInput = {
     id?: string
+    replyToId?: string | null
     body: string
     kind?: string
     createdAt?: Date | string
@@ -80511,6 +80541,7 @@ export namespace Prisma {
     taskId?: string | null
     projectId?: string | null
     conversationId?: string | null
+    replyToId?: string | null
     body: string
     kind?: string
     createdAt?: Date | string
@@ -80921,6 +80952,7 @@ export namespace Prisma {
     taskId?: StringNullableFilter<"Message"> | string | null
     projectId?: StringNullableFilter<"Message"> | string | null
     conversationId?: StringNullableFilter<"Message"> | string | null
+    replyToId?: StringNullableFilter<"Message"> | string | null
     authorId?: StringFilter<"Message"> | string
     body?: StringFilter<"Message"> | string
     kind?: StringFilter<"Message"> | string
@@ -85019,6 +85051,7 @@ export namespace Prisma {
 
   export type MessageCreateWithoutProjectInput = {
     id?: string
+    replyToId?: string | null
     body: string
     kind?: string
     createdAt?: Date | string
@@ -85034,6 +85067,7 @@ export namespace Prisma {
     id?: string
     taskId?: string | null
     conversationId?: string | null
+    replyToId?: string | null
     authorId: string
     body: string
     kind?: string
@@ -87902,6 +87936,7 @@ export namespace Prisma {
 
   export type MessageCreateWithoutTaskInput = {
     id?: string
+    replyToId?: string | null
     body: string
     kind?: string
     createdAt?: Date | string
@@ -87917,6 +87952,7 @@ export namespace Prisma {
     id?: string
     projectId?: string | null
     conversationId?: string | null
+    replyToId?: string | null
     authorId: string
     body: string
     kind?: string
@@ -89006,6 +89042,7 @@ export namespace Prisma {
 
   export type MessageCreateWithoutReactionsInput = {
     id?: string
+    replyToId?: string | null
     body: string
     kind?: string
     createdAt?: Date | string
@@ -89022,6 +89059,7 @@ export namespace Prisma {
     taskId?: string | null
     projectId?: string | null
     conversationId?: string | null
+    replyToId?: string | null
     authorId: string
     body: string
     kind?: string
@@ -89095,6 +89133,7 @@ export namespace Prisma {
 
   export type MessageUpdateWithoutReactionsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89111,6 +89150,7 @@ export namespace Prisma {
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
     conversationId?: NullableStringFieldUpdateOperationsInput | string | null
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
@@ -89174,6 +89214,7 @@ export namespace Prisma {
 
   export type MessageCreateWithoutMentionsInput = {
     id?: string
+    replyToId?: string | null
     body: string
     kind?: string
     createdAt?: Date | string
@@ -89190,6 +89231,7 @@ export namespace Prisma {
     taskId?: string | null
     projectId?: string | null
     conversationId?: string | null
+    replyToId?: string | null
     authorId: string
     body: string
     kind?: string
@@ -89263,6 +89305,7 @@ export namespace Prisma {
 
   export type MessageUpdateWithoutMentionsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89279,6 +89322,7 @@ export namespace Prisma {
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
     conversationId?: NullableStringFieldUpdateOperationsInput | string | null
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
@@ -89437,6 +89481,7 @@ export namespace Prisma {
 
   export type MessageCreateWithoutConversationInput = {
     id?: string
+    replyToId?: string | null
     body: string
     kind?: string
     createdAt?: Date | string
@@ -89452,6 +89497,7 @@ export namespace Prisma {
     id?: string
     taskId?: string | null
     projectId?: string | null
+    replyToId?: string | null
     authorId: string
     body: string
     kind?: string
@@ -93377,6 +93423,7 @@ export namespace Prisma {
     taskId?: string | null
     projectId?: string | null
     conversationId?: string | null
+    replyToId?: string | null
     body: string
     kind?: string
     createdAt?: Date | string
@@ -93534,6 +93581,7 @@ export namespace Prisma {
 
   export type MessageUpdateWithoutAuthorInput = {
     id?: StringFieldUpdateOperationsInput | string
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93550,6 +93598,7 @@ export namespace Prisma {
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
     conversationId?: NullableStringFieldUpdateOperationsInput | string | null
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93563,6 +93612,7 @@ export namespace Prisma {
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
     conversationId?: NullableStringFieldUpdateOperationsInput | string | null
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95055,6 +95105,7 @@ export namespace Prisma {
     id?: string
     taskId?: string | null
     conversationId?: string | null
+    replyToId?: string | null
     authorId: string
     body: string
     kind?: string
@@ -95375,6 +95426,7 @@ export namespace Prisma {
 
   export type MessageUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95390,6 +95442,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     conversationId?: NullableStringFieldUpdateOperationsInput | string | null
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
@@ -95403,6 +95456,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     conversationId?: NullableStringFieldUpdateOperationsInput | string | null
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
@@ -96009,6 +96063,7 @@ export namespace Prisma {
     id?: string
     projectId?: string | null
     conversationId?: string | null
+    replyToId?: string | null
     authorId: string
     body: string
     kind?: string
@@ -96099,6 +96154,7 @@ export namespace Prisma {
 
   export type MessageUpdateWithoutTaskInput = {
     id?: StringFieldUpdateOperationsInput | string
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -96114,6 +96170,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
     conversationId?: NullableStringFieldUpdateOperationsInput | string | null
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
@@ -96127,6 +96184,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
     conversationId?: NullableStringFieldUpdateOperationsInput | string | null
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
@@ -96229,6 +96287,7 @@ export namespace Prisma {
     id?: string
     taskId?: string | null
     projectId?: string | null
+    replyToId?: string | null
     authorId: string
     body: string
     kind?: string
@@ -96259,6 +96318,7 @@ export namespace Prisma {
 
   export type MessageUpdateWithoutConversationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -96274,6 +96334,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
@@ -96287,6 +96348,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    replyToId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string

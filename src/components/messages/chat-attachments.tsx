@@ -55,11 +55,13 @@ export function Lightbox({
   index,
   onClose,
   onIndex,
+  renderMenu,
 }: {
   images: MessageAttachment[];
   index: number;
   onClose: () => void;
   onIndex: (i: number) => void;
+  renderMenu?: (att: MessageAttachment) => React.ReactNode;
 }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -100,6 +102,7 @@ export function Lightbox({
           </div>
         </div>
         <div className="flex items-center gap-1">
+          {renderMenu?.(current)}
           <a
             href={`/api/files/${current.id}/stream`}
             download={current.name}
@@ -162,40 +165,51 @@ export function AttachmentBubble({
   attachment,
   mine,
   onOpenImage,
+  menu,
 }: {
   attachment: MessageAttachment;
   mine: boolean;
   onOpenImage?: (att: MessageAttachment) => void;
+  menu?: React.ReactNode;
 }) {
   const ct = attachment.contentType ?? "";
 
   if (attachment.isImage) {
     return (
-      <button
-        type="button"
-        onClick={() => onOpenImage?.(attachment)}
-        className="group relative block overflow-hidden rounded-xl border border-border/50 bg-surface"
-        style={{ aspectRatio: "4 / 3", maxWidth: 240, maxHeight: 240 }}
+      <div
+        className="group relative overflow-hidden rounded-xl border border-border/50 bg-surface"
+        style={{ aspectRatio: "4 / 3", width: 210 }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={`/api/files/${attachment.id}/stream`}
-          alt={attachment.name}
-          className="h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+        <button
+          type="button"
+          onClick={() => onOpenImage?.(attachment)}
+          className="block h-full w-full"
+          aria-label={`Open ${attachment.name}`}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`/api/files/${attachment.id}/stream`}
+            alt={attachment.name}
+            className="h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
+          />
+        </button>
+        {menu && (
+          <div className="absolute left-2 top-2 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
+            {menu}
+          </div>
+        )}
         <a
           href={`/api/files/${attachment.id}/stream`}
           download={attachment.name}
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => e.stopPropagation()}
-          className="pointer-events-auto absolute right-2 top-2 grid size-8 place-items-center rounded-full bg-black/60 text-white opacity-0 backdrop-blur-sm transition-opacity hover:bg-black/80 group-hover:opacity-100"
+          className="absolute bottom-2 right-2 grid size-8 place-items-center rounded-full bg-black/60 text-white opacity-0 backdrop-blur-sm transition-opacity hover:bg-black/80 group-hover:opacity-100"
           aria-label="Download"
         >
           <Download className="h-4 w-4" />
         </a>
-      </button>
+      </div>
     );
   }
 
@@ -254,35 +268,28 @@ export function AttachmentBubble({
 
   const Icon = fileIconFor(attachment);
   return (
-    <a
-      href={`/api/files/${attachment.id}/stream`}
-      download={attachment.name}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={cn(
-        "flex w-full max-w-sm items-center gap-3 rounded-xl border border-border/60 p-3 transition-colors",
-        mine
-          ? "bg-primary/80 text-primary-foreground hover:bg-primary/70"
-          : "bg-surface/60 text-foreground hover:bg-surface",
-      )}
-    >
-      <div className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary/15 text-primary">
-        <Icon className="h-5 w-5" />
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="truncate text-xs font-medium">{attachment.name}</div>
-        <div
-          className={cn(
-            "text-[10px]",
-            mine ? "text-primary-foreground/70" : "text-muted-foreground",
-          )}
-        >
-          {(attachment.contentType ?? "").split("/")[1]?.toUpperCase() ?? "FILE"}
-          {attachment.sizeBytes ? ` · ${formatBytes(attachment.sizeBytes)}` : ""}
+    <div className="group relative w-full max-w-sm">
+      <a
+        href={`/api/files/${attachment.id}/stream`}
+        download={attachment.name}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-3 rounded-2xl border border-border/60 bg-surface/60 p-3 text-foreground transition-colors hover:bg-surface"
+      >
+        <div className="relative grid size-11 shrink-0 place-items-center rounded-xl bg-primary/15 text-primary">
+          <Icon className="h-5 w-5 transition-opacity group-hover:opacity-0" />
+          <Download className="absolute h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
-      </div>
-      <Download className="h-4 w-4 shrink-0 opacity-70" />
-    </a>
+        <div className="min-w-0 flex-1 pr-6">
+          <div className="truncate text-sm font-semibold">{attachment.name}</div>
+          <div className="text-xs text-muted-foreground">
+            {(attachment.contentType ?? "").split("/")[1]?.toUpperCase() ?? "FILE"}
+            {attachment.sizeBytes ? ` · ${formatBytes(attachment.sizeBytes)}` : ""}
+          </div>
+        </div>
+      </a>
+      {menu && <div className="absolute right-1.5 top-1.5">{menu}</div>}
+    </div>
   );
 }
 

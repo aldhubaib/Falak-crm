@@ -154,6 +154,7 @@ export default async function ThreadPage({
       authorName: c.author.name ?? c.author.email,
       body: c.body.replace(MENTION_RE, "@$1"),
       createdAt: c.createdAt.toISOString(),
+      replyToId: c.replyToId ?? null,
       attachments: (attachmentsByMessage.get(c.id) ?? []).map((a) => ({
         id: a.id,
         name: a.name,

@@ -17,9 +17,9 @@ const nextConfig: NextConfig = {
       static: 180,
     },
     serverActions: {
-      // Allow chat attachments and image uploads via server actions (default 1MB).
       bodySizeLimit: "25mb",
     },
+    proxyClientMaxBodySize: "25mb",
   },
 };
 
