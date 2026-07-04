@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   CalendarPlus,
   Check,
@@ -5,9 +6,10 @@ import {
   Download,
   Image as ImageIcon,
   Inbox,
+  Loader2,
   Paperclip,
 } from "lucide-react";
-import { ProjectAvatar } from "@/components/project-avatar";
+import { PublishAvatar } from "./publish-avatar";
 import {
   Sheet,
   SheetContent,
@@ -66,7 +68,7 @@ export function TaskDetailSheet({
               <div className="overflow-hidden rounded-2xl border border-border/60 bg-surface">
                 {/* Top: project + title + delivered */}
                 <div className="flex items-start gap-3 px-4 pt-4">
-                  <ProjectAvatar name={project.name} size={44} />
+                  <PublishAvatar name={project.name} thumbnailId={project.thumbnailId} size={44} />
                   <div className="min-w-0 flex-1">
                     <div className="text-xs text-muted-foreground">
                       {item.handle}
@@ -92,14 +94,19 @@ export function TaskDetailSheet({
                       {formatFullDate(parseISO(item.deliveredOn))}
                     </span>
                   </div>
-                  <AttachmentRow
-                    icon={<Paperclip className="size-4" />}
-                    label="Final Short Video"
-                  />
-                  <AttachmentRow
-                    icon={<ImageIcon className="size-4" />}
-                    label="Final Video Poster"
-                  />
+                  {item.attachments.length === 0 && (
+                    <div className="px-4 py-3 text-center text-xs text-muted-foreground">
+                      No files attached.
+                    </div>
+                  )}
+                  {item.attachments.map((a) => (
+                    <AttachmentRow
+                      key={a.attachmentId}
+                      attachmentId={a.attachmentId}
+                      label={a.label}
+                      isImage={a.isImage}
+                    />
+                  ))}
                 </div>
 
                 {/* Actions */}
@@ -162,23 +169,35 @@ export function TaskDetailSheet({
 }
 
 function AttachmentRow({
-  icon,
+  attachmentId,
   label,
+  isImage,
 }: {
-  icon: React.ReactNode;
+  attachmentId: string;
   label: string;
+  isImage: boolean;
 }) {
+  const [downloading, setDownloading] = useState(false);
+  const Icon = isImage ? ImageIcon : Paperclip;
   return (
-    <div className="flex items-center gap-3 border-b border-border/60 px-4 py-3 last:border-b-0">
-      <span className="text-muted-foreground">{icon}</span>
-      <span className="flex-1 text-sm font-medium">{label}</span>
-      <button
-        type="button"
-        aria-label={`Download ${label}`}
-        className="grid size-8 place-items-center rounded-full text-muted-foreground hover:bg-surface-2 hover:text-foreground"
-      >
-        <Download className="size-4" />
-      </button>
-    </div>
+    <a
+      href={`/api/files/${attachmentId}/download`}
+      aria-label={`Download ${label}`}
+      className="flex min-h-12 items-center gap-3 border-b border-border/60 px-4 py-3 transition-colors last:border-b-0 hover:bg-surface-2 active:bg-surface-2"
+      onClick={() => {
+        setDownloading(true);
+        window.setTimeout(() => setDownloading(false), 2500);
+      }}
+    >
+      <span className="text-muted-foreground">
+        <Icon className="size-4" />
+      </span>
+      <span className="flex-1 truncate text-sm font-medium">{label}</span>
+      {downloading ? (
+        <Loader2 className="size-4 shrink-0 animate-spin text-primary" />
+      ) : (
+        <Download className="size-4 shrink-0 text-muted-foreground" />
+      )}
+    </a>
   );
 }

@@ -5,9 +5,10 @@ import {
   ChevronDown,
   Download,
   Image as ImageIcon,
+  Loader2,
   Paperclip,
 } from "lucide-react";
-import { ProjectAvatar } from "@/components/project-avatar";
+import { PublishAvatar } from "./publish-avatar";
 import { cn } from "@/lib/utils";
 import { type Item } from "./types";
 import { fmtShort, parseISO } from "./helpers";
@@ -28,10 +29,18 @@ export function QueueCard({
   const [expanded, setExpanded] = useState(false);
   const isScheduled = item.status === "scheduled" && !!item.publishOn;
   const isPublished = item.status === "published";
+  const isQueue = !!onAdd;
   return (
-    <div className="rounded-xl border border-border/60 bg-surface transition-colors hover:border-border">
+    <div
+      className={cn(
+        "rounded-xl border bg-surface transition-colors",
+        isQueue
+          ? "border-destructive/60 hover:border-destructive"
+          : "border-border/60 hover:border-border",
+      )}
+    >
       <div className="flex items-center gap-2.5 p-3">
-        <ProjectAvatar name={project.name} size={28} />
+        <PublishAvatar name={project.name} thumbnailId={project.thumbnailId} size={28} />
         <span className="min-w-0 flex-1 truncate text-sm font-medium">
           {project.name}
         </span>
@@ -47,13 +56,20 @@ export function QueueCard({
           />
         </button>
       </div>
-      <div className="grid grid-cols-2 gap-3 px-3 pb-3 text-tiny">
-        <MetaCell label="Delivered" value={fmtShort(parseISO(item.deliveredOn))} tone="success" />
+      <div className="flex items-center justify-between gap-3 px-3 pb-3 text-tiny">
         <MetaCell
           label="Publish"
           value={item.publishOn ? fmtShort(parseISO(item.publishOn)) : "Not set"}
           tone={item.publishOn ? "primary" : "muted"}
         />
+        <div className="min-w-0 flex-1 text-right">
+          <div className="text-xxs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+            Title
+          </div>
+          <div dir="rtl" className="mt-0.5 truncate text-xs font-semibold text-foreground">
+            {item.title}
+          </div>
+        </div>
       </div>
       {expanded && (
         <div className="border-t border-border/60">
@@ -65,16 +81,26 @@ export function QueueCard({
               {item.title}
             </div>
           </div>
-          <div className="mt-3 divide-y divide-border/60 border-y border-border/60">
-            <AttachmentDownloadRow
-              icon={<Paperclip className="size-4" />}
-              label="Final Short Video"
-            />
-            <AttachmentDownloadRow
-              icon={<ImageIcon className="size-4" />}
-              label="Final Video Poster"
-            />
+          <div className="mt-3 flex items-center justify-between border-t border-border/60 px-3 pt-3">
+            <span className="text-sm font-medium text-muted-foreground">
+              Delivered
+            </span>
+            <span className="text-sm font-medium text-success">
+              {fmtShort(parseISO(item.deliveredOn))}
+            </span>
           </div>
+          {item.attachments.length > 0 && (
+            <div className="mt-3 divide-y divide-border/60 border-y border-border/60">
+              {item.attachments.map((a) => (
+                <AttachmentDownloadRow
+                  key={a.attachmentId}
+                  attachmentId={a.attachmentId}
+                  label={a.label}
+                  isImage={a.isImage}
+                />
+              ))}
+            </div>
+          )}
           {onAdd ? (
             <div className="text-xs">
               <button
@@ -143,24 +169,36 @@ export function QueueCard({
 }
 
 function AttachmentDownloadRow({
-  icon,
+  attachmentId,
   label,
+  isImage,
 }: {
-  icon: React.ReactNode;
+  attachmentId: string;
   label: string;
+  isImage: boolean;
 }) {
+  const [downloading, setDownloading] = useState(false);
+  const Icon = isImage ? ImageIcon : Paperclip;
   return (
-    <div className="flex items-center gap-3 px-3 py-2.5">
-      <span className="text-muted-foreground">{icon}</span>
-      <span className="flex-1 text-sm font-medium">{label}</span>
-      <button
-        type="button"
-        className="grid size-8 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-surface-2 hover:text-foreground"
-        aria-label={`Download ${label}`}
-      >
-        <Download className="size-4" />
-      </button>
-    </div>
+    <a
+      href={`/api/files/${attachmentId}/download`}
+      className="flex min-h-12 items-center gap-3 px-3 py-3 transition-colors hover:bg-surface-2 active:bg-surface-2"
+      aria-label={`Download ${label}`}
+      onClick={() => {
+        setDownloading(true);
+        window.setTimeout(() => setDownloading(false), 2500);
+      }}
+    >
+      <span className="text-muted-foreground">
+        <Icon className="size-4" />
+      </span>
+      <span className="flex-1 truncate text-sm font-medium">{label}</span>
+      {downloading ? (
+        <Loader2 className="size-4 shrink-0 animate-spin text-primary" />
+      ) : (
+        <Download className="size-4 shrink-0 text-muted-foreground" />
+      )}
+    </a>
   );
 }
 

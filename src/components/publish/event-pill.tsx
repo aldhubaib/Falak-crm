@@ -1,6 +1,6 @@
-import { ProjectAvatar } from "@/components/project-avatar";
 import { cn } from "@/lib/utils";
 import { type Item } from "./types";
+import { PublishAvatar } from "./publish-avatar";
 
 export function EventPill({
   item,
@@ -11,8 +11,9 @@ export function EventPill({
 }) {
   return (
     <div className={cn("shrink-0 rounded-full", className)} title={item.title}>
-      <ProjectAvatar
+      <PublishAvatar
         name={item.project.name}
+        thumbnailId={item.project.thumbnailId}
         size={32}
         className="ring-2 ring-background"
       />

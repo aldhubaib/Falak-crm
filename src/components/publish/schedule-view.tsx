@@ -1,5 +1,5 @@
 import { CheckCircle2, Clock } from "lucide-react";
-import { ProjectAvatar } from "@/components/project-avatar";
+import { PublishAvatar } from "./publish-avatar";
 import { type Item } from "./types";
 import { DOW_SHORT, MONTHS, fmtShort, parseISO } from "./helpers";
 
@@ -62,7 +62,7 @@ function ScheduleRow({ item, onClick }: { item: Item; onClick?: () => void }) {
       onClick={onClick}
       className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-border/60 bg-surface p-3 text-left transition-colors hover:border-border"
     >
-      <ProjectAvatar name={item.project.name} size={36} />
+      <PublishAvatar name={item.project.name} thumbnailId={item.project.thumbnailId} size={36} />
       <div className="min-w-0">
         <div dir="rtl" className="truncate text-right text-sm font-semibold">
           {item.title}

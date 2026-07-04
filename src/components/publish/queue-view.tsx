@@ -1,5 +1,5 @@
 import { CheckCircle2, Clock, Inbox } from "lucide-react";
-import { ProjectAvatar } from "@/components/project-avatar";
+import { PublishAvatar } from "./publish-avatar";
 import { cn } from "@/lib/utils";
 import { type Item } from "./types";
 import { fmtShort, groupByProject, parseISO } from "./helpers";
@@ -54,7 +54,7 @@ export function QueueView({
       {groups.map(({ project, list }) => (
         <section key={project.id} className="px-4 py-4 sm:px-6">
           <div className="mb-3 flex items-center gap-2.5">
-            <ProjectAvatar name={project.name} size={24} />
+            <PublishAvatar name={project.name} thumbnailId={project.thumbnailId} size={24} />
             <div className="text-sm font-semibold">{project.name}</div>
             <span className="text-tiny text-muted-foreground">({list.length})</span>
           </div>
