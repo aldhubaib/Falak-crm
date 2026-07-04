@@ -19,6 +19,7 @@ import {
 import {
   BRANDING_SLOTS,
   validateBrandingFile,
+  MAX_BRANDING_FILE_BYTES,
   type BrandingSlotConfig,
   type BrandingSlotId,
 } from "@/lib/branding-slots";
@@ -93,6 +94,13 @@ function SlotRow({
     setError(null);
     const file = files?.[0];
     if (!file) return;
+    if (file.size > MAX_BRANDING_FILE_BYTES) {
+      setError(
+        `File is too large. Maximum is ${MAX_BRANDING_FILE_BYTES / (1024 * 1024)} MB.`,
+      );
+      if (inputRef.current) inputRef.current.value = "";
+      return;
+    }
     setBusy(true);
     try {
       const src = await readFileAsDataUrl(file);

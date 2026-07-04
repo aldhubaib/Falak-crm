@@ -14,6 +14,7 @@ import {
   getBrandingSlot,
   storageSlotsFor,
   validateBrandingFile,
+  MAX_BRANDING_FILE_BYTES,
   type BrandingSlotId,
 } from "@/lib/branding-slots";
 
@@ -88,6 +89,33 @@ function icoDimensions(
   };
 }
 
+// Detect the real format from the file bytes (magic numbers) — the browser's
+// reported mime type comes from the file extension and can be spoofed.
+function sniffMime(bytes: Buffer): string | null {
+  if (bytes.length >= 8 && bytes.readUInt32BE(0) === 0x89504e47) {
+    return "image/png";
+  }
+  if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
+    return "image/jpeg";
+  }
+  if (bytes.length >= 4 && bytes.readUInt16LE(0) === 0 && bytes.readUInt16LE(2) === 1) {
+    return "image/x-icon";
+  }
+  const head = bytes
+    .subarray(0, 512)
+    .toString("utf8")
+    .replace(/^\uFEFF/, "")
+    .trimStart();
+  if (
+    head.startsWith("<svg") ||
+    ((head.startsWith("<?xml") || head.startsWith("<!DOCTYPE svg")) &&
+      head.includes("<svg"))
+  ) {
+    return "image/svg+xml";
+  }
+  return null;
+}
+
 async function measureBytes(
   bytes: Buffer,
   mime: string,
@@ -152,12 +180,22 @@ export async function setBrandingAsset(formData: FormData): Promise<void> {
   if (!(file instanceof File) || file.size === 0) {
     throw new Error("No image provided");
   }
+  if (file.size > MAX_BRANDING_FILE_BYTES) {
+    throw new Error(
+      `File is too large. Maximum is ${MAX_BRANDING_FILE_BYTES / (1024 * 1024)} MB.`,
+    );
+  }
 
   const bytes = Buffer.from(await file.arrayBuffer());
-  const mime = file.type || "application/octet-stream";
+
+  // Validate against the real (sniffed) format, not the browser-reported one.
+  const mime = sniffMime(bytes);
+  if (!mime) {
+    throw new Error(`Wrong format. Expected ${slot.formatsLabel}.`);
+  }
   const dims = await measureBytes(bytes, mime);
 
-  const error = validateBrandingFile(slot, file.type, file.name, dims);
+  const error = validateBrandingFile(slot, mime, file.name, dims);
   if (error) throw new Error(error);
 
   if (slot.id === "androidAny" || slot.id === "androidMaskable") {

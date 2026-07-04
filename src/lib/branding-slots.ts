@@ -183,6 +183,10 @@ export function getBrandingSlot(id: string): BrandingSlotConfig | undefined {
   return BRANDING_SLOTS.find((s) => s.id === id);
 }
 
+// Generous cap — the largest legit asset (iOS splash PNG) stays well under
+// this. Checked client-side for fast feedback and re-checked on the server.
+export const MAX_BRANDING_FILE_BYTES = 10 * 1024 * 1024;
+
 // Same validation on both sides: the client checks before uploading (inline
 // error), the server re-checks the real bytes before storing.
 export function validateBrandingFile(
