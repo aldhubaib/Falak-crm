@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { ErrorToast } from "@/components/error-toast";
-import { ServiceWorkerRegister } from "@/components/sw-register";
 import { Providers } from "./providers";
 import "./globals.css";
 
@@ -58,7 +57,6 @@ export default function RootLayout({
           <Providers>
             {children}
             <ErrorToast />
-            <ServiceWorkerRegister />
           </Providers>
         </ClerkProvider>
       </body>
