@@ -328,8 +328,14 @@ class UploadManager {
 
       xhr.upload.onprogress = (e) => {
         if (e.lengthComputable) {
-          item.progress = 5 + Math.round((e.loaded / e.total) * 85);
-          this.notify();
+          // Only notify when the integer percentage moves — progress events
+          // fire many times per second and each notification re-renders every
+          // subscriber, which can starve UI work like route navigation.
+          const next = 5 + Math.round((e.loaded / e.total) * 85);
+          if (next > item.progress) {
+            item.progress = next;
+            this.notify();
+          }
         }
       };
 
@@ -363,8 +369,25 @@ class UploadManager {
     skipParts: Set<number>
   ): Promise<void> {
     const partsToUpload = parts.filter((p) => !skipParts.has(p.number));
-    const totalParts = parts.length;
-    let completedParts = skipParts.size;
+
+    // Byte-accurate progress across all concurrent parts. Each part tracks its
+    // own uploaded bytes; the overall percentage is the sum, and the displayed
+    // value never moves backwards (a retried part restarting from 0 would
+    // otherwise make the number visibly drop).
+    const partSize = (n: number) =>
+      Math.min(n * PART_SIZE, item.file.size) - (n - 1) * PART_SIZE;
+    const loadedByPart = new Map<number, number>();
+    for (const n of skipParts) loadedByPart.set(n, partSize(n));
+
+    const reportProgress = () => {
+      let loaded = 0;
+      for (const v of loadedByPart.values()) loaded += v;
+      const next = 5 + Math.round((loaded / item.file.size) * 85);
+      if (next > item.progress) {
+        item.progress = next;
+        this.notify();
+      }
+    };
 
     const queue = [...partsToUpload];
     const active = new Set<Promise<void>>();
@@ -383,10 +406,8 @@ class UploadManager {
 
         xhr.upload.onprogress = (e) => {
           if (e.lengthComputable) {
-            const partFraction = e.loaded / e.total;
-            const overallProgress = (completedParts + partFraction) / totalParts;
-            item.progress = 5 + Math.round(overallProgress * 85);
-            this.notify();
+            loadedByPart.set(part.number, e.loaded);
+            reportProgress();
           }
         };
 
@@ -397,9 +418,8 @@ class UploadManager {
             // Only count the part as done once its ETag is durably registered.
             this.registerPart(item.attachmentId!, part.number, etag, item.id)
               .then(() => {
-                completedParts++;
-                item.progress = 5 + Math.round((completedParts / totalParts) * 85);
-                this.notify();
+                loadedByPart.set(part.number, partSize(part.number));
+                reportProgress();
                 resolve();
               })
               .catch(reject);
@@ -431,6 +451,9 @@ class UploadManager {
         } catch (e) {
           if (this.isCancelled(item.id) || e instanceof UploadCancelledError) return;
           lastErr = e;
+          // The failed attempt's bytes were lost — reset so the retry's
+          // progress events keep the overall byte count accurate.
+          loadedByPart.set(part.number, 0);
           await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
         }
       }
@@ -638,8 +661,11 @@ class UploadManager {
 
       xhr.upload.onprogress = (e) => {
         if (e.lengthComputable) {
-          item.progress = 5 + Math.round((e.loaded / e.total) * 85);
-          this.notify();
+          const next = 5 + Math.round((e.loaded / e.total) * 85);
+          if (next > item.progress) {
+            item.progress = next;
+            this.notify();
+          }
         }
       };
 

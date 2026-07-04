@@ -78,6 +78,20 @@ edge, not from the Railway region.
 4. WebSockets (Centrifugo) are on a separate hostname; if you move it behind
    Cloudflare too, WebSockets are supported on all plans — no config needed.
 
+## 4b. Media playback (video/audio previews)
+
+Playback goes through `/api/files/[id]/stream`, which auth-checks and then
+302-redirects to a presigned R2 URL — the bytes stream straight from R2 to
+the browser and never touch the app server.
+
+If playback of very large videos still feels slow for far-away team members,
+the next upgrade is an R2 **custom domain** (R2 bucket → Settings → Custom
+Domains, e.g. `media.falak.media`). That serves objects through Cloudflare's
+CDN with edge caching close to each viewer. It requires switching playback
+URLs from presigned S3 URLs to that domain (plus an auth story such as signed
+URL tokens via a Worker), so treat it as a later optimization — the presigned
+redirect already removes the app-server bottleneck.
+
 ## 5. Railway sizing & replicas
 
 Order matters: only scale to multiple replicas **after** Redis is configured
