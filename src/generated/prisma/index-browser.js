@@ -486,6 +486,14 @@ exports.Prisma.MessageScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.MessageReactionScalarFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  memberId: 'memberId',
+  emoji: 'emoji',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.MessageMentionScalarFieldEnum = {
   id: 'id',
   messageId: 'messageId',
@@ -805,6 +813,7 @@ exports.Prisma.ModelName = {
   Task: 'Task',
   TaskStatusChange: 'TaskStatusChange',
   Message: 'Message',
+  MessageReaction: 'MessageReaction',
   MessageMention: 'MessageMention',
   Conversation: 'Conversation',
   ConversationParticipant: 'ConversationParticipant',

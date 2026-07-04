@@ -93,6 +93,7 @@ model WorkspaceMember {
   assignedTasks      Task[]                    @relation("TaskAssignee")
   messages           Message[]                 @relation("CommentAuthor")
   mentionedIn        MessageMention[]          @relation("MentionedIn")
+  reactions          MessageReaction[]         @relation("ReactionAuthor")
   notifications      Notification[]            @relation("NotificationRecipient")
   pushSubscriptions  PushSubscription[]
   scheduledItems     PublishItem[]             @relation("PublishScheduler")
@@ -631,16 +632,31 @@ model Message {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  task         Task?            @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  project      Project?         @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  conversation Conversation?    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  author       WorkspaceMember  @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  task         Task?             @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  project      Project?          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  conversation Conversation?     @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  author       WorkspaceMember   @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
   mentions     MessageMention[]
+  reactions    MessageReaction[]
 
   @@index([taskId, createdAt])
   @@index([projectId, createdAt])
   @@index([conversationId, createdAt])
   @@map("TaskComment")
+}
+
+model MessageReaction {
+  id        String   @id @default(cuid())
+  messageId String
+  memberId  String
+  emoji     String
+  createdAt DateTime @default(now())
+
+  message Message         @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  member  WorkspaceMember @relation("ReactionAuthor", fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, memberId, emoji])
+  @@index([messageId])
 }
 
 model MessageMention {

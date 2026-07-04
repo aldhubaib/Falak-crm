@@ -2,17 +2,39 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Paperclip, Send, X, FileText, Loader2, Download, UploadCloud } from "lucide-react";
+import { Paperclip, Send, X, FileText, Loader2, UploadCloud, SmilePlus, Search, Files as FilesIcon, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import {
   sendMessage,
   uploadMessageAttachment,
+  toggleReaction,
   type MessageDTO,
   type MessageAttachment,
+  type ReactionSummary,
 } from "@/actions/messages";
 import { useChannel, usePresence, useTyping } from "@/components/realtime/hooks";
+import {
+  AttachmentBubble,
+  Lightbox,
+  useLightbox,
+  FilesPanel,
+} from "@/components/messages/chat-attachments";
+
+const QUICK_EMOJIS = ["👍", "❤️", "😂", "🎉", "✅", "👀"];
 
 export type ChatMessage = {
   id: string;
@@ -21,6 +43,7 @@ export type ChatMessage = {
   body: string;
   createdAt: string;
   attachments: MessageAttachment[];
+  reactions: ReactionSummary[];
 };
 
 type PendingAttachment = {
@@ -30,13 +53,6 @@ type PendingAttachment = {
   attachment?: MessageAttachment;
   error?: boolean;
 };
-
-function formatSize(bytes: number | null): string {
-  if (!bytes) return "";
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
 
 export type ThreadTarget = {
   taskId?: string | null;
@@ -109,10 +125,15 @@ export function ThreadChat({
   const [pending, setPending] = useState<PendingAttachment[]>([]);
   const [, startTransition] = useTransition();
   const [dragging, setDragging] = useState(false);
+  const [view, setView] = useState<"chat" | "files">("chat");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const dragDepth = useRef(0);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const lb = useLightbox();
 
   const online = usePresence(presenceChannel);
   const { typing, notifyTyping } = useTyping(channel);
@@ -121,25 +142,42 @@ export function ThreadChat({
     setMessages(initialMessages);
   }, [initialMessages]);
 
-  // Live incoming messages.
+  // Live incoming messages + reaction updates.
   useChannel(channel, (data) => {
-    const d = data as { type?: string; message?: MessageDTO } | null;
-    if (!d || d.type !== "message.new" || !d.message) return;
-    const m = d.message;
-    setMessages((prev) => {
-      if (prev.some((x) => x.id === m.id)) return prev;
-      return [
-        ...prev,
-        {
-          id: m.id,
-          authorId: m.authorId,
-          authorName: m.authorName,
-          body: m.body,
-          createdAt: m.createdAt,
-          attachments: m.attachments ?? [],
-        },
-      ];
-    });
+    const d = data as
+      | {
+          type?: string;
+          message?: MessageDTO;
+          messageId?: string;
+          reactions?: ReactionSummary[];
+        }
+      | null;
+    if (!d) return;
+    if (d.type === "message.new" && d.message) {
+      const m = d.message;
+      setMessages((prev) => {
+        if (prev.some((x) => x.id === m.id)) return prev;
+        return [
+          ...prev,
+          {
+            id: m.id,
+            authorId: m.authorId,
+            authorName: m.authorName,
+            body: m.body,
+            createdAt: m.createdAt,
+            attachments: m.attachments ?? [],
+            reactions: [],
+          },
+        ];
+      });
+    } else if (d.type === "reaction.updated" && d.messageId) {
+      const { messageId, reactions } = d;
+      setMessages((prev) =>
+        prev.map((x) =>
+          x.id === messageId ? { ...x, reactions: reactions ?? [] } : x,
+        ),
+      );
+    }
   });
 
   useEffect(() => {
@@ -234,11 +272,38 @@ export function ThreadChat({
                   body: m.body,
                   createdAt: m.createdAt,
                   attachments: m.attachments,
+                  reactions: [],
                 },
               ],
         );
         router.refresh();
       }
+    });
+  };
+
+  const react = (messageId: string, emoji: string) => {
+    // Optimistic toggle of my own reaction; server broadcast reconciles.
+    setMessages((prev) =>
+      prev.map((m) => {
+        if (m.id !== messageId) return m;
+        const existing = m.reactions.find((r) => r.emoji === emoji);
+        let reactions: ReactionSummary[];
+        if (existing) {
+          const mine = existing.memberIds.includes(currentMemberId);
+          const memberIds = mine
+            ? existing.memberIds.filter((id) => id !== currentMemberId)
+            : [...existing.memberIds, currentMemberId];
+          reactions = memberIds.length
+            ? m.reactions.map((r) => (r.emoji === emoji ? { ...r, memberIds } : r))
+            : m.reactions.filter((r) => r.emoji !== emoji);
+        } else {
+          reactions = [...m.reactions, { emoji, memberIds: [currentMemberId] }];
+        }
+        return { ...m, reactions };
+      }),
+    );
+    startTransition(async () => {
+      await toggleReaction(messageId, emoji);
     });
   };
 
@@ -250,6 +315,36 @@ export function ThreadChat({
     if (names.length === 2) return `${names[0]} and ${names[1]} are typing…`;
     return "Several people are typing…";
   }, [typing, memberNames]);
+
+  const sq = searchQuery.trim().toLowerCase();
+  const searchMatches = useMemo(() => {
+    if (!sq) return null;
+    return messages.filter((m) => m.body.toLowerCase().includes(sq));
+  }, [messages, sq]);
+
+  const matchIds = useMemo(() => {
+    if (!searchMatches) return null;
+    return new Set(searchMatches.map((m) => m.id));
+  }, [searchMatches]);
+
+  const scrollToMessage = (id: string) => {
+    const el = document.getElementById(`msg-${id}`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.classList.add("ring-2", "ring-primary/60", "rounded-2xl");
+    setTimeout(() => el.classList.remove("ring-2", "ring-primary/60", "rounded-2xl"), 1500);
+  };
+
+  const allImages = useMemo(
+    () => messages.flatMap((m) => m.attachments.filter((a) => a.isImage)),
+    [messages],
+  );
+
+  const openImage = (att: MessageAttachment) => lb.open(att, allImages);
+
+  useEffect(() => {
+    if (searchOpen) searchInputRef.current?.focus();
+  }, [searchOpen]);
 
   return (
     <div
@@ -269,7 +364,7 @@ export function ThreadChat({
       )}
       {/* Thread header */}
       <div className="flex h-14 items-center gap-3 border-b border-border/60 px-4">
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className="truncate text-sm font-semibold">{title}</span>
             {peerMemberIds.length > 0 && (
@@ -293,6 +388,23 @@ export function ThreadChat({
             {subtitle}
           </div>
         </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="rounded-full" aria-label="More options">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-44">
+            <DropdownMenuItem onSelect={() => { setView("chat"); setSearchOpen(true); }}>
+              <Search className="h-4 w-4" />
+              <span className="flex-1">Search</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setView(view === "files" ? "chat" : "files")}>
+              <FilesIcon className="h-4 w-4" />
+              <span className="flex-1">Files</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Messages */}
@@ -305,7 +417,7 @@ export function ThreadChat({
             const showDay = !prev || !sameDay(prev.createdAt, m.createdAt);
 
             return (
-              <div key={m.id} className="contents">
+              <div key={m.id} id={`msg-${m.id}`} className={cn("contents", sq && matchIds && !matchIds.has(m.id) && "opacity-30")}>
                 {showDay && (
                   <div className="my-2 flex items-center justify-center">
                     <span className="rounded-full bg-surface px-3 py-1 text-tiny font-medium text-muted-foreground">
@@ -315,12 +427,12 @@ export function ThreadChat({
                 )}
                 <div
                   className={cn(
-                    "flex gap-2",
+                    "group flex items-center gap-2",
                     mine ? "justify-end" : "justify-start",
                   )}
                 >
                   {!mine && (
-                    <div className="w-8 shrink-0">
+                    <div className="w-8 shrink-0 self-end">
                       {showAuthor && (
                         <div
                           className="grid h-8 w-8 place-items-center rounded-full bg-primary/20 text-xxs font-semibold text-primary"
@@ -336,6 +448,9 @@ export function ThreadChat({
                       )}
                     </div>
                   )}
+                  {mine && (
+                    <ReactTrigger onPick={(e) => react(m.id, e)} side="left" />
+                  )}
                   <div
                     className={cn(
                       "flex max-w-[70%] flex-col gap-1",
@@ -350,7 +465,7 @@ export function ThreadChat({
                     {m.attachments.length > 0 && (
                       <div className="flex max-w-full flex-col gap-1.5">
                         {m.attachments.map((a) => (
-                          <AttachmentBubble key={a.id} attachment={a} mine={mine} />
+                          <AttachmentBubble key={a.id} attachment={a} mine={mine} onOpenImage={openImage} />
                         ))}
                       </div>
                     )}
@@ -378,7 +493,40 @@ export function ThreadChat({
                         </span>
                       </div>
                     )}
+                    {m.reactions.length > 0 && (
+                      <div
+                        className={cn(
+                          "flex flex-wrap gap-1",
+                          mine ? "justify-end" : "justify-start",
+                        )}
+                      >
+                        {m.reactions.map((r) => {
+                          const mineReacted = r.memberIds.includes(currentMemberId);
+                          return (
+                            <button
+                              key={r.emoji}
+                              type="button"
+                              onClick={() => react(m.id, r.emoji)}
+                              className={cn(
+                                "flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-xs leading-none transition-colors",
+                                mineReacted
+                                  ? "border-primary/50 bg-primary/15 text-foreground"
+                                  : "border-border/60 bg-surface/60 text-muted-foreground hover:bg-surface",
+                              )}
+                            >
+                              <span>{r.emoji}</span>
+                              <span className="text-[10px] font-medium">
+                                {r.memberIds.length}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
+                  {!mine && (
+                    <ReactTrigger onPick={(e) => react(m.id, e)} side="right" />
+                  )}
                 </div>
               </div>
             );
@@ -475,59 +623,139 @@ export function ThreadChat({
           </div>
         </div>
       </div>
+      {lb.state && (
+        <Lightbox images={lb.state.images} index={lb.state.index} onClose={lb.close} onIndex={lb.setIndex} />
+      )}
+      {searchOpen && (
+        <div className="absolute inset-y-0 right-0 z-30 flex w-80 flex-col border-l border-border/60 bg-background shadow-xl">
+          <div className="flex h-14 shrink-0 items-center gap-2 border-b border-border/60 px-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
+              aria-label="Close search"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+            <span className="text-sm font-semibold">Search messages</span>
+          </div>
+          <div className="shrink-0 border-b border-border/60 px-3 py-3">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                ref={searchInputRef}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Escape") { setSearchOpen(false); setSearchQuery(""); } }}
+                placeholder="Search"
+                className="h-10 rounded-full pl-9 pr-9 text-sm"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2.5 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded-full text-muted-foreground hover:bg-surface hover:text-foreground"
+                  aria-label="Clear"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            {!sq && (
+              <div className="px-6 py-10 text-center text-sm text-muted-foreground">
+                Search for messages in this conversation.
+              </div>
+            )}
+            {sq && searchMatches && searchMatches.length === 0 && (
+              <div className="px-6 py-10 text-center text-sm text-muted-foreground">
+                No messages found.
+              </div>
+            )}
+            {sq && searchMatches && searchMatches.length > 0 && (
+              <>
+                <div className="px-4 pb-1 pt-3 text-xs font-medium text-muted-foreground">
+                  {searchMatches.length} result{searchMatches.length === 1 ? "" : "s"}
+                </div>
+                <ul className="flex flex-col">
+                  {searchMatches.map((m) => (
+                    <li key={m.id}>
+                      <button
+                        type="button"
+                        onClick={() => scrollToMessage(m.id)}
+                        className="flex w-full flex-col gap-1 border-b border-border/40 px-4 py-3 text-left hover:bg-surface/60"
+                      >
+                        <span className="text-[11px] text-muted-foreground">
+                          {new Date(m.createdAt).toLocaleDateString([], { day: "2-digit", month: "2-digit", year: "numeric" })}
+                        </span>
+                        <span className="line-clamp-2 text-sm text-foreground">
+                          <span className="text-muted-foreground">{m.authorName}:</span>{" "}
+                          {m.body}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+      {view === "files" && (
+        <div className="absolute inset-y-0 right-0 z-30 flex w-80 flex-col bg-background shadow-xl">
+          <FilesPanel
+            messages={messages.filter((m) => m.attachments.length > 0)}
+            onClose={() => setView("chat")}
+          />
+        </div>
+      )}
     </div>
   );
 }
 
-function AttachmentBubble({
-  attachment,
-  mine,
+function ReactTrigger({
+  onPick,
+  side,
 }: {
-  attachment: MessageAttachment;
-  mine: boolean;
+  onPick: (emoji: string) => void;
+  side: "left" | "right";
 }) {
-  if (attachment.isImage) {
-    return (
-      <a
-        href={`/api/files/${attachment.id}/download`}
-        className="block overflow-hidden rounded-xl border border-border/50"
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={`/api/files/${attachment.id}/stream`}
-          alt={attachment.name}
-          className="max-h-60 w-auto max-w-[240px] object-cover"
-        />
-      </a>
-    );
-  }
+  const [open, setOpen] = useState(false);
   return (
-    <a
-      href={`/api/files/${attachment.id}/download`}
-      className={cn(
-        "flex items-center gap-2.5 rounded-xl border px-3 py-2 text-sm transition-colors",
-        mine
-          ? "border-primary-foreground/20 bg-primary text-primary-foreground hover:bg-primary/90"
-          : "border-border/60 bg-surface text-foreground hover:bg-surface/70",
-      )}
-    >
-      <FileText className="h-5 w-5 shrink-0 opacity-80" />
-      <span className="min-w-0 flex-1">
-        <span className="block max-w-[200px] truncate font-medium">
-          {attachment.name}
-        </span>
-        {attachment.sizeBytes ? (
-          <span
-            className={cn(
-              "block text-[10px]",
-              mine ? "text-primary-foreground/70" : "text-muted-foreground",
-            )}
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          aria-label="Add reaction"
+          className={cn(
+            "grid h-7 w-7 shrink-0 place-items-center rounded-full text-muted-foreground opacity-50 transition-opacity hover:bg-muted hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none group-hover:opacity-100 data-[state=open]:opacity-100",
+            side === "left" ? "order-first" : "order-last",
+          )}
+        >
+          <SmilePlus className="h-icon-sm w-icon-sm" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        align="center"
+        className="flex w-auto gap-0.5 rounded-full p-1"
+      >
+        {QUICK_EMOJIS.map((e) => (
+          <button
+            key={e}
+            type="button"
+            onClick={() => {
+              onPick(e);
+              setOpen(false);
+            }}
+            className="grid h-9 w-9 place-items-center rounded-full text-lg transition-transform hover:scale-110 hover:bg-muted"
           >
-            {formatSize(attachment.sizeBytes)}
-          </span>
-        ) : null}
-      </span>
-      <Download className="h-4 w-4 shrink-0 opacity-70" />
-    </a>
+            {e}
+          </button>
+        ))}
+      </PopoverContent>
+    </Popover>
   );
 }
+

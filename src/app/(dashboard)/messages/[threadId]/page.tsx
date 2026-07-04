@@ -97,6 +97,7 @@ export default async function ThreadPage({
     where,
     include: {
       author: { select: { id: true, userId: true, name: true, email: true } },
+      reactions: { select: { emoji: true, memberId: true }, orderBy: { createdAt: "asc" } },
     },
     orderBy: { createdAt: "asc" },
   });
@@ -140,20 +141,32 @@ export default async function ThreadPage({
     data: { read: true },
   });
 
-  const messages: ChatMessage[] = rows.map((c) => ({
-    id: c.id,
-    authorId: c.author.id,
-    authorName: c.author.name ?? c.author.email,
-    body: c.body.replace(MENTION_RE, "@$1"),
-    createdAt: c.createdAt.toISOString(),
-    attachments: (attachmentsByMessage.get(c.id) ?? []).map((a) => ({
-      id: a.id,
-      name: a.name,
-      contentType: a.contentType,
-      sizeBytes: a.sizeBytes,
-      isImage: Boolean(a.contentType && a.contentType.startsWith("image/")),
-    })),
-  }));
+  const messages: ChatMessage[] = rows.map((c) => {
+    const byEmoji = new Map<string, string[]>();
+    for (const r of c.reactions) {
+      const list = byEmoji.get(r.emoji) ?? [];
+      list.push(r.memberId);
+      byEmoji.set(r.emoji, list);
+    }
+    return {
+      id: c.id,
+      authorId: c.author.id,
+      authorName: c.author.name ?? c.author.email,
+      body: c.body.replace(MENTION_RE, "@$1"),
+      createdAt: c.createdAt.toISOString(),
+      attachments: (attachmentsByMessage.get(c.id) ?? []).map((a) => ({
+        id: a.id,
+        name: a.name,
+        contentType: a.contentType,
+        sizeBytes: a.sizeBytes,
+        isImage: Boolean(a.contentType && a.contentType.startsWith("image/")),
+      })),
+      reactions: [...byEmoji.entries()].map(([emoji, memberIds]) => ({
+        emoji,
+        memberIds,
+      })),
+    };
+  });
 
   return (
     <ThreadChat

@@ -41,6 +41,13 @@ export type MessageAttachment = {
   isImage: boolean;
 };
 
+// A message's reactions grouped by emoji. Each client derives count + "mine"
+// from memberIds against the current viewer.
+export type ReactionSummary = { emoji: string; memberIds: string[] };
+
+// Server-side allowlist of reaction emojis so arbitrary strings can't be stored.
+const ALLOWED_EMOJIS = ["👍", "❤️", "😂", "🎉", "✅", "👀"];
+
 export type MessageDTO = {
   id: string;
   taskId: string | null;
@@ -288,6 +295,86 @@ export async function sendMessage(
     );
 
     return dto;
+  });
+}
+
+// Toggle the current member's reaction on a message. Returns the full grouped
+// reaction summary and publishes it live to the message's thread channel(s).
+export async function toggleReaction(
+  messageId: string,
+  emoji: string,
+): Promise<ActionResult<{ messageId: string; reactions: ReactionSummary[] }>> {
+  return safeAction("React", async () => {
+    const { workspace, member } = await requireWorkspaceWithMember();
+
+    if (!ALLOWED_EMOJIS.includes(emoji)) throw new Error("Invalid reaction");
+
+    const message = await db.message.findFirst({
+      where: { id: messageId },
+      select: { id: true, taskId: true, projectId: true, conversationId: true },
+    });
+    if (!message) throw new Error("Message not found");
+
+    // Access check mirrors sendMessage's thread resolution.
+    if (message.conversationId) {
+      const convo = await db.conversation.findFirst({
+        where: {
+          id: message.conversationId,
+          workspaceId: workspace.id,
+          participants: { some: { memberId: member.id } },
+        },
+        select: { id: true },
+      });
+      if (!convo) throw new Error("Permission denied");
+    } else if (message.projectId) {
+      const access = await getProjectAccess(message.projectId);
+      if (!access.hasAccess) throw new Error("Permission denied");
+    } else {
+      throw new Error("Permission denied");
+    }
+
+    // Toggle: remove if it exists, otherwise add.
+    const existing = await db.messageReaction.findUnique({
+      where: {
+        messageId_memberId_emoji: { messageId, memberId: member.id, emoji },
+      },
+      select: { id: true },
+    });
+    if (existing) {
+      await db.messageReaction.delete({ where: { id: existing.id } });
+    } else {
+      await db.messageReaction.create({
+        data: { messageId, memberId: member.id, emoji },
+      });
+    }
+
+    const all = await db.messageReaction.findMany({
+      where: { messageId },
+      select: { emoji: true, memberId: true },
+      orderBy: { createdAt: "asc" },
+    });
+    const byEmoji = new Map<string, string[]>();
+    for (const r of all) {
+      const list = byEmoji.get(r.emoji) ?? [];
+      list.push(r.memberId);
+      byEmoji.set(r.emoji, list);
+    }
+    const reactions: ReactionSummary[] = [...byEmoji.entries()].map(
+      ([e, memberIds]) => ({ emoji: e, memberIds }),
+    );
+
+    const channels: string[] = [];
+    if (message.taskId) channels.push(taskChannel(message.taskId));
+    if (message.projectId) channels.push(projectChannel(message.projectId));
+    if (message.conversationId)
+      channels.push(conversationChannel(message.conversationId));
+    void broadcast(channels, {
+      type: "reaction.updated",
+      messageId,
+      reactions,
+    });
+
+    return { messageId, reactions };
   });
 }
 
