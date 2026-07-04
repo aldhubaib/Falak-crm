@@ -681,6 +681,19 @@ exports.Prisma.LoginPhotoScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.BrandingAssetScalarFieldEnum = {
+  id: 'id',
+  slot: 'slot',
+  r2Key: 'r2Key',
+  contentType: 'contentType',
+  fileName: 'fileName',
+  width: 'width',
+  height: 'height',
+  size: 'size',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.PublishItemScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -833,6 +846,7 @@ exports.Prisma.ModelName = {
   CustomFieldDef: 'CustomFieldDef',
   Attachment: 'Attachment',
   LoginPhoto: 'LoginPhoto',
+  BrandingAsset: 'BrandingAsset',
   PublishItem: 'PublishItem'
 };
 

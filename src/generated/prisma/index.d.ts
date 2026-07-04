@@ -239,6 +239,11 @@ export type Attachment = $Result.DefaultSelection<Prisma.$AttachmentPayload>
  */
 export type LoginPhoto = $Result.DefaultSelection<Prisma.$LoginPhotoPayload>
 /**
+ * Model BrandingAsset
+ * 
+ */
+export type BrandingAsset = $Result.DefaultSelection<Prisma.$BrandingAssetPayload>
+/**
  * Model PublishItem
  * 
  */
@@ -947,6 +952,16 @@ export class PrismaClient<
   get loginPhoto(): Prisma.LoginPhotoDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.brandingAsset`: Exposes CRUD operations for the **BrandingAsset** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BrandingAssets
+    * const brandingAssets = await prisma.brandingAsset.findMany()
+    * ```
+    */
+  get brandingAsset(): Prisma.BrandingAssetDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.publishItem`: Exposes CRUD operations for the **PublishItem** model.
     * Example usage:
     * ```ts
@@ -1434,6 +1449,7 @@ export namespace Prisma {
     CustomFieldDef: 'CustomFieldDef',
     Attachment: 'Attachment',
     LoginPhoto: 'LoginPhoto',
+    BrandingAsset: 'BrandingAsset',
     PublishItem: 'PublishItem'
   };
 
@@ -1450,7 +1466,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "message" | "messageReaction" | "messageMention" | "conversation" | "conversationParticipant" | "notification" | "pushSubscription" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "publishItem"
+      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "message" | "messageReaction" | "messageMention" | "conversation" | "conversationParticipant" | "notification" | "pushSubscription" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "brandingAsset" | "publishItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4784,6 +4800,80 @@ export namespace Prisma {
           }
         }
       }
+      BrandingAsset: {
+        payload: Prisma.$BrandingAssetPayload<ExtArgs>
+        fields: Prisma.BrandingAssetFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BrandingAssetFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandingAssetPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BrandingAssetFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandingAssetPayload>
+          }
+          findFirst: {
+            args: Prisma.BrandingAssetFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandingAssetPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BrandingAssetFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandingAssetPayload>
+          }
+          findMany: {
+            args: Prisma.BrandingAssetFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandingAssetPayload>[]
+          }
+          create: {
+            args: Prisma.BrandingAssetCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandingAssetPayload>
+          }
+          createMany: {
+            args: Prisma.BrandingAssetCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BrandingAssetCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandingAssetPayload>[]
+          }
+          delete: {
+            args: Prisma.BrandingAssetDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandingAssetPayload>
+          }
+          update: {
+            args: Prisma.BrandingAssetUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandingAssetPayload>
+          }
+          deleteMany: {
+            args: Prisma.BrandingAssetDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BrandingAssetUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.BrandingAssetUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandingAssetPayload>[]
+          }
+          upsert: {
+            args: Prisma.BrandingAssetUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandingAssetPayload>
+          }
+          aggregate: {
+            args: Prisma.BrandingAssetAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBrandingAsset>
+          }
+          groupBy: {
+            args: Prisma.BrandingAssetGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BrandingAssetGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BrandingAssetCountArgs<ExtArgs>
+            result: $Utils.Optional<BrandingAssetCountAggregateOutputType> | number
+          }
+        }
+      }
       PublishItem: {
         payload: Prisma.$PublishItemPayload<ExtArgs>
         fields: Prisma.PublishItemFieldRefs
@@ -5011,6 +5101,7 @@ export namespace Prisma {
     customFieldDef?: CustomFieldDefOmit
     attachment?: AttachmentOmit
     loginPhoto?: LoginPhotoOmit
+    brandingAsset?: BrandingAssetOmit
     publishItem?: PublishItemOmit
   }
 
@@ -60125,6 +60216,1113 @@ export namespace Prisma {
 
 
   /**
+   * Model BrandingAsset
+   */
+
+  export type AggregateBrandingAsset = {
+    _count: BrandingAssetCountAggregateOutputType | null
+    _avg: BrandingAssetAvgAggregateOutputType | null
+    _sum: BrandingAssetSumAggregateOutputType | null
+    _min: BrandingAssetMinAggregateOutputType | null
+    _max: BrandingAssetMaxAggregateOutputType | null
+  }
+
+  export type BrandingAssetAvgAggregateOutputType = {
+    width: number | null
+    height: number | null
+    size: number | null
+  }
+
+  export type BrandingAssetSumAggregateOutputType = {
+    width: number | null
+    height: number | null
+    size: number | null
+  }
+
+  export type BrandingAssetMinAggregateOutputType = {
+    id: string | null
+    slot: string | null
+    r2Key: string | null
+    contentType: string | null
+    fileName: string | null
+    width: number | null
+    height: number | null
+    size: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BrandingAssetMaxAggregateOutputType = {
+    id: string | null
+    slot: string | null
+    r2Key: string | null
+    contentType: string | null
+    fileName: string | null
+    width: number | null
+    height: number | null
+    size: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BrandingAssetCountAggregateOutputType = {
+    id: number
+    slot: number
+    r2Key: number
+    contentType: number
+    fileName: number
+    width: number
+    height: number
+    size: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BrandingAssetAvgAggregateInputType = {
+    width?: true
+    height?: true
+    size?: true
+  }
+
+  export type BrandingAssetSumAggregateInputType = {
+    width?: true
+    height?: true
+    size?: true
+  }
+
+  export type BrandingAssetMinAggregateInputType = {
+    id?: true
+    slot?: true
+    r2Key?: true
+    contentType?: true
+    fileName?: true
+    width?: true
+    height?: true
+    size?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BrandingAssetMaxAggregateInputType = {
+    id?: true
+    slot?: true
+    r2Key?: true
+    contentType?: true
+    fileName?: true
+    width?: true
+    height?: true
+    size?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BrandingAssetCountAggregateInputType = {
+    id?: true
+    slot?: true
+    r2Key?: true
+    contentType?: true
+    fileName?: true
+    width?: true
+    height?: true
+    size?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BrandingAssetAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BrandingAsset to aggregate.
+     */
+    where?: BrandingAssetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BrandingAssets to fetch.
+     */
+    orderBy?: BrandingAssetOrderByWithRelationInput | BrandingAssetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BrandingAssetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BrandingAssets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BrandingAssets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BrandingAssets
+    **/
+    _count?: true | BrandingAssetCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: BrandingAssetAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BrandingAssetSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BrandingAssetMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BrandingAssetMaxAggregateInputType
+  }
+
+  export type GetBrandingAssetAggregateType<T extends BrandingAssetAggregateArgs> = {
+        [P in keyof T & keyof AggregateBrandingAsset]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBrandingAsset[P]>
+      : GetScalarType<T[P], AggregateBrandingAsset[P]>
+  }
+
+
+
+
+  export type BrandingAssetGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BrandingAssetWhereInput
+    orderBy?: BrandingAssetOrderByWithAggregationInput | BrandingAssetOrderByWithAggregationInput[]
+    by: BrandingAssetScalarFieldEnum[] | BrandingAssetScalarFieldEnum
+    having?: BrandingAssetScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BrandingAssetCountAggregateInputType | true
+    _avg?: BrandingAssetAvgAggregateInputType
+    _sum?: BrandingAssetSumAggregateInputType
+    _min?: BrandingAssetMinAggregateInputType
+    _max?: BrandingAssetMaxAggregateInputType
+  }
+
+  export type BrandingAssetGroupByOutputType = {
+    id: string
+    slot: string
+    r2Key: string
+    contentType: string
+    fileName: string
+    width: number
+    height: number
+    size: number
+    createdAt: Date
+    updatedAt: Date
+    _count: BrandingAssetCountAggregateOutputType | null
+    _avg: BrandingAssetAvgAggregateOutputType | null
+    _sum: BrandingAssetSumAggregateOutputType | null
+    _min: BrandingAssetMinAggregateOutputType | null
+    _max: BrandingAssetMaxAggregateOutputType | null
+  }
+
+  type GetBrandingAssetGroupByPayload<T extends BrandingAssetGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BrandingAssetGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BrandingAssetGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BrandingAssetGroupByOutputType[P]>
+            : GetScalarType<T[P], BrandingAssetGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BrandingAssetSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slot?: boolean
+    r2Key?: boolean
+    contentType?: boolean
+    fileName?: boolean
+    width?: boolean
+    height?: boolean
+    size?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["brandingAsset"]>
+
+  export type BrandingAssetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slot?: boolean
+    r2Key?: boolean
+    contentType?: boolean
+    fileName?: boolean
+    width?: boolean
+    height?: boolean
+    size?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["brandingAsset"]>
+
+  export type BrandingAssetSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slot?: boolean
+    r2Key?: boolean
+    contentType?: boolean
+    fileName?: boolean
+    width?: boolean
+    height?: boolean
+    size?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["brandingAsset"]>
+
+  export type BrandingAssetSelectScalar = {
+    id?: boolean
+    slot?: boolean
+    r2Key?: boolean
+    contentType?: boolean
+    fileName?: boolean
+    width?: boolean
+    height?: boolean
+    size?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BrandingAssetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slot" | "r2Key" | "contentType" | "fileName" | "width" | "height" | "size" | "createdAt" | "updatedAt", ExtArgs["result"]["brandingAsset"]>
+
+  export type $BrandingAssetPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BrandingAsset"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      slot: string
+      r2Key: string
+      contentType: string
+      fileName: string
+      width: number
+      height: number
+      size: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["brandingAsset"]>
+    composites: {}
+  }
+
+  type BrandingAssetGetPayload<S extends boolean | null | undefined | BrandingAssetDefaultArgs> = $Result.GetResult<Prisma.$BrandingAssetPayload, S>
+
+  type BrandingAssetCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<BrandingAssetFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: BrandingAssetCountAggregateInputType | true
+    }
+
+  export interface BrandingAssetDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BrandingAsset'], meta: { name: 'BrandingAsset' } }
+    /**
+     * Find zero or one BrandingAsset that matches the filter.
+     * @param {BrandingAssetFindUniqueArgs} args - Arguments to find a BrandingAsset
+     * @example
+     * // Get one BrandingAsset
+     * const brandingAsset = await prisma.brandingAsset.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BrandingAssetFindUniqueArgs>(args: SelectSubset<T, BrandingAssetFindUniqueArgs<ExtArgs>>): Prisma__BrandingAssetClient<$Result.GetResult<Prisma.$BrandingAssetPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one BrandingAsset that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {BrandingAssetFindUniqueOrThrowArgs} args - Arguments to find a BrandingAsset
+     * @example
+     * // Get one BrandingAsset
+     * const brandingAsset = await prisma.brandingAsset.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BrandingAssetFindUniqueOrThrowArgs>(args: SelectSubset<T, BrandingAssetFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BrandingAssetClient<$Result.GetResult<Prisma.$BrandingAssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BrandingAsset that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BrandingAssetFindFirstArgs} args - Arguments to find a BrandingAsset
+     * @example
+     * // Get one BrandingAsset
+     * const brandingAsset = await prisma.brandingAsset.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BrandingAssetFindFirstArgs>(args?: SelectSubset<T, BrandingAssetFindFirstArgs<ExtArgs>>): Prisma__BrandingAssetClient<$Result.GetResult<Prisma.$BrandingAssetPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BrandingAsset that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BrandingAssetFindFirstOrThrowArgs} args - Arguments to find a BrandingAsset
+     * @example
+     * // Get one BrandingAsset
+     * const brandingAsset = await prisma.brandingAsset.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BrandingAssetFindFirstOrThrowArgs>(args?: SelectSubset<T, BrandingAssetFindFirstOrThrowArgs<ExtArgs>>): Prisma__BrandingAssetClient<$Result.GetResult<Prisma.$BrandingAssetPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more BrandingAssets that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BrandingAssetFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BrandingAssets
+     * const brandingAssets = await prisma.brandingAsset.findMany()
+     * 
+     * // Get first 10 BrandingAssets
+     * const brandingAssets = await prisma.brandingAsset.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const brandingAssetWithIdOnly = await prisma.brandingAsset.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BrandingAssetFindManyArgs>(args?: SelectSubset<T, BrandingAssetFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BrandingAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a BrandingAsset.
+     * @param {BrandingAssetCreateArgs} args - Arguments to create a BrandingAsset.
+     * @example
+     * // Create one BrandingAsset
+     * const BrandingAsset = await prisma.brandingAsset.create({
+     *   data: {
+     *     // ... data to create a BrandingAsset
+     *   }
+     * })
+     * 
+     */
+    create<T extends BrandingAssetCreateArgs>(args: SelectSubset<T, BrandingAssetCreateArgs<ExtArgs>>): Prisma__BrandingAssetClient<$Result.GetResult<Prisma.$BrandingAssetPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many BrandingAssets.
+     * @param {BrandingAssetCreateManyArgs} args - Arguments to create many BrandingAssets.
+     * @example
+     * // Create many BrandingAssets
+     * const brandingAsset = await prisma.brandingAsset.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BrandingAssetCreateManyArgs>(args?: SelectSubset<T, BrandingAssetCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BrandingAssets and returns the data saved in the database.
+     * @param {BrandingAssetCreateManyAndReturnArgs} args - Arguments to create many BrandingAssets.
+     * @example
+     * // Create many BrandingAssets
+     * const brandingAsset = await prisma.brandingAsset.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BrandingAssets and only return the `id`
+     * const brandingAssetWithIdOnly = await prisma.brandingAsset.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BrandingAssetCreateManyAndReturnArgs>(args?: SelectSubset<T, BrandingAssetCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BrandingAssetPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a BrandingAsset.
+     * @param {BrandingAssetDeleteArgs} args - Arguments to delete one BrandingAsset.
+     * @example
+     * // Delete one BrandingAsset
+     * const BrandingAsset = await prisma.brandingAsset.delete({
+     *   where: {
+     *     // ... filter to delete one BrandingAsset
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BrandingAssetDeleteArgs>(args: SelectSubset<T, BrandingAssetDeleteArgs<ExtArgs>>): Prisma__BrandingAssetClient<$Result.GetResult<Prisma.$BrandingAssetPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one BrandingAsset.
+     * @param {BrandingAssetUpdateArgs} args - Arguments to update one BrandingAsset.
+     * @example
+     * // Update one BrandingAsset
+     * const brandingAsset = await prisma.brandingAsset.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BrandingAssetUpdateArgs>(args: SelectSubset<T, BrandingAssetUpdateArgs<ExtArgs>>): Prisma__BrandingAssetClient<$Result.GetResult<Prisma.$BrandingAssetPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more BrandingAssets.
+     * @param {BrandingAssetDeleteManyArgs} args - Arguments to filter BrandingAssets to delete.
+     * @example
+     * // Delete a few BrandingAssets
+     * const { count } = await prisma.brandingAsset.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BrandingAssetDeleteManyArgs>(args?: SelectSubset<T, BrandingAssetDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BrandingAssets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BrandingAssetUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BrandingAssets
+     * const brandingAsset = await prisma.brandingAsset.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BrandingAssetUpdateManyArgs>(args: SelectSubset<T, BrandingAssetUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BrandingAssets and returns the data updated in the database.
+     * @param {BrandingAssetUpdateManyAndReturnArgs} args - Arguments to update many BrandingAssets.
+     * @example
+     * // Update many BrandingAssets
+     * const brandingAsset = await prisma.brandingAsset.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more BrandingAssets and only return the `id`
+     * const brandingAssetWithIdOnly = await prisma.brandingAsset.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends BrandingAssetUpdateManyAndReturnArgs>(args: SelectSubset<T, BrandingAssetUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BrandingAssetPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one BrandingAsset.
+     * @param {BrandingAssetUpsertArgs} args - Arguments to update or create a BrandingAsset.
+     * @example
+     * // Update or create a BrandingAsset
+     * const brandingAsset = await prisma.brandingAsset.upsert({
+     *   create: {
+     *     // ... data to create a BrandingAsset
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BrandingAsset we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BrandingAssetUpsertArgs>(args: SelectSubset<T, BrandingAssetUpsertArgs<ExtArgs>>): Prisma__BrandingAssetClient<$Result.GetResult<Prisma.$BrandingAssetPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of BrandingAssets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BrandingAssetCountArgs} args - Arguments to filter BrandingAssets to count.
+     * @example
+     * // Count the number of BrandingAssets
+     * const count = await prisma.brandingAsset.count({
+     *   where: {
+     *     // ... the filter for the BrandingAssets we want to count
+     *   }
+     * })
+    **/
+    count<T extends BrandingAssetCountArgs>(
+      args?: Subset<T, BrandingAssetCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BrandingAssetCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BrandingAsset.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BrandingAssetAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BrandingAssetAggregateArgs>(args: Subset<T, BrandingAssetAggregateArgs>): Prisma.PrismaPromise<GetBrandingAssetAggregateType<T>>
+
+    /**
+     * Group by BrandingAsset.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BrandingAssetGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BrandingAssetGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BrandingAssetGroupByArgs['orderBy'] }
+        : { orderBy?: BrandingAssetGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BrandingAssetGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBrandingAssetGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BrandingAsset model
+   */
+  readonly fields: BrandingAssetFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BrandingAsset.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BrandingAssetClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the BrandingAsset model
+   */
+  interface BrandingAssetFieldRefs {
+    readonly id: FieldRef<"BrandingAsset", 'String'>
+    readonly slot: FieldRef<"BrandingAsset", 'String'>
+    readonly r2Key: FieldRef<"BrandingAsset", 'String'>
+    readonly contentType: FieldRef<"BrandingAsset", 'String'>
+    readonly fileName: FieldRef<"BrandingAsset", 'String'>
+    readonly width: FieldRef<"BrandingAsset", 'Int'>
+    readonly height: FieldRef<"BrandingAsset", 'Int'>
+    readonly size: FieldRef<"BrandingAsset", 'Int'>
+    readonly createdAt: FieldRef<"BrandingAsset", 'DateTime'>
+    readonly updatedAt: FieldRef<"BrandingAsset", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BrandingAsset findUnique
+   */
+  export type BrandingAssetFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BrandingAsset
+     */
+    select?: BrandingAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BrandingAsset
+     */
+    omit?: BrandingAssetOmit<ExtArgs> | null
+    /**
+     * Filter, which BrandingAsset to fetch.
+     */
+    where: BrandingAssetWhereUniqueInput
+  }
+
+  /**
+   * BrandingAsset findUniqueOrThrow
+   */
+  export type BrandingAssetFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BrandingAsset
+     */
+    select?: BrandingAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BrandingAsset
+     */
+    omit?: BrandingAssetOmit<ExtArgs> | null
+    /**
+     * Filter, which BrandingAsset to fetch.
+     */
+    where: BrandingAssetWhereUniqueInput
+  }
+
+  /**
+   * BrandingAsset findFirst
+   */
+  export type BrandingAssetFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BrandingAsset
+     */
+    select?: BrandingAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BrandingAsset
+     */
+    omit?: BrandingAssetOmit<ExtArgs> | null
+    /**
+     * Filter, which BrandingAsset to fetch.
+     */
+    where?: BrandingAssetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BrandingAssets to fetch.
+     */
+    orderBy?: BrandingAssetOrderByWithRelationInput | BrandingAssetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BrandingAssets.
+     */
+    cursor?: BrandingAssetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BrandingAssets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BrandingAssets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BrandingAssets.
+     */
+    distinct?: BrandingAssetScalarFieldEnum | BrandingAssetScalarFieldEnum[]
+  }
+
+  /**
+   * BrandingAsset findFirstOrThrow
+   */
+  export type BrandingAssetFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BrandingAsset
+     */
+    select?: BrandingAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BrandingAsset
+     */
+    omit?: BrandingAssetOmit<ExtArgs> | null
+    /**
+     * Filter, which BrandingAsset to fetch.
+     */
+    where?: BrandingAssetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BrandingAssets to fetch.
+     */
+    orderBy?: BrandingAssetOrderByWithRelationInput | BrandingAssetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BrandingAssets.
+     */
+    cursor?: BrandingAssetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BrandingAssets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BrandingAssets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BrandingAssets.
+     */
+    distinct?: BrandingAssetScalarFieldEnum | BrandingAssetScalarFieldEnum[]
+  }
+
+  /**
+   * BrandingAsset findMany
+   */
+  export type BrandingAssetFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BrandingAsset
+     */
+    select?: BrandingAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BrandingAsset
+     */
+    omit?: BrandingAssetOmit<ExtArgs> | null
+    /**
+     * Filter, which BrandingAssets to fetch.
+     */
+    where?: BrandingAssetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BrandingAssets to fetch.
+     */
+    orderBy?: BrandingAssetOrderByWithRelationInput | BrandingAssetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BrandingAssets.
+     */
+    cursor?: BrandingAssetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BrandingAssets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BrandingAssets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BrandingAssets.
+     */
+    distinct?: BrandingAssetScalarFieldEnum | BrandingAssetScalarFieldEnum[]
+  }
+
+  /**
+   * BrandingAsset create
+   */
+  export type BrandingAssetCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BrandingAsset
+     */
+    select?: BrandingAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BrandingAsset
+     */
+    omit?: BrandingAssetOmit<ExtArgs> | null
+    /**
+     * The data needed to create a BrandingAsset.
+     */
+    data: XOR<BrandingAssetCreateInput, BrandingAssetUncheckedCreateInput>
+  }
+
+  /**
+   * BrandingAsset createMany
+   */
+  export type BrandingAssetCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BrandingAssets.
+     */
+    data: BrandingAssetCreateManyInput | BrandingAssetCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BrandingAsset createManyAndReturn
+   */
+  export type BrandingAssetCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BrandingAsset
+     */
+    select?: BrandingAssetSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BrandingAsset
+     */
+    omit?: BrandingAssetOmit<ExtArgs> | null
+    /**
+     * The data used to create many BrandingAssets.
+     */
+    data: BrandingAssetCreateManyInput | BrandingAssetCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BrandingAsset update
+   */
+  export type BrandingAssetUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BrandingAsset
+     */
+    select?: BrandingAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BrandingAsset
+     */
+    omit?: BrandingAssetOmit<ExtArgs> | null
+    /**
+     * The data needed to update a BrandingAsset.
+     */
+    data: XOR<BrandingAssetUpdateInput, BrandingAssetUncheckedUpdateInput>
+    /**
+     * Choose, which BrandingAsset to update.
+     */
+    where: BrandingAssetWhereUniqueInput
+  }
+
+  /**
+   * BrandingAsset updateMany
+   */
+  export type BrandingAssetUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BrandingAssets.
+     */
+    data: XOR<BrandingAssetUpdateManyMutationInput, BrandingAssetUncheckedUpdateManyInput>
+    /**
+     * Filter which BrandingAssets to update
+     */
+    where?: BrandingAssetWhereInput
+    /**
+     * Limit how many BrandingAssets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * BrandingAsset updateManyAndReturn
+   */
+  export type BrandingAssetUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BrandingAsset
+     */
+    select?: BrandingAssetSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BrandingAsset
+     */
+    omit?: BrandingAssetOmit<ExtArgs> | null
+    /**
+     * The data used to update BrandingAssets.
+     */
+    data: XOR<BrandingAssetUpdateManyMutationInput, BrandingAssetUncheckedUpdateManyInput>
+    /**
+     * Filter which BrandingAssets to update
+     */
+    where?: BrandingAssetWhereInput
+    /**
+     * Limit how many BrandingAssets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * BrandingAsset upsert
+   */
+  export type BrandingAssetUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BrandingAsset
+     */
+    select?: BrandingAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BrandingAsset
+     */
+    omit?: BrandingAssetOmit<ExtArgs> | null
+    /**
+     * The filter to search for the BrandingAsset to update in case it exists.
+     */
+    where: BrandingAssetWhereUniqueInput
+    /**
+     * In case the BrandingAsset found by the `where` argument doesn't exist, create a new BrandingAsset with this data.
+     */
+    create: XOR<BrandingAssetCreateInput, BrandingAssetUncheckedCreateInput>
+    /**
+     * In case the BrandingAsset was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BrandingAssetUpdateInput, BrandingAssetUncheckedUpdateInput>
+  }
+
+  /**
+   * BrandingAsset delete
+   */
+  export type BrandingAssetDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BrandingAsset
+     */
+    select?: BrandingAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BrandingAsset
+     */
+    omit?: BrandingAssetOmit<ExtArgs> | null
+    /**
+     * Filter which BrandingAsset to delete.
+     */
+    where: BrandingAssetWhereUniqueInput
+  }
+
+  /**
+   * BrandingAsset deleteMany
+   */
+  export type BrandingAssetDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BrandingAssets to delete
+     */
+    where?: BrandingAssetWhereInput
+    /**
+     * Limit how many BrandingAssets to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * BrandingAsset without action
+   */
+  export type BrandingAssetDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BrandingAsset
+     */
+    select?: BrandingAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BrandingAsset
+     */
+    omit?: BrandingAssetOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model PublishItem
    */
 
@@ -61997,6 +63195,22 @@ export namespace Prisma {
   };
 
   export type LoginPhotoScalarFieldEnum = (typeof LoginPhotoScalarFieldEnum)[keyof typeof LoginPhotoScalarFieldEnum]
+
+
+  export const BrandingAssetScalarFieldEnum: {
+    id: 'id',
+    slot: 'slot',
+    r2Key: 'r2Key',
+    contentType: 'contentType',
+    fileName: 'fileName',
+    width: 'width',
+    height: 'height',
+    size: 'size',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BrandingAssetScalarFieldEnum = (typeof BrandingAssetScalarFieldEnum)[keyof typeof BrandingAssetScalarFieldEnum]
 
 
   export const PublishItemScalarFieldEnum: {
@@ -66146,6 +67360,85 @@ export namespace Prisma {
     column?: StringWithAggregatesFilter<"LoginPhoto"> | string
     order?: IntWithAggregatesFilter<"LoginPhoto"> | number
     createdAt?: DateTimeWithAggregatesFilter<"LoginPhoto"> | Date | string
+  }
+
+  export type BrandingAssetWhereInput = {
+    AND?: BrandingAssetWhereInput | BrandingAssetWhereInput[]
+    OR?: BrandingAssetWhereInput[]
+    NOT?: BrandingAssetWhereInput | BrandingAssetWhereInput[]
+    id?: StringFilter<"BrandingAsset"> | string
+    slot?: StringFilter<"BrandingAsset"> | string
+    r2Key?: StringFilter<"BrandingAsset"> | string
+    contentType?: StringFilter<"BrandingAsset"> | string
+    fileName?: StringFilter<"BrandingAsset"> | string
+    width?: IntFilter<"BrandingAsset"> | number
+    height?: IntFilter<"BrandingAsset"> | number
+    size?: IntFilter<"BrandingAsset"> | number
+    createdAt?: DateTimeFilter<"BrandingAsset"> | Date | string
+    updatedAt?: DateTimeFilter<"BrandingAsset"> | Date | string
+  }
+
+  export type BrandingAssetOrderByWithRelationInput = {
+    id?: SortOrder
+    slot?: SortOrder
+    r2Key?: SortOrder
+    contentType?: SortOrder
+    fileName?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    size?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BrandingAssetWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    slot?: string
+    AND?: BrandingAssetWhereInput | BrandingAssetWhereInput[]
+    OR?: BrandingAssetWhereInput[]
+    NOT?: BrandingAssetWhereInput | BrandingAssetWhereInput[]
+    r2Key?: StringFilter<"BrandingAsset"> | string
+    contentType?: StringFilter<"BrandingAsset"> | string
+    fileName?: StringFilter<"BrandingAsset"> | string
+    width?: IntFilter<"BrandingAsset"> | number
+    height?: IntFilter<"BrandingAsset"> | number
+    size?: IntFilter<"BrandingAsset"> | number
+    createdAt?: DateTimeFilter<"BrandingAsset"> | Date | string
+    updatedAt?: DateTimeFilter<"BrandingAsset"> | Date | string
+  }, "id" | "slot">
+
+  export type BrandingAssetOrderByWithAggregationInput = {
+    id?: SortOrder
+    slot?: SortOrder
+    r2Key?: SortOrder
+    contentType?: SortOrder
+    fileName?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    size?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BrandingAssetCountOrderByAggregateInput
+    _avg?: BrandingAssetAvgOrderByAggregateInput
+    _max?: BrandingAssetMaxOrderByAggregateInput
+    _min?: BrandingAssetMinOrderByAggregateInput
+    _sum?: BrandingAssetSumOrderByAggregateInput
+  }
+
+  export type BrandingAssetScalarWhereWithAggregatesInput = {
+    AND?: BrandingAssetScalarWhereWithAggregatesInput | BrandingAssetScalarWhereWithAggregatesInput[]
+    OR?: BrandingAssetScalarWhereWithAggregatesInput[]
+    NOT?: BrandingAssetScalarWhereWithAggregatesInput | BrandingAssetScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"BrandingAsset"> | string
+    slot?: StringWithAggregatesFilter<"BrandingAsset"> | string
+    r2Key?: StringWithAggregatesFilter<"BrandingAsset"> | string
+    contentType?: StringWithAggregatesFilter<"BrandingAsset"> | string
+    fileName?: StringWithAggregatesFilter<"BrandingAsset"> | string
+    width?: IntWithAggregatesFilter<"BrandingAsset"> | number
+    height?: IntWithAggregatesFilter<"BrandingAsset"> | number
+    size?: IntWithAggregatesFilter<"BrandingAsset"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"BrandingAsset"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"BrandingAsset"> | Date | string
   }
 
   export type PublishItemWhereInput = {
@@ -70407,6 +71700,97 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type BrandingAssetCreateInput = {
+    id?: string
+    slot: string
+    r2Key: string
+    contentType: string
+    fileName: string
+    width?: number
+    height?: number
+    size?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BrandingAssetUncheckedCreateInput = {
+    id?: string
+    slot: string
+    r2Key: string
+    contentType: string
+    fileName: string
+    width?: number
+    height?: number
+    size?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BrandingAssetUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slot?: StringFieldUpdateOperationsInput | string
+    r2Key?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    width?: IntFieldUpdateOperationsInput | number
+    height?: IntFieldUpdateOperationsInput | number
+    size?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BrandingAssetUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slot?: StringFieldUpdateOperationsInput | string
+    r2Key?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    width?: IntFieldUpdateOperationsInput | number
+    height?: IntFieldUpdateOperationsInput | number
+    size?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BrandingAssetCreateManyInput = {
+    id?: string
+    slot: string
+    r2Key: string
+    contentType: string
+    fileName: string
+    width?: number
+    height?: number
+    size?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BrandingAssetUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slot?: StringFieldUpdateOperationsInput | string
+    r2Key?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    width?: IntFieldUpdateOperationsInput | number
+    height?: IntFieldUpdateOperationsInput | number
+    size?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BrandingAssetUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slot?: StringFieldUpdateOperationsInput | string
+    r2Key?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    width?: IntFieldUpdateOperationsInput | number
+    height?: IntFieldUpdateOperationsInput | number
+    size?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type PublishItemCreateInput = {
     id?: string
     scheduledDate: Date | string
@@ -73512,6 +74896,57 @@ export namespace Prisma {
 
   export type LoginPhotoSumOrderByAggregateInput = {
     order?: SortOrder
+  }
+
+  export type BrandingAssetCountOrderByAggregateInput = {
+    id?: SortOrder
+    slot?: SortOrder
+    r2Key?: SortOrder
+    contentType?: SortOrder
+    fileName?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    size?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BrandingAssetAvgOrderByAggregateInput = {
+    width?: SortOrder
+    height?: SortOrder
+    size?: SortOrder
+  }
+
+  export type BrandingAssetMaxOrderByAggregateInput = {
+    id?: SortOrder
+    slot?: SortOrder
+    r2Key?: SortOrder
+    contentType?: SortOrder
+    fileName?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    size?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BrandingAssetMinOrderByAggregateInput = {
+    id?: SortOrder
+    slot?: SortOrder
+    r2Key?: SortOrder
+    contentType?: SortOrder
+    fileName?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    size?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BrandingAssetSumOrderByAggregateInput = {
+    width?: SortOrder
+    height?: SortOrder
+    size?: SortOrder
   }
 
   export type PublishItemCountOrderByAggregateInput = {

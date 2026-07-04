@@ -1,4 +1,4 @@
-const CACHE_NAME = "falak-crm-d51fdf1b";
+const CACHE_NAME = "falak-crm-d891b79f";
 
 self.addEventListener("install", () => {
   // Don't skipWaiting automatically — wait for user to accept the update
@@ -47,8 +47,10 @@ self.addEventListener("push", (event) => {
     Promise.all([
       self.registration.showNotification(title, {
         body: body || "",
-        icon: icon || "/icons/android-192.png",
-        badge: "/icons/android-192.png",
+        // Falls back to the static icon via /api/public/branding when no
+        // custom icon is uploaded in Settings → App Logo.
+        icon: icon || "/api/public/branding/androidAny192",
+        badge: "/api/public/branding/androidAny192",
         data: { url: url || "/dashboard" },
         vibrate: [200, 100, 200],
         tag: data.tag || undefined,

@@ -958,6 +958,25 @@ model LoginPhoto {
   @@index([column, order])
 }
 
+// ─── App Branding ───────────────────────────────────────────────────────────────
+// Uploaded logo/icon assets (favicon, PWA icons, web logo, OG image) managed in
+// Settings → App Logo. Global (not workspace-scoped): the favicon, manifest and
+// sign-in page all render before any workspace context exists. One row per
+// concrete served asset — Android slots store a row per size (192 + 512).
+
+model BrandingAsset {
+  id          String   @id @default(cuid())
+  slot        String   @unique // favicon | appleTouchIcon | androidAny192 | androidAny512 | androidMaskable192 | androidMaskable512 | webLogo | ogImage | androidMonochrome | iosSplash
+  r2Key       String
+  contentType String
+  fileName    String
+  width       Int      @default(0)
+  height      Int      @default(0)
+  size        Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 // ─── Publish Schedule ────────────────────────────────────────────────────────────
 
 model PublishItem {

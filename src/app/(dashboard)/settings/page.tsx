@@ -11,6 +11,7 @@ import {
   Receipt,
   MessageCircle,
   LogIn,
+  Image as ImageIcon,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { AppHeader } from "@/components/app-header";
@@ -86,6 +87,12 @@ export default function SettingsPage() {
           </Group>
 
           <Group title="Appearance">
+            <Tile
+              href="/settings/app-logo"
+              icon={ImageIcon}
+              title="App Logo"
+              desc="Upload favicon, PWA icons, web logo, and social share image."
+            />
             <Tile
               href="/settings/login"
               icon={LogIn}

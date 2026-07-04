@@ -32,7 +32,13 @@ export default function SignInPage() {
       <div className="flex flex-1 items-center justify-center px-6">
         <div className="w-full max-w-[380px] text-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/falak-mark.svg" alt="Falak" className="mx-auto h-10 w-10" />
+          {/* Served from Settings → App Logo when a custom web logo is uploaded;
+              falls back to the bundled mark otherwise. */}
+          <img
+            src="/api/public/branding/webLogo"
+            alt="Falak"
+            className="mx-auto h-10 w-10"
+          />
 
           <h1 className="mt-6 text-[28px] font-semibold leading-[1.2] tracking-tight text-white">
             Welcome to Falak
