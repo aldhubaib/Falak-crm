@@ -330,6 +330,7 @@ export async function createFullTask(data: {
               visibleFromStageId: item.visibleFromStageId,
               requiredBeforeStageId: item.requiredBeforeStageId,
               lockedFromStageId: item.lockedFromStageId,
+              neverLock: item.neverLock,
               order: item.order,
               textValue: hasAnswer ? answer : null,
               completed: hasAnswer,
@@ -941,6 +942,7 @@ export async function syncTaskTemplates(taskId: string, templateIds: string[], p
         visibleFromStageId: item.visibleFromStageId,
         requiredBeforeStageId: item.requiredBeforeStageId,
         lockedFromStageId: item.lockedFromStageId,
+        neverLock: item.neverLock,
         order: nextOrder++,
       })),
     });

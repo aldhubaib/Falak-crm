@@ -27,6 +27,7 @@ type Draft = {
   visibleFromStageId: string | null;
   requiredBeforeStageId: string | null;
   lockedFromStageId: string | null;
+  neverLock: boolean;
 };
 
 function toDraft(f: Partial<TTField>): Draft {
@@ -41,6 +42,7 @@ function toDraft(f: Partial<TTField>): Draft {
     visibleFromStageId: f.visibleFromStageId ?? null,
     requiredBeforeStageId: f.requiredBeforeStageId ?? null,
     lockedFromStageId: f.lockedFromStageId ?? null,
+    neverLock: !!f.neverLock,
   };
 }
 
@@ -177,9 +179,17 @@ export function FieldEditor({
         </LabeledField>
         <LabeledField label="Locked From">
           <Select
-            value={draft.lockedFromStageId ?? "auto"}
+            value={
+              draft.neverLock ? "never" : (draft.lockedFromStageId ?? "auto")
+            }
             onValueChange={(v) =>
-              setField({ lockedFromStageId: v === "auto" ? null : v })
+              setField(
+                v === "never"
+                  ? { neverLock: true, lockedFromStageId: null }
+                  : v === "auto"
+                    ? { neverLock: false, lockedFromStageId: null }
+                    : { neverLock: false, lockedFromStageId: v },
+              )
             }
           >
             <SelectTrigger className="h-10">
@@ -187,6 +197,7 @@ export function FieldEditor({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="auto">Auto</SelectItem>
+              <SelectItem value="never">Never</SelectItem>
               {statuses.map((s) => (
                 <SelectItem key={s.id} value={s.id}>
                   {s.name}
@@ -351,6 +362,7 @@ export function FieldEditor({
                 visibleFromStageId: draft.visibleFromStageId,
                 requiredBeforeStageId: draft.requiredBeforeStageId,
                 lockedFromStageId: draft.lockedFromStageId,
+                neverLock: draft.neverLock,
               })
             }
             disabled={!draft.label.trim() || !dirty}

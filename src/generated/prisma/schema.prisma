@@ -486,6 +486,7 @@ model ChecklistTemplateItem {
   visibleFromStageId    String?
   requiredBeforeStageId String?
   lockedFromStageId     String?
+  neverLock             Boolean @default(false) // field stays editable at every stage
   order                 Int     @default(0)
 
   template            ChecklistTemplate   @relation(fields: [templateId], references: [id], onDelete: Cascade)
@@ -524,6 +525,7 @@ model TaskChecklistItem {
   visibleFromStageId    String?
   requiredBeforeStageId String?
   lockedFromStageId     String?
+  neverLock             Boolean   @default(false) // field stays editable at every stage
   completed             Boolean   @default(false)
   attachmentId          String?
   textValue             String?

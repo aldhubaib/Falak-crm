@@ -217,6 +217,7 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
   const visibleFromStageId = (formData.get("visibleFromStageId") as string) || null;
   const requiredBeforeStageId = (formData.get("requiredBeforeStageId") as string) || null;
   const lockedFromStageId = (formData.get("lockedFromStageId") as string) || null;
+  const neverLock = formData.get("neverLock") === "true";
   const mandatory = formData.get("mandatory") === "true";
   const phase = (formData.get("phase") as string) || "create";
   const options = (formData.get("options") as string)?.trim() || null;
@@ -241,6 +242,7 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
       visibleFromStageId,
       requiredBeforeStageId,
       lockedFromStageId,
+      neverLock,
       order: (last?.order ?? 0) + 1,
     },
   });
@@ -255,7 +257,7 @@ export async function deleteChecklistTemplateItem(id: string) {
 
 export async function updateChecklistTemplateItem(
   id: string,
-  data: { name?: string; type?: string; role?: string; options?: string | null; allowedFileTypes?: string | null; allowedFormats?: string | null; aspectRatio?: string | null; mandatory?: boolean; phase?: string; visibleFromStageId?: string | null; requiredBeforeStageId?: string | null; lockedFromStageId?: string | null }
+  data: { name?: string; type?: string; role?: string; options?: string | null; allowedFileTypes?: string | null; allowedFormats?: string | null; aspectRatio?: string | null; mandatory?: boolean; phase?: string; visibleFromStageId?: string | null; requiredBeforeStageId?: string | null; lockedFromStageId?: string | null; neverLock?: boolean }
 ) {
   const { member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");
@@ -294,6 +296,7 @@ export async function updateChecklistTemplateItem(
   if (visibleFromStageId !== undefined) syncFields.visibleFromStageId = visibleFromStageId;
   if (requiredBeforeStageId !== undefined) syncFields.requiredBeforeStageId = requiredBeforeStageId;
   if (lockedFromStageId !== undefined) syncFields.lockedFromStageId = lockedFromStageId;
+  if (data.neverLock !== undefined) syncFields.neverLock = data.neverLock;
 
   if (Object.keys(syncFields).length > 0) {
     await db.taskChecklistItem.updateMany({

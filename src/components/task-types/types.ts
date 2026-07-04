@@ -14,6 +14,7 @@ export type TTField = {
   visibleFromStageId: string | null;
   requiredBeforeStageId: string | null;
   lockedFromStageId: string | null;
+  neverLock: boolean;
 };
 
 export type TaskTypeVM = {
@@ -38,4 +39,5 @@ export type FieldPatch = {
   visibleFromStageId?: string | null;
   requiredBeforeStageId?: string | null;
   lockedFromStageId?: string | null;
+  neverLock?: boolean;
 };

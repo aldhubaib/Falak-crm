@@ -64,12 +64,15 @@ export default async function TaskDetailPage({
   const currentOrder = task.status?.order ?? null;
 
   // A field is read-only when the task has reached its configured "Locked From"
-  // stage. When left on "Auto" (no stage set) we preserve the built-in rule:
-  // requirement fields lock once the task moves past Todo; delivery stays open.
+  // stage. "Never" keeps the field editable at every stage. When left on "Auto"
+  // (no stage set) we preserve the built-in rule: requirement fields lock once
+  // the task moves past Todo; delivery stays open.
   const isLocked = (
     phase: string,
     lockedFromStageId: string | null,
+    neverLock: boolean,
   ): boolean => {
+    if (neverLock) return false;
     if (currentOrder == null) return false;
     if (lockedFromStageId) {
       const lockOrder = orderById.get(lockedFromStageId);
@@ -97,7 +100,7 @@ export default async function TaskDetailPage({
       allowedFileTypes: it.allowedFileTypes,
       allowedFormats: parseArray(it.allowedFormats),
       aspectRatio: it.aspectRatio,
-      locked: isLocked(it.phase, it.lockedFromStageId),
+      locked: isLocked(it.phase, it.lockedFromStageId, it.neverLock),
     };
   });
 

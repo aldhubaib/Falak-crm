@@ -33,6 +33,7 @@ function buildAddFormData(section: Section, patch: FieldPatch): FormData {
     fd.set("requiredBeforeStageId", patch.requiredBeforeStageId);
   if (patch.lockedFromStageId)
     fd.set("lockedFromStageId", patch.lockedFromStageId);
+  fd.set("neverLock", patch.neverLock ? "true" : "false");
   return fd;
 }
 
@@ -54,6 +55,7 @@ function toUpdateData(patch: FieldPatch) {
     visibleFromStageId: patch.visibleFromStageId ?? null,
     requiredBeforeStageId: patch.requiredBeforeStageId ?? null,
     lockedFromStageId: patch.lockedFromStageId ?? null,
+    neverLock: patch.neverLock ?? false,
   };
 }
 

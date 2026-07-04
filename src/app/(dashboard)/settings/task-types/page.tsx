@@ -35,6 +35,7 @@ type RawItem = {
   visibleFromStageId: string | null;
   requiredBeforeStageId: string | null;
   lockedFromStageId: string | null;
+  neverLock: boolean;
 };
 
 function toField(i: RawItem): TTField {
@@ -52,6 +53,7 @@ function toField(i: RawItem): TTField {
     visibleFromStageId: i.visibleFromStageId,
     requiredBeforeStageId: i.requiredBeforeStageId,
     lockedFromStageId: i.lockedFromStageId,
+    neverLock: i.neverLock,
   };
 }
 
