@@ -70,12 +70,18 @@ export function MonthView({
               <div className="pointer-events-none flex flex-1 items-center justify-center">
                 {dayItems.length > 0 && (
                   <>
-                    {/* Mobile: single "+N" pill */}
-                    <div
-                      className="grid size-7 shrink-0 place-items-center rounded-full bg-primary text-tiny font-semibold text-primary-foreground md:hidden"
-                      aria-label={`${dayItems.length} tasks`}
-                    >
-                      +{dayItems.length}
+                    {/* Mobile: single task shows its avatar, several show a "+N" pill */}
+                    <div className="flex items-center md:hidden">
+                      {dayItems.length === 1 ? (
+                        <EventPill item={dayItems[0]} />
+                      ) : (
+                        <div
+                          className="grid size-7 shrink-0 place-items-center rounded-full bg-primary text-tiny font-semibold text-primary-foreground"
+                          aria-label={`${dayItems.length} tasks`}
+                        >
+                          +{dayItems.length}
+                        </div>
+                      )}
                     </div>
                     {/* Tablet: 1 avatar + overflow pill */}
                     <div className="hidden items-center md:flex lg:hidden">
