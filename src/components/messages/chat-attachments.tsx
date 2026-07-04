@@ -260,6 +260,9 @@ export function AttachmentBubble({
           controls
           preload="metadata"
           className="h-9 min-w-0 flex-1"
+          // Native media controls follow the element's color-scheme; voice
+          // notes use the light (white pill) look from the Lovable design.
+          style={{ colorScheme: "light" }}
         />
         {timeLabel && (
           <span className="shrink-0 pr-1 text-[10px] leading-none text-muted-foreground">
@@ -284,6 +287,7 @@ export function AttachmentBubble({
             controls
             preload="metadata"
             className="mt-1 h-8 w-full"
+            style={{ colorScheme: "dark" }}
           />
         </div>
         <a
