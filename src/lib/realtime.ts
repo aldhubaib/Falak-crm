@@ -23,15 +23,26 @@ export type BoardTaskMovePatch = {
   rejectionCountDelta: number;
 };
 
+// Checklist progress for a task's board card, broadcast whenever a checklist
+// item is completed/uncompleted (file upload finalized, text saved, attachment
+// removed) so the drag gate on every open board unlocks without a refresh.
+export type BoardChecklistPatch = {
+  checklistTotal: number;
+  checklistDone: number;
+  deliveryIncomplete: string[];
+};
+
 // Event payload broadcast to every client subscribed to a project's board.
 // `actorClientId` lets a client ignore the echo of its own optimistic action.
-// `patch` (task.moved) and `snapshot` (task.created) carry the data needed to
-// update the board cache directly; clients fall back to a refetch when absent.
+// `patch` (task.moved), `snapshot` (task.created) and `checklist`
+// (task.updated) carry the data needed to update the board cache directly;
+// clients fall back to a refetch when absent.
 export type RealtimeEvent = {
   type: "task.moved" | "task.created" | "task.deleted" | "task.updated";
   taskId: string;
   actorClientId?: string | null;
   patch?: BoardTaskMovePatch;
+  checklist?: BoardChecklistPatch;
   // Full BoardTask snapshot (typed loosely to avoid importing action types here).
   snapshot?: Record<string, unknown>;
 };

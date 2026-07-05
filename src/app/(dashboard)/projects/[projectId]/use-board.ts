@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { getBoardData, type BoardData, type BoardTask } from "@/actions/board";
-import type { BoardTaskMovePatch } from "@/lib/realtime";
+import type { BoardChecklistPatch, BoardTaskMovePatch } from "@/lib/realtime";
 import { useCentrifugo } from "@/components/realtime/centrifugo-provider";
 import { projectChannel } from "@/lib/channels";
 
@@ -26,6 +26,7 @@ type BoardEvent = {
   taskId?: string;
   actorClientId?: string | null;
   patch?: BoardTaskMovePatch;
+  checklist?: BoardChecklistPatch;
   snapshot?: BoardTask;
 };
 
@@ -90,6 +91,30 @@ function applyBoardEvent(
                 submittedById: patch.submittedById,
                 submittedByName: patch.submittedByName,
                 rejectionCount: t.rejectionCount + patch.rejectionCountDelta,
+              }
+            : t,
+        ),
+      };
+    });
+    return;
+  }
+
+  // Checklist progress changed (upload finished, text saved, file removed) —
+  // update the card's counters and the delivery drag gate in memory.
+  if (event.type === "task.updated" && event.checklist && event.taskId) {
+    const checklist = event.checklist;
+    queryClient.setQueryData<BoardData>(key, (old) => {
+      if (!old) return old;
+      if (!old.tasks.some((t) => t.id === event.taskId)) return old;
+      return {
+        ...old,
+        tasks: old.tasks.map((t) =>
+          t.id === event.taskId
+            ? {
+                ...t,
+                checklistTotal: checklist.checklistTotal,
+                checklistDone: checklist.checklistDone,
+                deliveryIncomplete: checklist.deliveryIncomplete,
               }
             : t,
         ),

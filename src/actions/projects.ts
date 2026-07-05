@@ -840,6 +840,38 @@ export async function toggleChecklistItem(itemId: string, completed: boolean, pr
   revalidatePath(`/projects/${projectId}`);
 }
 
+// After a checklist item changes, broadcast the task's fresh checklist
+// progress so every open board unlocks/updates its card instantly — the drag
+// gate reads deliveryIncomplete from the client cache, and without this event
+// a completed upload wouldn't count until a full page refresh.
+// Fire-and-forget: a broadcast failure must never break the write.
+async function publishChecklistProgress(itemId: string, projectId: string) {
+  try {
+    const item = await db.taskChecklistItem.findUnique({
+      where: { id: itemId },
+      select: { taskId: true },
+    });
+    if (!item) return;
+    const checklistItems = await db.taskChecklistItem.findMany({
+      where: { taskId: item.taskId },
+      select: { name: true, phase: true, mandatory: true, completed: true },
+    });
+    publishTaskEvent(projectId, {
+      type: "task.updated",
+      taskId: item.taskId,
+      checklist: {
+        checklistTotal: checklistItems.length,
+        checklistDone: checklistItems.filter((i) => i.completed).length,
+        deliveryIncomplete: checklistItems
+          .filter((i) => i.phase === "delivery" && i.mandatory && !i.completed)
+          .map((i) => i.name),
+      },
+    });
+  } catch {
+    // Best-effort only.
+  }
+}
+
 export async function saveChecklistItemText(itemId: string, textValue: string, projectId: string) {
   await requireProjectWork(projectId);
 
@@ -852,6 +884,7 @@ export async function saveChecklistItemText(itemId: string, textValue: string, p
     },
   });
 
+  await publishChecklistProgress(itemId, projectId);
   revalidatePath(`/projects/${projectId}`);
   revalidatePath(`/projects`);
 }
@@ -868,6 +901,7 @@ export async function setChecklistItemAttachment(itemId: string, attachmentId: s
     },
   });
 
+  await publishChecklistProgress(itemId, projectId);
   revalidatePath(`/projects/${projectId}`);
 }
 
@@ -883,6 +917,7 @@ export async function removeChecklistItemAttachment(itemId: string, projectId: s
     },
   });
 
+  await publishChecklistProgress(itemId, projectId);
   revalidatePath(`/projects/${projectId}`);
 }
 

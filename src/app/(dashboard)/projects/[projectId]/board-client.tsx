@@ -511,6 +511,15 @@ export function ProjectBoardClient({
       }
 
       if (toOrder > fromOrder) {
+        const proceedForward = () => {
+          const msg = CONFIRM_MESSAGES[targetName];
+          if (msg) {
+            setConfirmMove({ taskId, toStatusId: targetStatusId });
+          } else {
+            moveTask(taskId, targetStatusId);
+          }
+        };
+
         // Delivery items are produced during In Progress and only need to be
         // complete when submitting for Internal Review — not on earlier forward
         // moves like Todo → In Progress.
@@ -518,16 +527,29 @@ export function ProjectBoardClient({
           targetName.toLowerCase() === "internal review" &&
           task.deliveryIncomplete.length > 0
         ) {
-          const names = task.deliveryIncomplete.map((n) => `"${n}"`).join(", ");
-          setMoveError(`Complete delivery items first: ${names}`);
+          // The cache may be stale (e.g. an upload finished moments ago and
+          // the broadcast was missed) — never block on cached data alone.
+          // Refetch, re-check against fresh data, and only then show the error.
+          void (async () => {
+            await queryClient.refetchQueries({
+              queryKey: boardQueryKey(projectId),
+            });
+            const fresh = queryClient.getQueryData<BoardData>(
+              boardQueryKey(projectId),
+            );
+            const freshTask = fresh?.tasks.find((t) => t.id === taskId);
+            const incomplete =
+              freshTask?.deliveryIncomplete ?? task.deliveryIncomplete;
+            if (incomplete.length > 0) {
+              const names = incomplete.map((n) => `"${n}"`).join(", ");
+              setMoveError(`Complete delivery items first: ${names}`);
+              return;
+            }
+            proceedForward();
+          })();
           return;
         }
-        const msg = CONFIRM_MESSAGES[targetName];
-        if (msg) {
-          setConfirmMove({ taskId, toStatusId: targetStatusId });
-        } else {
-          moveTask(taskId, targetStatusId);
-        }
+        proceedForward();
       } else if (toOrder < fromOrder) {
         const fromStatus = task.statusId
           ? statuses.find((s) => s.id === task.statusId)
@@ -542,7 +564,7 @@ export function ProjectBoardClient({
         });
       }
     },
-    [tasks, statuses, statusOrderMap, moveTask, movePerms],
+    [tasks, statuses, statusOrderMap, moveTask, movePerms, queryClient, projectId],
   );
 
   const openTask = useCallback(
