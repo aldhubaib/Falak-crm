@@ -53,6 +53,14 @@ export function AssignToDateSheet({
   const scheduledOnDate = date
     ? scheduled.filter((i) => sameDay(parseISO(i.publishOn!), date))
     : [];
+  const completedOnDate = date
+    ? allItems.filter(
+        (i) =>
+          i.status === "published" &&
+          i.publishOn &&
+          sameDay(parseISO(i.publishOn), date),
+      )
+    : [];
 
   const unscheduledCount = allItems.filter((i) => !i.publishOn).length;
 
@@ -102,7 +110,9 @@ export function AssignToDateSheet({
             </div>
 
             <div className="flex-1 space-y-5 overflow-y-auto border-t border-border/60 px-4 pt-4 pb-6">
-              {scheduledOnDate.length === 0 && queued.length === 0 ? (
+              {scheduledOnDate.length === 0 &&
+              queued.length === 0 &&
+              completedOnDate.length === 0 ? (
                 <div className="rounded-xl border border-dashed border-border/70 p-6 text-center text-xs text-muted-foreground">
                   Nothing scheduled or queued.
                 </div>
@@ -165,6 +175,23 @@ export function AssignToDateSheet({
                           </div>
                         </div>
                       ))}
+                    </div>
+                  )}
+
+                  {completedOnDate.length > 0 && (
+                    <div>
+                      <div className="mb-2 px-1 text-tiny font-medium uppercase tracking-[0.14em] text-success">
+                        Completed ({completedOnDate.length})
+                      </div>
+                      <div className="space-y-2">
+                        {completedOnDate.map((it) => (
+                          <QueueCard
+                            key={it.id}
+                            item={it}
+                            onUpdate={(p) => onUpdate(it.id, p)}
+                          />
+                        ))}
+                      </div>
                     </div>
                   )}
                 </>

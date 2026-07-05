@@ -15,6 +15,8 @@ export type ModulePermission = "full" | "view" | "none";
 export type ModuleDef = {
   key: string;
   label: string;
+  /** Shown under the module name in Settings → Roles. */
+  description: string;
   /** Sidebar/nav destination gated by this module, if it has one. */
   href: string | null;
   /** Level assumed for roles saved before this module existed. */
@@ -22,17 +24,17 @@ export type ModuleDef = {
 };
 
 export const MODULES = [
-  { key: "companies", label: "Companies", href: "/companies", legacyDefault: "full" },
-  { key: "contacts", label: "Contacts", href: "/contacts", legacyDefault: "full" },
-  { key: "deals", label: "Deals", href: "/deals", legacyDefault: "none" },
-  { key: "pipeline", label: "Pipeline", href: null, legacyDefault: "none" },
-  { key: "projects", label: "Projects", href: "/projects", legacyDefault: "none" },
-  { key: "invoices", label: "Invoices", href: "/invoices", legacyDefault: "none" },
-  { key: "publish", label: "Publish", href: "/publish", legacyDefault: "full" },
+  { key: "companies", label: "Companies", description: "Manage company records", href: "/companies", legacyDefault: "full" },
+  { key: "contacts", label: "Contacts", description: "Manage contact records", href: "/contacts", legacyDefault: "full" },
+  { key: "deals", label: "CRM / Deals", description: "Manage deals and pipeline", href: "/deals", legacyDefault: "none" },
+  { key: "pipeline", label: "Pipeline", description: "View and manage deal pipeline", href: null, legacyDefault: "none" },
+  { key: "projects", label: "Projects", description: "Access project boards and tasks", href: "/projects", legacyDefault: "none" },
+  { key: "invoices", label: "Invoices", description: "View and manage invoices", href: "/invoices", legacyDefault: "none" },
+  { key: "publish", label: "Publish", description: "Schedule and publish delivery items", href: "/publish", legacyDefault: "full" },
   // Chat has no sidebar entry — the inbox opens from the notifications bell.
-  { key: "chat", label: "Chat", href: null, legacyDefault: "full" },
-  { key: "settings", label: "Settings", href: "/settings", legacyDefault: "none" },
-  { key: "team", label: "Team", href: null, legacyDefault: "none" },
+  { key: "chat", label: "Chat", description: "Message threads and direct messages", href: null, legacyDefault: "full" },
+  { key: "settings", label: "Settings", description: "Access workspace settings", href: "/settings", legacyDefault: "none" },
+  { key: "team", label: "Team", description: "Manage team members and roles", href: null, legacyDefault: "none" },
 ] as const satisfies readonly ModuleDef[];
 
 export type ModuleKey = (typeof MODULES)[number]["key"];

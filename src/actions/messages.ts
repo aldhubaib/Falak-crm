@@ -516,6 +516,13 @@ export async function deleteMessage(
     if (message.authorId !== member.id) throw new Error("You can only delete your own messages");
 
     await db.message.delete({ where: { id: message.id } });
+
+    const channels: string[] = [];
+    if (message.taskId) channels.push(taskChannel(message.taskId));
+    if (message.projectId) channels.push(projectChannel(message.projectId));
+    if (message.conversationId)
+      channels.push(conversationChannel(message.conversationId));
+    void broadcast(channels, { type: "message.deleted", messageId: message.id });
   });
 }
 

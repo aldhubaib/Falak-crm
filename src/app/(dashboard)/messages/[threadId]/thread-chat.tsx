@@ -285,6 +285,9 @@ export function ThreadChat({
           x.id === messageId ? { ...x, reactions: reactions ?? [] } : x,
         ),
       );
+    } else if (d.type === "message.deleted" && d.messageId) {
+      const { messageId } = d;
+      setMessages((prev) => prev.filter((x) => x.id !== messageId));
     }
   });
 

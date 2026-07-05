@@ -143,7 +143,10 @@ export async function updateRole(roleId: string, data: { name?: string; permissi
   });
 }
 
-export async function deleteRole(roleId: string): Promise<ActionResult> {
+export async function deleteRole(
+  roleId: string,
+  reassignToRoleId?: string,
+): Promise<ActionResult> {
   return safeAction("Delete Role", async () => {
     const { workspace, member } = await requireWorkspaceWithMember();
     if (!canEdit(member, "team")) throw new Error("Permission denied");
@@ -151,10 +154,26 @@ export async function deleteRole(roleId: string): Promise<ActionResult> {
     // Capture affected members before the role links are severed.
     await invalidateRoleMembersPerms(workspace.id, roleId);
 
-    await db.workspaceMember.updateMany({
-      where: { workspaceId: workspace.id, roleId },
-      data: { roleId: null },
-    });
+    if (reassignToRoleId) {
+      const target = await db.role.findFirst({
+        where: { id: reassignToRoleId, workspaceId: workspace.id },
+        select: { id: true },
+      });
+      if (!target || reassignToRoleId === roleId) {
+        throw new Error("Invalid role to move members to");
+      }
+      await db.workspaceMember.updateMany({
+        where: { workspaceId: workspace.id, roleId },
+        data: { roleId: reassignToRoleId },
+      });
+      // Members moved to a different role need their derived perms recomputed.
+      await invalidateRoleMembersPerms(workspace.id, reassignToRoleId);
+    } else {
+      await db.workspaceMember.updateMany({
+        where: { workspaceId: workspace.id, roleId },
+        data: { roleId: null },
+      });
+    }
 
     await db.role.delete({ where: { id: roleId, workspaceId: workspace.id } });
     revalidatePath("/settings/team");

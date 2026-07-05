@@ -36,7 +36,9 @@ export function QueueCard({
         "rounded-xl border bg-surface transition-colors",
         isQueue
           ? "border-destructive/60 hover:border-destructive"
-          : "border-border/60 hover:border-border",
+          : isPublished
+            ? "border-success/60 hover:border-success"
+            : "border-border/60 hover:border-border",
       )}
     >
       <div className="flex items-center gap-2.5 p-3">
@@ -60,7 +62,7 @@ export function QueueCard({
         <MetaCell
           label="Publish"
           value={item.publishOn ? fmtShort(parseISO(item.publishOn)) : "Not set"}
-          tone={item.publishOn ? "primary" : "muted"}
+          tone={isPublished ? "success" : item.publishOn ? "primary" : "muted"}
         />
         <div className="min-w-0 flex-1 text-right">
           <div className="text-xxs font-medium uppercase tracking-[0.12em] text-muted-foreground">

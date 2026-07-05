@@ -69,10 +69,20 @@ export function subscriptionToken(memberId: string, channel: string): string {
 
 // ─── Publish ──────────────────────────────────────────────────────────────────
 
+let warnedNotConfigured = false;
+
 async function apiCall(method: string, params: unknown): Promise<void> {
-  if (!isCentrifugoConfigured()) return;
+  if (!isCentrifugoConfigured()) {
+    if (!warnedNotConfigured) {
+      warnedNotConfigured = true;
+      console.warn(
+        "[centrifugo] not configured (CENTRIFUGO_HTTP_API / CENTRIFUGO_API_KEY / CENTRIFUGO_TOKEN_HMAC_SECRET_KEY) — realtime publishes are skipped",
+      );
+    }
+    return;
+  }
   try {
-    await fetch(`${API_URL}/api/${method}`, {
+    const res = await fetch(`${API_URL}/api/${method}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -82,8 +92,17 @@ async function apiCall(method: string, params: unknown): Promise<void> {
       // Never let a realtime broadcast delay or break the originating request.
       cache: "no-store",
     });
-  } catch {
+    if (!res.ok) {
+      console.error(
+        `[centrifugo] ${method} failed: HTTP ${res.status} ${await res.text().catch(() => "")}`,
+      );
+    }
+  } catch (err) {
     // Best-effort: realtime is a delivery optimization, not source of truth.
+    console.error(
+      `[centrifugo] ${method} failed:`,
+      err instanceof Error ? err.message : err,
+    );
   }
 }
 

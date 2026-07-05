@@ -2,8 +2,15 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ShieldPlus, ChevronDown, ChevronUp, Trash2, AlertTriangle, Users } from "lucide-react";
+import { ShieldPlus, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -16,31 +23,18 @@ import { PageContainer } from "@/components/page-container";
 import { SurfaceCard } from "@/components/surface-card";
 import { EmptyState } from "@/components/empty-state";
 import { AddItemInput } from "@/components/add-item-input";
-import { IconButton } from "@/components/icon-button";
-import { Switch } from "@/components/ui/switch";
-import { createRole, updateRole, deleteRole } from "@/actions/team";
-import { MODULES, normalizeLevel, normalizePermissions } from "@/lib/permissions";
+import { RoleCard } from "@/components/roles/role-card";
+import type { RoleDTO, TaskStageDTO } from "@/components/roles/role-editor";
+import { createRole, deleteRole, startTestRole } from "@/actions/team";
 import { cn } from "@/lib/utils";
-
-type Role = {
-  id: string;
-  name: string;
-  permissions: unknown;
-};
-
-// Rows come straight from the module registry, so adding a module to
-// MODULES in src/lib/permissions.ts automatically shows up here.
-const LEVELS = [
-  { value: "none", label: "None" },
-  { value: "view", label: "View" },
-  { value: "full", label: "Edit" },
-] as const;
 
 export function RolesClient({
   roles,
+  stages,
   memberCounts,
 }: {
-  roles: Role[];
+  roles: RoleDTO[];
+  stages: TaskStageDTO[];
   memberCounts: Record<string, number>;
 }) {
   const router = useRouter();
@@ -49,7 +43,8 @@ export function RolesClient({
   const [newName, setNewName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [shake, setShake] = useState(0);
-  const [toDelete, setToDelete] = useState<Role | null>(null);
+  const [toDelete, setToDelete] = useState<RoleDTO | null>(null);
+  const [reassignTo, setReassignTo] = useState<string>("");
 
   const addRole = () => {
     const n = newName.trim();
@@ -70,39 +65,39 @@ export function RolesClient({
         setError(null);
         setExpanded(result.data);
         router.refresh();
+      } else {
+        setError(result.error.message);
+        setShake((s) => s + 1);
       }
     });
   };
 
-  const updatePermission = (
-    role: Role,
-    key: string,
-    level: string,
-  ) => {
-    // Save the full normalized set: heals legacy values ("edit" → "full")
-    // and materializes defaults for modules added after the role was created.
-    const updated = { ...normalizePermissions(role.permissions), [key]: level };
-    startTransition(async () => {
-      await updateRole(role.id, { permissions: updated });
-      router.refresh();
-    });
-  };
+  const countFor = (id: string) => memberCounts[id] ?? 0;
 
-  const toggleAssignMembers = (role: Role, enabled: boolean) => {
-    const updated = { ...normalizePermissions(role.permissions), assignMembers: enabled };
-    startTransition(async () => {
-      await updateRole(role.id, { permissions: updated });
-      router.refresh();
-    });
+  const affected = toDelete ? countFor(toDelete.id) : 0;
+  const targets = toDelete ? roles.filter((r) => r.id !== toDelete.id) : [];
+  const openDelete = (r: RoleDTO) => {
+    setToDelete(r);
+    setReassignTo("");
   };
-
   const confirmDelete = () => {
     if (!toDelete) return;
+    if (affected > 0 && !reassignTo) return;
     startTransition(async () => {
-      await deleteRole(toDelete.id);
-      setToDelete(null);
+      await deleteRole(toDelete.id, affected > 0 ? reassignTo : undefined);
       if (expanded === toDelete.id) setExpanded(null);
+      setToDelete(null);
       router.refresh();
+    });
+  };
+
+  const testRole = (r: RoleDTO) => {
+    startTransition(async () => {
+      const result = await startTestRole(r.id);
+      if (result.ok) {
+        router.push("/dashboard");
+        router.refresh();
+      }
     });
   };
 
@@ -128,100 +123,22 @@ export function RolesClient({
               "border-destructive text-destructive animate-shake focus-visible:ring-destructive/40",
           )}
         />
-        {error && (
-          <div className="mt-2 text-hint text-destructive">{error}</div>
-        )}
+        {error && <div className="mt-2 text-hint text-destructive">{error}</div>}
       </SurfaceCard>
 
-      {roles.map((r) => {
-        const count = memberCounts[r.id] ?? 0;
-        const isExpanded = expanded === r.id;
-        const perms = (r.permissions as Record<string, string>) || {};
-
-        return (
-          <SurfaceCard key={r.id} padding="none">
-            <button
-              type="button"
-              onClick={() => setExpanded(isExpanded ? null : r.id)}
-              className="flex w-full items-center gap-3 p-3 text-left sm:p-4"
-            >
-              <div className="min-w-0 flex-1">
-                <div className="font-medium">{r.name}</div>
-                <div className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
-                  <Users className="h-3 w-3" /> {count} member
-                  {count !== 1 ? "s" : ""}
-                </div>
-              </div>
-              {isExpanded ? (
-                <ChevronUp className="h-4 w-4 text-muted-foreground" />
-              ) : (
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
-              )}
-            </button>
-
-            {isExpanded && (
-              <div className="border-t border-border/40 p-3 sm:p-4">
-                <div className="space-y-3">
-                  {MODULES.map(({ key, label, legacyDefault }) => {
-                    const current = normalizeLevel(perms[key], legacyDefault);
-                    return (
-                      <div
-                        key={key}
-                        className="flex items-center justify-between gap-4"
-                      >
-                        <span className="text-sm">{label}</span>
-                        <div className="flex gap-1">
-                          {LEVELS.map((level) => (
-                            <button
-                              key={level.value}
-                              type="button"
-                              onClick={() => updatePermission(r, key, level.value)}
-                              disabled={pending}
-                              className={cn(
-                                "rounded-md px-3 py-1 text-xs font-medium transition-colors",
-                                current === level.value
-                                  ? "bg-primary text-primary-foreground"
-                                  : "bg-muted/40 text-muted-foreground hover:bg-muted",
-                              )}
-                            >
-                              {level.label}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="mt-3 flex items-center justify-between gap-4 border-t border-border/40 pt-3">
-                  <div>
-                    <div className="text-sm">Assign people to projects</div>
-                    <div className="mt-0.5 text-xs text-muted-foreground">
-                      Can add or remove members on projects they have access to
-                    </div>
-                  </div>
-                  <Switch
-                    checked={normalizePermissions(r.permissions).assignMembers === true}
-                    onCheckedChange={(v) => toggleAssignMembers(r, v)}
-                    disabled={pending}
-                  />
-                </div>
-                <div className="mt-4 flex justify-end">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-destructive hover:text-destructive"
-                    onClick={() => setToDelete(r)}
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                    Delete role
-                  </Button>
-                </div>
-              </div>
-            )}
-          </SurfaceCard>
-        );
-      })}
-
+      {roles.map((r) => (
+        <RoleCard
+          key={r.id}
+          role={r}
+          stages={stages}
+          count={countFor(r.id)}
+          expanded={expanded === r.id}
+          onToggle={() => setExpanded(expanded === r.id ? null : r.id)}
+          onClose={() => setExpanded(null)}
+          onDelete={() => openDelete(r)}
+          onTest={() => testRole(r)}
+        />
+      ))}
       {roles.length === 0 && <EmptyState message="No roles yet." />}
 
       <Dialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
@@ -232,11 +149,38 @@ export function RolesClient({
             </div>
             <DialogTitle>Delete role &quot;{toDelete?.name}&quot;?</DialogTitle>
             <DialogDescription>
-              {(memberCounts[toDelete?.id ?? ""] ?? 0) > 0
-                ? `${memberCounts[toDelete?.id ?? ""]} member(s) have this role. They will be unassigned.`
+              {affected > 0
+                ? `${affected} member${affected === 1 ? "" : "s"} currently have this role. Move them to another role before deleting.`
                 : "This role will be removed. This action cannot be undone."}
             </DialogDescription>
           </DialogHeader>
+
+          {affected > 0 && (
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-muted-foreground">
+                Move members to
+              </label>
+              <Select value={reassignTo} onValueChange={setReassignTo}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a role" />
+                </SelectTrigger>
+                <SelectContent>
+                  {targets.length === 0 ? (
+                    <div className="px-2 py-1.5 text-xs text-muted-foreground">
+                      No other roles available
+                    </div>
+                  ) : (
+                    targets.map((r) => (
+                      <SelectItem key={r.id} value={r.id}>
+                        {r.name}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
           <DialogFooter>
             <Button variant="ghost" onClick={() => setToDelete(null)}>
               Cancel
@@ -244,7 +188,7 @@ export function RolesClient({
             <Button
               variant="destructive"
               onClick={confirmDelete}
-              disabled={pending}
+              disabled={pending || (affected > 0 && !reassignTo)}
             >
               Delete
             </Button>

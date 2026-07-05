@@ -1,4 +1,7 @@
 {
+  "health": {
+    "enabled": true
+  },
   "client": {
     "allowed_origins": [
       "https://panel.falak.media",
@@ -19,6 +22,7 @@
         "join_leave": true,
         "history_size": 50,
         "history_ttl": "300s",
+        "force_recovery": true,
         "allow_publish_for_subscriber": true,
         "allow_presence_for_subscriber": true
       },
@@ -28,6 +32,7 @@
         "join_leave": true,
         "history_size": 50,
         "history_ttl": "300s",
+        "force_recovery": true,
         "allow_publish_for_subscriber": true,
         "allow_presence_for_subscriber": true
       },
@@ -37,6 +42,7 @@
         "join_leave": true,
         "history_size": 100,
         "history_ttl": "600s",
+        "force_recovery": true,
         "allow_publish_for_subscriber": true,
         "allow_presence_for_subscriber": true
       },
