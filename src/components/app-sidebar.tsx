@@ -52,6 +52,7 @@ import { Button } from "@/components/ui/button";
 // Icons are presentation-only; which items exist and who sees them is driven
 // by the module registry in src/lib/permissions.ts.
 const MODULE_ICONS: Partial<Record<ModuleKey, LucideIcon>> = {
+  dashboard: LayoutGrid,
   companies: Building2,
   contacts: Users,
   deals: Handshake,
@@ -70,19 +71,16 @@ export function AppSidebar() {
   const [signOutOpen, setSignOutOpen] = useState(false);
   const permissions = usePermissions();
 
-  // Dashboard is always visible; module entries are hidden entirely when the
-  // member's level for that module is "none" (route guards enforce the same
-  // rule server-side).
-  const items = [
-    { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
-    ...MODULES.filter(
-      (m) => m.href && MODULE_ICONS[m.key] && permissions[m.key] !== "none",
-    ).map((m) => ({
-      title: m.label,
-      url: m.href!,
-      icon: MODULE_ICONS[m.key]!,
-    })),
-  ];
+  // Every entry (including Dashboard) comes from the module registry and is
+  // hidden entirely when the member's level for that module is "none" (route
+  // guards enforce the same rule server-side).
+  const items = MODULES.filter(
+    (m) => m.href && MODULE_ICONS[m.key] && permissions[m.key] !== "none",
+  ).map((m) => ({
+    title: m.label,
+    url: m.href!,
+    icon: MODULE_ICONS[m.key]!,
+  }));
 
   const handleSignOut = () => {
     setSignOutOpen(false);

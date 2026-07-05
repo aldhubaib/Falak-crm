@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { cached } from "@/lib/cache";
 import {
   DEFAULT_PERMISSIONS,
+  MODULES,
   ROLE_PRESETS,
   mergePermissions,
   normalizePermissions,
@@ -384,12 +385,25 @@ function hasAnyTaskStagePermission(permissions: Permissions): boolean {
   );
 }
 
+// First destination the member is allowed to see — the registry's first
+// module with a sidebar entry that the member can view (Dashboard when
+// permitted, since it's first). Account settings is the always-accessible
+// last resort.
+export const defaultLandingPath = (member: MemberWithPermissions): string => {
+  for (const mod of MODULES) {
+    if (mod.href && canView(member, mod.key)) return mod.href;
+  }
+  return "/account";
+};
+
 // Server-side route guard for a permissioned module. Call from the module's
 // layout (or page) — members without at least view access never see the
 // module's routes, matching the sidebar which hides the entry entirely.
 export const requireModuleView = async (module: ModuleKey) => {
   const { workspace, member } = await requireWorkspaceWithMember();
-  if (!canView(member, module)) redirect("/dashboard");
+  // Redirect to a module the member CAN view — never back to the one that
+  // just failed, so this can't loop (dashboard itself is permissioned).
+  if (!canView(member, module)) redirect(defaultLandingPath(member));
   return { workspace, member };
 };
 

@@ -37,6 +37,9 @@ export type ModuleDef = {
 };
 
 const MODULES_SOURCE = [
+  // "full" legacy default: every role could see the dashboard before it became
+  // permissioned, so existing roles keep it until an admin turns it off.
+  { key: "dashboard", label: "Dashboard", description: "Home overview with calendar and task queue", href: "/dashboard", legacyDefault: "full" },
   { key: "companies", label: "Companies", description: "Manage company records", href: "/companies", legacyDefault: "full" },
   { key: "contacts", label: "Contacts", description: "Manage contact records", href: "/contacts", legacyDefault: "full" },
   { key: "deals", label: "CRM / Deals", description: "Manage deals and pipeline", href: "/deals", legacyDefault: "none" },
@@ -176,6 +179,7 @@ export const DEFAULT_PERMISSIONS: Permissions = fullPermissions();
 // Starting point for roles created from Settings → Roles.
 export function newRolePermissions(): Permissions {
   return normalizePermissions({
+    dashboard: "full",
     companies: "view",
     contacts: "view",
     deals: "view",
@@ -329,6 +333,22 @@ export function canDeleteTaskAt(
   if (permissions.projects === "full") return true;
   if (!statusId) return false;
   return permissions.taskPermissions?.stages?.[statusId]?.delete === true;
+}
+
+// Full project rights move tasks anywhere; otherwise the SOURCE stage's
+// Forward/Rollback flag (Settings → Roles → Task Stage Permissions) must be
+// on. Tasks not yet in any stage can always be placed into one.
+export function canMoveTaskFrom(
+  permissions: Permissions,
+  fromStatusId: string | null,
+  direction: "forward" | "rollback",
+): boolean {
+  if (permissions.projects === "full") return true;
+  if (!fromStatusId) return true;
+  const stage = permissions.taskPermissions?.stages?.[fromStatusId];
+  return direction === "forward"
+    ? stage?.forward === true
+    : stage?.rollback === true;
 }
 
 export function canView(member: MemberWithPermissions, module: ModuleKey): boolean {

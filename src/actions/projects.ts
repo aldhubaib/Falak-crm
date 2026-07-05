@@ -3,7 +3,7 @@
 import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { requireWorkspace, requireWorkspaceWithMember, requireProjectAssign, requireProjectSettings, requireProjectWork, getProjectAccess } from "@/lib/workspace";
-import { canEdit, canDeleteTaskAt } from "@/lib/permissions";
+import { canEdit, canDeleteTaskAt, canMoveTaskFrom } from "@/lib/permissions";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
@@ -363,14 +363,23 @@ export async function createTask(projectId: string, formData: FormData, dealId?:
   const statusId = (formData.get("statusId") as string) || undefined;
   const assigneeId = (formData.get("assigneeId") as string) || undefined;
 
-  const lastTask = await db.task.findFirst({
-    where: { projectId },
-    orderBy: { order: "desc" },
-  });
+  const [lastTask, lastNumber] = await Promise.all([
+    db.task.findFirst({
+      where: { projectId },
+      orderBy: { order: "desc" },
+      select: { order: true },
+    }),
+    db.task.findFirst({
+      where: { projectId },
+      orderBy: { taskNumber: "desc" },
+      select: { taskNumber: true },
+    }),
+  ]);
 
   const task = await db.task.create({
     data: {
       projectId,
+      taskNumber: (lastNumber?.taskNumber ?? 0) + 1,
       title,
       description,
       serviceId: serviceId || null,
@@ -414,7 +423,8 @@ export async function updateTaskStatus(
   dealId?: string,
   actorClientId?: string | null,
 ) {
-  const { workspace, member } = await requireProjectWork(projectId);
+  const access = await requireProjectWork(projectId);
+  const { workspace, member } = access;
 
   // Independent reads run concurrently to shave latency off the drag response.
   const [blockers, task, targetStatus, allStatuses] = await Promise.all([
@@ -441,6 +451,21 @@ export async function updateTaskStatus(
   const fromOrder = task?.status ? allStatuses.find((s) => s.id === task.status!.id)?.order ?? 0 : 0;
   const toOrder = allStatuses.find((s) => s.id === statusId)?.order ?? 0;
   const isForward = toOrder > fromOrder;
+
+  // Stage-level move rights: the role's Forward/Rollback flag on the task's
+  // CURRENT stage decides whether the member may move it out of that stage.
+  if (
+    !canMoveTaskFrom(
+      access.permissions,
+      task?.statusId ?? null,
+      isForward ? "forward" : "rollback",
+    )
+  ) {
+    const stageName = task?.status?.name ?? "this stage";
+    throw new Error(
+      `You don't have permission to move tasks ${isForward ? "forward" : "back"} from ${stageName}`,
+    );
+  }
 
   // Block submission for Internal Review if mandatory delivery items are still
   // incomplete. Delivery items only need to be done at this gate — earlier

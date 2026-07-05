@@ -49,6 +49,20 @@ export default async function ProjectDetailPage({
   const canEditTeam = hasCap(access.permissions, "projects", "assignMembers");
   const canEditSettings = hasCap(access.permissions, "projects", "editSettings");
 
+  // Per-stage move rights for the board's drag handler (server enforces the
+  // same rule in updateTaskStatus).
+  const movePerms = {
+    full: access.permissions.projects === "full",
+    stages: Object.fromEntries(
+      Object.entries(access.permissions.taskPermissions?.stages ?? {}).map(
+        ([stageId, sp]) => [
+          stageId,
+          { forward: sp.forward === true, rollback: sp.rollback === true },
+        ],
+      ),
+    ),
+  };
+
   return (
     <>
       <AppHeader
@@ -66,7 +80,11 @@ export default async function ProjectDetailPage({
         actions={<ProjectViewMenu projectId={projectId} showSettings={canEditSettings} />}
       />
       <main className="min-h-0 flex-1 overflow-y-auto">
-        <ProjectBoardClient projectId={project.id} initialData={initialData} />
+        <ProjectBoardClient
+          projectId={project.id}
+          initialData={initialData}
+          movePerms={movePerms}
+        />
       </main>
     </>
   );

@@ -282,12 +282,20 @@ const BoardColumn = memo(function BoardColumn({
 
 // ─── Board ───────────────────────────────────────────────────────────────────
 
+// Per-stage move rights computed server-side from the member's project role.
+export type BoardMovePerms = {
+  full: boolean;
+  stages: Record<string, { forward: boolean; rollback: boolean }>;
+};
+
 export function ProjectBoardClient({
   projectId,
   initialData,
+  movePerms,
 }: {
   projectId: string;
   initialData: BoardData;
+  movePerms: BoardMovePerms;
 }) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -480,6 +488,23 @@ export function ProjectBoardClient({
       const targetStatus = statuses.find((s) => s.id === targetStatusId);
       const targetName = targetStatus?.name ?? "";
 
+      // Stage-level move rights (mirrors the server check in updateTaskStatus):
+      // the role's Forward/Rollback flag on the task's CURRENT stage decides.
+      if (!movePerms.full && task.statusId) {
+        const stage = movePerms.stages[task.statusId];
+        const allowed = toOrder > fromOrder ? stage?.forward : stage?.rollback;
+        if (!allowed) {
+          const fromName =
+            statuses.find((s) => s.id === task.statusId)?.name ?? "this stage";
+          setMoveError(
+            `You don't have permission to move tasks ${
+              toOrder > fromOrder ? "forward" : "back"
+            } from ${fromName}`,
+          );
+          return;
+        }
+      }
+
       if (toOrder > fromOrder) {
         // Delivery items are produced during In Progress and only need to be
         // complete when submitting for Internal Review — not on earlier forward
@@ -512,7 +537,7 @@ export function ProjectBoardClient({
         });
       }
     },
-    [tasks, statuses, statusOrderMap, moveTask],
+    [tasks, statuses, statusOrderMap, moveTask, movePerms],
   );
 
   const openTask = useCallback(
