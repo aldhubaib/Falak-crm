@@ -173,6 +173,7 @@ export default async function TaskDetailPage({
         body: c.body,
         authorName: c.author?.name ?? c.author?.email ?? "Unknown",
         createdAt: c.createdAt.toISOString(),
+        attachments: c.attachments,
       }))}
       history={history.map((h) => ({
         id: h.id,

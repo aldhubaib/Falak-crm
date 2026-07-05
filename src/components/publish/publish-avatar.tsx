@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { ProjectAvatar } from "@/components/project-avatar";
 import { cn } from "@/lib/utils";
 
@@ -34,11 +34,15 @@ export function PublishAvatar({
   thumbnailId,
   size = 28,
   className,
+  fallback,
 }: {
   name: string;
   thumbnailId?: string | null;
   size?: number;
   className?: string;
+  /** Rendered while the photo resolves or when the project has none.
+   *  Defaults to the colored-initial ProjectAvatar. */
+  fallback?: ReactNode;
 }) {
   const [url, setUrl] = useState<string | null>(
     thumbnailId ? urlCache.get(thumbnailId) ?? null : null,
@@ -71,5 +75,6 @@ export function PublishAvatar({
     );
   }
 
+  if (fallback !== undefined) return <>{fallback}</>;
   return <ProjectAvatar name={name} size={size} className={className} />;
 }

@@ -1,12 +1,21 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { UploadIndicator } from "@/components/upload-indicator";
 import { TestRoleBanner } from "@/components/test-role-banner";
+import { rememberInboxReturnPath } from "@/lib/inbox-return";
 
 export function DashboardShell({ children }: { children: ReactNode }) {
+  // Remember the last page outside the inbox overlay so its close button can
+  // bring the user back to exactly where they opened it from.
+  const pathname = usePathname();
+  useEffect(() => {
+    if (!pathname.startsWith("/messages")) rememberInboxReturnPath(pathname);
+  }, [pathname]);
+
   return (
     <SidebarProvider defaultOpen={false}>
       <div className="flex h-screen w-full overflow-hidden bg-background">

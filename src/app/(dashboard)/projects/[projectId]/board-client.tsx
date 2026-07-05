@@ -39,6 +39,7 @@ import { DeclineDialog } from "@/components/board/decline-dialog";
 import { cn } from "@/lib/utils";
 import { updateTaskStatus } from "@/actions/projects";
 import { addTaskComment } from "@/actions/comments";
+import { uploadManager } from "@/lib/upload-manager";
 import type { BoardData, BoardStatus, BoardTask } from "@/actions/board";
 import { boardQueryKey, useBoardData, useBoardStream } from "./use-board";
 
@@ -390,23 +391,37 @@ export function ProjectBoardClient({
   );
 
   // Decline a task backward: record the reason as a comment that @mentions the
-  // person who submitted it (locked in the dialog), then move it back.
+  // person who submitted it (locked in the dialog), then move it back. The move
+  // fires immediately; an attached file uploads in the background and the
+  // comment posts once its bytes are up so the attachment is never dropped.
   const declineTask = useCallback(
     async (
       taskId: string,
       statusId: string,
       reason: string,
       mention: { id: string | null; name: string | null },
+      file: File | null,
     ) => {
+      moveMutation.mutate({ taskId, statusId });
+
       const prefix =
         mention.id && mention.name ? `@[${mention.name}](${mention.id}) ` : "";
       const body = `${prefix}${reason}`.trim();
+      if (!body && !file) return;
       try {
-        if (body) await addTaskComment(taskId, body, projectId, "rejection");
+        let attachmentIds: string[] = [];
+        if (file) {
+          const ids = uploadManager.enqueueMessage([file]);
+          const items = await uploadManager.waitForCompletion(ids);
+          attachmentIds = items
+            .filter((i) => i.status === "done" && i.attachmentId)
+            .map((i) => i.attachmentId!);
+          uploadManager.removeItems(ids);
+        }
+        await addTaskComment(taskId, body, projectId, "rejection", attachmentIds);
       } catch {
         // Comment failure shouldn't block the move.
       }
-      moveMutation.mutate({ taskId, statusId });
     },
     [moveMutation, projectId],
   );
@@ -601,12 +616,15 @@ export function ProjectBoardClient({
         toLabel={declineMove?.toName ?? ""}
         mentionName={declineMove?.mentionName ?? null}
         onClose={() => setDeclineMove(null)}
-        onConfirm={(reason) => {
+        onConfirm={(reason, file) => {
           if (declineMove)
-            declineTask(declineMove.taskId, declineMove.toStatusId, reason, {
-              id: declineMove.mentionId,
-              name: declineMove.mentionName,
-            });
+            declineTask(
+              declineMove.taskId,
+              declineMove.toStatusId,
+              reason,
+              { id: declineMove.mentionId, name: declineMove.mentionName },
+              file,
+            );
           setDeclineMove(null);
         }}
       />

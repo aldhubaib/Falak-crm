@@ -27,6 +27,9 @@ import {
   Clock,
   RotateCcw,
   AlertCircle,
+  AlertOctagon,
+  ArrowUpRight,
+  CheckSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -44,9 +47,12 @@ import {
   toggleReaction,
   deleteMessage as deleteMessageAction,
   getThreadMessages,
+  getProjectTaskRefs,
   type MessageDTO,
   type MessageAttachment,
+  type MessageTaskRef,
   type ReactionSummary,
+  type TaskPickerItem,
 } from "@/actions/messages";
 import { useChannel, usePresence, useTyping } from "@/components/realtime/hooks";
 import {
@@ -72,7 +78,52 @@ export type ChatMessage = {
   attachments: MessageAttachment[];
   reactions: ReactionSummary[];
   replyToId?: string | null;
+  kind?: string;
+  /** Task this message belongs to — rendered as a reference card in project channels. */
+  task?: MessageTaskRef | null;
+  /** Display names mentioned in the body, highlighted as @chips. */
+  mentions?: string[];
 };
+
+const fmtTaskNumber = (n: number) => `T-${String(n).padStart(3, "0")}`;
+
+// Renders "@Name" runs as highlighted chips, matching the Lovable design.
+function renderBodyWithMentions(
+  text: string,
+  mentions: string[] | undefined,
+  mine: boolean,
+) {
+  if (!mentions || mentions.length === 0) return text;
+  const pattern = new RegExp(
+    `@(${mentions
+      .map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+      .join("|")})`,
+    "g",
+  );
+  const parts: React.ReactNode[] = [];
+  let last = 0;
+  let match: RegExpExecArray | null;
+  let key = 0;
+  while ((match = pattern.exec(text)) !== null) {
+    if (match.index > last) parts.push(text.slice(last, match.index));
+    parts.push(
+      <span
+        key={`mention-${key++}`}
+        className={cn(
+          "rounded px-1 font-medium",
+          mine
+            ? "bg-primary-foreground/20 text-primary-foreground"
+            : "bg-primary/15 text-primary",
+        )}
+      >
+        @{match[1]}
+      </span>,
+    );
+    last = match.index + match[0].length;
+  }
+  if (last < text.length) parts.push(text.slice(last));
+  return <>{parts}</>;
+}
 
 export type ThreadTarget = {
   taskId?: string | null;
@@ -128,6 +179,8 @@ type OutboxEntry = {
   tempId: string;
   body: string;
   replyToId: string | null;
+  /** When set, the message is posted as a comment on this task (# reference). */
+  taskRefId: string | null;
   createdAt: string;
   files: {
     uploadId: string;
@@ -179,6 +232,12 @@ export function ThreadChat({
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [replyTo, setReplyTo] = useState<string | null>(null);
+  // "#" task references (project channels only, per the Lovable design).
+  const isProjectChannel =
+    !!target.projectId && !target.taskId && !target.conversationId;
+  const [taskRefs, setTaskRefs] = useState<TaskPickerItem[] | null>(null);
+  const [pendingTaskRef, setPendingTaskRef] = useState<TaskPickerItem | null>(null);
+  const [pickerIndex, setPickerIndex] = useState(0);
   const dragDepth = useRef(0);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -275,6 +334,10 @@ export function ThreadChat({
             createdAt: m.createdAt,
             attachments: m.attachments ?? [],
             reactions: [],
+            replyToId: m.replyToId ?? null,
+            kind: m.kind,
+            task: m.task ?? null,
+            mentions: m.mentions ?? [],
           },
         ];
       });
@@ -306,6 +369,52 @@ export function ThreadChat({
     for (const m of messages) map.set(m.id, m);
     return map;
   }, [messages]);
+
+  // Detect a trailing "#query" token in the draft — opens the task picker.
+  const taskToken = useMemo(() => {
+    if (!isProjectChannel) return null;
+    const m = /(^|\s)#([^\s#]*)$/.exec(draft);
+    if (!m) return null;
+    return { start: m.index + m[1].length, query: m[2].toLowerCase() };
+  }, [draft, isProjectChannel]);
+
+  // Load the project's tasks the first time the member types "#".
+  useEffect(() => {
+    if (!taskToken || taskRefs || !target.projectId) return;
+    getProjectTaskRefs(target.projectId)
+      .then(setTaskRefs)
+      .catch(() => setTaskRefs([]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [taskToken, taskRefs, target.projectId]);
+
+  const pickerResults = useMemo(() => {
+    if (!taskToken || !taskRefs) return [];
+    const q = taskToken.query;
+    const filtered = q
+      ? taskRefs.filter(
+          (t) =>
+            t.title.toLowerCase().includes(q) ||
+            fmtTaskNumber(t.number).toLowerCase().includes(q) ||
+            String(t.number).includes(q),
+        )
+      : taskRefs;
+    return filtered.slice(0, 6);
+  }, [taskToken, taskRefs]);
+  const pickerOpen = !!taskToken && pickerResults.length > 0;
+
+  useEffect(() => {
+    setPickerIndex(0);
+  }, [taskToken?.query, pickerResults.length]);
+
+  const pickTask = (t: TaskPickerItem) => {
+    if (!taskToken) return;
+    const label = `#${fmtTaskNumber(t.number)}`;
+    const before = draft.slice(0, taskToken.start);
+    const after = draft.slice(taskToken.start + 1 + taskToken.query.length);
+    setDraft(`${before}${label} ${after}`.replace(/ {2,}/g, " "));
+    setPendingTaskRef(t);
+    setTimeout(() => composerRef.current?.focus(), 0);
+  };
 
   // Files wait locally (no upload) until the user presses Send — WhatsApp-style.
   const pickFiles = (files: FileList | null) => {
@@ -373,6 +482,7 @@ export function ThreadChat({
       startTransition(async () => {
         const res = await sendMessage({
           ...target,
+          taskId: entry.taskRefId ?? target.taskId,
           body: entry.body,
           attachmentIds,
           replyToId: entry.replyToId ?? undefined,
@@ -398,6 +508,9 @@ export function ThreadChat({
                     attachments: m.attachments,
                     reactions: [],
                     replyToId: entry.replyToId,
+                    kind: m.kind,
+                    task: m.task ?? null,
+                    mentions: m.mentions ?? [],
                   },
                 ],
           );
@@ -443,9 +556,11 @@ export function ThreadChat({
     if (!text && pending.length === 0) return;
     const files = [...pending];
     const replyId = replyTo;
+    const taskRefId = pendingTaskRef?.id ?? null;
     setDraft("");
     setPending([]);
     setReplyTo(null);
+    setPendingTaskRef(null);
 
     if (files.length === 0) {
       // Text-only: send straight away (no upload phase).
@@ -453,6 +568,7 @@ export function ThreadChat({
         tempId: `out-${Date.now()}-${Math.random().toString(36).slice(2)}`,
         body: text,
         replyToId: replyId,
+        taskRefId,
         createdAt: new Date().toISOString(),
         files: [],
         status: "sending",
@@ -470,6 +586,7 @@ export function ThreadChat({
       tempId: `out-${Date.now()}-${Math.random().toString(36).slice(2)}`,
       body: text,
       replyToId: replyId,
+      taskRefId,
       createdAt: new Date().toISOString(),
       files: files.map((f, i) => ({
         uploadId: ids[i],
@@ -514,6 +631,7 @@ export function ThreadChat({
         tempId: `out-${Date.now()}-${Math.random().toString(36).slice(2)}`,
         body: "",
         replyToId: replyTo,
+        taskRefId: null,
         createdAt: new Date().toISOString(),
         files: [
           {
@@ -940,7 +1058,7 @@ export function ThreadChat({
                     {showAuthor && (
                       <div className="px-1 text-tiny text-muted-foreground">{m.authorName}</div>
                     )}
-                    {(m.body || replied) && (
+                    {(m.body || replied || (m.task && !target.taskId)) && (
                       <div className="group relative">
                         <div
                           className={cn(
@@ -950,6 +1068,47 @@ export function ThreadChat({
                               : "rounded-bl-md bg-surface-2 text-foreground",
                           )}
                         >
+                          {m.task && !target.taskId && (
+                            <Link
+                              href={`/projects/${m.task.projectId}/tasks/${m.task.id}`}
+                              className={cn(
+                                "-mx-1 flex items-center gap-2 rounded-md border px-2 py-1.5 transition-colors",
+                                mine
+                                  ? "border-primary-foreground/30 bg-primary-foreground/10 hover:bg-primary-foreground/15"
+                                  : "border-border/60 bg-surface hover:bg-surface/70",
+                              )}
+                            >
+                              <CheckSquare
+                                className={cn(
+                                  "h-3.5 w-3.5 shrink-0",
+                                  mine ? "text-primary-foreground/80" : "text-primary",
+                                )}
+                              />
+                              <div className="min-w-0 flex-1">
+                                <div
+                                  className={cn(
+                                    "text-[10px] uppercase tracking-wide",
+                                    mine
+                                      ? "text-primary-foreground/70"
+                                      : "text-muted-foreground",
+                                  )}
+                                >
+                                  Task · #{fmtTaskNumber(m.task.number)}
+                                </div>
+                                <div className="truncate text-xs font-medium">
+                                  {m.task.title}
+                                </div>
+                              </div>
+                              <ArrowUpRight
+                                className={cn(
+                                  "h-3.5 w-3.5 shrink-0",
+                                  mine
+                                    ? "text-primary-foreground/70"
+                                    : "text-muted-foreground",
+                                )}
+                              />
+                            </Link>
+                          )}
                           {replied && (
                             <button
                               type="button"
@@ -980,7 +1139,30 @@ export function ThreadChat({
                           )}
                           {m.body && (
                             <div className="flex items-end gap-2">
-                              <span className="whitespace-pre-wrap break-words">{m.body}</span>
+                              {m.kind === "rejection" ? (
+                                <div
+                                  className={cn(
+                                    "-mx-1 flex items-start gap-2 rounded-md border-l-2 px-2 py-1.5 text-xs",
+                                    mine
+                                      ? "border-red-300 bg-red-500/15 text-primary-foreground"
+                                      : "border-destructive bg-destructive/10 text-foreground",
+                                  )}
+                                >
+                                  <AlertOctagon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-destructive" />
+                                  <div className="min-w-0 flex-1">
+                                    <div className="text-[10px] font-semibold uppercase tracking-wide text-destructive">
+                                      Rejected
+                                    </div>
+                                    <div className="whitespace-pre-wrap break-words">
+                                      {renderBodyWithMentions(m.body, m.mentions, mine)}
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : (
+                                <span className="whitespace-pre-wrap break-words">
+                                  {renderBodyWithMentions(m.body, m.mentions, mine)}
+                                </span>
+                              )}
                               <span
                                 className={cn(
                                   "ml-1 shrink-0 translate-y-0.5 text-[10px] leading-none",
@@ -1121,6 +1303,67 @@ export function ThreadChat({
             </div>
           ) : (
           <>
+          {pendingTaskRef && (
+            <div className="mb-2 flex items-center gap-2 rounded-md border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs">
+              <CheckSquare className="h-3.5 w-3.5 shrink-0 text-primary" />
+              <div className="min-w-0 flex-1 truncate">
+                <span className="text-muted-foreground">Referencing task </span>
+                <span className="font-medium">
+                  #{fmtTaskNumber(pendingTaskRef.number)} · {pendingTaskRef.title}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPendingTaskRef(null)}
+                className="grid size-5 shrink-0 place-items-center rounded-full text-muted-foreground hover:bg-surface hover:text-foreground"
+                aria-label="Remove task reference"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </div>
+          )}
+          {pickerOpen && (
+            <div className="relative">
+              <div className="absolute -top-1 left-0 z-10 w-full -translate-y-full overflow-hidden rounded-lg border border-border/60 bg-popover shadow-lg">
+                <div className="border-b border-border/60 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                  Tasks in {title}
+                </div>
+                <ul className="max-h-60 overflow-y-auto py-1">
+                  {pickerResults.map((task, i) => (
+                    <li key={task.id}>
+                      <button
+                        type="button"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          pickTask(task);
+                        }}
+                        onMouseEnter={() => setPickerIndex(i)}
+                        className={cn(
+                          "flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm",
+                          i === pickerIndex ? "bg-surface" : "hover:bg-surface/60",
+                        )}
+                      >
+                        <CheckSquare className="h-3.5 w-3.5 shrink-0 text-primary" />
+                        <span className="font-mono text-[10px] uppercase text-muted-foreground">
+                          #{fmtTaskNumber(task.number)}
+                        </span>
+                        <span className="min-w-0 flex-1 truncate">{task.title}</span>
+                        {task.statusName && (
+                          <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-border/60 bg-surface/60 px-2 py-0.5 text-[10px] text-muted-foreground">
+                            <span
+                              className="h-1.5 w-1.5 rounded-full"
+                              style={{ background: task.statusColor ?? "var(--muted-foreground)" }}
+                            />
+                            {task.statusName}
+                          </span>
+                        )}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
           {replyingTo && (
             <div className="mb-2 flex items-start gap-2 rounded-t-2xl border border-b-0 border-border/60 bg-surface/60 px-3 py-2">
               <Reply className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
@@ -1263,6 +1506,30 @@ export function ThreadChat({
                 notifyTyping();
               }}
               onKeyDown={(e) => {
+                if (pickerOpen) {
+                  if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    setPickerIndex((i) => (i + 1) % pickerResults.length);
+                    return;
+                  }
+                  if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    setPickerIndex(
+                      (i) => (i - 1 + pickerResults.length) % pickerResults.length,
+                    );
+                    return;
+                  }
+                  if (e.key === "Enter" || e.key === "Tab") {
+                    e.preventDefault();
+                    pickTask(pickerResults[pickerIndex]);
+                    return;
+                  }
+                  if (e.key === "Escape") {
+                    e.preventDefault();
+                    setDraft((d) => d.replace(/(^|\s)#[^\s#]*$/, "$1"));
+                    return;
+                  }
+                }
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   send();
@@ -1272,7 +1539,13 @@ export function ThreadChat({
                   setReplyTo(null);
                 }
               }}
-              placeholder={replyingTo ? "Reply…" : `Message ${title}`}
+              placeholder={
+                replyingTo
+                  ? "Reply…"
+                  : isProjectChannel
+                    ? `Message ${title} — type # to link a task`
+                    : `Message ${title}`
+              }
               className="min-h-10 flex-1 resize-none border-0 bg-transparent p-2 text-sm shadow-none focus-visible:ring-0"
               rows={1}
             />

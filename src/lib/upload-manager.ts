@@ -100,7 +100,17 @@ class UploadManager {
     this.notify();
   }
 
+  // The manager is a global singleton, so finished uploads from earlier in the
+  // session would otherwise keep inflating the indicator's "N files uploaded"
+  // count. When a new upload starts while nothing is in flight, drop the
+  // previous batch's finished items (failed ones stay visible for retry).
+  private startBatchIfIdle() {
+    if (this.hasActive()) return;
+    this.queue = this.queue.filter((i) => i.status !== "done");
+  }
+
   enqueue(files: File[], projectId: string, folderId: string | null) {
+    this.startBatchIfIdle();
     const SKIP_FILES = [".ds_store", "thumbs.db", ".gitkeep", "desktop.ini"];
     for (const file of files) {
       if (SKIP_FILES.includes(file.name.toLowerCase())) continue;
@@ -125,6 +135,7 @@ class UploadManager {
     opts: { checklistItemId: string; projectId: string; label?: string }
   ): string | null {
     if (file.size === 0) return null;
+    this.startBatchIfIdle();
     // A checklist field holds one file — drop any prior finished/failed upload
     // for the same item so the indicator and inline UI don't show stale entries.
     this.queue = this.queue.filter(
@@ -161,6 +172,7 @@ class UploadManager {
   }
 
   enqueueMessage(files: File[]): string[] {
+    this.startBatchIfIdle();
     const ids: string[] = [];
     for (const file of files) {
       if (file.size === 0) continue;
@@ -182,6 +194,25 @@ class UploadManager {
 
   getItemById(id: string): UploadItem | undefined {
     return this.snapshot.find((i) => i.id === id);
+  }
+
+  // Resolves once every listed upload has settled (done, error, or removed).
+  // Lets one-shot flows (e.g. decline-with-attachment) await the pipeline
+  // without wiring their own subscription.
+  waitForCompletion(ids: string[]): Promise<UploadItem[]> {
+    return new Promise((resolve) => {
+      const check = () => {
+        const items = ids.map((id) => this.snapshot.find((i) => i.id === id));
+        const settled = items.every(
+          (i) => !i || i.status === "done" || i.status === "error",
+        );
+        if (!settled) return;
+        unsubscribe();
+        resolve(items.filter((i): i is UploadItem => !!i));
+      };
+      const unsubscribe = this.subscribe(check);
+      check();
+    });
   }
 
   removeItems(ids: string[]) {

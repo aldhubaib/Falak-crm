@@ -35,6 +35,24 @@ function toDisplayBody(body: string): string {
   return body.replace(MENTION_RE, "@$1");
 }
 
+/** Names mentioned in a body — the client highlights "@Name" runs as chips. */
+function parseMentionNames(body: string): string[] {
+  const names = new Set<string>();
+  let match;
+  while ((match = MENTION_RE.exec(body)) !== null) {
+    names.add(match[1]);
+  }
+  return [...names];
+}
+
+/** Task summary rendered as a reference card on chat bubbles. */
+export type MessageTaskRef = {
+  id: string;
+  projectId: string;
+  number: number;
+  title: string;
+};
+
 export type MessageAttachment = {
   id: string;
   name: string;
@@ -62,6 +80,8 @@ export type MessageDTO = {
   createdAt: string;
   attachments: MessageAttachment[];
   replyToId?: string | null;
+  task?: MessageTaskRef | null;
+  mentions?: string[];
 };
 
 type SendMessageInput = {
@@ -87,6 +107,11 @@ export type ThreadMessage = {
   replyToId: string | null;
   attachments: MessageAttachment[];
   reactions: ReactionSummary[];
+  kind: string;
+  /** Set when the message is a task comment surfacing in a project channel. */
+  task: MessageTaskRef | null;
+  /** Display names mentioned in the body, for @chip highlighting. */
+  mentions: string[];
 };
 
 export type ThreadMessagesPage = {
@@ -140,6 +165,7 @@ export async function getThreadMessages(input: {
     include: {
       author: { select: { id: true, name: true, email: true } },
       reactions: { select: { emoji: true, memberId: true }, orderBy: { createdAt: "asc" } },
+      task: { select: { id: true, taskNumber: true, title: true, projectId: true } },
     },
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     take: THREAD_PAGE_SIZE + 1,
@@ -191,10 +217,59 @@ export async function getThreadMessages(input: {
         isImage: isImageType(a.contentType),
       })),
       reactions: [...byEmoji.entries()].map(([emoji, memberIds]) => ({ emoji, memberIds })),
+      kind: c.kind,
+      task: c.task
+        ? {
+            id: c.task.id,
+            projectId: c.task.projectId,
+            number: c.task.taskNumber,
+            title: c.task.title,
+          }
+        : null,
+      mentions: parseMentionNames(c.body),
     };
   });
 
   return { messages, hasMore };
+}
+
+// ─── Task references (# picker in project channels) ─────────────────────────
+
+export type TaskPickerItem = {
+  id: string;
+  number: number;
+  title: string;
+  statusName: string | null;
+  statusColor: string | null;
+};
+
+// Task list for the composer's "#" autocomplete in project channels. Loaded
+// lazily the first time the member types "#".
+export async function getProjectTaskRefs(
+  projectId: string,
+): Promise<TaskPickerItem[]> {
+  const access = await getProjectAccess(projectId);
+  if (!access.hasAccess) throw new Error("Permission denied");
+
+  const tasks = await db.task.findMany({
+    where: { projectId, deletedAt: null },
+    orderBy: { taskNumber: "desc" },
+    take: 100,
+    select: {
+      id: true,
+      taskNumber: true,
+      title: true,
+      status: { select: { name: true, color: true } },
+    },
+  });
+
+  return tasks.map((t) => ({
+    id: t.id,
+    number: t.taskNumber,
+    title: t.title,
+    statusName: t.status?.name ?? null,
+    statusColor: t.status?.color ?? null,
+  }));
 }
 
 // Chat attachments upload directly to R2 through the client upload manager
@@ -224,6 +299,7 @@ export async function sendMessage(
     let projectId = input.projectId ?? null;
     const conversationId = input.conversationId ?? null;
     let taskTitle = "";
+    let taskNumber = 0;
     let projectName = "";
     let projectThumbnailId: string | null = null;
     let participantIds: string[] = [];
@@ -254,6 +330,7 @@ export async function sendMessage(
         select: {
           id: true,
           title: true,
+          taskNumber: true,
           projectId: true,
           project: { select: { name: true, thumbnailId: true } },
         },
@@ -263,6 +340,7 @@ export async function sendMessage(
       if (!access.hasAccess) throw new Error("Permission denied");
       projectId = task.projectId;
       taskTitle = task.title;
+      taskNumber = task.taskNumber;
       projectName = task.project.name;
       projectThumbnailId = task.project.thumbnailId;
     } else if (projectId) {
@@ -344,6 +422,11 @@ export async function sendMessage(
       createdAt: message.createdAt.toISOString(),
       attachments,
       replyToId: input.replyToId ?? null,
+      task:
+        taskId && projectId
+          ? { id: taskId, projectId, number: taskNumber, title: taskTitle }
+          : null,
+      mentions: parseMentionNames(body),
     };
 
     // Recipients + notification (mention-driven; DMs notify all participants).

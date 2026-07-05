@@ -6,6 +6,7 @@ import { canEdit } from "@/lib/permissions";
 import { AppHeader } from "@/components/app-header";
 import { EmptyState } from "@/components/empty-state";
 import { Button } from "@/components/ui/button";
+import { PublishAvatar } from "@/components/publish/publish-avatar";
 
 function hueFor(id: string) {
   let h = 0;
@@ -72,12 +73,20 @@ export default async function ProjectsPage() {
                 />
 
                 <div className="relative flex items-start gap-3">
-                  <div
-                    className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-sm font-semibold text-white ring-1 ring-white/10 shadow-sm"
-                    style={{ background: `hsl(${hue} 70% 55%)` }}
-                  >
-                    {p.name.charAt(0).toUpperCase()}
-                  </div>
+                  <PublishAvatar
+                    name={p.name}
+                    thumbnailId={p.thumbnailId}
+                    size={40}
+                    className="ring-1 ring-white/10 shadow-sm"
+                    fallback={
+                      <div
+                        className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-sm font-semibold text-white ring-1 ring-white/10 shadow-sm"
+                        style={{ background: `hsl(${hue} 70% 55%)` }}
+                      >
+                        {p.name.charAt(0).toUpperCase()}
+                      </div>
+                    }
+                  />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <div className="truncate text-sm font-semibold tracking-tight text-foreground">

@@ -31,6 +31,8 @@ import { useCentrifugo } from "@/components/realtime/centrifugo-provider";
 import { useChannel, usePresence } from "@/components/realtime/hooks";
 import { usePermissions } from "@/components/permissions-provider";
 import { userChannel, workspacePresenceChannel } from "@/lib/channels";
+import { getInboxReturnPath } from "@/lib/inbox-return";
+import { PublishAvatar } from "@/components/publish/publish-avatar";
 
 function formatRelative(iso: string) {
   if (!iso) return "";
@@ -125,15 +127,13 @@ export function ThreadSidebar({ threads }: { threads: InboxThread[] }) {
     >
       <div className="flex h-14 items-center gap-2 border-b border-border/60 px-3">
         <Button
-          asChild
           variant="ghost"
           size="icon"
           className="rounded-full"
           aria-label="Close"
+          onClick={() => router.push(getInboxReturnPath())}
         >
-          <Link href="/dashboard">
-            <X className="h-4 w-4" />
-          </Link>
+          <X className="h-4 w-4" />
         </Button>
         <div className="text-sm font-semibold">Inbox</div>
         {canCompose && (
@@ -272,13 +272,20 @@ function ThreadRow({
       )}
     >
       <div className="relative shrink-0">
-        <div
-          className="grid h-9 w-9 place-items-center rounded-full text-tiny font-semibold text-white"
-          style={{ background: thread.avatar }}
-          aria-hidden
-        >
-          {thread.initials}
-        </div>
+        <PublishAvatar
+          name={thread.name}
+          thumbnailId={thread.thumbnailId}
+          size={36}
+          fallback={
+            <div
+              className="grid h-9 w-9 place-items-center rounded-full text-tiny font-semibold text-white"
+              style={{ background: thread.avatar }}
+              aria-hidden
+            >
+              {thread.initials}
+            </div>
+          }
+        />
         {isOnline && (
           <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-background bg-emerald-500" />
         )}

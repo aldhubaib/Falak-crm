@@ -28,16 +28,16 @@ export function DeclineDialog({
   /** Person who submitted the task — @mentioned by default and not editable. */
   mentionName?: string | null;
   onClose: () => void;
-  onConfirm: (reason: string) => void;
+  onConfirm: (reason: string, file: File | null) => void;
 }) {
   const [reason, setReason] = useState("");
-  const [fileName, setFileName] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const canSubmit = reason.trim().length > 0;
 
   const close = () => {
     setReason("");
-    setFileName(null);
+    setFile(null);
     onClose();
   };
 
@@ -93,20 +93,20 @@ export function DeclineDialog({
             className="hidden"
             onChange={(e) => {
               const f = e.target.files?.[0];
-              if (f) setFileName(f.name);
+              if (f) setFile(f);
             }}
           />
-          {fileName ? (
+          {file ? (
             <div className="flex items-center justify-between gap-2 rounded-md border border-border/60 bg-surface/60 px-3 py-2 text-sm">
               <div className="flex min-w-0 items-center gap-2 text-muted-foreground">
                 <Paperclip className="h-4 w-4 shrink-0" />
-                <span className="truncate">{fileName}</span>
+                <span className="truncate">{file.name}</span>
               </div>
               <Button
                 variant="ghost"
                 size="icon"
                 className="h-6 w-6 shrink-0"
-                onClick={() => setFileName(null)}
+                onClick={() => setFile(null)}
               >
                 <X className="h-3.5 w-3.5" />
               </Button>
@@ -122,7 +122,7 @@ export function DeclineDialog({
               onDrop={(e) => {
                 e.preventDefault();
                 const f = e.dataTransfer.files?.[0];
-                if (f) setFileName(f.name);
+                if (f) setFile(f);
               }}
               className="flex w-full flex-col items-center justify-center gap-2 rounded-md border border-dashed border-border/70 bg-surface/40 py-6 text-center transition-colors hover:border-border hover:bg-surface"
             >
@@ -145,7 +145,7 @@ export function DeclineDialog({
             disabled={!canSubmit}
             className="gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90"
             onClick={() => {
-              onConfirm(reason);
+              onConfirm(reason, file);
               close();
             }}
           >

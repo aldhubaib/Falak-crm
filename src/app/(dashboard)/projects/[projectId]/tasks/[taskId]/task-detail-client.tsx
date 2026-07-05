@@ -71,6 +71,8 @@ import {
 import { useActionHandler } from "@/hooks/use-action";
 import { restoreRecord, permanentDeleteRecord } from "@/actions/delete";
 import { addTaskComment } from "@/actions/comments";
+import type { MessageAttachment } from "@/actions/messages";
+import { AttachmentBubble } from "@/components/messages/chat-attachments";
 import { useChannel } from "@/components/realtime/hooks";
 import { taskChannel } from "@/lib/channels";
 import {
@@ -136,6 +138,7 @@ export type CommentEntry = {
   body: string;
   authorName: string;
   createdAt: string;
+  attachments: MessageAttachment[];
 };
 
 export function TaskDetailClient({
@@ -581,9 +584,18 @@ function CommentItem({ comment }: { comment: CommentEntry }) {
             {formatRelativeDate(comment.createdAt)}
           </span>
         </div>
-        <p className="mt-0.5 whitespace-pre-wrap break-words text-sm text-muted-foreground">
-          {renderCommentBody(comment.body)}
-        </p>
+        {comment.body && (
+          <p className="mt-0.5 whitespace-pre-wrap break-words text-sm text-muted-foreground">
+            {renderCommentBody(comment.body)}
+          </p>
+        )}
+        {comment.attachments.length > 0 && (
+          <div className="mt-2 space-y-2">
+            {comment.attachments.map((att) => (
+              <AttachmentBubble key={att.id} attachment={att} mine={false} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
