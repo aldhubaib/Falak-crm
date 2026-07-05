@@ -100,9 +100,12 @@ export function ThreadSidebar({ threads }: { threads: InboxThread[] }) {
             t.subtitle.toLowerCase().includes(q.toLowerCase())
           : true,
       )
-      .sort(
-        (a, b) => new Date(b.lastAt).getTime() - new Date(a.lastAt).getTime(),
-      );
+      .sort((a, b) => {
+        // Threads with no messages yet have an empty lastAt — sort them last.
+        const ta = a.lastAt ? new Date(a.lastAt).getTime() : 0;
+        const tb = b.lastAt ? new Date(b.lastAt).getTime() : 0;
+        return tb - ta;
+      });
   }, [threads, tab, q]);
 
   // Non-active projects collapse into an "Archived projects" section.

@@ -552,13 +552,14 @@ export async function getInboxThreads(): Promise<InboxThread[]> {
   const { workspace, member } = await requireWorkspaceWithMember();
   const scope = await getAccessibleProjectScope();
 
+  // Every accessible project appears in the inbox — including ones with an
+  // empty chat — so newly invited members can find and start the conversation.
   const projectWhere =
     scope.all
-      ? { workspaceId: workspace.id, deletedAt: null, messages: { some: {} } }
+      ? { workspaceId: workspace.id, deletedAt: null }
       : {
           workspaceId: workspace.id,
           deletedAt: null,
-          messages: { some: {} },
           id: { in: scope.projectIds ?? [] },
         };
 
@@ -662,9 +663,12 @@ export async function getInboxThreads(): Promise<InboxThread[]> {
       };
     });
 
-  return [...projectThreads, ...dmThreads].sort(
-    (a, b) => new Date(b.lastAt).getTime() - new Date(a.lastAt).getTime(),
-  );
+  // Most recent activity first; threads with no messages yet sink to the end.
+  return [...projectThreads, ...dmThreads].sort((a, b) => {
+    const ta = a.lastAt ? new Date(a.lastAt).getTime() : 0;
+    const tb = b.lastAt ? new Date(b.lastAt).getTime() : 0;
+    return tb - ta;
+  });
 }
 
 // ─── Direct conversations ─────────────────────────────────────────────────────

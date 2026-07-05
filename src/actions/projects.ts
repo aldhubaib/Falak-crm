@@ -3,7 +3,7 @@
 import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { requireWorkspace, requireWorkspaceWithMember, requireProjectAssign, requireProjectSettings, requireProjectWork, getProjectAccess } from "@/lib/workspace";
-import { canEdit } from "@/lib/permissions";
+import { canEdit, canDeleteTaskAt } from "@/lib/permissions";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
@@ -557,7 +557,24 @@ export async function updateTaskStatus(
   revalidatePath(`/projects/${projectId}`);
   if (dealId) revalidatePath(`/deals/${dealId}`);
 
-  return { taskId, statusId, assigneeId: newAssigneeId };
+  // Return the resolved assignee so the board can patch its cache immediately
+  // (self-assign on forward moves, previous owner on rollbacks, auto-assign).
+  const newAssignee = await db.workspaceMember.findUnique({
+    where: { id: newAssigneeId },
+    select: { id: true, name: true, email: true, imageUrl: true },
+  });
+
+  return {
+    taskId,
+    statusId,
+    assignee: newAssignee
+      ? {
+          id: newAssignee.id,
+          name: newAssignee.name ?? newAssignee.email,
+          imageUrl: newAssignee.imageUrl ?? null,
+        }
+      : null,
+  };
 }
 
 export async function assignTaskToMe(taskId: string, projectId: string) {
@@ -580,11 +597,22 @@ export async function assignTaskToMe(taskId: string, projectId: string) {
 }
 
 export async function deleteTask(taskId: string, projectId: string, dealId?: string) {
-  await requireProjectWork(projectId);
+  const access = await requireProjectWork(projectId);
+
+  const task = await db.task.findFirst({
+    where: { id: taskId, projectId },
+    select: { statusId: true },
+  });
+  if (!task) throw new Error("Task not found");
+  // Full project rights delete anywhere; otherwise the role's stage-level
+  // "Delete" flag must be on for the task's current stage.
+  if (!canDeleteTaskAt(access.permissions, task.statusId)) {
+    throw new Error("You don't have permission to delete this task");
+  }
 
   await db.task.update({
     where: { id: taskId },
-    data: { deletedAt: new Date() },
+    data: { deletedAt: new Date(), deletedBy: access.member.id },
   });
 
   publishTaskEvent(projectId, { type: "task.deleted", taskId });

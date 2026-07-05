@@ -16,6 +16,8 @@ import {
   Download,
   Trash2,
   Loader2,
+  MoreVertical,
+  AlertTriangle,
   Paperclip,
   History,
   Clock,
@@ -36,13 +38,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { AppHeader } from "@/components/app-header";
 
 import { cn } from "@/lib/utils";
 import {
   saveChecklistItemText,
   removeChecklistItemAttachment,
+  deleteTask,
 } from "@/actions/projects";
+import { useActionHandler } from "@/hooks/use-action";
 import { addTaskComment } from "@/actions/comments";
 import { useChannel } from "@/components/realtime/hooks";
 import { taskChannel } from "@/lib/channels";
@@ -111,6 +129,7 @@ export type CommentEntry = {
 export function TaskDetailClient({
   projectId,
   taskId,
+  canDelete,
   title,
   typeName,
   statusName,
@@ -124,6 +143,7 @@ export function TaskDetailClient({
 }: {
   projectId: string;
   taskId: string;
+  canDelete: boolean;
   title: string;
   typeName: string | null;
   statusName: string | null;
@@ -141,6 +161,14 @@ export function TaskDetailClient({
 
   const [historyOpen, setHistoryOpen] = useState(false);
   const [historyTab, setHistoryTab] = useState<"all" | "comments" | "status">("all");
+
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const { run: runDelete, loading: deleting } = useActionHandler();
+  const handleDelete = () =>
+    runDelete("Delete Task", async () => {
+      await deleteTask(taskId, projectId);
+      router.push(`/projects/${projectId}`);
+    });
 
   const reqItems = items.filter((i) => i.phase === "create");
   const delItems = items.filter((i) => i.phase === "delivery");
@@ -181,7 +209,69 @@ export function TaskDetailClient({
             <History className="size-[18px]" />
           </Button>
         }
+        actions={
+          canDelete ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full"
+                  aria-label="Task options"
+                >
+                  <MoreVertical className="size-[18px]" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  className="text-destructive focus:text-destructive"
+                  onSelect={() => setConfirmDelete(true)}
+                >
+                  <Trash2 className="size-4" />
+                  Delete task
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : undefined
+        }
       />
+
+      <Dialog open={confirmDelete} onOpenChange={(o) => !deleting && setConfirmDelete(o)}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="size-4 text-destructive" />
+              Delete this task?
+            </DialogTitle>
+            <DialogDescription>
+              “{title}” and its checklist will be removed from the board. This
+              can&apos;t be undone from the app.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              disabled={deleting}
+              onClick={() => setConfirmDelete(false)}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" disabled={deleting} onClick={handleDelete}>
+              {deleting ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" />
+                  Deleting…
+                </>
+              ) : (
+                <>
+                  <Trash2 className="size-4" />
+                  Delete
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <main className="min-h-0 flex-1 overflow-y-auto">
         <div className="mx-auto max-w-3xl space-y-8 p-5">
           {/* Requirements */}

@@ -319,6 +319,18 @@ export function can(
   return level === "full";
 }
 
+// Full project rights delete anywhere; otherwise the role's stage-level
+// "Delete" flag (Settings → Roles → Task Stage Permissions) must be on for
+// the task's current stage.
+export function canDeleteTaskAt(
+  permissions: Permissions,
+  statusId: string | null,
+): boolean {
+  if (permissions.projects === "full") return true;
+  if (!statusId) return false;
+  return permissions.taskPermissions?.stages?.[statusId]?.delete === true;
+}
+
 export function canView(member: MemberWithPermissions, module: ModuleKey): boolean {
   return can(member, module, "view");
 }

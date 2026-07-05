@@ -17,6 +17,7 @@ export type BoardTask = {
   statusId: string | null;
   statusName: string;
   statusColor: string;
+  assigneeId: string | null;
   assigneeName: string | null;
   assigneeAvatar: string | null;
   serviceName: string | null;
@@ -62,7 +63,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         stageTimings: true,
         rejectionCount: true,
         status: { select: { name: true, color: true } },
-        assignee: { select: { id: true, name: true, email: true } },
+        assignee: { select: { id: true, name: true, email: true, imageUrl: true } },
         service: { select: { name: true } },
         checklistItems: {
           select: { name: true, phase: true, mandatory: true, completed: true },
@@ -138,8 +139,9 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
       statusId: t.statusId,
       statusName: t.status?.name ?? "Unknown",
       statusColor: t.status?.color ?? "#3b82f6",
-      assigneeName: t.assignee?.name ?? null,
-      assigneeAvatar: null,
+      assigneeId: t.assignee?.id ?? null,
+      assigneeName: t.assignee?.name ?? t.assignee?.email ?? null,
+      assigneeAvatar: t.assignee?.imageUrl ?? null,
       serviceName: t.service?.name ?? null,
       priority: t.priority,
       estimateMin: t.estimateMin,

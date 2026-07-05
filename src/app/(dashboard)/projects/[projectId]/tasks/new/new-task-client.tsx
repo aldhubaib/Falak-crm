@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Flag, HelpCircle, LayoutGrid, Type as TypeIcon } from "lucide-react";
@@ -40,7 +40,13 @@ export function NewTaskClient({
   const [priority, setPriority] = useState<number | null>(null);
   const [answers, setAnswers] = useState<Record<string, FieldAnswer>>({});
 
-  const { execute, loading } = useAction(createFullTask);
+  const { execute } = useAction(createFullTask);
+  // Ref guards against double-submit: two rapid clicks can both fire before
+  // React re-renders the disabled button. State drives the spinner UI and
+  // stays on through the redirect so the button never re-enables after
+  // a successful save.
+  const submittingRef = useRef(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const type = taskTypes.find((t) => t.id === typeId);
   const mandatoryFilled =
@@ -51,7 +57,9 @@ export function NewTaskClient({
     !!typeId && title.trim().length > 0 && !!defaultStatusId && mandatoryFilled;
 
   const create = async () => {
-    if (!canSave) return;
+    if (!canSave || submittingRef.current) return;
+    submittingRef.current = true;
+    setSubmitting(true);
 
     // Text + yes/no answers are stored on the checklist item at creation.
     const textAnswers: Record<string, string> = {};
@@ -83,7 +91,12 @@ export function NewTaskClient({
       answers: textAnswers,
     });
 
-    if (!res) return;
+    if (!res) {
+      // Failed — let the user retry.
+      submittingRef.current = false;
+      setSubmitting(false);
+      return;
+    }
 
     // Map each selected file to its freshly-created checklist item and enqueue
     // the upload — the global UploadIndicator shows progress.
@@ -114,7 +127,14 @@ export function NewTaskClient({
             <span className="font-semibold text-foreground">New Task</span>
           </div>
         }
-        actions={<SaveButton onClick={create} disabled={!canSave || loading} ready={canSave && !loading} />}
+        actions={
+          <SaveButton
+            onClick={create}
+            disabled={!canSave}
+            loading={submitting}
+            ready={canSave && !submitting}
+          />
+        }
       />
       <main className="min-h-0 flex-1 overflow-y-auto">
         <PageContainer className="mx-auto max-w-3xl">

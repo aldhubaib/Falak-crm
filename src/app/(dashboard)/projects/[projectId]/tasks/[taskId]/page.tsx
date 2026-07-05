@@ -1,10 +1,29 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTask } from "@/actions/projects";
 import { getTaskStatuses } from "@/actions/settings";
 import { getTaskHistory, getTaskComments } from "@/actions/comments";
 import { db } from "@/lib/db";
 import { createPresignedGet } from "@/lib/storage";
+import { getProjectAccess } from "@/lib/workspace";
+import { canDeleteTaskAt } from "@/lib/permissions";
 import { TaskDetailClient, type ChecklistItem } from "./task-detail-client";
+
+// Browser tab title: "Project Name - Task title" (the route itself is
+// auth-gated by middleware, so this leaks nothing to signed-out visitors).
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ projectId: string; taskId: string }>;
+}): Promise<Metadata> {
+  const { projectId, taskId } = await params;
+  const task = await db.task.findFirst({
+    where: { id: taskId, projectId },
+    select: { title: true, project: { select: { name: true } } },
+  });
+  if (!task) return {};
+  return { title: `${task.project.name} - ${task.title}` };
+}
 
 function parseArray(raw: string | null): string[] {
   if (!raw) return [];
@@ -110,13 +129,18 @@ export default async function TaskDetailPage({
       ?.template?.name ??
     null;
 
-  const history = await getTaskHistory(taskId);
-  const comments = await getTaskComments(taskId);
+  const [history, comments, access] = await Promise.all([
+    getTaskHistory(taskId),
+    getTaskComments(taskId),
+    getProjectAccess(projectId),
+  ]);
+  const canDelete = canDeleteTaskAt(access.permissions, task.statusId);
 
   return (
     <TaskDetailClient
       projectId={projectId}
       taskId={taskId}
+      canDelete={canDelete}
       title={task.title}
       typeName={typeName}
       statusName={task.status?.name ?? null}

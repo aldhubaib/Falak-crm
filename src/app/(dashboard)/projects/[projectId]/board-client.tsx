@@ -126,12 +126,7 @@ function CardBody({ task }: { task: BoardTask }) {
             <TooltipTrigger asChild>
               <Avatar className="h-5 w-5">
                 <AvatarImage
-                  src={
-                    task.assigneeAvatar ??
-                    (task.assigneeName
-                      ? `https://i.pravatar.cc/48?u=${encodeURIComponent(task.assigneeName)}`
-                      : undefined)
-                  }
+                  src={task.assigneeAvatar ?? undefined}
                   alt={task.assigneeName ?? "Unassigned"}
                 />
                 <AvatarFallback className="bg-muted text-[9px] font-semibold text-muted-foreground">
@@ -360,6 +355,27 @@ export function ProjectBoardClient({
     onError: (err, _vars, ctx) => {
       if (ctx?.prev) queryClient.setQueryData(boardQueryKey(projectId), ctx.prev);
       setMoveError(err instanceof Error ? err.message : "Failed to move task");
+    },
+    // The server resolves who owns the task after a move (self-assign going
+    // forward, auto-assign stages, previous owner on rejection). Patch the
+    // card immediately instead of waiting for the background refetch.
+    onSuccess: (result, vars) => {
+      queryClient.setQueryData<BoardData>(boardQueryKey(projectId), (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          tasks: old.tasks.map((t) =>
+            t.id === vars.taskId
+              ? {
+                  ...t,
+                  assigneeId: result.assignee?.id ?? null,
+                  assigneeName: result.assignee?.name ?? null,
+                  assigneeAvatar: result.assignee?.imageUrl ?? null,
+                }
+              : t,
+          ),
+        };
+      });
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
