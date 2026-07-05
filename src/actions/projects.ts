@@ -2,7 +2,7 @@
 
 import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
-import { requireWorkspace, requireWorkspaceWithMember, requireProjectEdit, requireProjectAssign, requireProjectWork, getProjectAccess } from "@/lib/workspace";
+import { requireWorkspace, requireWorkspaceWithMember, requireProjectAssign, requireProjectSettings, requireProjectWork, getProjectAccess } from "@/lib/workspace";
 import { canEdit } from "@/lib/permissions";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
@@ -238,7 +238,7 @@ export async function removeProjectMember(projectId: string, memberId: string) {
 }
 
 export async function updateProjectStatus(id: string, statusId: string, dealId?: string) {
-  const { workspace } = await requireProjectEdit(id);
+  const { workspace } = await requireProjectSettings(id);
 
   await db.project.update({
     where: { id, workspaceId: workspace.id },
@@ -749,7 +749,7 @@ export async function removeChecklistItemAttachment(itemId: string, projectId: s
 }
 
 export async function updateProjectName(projectId: string, name: string) {
-  const { workspace } = await requireProjectEdit(projectId);
+  const { workspace } = await requireProjectSettings(projectId);
   if (!name.trim()) throw new Error("Name is required");
 
   await db.project.update({
@@ -763,7 +763,7 @@ export async function updateProjectName(projectId: string, name: string) {
 }
 
 export async function updateProjectRequirePublishing(projectId: string, requirePublishing: boolean) {
-  const { workspace } = await requireProjectEdit(projectId);
+  const { workspace } = await requireProjectSettings(projectId);
 
   await db.project.update({
     where: { id: projectId, workspaceId: workspace.id },
@@ -775,7 +775,7 @@ export async function updateProjectRequirePublishing(projectId: string, requireP
 }
 
 export async function updateProjectDescription(projectId: string, description: string) {
-  const { workspace } = await requireProjectEdit(projectId);
+  const { workspace } = await requireProjectSettings(projectId);
 
   await db.project.update({
     where: { id: projectId, workspaceId: workspace.id },
@@ -788,7 +788,7 @@ export async function updateProjectDescription(projectId: string, description: s
 }
 
 export async function updateProjectThumbnail(projectId: string, thumbnailId: string | null) {
-  const { workspace } = await requireProjectEdit(projectId);
+  const { workspace } = await requireProjectSettings(projectId);
 
   await db.project.update({
     where: { id: projectId, workspaceId: workspace.id },
@@ -818,7 +818,7 @@ export async function uploadProjectThumbnail(formData: FormData): Promise<void> 
     throw new Error("Image must be 10MB or smaller");
   }
 
-  const { workspace } = await requireProjectEdit(projectId);
+  const { workspace } = await requireProjectSettings(projectId);
 
   const key = generateR2Key("project_thumbnail", file.name || "photo.jpg");
   const bytes = Buffer.from(await file.arrayBuffer());
@@ -862,7 +862,7 @@ export async function uploadProjectThumbnail(formData: FormData): Promise<void> 
 }
 
 export async function updateProjectTemplates(projectId: string, templateIds: string[]) {
-  await requireProjectEdit(projectId);
+  await requireProjectSettings(projectId);
 
   await db.projectTemplate.deleteMany({ where: { projectId } });
 

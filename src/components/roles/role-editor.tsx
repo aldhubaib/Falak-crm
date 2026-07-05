@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Check, X } from "lucide-react";
+import { Check, ChevronDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,6 +14,7 @@ import { createAppError } from "@/lib/errors";
 import {
   MODULES,
   normalizePermissions,
+  type ModuleCaps,
   type ModuleKey,
   type ModulePermission,
   type StagePermission,
@@ -69,13 +70,42 @@ export function RoleEditor({
   const [stages, setStages] = useState<Record<string, Partial<StagePermission>>>(
     () => ({ ...(initial.taskPermissions?.stages ?? {}) }),
   );
-  const [assignMembers, setAssignMembers] = useState(
-    initial.assignMembers === true,
-  );
+  // Fine-grained per-module capabilities (normalization materialized them all).
+  const [caps, setCaps] = useState<Partial<Record<ModuleKey, ModuleCaps>>>(() => {
+    const result: Partial<Record<ModuleKey, ModuleCaps>> = {};
+    for (const m of MODULES) {
+      if (m.capabilities?.length) result[m.key] = { ...(initial.caps?.[m.key] ?? {}) };
+    }
+    return result;
+  });
+  // Start expanded when any capability differs from what the level implies,
+  // so non-default grants are visible at a glance.
+  const [openCaps, setOpenCaps] = useState<Set<ModuleKey>>(() => {
+    const open = new Set<ModuleKey>();
+    for (const m of MODULES) {
+      if (!m.capabilities?.length) continue;
+      const levelDefault = initial[m.key] === "full";
+      if (m.capabilities.some((c) => (initial.caps?.[m.key]?.[c.key] ?? false) !== levelDefault)) {
+        open.add(m.key);
+      }
+    }
+    return open;
+  });
 
   const getModule = (id: ModuleKey): ModulePermission => modules[id] ?? "none";
   const setModule = (id: ModuleKey, v: ModulePermission) =>
     setModules((prev) => ({ ...prev, [id]: v }));
+
+  const getCap = (id: ModuleKey, cap: string) => caps[id]?.[cap] ?? false;
+  const setCap = (id: ModuleKey, cap: string, v: boolean) =>
+    setCaps((prev) => ({ ...prev, [id]: { ...(prev[id] ?? {}), [cap]: v } }));
+  const toggleOpen = (id: ModuleKey) =>
+    setOpenCaps((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
 
   const getStage = (id: string, p: StageFlag) => stages?.[id]?.[p] ?? false;
   const toggleStage = (id: string, p: StageFlag, v: boolean) =>
@@ -87,14 +117,18 @@ export function RoleEditor({
   const dirty = useMemo(() => {
     const initialModules = {} as Record<ModuleKey, ModulePermission>;
     for (const m of MODULES) initialModules[m.key] = initial[m.key];
+    const initialCaps: Partial<Record<ModuleKey, ModuleCaps>> = {};
+    for (const m of MODULES) {
+      if (m.capabilities?.length) initialCaps[m.key] = { ...(initial.caps?.[m.key] ?? {}) };
+    }
     return (
       name !== role.name ||
       JSON.stringify(modules) !== JSON.stringify(initialModules) ||
       JSON.stringify(stages) !==
         JSON.stringify(initial.taskPermissions?.stages ?? {}) ||
-      assignMembers !== (initial.assignMembers === true)
+      JSON.stringify(caps) !== JSON.stringify(initialCaps)
     );
-  }, [name, modules, stages, assignMembers, role, initial]);
+  }, [name, modules, stages, caps, role, initial]);
 
   // First/last stage by order: nothing to roll back to / forward into.
   const firstStageId = taskStages[0]?.id;
@@ -107,7 +141,7 @@ export function RoleEditor({
         permissions: {
           ...modules,
           taskPermissions: { stages },
-          assignMembers,
+          caps,
         },
       });
       if (result.ok) {
@@ -136,40 +170,94 @@ export function RoleEditor({
           </div>
           {MODULES.map((m) => {
             const value = getModule(m.key);
+            const hasCaps = (m.capabilities?.length ?? 0) > 0;
+            const open = openCaps.has(m.key);
             return (
-              <div
-                key={m.key}
-                className="grid grid-cols-[minmax(0,1fr)_repeat(3,64px)] items-center gap-2 border-b border-border/40 px-3 py-2.5 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_repeat(3,80px)]"
-              >
-                <div className="min-w-0">
-                  <div className="truncate text-sm">{m.label}</div>
-                  <div className="truncate text-xs text-muted-foreground">
-                    {m.description}
-                  </div>
+              <div key={m.key} className="border-b border-border/40 last:border-b-0">
+                <div className="grid grid-cols-[minmax(0,1fr)_repeat(3,64px)] items-center gap-2 px-3 py-2.5 sm:grid-cols-[minmax(0,1fr)_repeat(3,80px)]">
+                  {hasCaps ? (
+                    <button
+                      type="button"
+                      onClick={() => toggleOpen(m.key)}
+                      className="flex min-w-0 items-center gap-1.5 text-left"
+                      aria-expanded={open}
+                      aria-label={`${m.label} detailed permissions`}
+                    >
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="truncate text-sm">{m.label}</span>
+                          <ChevronDown
+                            className={cn(
+                              "h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform",
+                              open && "rotate-180",
+                            )}
+                          />
+                        </div>
+                        <div className="truncate text-xs text-muted-foreground">
+                          {m.description}
+                        </div>
+                      </div>
+                    </button>
+                  ) : (
+                    <div className="min-w-0">
+                      <div className="truncate text-sm">{m.label}</div>
+                      <div className="truncate text-xs text-muted-foreground">
+                        {m.description}
+                      </div>
+                    </div>
+                  )}
+                  <RadioGroup
+                    value={value}
+                    onValueChange={(v) => setModule(m.key, v as ModulePermission)}
+                    className="col-span-3 grid grid-cols-3 gap-2"
+                  >
+                    <div className="flex justify-center">
+                      <RadioGroupItem
+                        value="none"
+                        aria-label="None"
+                        className={cn(value === "none" && "border-destructive text-destructive")}
+                      />
+                    </div>
+                    <div className="flex justify-center">
+                      <RadioGroupItem
+                        value="view"
+                        aria-label="View"
+                        className={cn(value === "view" && "border-warning text-warning")}
+                      />
+                    </div>
+                    <div className="flex justify-center">
+                      <RadioGroupItem value="full" aria-label="Full" />
+                    </div>
+                  </RadioGroup>
                 </div>
-                <RadioGroup
-                  value={value}
-                  onValueChange={(v) => setModule(m.key, v as ModulePermission)}
-                  className="col-span-3 grid grid-cols-3 gap-2"
-                >
-                  <div className="flex justify-center">
-                    <RadioGroupItem
-                      value="none"
-                      aria-label="None"
-                      className={cn(value === "none" && "border-destructive text-destructive")}
-                    />
+                {hasCaps && open && (
+                  <div className="space-y-2.5 border-t border-border/30 bg-background/30 px-3 py-2.5 pl-6">
+                    {m.capabilities!.map((c) => (
+                      <div
+                        key={c.key}
+                        className="flex items-center justify-between gap-4"
+                      >
+                        <div className="min-w-0">
+                          <div className="truncate text-sm">{c.label}</div>
+                          <div className="truncate text-xs text-muted-foreground">
+                            {c.description}
+                          </div>
+                        </div>
+                        <Switch
+                          checked={getCap(m.key, c.key)}
+                          onCheckedChange={(v) => setCap(m.key, c.key, v)}
+                          disabled={value === "none"}
+                          aria-label={`${m.label}: ${c.label}`}
+                        />
+                      </div>
+                    ))}
+                    {value === "none" && (
+                      <p className="text-tiny text-muted-foreground">
+                        Grant at least View access to enable these options.
+                      </p>
+                    )}
                   </div>
-                  <div className="flex justify-center">
-                    <RadioGroupItem
-                      value="view"
-                      aria-label="View"
-                      className={cn(value === "view" && "border-warning text-warning")}
-                    />
-                  </div>
-                  <div className="flex justify-center">
-                    <RadioGroupItem value="full" aria-label="Full" />
-                  </div>
-                </RadioGroup>
+                )}
               </div>
             );
           })}
@@ -231,21 +319,6 @@ export function RoleEditor({
           Forward/Rollback = can move tasks to next/previous stage. Delete = can delete tasks in this stage.
           Auto-Assign = task is automatically assigned to this role when it enters this stage.
         </p>
-      </section>
-
-      <section className="space-y-3">
-        <div className="text-tiny font-medium uppercase tracking-[0.14em] text-muted-foreground">
-          Projects
-        </div>
-        <div className="flex items-center justify-between gap-4 rounded-lg border border-border/60 px-3 py-2.5">
-          <div className="min-w-0">
-            <div className="truncate text-sm">Assign people to projects</div>
-            <div className="truncate text-xs text-muted-foreground">
-              Can add or remove members on projects they have access to
-            </div>
-          </div>
-          <Switch checked={assignMembers} onCheckedChange={setAssignMembers} />
-        </div>
       </section>
 
       <div className="flex justify-end gap-2 border-t border-border/60 pt-4">

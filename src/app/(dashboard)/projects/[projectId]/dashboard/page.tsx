@@ -3,6 +3,8 @@ import Link from "next/link";
 import { getProjectDashboard } from "@/actions/projects";
 import { getTaskStatuses } from "@/actions/settings";
 import { db } from "@/lib/db";
+import { getProjectAccess } from "@/lib/workspace";
+import { hasCap } from "@/lib/permissions";
 import { AppHeader } from "@/components/app-header";
 import { ProjectViewMenu } from "@/components/projects/project-view-menu";
 import { cn } from "@/lib/utils";
@@ -18,9 +20,10 @@ export default async function ProjectDashboardPage({
 }) {
   const { projectId } = await params;
 
-  const [project, statuses] = await Promise.all([
+  const [project, statuses, access] = await Promise.all([
     getProjectDashboard(projectId),
     getTaskStatuses(),
+    getProjectAccess(projectId),
   ]);
   if (!project) notFound();
 
@@ -46,7 +49,12 @@ export default async function ProjectDashboardPage({
       <AppHeader
         backHref="/projects"
         title={project.name}
-        actions={<ProjectViewMenu projectId={projectId} />}
+        actions={
+          <ProjectViewMenu
+            projectId={projectId}
+            showSettings={hasCap(access.permissions, "projects", "editSettings")}
+          />
+        }
       />
       <main className="min-h-0 flex-1 overflow-y-auto">
         <div className="mx-auto flex max-w-6xl flex-col gap-5 p-5">

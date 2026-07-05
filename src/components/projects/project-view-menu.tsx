@@ -20,7 +20,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function ProjectViewMenu({ projectId }: { projectId: string }) {
+export function ProjectViewMenu({
+  projectId,
+  showSettings = true,
+}: {
+  projectId: string;
+  /** Hidden for members without the "modify project settings" capability. */
+  showSettings?: boolean;
+}) {
   const path = usePathname();
   const boardHref = `/projects/${projectId}`;
   const assetsHref = `/projects/${projectId}/assets`;
@@ -73,13 +80,17 @@ export function ProjectViewMenu({ projectId }: { projectId: string }) {
             </Link>
           </DropdownMenuItem>
         ))}
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href={settingsHref} className="gap-2">
-            <Settings2 className="h-4 w-4" />
-            Settings
-          </Link>
-        </DropdownMenuItem>
+        {showSettings && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href={settingsHref} className="gap-2">
+                <Settings2 className="h-4 w-4" />
+                Settings
+              </Link>
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

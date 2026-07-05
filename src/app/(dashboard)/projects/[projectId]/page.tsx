@@ -3,6 +3,7 @@ import { getBoardData } from "@/actions/board";
 import { getProjectTeam } from "@/actions/projects";
 import { db } from "@/lib/db";
 import { requireWorkspace, getProjectAccess } from "@/lib/workspace";
+import { hasCap } from "@/lib/permissions";
 import { AppHeader } from "@/components/app-header";
 import { ProjectViewMenu } from "@/components/projects/project-view-menu";
 import { ProjectTeamStack } from "@/components/projects/project-team-stack";
@@ -45,8 +46,8 @@ export default async function ProjectDetailPage({
       email: m.email,
       imageUrl: m.imageUrl ?? null,
     }));
-  const canEditTeam =
-    access.permissions.projects === "full" || access.permissions.assignMembers === true;
+  const canEditTeam = hasCap(access.permissions, "projects", "assignMembers");
+  const canEditSettings = hasCap(access.permissions, "projects", "editSettings");
 
   return (
     <>
@@ -62,7 +63,7 @@ export default async function ProjectDetailPage({
             roles={team.roles}
           />
         }
-        actions={<ProjectViewMenu projectId={projectId} />}
+        actions={<ProjectViewMenu projectId={projectId} showSettings={canEditSettings} />}
       />
       <main className="min-h-0 flex-1 overflow-y-auto">
         <ProjectBoardClient projectId={project.id} initialData={initialData} />

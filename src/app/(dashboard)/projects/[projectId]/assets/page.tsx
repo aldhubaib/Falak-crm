@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { getProjectMeta } from "@/actions/projects";
 import { getProjectAssets, getFolderBreadcrumbs } from "@/actions/assets";
 import { createPresignedGet } from "@/lib/storage";
+import { getProjectAccess } from "@/lib/workspace";
+import { hasCap } from "@/lib/permissions";
 import { AppHeader } from "@/components/app-header";
 import { ProjectViewMenu } from "@/components/projects/project-view-menu";
 import { AssetsClient, type AssetVM, type FolderVM } from "./assets-client";
@@ -17,10 +19,11 @@ export default async function ProjectAssetsPage({
   const { folder } = await searchParams;
   const folderId = folder || null;
 
-  const [project, data, crumbs] = await Promise.all([
+  const [project, data, crumbs, access] = await Promise.all([
     getProjectMeta(projectId),
     getProjectAssets(projectId, folderId),
     folderId ? getFolderBreadcrumbs(folderId) : Promise.resolve([]),
+    getProjectAccess(projectId),
   ]);
 
   if (!project) notFound();
@@ -62,7 +65,12 @@ export default async function ProjectAssetsPage({
       <AppHeader
         backHref="/projects"
         title={project.name}
-        actions={<ProjectViewMenu projectId={projectId} />}
+        actions={
+          <ProjectViewMenu
+            projectId={projectId}
+            showSettings={hasCap(access.permissions, "projects", "editSettings")}
+          />
+        }
       />
       <main className="min-h-0 flex-1 overflow-y-auto">
         <AssetsClient

@@ -10,6 +10,7 @@ import {
   mergePermissions,
   normalizePermissions,
   canView,
+  hasCap,
   type MemberWithPermissions,
   type ModuleKey,
   type Permissions,
@@ -329,15 +330,28 @@ export const requireProjectEdit = async (projectId: string) => {
   return access;
 };
 
-// Throws unless the current member can manage the project's team: either
-// full project edit rights, or the role-level "assign members" grant
-// (Settings → Roles) combined with access to the project.
+// Throws unless the current member can manage the project's team. The
+// "assign people to projects" capability (Settings → Roles → Projects) is
+// authoritative; full-level roles have it on by default via normalization.
 export const requireProjectAssign = async (projectId: string) => {
   const access = await getProjectAccess(projectId);
   if (!access.hasAccess) throw new Error("Permission denied");
-  if (access.permissions.projects === "full") return access;
-  if (access.permissions.assignMembers) return access;
-  throw new Error("Permission denied");
+  if (!hasCap(access.permissions, "projects", "assignMembers")) {
+    throw new Error("Permission denied");
+  }
+  return access;
+};
+
+// Throws unless the current member can modify project settings (name, photo,
+// status, description, templates). Gated by the "modify project settings"
+// capability; full-level roles have it on by default via normalization.
+export const requireProjectSettings = async (projectId: string) => {
+  const access = await getProjectAccess(projectId);
+  if (!access.hasAccess) throw new Error("Permission denied");
+  if (!hasCap(access.permissions, "projects", "editSettings")) {
+    throw new Error("Permission denied");
+  }
+  return access;
 };
 
 // Returns the set of projects the current member may access. Owners (and the

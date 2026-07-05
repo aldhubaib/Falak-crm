@@ -12,6 +12,17 @@ export type ModulePermission = "full" | "view" | "none";
 // access they effectively had before the module became permissioned, or
 // "none" to lock a new module down until an admin grants it explicitly.
 
+// A fine-grained switch under a module (rendered as a toggle in the module's
+// expandable row in Settings → Roles). Defaults follow the module level: a
+// role at "full" has every capability ON until an admin turns one off; "view"
+// and "none" roles have them OFF until granted.
+export type CapabilityDef = {
+  key: string;
+  label: string;
+  /** Shown under the capability name in Settings → Roles. */
+  description: string;
+};
+
 export type ModuleDef = {
   key: string;
   label: string;
@@ -21,14 +32,34 @@ export type ModuleDef = {
   href: string | null;
   /** Level assumed for roles saved before this module existed. */
   legacyDefault: ModulePermission;
+  /** Fine-grained switches beyond none/view/full, if the module needs them. */
+  capabilities?: readonly CapabilityDef[];
 };
 
-export const MODULES = [
+const MODULES_SOURCE = [
   { key: "companies", label: "Companies", description: "Manage company records", href: "/companies", legacyDefault: "full" },
   { key: "contacts", label: "Contacts", description: "Manage contact records", href: "/contacts", legacyDefault: "full" },
   { key: "deals", label: "CRM / Deals", description: "Manage deals and pipeline", href: "/deals", legacyDefault: "none" },
   { key: "pipeline", label: "Pipeline", description: "View and manage deal pipeline", href: null, legacyDefault: "none" },
-  { key: "projects", label: "Projects", description: "Access project boards and tasks", href: "/projects", legacyDefault: "none" },
+  {
+    key: "projects",
+    label: "Projects",
+    description: "Access project boards and tasks",
+    href: "/projects",
+    legacyDefault: "none",
+    capabilities: [
+      {
+        key: "editSettings",
+        label: "Modify project settings",
+        description: "Change project name, photo, status, description and task templates",
+      },
+      {
+        key: "assignMembers",
+        label: "Assign people to projects",
+        description: "Add or remove members on projects they have access to",
+      },
+    ],
+  },
   { key: "invoices", label: "Invoices", description: "View and manage invoices", href: "/invoices", legacyDefault: "none" },
   { key: "publish", label: "Publish", description: "Schedule and publish delivery items", href: "/publish", legacyDefault: "full" },
   // Chat has no sidebar entry — the inbox opens from the notifications bell.
@@ -37,7 +68,11 @@ export const MODULES = [
   { key: "team", label: "Team", description: "Manage team members and roles", href: null, legacyDefault: "none" },
 ] as const satisfies readonly ModuleDef[];
 
-export type ModuleKey = (typeof MODULES)[number]["key"];
+export type ModuleKey = (typeof MODULES_SOURCE)[number]["key"];
+
+// Widened view so `capabilities` is accessible on every element (the `as
+// const` literal narrows it away on modules that don't declare any).
+export const MODULES: ReadonlyArray<ModuleDef & { key: ModuleKey }> = MODULES_SOURCE;
 
 export const MODULE_KEYS = MODULES.map((m) => m.key) as ModuleKey[];
 
@@ -54,11 +89,15 @@ export interface TaskPermissions {
   stages: Record<string, StagePermission>;
 }
 
+/** Per-module capability flags, e.g. caps.projects.editSettings. */
+export type ModuleCaps = Record<string, boolean>;
+
 export type Permissions = { [K in ModuleKey]: ModulePermission } & {
   taskPermissions?: TaskPermissions;
-  /** Can add/remove members on projects they have access to, without
-   *  needing full Projects edit rights. */
-  assignMembers?: boolean;
+  /** Fine-grained per-module capabilities (see MODULES[].capabilities).
+   *  Always materialized by normalizePermissions for modules that declare
+   *  capabilities. */
+  caps?: Partial<Record<ModuleKey, ModuleCaps>>;
 };
 
 export type PermissionModule = keyof Permissions;
@@ -87,15 +126,49 @@ export function normalizePermissions(raw: unknown): Permissions {
   }
   const tp = source.taskPermissions as TaskPermissions | undefined;
   if (tp && typeof tp === "object") result.taskPermissions = tp;
-  result.assignMembers = source.assignMembers === true;
+
+  // Materialize every declared capability. Resolution order:
+  //   explicit stored value → legacy top-level flag → "follows the level"
+  // (full ⇒ on, view/none ⇒ off). The last rule means roles saved before a
+  // capability existed keep the access their level already implied.
+  const rawCaps = (source.caps ?? {}) as Record<string, Record<string, unknown>>;
+  result.caps = {};
+  for (const mod of MODULES) {
+    if (!mod.capabilities?.length) continue;
+    const modCaps: ModuleCaps = {};
+    for (const cap of mod.capabilities) {
+      const explicit = rawCaps[mod.key]?.[cap.key];
+      // "assignMembers" predates caps and was stored at the top level.
+      const legacy =
+        mod.key === "projects" && cap.key === "assignMembers"
+          ? source.assignMembers
+          : undefined;
+      modCaps[cap.key] =
+        typeof explicit === "boolean"
+          ? explicit
+          : typeof legacy === "boolean"
+            ? legacy
+            : result[mod.key] === "full";
+    }
+    result.caps[mod.key] = modCaps;
+  }
   return result;
+}
+
+/** True when the member's permissions grant a module capability. */
+export function hasCap(
+  permissions: Permissions,
+  module: ModuleKey,
+  cap: string,
+): boolean {
+  return permissions.caps?.[module]?.[cap] === true;
 }
 
 function fullPermissions(): Permissions {
   const result = {} as Permissions;
   for (const mod of MODULES) result[mod.key] = "full";
-  result.assignMembers = true;
-  return result;
+  // normalizePermissions turns every capability on for "full" levels.
+  return normalizePermissions(result);
 }
 
 export const DEFAULT_PERMISSIONS: Permissions = fullPermissions();
@@ -198,7 +271,7 @@ export function mergePermissions(list: unknown[]): Permissions {
     result[mod.key] = "none";
   }
   result.taskPermissions = { stages: {} };
-  result.assignMembers = false;
+  result.caps = {};
 
   for (const p of normalized) {
     for (const key of MODULE_KEYS) {
@@ -206,7 +279,14 @@ export function mergePermissions(list: unknown[]): Permissions {
         result[key] = p[key];
       }
     }
-    if (p.assignMembers) result.assignMembers = true;
+    // Capabilities merge like everything else: most permissive wins.
+    for (const [modKey, modCaps] of Object.entries(p.caps ?? {})) {
+      const cur = (result.caps[modKey as ModuleKey] ??= {});
+      for (const [capKey, on] of Object.entries(modCaps ?? {})) {
+        if (on) cur[capKey] = true;
+        else cur[capKey] ??= false;
+      }
+    }
 
     const stages = p.taskPermissions?.stages ?? {};
     for (const [stageId, sp] of Object.entries(stages)) {
