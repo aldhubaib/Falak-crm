@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   AtSign,
   Send,
@@ -85,6 +86,8 @@ import {
 } from "@/components/projects/dynamic-field";
 import { uploadManager, type UploadItem } from "@/lib/upload-manager";
 import { FormSection } from "@/components/projects/form-section";
+import { boardQueryKey } from "../../use-board";
+import type { BoardData } from "@/actions/board";
 
 export type ChecklistItem = {
   id: string;
@@ -180,11 +183,23 @@ export function TaskDetailClient({
   const [historyOpen, setHistoryOpen] = useState(false);
   const [historyTab, setHistoryTab] = useState<"all" | "comments" | "status">("all");
 
+  const queryClient = useQueryClient();
+  // Drop the task from the board's React Query cache right away — the board
+  // page keeps its own client cache, so without this the deleted task would
+  // linger there until the next background refetch.
+  const evictFromBoardCache = () => {
+    queryClient.setQueryData<BoardData>(boardQueryKey(projectId), (prev) =>
+      prev ? { ...prev, tasks: prev.tasks.filter((t) => t.id !== taskId) } : prev,
+    );
+    void queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
+  };
+
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { run: runDelete, loading: deleting } = useActionHandler();
   const handleDelete = () =>
     runDelete("Delete Task", async () => {
       await deleteTask(taskId, projectId);
+      evictFromBoardCache();
       router.push(`/projects/${projectId}`);
     });
 
@@ -192,11 +207,14 @@ export function TaskDetailClient({
   const handleRestore = () =>
     runTrashAction("Restore Task", async () => {
       await restoreRecord("task", taskId);
+      // Restored task must reappear on the board.
+      void queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
       router.refresh();
     });
   const handlePurge = () =>
     runTrashAction("Delete Task Forever", async () => {
       await permanentDeleteRecord("task", taskId);
+      evictFromBoardCache();
       router.push("/settings/trash");
     });
 
