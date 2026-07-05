@@ -143,6 +143,26 @@ export default async function TaskDetailPage({
     getTaskComments(taskId),
     getProjectAccess(projectId),
   ]);
+
+  // Who can be @mentioned in comments: the project's team plus workspace
+  // owners (owners see every project but aren't project members).
+  const [projectMembers, owners] = await Promise.all([
+    db.projectMember.findMany({
+      where: { projectId },
+      select: { member: { select: { id: true, name: true, email: true } } },
+    }),
+    db.workspaceMember.findMany({
+      where: { workspaceId: access.workspace.id, type: "OWNER" },
+      select: { id: true, name: true, email: true },
+    }),
+  ]);
+  const mentionableMap = new Map<string, { id: string; name: string }>();
+  for (const m of [...projectMembers.map((pm) => pm.member), ...owners]) {
+    mentionableMap.set(m.id, { id: m.id, name: m.name ?? m.email });
+  }
+  const mentionables = [...mentionableMap.values()].sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
   const canDelete = canDeleteTaskAt(access.permissions, task.statusId);
 
   // Per-stage move rights for the status bar's Back/Next controls (the server
@@ -210,6 +230,7 @@ export default async function TaskDetailPage({
         perms: movePerms,
         submittedBy,
       }}
+      mentionables={mentionables}
       stageEnteredAt={task.stageEnteredAt?.toISOString() ?? null}
       createdAt={task.createdAt.toISOString()}
       items={items}

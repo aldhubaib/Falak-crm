@@ -39,6 +39,7 @@ import { ConfirmStatusDialog } from "@/components/board/confirm-status-dialog";
 import { DeclineDialog } from "@/components/board/decline-dialog";
 import { CONFIRM_MESSAGES } from "@/components/board/confirm-messages";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { updateTaskStatus } from "@/actions/projects";
 import { addTaskComment } from "@/actions/comments";
 import { uploadManager } from "@/lib/upload-manager";
@@ -144,16 +145,19 @@ const BoardCard = memo(function BoardCard({
   task,
   onOpen,
   remoteDragger,
+  dragDisabled,
 }: {
   task: BoardTask;
   onOpen: (taskId: string) => void;
   /** Name of another user currently dragging this card, if any. */
   remoteDragger: string | null;
+  /** Mobile: dragging is off so touch scrolls the board (move via task page). */
+  dragDisabled: boolean;
 }) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: task.id,
     data: { statusId: task.statusId },
-    disabled: remoteDragger != null,
+    disabled: dragDisabled || remoteDragger != null,
   });
 
   return (
@@ -164,7 +168,10 @@ const BoardCard = memo(function BoardCard({
       onClick={() => onOpen(task.id)}
       style={{ opacity: isDragging ? 0.4 : 1 }}
       className={cn(
-        "group/card relative block cursor-grab touch-none select-none rounded-lg border border-border/60 bg-background p-3 text-left transition-colors hover:border-muted-foreground/20 active:cursor-grabbing",
+        "group/card relative block select-none rounded-lg border border-border/60 bg-background p-3 text-left transition-colors hover:border-muted-foreground/20",
+        // touch-none suppresses native scrolling from a touch on the card, so
+        // only apply it when the card is actually draggable.
+        !dragDisabled && "cursor-grab touch-none active:cursor-grabbing",
         remoteDragger && "border-primary/60 ring-1 ring-primary/40",
       )}
     >
@@ -189,6 +196,7 @@ const BoardColumn = memo(function BoardColumn({
   onOpen,
   highlight,
   remoteDrags,
+  dragDisabled,
 }: {
   col: Column;
   projectId: string;
@@ -198,6 +206,7 @@ const BoardColumn = memo(function BoardColumn({
   onOpen: (taskId: string) => void;
   highlight: boolean;
   remoteDrags: RemoteDrags;
+  dragDisabled: boolean;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: col.id });
 
@@ -271,6 +280,7 @@ const BoardColumn = memo(function BoardColumn({
               task={task}
               onOpen={onOpen}
               remoteDragger={remoteDrags[task.id]?.name ?? null}
+              dragDisabled={dragDisabled}
             />
           ))
         )}
@@ -300,6 +310,10 @@ export function ProjectBoardClient({
 }) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  // Mobile: the board stacks into one scrollable column — dragging would fight
+  // touch scrolling, so it's disabled and tasks move via the task page's
+  // status bar instead.
+  const isMobile = useIsMobile();
 
   // Stable per-tab id so this client can ignore the SSE echo of its own moves.
   const [clientId] = useState(() =>
@@ -649,6 +663,7 @@ export function ProjectBoardClient({
               onOpen={openTask}
               highlight={activeId != null && activeSourceCol !== col.id}
               remoteDrags={remoteDrags}
+              dragDisabled={isMobile}
             />
           ))}
         </div>

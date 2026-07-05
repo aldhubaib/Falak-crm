@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
   useTransition,
@@ -179,6 +180,7 @@ export function TaskDetailClient({
   history,
   totalTimeMs,
   move,
+  mentionables,
 }: {
   projectId: string;
   taskId: string;
@@ -199,10 +201,11 @@ export function TaskDetailClient({
   history: HistoryEntry[];
   totalTimeMs: number;
   move?: TaskMoveData | null;
+  /** Project team + owners, offered by the @ mention autocomplete. */
+  mentionables?: { id: string; name: string }[];
 }) {
   const router = useRouter();
   const [, startTransition] = useTransition();
-  const [comment, setComment] = useState("");
 
   const [historyOpen, setHistoryOpen] = useState(false);
   const [historyTab, setHistoryTab] = useState<"all" | "comments" | "status">("all");
@@ -249,12 +252,9 @@ export function TaskDetailClient({
   const isTodo = !statusName || statusName === "Todo";
   const showDelivery = !isTodo;
 
-  const sendComment = () => {
-    const text = comment.trim();
-    if (!text) return;
-    setComment("");
+  const sendComment = (body: string) => {
     startTransition(async () => {
-      await addTaskComment(taskId, text, projectId);
+      await addTaskComment(taskId, body, projectId);
       router.refresh();
     });
   };
@@ -494,29 +494,10 @@ export function TaskDetailClient({
               </div>
             )}
             {!trashed && (
-              <div className="flex items-center gap-2 rounded-md border border-border/60 bg-surface px-3 py-2">
-                <AtSign className="h-4 w-4 text-muted-foreground" />
-                <Input
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      sendComment();
-                    }
-                  }}
-                  placeholder="Write a comment... Use @ to mention"
-                  className="h-9 border-0 bg-transparent px-0 focus-visible:ring-0"
-                />
-                <Button
-                  size="icon"
-                  className="h-9 w-9 rounded-md"
-                  onClick={sendComment}
-                  disabled={!comment.trim()}
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
+              <CommentComposer
+                mentionables={mentionables ?? []}
+                onSend={sendComment}
+              />
             )}
           </FormSection>
         </PageContainer>
@@ -749,6 +730,153 @@ function StatusMoveBar({
         </DialogContent>
       </Dialog>
     </>
+  );
+}
+
+// Comment composer with @ mention autocomplete. Mentions display as plain
+// "@Name" while typing; on send each picked name is converted to the
+// "@[Name](memberId)" token that sendMessage parses to notify the member and
+// deliver the comment to their inbox.
+function CommentComposer({
+  mentionables,
+  onSend,
+}: {
+  mentionables: { id: string; name: string }[];
+  onSend: (body: string) => void;
+}) {
+  const [draft, setDraft] = useState("");
+  const [picked, setPicked] = useState<{ id: string; name: string }[]>([]);
+  const [pickerIndex, setPickerIndex] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Trailing "@query" token in the draft opens the member picker.
+  const mentionToken = useMemo(() => {
+    const m = /(^|\s)@([^\s@]*)$/.exec(draft);
+    if (!m) return null;
+    return { start: m.index + m[1].length, query: m[2].toLowerCase() };
+  }, [draft]);
+
+  const pickerResults = useMemo(() => {
+    if (!mentionToken) return [];
+    const q = mentionToken.query;
+    const filtered = q
+      ? mentionables.filter((m) => m.name.toLowerCase().includes(q))
+      : mentionables;
+    return filtered.slice(0, 6);
+  }, [mentionToken, mentionables]);
+  const pickerOpen = !!mentionToken && pickerResults.length > 0;
+
+  useEffect(() => {
+    setPickerIndex(0);
+  }, [mentionToken?.query, pickerResults.length]);
+
+  const pickMember = (m: { id: string; name: string }) => {
+    if (!mentionToken) return;
+    const before = draft.slice(0, mentionToken.start);
+    const after = draft.slice(
+      mentionToken.start + 1 + mentionToken.query.length,
+    );
+    setDraft(`${before}@${m.name} ${after}`.replace(/ {2,}/g, " "));
+    setPicked((prev) =>
+      prev.some((p) => p.id === m.id) ? prev : [...prev, m],
+    );
+    setTimeout(() => inputRef.current?.focus(), 0);
+  };
+
+  const send = () => {
+    let body = draft.trim();
+    if (!body) return;
+    // Longest names first so "@Adham Ali" isn't clobbered by "@Adham".
+    const sorted = [...picked].sort((a, b) => b.name.length - a.name.length);
+    for (const m of sorted) {
+      body = body.split(`@${m.name}`).join(`@[${m.name}](${m.id})`);
+    }
+    setDraft("");
+    setPicked([]);
+    onSend(body);
+  };
+
+  return (
+    <div className="relative">
+      {pickerOpen && (
+        <div className="absolute bottom-full left-0 z-10 mb-1 w-full max-w-sm overflow-hidden rounded-lg border border-border/60 bg-popover shadow-lg">
+          <div className="border-b border-border/60 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+            Mention someone
+          </div>
+          <ul className="max-h-52 overflow-y-auto py-1">
+            {pickerResults.map((m, i) => (
+              <li key={m.id}>
+                <button
+                  type="button"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    pickMember(m);
+                  }}
+                  onMouseEnter={() => setPickerIndex(i)}
+                  className={cn(
+                    "flex w-full items-center gap-2.5 px-3 py-1.5 text-left text-sm",
+                    i === pickerIndex ? "bg-surface" : "hover:bg-surface/60",
+                  )}
+                >
+                  <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-primary/15 text-[10px] font-semibold text-primary">
+                    {m.name.charAt(0).toUpperCase()}
+                  </span>
+                  <span className="min-w-0 flex-1 truncate">{m.name}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <div className="flex items-center gap-2 rounded-md border border-border/60 bg-surface px-3 py-2">
+        <AtSign className="h-4 w-4 shrink-0 text-muted-foreground" />
+        <Input
+          ref={inputRef}
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => {
+            if (pickerOpen) {
+              if (e.key === "ArrowDown") {
+                e.preventDefault();
+                setPickerIndex((i) => (i + 1) % pickerResults.length);
+                return;
+              }
+              if (e.key === "ArrowUp") {
+                e.preventDefault();
+                setPickerIndex(
+                  (i) => (i - 1 + pickerResults.length) % pickerResults.length,
+                );
+                return;
+              }
+              if (e.key === "Enter" || e.key === "Tab") {
+                e.preventDefault();
+                pickMember(pickerResults[pickerIndex]);
+                return;
+              }
+              if (e.key === "Escape") {
+                e.preventDefault();
+                setDraft((d) => d.replace(/(^|\s)@[^\s@]*$/, "$1"));
+                return;
+              }
+            }
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              send();
+            }
+          }}
+          placeholder="Write a comment... Use @ to mention"
+          className="h-9 border-0 bg-transparent px-0 focus-visible:ring-0"
+        />
+        <Button
+          size="icon"
+          className="h-9 w-9 shrink-0 rounded-md"
+          onClick={send}
+          disabled={!draft.trim()}
+        >
+          <Send className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
   );
 }
 
