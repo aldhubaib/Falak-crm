@@ -384,6 +384,16 @@ export function TaskDetailClient({
               </div>
             </div>
           )}
+          {/* Status bar — move the task Back / Next without going to the board */}
+          {!trashed && move && (
+            <StatusMoveBar
+              projectId={projectId}
+              taskId={taskId}
+              move={move}
+              items={items}
+            />
+          )}
+
           {/* Task type / title / priority — mirrors the New Task page */}
           <FormSection
             icon={<LayoutGrid className="size-4" />}
@@ -509,16 +519,6 @@ export function TaskDetailClient({
               </div>
             )}
           </FormSection>
-
-          {/* Status bar — move the task Back / Next without going to the board */}
-          {!trashed && move && (
-            <StatusMoveBar
-              projectId={projectId}
-              taskId={taskId}
-              move={move}
-              items={items}
-            />
-          )}
         </PageContainer>
       </main>
 
@@ -654,7 +654,7 @@ function StatusMoveBar({
 
   return (
     <>
-      <section className="rounded-2xl border border-border/60 bg-surface/40 p-4">
+      <section className="rounded-2xl border border-border/60 bg-card/60 p-5 backdrop-blur-sm">
         <div className="flex items-center gap-3">
           <span className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             Status:
