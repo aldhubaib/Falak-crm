@@ -8,6 +8,7 @@ export default async function TrashPage() {
     type: i.type,
     name: i.name,
     deletedAt: i.deletedAt.toISOString(),
+    deletedByName: i.deletedByName,
   }));
 
   return <TrashClient items={items} />;

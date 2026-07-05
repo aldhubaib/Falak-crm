@@ -18,7 +18,7 @@ async function collectEntries(
   out: ZipEntry[],
 ): Promise<void> {
   const assets = await db.projectAsset.findMany({
-    where: { folderId },
+    where: { folderId, deletedAt: null },
     select: { name: true, r2Key: true },
   });
   for (const asset of assets) {
@@ -26,7 +26,7 @@ async function collectEntries(
   }
 
   const children = await db.projectFolder.findMany({
-    where: { parentId: folderId },
+    where: { parentId: folderId, deletedAt: null },
     select: { id: true, name: true },
   });
   for (const child of children) {
@@ -42,7 +42,7 @@ export async function GET(
   const workspace = await requireWorkspace();
 
   const folder = await db.projectFolder.findFirst({
-    where: { id, project: { workspaceId: workspace.id } },
+    where: { id, project: { workspaceId: workspace.id }, deletedAt: null },
     select: { name: true, projectId: true },
   });
 

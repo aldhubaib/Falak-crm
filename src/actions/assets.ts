@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { getProjectAccess, requireProjectWork } from "@/lib/workspace";
 import { revalidatePath } from "next/cache";
-import { deleteObject } from "@/lib/storage";
+import { softDelete } from "@/lib/soft-delete";
 
 export async function getProjectAssets(projectId: string, folderId?: string | null) {
   const access = await getProjectAccess(projectId);
@@ -11,12 +11,19 @@ export async function getProjectAssets(projectId: string, folderId?: string | nu
 
   const [folders, assets] = await Promise.all([
     db.projectFolder.findMany({
-      where: { projectId, parentId: folderId || null },
+      where: { projectId, parentId: folderId || null, deletedAt: null },
       orderBy: { name: "asc" },
-      include: { _count: { select: { assets: true, children: true } } },
+      include: {
+        _count: {
+          select: {
+            assets: { where: { deletedAt: null } },
+            children: { where: { deletedAt: null } },
+          },
+        },
+      },
     }),
     db.projectAsset.findMany({
-      where: { projectId, folderId: folderId || null },
+      where: { projectId, folderId: folderId || null, deletedAt: null },
       orderBy: { createdAt: "desc" },
     }),
   ]);
@@ -29,7 +36,7 @@ export async function getAllProjectFolders(projectId: string) {
   if (!access.hasAccess || !access.project) throw new Error("Project not found");
 
   return db.projectFolder.findMany({
-    where: { projectId },
+    where: { projectId, deletedAt: null },
     orderBy: { name: "asc" },
     select: { id: true, name: true, parentId: true },
   });
@@ -67,28 +74,13 @@ export async function renameFolder(folderId: string, name: string) {
 export async function deleteFolder(folderId: string) {
   const existing = await db.projectFolder.findUnique({ where: { id: folderId }, select: { projectId: true } });
   if (!existing) throw new Error("Folder not found");
-  await requireProjectWork(existing.projectId);
+  const { member } = await requireProjectWork(existing.projectId);
 
-  const allAssets = await getNestedAssets(folderId);
-  if (allAssets.length > 0) {
-    await Promise.all(allAssets.map((a) => deleteObject(a.r2Key)));
-  }
+  // Goes to Settings → Trash; files stay in R2 until the trash is emptied.
+  await softDelete("folder", folderId, member.id);
 
-  const folder = await db.projectFolder.delete({ where: { id: folderId } });
-  revalidatePath(`/projects/${folder.projectId}`);
-}
-
-async function getNestedAssets(folderId: string): Promise<{ r2Key: string }[]> {
-  const assets = await db.projectAsset.findMany({
-    where: { folderId },
-    select: { r2Key: true },
-  });
-  const children = await db.projectFolder.findMany({
-    where: { parentId: folderId },
-    select: { id: true },
-  });
-  const nested = await Promise.all(children.map((c) => getNestedAssets(c.id)));
-  return [...assets, ...nested.flat()];
+  revalidatePath(`/projects/${existing.projectId}`);
+  revalidatePath("/settings/trash");
 }
 
 export async function createAsset(data: {
@@ -120,12 +112,13 @@ export async function createAsset(data: {
 export async function deleteAsset(assetId: string) {
   const asset = await db.projectAsset.findUnique({ where: { id: assetId } });
   if (!asset) throw new Error("Asset not found");
-  await requireProjectWork(asset.projectId);
+  const { member } = await requireProjectWork(asset.projectId);
 
-  await deleteObject(asset.r2Key);
-  await db.projectAsset.delete({ where: { id: assetId } });
+  // Goes to Settings → Trash; the file stays in R2 until the trash is emptied.
+  await softDelete("asset", assetId, member.id);
 
   revalidatePath(`/projects/${asset.projectId}`);
+  revalidatePath("/settings/trash");
 }
 
 export async function renameAsset(assetId: string, name: string) {

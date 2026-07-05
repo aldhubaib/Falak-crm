@@ -200,7 +200,8 @@ exports.Prisma.CompanyScalarFieldEnum = {
   customFields: 'customFields',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  deletedBy: 'deletedBy'
 };
 
 exports.Prisma.ContactScalarFieldEnum = {
@@ -220,7 +221,8 @@ exports.Prisma.ContactScalarFieldEnum = {
   customFields: 'customFields',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  deletedBy: 'deletedBy'
 };
 
 exports.Prisma.ContactCompanyScalarFieldEnum = {
@@ -287,7 +289,8 @@ exports.Prisma.DealScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   closedAt: 'closedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  deletedBy: 'deletedBy'
 };
 
 exports.Prisma.DealAccessScalarFieldEnum = {
@@ -337,7 +340,8 @@ exports.Prisma.ProjectScalarFieldEnum = {
   deadline: 'deadline',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  deletedBy: 'deletedBy'
 };
 
 exports.Prisma.ProjectMemberScalarFieldEnum = {
@@ -353,7 +357,9 @@ exports.Prisma.ProjectFolderScalarFieldEnum = {
   projectId: 'projectId',
   parentId: 'parentId',
   name: 'name',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt',
+  deletedBy: 'deletedBy'
 };
 
 exports.Prisma.ProjectAssetScalarFieldEnum = {
@@ -365,7 +371,9 @@ exports.Prisma.ProjectAssetScalarFieldEnum = {
   contentType: 'contentType',
   r2Key: 'r2Key',
   uploadedBy: 'uploadedBy',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt',
+  deletedBy: 'deletedBy'
 };
 
 exports.Prisma.ChecklistTemplateScalarFieldEnum = {
@@ -460,7 +468,8 @@ exports.Prisma.TaskScalarFieldEnum = {
   order: 'order',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  deletedBy: 'deletedBy'
 };
 
 exports.Prisma.TaskStatusChangeScalarFieldEnum = {

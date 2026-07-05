@@ -13905,6 +13905,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
+    deletedBy: string | null
   }
 
   export type CompanyMaxAggregateOutputType = {
@@ -13926,6 +13927,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
+    deletedBy: string | null
   }
 
   export type CompanyCountAggregateOutputType = {
@@ -13948,6 +13950,7 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     deletedAt: number
+    deletedBy: number
     _all: number
   }
 
@@ -13971,6 +13974,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    deletedBy?: true
   }
 
   export type CompanyMaxAggregateInputType = {
@@ -13992,6 +13996,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    deletedBy?: true
   }
 
   export type CompanyCountAggregateInputType = {
@@ -14014,6 +14019,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    deletedBy?: true
     _all?: true
   }
 
@@ -14109,6 +14115,7 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
+    deletedBy: string | null
     _count: CompanyCountAggregateOutputType | null
     _min: CompanyMinAggregateOutputType | null
     _max: CompanyMaxAggregateOutputType | null
@@ -14148,6 +14155,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     contacts?: boolean | Company$contactsArgs<ExtArgs>
     deals?: boolean | Company$dealsArgs<ExtArgs>
@@ -14175,6 +14183,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
@@ -14198,6 +14207,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
@@ -14221,9 +14231,10 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
   }
 
-  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "ownerId" | "ownerName" | "name" | "nameAr" | "industry" | "referral" | "phone" | "whatsappNumber" | "email" | "website" | "address" | "logo" | "notes" | "customFields" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["company"]>
+  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "ownerId" | "ownerName" | "name" | "nameAr" | "industry" | "referral" | "phone" | "whatsappNumber" | "email" | "website" | "address" | "logo" | "notes" | "customFields" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["company"]>
   export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     contacts?: boolean | Company$contactsArgs<ExtArgs>
@@ -14266,6 +14277,7 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
+      deletedBy: string | null
     }, ExtArgs["result"]["company"]>
     composites: {}
   }
@@ -14712,6 +14724,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Company", 'DateTime'>
     readonly updatedAt: FieldRef<"Company", 'DateTime'>
     readonly deletedAt: FieldRef<"Company", 'DateTime'>
+    readonly deletedBy: FieldRef<"Company", 'String'>
   }
     
 
@@ -15230,6 +15243,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
+    deletedBy: string | null
   }
 
   export type ContactMaxAggregateOutputType = {
@@ -15249,6 +15263,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
+    deletedBy: string | null
   }
 
   export type ContactCountAggregateOutputType = {
@@ -15269,6 +15284,7 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     deletedAt: number
+    deletedBy: number
     _all: number
   }
 
@@ -15290,6 +15306,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    deletedBy?: true
   }
 
   export type ContactMaxAggregateInputType = {
@@ -15309,6 +15326,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    deletedBy?: true
   }
 
   export type ContactCountAggregateInputType = {
@@ -15329,6 +15347,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    deletedBy?: true
     _all?: true
   }
 
@@ -15422,6 +15441,7 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
+    deletedBy: string | null
     _count: ContactCountAggregateOutputType | null
     _min: ContactMinAggregateOutputType | null
     _max: ContactMaxAggregateOutputType | null
@@ -15459,6 +15479,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     companies?: boolean | Contact$companiesArgs<ExtArgs>
     deals?: boolean | Contact$dealsArgs<ExtArgs>
@@ -15485,6 +15506,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["contact"]>
 
@@ -15506,6 +15528,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["contact"]>
 
@@ -15527,9 +15550,10 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
   }
 
-  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "ownerId" | "ownerName" | "firstName" | "middleName" | "lastName" | "nameAr" | "mobile" | "email" | "role" | "country" | "notes" | "customFields" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["contact"]>
+  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "ownerId" | "ownerName" | "firstName" | "middleName" | "lastName" | "nameAr" | "mobile" | "email" | "role" | "country" | "notes" | "customFields" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["contact"]>
   export type ContactInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     companies?: boolean | Contact$companiesArgs<ExtArgs>
@@ -15572,6 +15596,7 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
+      deletedBy: string | null
     }, ExtArgs["result"]["contact"]>
     composites: {}
   }
@@ -16017,6 +16042,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Contact", 'DateTime'>
     readonly updatedAt: FieldRef<"Contact", 'DateTime'>
     readonly deletedAt: FieldRef<"Contact", 'DateTime'>
+    readonly deletedBy: FieldRef<"Contact", 'String'>
   }
     
 
@@ -21172,6 +21198,7 @@ export namespace Prisma {
     updatedAt: Date | null
     closedAt: Date | null
     deletedAt: Date | null
+    deletedBy: string | null
   }
 
   export type DealMaxAggregateOutputType = {
@@ -21197,6 +21224,7 @@ export namespace Prisma {
     updatedAt: Date | null
     closedAt: Date | null
     deletedAt: Date | null
+    deletedBy: string | null
   }
 
   export type DealCountAggregateOutputType = {
@@ -21223,6 +21251,7 @@ export namespace Prisma {
     updatedAt: number
     closedAt: number
     deletedAt: number
+    deletedBy: number
     _all: number
   }
 
@@ -21264,6 +21293,7 @@ export namespace Prisma {
     updatedAt?: true
     closedAt?: true
     deletedAt?: true
+    deletedBy?: true
   }
 
   export type DealMaxAggregateInputType = {
@@ -21289,6 +21319,7 @@ export namespace Prisma {
     updatedAt?: true
     closedAt?: true
     deletedAt?: true
+    deletedBy?: true
   }
 
   export type DealCountAggregateInputType = {
@@ -21315,6 +21346,7 @@ export namespace Prisma {
     updatedAt?: true
     closedAt?: true
     deletedAt?: true
+    deletedBy?: true
     _all?: true
   }
 
@@ -21428,6 +21460,7 @@ export namespace Prisma {
     updatedAt: Date
     closedAt: Date | null
     deletedAt: Date | null
+    deletedBy: string | null
     _count: DealCountAggregateOutputType | null
     _avg: DealAvgAggregateOutputType | null
     _sum: DealSumAggregateOutputType | null
@@ -21473,6 +21506,7 @@ export namespace Prisma {
     updatedAt?: boolean
     closedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     pipeline?: boolean | PipelineDefaultArgs<ExtArgs>
     stage?: boolean | PipelineStageDefaultArgs<ExtArgs>
@@ -21508,6 +21542,7 @@ export namespace Prisma {
     updatedAt?: boolean
     closedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     pipeline?: boolean | PipelineDefaultArgs<ExtArgs>
     stage?: boolean | PipelineStageDefaultArgs<ExtArgs>
@@ -21539,6 +21574,7 @@ export namespace Prisma {
     updatedAt?: boolean
     closedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     pipeline?: boolean | PipelineDefaultArgs<ExtArgs>
     stage?: boolean | PipelineStageDefaultArgs<ExtArgs>
@@ -21570,9 +21606,10 @@ export namespace Prisma {
     updatedAt?: boolean
     closedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
   }
 
-  export type DealOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "pipelineId" | "stageId" | "companyId" | "contactId" | "ownerId" | "ownerName" | "title" | "value" | "currency" | "rateToBase" | "valueInBase" | "expectedCloseDate" | "discountType" | "discountValue" | "lostReason" | "notes" | "customFields" | "createdAt" | "updatedAt" | "closedAt" | "deletedAt", ExtArgs["result"]["deal"]>
+  export type DealOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "pipelineId" | "stageId" | "companyId" | "contactId" | "ownerId" | "ownerName" | "title" | "value" | "currency" | "rateToBase" | "valueInBase" | "expectedCloseDate" | "discountType" | "discountValue" | "lostReason" | "notes" | "customFields" | "createdAt" | "updatedAt" | "closedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["deal"]>
   export type DealInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     pipeline?: boolean | PipelineDefaultArgs<ExtArgs>
@@ -21635,6 +21672,7 @@ export namespace Prisma {
       updatedAt: Date
       closedAt: Date | null
       deletedAt: Date | null
+      deletedBy: string | null
     }, ExtArgs["result"]["deal"]>
     composites: {}
   }
@@ -22089,6 +22127,7 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"Deal", 'DateTime'>
     readonly closedAt: FieldRef<"Deal", 'DateTime'>
     readonly deletedAt: FieldRef<"Deal", 'DateTime'>
+    readonly deletedBy: FieldRef<"Deal", 'String'>
   }
     
 
@@ -26002,6 +26041,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
+    deletedBy: string | null
   }
 
   export type ProjectMaxAggregateOutputType = {
@@ -26023,6 +26063,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
+    deletedBy: string | null
   }
 
   export type ProjectCountAggregateOutputType = {
@@ -26044,6 +26085,7 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     deletedAt: number
+    deletedBy: number
     _all: number
   }
 
@@ -26067,6 +26109,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    deletedBy?: true
   }
 
   export type ProjectMaxAggregateInputType = {
@@ -26088,6 +26131,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    deletedBy?: true
   }
 
   export type ProjectCountAggregateInputType = {
@@ -26109,6 +26153,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    deletedBy?: true
     _all?: true
   }
 
@@ -26203,6 +26248,7 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
+    deletedBy: string | null
     _count: ProjectCountAggregateOutputType | null
     _min: ProjectMinAggregateOutputType | null
     _max: ProjectMaxAggregateOutputType | null
@@ -26241,6 +26287,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     deal?: boolean | Project$dealArgs<ExtArgs>
     company?: boolean | Project$companyArgs<ExtArgs>
@@ -26276,6 +26323,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     deal?: boolean | Project$dealArgs<ExtArgs>
     company?: boolean | Project$companyArgs<ExtArgs>
@@ -26301,6 +26349,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     deal?: boolean | Project$dealArgs<ExtArgs>
     company?: boolean | Project$companyArgs<ExtArgs>
@@ -26326,9 +26375,10 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "dealId" | "companyId" | "contactId" | "ownerId" | "ownerName" | "statusId" | "name" | "type" | "thumbnailId" | "description" | "requirePublishing" | "startDate" | "deadline" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["project"]>
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "dealId" | "companyId" | "contactId" | "ownerId" | "ownerName" | "statusId" | "name" | "type" | "thumbnailId" | "description" | "requirePublishing" | "startDate" | "deadline" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["project"]>
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     deal?: boolean | Project$dealArgs<ExtArgs>
@@ -26394,6 +26444,7 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
+      deletedBy: string | null
     }, ExtArgs["result"]["project"]>
     composites: {}
   }
@@ -26848,6 +26899,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Project", 'DateTime'>
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
     readonly deletedAt: FieldRef<"Project", 'DateTime'>
+    readonly deletedBy: FieldRef<"Project", 'String'>
   }
     
 
@@ -28654,6 +28706,8 @@ export namespace Prisma {
     parentId: string | null
     name: string | null
     createdAt: Date | null
+    deletedAt: Date | null
+    deletedBy: string | null
   }
 
   export type ProjectFolderMaxAggregateOutputType = {
@@ -28662,6 +28716,8 @@ export namespace Prisma {
     parentId: string | null
     name: string | null
     createdAt: Date | null
+    deletedAt: Date | null
+    deletedBy: string | null
   }
 
   export type ProjectFolderCountAggregateOutputType = {
@@ -28670,6 +28726,8 @@ export namespace Prisma {
     parentId: number
     name: number
     createdAt: number
+    deletedAt: number
+    deletedBy: number
     _all: number
   }
 
@@ -28680,6 +28738,8 @@ export namespace Prisma {
     parentId?: true
     name?: true
     createdAt?: true
+    deletedAt?: true
+    deletedBy?: true
   }
 
   export type ProjectFolderMaxAggregateInputType = {
@@ -28688,6 +28748,8 @@ export namespace Prisma {
     parentId?: true
     name?: true
     createdAt?: true
+    deletedAt?: true
+    deletedBy?: true
   }
 
   export type ProjectFolderCountAggregateInputType = {
@@ -28696,6 +28758,8 @@ export namespace Prisma {
     parentId?: true
     name?: true
     createdAt?: true
+    deletedAt?: true
+    deletedBy?: true
     _all?: true
   }
 
@@ -28777,6 +28841,8 @@ export namespace Prisma {
     parentId: string | null
     name: string
     createdAt: Date
+    deletedAt: Date | null
+    deletedBy: string | null
     _count: ProjectFolderCountAggregateOutputType | null
     _min: ProjectFolderMinAggregateOutputType | null
     _max: ProjectFolderMaxAggregateOutputType | null
@@ -28802,6 +28868,8 @@ export namespace Prisma {
     parentId?: boolean
     name?: boolean
     createdAt?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     parent?: boolean | ProjectFolder$parentArgs<ExtArgs>
     children?: boolean | ProjectFolder$childrenArgs<ExtArgs>
@@ -28815,6 +28883,8 @@ export namespace Prisma {
     parentId?: boolean
     name?: boolean
     createdAt?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     parent?: boolean | ProjectFolder$parentArgs<ExtArgs>
   }, ExtArgs["result"]["projectFolder"]>
@@ -28825,6 +28895,8 @@ export namespace Prisma {
     parentId?: boolean
     name?: boolean
     createdAt?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     parent?: boolean | ProjectFolder$parentArgs<ExtArgs>
   }, ExtArgs["result"]["projectFolder"]>
@@ -28835,9 +28907,11 @@ export namespace Prisma {
     parentId?: boolean
     name?: boolean
     createdAt?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
   }
 
-  export type ProjectFolderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "parentId" | "name" | "createdAt", ExtArgs["result"]["projectFolder"]>
+  export type ProjectFolderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "parentId" | "name" | "createdAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["projectFolder"]>
   export type ProjectFolderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     parent?: boolean | ProjectFolder$parentArgs<ExtArgs>
@@ -28868,6 +28942,8 @@ export namespace Prisma {
       parentId: string | null
       name: string
       createdAt: Date
+      deletedAt: Date | null
+      deletedBy: string | null
     }, ExtArgs["result"]["projectFolder"]>
     composites: {}
   }
@@ -29300,6 +29376,8 @@ export namespace Prisma {
     readonly parentId: FieldRef<"ProjectFolder", 'String'>
     readonly name: FieldRef<"ProjectFolder", 'String'>
     readonly createdAt: FieldRef<"ProjectFolder", 'DateTime'>
+    readonly deletedAt: FieldRef<"ProjectFolder", 'DateTime'>
+    readonly deletedBy: FieldRef<"ProjectFolder", 'String'>
   }
     
 
@@ -29816,6 +29894,8 @@ export namespace Prisma {
     r2Key: string | null
     uploadedBy: string | null
     createdAt: Date | null
+    deletedAt: Date | null
+    deletedBy: string | null
   }
 
   export type ProjectAssetMaxAggregateOutputType = {
@@ -29828,6 +29908,8 @@ export namespace Prisma {
     r2Key: string | null
     uploadedBy: string | null
     createdAt: Date | null
+    deletedAt: Date | null
+    deletedBy: string | null
   }
 
   export type ProjectAssetCountAggregateOutputType = {
@@ -29840,6 +29922,8 @@ export namespace Prisma {
     r2Key: number
     uploadedBy: number
     createdAt: number
+    deletedAt: number
+    deletedBy: number
     _all: number
   }
 
@@ -29862,6 +29946,8 @@ export namespace Prisma {
     r2Key?: true
     uploadedBy?: true
     createdAt?: true
+    deletedAt?: true
+    deletedBy?: true
   }
 
   export type ProjectAssetMaxAggregateInputType = {
@@ -29874,6 +29960,8 @@ export namespace Prisma {
     r2Key?: true
     uploadedBy?: true
     createdAt?: true
+    deletedAt?: true
+    deletedBy?: true
   }
 
   export type ProjectAssetCountAggregateInputType = {
@@ -29886,6 +29974,8 @@ export namespace Prisma {
     r2Key?: true
     uploadedBy?: true
     createdAt?: true
+    deletedAt?: true
+    deletedBy?: true
     _all?: true
   }
 
@@ -29985,6 +30075,8 @@ export namespace Prisma {
     r2Key: string
     uploadedBy: string | null
     createdAt: Date
+    deletedAt: Date | null
+    deletedBy: string | null
     _count: ProjectAssetCountAggregateOutputType | null
     _avg: ProjectAssetAvgAggregateOutputType | null
     _sum: ProjectAssetSumAggregateOutputType | null
@@ -30016,6 +30108,8 @@ export namespace Prisma {
     r2Key?: boolean
     uploadedBy?: boolean
     createdAt?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     folder?: boolean | ProjectAsset$folderArgs<ExtArgs>
   }, ExtArgs["result"]["projectAsset"]>
@@ -30030,6 +30124,8 @@ export namespace Prisma {
     r2Key?: boolean
     uploadedBy?: boolean
     createdAt?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     folder?: boolean | ProjectAsset$folderArgs<ExtArgs>
   }, ExtArgs["result"]["projectAsset"]>
@@ -30044,6 +30140,8 @@ export namespace Prisma {
     r2Key?: boolean
     uploadedBy?: boolean
     createdAt?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     folder?: boolean | ProjectAsset$folderArgs<ExtArgs>
   }, ExtArgs["result"]["projectAsset"]>
@@ -30058,9 +30156,11 @@ export namespace Prisma {
     r2Key?: boolean
     uploadedBy?: boolean
     createdAt?: boolean
+    deletedAt?: boolean
+    deletedBy?: boolean
   }
 
-  export type ProjectAssetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "folderId" | "name" | "fileSize" | "contentType" | "r2Key" | "uploadedBy" | "createdAt", ExtArgs["result"]["projectAsset"]>
+  export type ProjectAssetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "folderId" | "name" | "fileSize" | "contentType" | "r2Key" | "uploadedBy" | "createdAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["projectAsset"]>
   export type ProjectAssetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     folder?: boolean | ProjectAsset$folderArgs<ExtArgs>
@@ -30090,6 +30190,8 @@ export namespace Prisma {
       r2Key: string
       uploadedBy: string | null
       createdAt: Date
+      deletedAt: Date | null
+      deletedBy: string | null
     }, ExtArgs["result"]["projectAsset"]>
     composites: {}
   }
@@ -30524,6 +30626,8 @@ export namespace Prisma {
     readonly r2Key: FieldRef<"ProjectAsset", 'String'>
     readonly uploadedBy: FieldRef<"ProjectAsset", 'String'>
     readonly createdAt: FieldRef<"ProjectAsset", 'DateTime'>
+    readonly deletedAt: FieldRef<"ProjectAsset", 'DateTime'>
+    readonly deletedBy: FieldRef<"ProjectAsset", 'String'>
   }
     
 
@@ -37138,6 +37242,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
+    deletedBy: string | null
   }
 
   export type TaskMaxAggregateOutputType = {
@@ -37161,6 +37266,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
+    deletedBy: string | null
   }
 
   export type TaskCountAggregateOutputType = {
@@ -37186,6 +37292,7 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     deletedAt: number
+    deletedBy: number
     _all: number
   }
 
@@ -37229,6 +37336,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    deletedBy?: true
   }
 
   export type TaskMaxAggregateInputType = {
@@ -37252,6 +37360,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    deletedBy?: true
   }
 
   export type TaskCountAggregateInputType = {
@@ -37277,6 +37386,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    deletedBy?: true
     _all?: true
   }
 
@@ -37389,6 +37499,7 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
+    deletedBy: string | null
     _count: TaskCountAggregateOutputType | null
     _avg: TaskAvgAggregateOutputType | null
     _sum: TaskSumAggregateOutputType | null
@@ -37433,6 +37544,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
     status?: boolean | Task$statusArgs<ExtArgs>
@@ -37467,6 +37579,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
     status?: boolean | Task$statusArgs<ExtArgs>
@@ -37496,6 +37609,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
     status?: boolean | Task$statusArgs<ExtArgs>
@@ -37525,9 +37639,10 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    deletedBy?: boolean
   }
 
-  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "taskNumber" | "serviceId" | "statusId" | "assigneeId" | "title" | "description" | "billable" | "price" | "priority" | "estimateMin" | "dueDate" | "completedAt" | "assignmentHistory" | "stageTimings" | "stageEnteredAt" | "rejectionCount" | "order" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["task"]>
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "taskNumber" | "serviceId" | "statusId" | "assigneeId" | "title" | "description" | "billable" | "price" | "priority" | "estimateMin" | "dueDate" | "completedAt" | "assignmentHistory" | "stageTimings" | "stageEnteredAt" | "rejectionCount" | "order" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
@@ -37587,6 +37702,7 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
+      deletedBy: string | null
     }, ExtArgs["result"]["task"]>
     composites: {}
   }
@@ -38040,6 +38156,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Task", 'DateTime'>
     readonly updatedAt: FieldRef<"Task", 'DateTime'>
     readonly deletedAt: FieldRef<"Task", 'DateTime'>
+    readonly deletedBy: FieldRef<"Task", 'String'>
   }
     
 
@@ -62599,7 +62716,8 @@ export namespace Prisma {
     customFields: 'customFields',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    deletedAt: 'deletedAt'
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
   };
 
   export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
@@ -62622,7 +62740,8 @@ export namespace Prisma {
     customFields: 'customFields',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    deletedAt: 'deletedAt'
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
   };
 
   export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
@@ -62704,7 +62823,8 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     closedAt: 'closedAt',
-    deletedAt: 'deletedAt'
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
   };
 
   export type DealScalarFieldEnum = (typeof DealScalarFieldEnum)[keyof typeof DealScalarFieldEnum]
@@ -62766,7 +62886,8 @@ export namespace Prisma {
     deadline: 'deadline',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    deletedAt: 'deletedAt'
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
   };
 
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
@@ -62788,7 +62909,9 @@ export namespace Prisma {
     projectId: 'projectId',
     parentId: 'parentId',
     name: 'name',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
   };
 
   export type ProjectFolderScalarFieldEnum = (typeof ProjectFolderScalarFieldEnum)[keyof typeof ProjectFolderScalarFieldEnum]
@@ -62803,7 +62926,9 @@ export namespace Prisma {
     contentType: 'contentType',
     r2Key: 'r2Key',
     uploadedBy: 'uploadedBy',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
   };
 
   export type ProjectAssetScalarFieldEnum = (typeof ProjectAssetScalarFieldEnum)[keyof typeof ProjectAssetScalarFieldEnum]
@@ -62916,7 +63041,8 @@ export namespace Prisma {
     order: 'order',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    deletedAt: 'deletedAt'
+    deletedAt: 'deletedAt',
+    deletedBy: 'deletedBy'
   };
 
   export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
@@ -64033,6 +64159,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Company"> | Date | string
     updatedAt?: DateTimeFilter<"Company"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Company"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Company"> | string | null
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     contacts?: ContactCompanyListRelationFilter
     deals?: DealListRelationFilter
@@ -64059,6 +64186,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
     contacts?: ContactCompanyOrderByRelationAggregateInput
     deals?: DealOrderByRelationAggregateInput
@@ -64088,6 +64216,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Company"> | Date | string
     updatedAt?: DateTimeFilter<"Company"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Company"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Company"> | string | null
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     contacts?: ContactCompanyListRelationFilter
     deals?: DealListRelationFilter
@@ -64114,6 +64243,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
     _count?: CompanyCountOrderByAggregateInput
     _max?: CompanyMaxOrderByAggregateInput
     _min?: CompanyMinOrderByAggregateInput
@@ -64142,6 +64272,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Company"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"Company"> | string | null
   }
 
   export type ContactWhereInput = {
@@ -64165,6 +64296,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Contact"> | Date | string
     updatedAt?: DateTimeFilter<"Contact"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Contact"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Contact"> | string | null
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     companies?: ContactCompanyListRelationFilter
     deals?: DealListRelationFilter
@@ -64190,6 +64322,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
     companies?: ContactCompanyOrderByRelationAggregateInput
     deals?: DealOrderByRelationAggregateInput
@@ -64219,6 +64352,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Contact"> | Date | string
     updatedAt?: DateTimeFilter<"Contact"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Contact"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Contact"> | string | null
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     companies?: ContactCompanyListRelationFilter
     deals?: DealListRelationFilter
@@ -64244,6 +64378,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
     _count?: ContactCountOrderByAggregateInput
     _max?: ContactMaxOrderByAggregateInput
     _min?: ContactMinOrderByAggregateInput
@@ -64270,6 +64405,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Contact"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Contact"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Contact"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"Contact"> | string | null
   }
 
   export type ContactCompanyWhereInput = {
@@ -64588,6 +64724,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Deal"> | Date | string
     closedAt?: DateTimeNullableFilter<"Deal"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Deal"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Deal"> | string | null
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     pipeline?: XOR<PipelineScalarRelationFilter, PipelineWhereInput>
     stage?: XOR<PipelineStageScalarRelationFilter, PipelineStageWhereInput>
@@ -64622,6 +64759,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     closedAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
     pipeline?: PipelineOrderByWithRelationInput
     stage?: PipelineStageOrderByWithRelationInput
@@ -64659,6 +64797,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Deal"> | Date | string
     closedAt?: DateTimeNullableFilter<"Deal"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Deal"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Deal"> | string | null
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     pipeline?: XOR<PipelineScalarRelationFilter, PipelineWhereInput>
     stage?: XOR<PipelineStageScalarRelationFilter, PipelineStageWhereInput>
@@ -64693,6 +64832,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     closedAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
     _count?: DealCountOrderByAggregateInput
     _avg?: DealAvgOrderByAggregateInput
     _max?: DealMaxOrderByAggregateInput
@@ -64727,6 +64867,7 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Deal"> | Date | string
     closedAt?: DateTimeNullableWithAggregatesFilter<"Deal"> | Date | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Deal"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"Deal"> | string | null
   }
 
   export type DealAccessWhereInput = {
@@ -64953,6 +65094,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Project"> | string | null
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     deal?: XOR<DealNullableScalarRelationFilter, DealWhereInput> | null
     company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
@@ -64987,6 +65129,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
     deal?: DealOrderByWithRelationInput
     company?: CompanyOrderByWithRelationInput
@@ -65024,6 +65167,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Project"> | string | null
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     deal?: XOR<DealNullableScalarRelationFilter, DealWhereInput> | null
     company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
@@ -65058,6 +65202,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
     _count?: ProjectCountOrderByAggregateInput
     _max?: ProjectMaxOrderByAggregateInput
     _min?: ProjectMinOrderByAggregateInput
@@ -65085,6 +65230,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"Project"> | string | null
   }
 
   export type ProjectMemberWhereInput = {
@@ -65158,6 +65304,8 @@ export namespace Prisma {
     parentId?: StringNullableFilter<"ProjectFolder"> | string | null
     name?: StringFilter<"ProjectFolder"> | string
     createdAt?: DateTimeFilter<"ProjectFolder"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"ProjectFolder"> | Date | string | null
+    deletedBy?: StringNullableFilter<"ProjectFolder"> | string | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     parent?: XOR<ProjectFolderNullableScalarRelationFilter, ProjectFolderWhereInput> | null
     children?: ProjectFolderListRelationFilter
@@ -65170,6 +65318,8 @@ export namespace Prisma {
     parentId?: SortOrderInput | SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
     project?: ProjectOrderByWithRelationInput
     parent?: ProjectFolderOrderByWithRelationInput
     children?: ProjectFolderOrderByRelationAggregateInput
@@ -65185,6 +65335,8 @@ export namespace Prisma {
     parentId?: StringNullableFilter<"ProjectFolder"> | string | null
     name?: StringFilter<"ProjectFolder"> | string
     createdAt?: DateTimeFilter<"ProjectFolder"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"ProjectFolder"> | Date | string | null
+    deletedBy?: StringNullableFilter<"ProjectFolder"> | string | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     parent?: XOR<ProjectFolderNullableScalarRelationFilter, ProjectFolderWhereInput> | null
     children?: ProjectFolderListRelationFilter
@@ -65197,6 +65349,8 @@ export namespace Prisma {
     parentId?: SortOrderInput | SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
     _count?: ProjectFolderCountOrderByAggregateInput
     _max?: ProjectFolderMaxOrderByAggregateInput
     _min?: ProjectFolderMinOrderByAggregateInput
@@ -65211,6 +65365,8 @@ export namespace Prisma {
     parentId?: StringNullableWithAggregatesFilter<"ProjectFolder"> | string | null
     name?: StringWithAggregatesFilter<"ProjectFolder"> | string
     createdAt?: DateTimeWithAggregatesFilter<"ProjectFolder"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"ProjectFolder"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"ProjectFolder"> | string | null
   }
 
   export type ProjectAssetWhereInput = {
@@ -65226,6 +65382,8 @@ export namespace Prisma {
     r2Key?: StringFilter<"ProjectAsset"> | string
     uploadedBy?: StringNullableFilter<"ProjectAsset"> | string | null
     createdAt?: DateTimeFilter<"ProjectAsset"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"ProjectAsset"> | Date | string | null
+    deletedBy?: StringNullableFilter<"ProjectAsset"> | string | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     folder?: XOR<ProjectFolderNullableScalarRelationFilter, ProjectFolderWhereInput> | null
   }
@@ -65240,6 +65398,8 @@ export namespace Prisma {
     r2Key?: SortOrder
     uploadedBy?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
     project?: ProjectOrderByWithRelationInput
     folder?: ProjectFolderOrderByWithRelationInput
   }
@@ -65257,6 +65417,8 @@ export namespace Prisma {
     r2Key?: StringFilter<"ProjectAsset"> | string
     uploadedBy?: StringNullableFilter<"ProjectAsset"> | string | null
     createdAt?: DateTimeFilter<"ProjectAsset"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"ProjectAsset"> | Date | string | null
+    deletedBy?: StringNullableFilter<"ProjectAsset"> | string | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     folder?: XOR<ProjectFolderNullableScalarRelationFilter, ProjectFolderWhereInput> | null
   }, "id">
@@ -65271,6 +65433,8 @@ export namespace Prisma {
     r2Key?: SortOrder
     uploadedBy?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
     _count?: ProjectAssetCountOrderByAggregateInput
     _avg?: ProjectAssetAvgOrderByAggregateInput
     _max?: ProjectAssetMaxOrderByAggregateInput
@@ -65291,6 +65455,8 @@ export namespace Prisma {
     r2Key?: StringWithAggregatesFilter<"ProjectAsset"> | string
     uploadedBy?: StringNullableWithAggregatesFilter<"ProjectAsset"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ProjectAsset"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"ProjectAsset"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"ProjectAsset"> | string | null
   }
 
   export type ChecklistTemplateWhereInput = {
@@ -65788,6 +65954,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Task"> | string | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     service?: XOR<ServiceNullableScalarRelationFilter, ServiceWhereInput> | null
     status?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
@@ -65821,6 +65988,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
     project?: ProjectOrderByWithRelationInput
     service?: ServiceOrderByWithRelationInput
     status?: TaskStatusOrderByWithRelationInput
@@ -65857,6 +66025,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Task"> | string | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     service?: XOR<ServiceNullableScalarRelationFilter, ServiceWhereInput> | null
     status?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
@@ -65890,6 +66059,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedBy?: SortOrderInput | SortOrder
     _count?: TaskCountOrderByAggregateInput
     _avg?: TaskAvgOrderByAggregateInput
     _max?: TaskMaxOrderByAggregateInput
@@ -65923,6 +66093,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
+    deletedBy?: StringNullableWithAggregatesFilter<"Task"> | string | null
   }
 
   export type TaskStatusChangeWhereInput = {
@@ -68115,6 +68286,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
     contacts?: ContactCompanyCreateNestedManyWithoutCompanyInput
     deals?: DealCreateNestedManyWithoutCompanyInput
@@ -68141,6 +68313,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     contacts?: ContactCompanyUncheckedCreateNestedManyWithoutCompanyInput
     deals?: DealUncheckedCreateNestedManyWithoutCompanyInput
     projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
@@ -68165,6 +68338,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
     contacts?: ContactCompanyUpdateManyWithoutCompanyNestedInput
     deals?: DealUpdateManyWithoutCompanyNestedInput
@@ -68191,6 +68365,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: ContactCompanyUncheckedUpdateManyWithoutCompanyNestedInput
     deals?: DealUncheckedUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
@@ -68216,6 +68391,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type CompanyUpdateManyMutationInput = {
@@ -68237,6 +68413,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CompanyUncheckedUpdateManyInput = {
@@ -68259,6 +68436,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ContactCreateInput = {
@@ -68278,6 +68456,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutContactsInput
     companies?: ContactCompanyCreateNestedManyWithoutContactInput
     deals?: DealCreateNestedManyWithoutContactInput
@@ -68303,6 +68482,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     companies?: ContactCompanyUncheckedCreateNestedManyWithoutContactInput
     deals?: DealUncheckedCreateNestedManyWithoutContactInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutContactInput
@@ -68326,6 +68506,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutContactsNestedInput
     companies?: ContactCompanyUpdateManyWithoutContactNestedInput
     deals?: DealUpdateManyWithoutContactNestedInput
@@ -68351,6 +68532,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     companies?: ContactCompanyUncheckedUpdateManyWithoutContactNestedInput
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutContactNestedInput
@@ -68375,6 +68557,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ContactUpdateManyMutationInput = {
@@ -68394,6 +68577,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ContactUncheckedUpdateManyInput = {
@@ -68414,6 +68598,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ContactCompanyCreateInput = {
@@ -68737,6 +68922,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutDealsInput
     pipeline: PipelineCreateNestedOneWithoutDealsInput
     stage: PipelineStageCreateNestedOneWithoutDealsInput
@@ -68771,6 +68957,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
@@ -68795,6 +68982,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutDealsNestedInput
     pipeline?: PipelineUpdateOneRequiredWithoutDealsNestedInput
     stage?: PipelineStageUpdateOneRequiredWithoutDealsNestedInput
@@ -68829,6 +69017,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
@@ -68858,6 +69047,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type DealUpdateManyMutationInput = {
@@ -68879,6 +69069,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DealUncheckedUpdateManyInput = {
@@ -68905,6 +69096,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DealAccessCreateInput = {
@@ -69125,6 +69317,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
     deal?: DealCreateNestedOneWithoutProjectInput
     company?: CompanyCreateNestedOneWithoutProjectsInput
@@ -69159,6 +69352,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
     collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
@@ -69185,6 +69379,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
     deal?: DealUpdateOneWithoutProjectNestedInput
     company?: CompanyUpdateOneWithoutProjectsNestedInput
@@ -69219,6 +69414,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
     collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
@@ -69249,6 +69445,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ProjectUpdateManyMutationInput = {
@@ -69266,6 +69463,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectUncheckedUpdateManyInput = {
@@ -69287,6 +69485,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectMemberCreateInput = {
@@ -69346,6 +69545,8 @@ export namespace Prisma {
     id?: string
     name: string
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutFoldersInput
     parent?: ProjectFolderCreateNestedOneWithoutChildrenInput
     children?: ProjectFolderCreateNestedManyWithoutParentInput
@@ -69358,6 +69559,8 @@ export namespace Prisma {
     parentId?: string | null
     name: string
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
     children?: ProjectFolderUncheckedCreateNestedManyWithoutParentInput
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutFolderInput
   }
@@ -69366,6 +69569,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutFoldersNestedInput
     parent?: ProjectFolderUpdateOneWithoutChildrenNestedInput
     children?: ProjectFolderUpdateManyWithoutParentNestedInput
@@ -69378,6 +69583,8 @@ export namespace Prisma {
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     children?: ProjectFolderUncheckedUpdateManyWithoutParentNestedInput
     assets?: ProjectAssetUncheckedUpdateManyWithoutFolderNestedInput
   }
@@ -69388,12 +69595,16 @@ export namespace Prisma {
     parentId?: string | null
     name: string
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ProjectFolderUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectFolderUncheckedUpdateManyInput = {
@@ -69402,6 +69613,8 @@ export namespace Prisma {
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectAssetCreateInput = {
@@ -69412,6 +69625,8 @@ export namespace Prisma {
     r2Key: string
     uploadedBy?: string | null
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutAssetsInput
     folder?: ProjectFolderCreateNestedOneWithoutAssetsInput
   }
@@ -69426,6 +69641,8 @@ export namespace Prisma {
     r2Key: string
     uploadedBy?: string | null
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ProjectAssetUpdateInput = {
@@ -69436,6 +69653,8 @@ export namespace Prisma {
     r2Key?: StringFieldUpdateOperationsInput | string
     uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutAssetsNestedInput
     folder?: ProjectFolderUpdateOneWithoutAssetsNestedInput
   }
@@ -69450,6 +69669,8 @@ export namespace Prisma {
     r2Key?: StringFieldUpdateOperationsInput | string
     uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectAssetCreateManyInput = {
@@ -69462,6 +69683,8 @@ export namespace Prisma {
     r2Key: string
     uploadedBy?: string | null
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ProjectAssetUpdateManyMutationInput = {
@@ -69472,6 +69695,8 @@ export namespace Prisma {
     r2Key?: StringFieldUpdateOperationsInput | string
     uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectAssetUncheckedUpdateManyInput = {
@@ -69484,6 +69709,8 @@ export namespace Prisma {
     r2Key?: StringFieldUpdateOperationsInput | string
     uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ChecklistTemplateCreateInput = {
@@ -70013,6 +70240,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
@@ -70046,6 +70274,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
@@ -70071,6 +70300,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
@@ -70104,6 +70334,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
@@ -70133,6 +70364,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type TaskUpdateManyMutationInput = {
@@ -70154,6 +70386,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TaskUncheckedUpdateManyInput = {
@@ -70179,6 +70412,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TaskStatusChangeCreateInput = {
@@ -72710,6 +72944,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type CompanyMaxOrderByAggregateInput = {
@@ -72731,6 +72966,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type CompanyMinOrderByAggregateInput = {
@@ -72752,6 +72988,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
   export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -72827,6 +73064,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type ContactMaxOrderByAggregateInput = {
@@ -72846,6 +73084,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type ContactMinOrderByAggregateInput = {
@@ -72865,6 +73104,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type ContactScalarRelationFilter = {
@@ -73177,6 +73417,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     closedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type DealAvgOrderByAggregateInput = {
@@ -73209,6 +73450,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     closedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type DealMinOrderByAggregateInput = {
@@ -73234,6 +73476,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     closedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type DealSumOrderByAggregateInput = {
@@ -73451,6 +73694,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type ProjectMaxOrderByAggregateInput = {
@@ -73472,6 +73716,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type ProjectMinOrderByAggregateInput = {
@@ -73493,6 +73738,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type WorkspaceMemberScalarRelationFilter = {
@@ -73540,6 +73786,8 @@ export namespace Prisma {
     parentId?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type ProjectFolderMaxOrderByAggregateInput = {
@@ -73548,6 +73796,8 @@ export namespace Prisma {
     parentId?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type ProjectFolderMinOrderByAggregateInput = {
@@ -73556,6 +73806,8 @@ export namespace Prisma {
     parentId?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type ProjectAssetCountOrderByAggregateInput = {
@@ -73568,6 +73820,8 @@ export namespace Prisma {
     r2Key?: SortOrder
     uploadedBy?: SortOrder
     createdAt?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type ProjectAssetAvgOrderByAggregateInput = {
@@ -73584,6 +73838,8 @@ export namespace Prisma {
     r2Key?: SortOrder
     uploadedBy?: SortOrder
     createdAt?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type ProjectAssetMinOrderByAggregateInput = {
@@ -73596,6 +73852,8 @@ export namespace Prisma {
     r2Key?: SortOrder
     uploadedBy?: SortOrder
     createdAt?: SortOrder
+    deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type ProjectAssetSumOrderByAggregateInput = {
@@ -73935,6 +74193,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type TaskAvgOrderByAggregateInput = {
@@ -73967,6 +74226,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type TaskMinOrderByAggregateInput = {
@@ -73990,6 +74250,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type TaskSumOrderByAggregateInput = {
@@ -80072,6 +80333,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     contacts?: ContactCompanyCreateNestedManyWithoutCompanyInput
     deals?: DealCreateNestedManyWithoutCompanyInput
     projects?: ProjectCreateNestedManyWithoutCompanyInput
@@ -80096,6 +80358,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     contacts?: ContactCompanyUncheckedCreateNestedManyWithoutCompanyInput
     deals?: DealUncheckedCreateNestedManyWithoutCompanyInput
     projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
@@ -80128,6 +80391,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     companies?: ContactCompanyCreateNestedManyWithoutContactInput
     deals?: DealCreateNestedManyWithoutContactInput
     invoices?: InvoiceCreateNestedManyWithoutContactInput
@@ -80151,6 +80415,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     companies?: ContactCompanyUncheckedCreateNestedManyWithoutContactInput
     deals?: DealUncheckedCreateNestedManyWithoutContactInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutContactInput
@@ -80226,6 +80491,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     pipeline: PipelineCreateNestedOneWithoutDealsInput
     stage: PipelineStageCreateNestedOneWithoutDealsInput
     company?: CompanyCreateNestedOneWithoutDealsInput
@@ -80258,6 +80524,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
@@ -80288,6 +80555,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     deal?: DealCreateNestedOneWithoutProjectInput
     company?: CompanyCreateNestedOneWithoutProjectsInput
     status?: ProjectStatusCreateNestedOneWithoutProjectsInput
@@ -80320,6 +80588,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
     collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
@@ -80966,6 +81235,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Company"> | Date | string
     updatedAt?: DateTimeFilter<"Company"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Company"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Company"> | string | null
   }
 
   export type ContactUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -81005,6 +81275,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Contact"> | Date | string
     updatedAt?: DateTimeFilter<"Contact"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Contact"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Contact"> | string | null
   }
 
   export type ServiceUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -81083,6 +81354,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Deal"> | Date | string
     closedAt?: DateTimeNullableFilter<"Deal"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Deal"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Deal"> | string | null
   }
 
   export type ProjectUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -81123,6 +81395,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Project"> | string | null
   }
 
   export type InvoiceUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -81968,6 +82241,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
@@ -81999,6 +82273,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
@@ -82419,6 +82694,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
+    deletedBy?: StringNullableFilter<"Task"> | string | null
   }
 
   export type MessageUpsertWithWhereUniqueWithoutAuthorInput = {
@@ -82936,6 +83212,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
     deal?: DealCreateNestedOneWithoutProjectInput
     company?: CompanyCreateNestedOneWithoutProjectsInput
@@ -82969,6 +83246,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
     projectTemplates?: ProjectTemplateUncheckedCreateNestedManyWithoutProjectInput
@@ -83010,6 +83288,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
     deal?: DealUpdateOneWithoutProjectNestedInput
     company?: CompanyUpdateOneWithoutProjectsNestedInput
@@ -83043,6 +83322,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
     projectTemplates?: ProjectTemplateUncheckedUpdateManyWithoutProjectNestedInput
@@ -83169,6 +83449,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutDealsInput
     pipeline: PipelineCreateNestedOneWithoutDealsInput
     stage: PipelineStageCreateNestedOneWithoutDealsInput
@@ -83201,6 +83482,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
@@ -83231,6 +83513,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
     deal?: DealCreateNestedOneWithoutProjectInput
     status?: ProjectStatusCreateNestedOneWithoutProjectsInput
@@ -83263,6 +83546,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
     collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
@@ -83537,6 +83821,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutDealsInput
     pipeline: PipelineCreateNestedOneWithoutDealsInput
     stage: PipelineStageCreateNestedOneWithoutDealsInput
@@ -83569,6 +83854,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
@@ -83858,6 +84144,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutContactsInput
     deals?: DealCreateNestedManyWithoutContactInput
     invoices?: InvoiceCreateNestedManyWithoutContactInput
@@ -83882,6 +84169,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     deals?: DealUncheckedCreateNestedManyWithoutContactInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutContactInput
     whatsappMessages?: WhatsAppMessageUncheckedCreateNestedManyWithoutContactInput
@@ -83911,6 +84199,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
     deals?: DealCreateNestedManyWithoutCompanyInput
     projects?: ProjectCreateNestedManyWithoutCompanyInput
@@ -83936,6 +84225,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     deals?: DealUncheckedCreateNestedManyWithoutCompanyInput
     projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
   }
@@ -83973,6 +84263,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutContactsNestedInput
     deals?: DealUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUpdateManyWithoutContactNestedInput
@@ -83997,6 +84288,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutContactNestedInput
     whatsappMessages?: WhatsAppMessageUncheckedUpdateManyWithoutContactNestedInput
@@ -84032,6 +84324,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
     deals?: DealUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUpdateManyWithoutCompanyNestedInput
@@ -84057,6 +84350,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deals?: DealUncheckedUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
   }
@@ -84177,6 +84471,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
@@ -84208,6 +84503,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
@@ -84465,6 +84761,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutDealsInput
     stage: PipelineStageCreateNestedOneWithoutDealsInput
     company?: CompanyCreateNestedOneWithoutDealsInput
@@ -84497,6 +84794,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
@@ -84676,6 +84974,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutDealsInput
     pipeline: PipelineCreateNestedOneWithoutDealsInput
     company?: CompanyCreateNestedOneWithoutDealsInput
@@ -84708,6 +85007,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
@@ -84906,6 +85206,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
     contacts?: ContactCompanyCreateNestedManyWithoutCompanyInput
     projects?: ProjectCreateNestedManyWithoutCompanyInput
@@ -84931,6 +85232,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     contacts?: ContactCompanyUncheckedCreateNestedManyWithoutCompanyInput
     projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
   }
@@ -84957,6 +85259,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutContactsInput
     companies?: ContactCompanyCreateNestedManyWithoutContactInput
     invoices?: InvoiceCreateNestedManyWithoutContactInput
@@ -84981,6 +85284,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     companies?: ContactCompanyUncheckedCreateNestedManyWithoutContactInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutContactInput
     whatsappMessages?: WhatsAppMessageUncheckedCreateNestedManyWithoutContactInput
@@ -85032,6 +85336,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
     company?: CompanyCreateNestedOneWithoutProjectsInput
     status?: ProjectStatusCreateNestedOneWithoutProjectsInput
@@ -85064,6 +85369,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
     collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
@@ -85277,6 +85583,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
     contacts?: ContactCompanyUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUpdateManyWithoutCompanyNestedInput
@@ -85302,6 +85609,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: ContactCompanyUncheckedUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
   }
@@ -85334,6 +85642,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutContactsNestedInput
     companies?: ContactCompanyUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUpdateManyWithoutContactNestedInput
@@ -85358,6 +85667,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     companies?: ContactCompanyUncheckedUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutContactNestedInput
     whatsappMessages?: WhatsAppMessageUncheckedUpdateManyWithoutContactNestedInput
@@ -85405,6 +85715,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
     company?: CompanyUpdateOneWithoutProjectsNestedInput
     status?: ProjectStatusUpdateOneWithoutProjectsNestedInput
@@ -85437,6 +85748,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
     collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
@@ -85497,6 +85809,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutDealsInput
     pipeline: PipelineCreateNestedOneWithoutDealsInput
     stage: PipelineStageCreateNestedOneWithoutDealsInput
@@ -85530,6 +85843,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
   }
@@ -85569,6 +85883,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutDealsNestedInput
     pipeline?: PipelineUpdateOneRequiredWithoutDealsNestedInput
     stage?: PipelineStageUpdateOneRequiredWithoutDealsNestedInput
@@ -85602,6 +85917,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
   }
@@ -85625,6 +85941,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutDealsInput
     pipeline: PipelineCreateNestedOneWithoutDealsInput
     stage: PipelineStageCreateNestedOneWithoutDealsInput
@@ -85658,6 +85975,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
   }
@@ -85732,6 +86050,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutDealsNestedInput
     pipeline?: PipelineUpdateOneRequiredWithoutDealsNestedInput
     stage?: PipelineStageUpdateOneRequiredWithoutDealsNestedInput
@@ -85765,6 +86084,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
   }
@@ -85896,6 +86216,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
     deal?: DealCreateNestedOneWithoutProjectInput
     company?: CompanyCreateNestedOneWithoutProjectsInput
@@ -85928,6 +86249,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
     collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
@@ -86132,6 +86454,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutDealsInput
     pipeline: PipelineCreateNestedOneWithoutDealsInput
     stage: PipelineStageCreateNestedOneWithoutDealsInput
@@ -86165,6 +86488,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
   }
@@ -86193,6 +86517,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
     contacts?: ContactCompanyCreateNestedManyWithoutCompanyInput
     deals?: DealCreateNestedManyWithoutCompanyInput
@@ -86218,6 +86543,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     contacts?: ContactCompanyUncheckedCreateNestedManyWithoutCompanyInput
     deals?: DealUncheckedCreateNestedManyWithoutCompanyInput
   }
@@ -86269,6 +86595,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
@@ -86300,6 +86627,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
@@ -86426,6 +86754,8 @@ export namespace Prisma {
     id?: string
     name: string
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
     parent?: ProjectFolderCreateNestedOneWithoutChildrenInput
     children?: ProjectFolderCreateNestedManyWithoutParentInput
     assets?: ProjectAssetCreateNestedManyWithoutFolderInput
@@ -86436,6 +86766,8 @@ export namespace Prisma {
     parentId?: string | null
     name: string
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
     children?: ProjectFolderUncheckedCreateNestedManyWithoutParentInput
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutFolderInput
   }
@@ -86458,6 +86790,8 @@ export namespace Prisma {
     r2Key: string
     uploadedBy?: string | null
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
     folder?: ProjectFolderCreateNestedOneWithoutAssetsInput
   }
 
@@ -86470,6 +86804,8 @@ export namespace Prisma {
     r2Key: string
     uploadedBy?: string | null
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ProjectAssetCreateOrConnectWithoutProjectInput = {
@@ -86687,6 +87023,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutDealsNestedInput
     pipeline?: PipelineUpdateOneRequiredWithoutDealsNestedInput
     stage?: PipelineStageUpdateOneRequiredWithoutDealsNestedInput
@@ -86720,6 +87057,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
   }
@@ -86754,6 +87092,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
     contacts?: ContactCompanyUpdateManyWithoutCompanyNestedInput
     deals?: DealUpdateManyWithoutCompanyNestedInput
@@ -86779,6 +87118,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: ContactCompanyUncheckedUpdateManyWithoutCompanyNestedInput
     deals?: DealUncheckedUpdateManyWithoutCompanyNestedInput
   }
@@ -86922,6 +87262,8 @@ export namespace Prisma {
     parentId?: StringNullableFilter<"ProjectFolder"> | string | null
     name?: StringFilter<"ProjectFolder"> | string
     createdAt?: DateTimeFilter<"ProjectFolder"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"ProjectFolder"> | Date | string | null
+    deletedBy?: StringNullableFilter<"ProjectFolder"> | string | null
   }
 
   export type ProjectAssetUpsertWithWhereUniqueWithoutProjectInput = {
@@ -86953,6 +87295,8 @@ export namespace Prisma {
     r2Key?: StringFilter<"ProjectAsset"> | string
     uploadedBy?: StringNullableFilter<"ProjectAsset"> | string | null
     createdAt?: DateTimeFilter<"ProjectAsset"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"ProjectAsset"> | Date | string | null
+    deletedBy?: StringNullableFilter<"ProjectAsset"> | string | null
   }
 
   export type PublishItemUpsertWithWhereUniqueWithoutProjectInput = {
@@ -87018,6 +87362,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
     deal?: DealCreateNestedOneWithoutProjectInput
     company?: CompanyCreateNestedOneWithoutProjectsInput
@@ -87051,6 +87396,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
     collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
@@ -87162,6 +87508,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
     deal?: DealUpdateOneWithoutProjectNestedInput
     company?: CompanyUpdateOneWithoutProjectsNestedInput
@@ -87195,6 +87542,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
     collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
@@ -87302,6 +87650,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
     deal?: DealCreateNestedOneWithoutProjectInput
     company?: CompanyCreateNestedOneWithoutProjectsInput
@@ -87335,6 +87684,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
     collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
@@ -87354,6 +87704,8 @@ export namespace Prisma {
     id?: string
     name: string
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutFoldersInput
     parent?: ProjectFolderCreateNestedOneWithoutChildrenInput
     assets?: ProjectAssetCreateNestedManyWithoutFolderInput
@@ -87365,6 +87717,8 @@ export namespace Prisma {
     parentId?: string | null
     name: string
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutFolderInput
   }
 
@@ -87377,6 +87731,8 @@ export namespace Prisma {
     id?: string
     name: string
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutFoldersInput
     children?: ProjectFolderCreateNestedManyWithoutParentInput
     assets?: ProjectAssetCreateNestedManyWithoutFolderInput
@@ -87387,6 +87743,8 @@ export namespace Prisma {
     projectId: string
     name: string
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
     children?: ProjectFolderUncheckedCreateNestedManyWithoutParentInput
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutFolderInput
   }
@@ -87409,6 +87767,8 @@ export namespace Prisma {
     r2Key: string
     uploadedBy?: string | null
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutAssetsInput
   }
 
@@ -87421,6 +87781,8 @@ export namespace Prisma {
     r2Key: string
     uploadedBy?: string | null
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ProjectAssetCreateOrConnectWithoutFolderInput = {
@@ -87459,6 +87821,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
     deal?: DealUpdateOneWithoutProjectNestedInput
     company?: CompanyUpdateOneWithoutProjectsNestedInput
@@ -87492,6 +87855,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
     collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
@@ -87517,6 +87881,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutFoldersNestedInput
     parent?: ProjectFolderUpdateOneWithoutChildrenNestedInput
     assets?: ProjectAssetUpdateManyWithoutFolderNestedInput
@@ -87528,6 +87894,8 @@ export namespace Prisma {
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     assets?: ProjectAssetUncheckedUpdateManyWithoutFolderNestedInput
   }
 
@@ -87578,6 +87946,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
     deal?: DealCreateNestedOneWithoutProjectInput
     company?: CompanyCreateNestedOneWithoutProjectsInput
@@ -87611,6 +87980,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
     collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
@@ -87630,6 +88000,8 @@ export namespace Prisma {
     id?: string
     name: string
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutFoldersInput
     parent?: ProjectFolderCreateNestedOneWithoutChildrenInput
     children?: ProjectFolderCreateNestedManyWithoutParentInput
@@ -87641,6 +88013,8 @@ export namespace Prisma {
     parentId?: string | null
     name: string
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
     children?: ProjectFolderUncheckedCreateNestedManyWithoutParentInput
   }
 
@@ -87675,6 +88049,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
     deal?: DealUpdateOneWithoutProjectNestedInput
     company?: CompanyUpdateOneWithoutProjectsNestedInput
@@ -87708,6 +88083,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
     collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
@@ -87733,6 +88109,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutFoldersNestedInput
     parent?: ProjectFolderUpdateOneWithoutChildrenNestedInput
     children?: ProjectFolderUpdateManyWithoutParentNestedInput
@@ -87744,6 +88122,8 @@ export namespace Prisma {
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     children?: ProjectFolderUncheckedUpdateManyWithoutParentNestedInput
   }
 
@@ -88390,6 +88770,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
     deal?: DealCreateNestedOneWithoutProjectInput
     company?: CompanyCreateNestedOneWithoutProjectsInput
@@ -88423,6 +88804,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
     collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
@@ -88493,6 +88875,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
     deal?: DealUpdateOneWithoutProjectNestedInput
     company?: CompanyUpdateOneWithoutProjectsNestedInput
@@ -88526,6 +88909,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
     collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
@@ -88590,6 +88974,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
@@ -88622,6 +89007,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
@@ -88705,6 +89091,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
@@ -88737,6 +89124,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
@@ -88881,6 +89269,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
@@ -88912,6 +89301,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
@@ -89228,6 +89618,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
     deal?: DealCreateNestedOneWithoutProjectInput
     company?: CompanyCreateNestedOneWithoutProjectsInput
@@ -89261,6 +89652,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
     collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
     projectTemplates?: ProjectTemplateUncheckedCreateNestedManyWithoutProjectInput
@@ -89574,6 +89966,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
     deal?: DealUpdateOneWithoutProjectNestedInput
     company?: CompanyUpdateOneWithoutProjectsNestedInput
@@ -89607,6 +90000,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
     collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
     projectTemplates?: ProjectTemplateUncheckedUpdateManyWithoutProjectNestedInput
@@ -89850,6 +90244,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
@@ -89882,6 +90277,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
@@ -89969,6 +90365,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
@@ -90001,6 +90398,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
@@ -90078,6 +90476,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
@@ -90110,6 +90509,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
@@ -90135,6 +90535,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
     deal?: DealCreateNestedOneWithoutProjectInput
     company?: CompanyCreateNestedOneWithoutProjectsInput
@@ -90168,6 +90569,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
     collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
@@ -90329,6 +90731,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
@@ -90361,6 +90764,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
@@ -90392,6 +90796,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
     deal?: DealUpdateOneWithoutProjectNestedInput
     company?: CompanyUpdateOneWithoutProjectsNestedInput
@@ -90425,6 +90830,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
     collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
@@ -91579,6 +91985,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
     deal?: DealCreateNestedOneWithoutProjectInput
     company?: CompanyCreateNestedOneWithoutProjectsInput
@@ -91612,6 +92019,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
     projectTemplates?: ProjectTemplateUncheckedCreateNestedManyWithoutProjectInput
@@ -91644,6 +92052,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutContactsInput
     companies?: ContactCompanyCreateNestedManyWithoutContactInput
     deals?: DealCreateNestedManyWithoutContactInput
@@ -91668,6 +92077,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     companies?: ContactCompanyUncheckedCreateNestedManyWithoutContactInput
     deals?: DealUncheckedCreateNestedManyWithoutContactInput
     whatsappMessages?: WhatsAppMessageUncheckedCreateNestedManyWithoutContactInput
@@ -91807,6 +92217,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
     deal?: DealUpdateOneWithoutProjectNestedInput
     company?: CompanyUpdateOneWithoutProjectsNestedInput
@@ -91840,6 +92251,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
     projectTemplates?: ProjectTemplateUncheckedUpdateManyWithoutProjectNestedInput
@@ -91878,6 +92290,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutContactsNestedInput
     companies?: ContactCompanyUpdateManyWithoutContactNestedInput
     deals?: DealUpdateManyWithoutContactNestedInput
@@ -91902,6 +92315,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     companies?: ContactCompanyUncheckedUpdateManyWithoutContactNestedInput
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
     whatsappMessages?: WhatsAppMessageUncheckedUpdateManyWithoutContactNestedInput
@@ -92364,6 +92778,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutContactsInput
     companies?: ContactCompanyCreateNestedManyWithoutContactInput
     deals?: DealCreateNestedManyWithoutContactInput
@@ -92388,6 +92803,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     companies?: ContactCompanyUncheckedCreateNestedManyWithoutContactInput
     deals?: DealUncheckedCreateNestedManyWithoutContactInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutContactInput
@@ -92426,6 +92842,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutContactsNestedInput
     companies?: ContactCompanyUpdateManyWithoutContactNestedInput
     deals?: DealUpdateManyWithoutContactNestedInput
@@ -92450,6 +92867,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     companies?: ContactCompanyUncheckedUpdateManyWithoutContactNestedInput
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutContactNestedInput
@@ -93281,6 +93699,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
     deal?: DealCreateNestedOneWithoutProjectInput
     company?: CompanyCreateNestedOneWithoutProjectsInput
@@ -93314,6 +93733,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
     collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
@@ -93348,6 +93768,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
@@ -93380,6 +93801,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
@@ -93540,6 +93962,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
     deal?: DealUpdateOneWithoutProjectNestedInput
     company?: CompanyUpdateOneWithoutProjectsNestedInput
@@ -93573,6 +93996,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
     collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
@@ -93613,6 +94037,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
@@ -93645,6 +94070,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
@@ -93761,6 +94187,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ContactCreateManyWorkspaceInput = {
@@ -93780,6 +94207,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ServiceCreateManyWorkspaceInput = {
@@ -93818,6 +94246,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ProjectCreateManyWorkspaceInput = {
@@ -93838,6 +94267,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type InvoiceCreateManyWorkspaceInput = {
@@ -94137,6 +94567,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: ContactCompanyUpdateManyWithoutCompanyNestedInput
     deals?: DealUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUpdateManyWithoutCompanyNestedInput
@@ -94161,6 +94592,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: ContactCompanyUncheckedUpdateManyWithoutCompanyNestedInput
     deals?: DealUncheckedUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
@@ -94185,6 +94617,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ContactUpdateWithoutWorkspaceInput = {
@@ -94204,6 +94637,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     companies?: ContactCompanyUpdateManyWithoutContactNestedInput
     deals?: DealUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUpdateManyWithoutContactNestedInput
@@ -94227,6 +94661,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     companies?: ContactCompanyUncheckedUpdateManyWithoutContactNestedInput
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutContactNestedInput
@@ -94250,6 +94685,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ServiceUpdateWithoutWorkspaceInput = {
@@ -94314,6 +94750,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     pipeline?: PipelineUpdateOneRequiredWithoutDealsNestedInput
     stage?: PipelineStageUpdateOneRequiredWithoutDealsNestedInput
     company?: CompanyUpdateOneWithoutDealsNestedInput
@@ -94346,6 +94783,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
@@ -94374,6 +94812,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectUpdateWithoutWorkspaceInput = {
@@ -94391,6 +94830,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deal?: DealUpdateOneWithoutProjectNestedInput
     company?: CompanyUpdateOneWithoutProjectsNestedInput
     status?: ProjectStatusUpdateOneWithoutProjectsNestedInput
@@ -94423,6 +94863,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
     collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
@@ -94452,6 +94893,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InvoiceUpdateWithoutWorkspaceInput = {
@@ -94927,6 +95369,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type MessageCreateManyAuthorInput = {
@@ -95029,6 +95472,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
@@ -95060,6 +95504,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
@@ -95088,6 +95533,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageUpdateWithoutAuthorInput = {
@@ -95460,6 +95906,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ProjectCreateManyCompanyInput = {
@@ -95480,6 +95927,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ContactCompanyUpdateWithoutCompanyInput = {
@@ -95525,6 +95973,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutDealsNestedInput
     pipeline?: PipelineUpdateOneRequiredWithoutDealsNestedInput
     stage?: PipelineStageUpdateOneRequiredWithoutDealsNestedInput
@@ -95557,6 +96006,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
@@ -95585,6 +96035,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectUpdateWithoutCompanyInput = {
@@ -95602,6 +96053,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
     deal?: DealUpdateOneWithoutProjectNestedInput
     status?: ProjectStatusUpdateOneWithoutProjectsNestedInput
@@ -95634,6 +96086,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
     collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
@@ -95663,6 +96116,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ContactCompanyCreateManyContactInput = {
@@ -95696,6 +96150,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type InvoiceCreateManyContactInput = {
@@ -95779,6 +96234,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutDealsNestedInput
     pipeline?: PipelineUpdateOneRequiredWithoutDealsNestedInput
     stage?: PipelineStageUpdateOneRequiredWithoutDealsNestedInput
@@ -95811,6 +96267,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
@@ -95839,6 +96296,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InvoiceUpdateWithoutContactInput = {
@@ -95987,6 +96445,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type DealItemUpdateWithoutServiceInput = {
@@ -96032,6 +96491,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
@@ -96063,6 +96523,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
@@ -96091,6 +96552,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PipelineStageCreateManyPipelineInput = {
@@ -96125,6 +96587,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type PipelineStageUpdateWithoutPipelineInput = {
@@ -96175,6 +96638,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutDealsNestedInput
     stage?: PipelineStageUpdateOneRequiredWithoutDealsNestedInput
     company?: CompanyUpdateOneWithoutDealsNestedInput
@@ -96207,6 +96671,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
@@ -96235,6 +96700,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DealCreateManyStageInput = {
@@ -96260,6 +96726,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     closedAt?: Date | string | null
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type DealUpdateWithoutStageInput = {
@@ -96281,6 +96748,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutDealsNestedInput
     pipeline?: PipelineUpdateOneRequiredWithoutDealsNestedInput
     company?: CompanyUpdateOneWithoutDealsNestedInput
@@ -96313,6 +96781,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
@@ -96341,6 +96810,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DealItemCreateManyDealInput = {
@@ -96433,6 +96903,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ProjectUpdateWithoutStatusInput = {
@@ -96450,6 +96921,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
     deal?: DealUpdateOneWithoutProjectNestedInput
     company?: CompanyUpdateOneWithoutProjectsNestedInput
@@ -96482,6 +96954,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
     collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
@@ -96511,6 +96984,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TaskCreateManyProjectInput = {
@@ -96535,6 +97009,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type InvoiceCreateManyProjectInput = {
@@ -96579,6 +97054,8 @@ export namespace Prisma {
     parentId?: string | null
     name: string
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ProjectAssetCreateManyProjectInput = {
@@ -96590,6 +97067,8 @@ export namespace Prisma {
     r2Key: string
     uploadedBy?: string | null
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type PublishItemCreateManyProjectInput = {
@@ -96643,6 +97122,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
@@ -96674,6 +97154,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
@@ -96702,6 +97183,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InvoiceUpdateWithoutProjectInput = {
@@ -96821,6 +97303,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     parent?: ProjectFolderUpdateOneWithoutChildrenNestedInput
     children?: ProjectFolderUpdateManyWithoutParentNestedInput
     assets?: ProjectAssetUpdateManyWithoutFolderNestedInput
@@ -96831,6 +97315,8 @@ export namespace Prisma {
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     children?: ProjectFolderUncheckedUpdateManyWithoutParentNestedInput
     assets?: ProjectAssetUncheckedUpdateManyWithoutFolderNestedInput
   }
@@ -96840,6 +97326,8 @@ export namespace Prisma {
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectAssetUpdateWithoutProjectInput = {
@@ -96850,6 +97338,8 @@ export namespace Prisma {
     r2Key?: StringFieldUpdateOperationsInput | string
     uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     folder?: ProjectFolderUpdateOneWithoutAssetsNestedInput
   }
 
@@ -96862,6 +97352,8 @@ export namespace Prisma {
     r2Key?: StringFieldUpdateOperationsInput | string
     uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectAssetUncheckedUpdateManyWithoutProjectInput = {
@@ -96873,6 +97365,8 @@ export namespace Prisma {
     r2Key?: StringFieldUpdateOperationsInput | string
     uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PublishItemUpdateWithoutProjectInput = {
@@ -96980,6 +97474,8 @@ export namespace Prisma {
     projectId: string
     name: string
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ProjectAssetCreateManyFolderInput = {
@@ -96991,12 +97487,16 @@ export namespace Prisma {
     r2Key: string
     uploadedBy?: string | null
     createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ProjectFolderUpdateWithoutParentInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutFoldersNestedInput
     children?: ProjectFolderUpdateManyWithoutParentNestedInput
     assets?: ProjectAssetUpdateManyWithoutFolderNestedInput
@@ -97007,6 +97507,8 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     children?: ProjectFolderUncheckedUpdateManyWithoutParentNestedInput
     assets?: ProjectAssetUncheckedUpdateManyWithoutFolderNestedInput
   }
@@ -97016,6 +97518,8 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectAssetUpdateWithoutFolderInput = {
@@ -97026,6 +97530,8 @@ export namespace Prisma {
     r2Key?: StringFieldUpdateOperationsInput | string
     uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutAssetsNestedInput
   }
 
@@ -97038,6 +97544,8 @@ export namespace Prisma {
     r2Key?: StringFieldUpdateOperationsInput | string
     uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectAssetUncheckedUpdateManyWithoutFolderInput = {
@@ -97049,6 +97557,8 @@ export namespace Prisma {
     r2Key?: StringFieldUpdateOperationsInput | string
     uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ChecklistTemplateItemCreateManyTemplateInput = {
@@ -97263,6 +97773,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type ChecklistTemplateItemCreateManyVisibleFromStageInput = {
@@ -97338,6 +97849,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
@@ -97369,6 +97881,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
@@ -97397,6 +97910,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ChecklistTemplateItemUpdateWithoutVisibleFromStageInput = {
