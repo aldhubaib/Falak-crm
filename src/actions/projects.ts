@@ -672,10 +672,13 @@ export async function createProject(formData: FormData): Promise<ActionResult<{ 
   }, { formFields: Object.fromEntries(formData) });
 }
 
+// Trashed tasks are still returned so the task page can render them read-only
+// with a trash banner (Settings → Trash preview); callers that must exclude
+// them check task.deletedAt.
 export async function getTask(taskId: string) {
   const workspace = await requireWorkspace();
   const task = await db.task.findFirst({
-    where: { id: taskId, deletedAt: null, project: { workspaceId: workspace.id } },
+    where: { id: taskId, project: { workspaceId: workspace.id } },
     include: {
       status: true,
       service: true,

@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { useAction } from "@/hooks/use-action";
 import { createFullTask } from "@/actions/projects";
 import { PriorityPicker } from "@/components/projects/priority-picker";
+import { FormSection as Section } from "@/components/projects/form-section";
 import {
   DynamicField,
   serializeYesNo,
@@ -219,34 +220,5 @@ export function NewTaskClient({
         </PageContainer>
       </main>
     </>
-  );
-}
-
-function Section({
-  icon,
-  title,
-  hint,
-  children,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="rounded-2xl border border-border/60 bg-card/60 p-5 backdrop-blur-sm">
-      <div className="mb-4 flex items-start gap-3">
-        <div className="grid size-8 shrink-0 place-items-center rounded-lg bg-surface text-muted-foreground">
-          {icon}
-        </div>
-        <div className="min-w-0">
-          <div className="text-sm font-semibold tracking-tight">{title}</div>
-          {hint && (
-            <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">{hint}</p>
-          )}
-        </div>
-      </div>
-      <div>{children}</div>
-    </section>
   );
 }

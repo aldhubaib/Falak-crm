@@ -48,6 +48,8 @@ export type TrashItem = {
   name: string;
   deletedAt: string;
   deletedByName: string | null;
+  /** When set, clicking the row navigates here (original page) instead of opening the dialog. */
+  href: string | null;
 };
 
 const META: Record<string, { icon: LucideIcon; label: string }> = {
@@ -83,6 +85,11 @@ export function TrashClient({ items }: { items: TrashItem[] }) {
   });
 
   const openPreview = (item: TrashItem) => {
+    // Items with their own page (tasks) open in their original view.
+    if (item.href) {
+      router.push(item.href);
+      return;
+    }
     setPreviewItem(item);
     setPreview(null);
     startPreview(async () => {

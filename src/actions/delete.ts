@@ -133,7 +133,7 @@ export async function getTrashItems() {
     }),
     db.task.findMany({
       where: { project: { workspaceId: workspace.id }, deletedAt: { not: null } },
-      select: { id: true, title: true, deletedAt: true, deletedBy: true, project: { select: { name: true } } },
+      select: { id: true, title: true, deletedAt: true, deletedBy: true, project: { select: { id: true, name: true } } },
       orderBy: { deletedAt: "desc" },
       take: TRASH_PAGE_SIZE,
     }),
@@ -152,13 +152,15 @@ export async function getTrashItems() {
   ]);
 
   const items = [
-    ...companies.map((c) => ({ id: c.id, type: "company" as EntityType, name: c.name, deletedAt: c.deletedAt!, deletedBy: c.deletedBy })),
-    ...contacts.map((c) => ({ id: c.id, type: "contact" as EntityType, name: `${c.firstName} ${c.lastName}`, deletedAt: c.deletedAt!, deletedBy: c.deletedBy })),
-    ...deals.map((d) => ({ id: d.id, type: "deal" as EntityType, name: d.title, deletedAt: d.deletedAt!, deletedBy: d.deletedBy })),
-    ...projects.map((p) => ({ id: p.id, type: "project" as EntityType, name: p.name, deletedAt: p.deletedAt!, deletedBy: p.deletedBy })),
-    ...tasks.map((t) => ({ id: t.id, type: "task" as EntityType, name: `${t.title} (${t.project.name})`, deletedAt: t.deletedAt!, deletedBy: t.deletedBy })),
-    ...assets.map((a) => ({ id: a.id, type: "asset" as EntityType, name: `${a.name} (${a.project.name})`, deletedAt: a.deletedAt!, deletedBy: a.deletedBy })),
-    ...folders.map((f) => ({ id: f.id, type: "folder" as EntityType, name: `${f.name} (${f.project.name})`, deletedAt: f.deletedAt!, deletedBy: f.deletedBy })),
+    ...companies.map((c) => ({ id: c.id, type: "company" as EntityType, name: c.name, deletedAt: c.deletedAt!, deletedBy: c.deletedBy, href: null as string | null })),
+    ...contacts.map((c) => ({ id: c.id, type: "contact" as EntityType, name: `${c.firstName} ${c.lastName}`, deletedAt: c.deletedAt!, deletedBy: c.deletedBy, href: null as string | null })),
+    ...deals.map((d) => ({ id: d.id, type: "deal" as EntityType, name: d.title, deletedAt: d.deletedAt!, deletedBy: d.deletedBy, href: null as string | null })),
+    ...projects.map((p) => ({ id: p.id, type: "project" as EntityType, name: p.name, deletedAt: p.deletedAt!, deletedBy: p.deletedBy, href: null as string | null })),
+    // Tasks open the real task page (read-only with a trash banner) so they can
+    // be reviewed exactly as they were before deletion.
+    ...tasks.map((t) => ({ id: t.id, type: "task" as EntityType, name: `${t.title} (${t.project.name})`, deletedAt: t.deletedAt!, deletedBy: t.deletedBy, href: `/projects/${t.project.id}/tasks/${t.id}` as string | null })),
+    ...assets.map((a) => ({ id: a.id, type: "asset" as EntityType, name: `${a.name} (${a.project.name})`, deletedAt: a.deletedAt!, deletedBy: a.deletedBy, href: null as string | null })),
+    ...folders.map((f) => ({ id: f.id, type: "folder" as EntityType, name: `${f.name} (${f.project.name})`, deletedAt: f.deletedAt!, deletedBy: f.deletedBy, href: null as string | null })),
   ].sort((a, b) => b.deletedAt.getTime() - a.deletedAt.getTime());
 
   const memberNames = await resolveMemberNames(items.map((i) => i.deletedBy));

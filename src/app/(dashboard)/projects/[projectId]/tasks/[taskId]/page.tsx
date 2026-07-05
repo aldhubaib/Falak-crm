@@ -101,6 +101,8 @@ export default async function TaskDetailPage({
     return currentOrder > todoOrder;
   };
 
+  const trashed = task.deletedAt !== null;
+
   const items: ChecklistItem[] = task.checklistItems.map((it) => {
     const att = it.attachmentId ? attachmentMap.get(it.attachmentId) : null;
     return {
@@ -119,7 +121,8 @@ export default async function TaskDetailPage({
       allowedFileTypes: it.allowedFileTypes,
       allowedFormats: parseArray(it.allowedFormats),
       aspectRatio: it.aspectRatio,
-      locked: isLocked(it.phase, it.lockedFromStageId, it.neverLock),
+      // Everything is read-only while the task sits in the trash.
+      locked: trashed || isLocked(it.phase, it.lockedFromStageId, it.neverLock),
     };
   });
 
@@ -136,13 +139,30 @@ export default async function TaskDetailPage({
   ]);
   const canDelete = canDeleteTaskAt(access.permissions, task.statusId);
 
+  let deletedByName: string | null = null;
+  if (trashed && task.deletedBy) {
+    const deleter = await db.workspaceMember.findUnique({
+      where: { id: task.deletedBy },
+      select: { name: true, email: true },
+    });
+    deletedByName = deleter ? deleter.name || deleter.email : null;
+  }
+
   return (
     <TaskDetailClient
       projectId={projectId}
       taskId={taskId}
-      canDelete={canDelete}
+      canDelete={!trashed && canDelete}
+      trashed={
+        trashed
+          ? { deletedAt: task.deletedAt!.toISOString(), deletedByName }
+          : null
+      }
       title={task.title}
+      projectName={task.project.name}
+      taskNumber={task.taskNumber}
       typeName={typeName}
+      priority={task.priority}
       statusName={task.status?.name ?? null}
       statusColor={task.status?.color ?? "#3b82f6"}
       stageEnteredAt={task.stageEnteredAt?.toISOString() ?? null}

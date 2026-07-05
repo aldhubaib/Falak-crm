@@ -27,6 +27,12 @@ import {
   X,
   Copy,
   Check,
+  RotateCcw,
+  Flag,
+  HelpCircle,
+  LayoutGrid,
+  Package,
+  Type as TypeIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,6 +59,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { AppHeader } from "@/components/app-header";
+import { PageContainer } from "@/components/page-container";
 
 import { cn } from "@/lib/utils";
 import {
@@ -61,6 +68,7 @@ import {
   deleteTask,
 } from "@/actions/projects";
 import { useActionHandler } from "@/hooks/use-action";
+import { restoreRecord, permanentDeleteRecord } from "@/actions/delete";
 import { addTaskComment } from "@/actions/comments";
 import { useChannel } from "@/components/realtime/hooks";
 import { taskChannel } from "@/lib/channels";
@@ -76,6 +84,7 @@ import {
   serializeYesNo,
 } from "@/components/projects/dynamic-field";
 import { uploadManager, type UploadItem } from "@/lib/upload-manager";
+import { FormSection } from "@/components/projects/form-section";
 
 export type ChecklistItem = {
   id: string;
@@ -130,8 +139,12 @@ export function TaskDetailClient({
   projectId,
   taskId,
   canDelete,
+  trashed,
   title,
+  projectName,
+  taskNumber,
   typeName,
+  priority,
   statusName,
   statusColor,
   stageEnteredAt,
@@ -144,8 +157,13 @@ export function TaskDetailClient({
   projectId: string;
   taskId: string;
   canDelete: boolean;
+  /** Set when the task is in the trash — renders read-only with a trash banner. */
+  trashed?: { deletedAt: string; deletedByName: string | null } | null;
   title: string;
+  projectName: string;
+  taskNumber: number;
   typeName: string | null;
+  priority: number | null;
   statusName: string | null;
   statusColor: string;
   stageEnteredAt: string | null;
@@ -168,6 +186,18 @@ export function TaskDetailClient({
     runDelete("Delete Task", async () => {
       await deleteTask(taskId, projectId);
       router.push(`/projects/${projectId}`);
+    });
+
+  const { run: runTrashAction, loading: trashActionLoading } = useActionHandler();
+  const handleRestore = () =>
+    runTrashAction("Restore Task", async () => {
+      await restoreRecord("task", taskId);
+      router.refresh();
+    });
+  const handlePurge = () =>
+    runTrashAction("Delete Task Forever", async () => {
+      await permanentDeleteRecord("task", taskId);
+      router.push("/settings/trash");
     });
 
   const reqItems = items.filter((i) => i.phase === "create");
@@ -196,8 +226,16 @@ export function TaskDetailClient({
   return (
     <>
       <AppHeader
-        backHref={`/projects/${projectId}`}
-        title={title}
+        backHref={trashed ? "/settings/trash" : `/projects/${projectId}`}
+        title={
+          <div className="truncate text-sm text-muted-foreground">
+            <span className="font-semibold text-primary">{projectName}</span>
+            <span className="mx-2">/</span>
+            <span className="font-semibold text-foreground">
+              T-{String(taskNumber).padStart(3, "0")}
+            </span>
+          </div>
+        }
         beforeNotifications={
           <Button
             variant="ghost"
@@ -273,13 +311,76 @@ export function TaskDetailClient({
         </DialogContent>
       </Dialog>
       <main className="min-h-0 flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-3xl space-y-8 p-5">
-          {/* Requirements */}
-          <section>
-            <div className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.14em] text-primary">
-              Requirements
-              <div className="h-px flex-1 bg-border/60" />
+        <PageContainer className="mx-auto max-w-3xl">
+          {trashed && (
+            <div className="flex flex-wrap items-center gap-3 rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3">
+              <Trash2 className="h-4 w-4 shrink-0 text-destructive" />
+              <div className="min-w-0 flex-1 text-sm">
+                <span className="font-medium">This task is in the trash.</span>{" "}
+                <span className="text-muted-foreground">
+                  Deleted{trashed.deletedByName ? ` by ${trashed.deletedByName}` : ""} · everything
+                  below is read-only.
+                </span>
+              </div>
+              <div className="flex shrink-0 gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={trashActionLoading}
+                  onClick={handleRestore}
+                >
+                  <RotateCcw className="h-4 w-4" /> Restore
+                </Button>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  disabled={trashActionLoading}
+                  onClick={handlePurge}
+                >
+                  <Trash2 className="h-4 w-4" /> Delete forever
+                </Button>
+              </div>
             </div>
+          )}
+          {/* Task type / title / priority — mirrors the New Task page */}
+          <FormSection
+            icon={<LayoutGrid className="size-4" />}
+            title="Task Type"
+            hint="The template this task was created from."
+          >
+            {typeName ? (
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/60 bg-primary/10 px-3.5 py-1.5 text-xs font-medium text-primary">
+                {typeName}
+              </span>
+            ) : (
+              <span className="text-xs text-muted-foreground">No template</span>
+            )}
+          </FormSection>
+
+          <FormSection
+            icon={<TypeIcon className="size-4" />}
+            title="Task Title"
+            hint="A short, clear summary of what needs to be done."
+          >
+            <div className="flex min-h-12 items-center rounded-xl border border-border/60 bg-background/60 px-3 py-2 text-sm">
+              {title}
+            </div>
+          </FormSection>
+
+          <FormSection
+            icon={<Flag className="size-4" />}
+            title="Priority"
+            hint="1 is highest priority."
+          >
+            <PriorityDisplay value={priority} />
+          </FormSection>
+
+          {/* Requirements */}
+          <FormSection
+            icon={<HelpCircle className="size-4" />}
+            title="Requirements"
+            hint="Information provided when the task was created."
+          >
             {reqItems.length > 0 ? (
               <div className="space-y-6">
                 {reqItems.map((item, i) => (
@@ -297,16 +398,16 @@ export function TaskDetailClient({
                 No requirement fields on this task.
               </div>
             )}
-          </section>
+          </FormSection>
 
           {/* Delivery — gated behind leaving Todo */}
           {showDelivery ? (
             delItems.length > 0 && (
-              <section>
-                <div className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.14em] text-warning">
-                  Delivery
-                  <div className="h-px flex-1 bg-border/60" />
-                </div>
+              <FormSection
+                icon={<Package className="size-4" />}
+                title="Delivery"
+                hint="The finished work delivered for this task."
+              >
                 <div className="space-y-6">
                   {delItems.map((item, i) => (
                     <TaskField
@@ -318,20 +419,21 @@ export function TaskDetailClient({
                     />
                   ))}
                 </div>
-              </section>
+              </FormSection>
             )
           ) : delItems.length > 0 ? (
-            <section className="rounded-md border border-dashed border-border/60 p-6 text-center text-xs text-muted-foreground">
+            <section className="rounded-2xl border border-dashed border-border/60 p-6 text-center text-xs text-muted-foreground">
               Delivery fields unlock when the task moves past{" "}
               <span className="text-foreground">Todo</span>.
             </section>
           ) : null}
 
           {/* Comments */}
-          <section>
-            <div className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
-              Comments
-            </div>
+          <FormSection
+            icon={<MessageSquare className="size-4" />}
+            title="Comments"
+            hint="Discussion about this task."
+          >
             {comments.length > 0 && (
               <div className="mb-3 space-y-3">
                 {comments.map((c) => (
@@ -339,32 +441,34 @@ export function TaskDetailClient({
                 ))}
               </div>
             )}
-            <div className="flex items-center gap-2 rounded-md border border-border/60 bg-surface px-3 py-2">
-              <AtSign className="h-4 w-4 text-muted-foreground" />
-              <Input
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    sendComment();
-                  }
-                }}
-                placeholder="Write a comment... Use @ to mention"
-                className="h-9 border-0 bg-transparent px-0 focus-visible:ring-0"
-              />
-              <Button
-                size="icon"
-                className="h-9 w-9 rounded-md"
-                onClick={sendComment}
-                disabled={!comment.trim()}
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
-          </section>
+            {!trashed && (
+              <div className="flex items-center gap-2 rounded-md border border-border/60 bg-surface px-3 py-2">
+                <AtSign className="h-4 w-4 text-muted-foreground" />
+                <Input
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      sendComment();
+                    }
+                  }}
+                  placeholder="Write a comment... Use @ to mention"
+                  className="h-9 border-0 bg-transparent px-0 focus-visible:ring-0"
+                />
+                <Button
+                  size="icon"
+                  className="h-9 w-9 rounded-md"
+                  onClick={sendComment}
+                  disabled={!comment.trim()}
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </FormSection>
 
-        </div>
+        </PageContainer>
       </main>
 
       {/* History panel */}
@@ -381,6 +485,32 @@ export function TaskDetailClient({
         />
       )}
     </>
+  );
+}
+
+// Read-only version of the New Task page's priority picker.
+function PriorityDisplay({ value }: { value: number | null }) {
+  return (
+    <div>
+      <div className="flex flex-wrap gap-2">
+        {[1, 2, 3, 4, 7, 8, 9, 10].map((n) => (
+          <div
+            key={n}
+            className={cn(
+              "grid h-9 w-9 place-items-center rounded-md border text-sm font-medium",
+              value === n
+                ? "border-primary bg-primary/15 text-primary"
+                : "border-border/60 bg-surface text-muted-foreground",
+            )}
+          >
+            {n}
+          </div>
+        ))}
+      </div>
+      <div className="mt-2 text-xs text-muted-foreground">
+        {value === null ? "No priority selected" : `Priority ${value}`}
+      </div>
+    </div>
   );
 }
 
