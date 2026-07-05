@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { normalizeFormats } from "@/lib/formats";
 import { ASPECTS, FILE_CATEGORIES, FORMATS, KIND_LABELS, KINDS } from "./constants";
 import type { FieldPatch, StatusOpt, TTField } from "./types";
 
@@ -36,7 +37,10 @@ function toDraft(f: Partial<TTField>): Draft {
     kind: f.kind ?? "text",
     mandatory: !!f.mandatory,
     options: f.options ?? [],
-    allowedFormats: f.allowedFormats ?? [],
+    // Normalize stored formats (".png"/"png"/dupes) so they match the dotted
+    // FORMATS chips — otherwise saved picks render unselected and re-saving
+    // stacks duplicates.
+    allowedFormats: normalizeFormats(f.allowedFormats ?? []),
     allowedFileTypes: f.allowedFileTypes ?? null,
     aspectRatio: f.aspectRatio ?? null,
     visibleFromStageId: f.visibleFromStageId ?? null,
@@ -356,7 +360,7 @@ export function FieldEditor({
                 kind: draft.kind,
                 mandatory: draft.mandatory,
                 options: draft.options,
-                allowedFormats: draft.allowedFormats,
+                allowedFormats: normalizeFormats(draft.allowedFormats),
                 allowedFileTypes: draft.allowedFileTypes,
                 aspectRatio: draft.aspectRatio,
                 visibleFromStageId: draft.visibleFromStageId,

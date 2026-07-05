@@ -11,6 +11,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { dotExt, normalizeFormats } from "@/lib/formats";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -293,12 +294,9 @@ export function categoryIcon(category: string | null) {
 
 // Extensions are stored inconsistently across editors (some with a leading dot,
 // some without). Normalize to a leading-dot form so `accept` and validation work
-// regardless of how the field was saved.
-export function dotExt(f: string): string {
-  const t = f.trim().toLowerCase();
-  if (!t) return "";
-  return t.startsWith(".") ? t : `.${t}`;
-}
+// regardless of how the field was saved. Re-exported from lib/formats for the
+// existing import sites.
+export { dotExt, normalizeFormats };
 
 // Canonical extension set per file category. Used to enforce extensions even when
 // a field only picks a category (audio/video/image/document) and no explicit
@@ -320,7 +318,7 @@ export function allowedExtsFor(
   category: string | null,
   formats: string[],
 ): string[] {
-  const explicit = formats.map(dotExt).filter(Boolean);
+  const explicit = normalizeFormats(formats);
   if (explicit.length > 0) return explicit;
   if (category && CATEGORY_EXTENSIONS[category]) return CATEGORY_EXTENSIONS[category];
   return [];
@@ -517,7 +515,7 @@ function FileDrop({
   const [dragOver, setDragOver] = useState(false);
 
   const category = field.allowedFileTypes;
-  const formats = field.allowedFormats.map(dotExt).filter(Boolean);
+  const formats = normalizeFormats(field.allowedFormats);
   const Icon = categoryIcon(category);
   const label = category
     ? category.charAt(0).toUpperCase() + category.slice(1)

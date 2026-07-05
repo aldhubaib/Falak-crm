@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { normalizeFormats } from "@/lib/formats";
 import { getProjectTaskTemplates } from "@/actions/projects";
 import { getTaskStatuses } from "@/actions/settings";
 import { db } from "@/lib/db";
@@ -71,7 +72,7 @@ export default async function NewTaskPage({
         mandatory: it.mandatory,
         options: parseArray(it.options),
         allowedFileTypes: it.allowedFileTypes,
-        allowedFormats: parseArray(it.allowedFormats),
+        allowedFormats: normalizeFormats(parseArray(it.allowedFormats)),
         aspectRatio: it.aspectRatio,
       })),
   }));

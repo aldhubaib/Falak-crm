@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { createPresignedGet } from "@/lib/storage";
 import { getProjectAccess } from "@/lib/workspace";
 import { canDeleteTaskAt } from "@/lib/permissions";
+import { normalizeFormats } from "@/lib/formats";
 import { TaskDetailClient, type ChecklistItem } from "./task-detail-client";
 
 // Browser tab title: "Project Name - Task title" (the route itself is
@@ -124,7 +125,7 @@ export default async function TaskDetailPage({
       mandatory: it.mandatory,
       options: parseArray(it.options),
       allowedFileTypes: constraints.allowedFileTypes,
-      allowedFormats: [...new Set(parseArray(constraints.allowedFormats))],
+      allowedFormats: normalizeFormats(parseArray(constraints.allowedFormats)),
       aspectRatio: constraints.aspectRatio,
       // Everything is read-only while the task sits in the trash.
       locked: trashed || isLocked(it.phase, it.lockedFromStageId, it.neverLock),
@@ -143,6 +144,37 @@ export default async function TaskDetailPage({
     getProjectAccess(projectId),
   ]);
   const canDelete = canDeleteTaskAt(access.permissions, task.statusId);
+
+  // Per-stage move rights for the status bar's Back/Next controls (the server
+  // enforces the same rule in updateTaskStatus).
+  const movePerms = {
+    full: access.permissions.projects === "full",
+    stages: Object.fromEntries(
+      Object.entries(access.permissions.taskPermissions?.stages ?? {}).map(
+        ([stageId, sp]) => [
+          stageId,
+          { forward: sp.forward === true, rollback: sp.rollback === true },
+        ],
+      ),
+    ),
+  };
+
+  // Who to @mention when declining: the person who last moved the task INTO
+  // its current stage (falls back to the assignee) — same rule as the board.
+  const submitted = history.find(
+    (h) => h.action === "status_change" && h.toStatusId === task.statusId,
+  );
+  const submittedBy = submitted?.member
+    ? {
+        id: submitted.member.id,
+        name: submitted.member.name ?? submitted.member.email,
+      }
+    : task.assignee
+      ? {
+          id: task.assignee.id,
+          name: task.assignee.name ?? task.assignee.email,
+        }
+      : { id: null, name: null };
 
   let deletedByName: string | null = null;
   if (trashed && task.deletedBy) {
@@ -170,6 +202,14 @@ export default async function TaskDetailPage({
       priority={task.priority}
       statusName={task.status?.name ?? null}
       statusColor={task.status?.color ?? "#3b82f6"}
+      move={{
+        statuses: statuses
+          .filter((s) => s.name !== "Published")
+          .map((s) => ({ id: s.id, name: s.name, color: s.color, order: s.order })),
+        statusId: task.statusId,
+        perms: movePerms,
+        submittedBy,
+      }}
       stageEnteredAt={task.stageEnteredAt?.toISOString() ?? null}
       createdAt={task.createdAt.toISOString()}
       items={items}

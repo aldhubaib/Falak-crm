@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useState,
   useSyncExternalStore,
   useTransition,
@@ -22,6 +23,7 @@ import {
   Paperclip,
   History,
   Clock,
+  ArrowLeft,
   ArrowRight,
   MessageSquare,
   List,
@@ -68,7 +70,11 @@ import {
   saveChecklistItemText,
   removeChecklistItemAttachment,
   deleteTask,
+  updateTaskStatus,
 } from "@/actions/projects";
+import { ConfirmStatusDialog } from "@/components/board/confirm-status-dialog";
+import { DeclineDialog } from "@/components/board/decline-dialog";
+import { CONFIRM_MESSAGES } from "@/components/board/confirm-messages";
 import { useActionHandler } from "@/hooks/use-action";
 import { restoreRecord, permanentDeleteRecord } from "@/actions/delete";
 import { addTaskComment } from "@/actions/comments";
@@ -79,7 +85,7 @@ import { taskChannel } from "@/lib/channels";
 import {
   categoryIcon,
   validateFileFull,
-  dotExt,
+  normalizeFormats,
   allowedExtsFor,
   isFileField,
   isYesNoField,
@@ -142,6 +148,18 @@ export type CommentEntry = {
   attachments: MessageAttachment[];
 };
 
+// Everything the status bar needs to move the task Back / Next from here,
+// mirroring the board's drag flow (permissions, confirm dialogs, decline).
+export type TaskMoveData = {
+  statuses: { id: string; name: string; color: string; order: number }[];
+  statusId: string | null;
+  perms: {
+    full: boolean;
+    stages: Record<string, { forward: boolean; rollback: boolean }>;
+  };
+  submittedBy: { id: string | null; name: string | null };
+};
+
 export function TaskDetailClient({
   projectId,
   taskId,
@@ -160,6 +178,7 @@ export function TaskDetailClient({
   comments,
   history,
   totalTimeMs,
+  move,
 }: {
   projectId: string;
   taskId: string;
@@ -179,6 +198,7 @@ export function TaskDetailClient({
   comments: CommentEntry[];
   history: HistoryEntry[];
   totalTimeMs: number;
+  move?: TaskMoveData | null;
 }) {
   const router = useRouter();
   const [, startTransition] = useTransition();
@@ -490,6 +510,15 @@ export function TaskDetailClient({
             )}
           </FormSection>
 
+          {/* Status bar — move the task Back / Next without going to the board */}
+          {!trashed && move && (
+            <StatusMoveBar
+              projectId={projectId}
+              taskId={taskId}
+              move={move}
+              items={items}
+            />
+          )}
         </PageContainer>
       </main>
 
@@ -506,6 +535,219 @@ export function TaskDetailClient({
           onClose={() => setHistoryOpen(false)}
         />
       )}
+    </>
+  );
+}
+
+// Status bar with Back / Next controls — the same move flow as dragging the
+// card on the board: per-stage permissions, delivery gating, stage confirm
+// dialogs on forward moves and the decline dialog (reason + mention) on
+// backward moves.
+function StatusMoveBar({
+  projectId,
+  taskId,
+  move,
+  items,
+}: {
+  projectId: string;
+  taskId: string;
+  move: TaskMoveData;
+  items: ChecklistItem[];
+}) {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const [moving, setMoving] = useState(false);
+  const [confirmNext, setConfirmNext] = useState(false);
+  const [declineOpen, setDeclineOpen] = useState(false);
+  const [moveError, setMoveError] = useState<string | null>(null);
+
+  const ordered = useMemo(
+    () => [...move.statuses].sort((a, b) => a.order - b.order),
+    [move.statuses],
+  );
+  const idx = ordered.findIndex((s) => s.id === move.statusId);
+  const current = idx >= 0 ? ordered[idx] : null;
+  const prev = idx > 0 ? ordered[idx - 1] : null;
+  const next = idx >= 0 && idx < ordered.length - 1 ? ordered[idx + 1] : null;
+
+  // Per-stage move rights on the CURRENT stage (mirrors the server check).
+  const stagePerm = move.statusId ? move.perms.stages[move.statusId] : undefined;
+  const canForward = move.perms.full || stagePerm?.forward === true;
+  const canBack = move.perms.full || stagePerm?.rollback === true;
+
+  const deliveryIncomplete = items
+    .filter((i) => i.phase === "delivery" && i.mandatory && !i.completed)
+    .map((i) => i.name);
+
+  const showNext = next != null && canForward;
+  const showBack = prev != null && canBack;
+
+  if (!current || (!showNext && !showBack)) return null;
+
+  const doMove = async (targetId: string): Promise<boolean> => {
+    setMoving(true);
+    try {
+      await updateTaskStatus(taskId, targetId, projectId);
+      // The board keeps its own client cache — refetch it so the card is in
+      // the right column when the user navigates back.
+      void queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
+      router.refresh();
+      return true;
+    } catch (err) {
+      setMoveError(err instanceof Error ? err.message : "Failed to move task");
+      return false;
+    } finally {
+      setMoving(false);
+    }
+  };
+
+  const handleNext = () => {
+    if (!next || moving) return;
+    if (
+      next.name.toLowerCase() === "internal review" &&
+      deliveryIncomplete.length > 0
+    ) {
+      const names = deliveryIncomplete.map((n) => `"${n}"`).join(", ");
+      setMoveError(`Complete delivery items first: ${names}`);
+      return;
+    }
+    if (CONFIRM_MESSAGES[next.name]) setConfirmNext(true);
+    else void doMove(next.id);
+  };
+
+  // Backward move requires a decline reason that @mentions the submitter —
+  // identical to dropping the card on an earlier column.
+  const handleDecline = async (reason: string, file: File | null) => {
+    if (!prev) return;
+    const moved = await doMove(prev.id);
+    if (!moved) return;
+
+    const mention =
+      move.submittedBy.id && move.submittedBy.name
+        ? `@[${move.submittedBy.name}](${move.submittedBy.id}) `
+        : "";
+    const body = `${mention}${reason}`.trim();
+    if (!body && !file) return;
+    try {
+      let attachmentIds: string[] = [];
+      if (file) {
+        const ids = uploadManager.enqueueMessage([file]);
+        const uploaded = await uploadManager.waitForCompletion(ids);
+        attachmentIds = uploaded
+          .filter((i) => i.status === "done" && i.attachmentId)
+          .map((i) => i.attachmentId!);
+        uploadManager.removeItems(ids);
+      }
+      await addTaskComment(taskId, body, projectId, "rejection", attachmentIds);
+      router.refresh();
+    } catch {
+      // Comment failure shouldn't block the move.
+    }
+  };
+
+  const confirmMsg = next
+    ? (CONFIRM_MESSAGES[next.name] ?? {
+        title: `Move to ${next.name}`,
+        description: `Are you sure you want to move this task to ${next.name}?`,
+      })
+    : null;
+
+  return (
+    <>
+      <section className="rounded-2xl border border-border/60 bg-surface/40 p-4">
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+            Status:
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background px-3 py-1 text-sm font-medium text-foreground">
+            <span
+              className="h-2 w-2 rounded-full"
+              style={{ backgroundColor: current.color }}
+            />
+            {current.name}
+          </span>
+        </div>
+        <div className="mt-4 flex items-center justify-between">
+          {showBack ? (
+            <Button
+              variant="outline"
+              className="rounded-full"
+              disabled={moving}
+              onClick={() => setDeclineOpen(true)}
+              title={prev ? `Back to ${prev.name}` : undefined}
+            >
+              {moving ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <ArrowLeft className="size-4" />
+              )}
+              Back
+            </Button>
+          ) : (
+            <span />
+          )}
+          {showNext ? (
+            <Button
+              variant="outline"
+              className="rounded-full"
+              disabled={moving}
+              onClick={handleNext}
+              title={next ? `Move to ${next.name}` : undefined}
+            >
+              Next
+              {moving ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <ArrowRight className="size-4" />
+              )}
+            </Button>
+          ) : (
+            <span />
+          )}
+        </div>
+      </section>
+
+      {/* Forward move confirmation */}
+      <ConfirmStatusDialog
+        open={confirmNext}
+        onClose={() => setConfirmNext(false)}
+        onConfirm={() => {
+          setConfirmNext(false);
+          if (next) void doMove(next.id);
+        }}
+        title={confirmMsg?.title ?? ""}
+        description={confirmMsg?.description ?? ""}
+        confirmLabel={confirmMsg?.confirmLabel}
+      />
+
+      {/* Backward move decline */}
+      <DeclineDialog
+        open={declineOpen}
+        fromLabel={current.name}
+        toLabel={prev?.name ?? ""}
+        mentionName={move.submittedBy.name}
+        onClose={() => setDeclineOpen(false)}
+        onConfirm={(reason, file) => {
+          setDeclineOpen(false);
+          void handleDecline(reason, file);
+        }}
+      />
+
+      {/* Move error dialog */}
+      <Dialog open={!!moveError} onOpenChange={(o) => !o && setMoveError(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="size-5 text-destructive" />
+              Cannot move task
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">{moveError}</p>
+          <DialogFooter>
+            <Button onClick={() => setMoveError(null)}>OK</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
@@ -1179,7 +1421,7 @@ function TaskFileField({
 
   const upload = useChecklistUpload(item.id);
   const category = item.allowedFileTypes;
-  const formats = item.allowedFormats.map(dotExt).filter(Boolean);
+  const formats = normalizeFormats(item.allowedFormats);
   const Icon = categoryIcon(category);
   const label = category
     ? category.charAt(0).toUpperCase() + category.slice(1)
