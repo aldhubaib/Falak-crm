@@ -9,8 +9,11 @@ import { PageContainer } from "@/components/page-container";
 import { SaveButton } from "@/components/save-button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAction } from "@/hooks/use-action";
 import { createFullTask } from "@/actions/projects";
+import type { BoardData } from "@/actions/board";
+import { boardQueryKey } from "../../use-board";
 import { PriorityPicker } from "@/components/projects/priority-picker";
 import { FormSection as Section } from "@/components/projects/form-section";
 import {
@@ -36,6 +39,7 @@ export function NewTaskClient({
   taskTypes: TaskType[];
 }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [typeId, setTypeId] = useState<string>(taskTypes[0]?.id ?? "");
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState<number | null>(null);
@@ -97,6 +101,16 @@ export function NewTaskClient({
       submittingRef.current = false;
       setSubmitting(false);
       return;
+    }
+
+    // Seed the board cache with the new card so it's already on the board the
+    // instant the user navigates there — no waiting on a refetch.
+    if (res.boardTask) {
+      queryClient.setQueryData<BoardData>(boardQueryKey(projectId), (old) => {
+        if (!old) return old;
+        if (old.tasks.some((t) => t.id === res.boardTask.id)) return old;
+        return { ...old, tasks: [...old.tasks, res.boardTask] };
+      });
     }
 
     // Map each selected file to its freshly-created checklist item and enqueue

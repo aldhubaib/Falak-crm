@@ -1,6 +1,6 @@
 "use client";
 
-import { Pencil, Play, ShieldCheck, Trash2, Users } from "lucide-react";
+import { ChevronDown, ChevronUp, Play, ShieldCheck, Trash2, Users } from "lucide-react";
 import { SurfaceCard } from "@/components/surface-card";
 import { RoleEditor, type RoleDTO, type TaskStageDTO } from "./role-editor";
 
@@ -52,23 +52,27 @@ export function RoleCard({
               </span>
               <span
                 role="button"
-                aria-label="Edit"
-                className="grid h-8 w-8 place-items-center rounded-md text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                aria-label="Delete role"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete();
+                }}
+                className="grid h-8 w-8 place-items-center rounded-md text-muted-foreground hover:bg-destructive/15 hover:text-destructive"
               >
-                <Pencil className="h-4 w-4" />
+                <Trash2 className="h-4 w-4" />
               </span>
             </>
           )}
+          {/* Clicking anywhere on the header toggles; the chevron just makes it obvious. */}
           <span
-            role="button"
-            aria-label="Delete role"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            className="grid h-8 w-8 place-items-center rounded-md text-muted-foreground hover:bg-destructive/15 hover:text-destructive"
+            aria-hidden
+            className="grid h-8 w-8 place-items-center rounded-md text-muted-foreground"
           >
-            <Trash2 className="h-4 w-4" />
+            {expanded ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
           </span>
         </div>
       </button>

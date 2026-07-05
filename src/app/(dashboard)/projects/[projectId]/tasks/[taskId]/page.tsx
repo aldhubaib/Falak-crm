@@ -105,6 +105,11 @@ export default async function TaskDetailPage({
 
   const items: ChecklistItem[] = task.checklistItems.map((it) => {
     const att = it.attachmentId ? attachmentMap.get(it.attachmentId) : null;
+    // File constraints come from the LIVE template item when the field is
+    // linked to one, so edits in Settings → Task Types take effect on
+    // existing tasks immediately (the per-task copy is only a fallback for
+    // detached fields, and can go stale).
+    const constraints = it.templateItem ?? it;
     return {
       id: it.id,
       name: it.name,
@@ -118,9 +123,9 @@ export default async function TaskDetailPage({
       attachmentContentType: att?.contentType ?? null,
       mandatory: it.mandatory,
       options: parseArray(it.options),
-      allowedFileTypes: it.allowedFileTypes,
-      allowedFormats: parseArray(it.allowedFormats),
-      aspectRatio: it.aspectRatio,
+      allowedFileTypes: constraints.allowedFileTypes,
+      allowedFormats: [...new Set(parseArray(constraints.allowedFormats))],
+      aspectRatio: constraints.aspectRatio,
       // Everything is read-only while the task sits in the trash.
       locked: trashed || isLocked(it.phase, it.lockedFromStageId, it.neverLock),
     };

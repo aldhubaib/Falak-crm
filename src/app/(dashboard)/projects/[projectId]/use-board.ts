@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getBoardData, type BoardData } from "@/actions/board";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
+import { getBoardData, type BoardData, type BoardTask } from "@/actions/board";
+import type { BoardTaskMovePatch } from "@/lib/realtime";
 import { useCentrifugo } from "@/components/realtime/centrifugo-provider";
 import { projectChannel } from "@/lib/channels";
 
@@ -10,8 +11,8 @@ export function boardQueryKey(projectId: string) {
   return ["board", projectId] as const;
 }
 
-// Board task list, seeded from the server-rendered payload and kept live by the
-// SSE stream. Uses React Query so optimistic mutations can patch the cache.
+// Board task list, seeded from the server-rendered payload and kept live by
+// realtime events. Uses React Query so optimistic mutations can patch the cache.
 export function useBoardData(projectId: string, initialData: BoardData) {
   return useQuery({
     queryKey: boardQueryKey(projectId),
@@ -20,30 +21,150 @@ export function useBoardData(projectId: string, initialData: BoardData) {
   });
 }
 
+type BoardEvent = {
+  type?: string;
+  taskId?: string;
+  actorClientId?: string | null;
+  patch?: BoardTaskMovePatch;
+  snapshot?: BoardTask;
+};
+
+// Ephemeral drag broadcast, published client-to-client over the Centrifugo
+// project channel (no server round trip): everyone watching the board sees who
+// is dragging which card, live.
+type DragEvent = {
+  type: "board.drag";
+  taskId: string;
+  dragging: boolean;
+  memberId: string;
+  memberName: string;
+  actorClientId: string;
+};
+
+export type RemoteDrags = Record<string, { name: string; ts: number }>;
+
+// If a drag-end broadcast is lost (tab closed mid-drag, network blip), the
+// remote highlight clears itself after this long.
+const DRAG_TTL_MS = 15_000;
+
+// Apply a realtime task event straight to the React Query cache. Events carry
+// the changed data (snapshot on create, patch on move), so remote boards
+// update in memory with zero refetch — critical when 100 screens are open and
+// every event used to fan out into 100 full board queries.
+function applyBoardEvent(
+  queryClient: QueryClient,
+  projectId: string,
+  event: BoardEvent,
+) {
+  const key = boardQueryKey(projectId);
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: key });
+
+  if (event.type === "task.created" && event.snapshot) {
+    queryClient.setQueryData<BoardData>(key, (old) => {
+      if (!old) return old;
+      if (old.tasks.some((t) => t.id === event.snapshot!.id)) return old;
+      return { ...old, tasks: [...old.tasks, event.snapshot!] };
+    });
+    return;
+  }
+
+  if (event.type === "task.moved" && event.patch && event.taskId) {
+    const patch = event.patch;
+    queryClient.setQueryData<BoardData>(key, (old) => {
+      if (!old) return old;
+      if (!old.tasks.some((t) => t.id === event.taskId)) return old;
+      return {
+        ...old,
+        tasks: old.tasks.map((t) =>
+          t.id === event.taskId
+            ? {
+                ...t,
+                statusId: patch.statusId,
+                statusName: patch.statusName ?? t.statusName,
+                statusColor: patch.statusColor ?? t.statusColor,
+                stageEnteredAt: patch.stageEnteredAt,
+                completedAt: patch.completedAt,
+                assigneeId: patch.assigneeId,
+                assigneeName: patch.assigneeName,
+                assigneeAvatar: patch.assigneeAvatar,
+                submittedById: patch.submittedById,
+                submittedByName: patch.submittedByName,
+                rejectionCount: t.rejectionCount + patch.rejectionCountDelta,
+              }
+            : t,
+        ),
+      };
+    });
+    return;
+  }
+
+  if (event.type === "task.deleted" && event.taskId) {
+    queryClient.setQueryData<BoardData>(key, (old) => {
+      if (!old) return old;
+      return { ...old, tasks: old.tasks.filter((t) => t.id !== event.taskId) };
+    });
+    return;
+  }
+
+  // task.updated or an event without a payload — fall back to a refetch.
+  invalidate();
+}
+
 // Keeps the board live when another client changes something. Prefers Centrifugo
 // (the primary transport); falls back to the in-process SSE stream when no
 // Centrifugo WS URL is configured. The client's own echoes are ignored so they
 // don't clobber an in-flight optimistic update.
-export function useBoardStream(projectId: string, clientId: string) {
+//
+// Also exposes live drag presence: `publishDrag` broadcasts that this user is
+// dragging a card, and `remoteDrags` maps taskId → who's dragging it elsewhere.
+export function useBoardStream(
+  projectId: string,
+  clientId: string,
+  memberName?: string,
+) {
   const queryClient = useQueryClient();
   const cent = useCentrifugo();
   const enabled = cent?.enabled ?? false;
+  const [remoteDrags, setRemoteDrags] = useState<RemoteDrags>({});
 
   useEffect(() => {
-    const invalidate = () =>
-      queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
+    const handleEvent = (event: BoardEvent | DragEvent) => {
+      if (!event?.type) return;
+      if (event.actorClientId && event.actorClientId === clientId) return;
+
+      if (event.type === "board.drag") {
+        const d = event as DragEvent;
+        setRemoteDrags((prev) => {
+          if (d.dragging) {
+            return { ...prev, [d.taskId]: { name: d.memberName, ts: Date.now() } };
+          }
+          if (!(d.taskId in prev)) return prev;
+          const next = { ...prev };
+          delete next[d.taskId];
+          return next;
+        });
+        return;
+      }
+
+      if (event.type.startsWith("task.")) {
+        // A move lands the card — clear any lingering drag highlight for it.
+        if (event.taskId) {
+          setRemoteDrags((prev) => {
+            if (!(event.taskId! in prev)) return prev;
+            const next = { ...prev };
+            delete next[event.taskId!];
+            return next;
+          });
+        }
+        applyBoardEvent(queryClient, projectId, event as BoardEvent);
+      }
+    };
 
     // Primary: Centrifugo project channel.
     if (enabled && cent) {
-      return cent.subscribe(projectChannel(projectId), (data) => {
-        const event = data as {
-          type?: string;
-          actorClientId?: string | null;
-        } | null;
-        if (!event?.type || !event.type.startsWith("task.")) return;
-        if (event.actorClientId && event.actorClientId === clientId) return;
-        invalidate();
-      });
+      return cent.subscribe(projectChannel(projectId), (data) =>
+        handleEvent(data as BoardEvent | DragEvent),
+      );
     }
 
     // Fallback: in-process SSE stream (single instance, no Centrifugo).
@@ -53,9 +174,7 @@ export function useBoardStream(projectId: string, clientId: string) {
     const source = new EventSource(`/api/projects/${projectId}/stream`);
     source.onmessage = (e) => {
       try {
-        const event = JSON.parse(e.data) as { actorClientId?: string | null };
-        if (event.actorClientId && event.actorClientId === clientId) return;
-        invalidate();
+        handleEvent(JSON.parse(e.data) as BoardEvent);
       } catch {
         // Malformed frame — ignore.
       }
@@ -63,4 +182,38 @@ export function useBoardStream(projectId: string, clientId: string) {
     source.onerror = () => {};
     return () => source.close();
   }, [enabled, cent, projectId, clientId, queryClient]);
+
+  // Expire stale remote drag highlights.
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const cutoff = Date.now() - DRAG_TTL_MS;
+      setRemoteDrags((prev) => {
+        const entries = Object.entries(prev).filter(([, v]) => v.ts >= cutoff);
+        return entries.length === Object.keys(prev).length
+          ? prev
+          : Object.fromEntries(entries);
+      });
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const memberNameRef = useRef(memberName);
+  memberNameRef.current = memberName;
+
+  const publishDrag = useCallback(
+    (taskId: string, dragging: boolean) => {
+      if (!cent?.enabled) return;
+      cent.publish(projectChannel(projectId), {
+        type: "board.drag",
+        taskId,
+        dragging,
+        memberId: cent.memberId,
+        memberName: memberNameRef.current ?? "Someone",
+        actorClientId: clientId,
+      } satisfies DragEvent);
+    },
+    [cent, projectId, clientId],
+  );
+
+  return { remoteDrags, publishDrag };
 }

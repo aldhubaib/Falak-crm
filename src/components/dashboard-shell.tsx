@@ -6,6 +6,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { UploadIndicator } from "@/components/upload-indicator";
 import { TestRoleBanner } from "@/components/test-role-banner";
+import { PullToRefresh } from "@/components/pull-to-refresh";
 import { rememberInboxReturnPath } from "@/lib/inbox-return";
 
 export function DashboardShell({ children }: { children: ReactNode }) {
@@ -26,6 +27,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
       </div>
       <UploadIndicator />
       <TestRoleBanner />
+      <PullToRefresh />
     </SidebarProvider>
   );
 }

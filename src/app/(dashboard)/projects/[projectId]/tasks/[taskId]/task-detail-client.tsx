@@ -34,6 +34,7 @@ import {
   LayoutGrid,
   Package,
   Type as TypeIcon,
+  VideoOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -77,7 +78,7 @@ import { useChannel } from "@/components/realtime/hooks";
 import { taskChannel } from "@/lib/channels";
 import {
   categoryIcon,
-  validateFile,
+  validateFileFull,
   dotExt,
   allowedExtsFor,
   isFileField,
@@ -1195,9 +1196,14 @@ function TaskFileField({
     if (upload?.status === "done") router.refresh();
   }, [upload?.status, router]);
 
-  const handlePick = (picked: File | null) => {
+  const handlePick = async (picked: File | null) => {
     if (!picked) return;
-    const err = validateFile(picked, category, formats);
+    const err = await validateFileFull(
+      picked,
+      category,
+      formats,
+      item.aspectRatio,
+    );
     if (err) {
       setError(err);
       return;
@@ -1231,10 +1237,9 @@ function TaskFileField({
               className="max-h-64 rounded"
             />
           ) : ct.startsWith("video/") ? (
-            <video
-              controls
-              preload="metadata"
+            <SafeVideo
               src={`/api/files/${item.attachmentId}/stream`}
+              downloadHref={`/api/files/${item.attachmentId}/download`}
               className="max-h-64 w-full max-w-md rounded"
             />
           ) : ct.startsWith("audio/") ? (
@@ -1363,6 +1368,47 @@ function TaskFileField({
   );
 }
 
+// <video> that swaps to an honest explanation when the source can't actually
+// be played (missing/failed upload, or the stream 404s) — a dead player with
+// a play button that does nothing is confusing, especially on iOS.
+function SafeVideo({
+  src,
+  downloadHref,
+  className,
+}: {
+  src: string;
+  downloadHref?: string;
+  className?: string;
+}) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <div className="flex w-full max-w-md flex-col items-center gap-2 rounded-lg border border-dashed border-border/60 bg-surface/40 px-4 py-6 text-center">
+        <VideoOff className="h-6 w-6 text-muted-foreground" />
+        <div className="text-xs text-muted-foreground">
+          This video can&apos;t be played — the file may not have finished
+          uploading. Try re-uploading it.
+        </div>
+        {downloadHref && (
+          <a href={downloadHref} className="text-xs font-medium text-primary underline">
+            Try downloading instead
+          </a>
+        )}
+      </div>
+    );
+  }
+  return (
+    <video
+      controls
+      playsInline
+      preload="metadata"
+      src={src}
+      onError={() => setFailed(true)}
+      className={className}
+    />
+  );
+}
+
 function AttachmentPreview({
   url,
   name,
@@ -1389,10 +1435,9 @@ function AttachmentPreview({
 
   if (contentType.startsWith("video/")) {
     return (
-      <video
-        controls
-        preload="metadata"
+      <SafeVideo
         src={streamSrc}
+        downloadHref={attachmentId ? `/api/files/${attachmentId}/download` : url}
         className="mb-2 max-h-64 w-full max-w-md rounded"
       />
     );

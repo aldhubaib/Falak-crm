@@ -339,6 +339,64 @@ export function validateFile(
   return null;
 }
 
+// Measures an image/video's pixel dimensions in the browser. Resolves null
+// when the file can't be decoded (we don't block those — the format check
+// already ran).
+function mediaDimensions(
+  file: File,
+): Promise<{ width: number; height: number } | null> {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const done = (dims: { width: number; height: number } | null) => {
+      URL.revokeObjectURL(url);
+      resolve(dims);
+    };
+    if (file.type.startsWith("image/")) {
+      const img = new Image();
+      img.onload = () =>
+        done({ width: img.naturalWidth, height: img.naturalHeight });
+      img.onerror = () => done(null);
+      img.src = url;
+    } else if (file.type.startsWith("video/")) {
+      const video = document.createElement("video");
+      video.preload = "metadata";
+      video.onloadedmetadata = () =>
+        done({ width: video.videoWidth, height: video.videoHeight });
+      video.onerror = () => done(null);
+      video.src = url;
+    } else {
+      done(null);
+    }
+  });
+}
+
+// Full client-side validation: extension/format check plus, when the field
+// pins an aspect ratio, the actual pixel dimensions of the image/video.
+// A 2% tolerance absorbs rounding (e.g. 1080×1920 vs 1082×1920 exports).
+export async function validateFileFull(
+  file: File,
+  category: string | null,
+  formats: string[],
+  aspectRatio: string | null,
+): Promise<string | null> {
+  const formatError = validateFile(file, category, formats);
+  if (formatError) return formatError;
+
+  if (!aspectRatio) return null;
+  const [w, h] = aspectRatio.split(":").map(Number);
+  if (!w || !h) return null;
+
+  const dims = await mediaDimensions(file);
+  if (!dims || !dims.width || !dims.height) return null;
+
+  const expected = w / h;
+  const actual = dims.width / dims.height;
+  if (Math.abs(actual - expected) / expected > 0.02) {
+    return `File must be ${aspectRatio} — this file is ${dims.width}×${dims.height}`;
+  }
+  return null;
+}
+
 function FilePreview({ file }: { file: File }) {
   const [url, setUrl] = useState<string | null>(null);
 
@@ -473,9 +531,14 @@ function FileDrop({
 
   const file = answer?.kind === "file" ? answer.file : null;
 
-  const handlePick = (picked: File | null) => {
+  const handlePick = async (picked: File | null) => {
     if (!picked) return;
-    const err = validateFile(picked, category, formats);
+    const err = await validateFileFull(
+      picked,
+      category,
+      formats,
+      field.aspectRatio,
+    );
     if (err) {
       setError(err);
       onChange({ kind: "file", file: null });

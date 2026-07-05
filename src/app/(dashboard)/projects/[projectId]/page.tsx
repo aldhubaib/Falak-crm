@@ -47,6 +47,10 @@ export default async function ProjectDetailPage({
       imageUrl: m.imageUrl ?? null,
     }));
   const canEditTeam = hasCap(access.permissions, "projects", "assignMembers");
+  // Display name broadcast with live drag events so other viewers see who is
+  // moving a card.
+  const self = team.allMembers.find((m) => m.id === access.member.id);
+  const currentMemberName = self ? (self.name ?? self.email) : undefined;
   const canEditSettings = hasCap(access.permissions, "projects", "editSettings");
 
   // Per-stage move rights for the board's drag handler (server enforces the
@@ -84,6 +88,7 @@ export default async function ProjectDetailPage({
           projectId={project.id}
           initialData={initialData}
           movePerms={movePerms}
+          currentMemberName={currentMemberName}
         />
       </main>
     </>

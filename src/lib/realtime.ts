@@ -5,12 +5,35 @@ import {
   projectChannel as centrifugoProjectChannel,
 } from "@/lib/centrifugo";
 
+// Changed card fields for a `task.moved` event, so subscribed boards can patch
+// their cache in memory instead of refetching the whole board. With 100 open
+// screens, one move used to trigger 100 full board queries; now it triggers 0.
+export type BoardTaskMovePatch = {
+  statusId: string | null;
+  statusName: string | null;
+  statusColor: string | null;
+  stageEnteredAt: string | null;
+  completedAt: string | null;
+  assigneeId: string | null;
+  assigneeName: string | null;
+  assigneeAvatar: string | null;
+  // Who moved the task into its new stage — the decline dialog @mentions them.
+  submittedById: string | null;
+  submittedByName: string | null;
+  rejectionCountDelta: number;
+};
+
 // Event payload broadcast to every client subscribed to a project's board.
 // `actorClientId` lets a client ignore the echo of its own optimistic action.
+// `patch` (task.moved) and `snapshot` (task.created) carry the data needed to
+// update the board cache directly; clients fall back to a refetch when absent.
 export type RealtimeEvent = {
   type: "task.moved" | "task.created" | "task.deleted" | "task.updated";
   taskId: string;
   actorClientId?: string | null;
+  patch?: BoardTaskMovePatch;
+  // Full BoardTask snapshot (typed loosely to avoid importing action types here).
+  snapshot?: Record<string, unknown>;
 };
 
 // Minimal transport interface. `RedisBus` (used when REDIS_URL is set) works

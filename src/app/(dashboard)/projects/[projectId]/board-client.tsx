@@ -12,6 +12,7 @@ import {
   useDroppable,
   useSensor,
   useSensors,
+  type DragCancelEvent,
   type DragEndEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
@@ -41,7 +42,12 @@ import { updateTaskStatus } from "@/actions/projects";
 import { addTaskComment } from "@/actions/comments";
 import { uploadManager } from "@/lib/upload-manager";
 import type { BoardData, BoardStatus, BoardTask } from "@/actions/board";
-import { boardQueryKey, useBoardData, useBoardStream } from "./use-board";
+import {
+  boardQueryKey,
+  useBoardData,
+  useBoardStream,
+  type RemoteDrags,
+} from "./use-board";
 
 // Completed tasks auto-archive after this many days; archived tasks are hidden
 // in their column until the eye toggle reveals them.
@@ -163,13 +169,17 @@ function CardBody({ task }: { task: BoardTask }) {
 const BoardCard = memo(function BoardCard({
   task,
   onOpen,
+  remoteDragger,
 }: {
   task: BoardTask;
   onOpen: (taskId: string) => void;
+  /** Name of another user currently dragging this card, if any. */
+  remoteDragger: string | null;
 }) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: task.id,
     data: { statusId: task.statusId },
+    disabled: remoteDragger != null,
   });
 
   return (
@@ -179,8 +189,16 @@ const BoardCard = memo(function BoardCard({
       {...attributes}
       onClick={() => onOpen(task.id)}
       style={{ opacity: isDragging ? 0.4 : 1 }}
-      className="group/card block cursor-grab touch-none select-none rounded-lg border border-border/60 bg-background p-3 text-left transition-colors hover:border-muted-foreground/20 active:cursor-grabbing"
+      className={cn(
+        "group/card relative block cursor-grab touch-none select-none rounded-lg border border-border/60 bg-background p-3 text-left transition-colors hover:border-muted-foreground/20 active:cursor-grabbing",
+        remoteDragger && "border-primary/60 ring-1 ring-primary/40",
+      )}
     >
+      {remoteDragger && (
+        <span className="absolute -top-2 right-2 z-10 rounded-full bg-primary px-2 py-0.5 text-[9px] font-semibold text-primary-foreground shadow-sm">
+          {remoteDragger} is moving…
+        </span>
+      )}
       <CardBody task={task} />
     </div>
   );
@@ -196,6 +214,7 @@ const BoardColumn = memo(function BoardColumn({
   onToggleArchived,
   onOpen,
   highlight,
+  remoteDrags,
 }: {
   col: Column;
   projectId: string;
@@ -204,6 +223,7 @@ const BoardColumn = memo(function BoardColumn({
   onToggleArchived: () => void;
   onOpen: (taskId: string) => void;
   highlight: boolean;
+  remoteDrags: RemoteDrags;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: col.id });
 
@@ -272,7 +292,12 @@ const BoardColumn = memo(function BoardColumn({
           </div>
         ) : (
           col.tasks.map((task) => (
-            <BoardCard key={task.id} task={task} onOpen={onOpen} />
+            <BoardCard
+              key={task.id}
+              task={task}
+              onOpen={onOpen}
+              remoteDragger={remoteDrags[task.id]?.name ?? null}
+            />
           ))
         )}
       </div>
@@ -292,10 +317,12 @@ export function ProjectBoardClient({
   projectId,
   initialData,
   movePerms,
+  currentMemberName,
 }: {
   projectId: string;
   initialData: BoardData;
   movePerms: BoardMovePerms;
+  currentMemberName?: string;
 }) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -308,7 +335,11 @@ export function ProjectBoardClient({
   );
 
   const { data } = useBoardData(projectId, initialData);
-  useBoardStream(projectId, clientId);
+  const { remoteDrags, publishDrag } = useBoardStream(
+    projectId,
+    clientId,
+    currentMemberName,
+  );
 
   const tasks = data.tasks;
   const statuses = data.statuses;
@@ -548,9 +579,15 @@ export function ProjectBoardClient({
     [router, projectId],
   );
 
-  const onDragStart = useCallback((e: DragStartEvent) => {
-    setActiveId(String(e.active.id));
-  }, []);
+  const onDragStart = useCallback(
+    (e: DragStartEvent) => {
+      const taskId = String(e.active.id);
+      setActiveId(taskId);
+      // Tell every other open board that this card is being dragged.
+      publishDrag(taskId, true);
+    },
+    [publishDrag],
+  );
 
   const onDragEnd = useCallback(
     (e: DragEndEvent) => {
@@ -561,12 +598,19 @@ export function ProjectBoardClient({
       const overId = e.over ? String(e.over.id) : null;
       const taskId = String(e.active.id);
       setActiveId(null);
+      publishDrag(taskId, false);
       if (overId) handleDrop(taskId, overId);
     },
-    [handleDrop],
+    [handleDrop, publishDrag],
   );
 
-  const onDragCancel = useCallback(() => setActiveId(null), []);
+  const onDragCancel = useCallback(
+    (e: DragCancelEvent) => {
+      setActiveId(null);
+      publishDrag(String(e.active.id), false);
+    },
+    [publishDrag],
+  );
 
   const activeTask = activeId ? tasks.find((t) => t.id === activeId) ?? null : null;
   const activeSourceCol = activeTask?.statusId ?? "unassigned";
@@ -608,6 +652,7 @@ export function ProjectBoardClient({
               onToggleArchived={() => setShowArchived((v) => !v)}
               onOpen={openTask}
               highlight={activeId != null && activeSourceCol !== col.id}
+              remoteDrags={remoteDrags}
             />
           ))}
         </div>

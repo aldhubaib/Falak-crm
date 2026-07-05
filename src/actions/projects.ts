@@ -10,6 +10,7 @@ import { safeAction, type ActionResult } from "@/lib/action";
 import { deleteObject, uploadBytes, generateR2Key } from "@/lib/storage";
 import { sendNotification } from "@/lib/push";
 import { publishTaskEvent } from "@/lib/realtime";
+import type { BoardTask } from "@/actions/board";
 import { invalidateCache, claimThrottle } from "@/lib/cache";
 
 export async function getProjects() {
@@ -260,12 +261,13 @@ export async function createFullTask(data: {
   ActionResult<{
     id: string;
     items: { id: string; templateItemId: string | null }[];
+    boardTask: BoardTask;
   }>
 > {
   return safeAction("Create Task", async () => {
     const { member } = await requireProjectWork(data.projectId);
 
-    const [lastTask, lastNumber] = await Promise.all([
+    const [lastTask, lastNumber, initialStatus, creator] = await Promise.all([
       db.task.findFirst({
         where: { projectId: data.projectId },
         orderBy: { order: "desc" },
@@ -275,12 +277,15 @@ export async function createFullTask(data: {
         orderBy: { taskNumber: "desc" },
         select: { taskNumber: true },
       }),
+      db.taskStatus.findUnique({
+        where: { id: data.statusId },
+        select: { name: true, color: true },
+      }),
+      db.workspaceMember.findUnique({
+        where: { id: member.id },
+        select: { name: true, email: true, imageUrl: true },
+      }),
     ]);
-
-    const initialStatus = await db.taskStatus.findUnique({
-      where: { id: data.statusId },
-      select: { name: true },
-    });
 
     const task = await db.task.create({
       data: {
@@ -343,12 +348,61 @@ export async function createFullTask(data: {
 
     const createdItems = await db.taskChecklistItem.findMany({
       where: { taskId: task.id },
-      select: { id: true, templateItemId: true },
+      select: {
+        id: true,
+        templateItemId: true,
+        name: true,
+        phase: true,
+        mandatory: true,
+        completed: true,
+      },
     });
 
+    // Full board-card snapshot: the creator's client seeds its cache with it
+    // (task appears instantly on the board) and every subscribed board inserts
+    // it from the broadcast without refetching.
+    const creatorName = creator ? (creator.name ?? creator.email) : null;
+    const boardTask: BoardTask = {
+      id: task.id,
+      taskNumber: task.taskNumber,
+      title: task.title,
+      statusId: task.statusId,
+      statusName: initialStatus?.name ?? "Unknown",
+      statusColor: initialStatus?.color ?? "#3b82f6",
+      assigneeId: member.id,
+      assigneeName: creatorName,
+      assigneeAvatar: creator?.imageUrl ?? null,
+      serviceName: null,
+      priority: task.priority,
+      estimateMin: task.estimateMin,
+      stageEnteredAt: task.stageEnteredAt?.toISOString() ?? null,
+      completedAt: null,
+      createdAt: task.createdAt.toISOString(),
+      totalTimeMs: 0,
+      checklistTotal: createdItems.length,
+      checklistDone: createdItems.filter((i) => i.completed).length,
+      deliveryIncomplete: createdItems
+        .filter((i) => i.phase === "delivery" && i.mandatory && !i.completed)
+        .map((i) => i.name),
+      submittedById: member.id,
+      submittedByName: creatorName,
+      rejectionCount: 0,
+    };
+
     revalidatePath(`/projects/${data.projectId}`);
-    publishTaskEvent(data.projectId, { type: "task.created", taskId: task.id });
-    return { id: task.id, items: createdItems };
+    publishTaskEvent(data.projectId, {
+      type: "task.created",
+      taskId: task.id,
+      snapshot: boardTask,
+    });
+    return {
+      id: task.id,
+      items: createdItems.map((i) => ({
+        id: i.id,
+        templateItemId: i.templateItemId,
+      })),
+      boardTask,
+    };
   });
 }
 
@@ -550,8 +604,41 @@ export async function updateTaskStatus(
     }),
   ]);
 
+  // Resolve the new assignee and the mover before broadcasting so the event
+  // carries everything a remote board needs to patch its cache without
+  // refetching (the mover becomes the card's "submitted by" for declines).
+  const involved = await db.workspaceMember.findMany({
+    where: { id: { in: [...new Set([newAssigneeId, member.id])] } },
+    select: { id: true, name: true, email: true, imageUrl: true },
+  });
+  const newAssignee = involved.find((m) => m.id === newAssigneeId) ?? null;
+  const mover = involved.find((m) => m.id === member.id) ?? null;
+  const completedAt =
+    targetStatus?.name === "Completed" || targetStatus?.name === "Published"
+      ? now.toISOString()
+      : null;
+
   // Broadcast to other connected board clients immediately after the commit.
-  publishTaskEvent(projectId, { type: "task.moved", taskId, actorClientId: actorClientId ?? null });
+  // The patch lets every subscribed board apply the move in memory — no
+  // refetch storm when many screens are open.
+  publishTaskEvent(projectId, {
+    type: "task.moved",
+    taskId,
+    actorClientId: actorClientId ?? null,
+    patch: {
+      statusId,
+      statusName: targetStatus?.name ?? null,
+      statusColor: targetStatus?.color ?? null,
+      stageEnteredAt: now.toISOString(),
+      completedAt,
+      assigneeId: newAssignee?.id ?? null,
+      assigneeName: newAssignee ? (newAssignee.name ?? newAssignee.email) : null,
+      assigneeAvatar: newAssignee?.imageUrl ?? null,
+      submittedById: mover?.id ?? null,
+      submittedByName: mover ? (mover.name ?? mover.email) : null,
+      rejectionCountDelta: isForward ? 0 : 1,
+    },
+  });
 
   // Activity log is non-critical to the move response — fire and forget.
   void logActivity({
@@ -584,11 +671,6 @@ export async function updateTaskStatus(
 
   // Return the resolved assignee so the board can patch its cache immediately
   // (self-assign on forward moves, previous owner on rollbacks, auto-assign).
-  const newAssignee = await db.workspaceMember.findUnique({
-    where: { id: newAssigneeId },
-    select: { id: true, name: true, email: true, imageUrl: true },
-  });
-
   return {
     taskId,
     statusId,
