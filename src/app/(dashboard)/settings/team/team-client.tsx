@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { UserPlus, Trash2, Mail, AlertTriangle } from "lucide-react";
+import { UserPlus, Trash2, Mail, AlertTriangle, Pencil, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -24,7 +24,7 @@ import { PageContainer } from "@/components/page-container";
 import { SurfaceCard } from "@/components/surface-card";
 import { EmptyState } from "@/components/empty-state";
 import { IconButton } from "@/components/icon-button";
-import { inviteMember, assignRole, removeMember } from "@/actions/team";
+import { inviteMember, assignRole, removeMember, renameMember } from "@/actions/team";
 import { cn } from "@/lib/utils";
 
 type Member = {
@@ -57,6 +57,8 @@ export function TeamClient({
   const [error, setError] = useState<string | null>(null);
   const [shake, setShake] = useState(0);
   const [toDelete, setToDelete] = useState<Member | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
 
   const flagError = (msg: string) => {
     setError(msg);
@@ -98,6 +100,26 @@ export function TeamClient({
   const handleAssignRole = (memberId: string, roleId: string) => {
     startTransition(async () => {
       await assignRole(memberId, roleId === "none" ? null : roleId);
+      router.refresh();
+    });
+  };
+
+  const startRename = (m: Member) => {
+    setEditingId(m.id);
+    setEditName(m.name ?? "");
+  };
+
+  const saveRename = () => {
+    if (!editingId) return;
+    const name = editName.trim();
+    if (!name) {
+      setEditingId(null);
+      return;
+    }
+    const id = editingId;
+    setEditingId(null);
+    startTransition(async () => {
+      await renameMember(id, name);
       router.refresh();
     });
   };
@@ -185,16 +207,49 @@ export function TeamClient({
               {(m.name || m.email || "U").slice(0, 2).toUpperCase()}
             </div>
             <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <div className="truncate font-medium">
-                  {m.name || m.email || "Unknown"}
+              {editingId === m.id ? (
+                <div className="flex items-center gap-1">
+                  <Input
+                    autoFocus
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") saveRename();
+                      if (e.key === "Escape") setEditingId(null);
+                    }}
+                    className="h-8 min-w-0 text-sm"
+                    placeholder="Full name"
+                  />
+                  <IconButton aria-label="Save name" onClick={saveRename}>
+                    <Check className="h-4 w-4" />
+                  </IconButton>
+                  <IconButton
+                    aria-label="Cancel"
+                    onClick={() => setEditingId(null)}
+                  >
+                    <X className="h-4 w-4" />
+                  </IconButton>
                 </div>
-                {m.type === "OWNER" && (
-                  <span className="shrink-0 rounded-full bg-primary/15 px-2 py-0.5 text-xxs font-medium uppercase tracking-wide text-primary">
-                    Owner
-                  </span>
-                )}
-              </div>
+              ) : (
+                <div className="group flex items-center gap-2">
+                  <div className="truncate font-medium">
+                    {m.name || m.email || "Unknown"}
+                  </div>
+                  {m.type === "OWNER" && (
+                    <span className="shrink-0 rounded-full bg-primary/15 px-2 py-0.5 text-xxs font-medium uppercase tracking-wide text-primary">
+                      Owner
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    aria-label="Edit name"
+                    onClick={() => startRename(m)}
+                    className="shrink-0 text-muted-foreground/50 transition-colors hover:text-foreground"
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              )}
               <div className="truncate text-xs text-muted-foreground">
                 {m.email}
               </div>

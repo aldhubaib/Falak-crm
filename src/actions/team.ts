@@ -1,5 +1,6 @@
 "use server";
 
+import { clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { requireWorkspaceWithMember } from "@/lib/workspace";
 import { canEdit, newRolePermissions, normalizePermissions } from "@/lib/permissions";
@@ -58,6 +59,42 @@ export async function assignRole(memberId: string, roleId: string | null): Promi
     await invalidateCache(`perms:${memberId}`);
     revalidatePath("/settings/team");
   }, { memberId, roleId });
+}
+
+export async function renameMember(memberId: string, name: string): Promise<ActionResult> {
+  return safeAction("Rename Member", async () => {
+    const { workspace, member } = await requireWorkspaceWithMember();
+    if (!canEdit(member, "team")) throw new Error("Permission denied");
+
+    const trimmed = name.trim();
+    if (!trimmed) throw new Error("Name cannot be empty");
+
+    const target = await db.workspaceMember.findFirst({
+      where: { id: memberId, workspaceId: workspace.id },
+      select: { id: true, userId: true },
+    });
+    if (!target) throw new Error("Member not found");
+
+    await db.workspaceMember.update({
+      where: { id: target.id },
+      data: { name: trimmed },
+    });
+
+    // Mirror into Clerk (best-effort) so the auth profile matches everywhere.
+    // Invited-but-not-signed-up members have a placeholder userId — skip those.
+    if (!target.userId.startsWith("pending_")) {
+      try {
+        const client = await clerkClient();
+        const [firstName, ...rest] = trimmed.split(/\s+/);
+        await client.users.updateUser(target.userId, {
+          firstName,
+          lastName: rest.join(" "),
+        });
+      } catch {}
+    }
+
+    revalidatePath("/settings/team");
+  }, { memberId });
 }
 
 export async function inviteMember(formData: FormData): Promise<ActionResult> {
