@@ -42,11 +42,24 @@ export function QueueCard({
             : "border-border/60 hover:border-border",
       )}
     >
+      {/* Collapsed layout: the parts every task has — project, publish date,
+          title with copy. Everything checklist-driven lives in the expanded
+          section below. */}
       <div className="flex items-center gap-2.5 p-3">
         <PublishAvatar name={project.name} thumbnailId={project.thumbnailId} size={28} />
-        <span className="min-w-0 flex-1 truncate text-sm font-medium">
-          {project.name}
-        </span>
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-sm font-medium">{project.name}</div>
+          {item.publishOn && (
+            <div
+              className={cn(
+                "mt-0.5 truncate text-xs font-semibold",
+                isPublished ? "text-success" : "text-primary",
+              )}
+            >
+              {fmtShort(parseISO(item.publishOn))}
+            </div>
+          )}
+        </div>
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
@@ -59,34 +72,29 @@ export function QueueCard({
           />
         </button>
       </div>
-      <div className="flex items-center justify-between gap-3 px-3 pb-3 text-tiny">
-        <MetaCell
-          label="Publish"
-          value={item.publishOn ? fmtShort(parseISO(item.publishOn)) : "Not set"}
-          tone={isPublished ? "success" : item.publishOn ? "primary" : "muted"}
-        />
-        <div className="min-w-0 flex-1 text-right">
+      <div className="flex items-end gap-2 px-3 pb-3 text-tiny">
+        <div className="min-w-0 flex-1">
           <div className="text-xxs font-medium uppercase tracking-[0.12em] text-muted-foreground">
             Title
           </div>
-          <div dir="rtl" className="mt-0.5 truncate text-xs font-semibold text-foreground">
+          <div dir="auto" className="mt-0.5 truncate text-xs font-semibold text-foreground">
             {item.title}
           </div>
         </div>
+        <CopyButton text={item.title} label="title" />
       </div>
       {expanded && (
         <div className="border-t border-border/60">
           <div className="px-3 pt-3">
-            <div className="flex items-center justify-between">
-              <div className="text-xxs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                Title
-              </div>
-              <CopyButton text={item.title} label="title" />
+            <div className="text-xxs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+              Title
             </div>
-            <div dir="rtl" className="mt-0.5 text-right text-base font-semibold">
+            <div dir="auto" className="mt-0.5 text-base font-semibold">
               {item.title}
             </div>
           </div>
+          {/* Dynamic section: fields marked "Show on publish card" in
+              Settings → Task Types, texts first then attachments. */}
           {item.texts
             .filter((t) => t.value !== item.title)
             .map((t) => (
@@ -226,32 +234,3 @@ function AttachmentDownloadRow({
   );
 }
 
-function MetaCell({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: string;
-  tone: "success" | "primary" | "muted";
-}) {
-  return (
-    <div>
-      <div className="text-xxs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </div>
-      <div
-        className={cn(
-          "mt-0.5 text-xs font-semibold",
-          tone === "success"
-            ? "text-success"
-            : tone === "primary"
-              ? "text-primary"
-              : "text-muted-foreground",
-        )}
-      >
-        {value}
-      </div>
-    </div>
-  );
-}

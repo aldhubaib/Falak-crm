@@ -267,7 +267,7 @@ export async function createFullTask(data: {
   return safeAction("Create Task", async () => {
     const { member } = await requireProjectWork(data.projectId);
 
-    const [lastTask, lastNumber, initialStatus, creator] = await Promise.all([
+    const [lastTask, lastNumber, initialStatus, creator, templates] = await Promise.all([
       db.task.findFirst({
         where: { projectId: data.projectId },
         orderBy: { order: "desc" },
@@ -285,6 +285,12 @@ export async function createFullTask(data: {
         where: { id: member.id },
         select: { name: true, email: true, imageUrl: true },
       }),
+      data.templateIds.length > 0
+        ? db.checklistTemplate.findMany({
+            where: { id: { in: data.templateIds } },
+            include: { items: { orderBy: { order: "asc" } } },
+          })
+        : Promise.resolve([]),
     ]);
 
     const task = await db.task.create({
@@ -297,6 +303,12 @@ export async function createFullTask(data: {
         assigneeId: member.id,
         order: (lastTask?.order ?? 0) + 1,
         stageEnteredAt: new Date(),
+        // Type-level publish control: the task goes to the publish calendar
+        // (once completed) only if its task type says so.
+        publish:
+          templates.length > 0
+            ? templates.some((t) => t.publishToCalendar)
+            : true,
         statusChanges: {
           create: {
             memberId: member.id,
@@ -308,12 +320,7 @@ export async function createFullTask(data: {
       },
     });
 
-    if (data.templateIds.length > 0) {
-      const templates = await db.checklistTemplate.findMany({
-        where: { id: { in: data.templateIds } },
-        include: { items: { orderBy: { order: "asc" } } },
-      });
-
+    if (templates.length > 0) {
       const allItems = templates.flatMap((t) => t.items);
       if (allItems.length > 0) {
         await db.taskChecklistItem.createMany({
@@ -336,6 +343,7 @@ export async function createFullTask(data: {
               requiredBeforeStageId: item.requiredBeforeStageId,
               lockedFromStageId: item.lockedFromStageId,
               neverLock: item.neverLock,
+              showOnPublishCard: item.showOnPublishCard,
               order: item.order,
               textValue: hasAnswer ? answer : null,
               completed: hasAnswer,
@@ -417,7 +425,7 @@ export async function createTask(projectId: string, formData: FormData, dealId?:
   const statusId = (formData.get("statusId") as string) || undefined;
   const assigneeId = (formData.get("assigneeId") as string) || undefined;
 
-  const [lastTask, lastNumber] = await Promise.all([
+  const [lastTask, lastNumber, projectTemplates] = await Promise.all([
     db.task.findFirst({
       where: { projectId },
       orderBy: { order: "desc" },
@@ -427,6 +435,10 @@ export async function createTask(projectId: string, formData: FormData, dealId?:
       where: { projectId },
       orderBy: { taskNumber: "desc" },
       select: { taskNumber: true },
+    }),
+    db.projectTemplate.findMany({
+      where: { projectId },
+      include: { template: { include: { items: { orderBy: { order: "asc" } } } } },
     }),
   ]);
 
@@ -441,13 +453,12 @@ export async function createTask(projectId: string, formData: FormData, dealId?:
       price,
       statusId: statusId || null,
       assigneeId: assigneeId || null,
+      publish:
+        projectTemplates.length > 0
+          ? projectTemplates.some((pt) => pt.template.publishToCalendar)
+          : true,
       order: (lastTask?.order ?? 0) + 1,
     },
-  });
-
-  const projectTemplates = await db.projectTemplate.findMany({
-    where: { projectId },
-    include: { template: { include: { items: { orderBy: { order: "asc" } } } } },
   });
 
   const allItems = projectTemplates.flatMap((pt) => pt.template.items);
@@ -459,6 +470,7 @@ export async function createTask(projectId: string, formData: FormData, dealId?:
         name: item.name,
         type: item.type,
         role: item.role,
+        showOnPublishCard: item.showOnPublishCard,
         order: item.order,
       })),
     });

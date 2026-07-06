@@ -69,6 +69,9 @@ export async function getDeliveryTasks(projectId: string | null) {
             },
           }),
       deletedAt: null,
+      // Task-level gate: only tasks whose type has Publish enabled reach the
+      // publish calendar (project-level requirePublishing is checked above).
+      publish: true,
       statusId: { in: completedIds },
       checklistItems: {
         some: {
@@ -83,15 +86,16 @@ export async function getDeliveryTasks(projectId: string | null) {
     include: {
       project: { select: { id: true, name: true, thumbnailId: true } },
       checklistItems: {
-        where: { phase: "delivery" },
         orderBy: { order: "asc" },
         select: {
           id: true,
           name: true,
           type: true,
+          phase: true,
           attachmentId: true,
           textValue: true,
           allowedFormats: true,
+          showOnPublishCard: true,
           templateItem: {
             select: {
               template: { select: { name: true, icon: true, color: true } },

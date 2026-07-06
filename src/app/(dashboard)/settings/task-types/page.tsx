@@ -36,6 +36,7 @@ type RawItem = {
   requiredBeforeStageId: string | null;
   lockedFromStageId: string | null;
   neverLock: boolean;
+  showOnPublishCard: boolean;
 };
 
 function toField(i: RawItem): TTField {
@@ -54,6 +55,7 @@ function toField(i: RawItem): TTField {
     requiredBeforeStageId: i.requiredBeforeStageId,
     lockedFromStageId: i.lockedFromStageId,
     neverLock: i.neverLock,
+    showOnPublishCard: i.showOnPublishCard,
   };
 }
 
@@ -70,6 +72,7 @@ export default async function TaskTypesPage() {
       name: t.name,
       icon: t.icon,
       color: t.color,
+      publishToCalendar: t.publishToCalendar,
       requirementFields: fields
         .filter((f) => f.phase === "create")
         .sort((a, b) => a.order - b.order),

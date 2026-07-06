@@ -29,6 +29,7 @@ type Draft = {
   requiredBeforeStageId: string | null;
   lockedFromStageId: string | null;
   neverLock: boolean;
+  showOnPublishCard: boolean;
 };
 
 function toDraft(f: Partial<TTField>): Draft {
@@ -47,6 +48,7 @@ function toDraft(f: Partial<TTField>): Draft {
     requiredBeforeStageId: f.requiredBeforeStageId ?? null,
     lockedFromStageId: f.lockedFromStageId ?? null,
     neverLock: !!f.neverLock,
+    showOnPublishCard: !!f.showOnPublishCard,
   };
 }
 
@@ -331,13 +333,25 @@ export function FieldEditor({
       )}
 
       <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-        <label className="flex items-center gap-2 text-sm">
-          <Checkbox
-            checked={draft.mandatory}
-            onCheckedChange={(v) => setField({ mandatory: !!v })}
-          />
-          Mandatory
-        </label>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <label className="flex items-center gap-2 text-sm">
+            <Checkbox
+              checked={draft.mandatory}
+              onCheckedChange={(v) => setField({ mandatory: !!v })}
+            />
+            Mandatory
+          </label>
+          <label
+            className="flex items-center gap-2 text-sm"
+            title="This field's value is shown on the task's card in the publish calendar"
+          >
+            <Checkbox
+              checked={draft.showOnPublishCard}
+              onCheckedChange={(v) => setField({ showOnPublishCard: !!v })}
+            />
+            Show on publish card
+          </label>
+        </div>
         <div className="flex items-center gap-2">
           {onDelete && (
             <Button
@@ -367,6 +381,7 @@ export function FieldEditor({
                 requiredBeforeStageId: draft.requiredBeforeStageId,
                 lockedFromStageId: draft.lockedFromStageId,
                 neverLock: draft.neverLock,
+                showOnPublishCard: draft.showOnPublishCard,
               })
             }
             disabled={!draft.label.trim() || !dirty}

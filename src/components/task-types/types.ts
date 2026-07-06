@@ -15,6 +15,7 @@ export type TTField = {
   requiredBeforeStageId: string | null;
   lockedFromStageId: string | null;
   neverLock: boolean;
+  showOnPublishCard: boolean;
 };
 
 export type TaskTypeVM = {
@@ -22,6 +23,7 @@ export type TaskTypeVM = {
   name: string;
   icon: string | null;
   color: string | null;
+  publishToCalendar: boolean;
   requirementFields: TTField[];
   deliveryFields: TTField[];
 };
@@ -40,4 +42,5 @@ export type FieldPatch = {
   requiredBeforeStageId?: string | null;
   lockedFromStageId?: string | null;
   neverLock?: boolean;
+  showOnPublishCard?: boolean;
 };

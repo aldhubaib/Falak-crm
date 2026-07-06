@@ -31083,6 +31083,7 @@ export namespace Prisma {
     icon: string | null
     color: string | null
     description: string | null
+    publishToCalendar: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -31094,6 +31095,7 @@ export namespace Prisma {
     icon: string | null
     color: string | null
     description: string | null
+    publishToCalendar: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -31105,6 +31107,7 @@ export namespace Prisma {
     icon: number
     color: number
     description: number
+    publishToCalendar: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -31118,6 +31121,7 @@ export namespace Prisma {
     icon?: true
     color?: true
     description?: true
+    publishToCalendar?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -31129,6 +31133,7 @@ export namespace Prisma {
     icon?: true
     color?: true
     description?: true
+    publishToCalendar?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -31140,6 +31145,7 @@ export namespace Prisma {
     icon?: true
     color?: true
     description?: true
+    publishToCalendar?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -31224,6 +31230,7 @@ export namespace Prisma {
     icon: string | null
     color: string | null
     description: string | null
+    publishToCalendar: boolean
     createdAt: Date
     updatedAt: Date
     _count: ChecklistTemplateCountAggregateOutputType | null
@@ -31252,6 +31259,7 @@ export namespace Prisma {
     icon?: boolean
     color?: boolean
     description?: boolean
+    publishToCalendar?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
@@ -31267,6 +31275,7 @@ export namespace Prisma {
     icon?: boolean
     color?: boolean
     description?: boolean
+    publishToCalendar?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
@@ -31279,6 +31288,7 @@ export namespace Prisma {
     icon?: boolean
     color?: boolean
     description?: boolean
+    publishToCalendar?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
@@ -31291,11 +31301,12 @@ export namespace Prisma {
     icon?: boolean
     color?: boolean
     description?: boolean
+    publishToCalendar?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ChecklistTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "name" | "icon" | "color" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["checklistTemplate"]>
+  export type ChecklistTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "name" | "icon" | "color" | "description" | "publishToCalendar" | "createdAt" | "updatedAt", ExtArgs["result"]["checklistTemplate"]>
   export type ChecklistTemplateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     items?: boolean | ChecklistTemplate$itemsArgs<ExtArgs>
@@ -31323,6 +31334,7 @@ export namespace Prisma {
       icon: string | null
       color: string | null
       description: string | null
+      publishToCalendar: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["checklistTemplate"]>
@@ -31757,6 +31769,7 @@ export namespace Prisma {
     readonly icon: FieldRef<"ChecklistTemplate", 'String'>
     readonly color: FieldRef<"ChecklistTemplate", 'String'>
     readonly description: FieldRef<"ChecklistTemplate", 'String'>
+    readonly publishToCalendar: FieldRef<"ChecklistTemplate", 'Boolean'>
     readonly createdAt: FieldRef<"ChecklistTemplate", 'DateTime'>
     readonly updatedAt: FieldRef<"ChecklistTemplate", 'DateTime'>
   }
@@ -32262,6 +32275,7 @@ export namespace Prisma {
     requiredBeforeStageId: string | null
     lockedFromStageId: string | null
     neverLock: boolean | null
+    showOnPublishCard: boolean | null
     order: number | null
   }
 
@@ -32281,6 +32295,7 @@ export namespace Prisma {
     requiredBeforeStageId: string | null
     lockedFromStageId: string | null
     neverLock: boolean | null
+    showOnPublishCard: boolean | null
     order: number | null
   }
 
@@ -32300,6 +32315,7 @@ export namespace Prisma {
     requiredBeforeStageId: number
     lockedFromStageId: number
     neverLock: number
+    showOnPublishCard: number
     order: number
     _all: number
   }
@@ -32329,6 +32345,7 @@ export namespace Prisma {
     requiredBeforeStageId?: true
     lockedFromStageId?: true
     neverLock?: true
+    showOnPublishCard?: true
     order?: true
   }
 
@@ -32348,6 +32365,7 @@ export namespace Prisma {
     requiredBeforeStageId?: true
     lockedFromStageId?: true
     neverLock?: true
+    showOnPublishCard?: true
     order?: true
   }
 
@@ -32367,6 +32385,7 @@ export namespace Prisma {
     requiredBeforeStageId?: true
     lockedFromStageId?: true
     neverLock?: true
+    showOnPublishCard?: true
     order?: true
     _all?: true
   }
@@ -32473,6 +32492,7 @@ export namespace Prisma {
     requiredBeforeStageId: string | null
     lockedFromStageId: string | null
     neverLock: boolean
+    showOnPublishCard: boolean
     order: number
     _count: ChecklistTemplateItemCountAggregateOutputType | null
     _avg: ChecklistTemplateItemAvgAggregateOutputType | null
@@ -32511,6 +32531,7 @@ export namespace Prisma {
     requiredBeforeStageId?: boolean
     lockedFromStageId?: boolean
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: boolean
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
@@ -32536,6 +32557,7 @@ export namespace Prisma {
     requiredBeforeStageId?: boolean
     lockedFromStageId?: boolean
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: boolean
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
@@ -32559,6 +32581,7 @@ export namespace Prisma {
     requiredBeforeStageId?: boolean
     lockedFromStageId?: boolean
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: boolean
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
@@ -32582,10 +32605,11 @@ export namespace Prisma {
     requiredBeforeStageId?: boolean
     lockedFromStageId?: boolean
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: boolean
   }
 
-  export type ChecklistTemplateItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "templateId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "visibleFromStageId" | "requiredBeforeStageId" | "lockedFromStageId" | "neverLock" | "order", ExtArgs["result"]["checklistTemplateItem"]>
+  export type ChecklistTemplateItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "templateId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "visibleFromStageId" | "requiredBeforeStageId" | "lockedFromStageId" | "neverLock" | "showOnPublishCard" | "order", ExtArgs["result"]["checklistTemplateItem"]>
   export type ChecklistTemplateItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
@@ -32632,6 +32656,7 @@ export namespace Prisma {
       requiredBeforeStageId: string | null
       lockedFromStageId: string | null
       neverLock: boolean
+      showOnPublishCard: boolean
       order: number
     }, ExtArgs["result"]["checklistTemplateItem"]>
     composites: {}
@@ -33076,6 +33101,7 @@ export namespace Prisma {
     readonly requiredBeforeStageId: FieldRef<"ChecklistTemplateItem", 'String'>
     readonly lockedFromStageId: FieldRef<"ChecklistTemplateItem", 'String'>
     readonly neverLock: FieldRef<"ChecklistTemplateItem", 'Boolean'>
+    readonly showOnPublishCard: FieldRef<"ChecklistTemplateItem", 'Boolean'>
     readonly order: FieldRef<"ChecklistTemplateItem", 'Int'>
   }
     
@@ -34659,6 +34685,7 @@ export namespace Prisma {
     requiredBeforeStageId: string | null
     lockedFromStageId: string | null
     neverLock: boolean | null
+    showOnPublishCard: boolean | null
     completed: boolean | null
     attachmentId: string | null
     textValue: string | null
@@ -34684,6 +34711,7 @@ export namespace Prisma {
     requiredBeforeStageId: string | null
     lockedFromStageId: string | null
     neverLock: boolean | null
+    showOnPublishCard: boolean | null
     completed: boolean | null
     attachmentId: string | null
     textValue: string | null
@@ -34709,6 +34737,7 @@ export namespace Prisma {
     requiredBeforeStageId: number
     lockedFromStageId: number
     neverLock: number
+    showOnPublishCard: number
     completed: number
     attachmentId: number
     textValue: number
@@ -34744,6 +34773,7 @@ export namespace Prisma {
     requiredBeforeStageId?: true
     lockedFromStageId?: true
     neverLock?: true
+    showOnPublishCard?: true
     completed?: true
     attachmentId?: true
     textValue?: true
@@ -34769,6 +34799,7 @@ export namespace Prisma {
     requiredBeforeStageId?: true
     lockedFromStageId?: true
     neverLock?: true
+    showOnPublishCard?: true
     completed?: true
     attachmentId?: true
     textValue?: true
@@ -34794,6 +34825,7 @@ export namespace Prisma {
     requiredBeforeStageId?: true
     lockedFromStageId?: true
     neverLock?: true
+    showOnPublishCard?: true
     completed?: true
     attachmentId?: true
     textValue?: true
@@ -34906,6 +34938,7 @@ export namespace Prisma {
     requiredBeforeStageId: string | null
     lockedFromStageId: string | null
     neverLock: boolean
+    showOnPublishCard: boolean
     completed: boolean
     attachmentId: string | null
     textValue: string | null
@@ -34950,6 +34983,7 @@ export namespace Prisma {
     requiredBeforeStageId?: boolean
     lockedFromStageId?: boolean
     neverLock?: boolean
+    showOnPublishCard?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
@@ -34977,6 +35011,7 @@ export namespace Prisma {
     requiredBeforeStageId?: boolean
     lockedFromStageId?: boolean
     neverLock?: boolean
+    showOnPublishCard?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
@@ -35004,6 +35039,7 @@ export namespace Prisma {
     requiredBeforeStageId?: boolean
     lockedFromStageId?: boolean
     neverLock?: boolean
+    showOnPublishCard?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
@@ -35031,6 +35067,7 @@ export namespace Prisma {
     requiredBeforeStageId?: boolean
     lockedFromStageId?: boolean
     neverLock?: boolean
+    showOnPublishCard?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
@@ -35039,7 +35076,7 @@ export namespace Prisma {
     order?: boolean
   }
 
-  export type TaskChecklistItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "templateItemId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "visibleFromStageId" | "requiredBeforeStageId" | "lockedFromStageId" | "neverLock" | "completed" | "attachmentId" | "textValue" | "completedAt" | "completedBy" | "order", ExtArgs["result"]["taskChecklistItem"]>
+  export type TaskChecklistItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "templateItemId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "visibleFromStageId" | "requiredBeforeStageId" | "lockedFromStageId" | "neverLock" | "showOnPublishCard" | "completed" | "attachmentId" | "textValue" | "completedAt" | "completedBy" | "order", ExtArgs["result"]["taskChecklistItem"]>
   export type TaskChecklistItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     task?: boolean | TaskDefaultArgs<ExtArgs>
     templateItem?: boolean | TaskChecklistItem$templateItemArgs<ExtArgs>
@@ -35076,6 +35113,7 @@ export namespace Prisma {
       requiredBeforeStageId: string | null
       lockedFromStageId: string | null
       neverLock: boolean
+      showOnPublishCard: boolean
       completed: boolean
       attachmentId: string | null
       textValue: string | null
@@ -35523,6 +35561,7 @@ export namespace Prisma {
     readonly requiredBeforeStageId: FieldRef<"TaskChecklistItem", 'String'>
     readonly lockedFromStageId: FieldRef<"TaskChecklistItem", 'String'>
     readonly neverLock: FieldRef<"TaskChecklistItem", 'Boolean'>
+    readonly showOnPublishCard: FieldRef<"TaskChecklistItem", 'Boolean'>
     readonly completed: FieldRef<"TaskChecklistItem", 'Boolean'>
     readonly attachmentId: FieldRef<"TaskChecklistItem", 'String'>
     readonly textValue: FieldRef<"TaskChecklistItem", 'String'>
@@ -37232,6 +37271,7 @@ export namespace Prisma {
     description: string | null
     billable: boolean | null
     price: Decimal | null
+    publish: boolean | null
     priority: number | null
     estimateMin: number | null
     dueDate: Date | null
@@ -37256,6 +37296,7 @@ export namespace Prisma {
     description: string | null
     billable: boolean | null
     price: Decimal | null
+    publish: boolean | null
     priority: number | null
     estimateMin: number | null
     dueDate: Date | null
@@ -37280,6 +37321,7 @@ export namespace Prisma {
     description: number
     billable: number
     price: number
+    publish: number
     priority: number
     estimateMin: number
     dueDate: number
@@ -37326,6 +37368,7 @@ export namespace Prisma {
     description?: true
     billable?: true
     price?: true
+    publish?: true
     priority?: true
     estimateMin?: true
     dueDate?: true
@@ -37350,6 +37393,7 @@ export namespace Prisma {
     description?: true
     billable?: true
     price?: true
+    publish?: true
     priority?: true
     estimateMin?: true
     dueDate?: true
@@ -37374,6 +37418,7 @@ export namespace Prisma {
     description?: true
     billable?: true
     price?: true
+    publish?: true
     priority?: true
     estimateMin?: true
     dueDate?: true
@@ -37487,6 +37532,7 @@ export namespace Prisma {
     description: string | null
     billable: boolean
     price: Decimal | null
+    publish: boolean
     priority: number | null
     estimateMin: number | null
     dueDate: Date | null
@@ -37532,6 +37578,7 @@ export namespace Prisma {
     description?: boolean
     billable?: boolean
     price?: boolean
+    publish?: boolean
     priority?: boolean
     estimateMin?: boolean
     dueDate?: boolean
@@ -37567,6 +37614,7 @@ export namespace Prisma {
     description?: boolean
     billable?: boolean
     price?: boolean
+    publish?: boolean
     priority?: boolean
     estimateMin?: boolean
     dueDate?: boolean
@@ -37597,6 +37645,7 @@ export namespace Prisma {
     description?: boolean
     billable?: boolean
     price?: boolean
+    publish?: boolean
     priority?: boolean
     estimateMin?: boolean
     dueDate?: boolean
@@ -37627,6 +37676,7 @@ export namespace Prisma {
     description?: boolean
     billable?: boolean
     price?: boolean
+    publish?: boolean
     priority?: boolean
     estimateMin?: boolean
     dueDate?: boolean
@@ -37642,7 +37692,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "taskNumber" | "serviceId" | "statusId" | "assigneeId" | "title" | "description" | "billable" | "price" | "priority" | "estimateMin" | "dueDate" | "completedAt" | "assignmentHistory" | "stageTimings" | "stageEnteredAt" | "rejectionCount" | "order" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["task"]>
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "taskNumber" | "serviceId" | "statusId" | "assigneeId" | "title" | "description" | "billable" | "price" | "publish" | "priority" | "estimateMin" | "dueDate" | "completedAt" | "assignmentHistory" | "stageTimings" | "stageEnteredAt" | "rejectionCount" | "order" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
@@ -37690,6 +37740,7 @@ export namespace Prisma {
       description: string | null
       billable: boolean
       price: Prisma.Decimal | null
+      publish: boolean
       priority: number | null
       estimateMin: number | null
       dueDate: Date | null
@@ -38144,6 +38195,7 @@ export namespace Prisma {
     readonly description: FieldRef<"Task", 'String'>
     readonly billable: FieldRef<"Task", 'Boolean'>
     readonly price: FieldRef<"Task", 'Decimal'>
+    readonly publish: FieldRef<"Task", 'Boolean'>
     readonly priority: FieldRef<"Task", 'Int'>
     readonly estimateMin: FieldRef<"Task", 'Int'>
     readonly dueDate: FieldRef<"Task", 'DateTime'>
@@ -62941,6 +62993,7 @@ export namespace Prisma {
     icon: 'icon',
     color: 'color',
     description: 'description',
+    publishToCalendar: 'publishToCalendar',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -62964,6 +63017,7 @@ export namespace Prisma {
     requiredBeforeStageId: 'requiredBeforeStageId',
     lockedFromStageId: 'lockedFromStageId',
     neverLock: 'neverLock',
+    showOnPublishCard: 'showOnPublishCard',
     order: 'order'
   };
 
@@ -62996,6 +63050,7 @@ export namespace Prisma {
     requiredBeforeStageId: 'requiredBeforeStageId',
     lockedFromStageId: 'lockedFromStageId',
     neverLock: 'neverLock',
+    showOnPublishCard: 'showOnPublishCard',
     completed: 'completed',
     attachmentId: 'attachmentId',
     textValue: 'textValue',
@@ -63030,6 +63085,7 @@ export namespace Prisma {
     description: 'description',
     billable: 'billable',
     price: 'price',
+    publish: 'publish',
     priority: 'priority',
     estimateMin: 'estimateMin',
     dueDate: 'dueDate',
@@ -65469,6 +65525,7 @@ export namespace Prisma {
     icon?: StringNullableFilter<"ChecklistTemplate"> | string | null
     color?: StringNullableFilter<"ChecklistTemplate"> | string | null
     description?: StringNullableFilter<"ChecklistTemplate"> | string | null
+    publishToCalendar?: BoolFilter<"ChecklistTemplate"> | boolean
     createdAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
@@ -65483,6 +65540,7 @@ export namespace Prisma {
     icon?: SortOrderInput | SortOrder
     color?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    publishToCalendar?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
@@ -65500,6 +65558,7 @@ export namespace Prisma {
     icon?: StringNullableFilter<"ChecklistTemplate"> | string | null
     color?: StringNullableFilter<"ChecklistTemplate"> | string | null
     description?: StringNullableFilter<"ChecklistTemplate"> | string | null
+    publishToCalendar?: BoolFilter<"ChecklistTemplate"> | boolean
     createdAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
@@ -65514,6 +65573,7 @@ export namespace Prisma {
     icon?: SortOrderInput | SortOrder
     color?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    publishToCalendar?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ChecklistTemplateCountOrderByAggregateInput
@@ -65531,6 +65591,7 @@ export namespace Prisma {
     icon?: StringNullableWithAggregatesFilter<"ChecklistTemplate"> | string | null
     color?: StringNullableWithAggregatesFilter<"ChecklistTemplate"> | string | null
     description?: StringNullableWithAggregatesFilter<"ChecklistTemplate"> | string | null
+    publishToCalendar?: BoolWithAggregatesFilter<"ChecklistTemplate"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"ChecklistTemplate"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ChecklistTemplate"> | Date | string
   }
@@ -65554,6 +65615,7 @@ export namespace Prisma {
     requiredBeforeStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     lockedFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     neverLock?: BoolFilter<"ChecklistTemplateItem"> | boolean
+    showOnPublishCard?: BoolFilter<"ChecklistTemplateItem"> | boolean
     order?: IntFilter<"ChecklistTemplateItem"> | number
     template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
     visibleFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
@@ -65578,6 +65640,7 @@ export namespace Prisma {
     requiredBeforeStageId?: SortOrderInput | SortOrder
     lockedFromStageId?: SortOrderInput | SortOrder
     neverLock?: SortOrder
+    showOnPublishCard?: SortOrder
     order?: SortOrder
     template?: ChecklistTemplateOrderByWithRelationInput
     visibleFromStage?: TaskStatusOrderByWithRelationInput
@@ -65605,6 +65668,7 @@ export namespace Prisma {
     requiredBeforeStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     lockedFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     neverLock?: BoolFilter<"ChecklistTemplateItem"> | boolean
+    showOnPublishCard?: BoolFilter<"ChecklistTemplateItem"> | boolean
     order?: IntFilter<"ChecklistTemplateItem"> | number
     template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
     visibleFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
@@ -65629,6 +65693,7 @@ export namespace Prisma {
     requiredBeforeStageId?: SortOrderInput | SortOrder
     lockedFromStageId?: SortOrderInput | SortOrder
     neverLock?: SortOrder
+    showOnPublishCard?: SortOrder
     order?: SortOrder
     _count?: ChecklistTemplateItemCountOrderByAggregateInput
     _avg?: ChecklistTemplateItemAvgOrderByAggregateInput
@@ -65656,6 +65721,7 @@ export namespace Prisma {
     requiredBeforeStageId?: StringNullableWithAggregatesFilter<"ChecklistTemplateItem"> | string | null
     lockedFromStageId?: StringNullableWithAggregatesFilter<"ChecklistTemplateItem"> | string | null
     neverLock?: BoolWithAggregatesFilter<"ChecklistTemplateItem"> | boolean
+    showOnPublishCard?: BoolWithAggregatesFilter<"ChecklistTemplateItem"> | boolean
     order?: IntWithAggregatesFilter<"ChecklistTemplateItem"> | number
   }
 
@@ -65728,6 +65794,7 @@ export namespace Prisma {
     requiredBeforeStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     lockedFromStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     neverLock?: BoolFilter<"TaskChecklistItem"> | boolean
+    showOnPublishCard?: BoolFilter<"TaskChecklistItem"> | boolean
     completed?: BoolFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableFilter<"TaskChecklistItem"> | string | null
@@ -65755,6 +65822,7 @@ export namespace Prisma {
     requiredBeforeStageId?: SortOrderInput | SortOrder
     lockedFromStageId?: SortOrderInput | SortOrder
     neverLock?: SortOrder
+    showOnPublishCard?: SortOrder
     completed?: SortOrder
     attachmentId?: SortOrderInput | SortOrder
     textValue?: SortOrderInput | SortOrder
@@ -65785,6 +65853,7 @@ export namespace Prisma {
     requiredBeforeStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     lockedFromStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     neverLock?: BoolFilter<"TaskChecklistItem"> | boolean
+    showOnPublishCard?: BoolFilter<"TaskChecklistItem"> | boolean
     completed?: BoolFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableFilter<"TaskChecklistItem"> | string | null
@@ -65812,6 +65881,7 @@ export namespace Prisma {
     requiredBeforeStageId?: SortOrderInput | SortOrder
     lockedFromStageId?: SortOrderInput | SortOrder
     neverLock?: SortOrder
+    showOnPublishCard?: SortOrder
     completed?: SortOrder
     attachmentId?: SortOrderInput | SortOrder
     textValue?: SortOrderInput | SortOrder
@@ -65845,6 +65915,7 @@ export namespace Prisma {
     requiredBeforeStageId?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
     lockedFromStageId?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
     neverLock?: BoolWithAggregatesFilter<"TaskChecklistItem"> | boolean
+    showOnPublishCard?: BoolWithAggregatesFilter<"TaskChecklistItem"> | boolean
     completed?: BoolWithAggregatesFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
@@ -65942,6 +66013,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Task"> | string | null
     billable?: BoolFilter<"Task"> | boolean
     price?: DecimalNullableFilter<"Task"> | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFilter<"Task"> | boolean
     priority?: IntNullableFilter<"Task"> | number | null
     estimateMin?: IntNullableFilter<"Task"> | number | null
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
@@ -65976,6 +66048,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     billable?: SortOrder
     price?: SortOrderInput | SortOrder
+    publish?: SortOrder
     priority?: SortOrderInput | SortOrder
     estimateMin?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
@@ -66013,6 +66086,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Task"> | string | null
     billable?: BoolFilter<"Task"> | boolean
     price?: DecimalNullableFilter<"Task"> | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFilter<"Task"> | boolean
     priority?: IntNullableFilter<"Task"> | number | null
     estimateMin?: IntNullableFilter<"Task"> | number | null
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
@@ -66047,6 +66121,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     billable?: SortOrder
     price?: SortOrderInput | SortOrder
+    publish?: SortOrder
     priority?: SortOrderInput | SortOrder
     estimateMin?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
@@ -66081,6 +66156,7 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"Task"> | string | null
     billable?: BoolWithAggregatesFilter<"Task"> | boolean
     price?: DecimalNullableWithAggregatesFilter<"Task"> | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolWithAggregatesFilter<"Task"> | boolean
     priority?: IntNullableWithAggregatesFilter<"Task"> | number | null
     estimateMin?: IntNullableWithAggregatesFilter<"Task"> | number | null
     dueDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
@@ -69719,6 +69795,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     description?: string | null
+    publishToCalendar?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
@@ -69733,6 +69810,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     description?: string | null
+    publishToCalendar?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
@@ -69745,6 +69823,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
@@ -69759,6 +69838,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
@@ -69772,6 +69852,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     description?: string | null
+    publishToCalendar?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -69782,6 +69863,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -69793,6 +69875,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -69809,6 +69892,7 @@ export namespace Prisma {
     mandatory?: boolean
     phase?: string
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
@@ -69833,6 +69917,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
   }
@@ -69849,6 +69934,7 @@ export namespace Prisma {
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
@@ -69873,6 +69959,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
@@ -69893,6 +69980,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
   }
 
@@ -69908,6 +69996,7 @@ export namespace Prisma {
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -69927,6 +70016,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -69985,6 +70075,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -70012,6 +70103,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -70035,6 +70127,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70062,6 +70155,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70087,6 +70181,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -70110,6 +70205,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70135,6 +70231,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70228,6 +70325,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -70262,6 +70360,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -70288,6 +70387,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70322,6 +70422,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70352,6 +70453,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -70374,6 +70476,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70400,6 +70503,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73877,6 +73981,7 @@ export namespace Prisma {
     icon?: SortOrder
     color?: SortOrder
     description?: SortOrder
+    publishToCalendar?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -73888,6 +73993,7 @@ export namespace Prisma {
     icon?: SortOrder
     color?: SortOrder
     description?: SortOrder
+    publishToCalendar?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -73899,6 +74005,7 @@ export namespace Prisma {
     icon?: SortOrder
     color?: SortOrder
     description?: SortOrder
+    publishToCalendar?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -73939,6 +74046,7 @@ export namespace Prisma {
     requiredBeforeStageId?: SortOrder
     lockedFromStageId?: SortOrder
     neverLock?: SortOrder
+    showOnPublishCard?: SortOrder
     order?: SortOrder
   }
 
@@ -73962,6 +74070,7 @@ export namespace Prisma {
     requiredBeforeStageId?: SortOrder
     lockedFromStageId?: SortOrder
     neverLock?: SortOrder
+    showOnPublishCard?: SortOrder
     order?: SortOrder
   }
 
@@ -73981,6 +74090,7 @@ export namespace Prisma {
     requiredBeforeStageId?: SortOrder
     lockedFromStageId?: SortOrder
     neverLock?: SortOrder
+    showOnPublishCard?: SortOrder
     order?: SortOrder
   }
 
@@ -74038,6 +74148,7 @@ export namespace Prisma {
     requiredBeforeStageId?: SortOrder
     lockedFromStageId?: SortOrder
     neverLock?: SortOrder
+    showOnPublishCard?: SortOrder
     completed?: SortOrder
     attachmentId?: SortOrder
     textValue?: SortOrder
@@ -74067,6 +74178,7 @@ export namespace Prisma {
     requiredBeforeStageId?: SortOrder
     lockedFromStageId?: SortOrder
     neverLock?: SortOrder
+    showOnPublishCard?: SortOrder
     completed?: SortOrder
     attachmentId?: SortOrder
     textValue?: SortOrder
@@ -74092,6 +74204,7 @@ export namespace Prisma {
     requiredBeforeStageId?: SortOrder
     lockedFromStageId?: SortOrder
     neverLock?: SortOrder
+    showOnPublishCard?: SortOrder
     completed?: SortOrder
     attachmentId?: SortOrder
     textValue?: SortOrder
@@ -74181,6 +74294,7 @@ export namespace Prisma {
     description?: SortOrder
     billable?: SortOrder
     price?: SortOrder
+    publish?: SortOrder
     priority?: SortOrder
     estimateMin?: SortOrder
     dueDate?: SortOrder
@@ -74216,6 +74330,7 @@ export namespace Prisma {
     description?: SortOrder
     billable?: SortOrder
     price?: SortOrder
+    publish?: SortOrder
     priority?: SortOrder
     estimateMin?: SortOrder
     dueDate?: SortOrder
@@ -74240,6 +74355,7 @@ export namespace Prisma {
     description?: SortOrder
     billable?: SortOrder
     price?: SortOrder
+    publish?: SortOrder
     priority?: SortOrder
     estimateMin?: SortOrder
     dueDate?: SortOrder
@@ -80983,6 +81099,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     description?: string | null
+    publishToCalendar?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
@@ -80995,6 +81112,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     description?: string | null
+    publishToCalendar?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
@@ -81767,6 +81885,7 @@ export namespace Prisma {
     icon?: StringNullableFilter<"ChecklistTemplate"> | string | null
     color?: StringNullableFilter<"ChecklistTemplate"> | string | null
     description?: StringNullableFilter<"ChecklistTemplate"> | string | null
+    publishToCalendar?: BoolFilter<"ChecklistTemplate"> | boolean
     createdAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
   }
@@ -82229,6 +82348,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -82261,6 +82381,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -82682,6 +82803,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Task"> | string | null
     billable?: BoolFilter<"Task"> | boolean
     price?: DecimalNullableFilter<"Task"> | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFilter<"Task"> | boolean
     priority?: IntNullableFilter<"Task"> | number | null
     estimateMin?: IntNullableFilter<"Task"> | number | null
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
@@ -84459,6 +84581,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -84491,6 +84614,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -86583,6 +86707,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -86615,6 +86740,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -88210,6 +88336,7 @@ export namespace Prisma {
     mandatory?: boolean
     phase?: string
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
     requiredBeforeStage?: TaskStatusCreateNestedOneWithoutRequiredBeforeItemsInput
@@ -88232,6 +88359,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
   }
@@ -88378,6 +88506,7 @@ export namespace Prisma {
     requiredBeforeStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     lockedFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     neverLock?: BoolFilter<"ChecklistTemplateItem"> | boolean
+    showOnPublishCard?: BoolFilter<"ChecklistTemplateItem"> | boolean
     order?: IntFilter<"ChecklistTemplateItem"> | number
   }
 
@@ -88403,6 +88532,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     description?: string | null
+    publishToCalendar?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
@@ -88416,6 +88546,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     description?: string | null
+    publishToCalendar?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
@@ -88528,6 +88659,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -88553,6 +88685,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -88588,6 +88721,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
@@ -88601,6 +88735,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
@@ -88747,6 +88882,7 @@ export namespace Prisma {
     requiredBeforeStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     lockedFromStageId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     neverLock?: BoolFilter<"TaskChecklistItem"> | boolean
+    showOnPublishCard?: BoolFilter<"TaskChecklistItem"> | boolean
     completed?: BoolFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableFilter<"TaskChecklistItem"> | string | null
@@ -88826,6 +88962,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     description?: string | null
+    publishToCalendar?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
@@ -88839,6 +88976,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     description?: string | null
+    publishToCalendar?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
@@ -88937,6 +89075,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
@@ -88950,6 +89089,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
@@ -88962,6 +89102,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -88995,6 +89136,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -89030,6 +89172,7 @@ export namespace Prisma {
     mandatory?: boolean
     phase?: string
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
@@ -89053,6 +89196,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
   }
 
@@ -89079,6 +89223,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -89112,6 +89257,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -89153,6 +89299,7 @@ export namespace Prisma {
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
@@ -89176,6 +89323,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -89257,6 +89405,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -89289,6 +89438,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -89330,6 +89480,7 @@ export namespace Prisma {
     mandatory?: boolean
     phase?: string
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     requiredBeforeStage?: TaskStatusCreateNestedOneWithoutRequiredBeforeItemsInput
@@ -89352,6 +89503,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
   }
@@ -89378,6 +89530,7 @@ export namespace Prisma {
     mandatory?: boolean
     phase?: string
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
@@ -89400,6 +89553,7 @@ export namespace Prisma {
     visibleFromStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
   }
@@ -89426,6 +89580,7 @@ export namespace Prisma {
     mandatory?: boolean
     phase?: string
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
@@ -89448,6 +89603,7 @@ export namespace Prisma {
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
   }
@@ -89794,6 +89950,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -89819,6 +89976,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -90232,6 +90390,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -90265,6 +90424,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -90353,6 +90513,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -90386,6 +90547,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -90464,6 +90626,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -90497,6 +90660,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -90719,6 +90883,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -90752,6 +90917,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -93756,6 +93922,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -93789,6 +93956,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -94025,6 +94193,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -94058,6 +94227,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -94386,6 +94556,7 @@ export namespace Prisma {
     icon?: string | null
     color?: string | null
     description?: string | null
+    publishToCalendar?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -95252,6 +95423,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
@@ -95264,6 +95436,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
@@ -95276,6 +95449,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -95357,6 +95531,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -95460,6 +95635,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -95492,6 +95668,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -95521,6 +95698,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96433,6 +96611,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -96479,6 +96658,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96511,6 +96691,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96540,6 +96721,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96997,6 +97179,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -97110,6 +97293,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -97142,6 +97326,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -97171,6 +97356,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -97576,6 +97762,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
   }
 
@@ -97596,6 +97783,7 @@ export namespace Prisma {
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
     requiredBeforeStage?: TaskStatusUpdateOneWithoutRequiredBeforeItemsNestedInput
@@ -97618,6 +97806,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
@@ -97637,6 +97826,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -97671,6 +97861,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -97694,6 +97885,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -97719,6 +97911,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -97743,6 +97936,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -97761,6 +97955,7 @@ export namespace Prisma {
     description?: string | null
     billable?: boolean
     price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
     priority?: number | null
     estimateMin?: number | null
     dueDate?: Date | string | null
@@ -97791,6 +97986,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
   }
 
@@ -97809,6 +98005,7 @@ export namespace Prisma {
     visibleFromStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
   }
 
@@ -97827,6 +98024,7 @@ export namespace Prisma {
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     order?: number
   }
 
@@ -97837,6 +98035,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -97869,6 +98068,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -97898,6 +98098,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -97925,6 +98126,7 @@ export namespace Prisma {
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     requiredBeforeStage?: TaskStatusUpdateOneWithoutRequiredBeforeItemsNestedInput
@@ -97947,6 +98149,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
@@ -97966,6 +98169,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -97981,6 +98185,7 @@ export namespace Prisma {
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
@@ -98003,6 +98208,7 @@ export namespace Prisma {
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
@@ -98022,6 +98228,7 @@ export namespace Prisma {
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -98037,6 +98244,7 @@ export namespace Prisma {
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
@@ -98059,6 +98267,7 @@ export namespace Prisma {
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
@@ -98078,6 +98287,7 @@ export namespace Prisma {
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -98097,6 +98307,7 @@ export namespace Prisma {
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
+    showOnPublishCard?: boolean
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -98144,6 +98355,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -98169,6 +98381,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -98193,6 +98406,7 @@ export namespace Prisma {
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
+    showOnPublishCard?: BoolFieldUpdateOperationsInput | boolean
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null

@@ -34,8 +34,10 @@ export default async function PublishPage() {
       deliveredOn: toISODate(t.completedAt ?? t.updatedAt),
       publishOn: pi?.scheduledDate ? toISODate(new Date(pi.scheduledDate)) : undefined,
       status,
+      // The card layout is dynamic: only fields marked "Show on publish card"
+      // in Settings → Task Types are rendered.
       attachments: t.checklistItems
-        .filter((c) => c.attachmentId)
+        .filter((c) => c.showOnPublishCard && c.attachmentId)
         .map((c) => ({
           attachmentId: c.attachmentId as string,
           label: c.name,
@@ -43,7 +45,7 @@ export default async function PublishPage() {
         })),
       // Filled-in text fields (mention, caption, …) shown with a copy button.
       texts: t.checklistItems
-        .filter((c) => c.textValue?.trim())
+        .filter((c) => c.showOnPublishCard && c.textValue?.trim())
         .map((c) => ({ label: c.name, value: c.textValue!.trim() })),
     };
   });

@@ -93,7 +93,9 @@ export function FieldsSection({
         {adding && (
           <div className={cn(fields.length > 0 && "border-b border-border/40")}>
             <FieldEditor
-              field={{ kind: "text" }}
+              // Delivery fields default to showing on the publish card — they
+              // are the deliverables the publisher needs.
+              field={{ kind: "text", showOnPublishCard: section === "delivery" }}
               statuses={statuses}
               onCancel={() => setAdding(false)}
               onSave={(patch) => {

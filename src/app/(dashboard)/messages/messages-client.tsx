@@ -315,13 +315,15 @@ function ThreadRow({
       {thread.unread > 0 && (
         <span
           className={cn(
-            "mt-2 grid h-4 min-w-4 place-items-center rounded-full px-1 text-xxs font-semibold",
+            // leading-none keeps the digit inside the 16px circle — inherited
+            // line-height (and iOS font scaling) otherwise pushes it below.
+            "mt-2 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-xxs font-semibold leading-none",
             archived
               ? "bg-muted text-muted-foreground"
               : "bg-primary text-primary-foreground",
           )}
         >
-          {thread.unread}
+          {thread.unread > 9 ? "9+" : thread.unread}
         </span>
       )}
     </Link>

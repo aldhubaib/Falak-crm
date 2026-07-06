@@ -383,6 +383,7 @@ exports.Prisma.ChecklistTemplateScalarFieldEnum = {
   icon: 'icon',
   color: 'color',
   description: 'description',
+  publishToCalendar: 'publishToCalendar',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -403,6 +404,7 @@ exports.Prisma.ChecklistTemplateItemScalarFieldEnum = {
   requiredBeforeStageId: 'requiredBeforeStageId',
   lockedFromStageId: 'lockedFromStageId',
   neverLock: 'neverLock',
+  showOnPublishCard: 'showOnPublishCard',
   order: 'order'
 };
 
@@ -429,6 +431,7 @@ exports.Prisma.TaskChecklistItemScalarFieldEnum = {
   requiredBeforeStageId: 'requiredBeforeStageId',
   lockedFromStageId: 'lockedFromStageId',
   neverLock: 'neverLock',
+  showOnPublishCard: 'showOnPublishCard',
   completed: 'completed',
   attachmentId: 'attachmentId',
   textValue: 'textValue',
@@ -457,6 +460,7 @@ exports.Prisma.TaskScalarFieldEnum = {
   description: 'description',
   billable: 'billable',
   price: 'price',
+  publish: 'publish',
   priority: 'priority',
   estimateMin: 'estimateMin',
   dueDate: 'dueDate',

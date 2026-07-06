@@ -190,11 +190,24 @@ export async function createChecklistTemplate(formData: FormData) {
   revalidatePath("/settings/checklists");
 }
 
-export async function updateChecklistTemplate(id: string, data: { name?: string; icon?: string | null; color?: string | null }) {
+export async function updateChecklistTemplate(id: string, data: { name?: string; icon?: string | null; color?: string | null; publishToCalendar?: boolean }) {
   const { member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");
   await db.checklistTemplate.update({ where: { id }, data });
+
+  // The type-level Publish toggle is retroactive, matching the rest of this
+  // settings page ("changes here affect every project immediately"): existing
+  // tasks created from this type follow the new value.
+  if (data.publishToCalendar !== undefined) {
+    await db.task.updateMany({
+      where: { checklistItems: { some: { templateItem: { templateId: id } } } },
+      data: { publish: data.publishToCalendar },
+    });
+    revalidatePath("/publish");
+  }
+
   revalidatePath("/settings/checklists");
+  revalidatePath("/settings/task-types");
 }
 
 export async function deleteChecklistTemplate(id: string) {
@@ -221,6 +234,7 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
   const mandatory = formData.get("mandatory") === "true";
   const phase = (formData.get("phase") as string) || "create";
   const options = (formData.get("options") as string)?.trim() || null;
+  const showOnPublishCard = formData.get("showOnPublishCard") === "true";
 
   const last = await db.checklistTemplateItem.findFirst({
     where: { templateId },
@@ -243,6 +257,7 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
       requiredBeforeStageId,
       lockedFromStageId,
       neverLock,
+      showOnPublishCard,
       order: (last?.order ?? 0) + 1,
     },
   });
@@ -257,7 +272,7 @@ export async function deleteChecklistTemplateItem(id: string) {
 
 export async function updateChecklistTemplateItem(
   id: string,
-  data: { name?: string; type?: string; role?: string; options?: string | null; allowedFileTypes?: string | null; allowedFormats?: string | null; aspectRatio?: string | null; mandatory?: boolean; phase?: string; visibleFromStageId?: string | null; requiredBeforeStageId?: string | null; lockedFromStageId?: string | null; neverLock?: boolean }
+  data: { name?: string; type?: string; role?: string; options?: string | null; allowedFileTypes?: string | null; allowedFormats?: string | null; aspectRatio?: string | null; mandatory?: boolean; phase?: string; visibleFromStageId?: string | null; requiredBeforeStageId?: string | null; lockedFromStageId?: string | null; neverLock?: boolean; showOnPublishCard?: boolean }
 ) {
   const { member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");
@@ -297,6 +312,7 @@ export async function updateChecklistTemplateItem(
   if (requiredBeforeStageId !== undefined) syncFields.requiredBeforeStageId = requiredBeforeStageId;
   if (lockedFromStageId !== undefined) syncFields.lockedFromStageId = lockedFromStageId;
   if (data.neverLock !== undefined) syncFields.neverLock = data.neverLock;
+  if (data.showOnPublishCard !== undefined) syncFields.showOnPublishCard = data.showOnPublishCard;
 
   if (Object.keys(syncFields).length > 0) {
     await db.taskChecklistItem.updateMany({
@@ -305,6 +321,7 @@ export async function updateChecklistTemplateItem(
     });
   }
 
+  if (data.showOnPublishCard !== undefined) revalidatePath("/publish");
   revalidatePath("/settings/checklists");
   revalidatePath("/settings/task-types");
 }

@@ -2,12 +2,13 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Layers, Pencil, Trash2, X } from "lucide-react";
+import { CalendarCheck2, Layers, Pencil, Trash2, X } from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
 import { updateChecklistTemplate } from "@/actions/settings";
 import { cn } from "@/lib/utils";
 import { TypeIcon, TYPE_COLORS, TYPE_ICONS } from "@/components/task-types/task-type-visuals";
@@ -123,6 +124,30 @@ export function TypeCard({
           <Layers className="h-3.5 w-3.5" />
           {count} {count === 1 ? "field" : "fields"}
         </div>
+
+        {/* Type-level gate: completed tasks of this type go to the publish
+            calendar. Flipping it also updates existing tasks. */}
+        <label
+          className="flex cursor-pointer items-center gap-1.5 text-xs text-muted-foreground"
+          title="Completed tasks of this type appear in the publish calendar"
+        >
+          <CalendarCheck2
+            className={cn(
+              "h-3.5 w-3.5",
+              type.publishToCalendar && "text-primary",
+            )}
+          />
+          <span className="hidden sm:inline">Publish</span>
+          <Switch
+            checked={type.publishToCalendar}
+            onCheckedChange={(v) =>
+              startTransition(async () => {
+                await updateChecklistTemplate(type.id, { publishToCalendar: v });
+                router.refresh();
+              })
+            }
+          />
+        </label>
 
         {expanded ? (
           <>

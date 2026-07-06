@@ -198,6 +198,17 @@ export async function setBrandingAsset(formData: FormData): Promise<void> {
   const error = validateBrandingFile(slot, mime, file.name, dims);
   if (error) throw new Error(error);
 
+  // iOS ignores alpha on home-screen icons and fills transparency with solid
+  // black, which mangles most artwork — flatten onto the brand background so
+  // the Settings preview shows exactly what the home screen will show.
+  let finalBytes = bytes;
+  if (slot.id === "appleTouchIcon" && mime === "image/png") {
+    finalBytes = await sharp(bytes)
+      .flatten({ background: "#0e0e10" })
+      .png()
+      .toBuffer();
+  }
+
   if (slot.id === "androidAny" || slot.id === "androidMaskable") {
     // Store both manifest sizes of the same artwork; the size that wasn't
     // uploaded is generated with sharp.
@@ -218,7 +229,7 @@ export async function setBrandingAsset(formData: FormData): Promise<void> {
   }
 
   await upsertAsset(slot.id, {
-    bytes,
+    bytes: finalBytes,
     mime,
     fileName: file.name,
     width: dims.width,
