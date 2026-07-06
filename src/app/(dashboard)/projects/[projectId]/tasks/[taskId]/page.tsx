@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { createPresignedGet } from "@/lib/storage";
 import { getProjectAccess } from "@/lib/workspace";
 import { canDeleteTaskAt } from "@/lib/permissions";
+import { fieldConfig, isFieldLocked } from "@/lib/checklist-config";
 import { normalizeFormats } from "@/lib/formats";
 import { TaskDetailClient, type ChecklistItem } from "./task-detail-client";
 
@@ -83,52 +84,34 @@ export default async function TaskDetailPage({
     : 0;
   const currentOrder = task.status?.order ?? null;
 
-  // A field is read-only when the task has reached its configured "Locked From"
-  // stage. "Never" keeps the field editable at every stage. When left on "Auto"
-  // (no stage set) we preserve the built-in rule: requirement fields lock once
-  // the task moves past Todo; delivery stays open.
-  const isLocked = (
-    phase: string,
-    lockedFromStageId: string | null,
-    neverLock: boolean,
-  ): boolean => {
-    if (neverLock) return false;
-    if (currentOrder == null) return false;
-    if (lockedFromStageId) {
-      const lockOrder = orderById.get(lockedFromStageId);
-      return lockOrder != null && currentOrder >= lockOrder;
-    }
-    if (phase === "delivery") return false;
-    return currentOrder > todoOrder;
-  };
-
   const trashed = task.deletedAt !== null;
 
   const items: ChecklistItem[] = task.checklistItems.map((it) => {
     const att = it.attachmentId ? attachmentMap.get(it.attachmentId) : null;
-    // File constraints come from the LIVE template item when the field is
-    // linked to one, so edits in Settings → Task Types take effect on
-    // existing tasks immediately (the per-task copy is only a fallback for
-    // detached fields, and can go stale).
-    const constraints = it.templateItem ?? it;
+    // ALL config comes from the LIVE template item when the field is linked
+    // to one, so edits in Settings → Task Types (name, type, lock rules,
+    // mandatory, options, file constraints, ...) take effect on existing
+    // tasks immediately. The per-task copy is only a fallback for detached
+    // custom fields.
+    const cfg = fieldConfig(it);
     return {
       id: it.id,
-      name: it.name,
-      type: it.type,
-      phase: it.phase,
+      name: cfg.name,
+      type: cfg.type,
+      phase: cfg.phase,
       completed: it.completed,
       textValue: it.textValue,
       attachmentId: it.attachmentId,
       attachmentName: att?.name ?? null,
       attachmentUrl: att?.url ?? null,
       attachmentContentType: att?.contentType ?? null,
-      mandatory: it.mandatory,
-      options: parseArray(it.options),
-      allowedFileTypes: constraints.allowedFileTypes,
-      allowedFormats: normalizeFormats(parseArray(constraints.allowedFormats)),
-      aspectRatio: constraints.aspectRatio,
+      mandatory: cfg.mandatory,
+      options: parseArray(cfg.options),
+      allowedFileTypes: cfg.allowedFileTypes,
+      allowedFormats: normalizeFormats(parseArray(cfg.allowedFormats)),
+      aspectRatio: cfg.aspectRatio,
       // Everything is read-only while the task sits in the trash.
-      locked: trashed || isLocked(it.phase, it.lockedFromStageId, it.neverLock),
+      locked: trashed || isFieldLocked(cfg, currentOrder, orderById, todoOrder),
     };
   });
 

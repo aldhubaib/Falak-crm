@@ -87,7 +87,6 @@ export async function getDeliveryTasks(projectId: string | null) {
     include: {
       project: { select: { id: true, name: true, thumbnailId: true } },
       checklistItems: {
-        where: { hidden: false },
         orderBy: { order: "asc" },
         select: {
           id: true,
@@ -98,8 +97,19 @@ export async function getDeliveryTasks(projectId: string | null) {
           textValue: true,
           allowedFormats: true,
           publishCard: true,
+          hidden: true,
+          order: true,
+          // Live template config — card labels/placement follow Settings →
+          // Task Types; the per-task copy is only a fallback.
           templateItem: {
             select: {
+              name: true,
+              type: true,
+              phase: true,
+              allowedFormats: true,
+              publishCard: true,
+              hidden: true,
+              order: true,
               template: { select: { name: true, icon: true, color: true } },
             },
           },

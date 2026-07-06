@@ -4,6 +4,7 @@ import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { requireWorkspace, requireWorkspaceWithMember, requireProjectAssign, requireProjectSettings, requireProjectWork, getProjectAccess } from "@/lib/workspace";
 import { canEdit, canDeleteTaskAt, canMoveTaskFrom } from "@/lib/permissions";
+import { fieldConfig, isFieldLocked } from "@/lib/checklist-config";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
@@ -500,8 +501,16 @@ export async function updateTaskStatus(
       include: {
         status: true,
         checklistItems: {
-          where: { hidden: false },
-          select: { name: true, phase: true, mandatory: true, completed: true },
+          select: {
+            name: true,
+            phase: true,
+            mandatory: true,
+            completed: true,
+            hidden: true,
+            templateItem: {
+              select: { name: true, phase: true, mandatory: true, hidden: true },
+            },
+          },
         },
       },
     }),
@@ -538,13 +547,20 @@ export async function updateTaskStatus(
 
   // Block submission for Internal Review if mandatory delivery items are still
   // incomplete. Delivery items only need to be done at this gate — earlier
-  // forward moves (e.g. Todo → In Progress) must not be blocked.
+  // forward moves (e.g. Todo → In Progress) must not be blocked. Rules come
+  // from the live template config.
   if (task && isForward && targetStatus?.name?.toLowerCase() === "internal review") {
-    const incomplete = task.checklistItems.filter(
-      (ci) => ci.phase === "delivery" && ci.mandatory && !ci.completed,
-    );
+    const incomplete = task.checklistItems
+      .map((ci) => ({ cfg: fieldConfig(ci), completed: ci.completed }))
+      .filter(
+        (ci) =>
+          !ci.cfg.hidden &&
+          ci.cfg.phase === "delivery" &&
+          ci.cfg.mandatory &&
+          !ci.completed,
+      );
     if (incomplete.length > 0) {
-      const names = incomplete.map((i) => `"${i.name}"`).join(", ");
+      const names = incomplete.map((i) => `"${i.cfg.name}"`).join(", ");
       throw new Error(`Complete delivery items first: ${names}`);
     }
   }
@@ -807,7 +823,6 @@ export async function getTask(taskId: string) {
       assignee: true,
       project: { select: { id: true, name: true, dealId: true } },
       checklistItems: {
-        where: { hidden: false },
         orderBy: { order: "asc" },
         include: {
           templateItem: {
@@ -817,13 +832,18 @@ export async function getTask(taskId: string) {
       },
     },
   });
-  // Fully dynamic ordering: fields linked to a template follow the template's
-  // CURRENT order (the per-task snapshot can be stale on tasks created before
-  // a reorder). Unlinked custom fields keep their own order.
-  task?.checklistItems.sort(
-    (a, b) =>
-      (a.templateItem?.order ?? a.order) - (b.templateItem?.order ?? b.order),
-  );
+  if (task) {
+    // Fully dynamic config: fields linked to a template follow the template's
+    // CURRENT hidden flag and order (the per-task snapshot can be stale on
+    // tasks created before a settings change). Unlinked custom fields keep
+    // their own values.
+    task.checklistItems = task.checklistItems
+      .filter((it) => !(it.templateItem?.hidden ?? it.hidden))
+      .sort(
+        (a, b) =>
+          (a.templateItem?.order ?? a.order) - (b.templateItem?.order ?? b.order),
+      );
+  }
   return task;
 }
 
@@ -849,8 +869,48 @@ export async function updateTask(taskId: string, data: {
 
 // ─── Checklist Items ──────────────────────────────────────────────────────────
 
+// Server-side write guard: the task page disables locked fields in the UI,
+// but this is the guarantee. Lock/hidden rules resolve from the LIVE template
+// item (fieldConfig), so a settings change protects every existing task
+// immediately.
+async function assertChecklistItemWritable(itemId: string) {
+  const item = await db.taskChecklistItem.findUnique({
+    where: { id: itemId },
+    include: {
+      templateItem: true,
+      task: {
+        select: {
+          deletedAt: true,
+          status: { select: { order: true } },
+          project: { select: { workspaceId: true } },
+        },
+      },
+    },
+  });
+  if (!item) throw new Error("Field not found");
+  if (item.task.deletedAt) throw new Error("Task is in the trash");
+
+  const cfg = fieldConfig(item);
+  if (cfg.hidden) throw new Error(`"${cfg.name}" is disabled`);
+
+  const statuses = await db.taskStatus.findMany({
+    where: { workspaceId: item.task.project.workspaceId },
+    select: { id: true, order: true },
+  });
+  const orderById = new Map(statuses.map((s) => [s.id, s.order]));
+  const todoOrder = statuses.length
+    ? Math.min(...statuses.map((s) => s.order))
+    : 0;
+  const currentOrder = item.task.status?.order ?? null;
+
+  if (isFieldLocked(cfg, currentOrder, orderById, todoOrder)) {
+    throw new Error(`"${cfg.name}" is locked at this stage`);
+  }
+}
+
 export async function toggleChecklistItem(itemId: string, completed: boolean, projectId: string) {
   await requireProjectWork(projectId);
+  await assertChecklistItemWritable(itemId);
 
   await db.taskChecklistItem.update({
     where: { id: itemId },
@@ -875,10 +935,22 @@ async function publishChecklistProgress(itemId: string, projectId: string) {
       select: { taskId: true },
     });
     if (!item) return;
-    const checklistItems = await db.taskChecklistItem.findMany({
-      where: { taskId: item.taskId, hidden: false },
-      select: { name: true, phase: true, mandatory: true, completed: true },
+    const rows = await db.taskChecklistItem.findMany({
+      where: { taskId: item.taskId },
+      select: {
+        name: true,
+        phase: true,
+        mandatory: true,
+        completed: true,
+        hidden: true,
+        templateItem: {
+          select: { name: true, phase: true, mandatory: true, hidden: true },
+        },
+      },
     });
+    const checklistItems = rows
+      .map((r) => ({ cfg: fieldConfig(r), completed: r.completed }))
+      .filter((r) => !r.cfg.hidden);
     publishTaskEvent(projectId, {
       type: "task.updated",
       taskId: item.taskId,
@@ -886,8 +958,8 @@ async function publishChecklistProgress(itemId: string, projectId: string) {
         checklistTotal: checklistItems.length,
         checklistDone: checklistItems.filter((i) => i.completed).length,
         deliveryIncomplete: checklistItems
-          .filter((i) => i.phase === "delivery" && i.mandatory && !i.completed)
-          .map((i) => i.name),
+          .filter((i) => i.cfg.phase === "delivery" && i.cfg.mandatory && !i.completed)
+          .map((i) => i.cfg.name),
       },
     });
   } catch {
@@ -897,6 +969,7 @@ async function publishChecklistProgress(itemId: string, projectId: string) {
 
 export async function saveChecklistItemText(itemId: string, textValue: string, projectId: string) {
   await requireProjectWork(projectId);
+  await assertChecklistItemWritable(itemId);
 
   await db.taskChecklistItem.update({
     where: { id: itemId },
@@ -914,6 +987,7 @@ export async function saveChecklistItemText(itemId: string, textValue: string, p
 
 export async function setChecklistItemAttachment(itemId: string, attachmentId: string, projectId: string) {
   await requireProjectWork(projectId);
+  await assertChecklistItemWritable(itemId);
 
   await db.taskChecklistItem.update({
     where: { id: itemId },
@@ -930,6 +1004,7 @@ export async function setChecklistItemAttachment(itemId: string, attachmentId: s
 
 export async function removeChecklistItemAttachment(itemId: string, projectId: string) {
   await requireProjectWork(projectId);
+  await assertChecklistItemWritable(itemId);
 
   await db.taskChecklistItem.update({
     where: { id: itemId },
@@ -1156,7 +1231,6 @@ export async function getStageGateBlockers(taskId: string, targetStatusId: strin
     where: { id: taskId },
     include: {
       checklistItems: {
-        where: { hidden: false },
         include: { templateItem: { include: { requiredBeforeStage: true } } },
       },
       project: {
@@ -1178,24 +1252,37 @@ export async function getStageGateBlockers(taskId: string, targetStatusId: strin
   const targetStatus = await db.taskStatus.findUnique({ where: { id: targetStatusId } });
   if (!targetStatus) return [];
 
+  // Stage orders for resolving "Required Before" gates on detached fields
+  // (linked fields carry the live relation, detached ones only the stage id).
+  const stages = await db.taskStatus.findMany({
+    where: { workspaceId: targetStatus.workspaceId },
+    select: { id: true, order: true },
+  });
+  const stageOrderById = new Map(stages.map((s) => [s.id, s.order]));
+
   const blockers: { itemName: string; role: string }[] = [];
 
   for (const ci of task.checklistItems) {
+    // Rules come from the live template config; detached fields fall back to
+    // their own snapshot.
+    const cfg = fieldConfig(ci);
+    if (cfg.hidden) continue;
+
     let isComplete = ci.completed;
-    if (!isComplete && (ci.type === "mention" || ci.type === "copyright")) {
+    if (!isComplete && (cfg.type === "mention" || cfg.type === "copyright")) {
       const parsed = (() => { try { return JSON.parse(ci.textValue || "{}"); } catch { return {}; } })();
       isComplete = parsed.enabled === true ? !!parsed.text : true;
     }
     if (isComplete) continue;
 
-    const gateStageId = ci.templateItem?.requiredBeforeStageId;
+    const gateStageId = cfg.requiredBeforeStageId;
     if (!gateStageId) continue;
 
-    const gateStage = ci.templateItem?.requiredBeforeStage;
-    if (!gateStage) continue;
+    const gateOrder = stageOrderById.get(gateStageId);
+    if (gateOrder == null) continue;
 
-    if (gateStage.order <= targetStatus.order) {
-      blockers.push({ itemName: ci.name, role: ci.role });
+    if (gateOrder <= targetStatus.order) {
+      blockers.push({ itemName: cfg.name, role: cfg.role });
     }
   }
 

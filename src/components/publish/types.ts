@@ -49,6 +49,28 @@ export type Item = {
   texts: DeliveryText[];
 };
 
+// Yes/No field kinds store "yes" | "no" | JSON {v,t} in textValue (see
+// dynamic-field.tsx). On the publish card only a "yes" WITH follow-up text is
+// worth showing — a bare yes/no toggle has nothing to copy.
+const YESNO_KINDS = new Set(["yes_no", "mention", "copyright", "checkbox"]);
+
+/** The publishable text of a checklist field, or null when there's nothing to show. */
+export function publishTextValue(type: string, raw: string | null): string | null {
+  const value = raw?.trim();
+  if (!value) return null;
+  if (YESNO_KINDS.has(type)) {
+    if (value === "yes" || value === "no") return null;
+    try {
+      const o = JSON.parse(value) as { v?: string; t?: string };
+      return o?.v === "yes" && o.t?.trim() ? o.t.trim() : null;
+    } catch {
+      // Legacy plain text — treat as a "yes" with text.
+      return value;
+    }
+  }
+  return value;
+}
+
 const IMAGE_EXTS = ["jpg", "jpeg", "png", "gif", "webp", "heic", "heif", "svg", "bmp", "tiff"];
 
 // Best-effort image detection from a checklist item's allowedFormats JSON.

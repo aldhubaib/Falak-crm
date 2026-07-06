@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { fieldConfig } from "@/lib/checklist-config";
 import { requireProjectWork } from "@/lib/workspace";
 
 export type BoardStatus = {
@@ -66,8 +67,17 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         assignee: { select: { id: true, name: true, email: true, imageUrl: true } },
         service: { select: { name: true } },
         checklistItems: {
-          where: { hidden: false },
-          select: { name: true, phase: true, mandatory: true, completed: true },
+          select: {
+            name: true,
+            phase: true,
+            mandatory: true,
+            completed: true,
+            hidden: true,
+            // Live template config — the per-task copy is only a fallback.
+            templateItem: {
+              select: { name: true, phase: true, mandatory: true, hidden: true },
+            },
+          },
         },
       },
     }),
@@ -133,6 +143,11 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
     const currentMs = t.stageEnteredAt
       ? now - t.stageEnteredAt.getTime()
       : 0;
+    // Counts follow the LIVE template config (hidden/phase/mandatory), so a
+    // settings change is reflected on every card without touching tasks.
+    const checklist = t.checklistItems
+      .map((i) => ({ cfg: fieldConfig(i), completed: i.completed }))
+      .filter((i) => !i.cfg.hidden);
     return {
       id: t.id,
       taskNumber: t.taskNumber,
@@ -150,11 +165,11 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
       completedAt: t.completedAt?.toISOString() ?? null,
       createdAt: t.createdAt.toISOString(),
       totalTimeMs: pastMs + currentMs,
-      checklistTotal: t.checklistItems.length,
-      checklistDone: t.checklistItems.filter((i) => i.completed).length,
-      deliveryIncomplete: t.checklistItems
-        .filter((i) => i.phase === "delivery" && i.mandatory && !i.completed)
-        .map((i) => i.name),
+      checklistTotal: checklist.length,
+      checklistDone: checklist.filter((i) => i.completed).length,
+      deliveryIncomplete: checklist
+        .filter((i) => i.cfg.phase === "delivery" && i.cfg.mandatory && !i.completed)
+        .map((i) => i.cfg.name),
       submittedById: submittedBy.get(t.id)?.id ?? null,
       submittedByName: submittedBy.get(t.id)?.name ?? null,
       rejectionCount: t.rejectionCount ?? 0,
