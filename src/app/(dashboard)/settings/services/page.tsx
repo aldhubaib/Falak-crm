@@ -7,7 +7,7 @@ export default async function ServicesPage() {
 
   return (
     <>
-      <AppHeader title="Services" />
+      <AppHeader title="Services" backHref="/settings" />
       <main className="min-h-0 flex-1 overflow-y-auto">
         <ServicesClient services={services} />
       </main>

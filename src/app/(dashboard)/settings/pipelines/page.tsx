@@ -7,7 +7,7 @@ export default async function PipelinesPage() {
 
   return (
     <>
-      <AppHeader title="Pipelines & Stages" />
+      <AppHeader title="Pipelines & Stages" backHref="/settings" />
       <main className="min-h-0 flex-1 overflow-y-auto">
         <PipelinesClient pipelines={pipelines} />
       </main>

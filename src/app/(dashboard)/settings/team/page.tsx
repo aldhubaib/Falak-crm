@@ -7,7 +7,7 @@ export default async function TeamPage() {
 
   return (
     <>
-      <AppHeader title="Team" />
+      <AppHeader title="Team" backHref="/settings" />
       <main className="min-h-0 flex-1 overflow-y-auto">
         <TeamClient members={members} roles={roles} />
       </main>

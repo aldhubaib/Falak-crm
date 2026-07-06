@@ -12,7 +12,7 @@ export default async function CurrenciesPage() {
 
   return (
     <>
-      <AppHeader title="Currencies" />
+      <AppHeader title="Currencies" backHref="/settings" />
       <main className="min-h-0 flex-1 overflow-y-auto">
         <CurrenciesClient
           currencies={currencies}
