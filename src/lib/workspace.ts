@@ -65,7 +65,17 @@ export const getOrCreateWorkspace = cache(async () => {
         // Real membership already exists; drop the duplicate placeholder.
         await db.workspaceMember.delete({ where: { id: invited.id } }).catch(() => {});
       } else {
-        await db.workspaceMember.update({ where: { id: invited.id }, data: { userId } });
+        // Fill in the Google profile (photo + name) at claim time so the very
+        // first page load already shows it — syncCurrentMemberProfile runs
+        // concurrently with this and misses rows that are still pending_*.
+        await db.workspaceMember.update({
+          where: { id: invited.id },
+          data: {
+            userId,
+            imageUrl: user?.imageUrl ?? null,
+            ...(user?.fullName ? { name: user.fullName } : {}),
+          },
+        });
       }
       // If this account previously auto-created its own empty personal
       // workspace (before being linked), drop that membership so the account
