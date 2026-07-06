@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   CalendarPlus,
+  CalendarX,
   Check,
   ChevronDown,
   Download,
@@ -169,15 +170,15 @@ export function QueueCard({
                     onClick={() =>
                       onUpdate({ publishOn: undefined, status: "queued" })
                     }
-                    className="flex items-center justify-center gap-1.5 py-2.5 text-muted-foreground transition-colors hover:bg-surface-2 hover:text-foreground"
+                    className="my-2 flex items-center justify-center gap-1.5 py-2.5 font-medium text-destructive transition-colors hover:bg-destructive/10"
                   >
-                    <CalendarPlus className="size-3.5" />
-                    Reschedule
+                    <CalendarX className="size-3.5" />
+                    Remove
                   </button>
                   <button
                     type="button"
                     onClick={() => onUpdate({ status: "published" })}
-                    className="flex items-center justify-center gap-1.5 py-2.5 font-medium text-success transition-colors hover:bg-surface-2"
+                    className="my-2 flex items-center justify-center gap-1.5 py-2.5 font-medium text-success transition-colors hover:bg-surface-2"
                   >
                     <Check className="size-3.5" />
                     Mark completed
