@@ -37,6 +37,7 @@ type RawItem = {
   lockedFromStageId: string | null;
   neverLock: boolean;
   publishCard: string;
+  hidden: boolean;
 };
 
 function toField(i: RawItem): TTField {
@@ -56,6 +57,7 @@ function toField(i: RawItem): TTField {
     lockedFromStageId: i.lockedFromStageId,
     neverLock: i.neverLock,
     publishCard: i.publishCard,
+    hidden: i.hidden,
   };
 }
 

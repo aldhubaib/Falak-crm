@@ -1,7 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Eye, Loader2, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { getChecklistTemplateItemUsage } from "@/actions/settings";
 import { cn } from "@/lib/utils";
 import type { Section } from "./constants";
 import type { FieldPatch, StatusOpt, TTField } from "./types";
@@ -16,6 +26,7 @@ export function FieldsSection({
   onAdd,
   onUpdate,
   onDelete,
+  onToggleHidden,
   onMove,
 }: {
   section: Section;
@@ -25,6 +36,7 @@ export function FieldsSection({
   onAdd: (section: Section, patch: FieldPatch) => void;
   onUpdate: (fieldId: string, patch: FieldPatch) => void;
   onDelete: (fieldId: string) => void;
+  onToggleHidden: (fieldId: string, hidden: boolean) => void;
   onMove: (
     fieldId: string,
     from: Section,
@@ -35,6 +47,18 @@ export function FieldsSection({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [over, setOver] = useState(false);
+  // Delete guard: deleting checks usage first — fields with answers on tasks
+  // can only be hidden (data preserved), empty ones need an explicit confirm.
+  const [deleteTarget, setDeleteTarget] = useState<TTField | null>(null);
+  const [usage, setUsage] = useState<number | null>(null);
+
+  const requestDelete = (f: TTField) => {
+    setDeleteTarget(f);
+    setUsage(null);
+    getChecklistTemplateItemUsage(f.id)
+      .then((u) => setUsage(u.tasksWithData))
+      .catch(() => setUsage(0));
+  };
 
   const handleDropAt = (toIndex: number, e: React.DragEvent) => {
     const raw = e.dataTransfer.getData("application/x-field");
@@ -126,9 +150,12 @@ export function FieldsSection({
                     setEditingId(null);
                   }}
                   onDelete={() => {
-                    onDelete(f.id);
+                    requestDelete(f);
                     setEditingId(null);
                   }}
+                  onToggleHidden={
+                    f.hidden ? () => onToggleHidden(f.id, false) : undefined
+                  }
                 />
               ) : (
                 <FieldRow
@@ -149,6 +176,70 @@ export function FieldsSection({
           </div>
         )}
       </div>
+
+      <Dialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => !open && setDeleteTarget(null)}
+      >
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>
+              {usage === null
+                ? `Delete "${deleteTarget?.label}"?`
+                : usage > 0
+                  ? `"${deleteTarget?.label}" can't be deleted`
+                  : `Delete "${deleteTarget?.label}"?`}
+            </DialogTitle>
+            <DialogDescription>
+              {usage === null ? (
+                <span className="inline-flex items-center gap-2">
+                  <Loader2 className="size-3.5 animate-spin" />
+                  Checking if any tasks have data in this field…
+                </span>
+              ) : usage > 0 ? (
+                <>
+                  {usage} task{usage === 1 ? " has" : "s have"} data in this
+                  field. You can hide it instead — it disappears from tasks and
+                  cards, but the answers are kept and you can unhide it later.
+                </>
+              ) : (
+                <>
+                  No task has data in this field. It will be removed from the
+                  task type and from all existing tasks. This can&apos;t be
+                  undone.
+                </>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button variant="ghost" onClick={() => setDeleteTarget(null)}>
+              Cancel
+            </Button>
+            {usage !== null &&
+              (usage > 0 ? (
+                <Button
+                  onClick={() => {
+                    if (deleteTarget) onToggleHidden(deleteTarget.id, true);
+                    setDeleteTarget(null);
+                  }}
+                >
+                  <Eye className="mr-1.5 size-3.5" />
+                  Hide field
+                </Button>
+              ) : (
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    if (deleteTarget) onDelete(deleteTarget.id);
+                    setDeleteTarget(null);
+                  }}
+                >
+                  Delete field
+                </Button>
+              ))}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

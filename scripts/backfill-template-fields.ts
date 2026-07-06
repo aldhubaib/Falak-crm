@@ -9,7 +9,7 @@ import type { Prisma } from "../src/generated/prisma";
 
 async function main() {
   const templates = await db.checklistTemplate.findMany({
-    include: { items: true },
+    include: { items: { where: { hidden: false } } },
   });
 
   let inserted = 0;

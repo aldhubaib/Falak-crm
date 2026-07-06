@@ -8,6 +8,7 @@ import {
   addChecklistTemplateItem,
   deleteChecklistTemplateItem,
   reorderChecklistItems,
+  setChecklistTemplateItemHidden,
   updateChecklistTemplate,
   updateChecklistTemplateItem,
 } from "@/actions/settings";
@@ -94,6 +95,9 @@ export function TypeEditor({
   const deleteField = (fieldId: string) =>
     run(() => deleteChecklistTemplateItem(fieldId));
 
+  const toggleFieldHidden = (fieldId: string, hidden: boolean) =>
+    run(() => setChecklistTemplateItemHidden(fieldId, hidden));
+
   const moveField = (
     fieldId: string,
     from: Section,
@@ -159,6 +163,7 @@ export function TypeEditor({
         onAdd={addField}
         onUpdate={updateField}
         onDelete={deleteField}
+        onToggleHidden={toggleFieldHidden}
         onMove={moveField}
       />
       <FieldsSection
@@ -169,6 +174,7 @@ export function TypeEditor({
         onAdd={addField}
         onUpdate={updateField}
         onDelete={deleteField}
+        onToggleHidden={toggleFieldHidden}
         onMove={moveField}
       />
     </div>

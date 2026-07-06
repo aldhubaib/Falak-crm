@@ -17,6 +17,8 @@ export type TTField = {
   neverLock: boolean;
   /** Placement on the publish calendar card: "hidden" | "expanded" | "always". */
   publishCard: string;
+  /** Disabled: kept with its task data but not shown or enforced anywhere. */
+  hidden: boolean;
 };
 
 export type TaskTypeVM = {

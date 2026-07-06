@@ -76,6 +76,7 @@ export async function getDeliveryTasks(projectId: string | null) {
       checklistItems: {
         some: {
           phase: "delivery",
+          hidden: false,
           OR: [
             { type: "file_upload", attachmentId: { not: null } },
             { type: "text_area", textValue: { not: null } },
@@ -86,6 +87,7 @@ export async function getDeliveryTasks(projectId: string | null) {
     include: {
       project: { select: { id: true, name: true, thumbnailId: true } },
       checklistItems: {
+        where: { hidden: false },
         orderBy: { order: "asc" },
         select: {
           id: true,
@@ -131,7 +133,7 @@ export async function getPublishSchedule(projectId: string | null, month: number
           taskNumber: true,
           completedAt: true,
           checklistItems: {
-            where: { phase: "delivery" },
+            where: { phase: "delivery", hidden: false },
             orderBy: { order: "asc" },
             select: {
               id: true,
@@ -247,7 +249,7 @@ export async function getAllScheduledItems(projectId: string | null) {
           taskNumber: true,
           completedAt: true,
           checklistItems: {
-            where: { phase: "delivery" },
+            where: { phase: "delivery", hidden: false },
             orderBy: { order: "asc" },
             select: {
               id: true,
@@ -286,7 +288,7 @@ export async function getPublishPageData(projectId: string | null, month: number
         taskNumber: true,
         completedAt: true,
         checklistItems: {
-          where: { phase: "delivery" as const },
+          where: { phase: "delivery" as const, hidden: false },
           orderBy: { order: "asc" as const },
           select: {
             id: true,

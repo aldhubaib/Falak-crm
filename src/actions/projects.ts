@@ -79,7 +79,7 @@ export async function getProjectTaskTemplates(id: string) {
             select: {
               id: true,
               name: true,
-              items: { orderBy: { order: "asc" } },
+              items: { where: { hidden: false }, orderBy: { order: "asc" } },
             },
           },
         },
@@ -288,7 +288,7 @@ export async function createFullTask(data: {
       data.templateIds.length > 0
         ? db.checklistTemplate.findMany({
             where: { id: { in: data.templateIds } },
-            include: { items: { orderBy: { order: "asc" } } },
+            include: { items: { where: { hidden: false }, orderBy: { order: "asc" } } },
           })
         : Promise.resolve([]),
     ]);
@@ -438,7 +438,7 @@ export async function createTask(projectId: string, formData: FormData, dealId?:
     }),
     db.projectTemplate.findMany({
       where: { projectId },
-      include: { template: { include: { items: { orderBy: { order: "asc" } } } } },
+      include: { template: { include: { items: { where: { hidden: false }, orderBy: { order: "asc" } } } } },
     }),
   ]);
 
@@ -499,7 +499,10 @@ export async function updateTaskStatus(
       where: { id: taskId },
       include: {
         status: true,
-        checklistItems: { select: { name: true, phase: true, mandatory: true, completed: true } },
+        checklistItems: {
+          where: { hidden: false },
+          select: { name: true, phase: true, mandatory: true, completed: true },
+        },
       },
     }),
     db.taskStatus.findUnique({ where: { id: statusId } }),
@@ -804,6 +807,7 @@ export async function getTask(taskId: string) {
       assignee: true,
       project: { select: { id: true, name: true, dealId: true } },
       checklistItems: {
+        where: { hidden: false },
         orderBy: { order: "asc" },
         include: {
           templateItem: {
@@ -865,7 +869,7 @@ async function publishChecklistProgress(itemId: string, projectId: string) {
     });
     if (!item) return;
     const checklistItems = await db.taskChecklistItem.findMany({
-      where: { taskId: item.taskId },
+      where: { taskId: item.taskId, hidden: false },
       select: { name: true, phase: true, mandatory: true, completed: true },
     });
     publishTaskEvent(projectId, {
@@ -1070,7 +1074,7 @@ export async function syncTaskTemplates(taskId: string, templateIds: string[], p
 
   const templates = await db.checklistTemplate.findMany({
     where: { id: { in: templateIds } },
-    include: { items: { orderBy: { order: "asc" } } },
+    include: { items: { where: { hidden: false }, orderBy: { order: "asc" } } },
   });
 
   const wantedTemplateItemIds = new Set(
@@ -1122,12 +1126,15 @@ export async function syncTaskTemplates(taskId: string, templateIds: string[], p
         role: item.role,
         options: item.options,
         allowedFileTypes: item.allowedFileTypes,
+        allowedFormats: item.allowedFormats,
+        aspectRatio: item.aspectRatio,
         mandatory: item.mandatory,
         phase: item.phase,
         visibleFromStageId: item.visibleFromStageId,
         requiredBeforeStageId: item.requiredBeforeStageId,
         lockedFromStageId: item.lockedFromStageId,
         neverLock: item.neverLock,
+        publishCard: item.publishCard,
         order: nextOrder++,
       })),
     });
@@ -1142,6 +1149,7 @@ export async function getStageGateBlockers(taskId: string, targetStatusId: strin
     where: { id: taskId },
     include: {
       checklistItems: {
+        where: { hidden: false },
         include: { templateItem: { include: { requiredBeforeStage: true } } },
       },
       project: {

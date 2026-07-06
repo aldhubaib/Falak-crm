@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Check, Trash2, X } from "lucide-react";
+import { Check, Eye, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -77,12 +77,15 @@ export function FieldEditor({
   onCancel,
   onSave,
   onDelete,
+  onToggleHidden,
 }: {
   field: Partial<TTField>;
   statuses: StatusOpt[];
   onCancel: () => void;
   onSave: (patch: FieldPatch) => void;
   onDelete?: () => void;
+  /** Present only for hidden fields — restores (unhides) the field. */
+  onToggleHidden?: () => void;
 }) {
   const initial = useMemo(() => toDraft(field), [field]);
   const [draft, setDraft] = useState<Draft>(initial);
@@ -357,6 +360,17 @@ export function FieldEditor({
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {onToggleHidden && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onToggleHidden}
+              title="This field is hidden — restore it on all tasks"
+            >
+              <Eye className="mr-1.5 h-3.5 w-3.5" />
+              Unhide
+            </Button>
+          )}
           {onDelete && (
             <Button
               variant="ghost"

@@ -23,6 +23,7 @@ export function FieldRow({
   const subline = [
     KIND_LABELS[field.kind] ?? field.kind,
     field.mandatory ? "Required" : null,
+    field.hidden ? "Hidden" : null,
   ]
     .filter(Boolean)
     .join(" · ");
@@ -67,7 +68,7 @@ export function FieldRow({
         <GripVertical className="h-4 w-4" />
       </span>
       <span className="w-5 shrink-0 text-xs text-muted-foreground">{index + 1}.</span>
-      <div className="min-w-0 flex-1">
+      <div className={cn("min-w-0 flex-1", field.hidden && "opacity-50")}>
         <div className="truncate text-sm">{field.label}</div>
         {subline && (
           <div className="mt-0.5 truncate text-xs text-muted-foreground">{subline}</div>

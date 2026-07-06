@@ -297,9 +297,62 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
   revalidatePath("/settings/checklists");
 }
 
+// How many tasks hold real data (an answer, upload, or completion) in this
+// field. Drives the delete guard: fields with data can't be deleted.
+export async function getChecklistTemplateItemUsage(id: string) {
+  await requireWorkspaceWithMember();
+  const tasksWithData = await db.taskChecklistItem.count({
+    where: {
+      templateItemId: id,
+      OR: [
+        { completed: true },
+        { attachmentId: { not: null } },
+        { AND: [{ textValue: { not: null } }, { textValue: { not: "" } }] },
+      ],
+    },
+  });
+  return { tasksWithData };
+}
+
+// Disable/enable a field without deleting it: hidden fields vanish from tasks
+// and the publish card but keep every answer already entered, so a field with
+// data can be retired safely (and restored later).
+export async function setChecklistTemplateItemHidden(id: string, hidden: boolean) {
+  const { member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
+  await db.$transaction([
+    db.checklistTemplateItem.update({ where: { id }, data: { hidden } }),
+    db.taskChecklistItem.updateMany({
+      where: { templateItemId: id },
+      data: { hidden },
+    }),
+  ]);
+
+  revalidatePath("/settings/task-types");
+  revalidatePath("/publish");
+}
+
 export async function deleteChecklistTemplateItem(id: string) {
-  await db.checklistTemplateItem.delete({ where: { id } });
+  const { member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
+  const { tasksWithData } = await getChecklistTemplateItemUsage(id);
+  if (tasksWithData > 0) {
+    throw new Error(
+      `This field has data on ${tasksWithData} task(s) and can't be deleted`,
+    );
+  }
+
+  // Also remove the (empty) copies on existing tasks. The FK is SetNull, so
+  // without this the tasks would keep orphaned ghost fields forever.
+  await db.$transaction([
+    db.taskChecklistItem.deleteMany({ where: { templateItemId: id } }),
+    db.checklistTemplateItem.delete({ where: { id } }),
+  ]);
+
   revalidatePath("/settings/checklists");
+  revalidatePath("/settings/task-types");
 }
 
 export async function updateChecklistTemplateItem(
@@ -366,13 +419,20 @@ export async function reorderChecklistItems(
   const { member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");
 
+  // Task checklist rows carry their own copy of order/phase (snapshotted at
+  // creation), so the new arrangement must be synced to existing tasks too —
+  // otherwise only future tasks pick it up.
   await db.$transaction(
-    items.map((it) =>
+    items.flatMap((it) => [
       db.checklistTemplateItem.update({
         where: { id: it.id },
         data: { phase: it.phase, order: it.order },
       }),
-    ),
+      db.taskChecklistItem.updateMany({
+        where: { templateItemId: it.id },
+        data: { phase: it.phase, order: it.order },
+      }),
+    ]),
   );
 
   revalidatePath("/settings/task-types");

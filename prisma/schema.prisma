@@ -497,6 +497,7 @@ model ChecklistTemplateItem {
   lockedFromStageId     String?
   neverLock             Boolean  @default(false) // field stays editable at every stage
   publishCard           String   @default("hidden") // placement on the publish card: "hidden" | "expanded" | "always"
+  hidden                Boolean  @default(false) // disabled: kept (with task data) but not shown or enforced anywhere
   order                 Int      @default(0)
 
   template              ChecklistTemplate  @relation(fields: [templateId], references: [id], onDelete: Cascade)
@@ -537,6 +538,7 @@ model TaskChecklistItem {
   lockedFromStageId     String?
   neverLock             Boolean   @default(false) // field stays editable at every stage
   publishCard           String    @default("hidden") // placement on the publish card: "hidden" | "expanded" | "always"
+  hidden                Boolean   @default(false) // disabled: kept (with task data) but not shown or enforced anywhere
   completed             Boolean   @default(false)
   attachmentId          String?
   textValue             String?

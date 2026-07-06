@@ -66,6 +66,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         assignee: { select: { id: true, name: true, email: true, imageUrl: true } },
         service: { select: { name: true } },
         checklistItems: {
+          where: { hidden: false },
           select: { name: true, phase: true, mandatory: true, completed: true },
         },
       },
