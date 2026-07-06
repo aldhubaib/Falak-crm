@@ -817,6 +817,13 @@ export async function getTask(taskId: string) {
       },
     },
   });
+  // Fully dynamic ordering: fields linked to a template follow the template's
+  // CURRENT order (the per-task snapshot can be stale on tasks created before
+  // a reorder). Unlinked custom fields keep their own order.
+  task?.checklistItems.sort(
+    (a, b) =>
+      (a.templateItem?.order ?? a.order) - (b.templateItem?.order ?? b.order),
+  );
   return task;
 }
 
