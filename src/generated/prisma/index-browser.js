@@ -404,7 +404,7 @@ exports.Prisma.ChecklistTemplateItemScalarFieldEnum = {
   requiredBeforeStageId: 'requiredBeforeStageId',
   lockedFromStageId: 'lockedFromStageId',
   neverLock: 'neverLock',
-  showOnPublishCard: 'showOnPublishCard',
+  publishCard: 'publishCard',
   order: 'order'
 };
 
@@ -431,7 +431,7 @@ exports.Prisma.TaskChecklistItemScalarFieldEnum = {
   requiredBeforeStageId: 'requiredBeforeStageId',
   lockedFromStageId: 'lockedFromStageId',
   neverLock: 'neverLock',
-  showOnPublishCard: 'showOnPublishCard',
+  publishCard: 'publishCard',
   completed: 'completed',
   attachmentId: 'attachmentId',
   textValue: 'textValue',

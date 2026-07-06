@@ -16,6 +16,8 @@ export type DeliveryAttachment = {
   label: string;
   /** True for image files, so the row can show an image icon. */
   isImage: boolean;
+  /** True = visible even when the card is collapsed (field set to "always"). */
+  always: boolean;
 };
 
 /** A filled-in delivery text field (e.g. "Mention", "Caption"). */
@@ -24,6 +26,8 @@ export type DeliveryText = {
   label: string;
   /** The text the creator entered. */
   value: string;
+  /** True = visible even when the card is collapsed (field set to "always"). */
+  always: boolean;
 };
 
 export type Item = {

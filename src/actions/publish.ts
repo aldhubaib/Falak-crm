@@ -95,7 +95,7 @@ export async function getDeliveryTasks(projectId: string | null) {
           attachmentId: true,
           textValue: true,
           allowedFormats: true,
-          showOnPublishCard: true,
+          publishCard: true,
           templateItem: {
             select: {
               template: { select: { name: true, icon: true, color: true } },

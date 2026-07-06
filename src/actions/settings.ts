@@ -234,14 +234,14 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
   const mandatory = formData.get("mandatory") === "true";
   const phase = (formData.get("phase") as string) || "create";
   const options = (formData.get("options") as string)?.trim() || null;
-  const showOnPublishCard = formData.get("showOnPublishCard") === "true";
+  const publishCard = (formData.get("publishCard") as string) || "hidden";
 
   const last = await db.checklistTemplateItem.findFirst({
     where: { templateId },
     orderBy: { order: "desc" },
   });
 
-  await db.checklistTemplateItem.create({
+  const item = await db.checklistTemplateItem.create({
     data: {
       templateId,
       name: name.trim(),
@@ -257,10 +257,42 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
       requiredBeforeStageId,
       lockedFromStageId,
       neverLock,
-      showOnPublishCard,
+      publishCard,
       order: (last?.order ?? 0) + 1,
     },
   });
+
+  // "Changes here affect every project immediately" — backfill the new field
+  // onto every existing task built from this template, same as field edits
+  // already sync. Without this, only tasks created afterwards would have it.
+  const existingTasks = await db.taskChecklistItem.findMany({
+    where: { templateItem: { templateId } },
+    select: { taskId: true },
+    distinct: ["taskId"],
+  });
+  if (existingTasks.length > 0) {
+    await db.taskChecklistItem.createMany({
+      data: existingTasks.map(({ taskId }) => ({
+        taskId,
+        templateItemId: item.id,
+        name: item.name,
+        type: item.type,
+        role: item.role,
+        options: item.options,
+        allowedFileTypes: item.allowedFileTypes,
+        allowedFormats: item.allowedFormats,
+        aspectRatio: item.aspectRatio,
+        mandatory: item.mandatory,
+        phase: item.phase,
+        visibleFromStageId: item.visibleFromStageId,
+        requiredBeforeStageId: item.requiredBeforeStageId,
+        lockedFromStageId: item.lockedFromStageId,
+        neverLock: item.neverLock,
+        publishCard: item.publishCard,
+        order: item.order,
+      })),
+    });
+  }
 
   revalidatePath("/settings/checklists");
 }
@@ -272,7 +304,7 @@ export async function deleteChecklistTemplateItem(id: string) {
 
 export async function updateChecklistTemplateItem(
   id: string,
-  data: { name?: string; type?: string; role?: string; options?: string | null; allowedFileTypes?: string | null; allowedFormats?: string | null; aspectRatio?: string | null; mandatory?: boolean; phase?: string; visibleFromStageId?: string | null; requiredBeforeStageId?: string | null; lockedFromStageId?: string | null; neverLock?: boolean; showOnPublishCard?: boolean }
+  data: { name?: string; type?: string; role?: string; options?: string | null; allowedFileTypes?: string | null; allowedFormats?: string | null; aspectRatio?: string | null; mandatory?: boolean; phase?: string; visibleFromStageId?: string | null; requiredBeforeStageId?: string | null; lockedFromStageId?: string | null; neverLock?: boolean; publishCard?: string }
 ) {
   const { member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");
@@ -312,7 +344,7 @@ export async function updateChecklistTemplateItem(
   if (requiredBeforeStageId !== undefined) syncFields.requiredBeforeStageId = requiredBeforeStageId;
   if (lockedFromStageId !== undefined) syncFields.lockedFromStageId = lockedFromStageId;
   if (data.neverLock !== undefined) syncFields.neverLock = data.neverLock;
-  if (data.showOnPublishCard !== undefined) syncFields.showOnPublishCard = data.showOnPublishCard;
+  if (data.publishCard !== undefined) syncFields.publishCard = data.publishCard;
 
   if (Object.keys(syncFields).length > 0) {
     await db.taskChecklistItem.updateMany({
@@ -321,7 +353,7 @@ export async function updateChecklistTemplateItem(
     });
   }
 
-  if (data.showOnPublishCard !== undefined) revalidatePath("/publish");
+  if (data.publishCard !== undefined) revalidatePath("/publish");
   revalidatePath("/settings/checklists");
   revalidatePath("/settings/task-types");
 }

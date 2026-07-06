@@ -31,6 +31,14 @@ export function QueueCard({
   const isScheduled = item.status === "scheduled" && !!item.publishOn;
   const isPublished = item.status === "published";
   const isQueue = !!onAdd;
+  // Field placement (Settings → Task Types → "Publish card"): "always" fields
+  // render right under the fixed photo/date/title block even while collapsed;
+  // the rest only appear when the card is opened.
+  const texts = item.texts.filter((t) => t.value !== item.title);
+  const alwaysTexts = texts.filter((t) => t.always);
+  const expandedTexts = texts.filter((t) => !t.always);
+  const alwaysAttachments = item.attachments.filter((a) => a.always);
+  const expandedAttachments = item.attachments.filter((a) => !a.always);
   return (
     <div
       className={cn(
@@ -83,37 +91,30 @@ export function QueueCard({
         </div>
         <CopyButton text={item.title} label="title" />
       </div>
+      {/* Fields set to "Always visible" stay under the title in both states. */}
+      {alwaysTexts.map((t) => (
+        <TextFieldRow key={t.label} label={t.label} value={t.value} />
+      ))}
+      {alwaysAttachments.length > 0 && (
+        <div className="divide-y divide-border/60 border-t border-border/60">
+          {alwaysAttachments.map((a) => (
+            <AttachmentDownloadRow
+              key={a.attachmentId}
+              attachmentId={a.attachmentId}
+              label={a.label}
+              isImage={a.isImage}
+            />
+          ))}
+        </div>
+      )}
       {expanded && (
-        <div className="border-t border-border/60">
-          <div className="px-3 pt-3">
-            <div className="text-xxs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-              Title
-            </div>
-            <div dir="auto" className="mt-0.5 text-base font-semibold">
-              {item.title}
-            </div>
-          </div>
-          {/* Dynamic section: fields marked "Show on publish card" in
-              Settings → Task Types, texts first then attachments. */}
-          {item.texts
-            .filter((t) => t.value !== item.title)
-            .map((t) => (
-              <div
-                key={t.label}
-                className="mt-3 border-t border-border/60 px-3 pt-3"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="text-xxs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                    {t.label}
-                  </div>
-                  <CopyButton text={t.value} label={t.label} />
-                </div>
-                <div dir="auto" className="mt-0.5 whitespace-pre-wrap text-sm">
-                  {t.value}
-                </div>
-              </div>
-            ))}
-          <div className="mt-3 flex items-center justify-between border-t border-border/60 px-3 pt-3">
+        <div>
+          {/* Fields set to "When expanded" only appear here; the fixed block
+              and any "always" fields above stay visible. */}
+          {expandedTexts.map((t) => (
+            <TextFieldRow key={t.label} label={t.label} value={t.value} />
+          ))}
+          <div className="flex items-center justify-between border-t border-border/60 px-3 py-3">
             <span className="text-sm font-medium text-muted-foreground">
               Delivered
             </span>
@@ -121,9 +122,9 @@ export function QueueCard({
               {fmtShort(parseISO(item.deliveredOn))}
             </span>
           </div>
-          {item.attachments.length > 0 && (
-            <div className="mt-3 divide-y divide-border/60 border-y border-border/60">
-              {item.attachments.map((a) => (
+          {expandedAttachments.length > 0 && (
+            <div className="divide-y divide-border/60 border-y border-border/60">
+              {expandedAttachments.map((a) => (
                 <AttachmentDownloadRow
                   key={a.attachmentId}
                   attachmentId={a.attachmentId}
@@ -196,6 +197,22 @@ export function QueueCard({
           ) : null}
         </div>
       )}
+    </div>
+  );
+}
+
+function TextFieldRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border-t border-border/60 px-3 pb-3 pt-3">
+      <div className="flex items-center justify-between">
+        <div className="text-xxs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+          {label}
+        </div>
+        <CopyButton text={value} label={label} />
+      </div>
+      <div dir="auto" className="mt-0.5 whitespace-pre-wrap text-sm">
+        {value}
+      </div>
     </div>
   );
 }

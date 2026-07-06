@@ -95,7 +95,7 @@ export function FieldsSection({
             <FieldEditor
               // Delivery fields default to showing on the publish card — they
               // are the deliverables the publisher needs.
-              field={{ kind: "text", showOnPublishCard: section === "delivery" }}
+              field={{ kind: "text", publishCard: section === "delivery" ? "expanded" : "hidden" }}
               statuses={statuses}
               onCancel={() => setAdding(false)}
               onSave={(patch) => {

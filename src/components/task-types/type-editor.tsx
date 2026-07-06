@@ -34,7 +34,7 @@ function buildAddFormData(section: Section, patch: FieldPatch): FormData {
   if (patch.lockedFromStageId)
     fd.set("lockedFromStageId", patch.lockedFromStageId);
   fd.set("neverLock", patch.neverLock ? "true" : "false");
-  fd.set("showOnPublishCard", patch.showOnPublishCard ? "true" : "false");
+  fd.set("publishCard", patch.publishCard ?? "hidden");
   return fd;
 }
 
@@ -57,7 +57,7 @@ function toUpdateData(patch: FieldPatch) {
     requiredBeforeStageId: patch.requiredBeforeStageId ?? null,
     lockedFromStageId: patch.lockedFromStageId ?? null,
     neverLock: patch.neverLock ?? false,
-    showOnPublishCard: patch.showOnPublishCard ?? false,
+    publishCard: patch.publishCard ?? "hidden",
   };
 }
 

@@ -343,7 +343,7 @@ export async function createFullTask(data: {
               requiredBeforeStageId: item.requiredBeforeStageId,
               lockedFromStageId: item.lockedFromStageId,
               neverLock: item.neverLock,
-              showOnPublishCard: item.showOnPublishCard,
+              publishCard: item.publishCard,
               order: item.order,
               textValue: hasAnswer ? answer : null,
               completed: hasAnswer,
@@ -470,7 +470,7 @@ export async function createTask(projectId: string, formData: FormData, dealId?:
         name: item.name,
         type: item.type,
         role: item.role,
-        showOnPublishCard: item.showOnPublishCard,
+        publishCard: item.publishCard,
         order: item.order,
       })),
     });

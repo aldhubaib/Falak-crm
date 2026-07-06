@@ -31,7 +31,7 @@ type Draft = {
   requiredBeforeStageId: string | null;
   lockedFromStageId: string | null;
   neverLock: boolean;
-  showOnPublishCard: boolean;
+  publishCard: string;
 };
 
 function toDraft(f: Partial<TTField>): Draft {
@@ -50,7 +50,7 @@ function toDraft(f: Partial<TTField>): Draft {
     requiredBeforeStageId: f.requiredBeforeStageId ?? null,
     lockedFromStageId: f.lockedFromStageId ?? null,
     neverLock: !!f.neverLock,
-    showOnPublishCard: !!f.showOnPublishCard,
+    publishCard: f.publishCard ?? "hidden",
   };
 }
 
@@ -336,16 +336,25 @@ export function FieldEditor({
             />
             Mandatory
           </label>
-          <label
+          <div
             className="flex items-center gap-2 text-sm"
-            title="This field's value is shown on the task's card in the publish calendar"
+            title="Where this field's value appears on the publish calendar card: hidden, only when the card is opened, or always (below the title even when collapsed)"
           >
-            <Checkbox
-              checked={draft.showOnPublishCard}
-              onCheckedChange={(v) => setField({ showOnPublishCard: !!v })}
-            />
-            Show on publish card
-          </label>
+            Publish card
+            <Select
+              value={draft.publishCard}
+              onValueChange={(v) => setField({ publishCard: v })}
+            >
+              <SelectTrigger className="h-8 w-36">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="hidden">Hidden</SelectItem>
+                <SelectItem value="expanded">When expanded</SelectItem>
+                <SelectItem value="always">Always visible</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           {onDelete && (
@@ -379,7 +388,7 @@ export function FieldEditor({
                 requiredBeforeStageId: draft.requiredBeforeStageId,
                 lockedFromStageId: draft.lockedFromStageId,
                 neverLock: draft.neverLock,
-                showOnPublishCard: draft.showOnPublishCard,
+                publishCard: draft.publishCard,
               })
             }
             disabled={!draft.label.trim() || !dirty}
