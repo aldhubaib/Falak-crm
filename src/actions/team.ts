@@ -106,6 +106,9 @@ export async function inviteMember(formData: FormData): Promise<ActionResult> {
     const name = (formData.get("name") as string) || undefined;
     const type = (formData.get("type") as string) || "MEMBER";
 
+    // Invite-only is enforced by the app itself: Clerk sign-ups are open, but
+    // accounts whose email doesn't match a member row land on /not-invited.
+    // Adding this row is what grants access — no email is sent.
     await db.workspaceMember.create({
       data: {
         workspaceId: workspace.id,
@@ -115,22 +118,6 @@ export async function inviteMember(formData: FormData): Promise<ActionResult> {
         type: type as "MEMBER" | "FREELANCER",
       },
     });
-
-    // The Clerk instance is invite-only (restricted sign-ups), so Clerk must
-    // also be told this email is allowed — otherwise their first Google
-    // sign-in is rejected with "authorization_invalid". Best-effort: the
-    // workspace invite above stands even if this call fails.
-    try {
-      const client = await clerkClient();
-      await client.invitations.createInvitation({
-        emailAddress: email,
-        redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL || "https://panel.falak.media"}/sign-in`,
-        notify: true,
-        ignoreExisting: true,
-      });
-    } catch (e) {
-      console.error("[Invite Member] Clerk invitation failed:", e);
-    }
 
     revalidatePath("/settings/team");
   }, { formFields: Object.fromEntries(formData) });
