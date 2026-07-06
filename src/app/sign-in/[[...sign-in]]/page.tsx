@@ -1,14 +1,54 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSignIn } from "@clerk/nextjs";
+import { useEffect, useRef, useState } from "react";
+import { useSignIn, useSignUp } from "@clerk/nextjs";
 
 type GalleryPhoto = { id: string; column: "a" | "b"; url: string };
 
 export default function SignInPage() {
   const { signIn } = useSignIn();
+  const { signUp } = useSignUp();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Invitation links from Clerk land here with a `__clerk_ticket` param.
+  // Sign-ups are restricted (invite-only), so the ticket is what authorizes
+  // account creation — consume it and sign the person straight in.
+  const ticketConsumed = useRef(false);
+  useEffect(() => {
+    if (!signIn || !signUp || ticketConsumed.current) return;
+    const params = new URLSearchParams(window.location.search);
+    const ticket = params.get("__clerk_ticket");
+    if (!ticket) return;
+    const status = params.get("__clerk_status");
+    if (status === "complete") {
+      window.location.href = "/";
+      return;
+    }
+    ticketConsumed.current = true;
+    setLoading(true);
+    void (async () => {
+      try {
+        if (status === "sign_in") {
+          const { error: e1 } = await signIn.ticket({ ticket });
+          if (e1) throw e1;
+          const { error: e2 } = await signIn.finalize();
+          if (e2) throw e2;
+        } else {
+          const { error: e1 } = await signUp.ticket({ ticket });
+          if (e1) throw e1;
+          const { error: e2 } = await signUp.finalize();
+          if (e2) throw e2;
+        }
+        window.location.href = "/";
+      } catch {
+        setLoading(false);
+        setError(
+          "This invitation link is invalid or has expired. Ask your admin for a new invite, or sign in with Google if you already have an account.",
+        );
+      }
+    })();
+  }, [signIn, signUp]);
 
   const handleGoogle = async () => {
     if (!signIn) return;

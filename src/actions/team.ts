@@ -116,6 +116,22 @@ export async function inviteMember(formData: FormData): Promise<ActionResult> {
       },
     });
 
+    // The Clerk instance is invite-only (restricted sign-ups), so Clerk must
+    // also be told this email is allowed — otherwise their first Google
+    // sign-in is rejected with "authorization_invalid". Best-effort: the
+    // workspace invite above stands even if this call fails.
+    try {
+      const client = await clerkClient();
+      await client.invitations.createInvitation({
+        emailAddress: email,
+        redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL || "https://panel.falak.media"}/sign-in`,
+        notify: true,
+        ignoreExisting: true,
+      });
+    } catch (e) {
+      console.error("[Invite Member] Clerk invitation failed:", e);
+    }
+
     revalidatePath("/settings/team");
   }, { formFields: Object.fromEntries(formData) });
 }

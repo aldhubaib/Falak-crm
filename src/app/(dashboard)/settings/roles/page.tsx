@@ -15,7 +15,11 @@ export default async function RolesPage() {
       <main className="min-h-0 flex-1 overflow-y-auto">
         <RolesClient
           roles={roles}
-          stages={statuses.map((s) => ({ id: s.id, name: s.name, order: s.order }))}
+          // "Published" is hidden everywhere (board, task moves) — no point
+          // configuring stage permissions for it.
+          stages={statuses
+            .filter((s) => s.name !== "Published")
+            .map((s) => ({ id: s.id, name: s.name, order: s.order }))}
           memberCounts={countByRole(roles, members)}
         />
       </main>
