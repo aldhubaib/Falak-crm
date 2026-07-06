@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { UserPlus, Trash2, Mail, AlertTriangle, Pencil, Check, X } from "lucide-react";
+import { UserPlus, Trash2, Save, AlertTriangle, Pencil, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -20,6 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PageContainer } from "@/components/page-container";
 import { SurfaceCard } from "@/components/surface-card";
 import { EmptyState } from "@/components/empty-state";
@@ -32,6 +33,7 @@ type Member = {
   userId: string;
   name: string | null;
   email: string | null;
+  imageUrl: string | null;
   type: string;
   joinedAt: Date;
   role: { id: string; name: string } | null;
@@ -188,7 +190,7 @@ export function TeamClient({
               className="shrink-0"
               disabled={pending}
             >
-              <Mail className="h-4 w-4" />
+              <Save className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -203,9 +205,12 @@ export function TeamClient({
             key={m.id}
             className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3"
           >
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary/15 text-xs font-medium text-primary">
-              {(m.name || m.email || "U").slice(0, 2).toUpperCase()}
-            </div>
+            <Avatar className="h-9 w-9 shrink-0">
+              {m.imageUrl && <AvatarImage src={m.imageUrl} alt={m.name ?? ""} />}
+              <AvatarFallback className="bg-primary/15 text-xs font-medium text-primary">
+                {(m.name || m.email || "U").slice(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
             <div className="min-w-0">
               {editingId === m.id ? (
                 <div className="flex items-center gap-1">

@@ -41,6 +41,10 @@ export default async function PublishPage() {
           label: c.name,
           isImage: attachmentIsImage(c.allowedFormats),
         })),
+      // Filled-in text fields (mention, caption, …) shown with a copy button.
+      texts: t.checklistItems
+        .filter((c) => c.textValue?.trim())
+        .map((c) => ({ label: c.name, value: c.textValue!.trim() })),
     };
   });
 

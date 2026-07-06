@@ -215,14 +215,11 @@ export function ProjectTeamStack({
               {filteredMembers.map((m) => (
                 <div
                   key={m.memberId}
-                  className="flex items-center gap-2 rounded-md px-2 py-1.5"
+                  className="flex items-center gap-2 rounded-md px-2 py-2"
                 >
                   <MemberAvatar name={m.name} imageUrl={m.imageUrl} />
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm">{m.name}</div>
-                    <div className="truncate text-tiny text-muted-foreground">
-                      {m.email}
-                    </div>
+                    <div className="truncate text-sm font-medium">{m.name}</div>
                   </div>
                   {canEdit ? (
                     <>
@@ -231,7 +228,7 @@ export function ProjectTeamStack({
                         onValueChange={(v) => changeRole(m.memberId, v)}
                         disabled={pending || roles.length === 0}
                       >
-                        <SelectTrigger className="h-7 w-24 border-transparent bg-muted/40 text-xs hover:bg-muted">
+                        <SelectTrigger className="h-7 w-32 border-transparent bg-muted/40 text-xs hover:bg-muted [&>span]:truncate">
                           <SelectValue>{roleName(m.roleId)}</SelectValue>
                         </SelectTrigger>
                         <SelectContent>
@@ -282,10 +279,7 @@ export function ProjectTeamStack({
                 >
                   <MemberAvatar name={m.name} imageUrl={m.imageUrl} muted />
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm">{m.name}</div>
-                    <div className="truncate text-tiny text-muted-foreground">
-                      {m.email}
-                    </div>
+                    <div className="truncate text-sm font-medium">{m.name}</div>
                   </div>
                   <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-muted-foreground">
                     <UserPlus className="h-3.5 w-3.5" />

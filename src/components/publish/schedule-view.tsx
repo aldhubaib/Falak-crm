@@ -1,7 +1,9 @@
-import { CheckCircle2, Clock } from "lucide-react";
+import { useState } from "react";
+import { CalendarOff, Check, ChevronDown, Clock } from "lucide-react";
 import { PublishAvatar } from "./publish-avatar";
+import { cn } from "@/lib/utils";
 import { type Item } from "./types";
-import { DOW_SHORT, MONTHS, fmtShort, parseISO } from "./helpers";
+import { DOW_SHORT, MONTHS, parseISO } from "./helpers";
 
 export function ScheduleView({
   items,
@@ -10,6 +12,9 @@ export function ScheduleView({
   items: Item[];
   onSelect: (id: string) => void;
 }) {
+  const [noDateOpen, setNoDateOpen] = useState(true);
+
+  const unscheduled = items.filter((i) => !i.publishOn);
   const sorted = [...items]
     .filter((i) => i.publishOn)
     .sort(
@@ -24,6 +29,37 @@ export function ScheduleView({
 
   return (
     <div className="divide-y divide-border/60">
+      {unscheduled.length > 0 && (
+        <section className="px-4 py-3 sm:px-6">
+          <button
+            type="button"
+            onClick={() => setNoDateOpen((v) => !v)}
+            aria-expanded={noDateOpen}
+            className="flex w-full items-center gap-2 py-1 text-destructive"
+          >
+            <CalendarOff className="size-4" />
+            <span className="text-tiny font-semibold uppercase tracking-[0.16em]">
+              No date · {unscheduled.length}
+            </span>
+            <ChevronDown
+              className={cn(
+                "ml-auto size-4 text-muted-foreground transition-transform",
+                !noDateOpen && "-rotate-90",
+              )}
+            />
+          </button>
+          {noDateOpen && (
+            <ul className="mt-2 space-y-2">
+              {unscheduled.map((it) => (
+                <li key={it.id}>
+                  <ScheduleRow item={it} noDate onClick={() => onSelect(it.id)} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
+
       {[...groups.entries()].map(([date, list]) => {
         const d = parseISO(date);
         return (
@@ -46,7 +82,7 @@ export function ScheduleView({
           </section>
         );
       })}
-      {sorted.length === 0 && (
+      {sorted.length === 0 && unscheduled.length === 0 && (
         <div className="p-10 text-center text-sm text-muted-foreground">
           Nothing to publish in this range.
         </div>
@@ -55,7 +91,16 @@ export function ScheduleView({
   );
 }
 
-function ScheduleRow({ item, onClick }: { item: Item; onClick?: () => void }) {
+function ScheduleRow({
+  item,
+  noDate = false,
+  onClick,
+}: {
+  item: Item;
+  noDate?: boolean;
+  onClick?: () => void;
+}) {
+  const isPublished = item.status === "published";
   return (
     <button
       type="button"
@@ -64,21 +109,29 @@ function ScheduleRow({ item, onClick }: { item: Item; onClick?: () => void }) {
     >
       <PublishAvatar name={item.project.name} thumbnailId={item.project.thumbnailId} size={36} />
       <div className="min-w-0">
-        <div dir="rtl" className="truncate text-right text-sm font-semibold">
+        <div className="truncate text-tiny text-muted-foreground">
+          @{item.project.name}
+        </div>
+        <div dir="auto" className="mt-0.5 truncate text-sm font-semibold">
           {item.title}
         </div>
-        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-tiny text-muted-foreground">
-          <span className="font-medium text-foreground/80">{item.handle}</span>
-          <span className="inline-flex items-center gap-1 text-success">
-            <CheckCircle2 className="size-3" />
-            Delivered {fmtShort(parseISO(item.deliveredOn))}
-          </span>
-        </div>
       </div>
-      <div className="hidden items-center gap-1.5 rounded-full border border-border/70 px-2.5 py-1 text-tiny text-muted-foreground sm:inline-flex">
-        <Clock className="size-3" />
-        Scheduled
-      </div>
+      {noDate ? (
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-destructive/60 px-2.5 py-1 text-tiny text-destructive">
+          <CalendarOff className="size-3" />
+          No date
+        </span>
+      ) : isPublished ? (
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-success/60 px-2.5 py-1 text-tiny text-success">
+          <Check className="size-3" />
+          Published
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 px-2.5 py-1 text-tiny text-muted-foreground">
+          <Clock className="size-3" />
+          Scheduled
+        </span>
+      )}
     </button>
   );
 }

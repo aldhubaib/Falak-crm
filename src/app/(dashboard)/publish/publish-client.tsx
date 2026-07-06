@@ -36,7 +36,7 @@ import {
   unscheduleTask,
 } from "@/actions/publish";
 import { type Item, type Project, type View, toISODate } from "@/components/publish/types";
-import { fmtShort } from "@/components/publish/helpers";
+import { fmtShort, MONTHS } from "@/components/publish/helpers";
 import { MonthView } from "@/components/publish/month-view";
 import { WeekView } from "@/components/publish/week-view";
 import { ScheduleView } from "@/components/publish/schedule-view";
@@ -190,7 +190,9 @@ export function PublishClient({
         onClick={goToday}
         title="Jump to today"
       >
-        {`${fmtShort(today)}, ${today.getFullYear()}`}
+        {view === "month"
+          ? `${MONTHS[cursor.getMonth()]} ${cursor.getFullYear()}`
+          : `${fmtShort(cursor)}, ${cursor.getFullYear()}`}
       </Button>
       <Button
         variant="ghost"

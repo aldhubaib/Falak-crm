@@ -18,6 +18,14 @@ export type DeliveryAttachment = {
   isImage: boolean;
 };
 
+/** A filled-in delivery text field (e.g. "Mention", "Caption"). */
+export type DeliveryText = {
+  /** The delivery field name. */
+  label: string;
+  /** The text the creator entered. */
+  value: string;
+};
+
 export type Item = {
   /** Stable identity = task id. */
   id: string;
@@ -33,6 +41,8 @@ export type Item = {
   status: "scheduled" | "published" | "queued";
   /** Delivery files available to download. */
   attachments: DeliveryAttachment[];
+  /** Delivery text fields (mention, caption, …) available to copy. */
+  texts: DeliveryText[];
 };
 
 const IMAGE_EXTS = ["jpg", "jpeg", "png", "gif", "webp", "heic", "heif", "svg", "bmp", "tiff"];

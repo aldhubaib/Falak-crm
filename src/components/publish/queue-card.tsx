@@ -9,6 +9,7 @@ import {
   Paperclip,
 } from "lucide-react";
 import { PublishAvatar } from "./publish-avatar";
+import { CopyButton } from "./copy-button";
 import { cn } from "@/lib/utils";
 import { type Item } from "./types";
 import { fmtShort, parseISO } from "./helpers";
@@ -76,13 +77,34 @@ export function QueueCard({
       {expanded && (
         <div className="border-t border-border/60">
           <div className="px-3 pt-3">
-            <div className="text-xxs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-              Title
+            <div className="flex items-center justify-between">
+              <div className="text-xxs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                Title
+              </div>
+              <CopyButton text={item.title} label="title" />
             </div>
             <div dir="rtl" className="mt-0.5 text-right text-base font-semibold">
               {item.title}
             </div>
           </div>
+          {item.texts
+            .filter((t) => t.value !== item.title)
+            .map((t) => (
+              <div
+                key={t.label}
+                className="mt-3 border-t border-border/60 px-3 pt-3"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="text-xxs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                    {t.label}
+                  </div>
+                  <CopyButton text={t.value} label={t.label} />
+                </div>
+                <div dir="auto" className="mt-0.5 whitespace-pre-wrap text-sm">
+                  {t.value}
+                </div>
+              </div>
+            ))}
           <div className="mt-3 flex items-center justify-between border-t border-border/60 px-3 pt-3">
             <span className="text-sm font-medium text-muted-foreground">
               Delivered

@@ -10,6 +10,7 @@ import {
   Paperclip,
 } from "lucide-react";
 import { PublishAvatar } from "./publish-avatar";
+import { CopyButton } from "./copy-button";
 import {
   Sheet,
   SheetContent,
@@ -80,7 +81,33 @@ export function TaskDetailSheet({
                       {item.title}
                     </div>
                   </div>
+                  <CopyButton text={item.title} label="title" />
                 </div>
+                {item.texts.filter((t) => t.value !== item.title).length > 0 && (
+                  <div className="mt-3 border-t border-border/60">
+                    {item.texts
+                      .filter((t) => t.value !== item.title)
+                      .map((t) => (
+                        <div
+                          key={t.label}
+                          className="border-b border-border/60 px-4 py-3 last:border-b-0"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="text-xxs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                              {t.label}
+                            </div>
+                            <CopyButton text={t.value} label={t.label} />
+                          </div>
+                          <div
+                            dir="auto"
+                            className="mt-0.5 whitespace-pre-wrap text-sm"
+                          >
+                            {t.value}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                )}
                 <div className="pb-2" />
 
                 {/* Attachments */}
