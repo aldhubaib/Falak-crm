@@ -646,10 +646,14 @@ export function ProjectBoardClient({
       >
         <div
           className={cn(
+            // Either every stage fits in one row, or the board stacks like the
+            // mobile view — intermediate widths must not wrap into a 2×N grid.
             "grid min-h-[calc(100vh-3.5rem)] gap-4 p-5",
             grouped.length <= 3
-              ? "grid-cols-1 sm:grid-cols-3"
-              : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5",
+              ? "grid-cols-1 md:grid-cols-3"
+              : grouped.length === 4
+                ? "grid-cols-1 xl:grid-cols-4"
+                : "grid-cols-1 xl:grid-cols-5",
           )}
         >
           {grouped.map((col, i) => (
