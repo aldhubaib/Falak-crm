@@ -21,7 +21,9 @@ type Draft = {
   label: string;
   kind: string;
   mandatory: boolean;
-  options: string[];
+  // Raw textarea content — parsed into the options array only on save, so
+  // typing Enter (a trailing empty line) isn't filtered away mid-edit.
+  optionsText: string;
   allowedFormats: string[];
   allowedFileTypes: string | null;
   aspectRatio: string | null;
@@ -37,7 +39,7 @@ function toDraft(f: Partial<TTField>): Draft {
     label: f.label ?? "",
     kind: f.kind ?? "text",
     mandatory: !!f.mandatory,
-    options: f.options ?? [],
+    optionsText: (f.options ?? []).join("\n"),
     // Normalize stored formats (".png"/"png"/dupes) so they match the dotted
     // FORMATS chips — otherwise saved picks render unselected and re-saving
     // stacks duplicates.
@@ -127,7 +129,7 @@ export function FieldEditor({
                 patch.allowedFileTypes = null;
                 patch.aspectRatio = null;
               }
-              if (v !== "select") patch.options = [];
+              if (v !== "select") patch.optionsText = "";
               setField(patch);
             }}
           >
@@ -217,15 +219,8 @@ export function FieldEditor({
       {draft.kind === "select" && (
         <LabeledField label="Options (one per line)">
           <textarea
-            value={draft.options.join("\n")}
-            onChange={(e) =>
-              setField({
-                options: e.target.value
-                  .split("\n")
-                  .map((o) => o.trim())
-                  .filter(Boolean),
-              })
-            }
+            value={draft.optionsText}
+            onChange={(e) => setField({ optionsText: e.target.value })}
             rows={3}
             placeholder={"Option A\nOption B"}
             className="w-full rounded-md border border-border/60 bg-background/60 px-3 py-2 text-sm outline-none focus-visible:border-ring"
@@ -373,7 +368,10 @@ export function FieldEditor({
                 label: draft.label,
                 kind: draft.kind,
                 mandatory: draft.mandatory,
-                options: draft.options,
+                options: draft.optionsText
+                  .split("\n")
+                  .map((o) => o.trim())
+                  .filter(Boolean),
                 allowedFormats: normalizeFormats(draft.allowedFormats),
                 allowedFileTypes: draft.allowedFileTypes,
                 aspectRatio: draft.aspectRatio,
