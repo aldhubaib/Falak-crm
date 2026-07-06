@@ -315,9 +315,11 @@ function ThreadRow({
       {thread.unread > 0 && (
         <span
           className={cn(
-            // leading-none keeps the digit inside the 16px circle — inherited
-            // line-height (and iOS font scaling) otherwise pushes it below.
-            "mt-2 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-xxs font-semibold leading-none",
+            // Compact 14px circle with a 9px digit so it reads the same as the
+            // corner badges on the bell / publish icons; leading-none keeps
+            // the digit vertically centered (inherited line-height and iOS
+            // font scaling otherwise push it below).
+            "mt-2 inline-flex h-3.5 min-w-3.5 items-center justify-center rounded-full px-1 text-[9px] font-semibold leading-none",
             archived
               ? "bg-muted text-muted-foreground"
               : "bg-primary text-primary-foreground",
