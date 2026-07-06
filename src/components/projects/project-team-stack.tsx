@@ -213,22 +213,32 @@ export function ProjectTeamStack({
                 On this project
               </div>
               {filteredMembers.map((m) => (
-                <div
-                  key={m.memberId}
-                  className="flex items-center gap-2 rounded-md px-2 py-2"
-                >
-                  <MemberAvatar name={m.name} imageUrl={m.imageUrl} />
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-medium">{m.name}</div>
+                <div key={m.memberId} className="rounded-md px-2 py-2">
+                  <div className="flex items-center gap-2">
+                    <MemberAvatar name={m.name} imageUrl={m.imageUrl} />
+                    <div className="min-w-0 flex-1 break-words text-sm font-medium">
+                      {m.name}
+                    </div>
+                    {canEdit && (
+                      <button
+                        type="button"
+                        onClick={() => remove(m.memberId)}
+                        disabled={pending}
+                        aria-label={`Remove ${m.name}`}
+                        className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-destructive/10 hover:text-destructive disabled:opacity-50"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    )}
                   </div>
-                  {canEdit ? (
-                    <>
+                  <div className="mt-1.5 pl-10">
+                    {canEdit ? (
                       <Select
                         value={m.roleId ?? ""}
                         onValueChange={(v) => changeRole(m.memberId, v)}
                         disabled={pending || roles.length === 0}
                       >
-                        <SelectTrigger className="h-7 w-32 border-transparent bg-muted/40 text-xs hover:bg-muted [&>span]:truncate">
+                        <SelectTrigger className="h-7 w-full border-transparent bg-muted/40 text-xs hover:bg-muted [&>span]:truncate">
                           <SelectValue>{roleName(m.roleId)}</SelectValue>
                         </SelectTrigger>
                         <SelectContent>
@@ -239,21 +249,12 @@ export function ProjectTeamStack({
                           ))}
                         </SelectContent>
                       </Select>
-                      <button
-                        type="button"
-                        onClick={() => remove(m.memberId)}
-                        disabled={pending}
-                        aria-label={`Remove ${m.name}`}
-                        className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-destructive/10 hover:text-destructive disabled:opacity-50"
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </button>
-                    </>
-                  ) : (
-                    <span className="rounded-md bg-muted/40 px-2 py-1 text-xs text-muted-foreground">
-                      {roleName(m.roleId)}
-                    </span>
-                  )}
+                    ) : (
+                      <span className="inline-block rounded-md bg-muted/40 px-2 py-1 text-xs text-muted-foreground">
+                        {roleName(m.roleId)}
+                      </span>
+                    )}
+                  </div>
                 </div>
               ))}
             </>
@@ -278,8 +279,8 @@ export function ProjectTeamStack({
                   className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left hover:bg-muted disabled:opacity-50"
                 >
                   <MemberAvatar name={m.name} imageUrl={m.imageUrl} muted />
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-medium">{m.name}</div>
+                  <div className="min-w-0 flex-1 break-words text-sm font-medium">
+                    {m.name}
                   </div>
                   <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-muted-foreground">
                     <UserPlus className="h-3.5 w-3.5" />
