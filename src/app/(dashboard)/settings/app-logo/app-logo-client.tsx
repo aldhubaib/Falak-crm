@@ -18,6 +18,7 @@ import {
 } from "@/actions/branding";
 import {
   BRANDING_SLOTS,
+  brandingFallbackFor,
   validateBrandingFile,
   MAX_BRANDING_FILE_BYTES,
   type BrandingSlotConfig,
@@ -33,18 +34,13 @@ export function AppLogoClient({ assets }: { assets: Assets }) {
   return (
     <PageContainer className="mx-auto max-w-3xl space-y-6">
       <p className="text-sm text-muted-foreground">
-        Upload branded assets for the browser tab, installed app icons, and
-        social sharing. Each slot enforces the required format and dimensions
-        before it&apos;s accepted.
+        Upload branded assets for the browser tab, installed app icons,
+        invoices, and social sharing. Each slot enforces the required format
+        and dimensions before it&apos;s accepted.
       </p>
       <div className="space-y-3">
         {BRANDING_SLOTS.map((slot) => (
-          <SlotRow
-            key={slot.id}
-            slot={slot}
-            asset={assets[slot.id]}
-            run={run}
-          />
+          <SlotRow key={slot.id} slot={slot} asset={assets[slot.id]} run={run} />
         ))}
       </div>
     </PageContainer>
@@ -232,7 +228,10 @@ function SlotPreview({
 
   const base = `${slot.previewClass} ${shape} shrink-0 overflow-hidden border border-border/60 bg-background grid place-items-center`;
 
-  if (!asset) {
+  // No upload yet — show the built-in default artwork when the app ships one.
+  const src = asset?.url ?? brandingFallbackFor(slot.id);
+
+  if (!src) {
     return (
       <div className={base}>
         <ImagePlus className="h-4 w-4 text-muted-foreground/60" />
@@ -244,7 +243,7 @@ function SlotPreview({
     <div className={base}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={asset.url}
+        src={src}
         alt=""
         className={
           slot.previewShape === "wide"

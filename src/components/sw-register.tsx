@@ -6,6 +6,10 @@ import { pushSupported, syncPushSubscription } from "@/lib/push-client";
 
 const PUSH_DISMISSED_KEY = "falak-push-dismissed-at";
 const PUSH_DISMISS_DAYS = 14;
+// Session-scoped: dismissing the update banner hides it until the app is
+// fully reopened. A waiting update activates by itself on the next cold
+// start anyway, so we never nag more than once per session.
+const UPDATE_DISMISSED_KEY = "falak-update-dismissed";
 
 export function ServiceWorkerRegister() {
   const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(null);
@@ -47,11 +51,25 @@ export function ServiceWorkerRegister() {
     localStorage.setItem(PUSH_DISMISSED_KEY, String(Date.now()));
   }, []);
 
+  const handleDismissUpdate = useCallback(() => {
+    setShowUpdate(false);
+    try {
+      sessionStorage.setItem(UPDATE_DISMISSED_KEY, "1");
+    } catch {}
+  }, []);
+
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
 
     let reg: ServiceWorkerRegistration | null = null;
     let lastCheckAt = Date.now();
+    const updateDismissed = () => {
+      try {
+        return sessionStorage.getItem(UPDATE_DISMISSED_KEY) === "1";
+      } catch {
+        return false;
+      }
+    };
 
     navigator.serviceWorker.register("/sw.js").then((r) => {
       reg = r;
@@ -74,7 +92,7 @@ export function ServiceWorkerRegister() {
 
       if (r.waiting) {
         setWaitingWorker(r.waiting);
-        setShowUpdate(true);
+        if (!updateDismissed()) setShowUpdate(true);
       }
 
       // Keep listening even if a worker is already waiting: a newer update
@@ -87,7 +105,7 @@ export function ServiceWorkerRegister() {
         newWorker.addEventListener("statechange", () => {
           if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
             setWaitingWorker(newWorker);
-            setShowUpdate(true);
+            if (!updateDismissed()) setShowUpdate(true);
           }
         });
       });
@@ -148,6 +166,13 @@ export function ServiceWorkerRegister() {
               Update now
             </button>
           </div>
+          <button
+            onClick={handleDismissUpdate}
+            aria-label="Dismiss"
+            className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
       </div>
     );

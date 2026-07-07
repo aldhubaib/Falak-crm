@@ -4,12 +4,14 @@
 // fields, an editable item table with a service picker, and a totals panel
 // with discount. Saves as draft or sends immediately.
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  AlertCircle,
   CalendarIcon,
   Copy,
   GripVertical,
+  Loader2,
   MoreVertical,
   Plus,
   Trash2,
@@ -40,7 +42,11 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useAction } from "@/hooks/use-action";
-import { createInvoiceDetailed, type NewInvoiceInput } from "@/actions/invoices";
+import {
+  createInvoiceDetailed,
+  updateInvoiceDetailed,
+  type NewInvoiceInput,
+} from "@/actions/invoices";
 import { createService } from "@/actions/services";
 
 type DealOption = {
@@ -64,6 +70,29 @@ type DraftItem = {
   rate: string;
   taxPct: string;
   serviceId?: string;
+  /** Item locked in (picked from the catalog or loaded from an existing
+   *  invoice) — shows the title card + description instead of the picker. */
+  picked?: boolean;
+};
+
+export type InvoiceFormInitial = {
+  number: string;
+  status: string;
+  dealId: string;
+  projectId: string | null;
+  issueDate: string; // yyyy-mm-dd
+  dueDate: string; // yyyy-mm-dd
+  currency: string;
+  notes: string;
+  discountType: "percent" | "fixed";
+  discountValue: number;
+  items: {
+    title: string;
+    details: string | null;
+    qty: number;
+    rate: number;
+    taxPct: number | null;
+  }[];
 };
 
 function newItem(): DraftItem {
@@ -140,33 +169,60 @@ export function NewInvoiceClient({
   deals,
   services: initialServices,
   currencies,
+  invoiceId,
+  initial,
 }: {
   nextNumber: string;
   baseCurrency: string;
   deals: DealOption[];
   services: ServiceOption[];
   currencies: { code: string; name: string }[];
+  /** When set, the form edits this invoice instead of creating a new one. */
+  invoiceId?: string;
+  initial?: InvoiceFormInitial;
 }) {
   const router = useRouter();
+  const isEdit = !!invoiceId;
 
-  const [dealId, setDealId] = useState("");
-  const [projectId, setProjectId] = useState("");
-  const [issueDate, setIssueDate] = useState(() => isoDate(new Date()));
-  const [dueDate, setDueDate] = useState(() => addDays(14));
-  const [currency, setCurrency] = useState(baseCurrency);
-  const [notes, setNotes] = useState("");
-  const [items, setItems] = useState<DraftItem[]>([newItem()]);
-  const [discountValue, setDiscountValue] = useState("0");
+  const [dealId, setDealId] = useState(initial?.dealId ?? "");
+  const [projectId, setProjectId] = useState(initial?.projectId ?? "");
+  const [issueDate, setIssueDate] = useState(
+    () => initial?.issueDate ?? isoDate(new Date()),
+  );
+  const [dueDate, setDueDate] = useState(() => initial?.dueDate ?? addDays(14));
+  const [currency, setCurrency] = useState(initial?.currency ?? baseCurrency);
+  const [notes, setNotes] = useState(initial?.notes ?? "");
+  const [items, setItems] = useState<DraftItem[]>(() =>
+    initial && initial.items.length > 0
+      ? initial.items.map((it) => ({
+          ...newItem(),
+          title: it.title,
+          description: it.details ?? "",
+          qty: String(it.qty),
+          rate: String(it.rate),
+          taxPct: it.taxPct != null ? String(it.taxPct) : "",
+          picked: true,
+        }))
+      : [newItem()],
+  );
+  const [discountValue, setDiscountValue] = useState(
+    initial ? String(initial.discountValue) : "0",
+  );
   const [discountMode, setDiscountMode] = useState<"percent" | "fixed">(
-    "percent",
+    initial?.discountType ?? "percent",
   );
   const [services, setServices] = useState(initialServices);
   const [itemPickerOpen, setItemPickerOpen] = useState<string | null>(null);
   const [dragId, setDragId] = useState<string | null>(null);
   const [dragOverId, setDragOverId] = useState<string | null>(null);
   const { execute: submitInvoice, loading: saving } = useAction(
-    (input: NewInvoiceInput) => createInvoiceDetailed(input),
+    (input: NewInvoiceInput) =>
+      invoiceId
+        ? updateInvoiceDetailed(invoiceId, input)
+        : createInvoiceDetailed(input),
   );
+  // Which button kicked off the save — drives the spinner on that button only.
+  const [saveMode, setSaveMode] = useState<"draft" | "send" | null>(null);
 
   const selectedDeal = deals.find((d) => d.id === dealId) ?? null;
   const dealProject = selectedDeal?.project ?? null;
@@ -228,6 +284,7 @@ export function NewInvoiceClient({
       description: service.description ?? "",
       rate: String(service.unitPrice),
       serviceId: service.id,
+      picked: true,
     });
     setItemPickerOpen(null);
   }
@@ -237,6 +294,7 @@ export function NewInvoiceClient({
       description: "",
       rate: "0",
       serviceId: undefined,
+      picked: false,
     });
   }
   async function addNewItemFromQuery(itemId: string, query: string) {
@@ -258,10 +316,14 @@ export function NewInvoiceClient({
   }
 
   const hasLineItem = items.some((it) => it.title.trim());
-  const canSave = !!dealId && hasLineItem;
+  // yyyy-mm-dd strings compare correctly lexicographically.
+  const dueDateInvalid = dueDate <= issueDate;
+  const projectMissing = !!dealId && !dealProject;
+  const canSave = !!dealId && !!projectId && hasLineItem && !dueDateInvalid;
 
   async function save(send: boolean) {
     if (saving || !canSave) return;
+    setSaveMode(send ? "send" : "draft");
     const cleaned = items
       .filter((it) => it.title.trim())
       .map((it) => ({
@@ -271,45 +333,76 @@ export function NewInvoiceClient({
         rate: Number(it.rate) || 0,
         taxPct: Number(it.taxPct) || undefined,
       }));
-    const result = await submitInvoice({
-      dealId,
-      projectId: projectId || null,
-      issueDate,
-      dueDate,
-      currency,
-      notes: notes.trim() || undefined,
-      discountType: discountMode,
-      discountValue: discountInput,
-      items: cleaned,
-      send,
-    });
-    if (result) router.push(`/invoices/${result.id}`);
+    try {
+      const result = await submitInvoice({
+        dealId,
+        projectId: projectId || null,
+        issueDate,
+        dueDate,
+        currency,
+        notes: notes.trim() || undefined,
+        discountType: discountMode,
+        discountValue: discountInput,
+        items: cleaned,
+        send,
+      });
+      if (result) router.push("/invoices");
+    } finally {
+      setSaveMode(null);
+    }
   }
+
+  // Editing an already-sent invoice keeps its status — one save button.
+  const editSentInvoice = isEdit && initial?.status !== "DRAFT";
 
   return (
     <>
       <AppHeader
-        title="New Invoice"
+        title={isEdit ? "Edit Invoice" : "New Invoice"}
         backHref="/invoices"
         actions={
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-full"
-              disabled={saving || !canSave}
-              onClick={() => save(false)}
-            >
-              Save as Draft
-            </Button>
-            <Button
-              size="sm"
-              className="rounded-full"
-              disabled={saving || !canSave}
-              onClick={() => save(true)}
-            >
-              Save &amp; Send
-            </Button>
+            {editSentInvoice ? (
+              <Button
+                size="sm"
+                className="rounded-full"
+                disabled={saving || !canSave}
+                onClick={() => save(false)}
+              >
+                {saving && (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                )}
+                {saving ? "Saving…" : "Save Changes"}
+              </Button>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full"
+                  disabled={saving || !canSave}
+                  onClick={() => save(false)}
+                >
+                  {saveMode === "draft" && (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  )}
+                  {saveMode === "draft" ? "Saving…" : "Save as Draft"}
+                </Button>
+                <Button
+                  size="sm"
+                  className="rounded-full"
+                  disabled={saving || !canSave}
+                  onClick={() => save(true)}
+                >
+                  {saveMode === "send" && (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  )}
+                  {saveMode === "send"
+                    ? "Sending…"
+                    : "Save & Send"}
+                </Button>
+              </>
+            )}
           </div>
         }
       />
@@ -317,9 +410,11 @@ export function NewInvoiceClient({
         <div className="mx-auto w-full max-w-4xl px-4 py-6 pb-16 sm:px-6">
           <div className="mb-6">
             <div className="text-xs uppercase tracking-widest text-muted-foreground">
-              New Invoice
+              {isEdit ? "Edit Invoice" : "New Invoice"}
             </div>
-            <div className="mt-1 text-2xl font-semibold">{nextNumber}</div>
+            <div className="mt-1 text-2xl font-semibold">
+              {initial?.number ?? nextNumber}
+            </div>
           </div>
 
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -328,7 +423,10 @@ export function NewInvoiceClient({
                 value={dealId}
                 onValueChange={(v) => {
                   setDealId(v);
-                  setProjectId("");
+                  // Each deal has at most one project — preselect it.
+                  setProjectId(
+                    deals.find((d) => d.id === v)?.project?.id ?? "",
+                  );
                 }}
               >
                 <SelectTrigger className="w-full">
@@ -350,7 +448,7 @@ export function NewInvoiceClient({
                 </SelectContent>
               </Select>
             </Field>
-            <Field label="Project">
+            <Field label="Project" required>
               <Select
                 value={projectId}
                 onValueChange={setProjectId}
@@ -375,12 +473,29 @@ export function NewInvoiceClient({
                   )}
                 </SelectContent>
               </Select>
+              {projectMissing && (
+                <p className="flex items-center gap-1.5 text-xs text-destructive">
+                  <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                  This deal has no project — create one for it before
+                  invoicing.
+                </p>
+              )}
             </Field>
             <Field label="Invoice Date">
               <DateField value={issueDate} onChange={setIssueDate} />
             </Field>
             <Field label="Due Date">
-              <DateField value={dueDate} onChange={setDueDate} />
+              <DateField
+                value={dueDate}
+                onChange={setDueDate}
+                invalid={dueDateInvalid}
+              />
+              {dueDateInvalid && (
+                <p className="flex items-center gap-1.5 text-xs text-destructive">
+                  <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                  Due date must be after the invoice date.
+                </p>
+              )}
             </Field>
             <Field label="Currency">
               <Select value={currency} onValueChange={setCurrency}>
@@ -505,7 +620,7 @@ export function NewInvoiceClient({
                         </td>
                         <td className="px-3 py-3">
                           <div className="min-w-0 space-y-2">
-                            {it.serviceId ? (
+                            {it.picked ? (
                               <div className="flex items-start justify-between gap-2">
                                 <div className="min-w-0">
                                   <div className="truncate text-sm font-semibold uppercase">
@@ -607,8 +722,8 @@ export function NewInvoiceClient({
                                 </PopoverContent>
                               </Popover>
                             )}
-                            {it.serviceId && (
-                              <Textarea
+                            {it.picked && (
+                              <AutoGrowTextarea
                                 value={it.description}
                                 onChange={(e) =>
                                   updateItem(it.id, {
@@ -617,7 +732,7 @@ export function NewInvoiceClient({
                                 }
                                 placeholder="Description"
                                 rows={2}
-                                className="min-h-0 resize-none bg-muted/30"
+                                className="min-h-0 resize-none overflow-hidden bg-muted/30"
                               />
                             )}
                           </div>
@@ -789,6 +904,18 @@ export function NewInvoiceClient({
   );
 }
 
+/** Textarea that grows with its content instead of showing a scrollbar. */
+function AutoGrowTextarea(props: React.ComponentProps<typeof Textarea>) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight + 2}px`;
+  }, [props.value]);
+  return <Textarea ref={ref} {...props} />;
+}
+
 function Field({
   label,
   required,
@@ -812,18 +939,30 @@ function Field({
 function DateField({
   value,
   onChange,
+  invalid,
 }: {
   value: string;
   onChange: (v: string) => void;
+  invalid?: boolean;
 }) {
   return (
     <div className="relative">
-      <CalendarIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <CalendarIcon
+        className={cn(
+          "pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground",
+          invalid && "text-destructive",
+        )}
+      />
       <Input
         type="date"
         value={value}
         onChange={(e) => e.target.value && onChange(e.target.value)}
-        className="h-9 pl-9 [&::-webkit-calendar-picker-indicator]:opacity-60"
+        aria-invalid={invalid || undefined}
+        className={cn(
+          "h-9 pl-9 [&::-webkit-calendar-picker-indicator]:opacity-60",
+          invalid &&
+            "border-destructive text-destructive focus-visible:ring-destructive/30",
+        )}
       />
     </div>
   );

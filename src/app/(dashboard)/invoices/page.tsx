@@ -3,31 +3,16 @@ import { Plus } from "lucide-react";
 import { getInvoices } from "@/actions/invoices";
 import { requireWorkspaceWithMember } from "@/lib/workspace";
 import { canEdit } from "@/lib/permissions";
+import { getInvoiceLogoUrl } from "@/lib/branding";
 import { AppHeader } from "@/components/app-header";
 import { Button } from "@/components/ui/button";
-import { EmptyState } from "@/components/empty-state";
-import { SurfaceCard } from "@/components/surface-card";
-import { Badge } from "@/components/ui/badge";
-import { ListPager } from "@/components/list-pager";
+import { InvoicesClient } from "./invoices-client";
 
-const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-  DRAFT: "secondary",
-  SENT: "outline",
-  ACCEPTED: "default",
-  REJECTED: "destructive",
-  PAID: "default",
-};
-
-export default async function InvoicesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string }>;
-}) {
-  const { page: pageParam } = await searchParams;
-  const page = Math.max(1, Number(pageParam) || 1);
-  const [{ items: invoices, hasMore }, { member }] = await Promise.all([
-    getInvoices({ page }),
+export default async function InvoicesPage() {
+  const [invoices, { member }, logoUrl] = await Promise.all([
+    getInvoices(),
     requireWorkspaceWithMember(),
+    getInvoiceLogoUrl(),
   ]);
   const editable = canEdit(member, "invoices");
 
@@ -46,49 +31,7 @@ export default async function InvoicesPage({
           ) : undefined
         }
       />
-      <main className="min-h-0 flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-3xl space-y-2 p-5">
-          {invoices.map((inv) => (
-            <Link key={inv.id} href={`/invoices/${inv.id}`}>
-              <SurfaceCard className="flex items-center gap-3 transition-colors hover:border-border">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm font-semibold">
-                      {inv.number}
-                    </span>
-                    <Badge variant={STATUS_VARIANT[inv.status] ?? "secondary"}>
-                      {inv.status}
-                    </Badge>
-                  </div>
-                  <div className="mt-0.5 truncate text-xs text-muted-foreground">
-                    {inv.project?.name ?? "No project"}
-                    {inv.project?.company && ` — ${inv.project.company.name}`}
-                    {inv.contact &&
-                      ` • ${inv.contact.firstName} ${inv.contact.lastName}`}
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm font-semibold tabular-nums">
-                    {Number(inv.total).toLocaleString()}{" "}
-                    <span className="text-xs text-muted-foreground">
-                      {inv.currency}
-                    </span>
-                  </div>
-                  <div className="text-tiny text-muted-foreground">
-                    {new Date(inv.createdAt).toLocaleDateString()}
-                  </div>
-                </div>
-              </SurfaceCard>
-            </Link>
-          ))}
-
-          <ListPager basePath="/invoices" page={page} hasMore={hasMore} />
-
-          {invoices.length === 0 && page === 1 && (
-            <EmptyState message="No invoices yet." />
-          )}
-        </div>
-      </main>
+      <InvoicesClient invoices={invoices} editable={editable} logoUrl={logoUrl} />
     </>
   );
 }

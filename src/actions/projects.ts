@@ -861,8 +861,25 @@ export async function updateTask(taskId: string, data: {
 
   const task = await db.task.findUnique({ where: { id: taskId }, include: { project: true } });
   if (!task) throw new Error("Task not found");
+  if (task.deletedAt) throw new Error("Task is in the trash");
 
-  await requireProjectWork(task.projectId);
+  const access = await requireProjectWork(task.projectId);
+  // Editing task fields requires the "Modify" right for the task's current
+  // stage (full project access always qualifies) — same rule the permissions
+  // table in Settings → Roles describes.
+  const canModify =
+    access.permissions.projects === "full" ||
+    (task.statusId
+      ? access.permissions.taskPermissions?.stages?.[task.statusId]?.modify === true
+      : false);
+  if (!canModify) {
+    throw new Error("You don't have permission to modify tasks at this stage");
+  }
+
+  if (data.title !== undefined && data.title.trim().length === 0) {
+    throw new Error("Task title cannot be empty");
+  }
+  if (data.title !== undefined) data.title = data.title.trim();
 
   await db.task.update({ where: { id: taskId }, data });
 

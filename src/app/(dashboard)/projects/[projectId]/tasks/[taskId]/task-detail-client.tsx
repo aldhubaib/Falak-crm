@@ -36,6 +36,7 @@ import {
   HelpCircle,
   LayoutGrid,
   Package,
+  Pencil,
   Timer,
   Type as TypeIcon,
   VideoOff,
@@ -72,6 +73,7 @@ import {
   saveChecklistItemText,
   removeChecklistItemAttachment,
   deleteTask,
+  updateTask,
   updateTaskStatus,
 } from "@/actions/projects";
 import { ConfirmStatusDialog } from "@/components/board/confirm-status-dialog";
@@ -167,6 +169,7 @@ export function TaskDetailClient({
   projectId,
   taskId,
   canDelete,
+  canEditTitle,
   trashed,
   title,
   projectName,
@@ -188,6 +191,8 @@ export function TaskDetailClient({
   projectId: string;
   taskId: string;
   canDelete: boolean;
+  /** Whether the member may edit the title (Modify right at the current stage). */
+  canEditTitle: boolean;
   /** Set when the task is in the trash — renders read-only with a trash banner. */
   trashed?: { deletedAt: string; deletedByName: string | null } | null;
   title: string;
@@ -419,9 +424,11 @@ export function TaskDetailClient({
             title="Task Title"
             hint="A short, clear summary of what needs to be done."
           >
-            <div className="flex min-h-12 items-center rounded-xl border border-border/60 bg-background/60 px-3 py-2 text-sm">
-              {title}
-            </div>
+            <TaskTitleField
+              taskId={taskId}
+              title={title}
+              editable={canEditTitle}
+            />
           </FormSection>
 
           <FormSection
@@ -1221,6 +1228,95 @@ function TaskHistoryPanel({
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+// Inline-editable task title: pencil → input → save (Enter) / cancel (Esc).
+// Only rendered editable when the member holds the Modify right for the
+// task's current stage; the server action re-checks the same rule.
+function TaskTitleField({
+  taskId,
+  title,
+  editable,
+}: {
+  taskId: string;
+  title: string;
+  editable: boolean;
+}) {
+  const router = useRouter();
+  const { run, loading } = useActionHandler();
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(title);
+
+  // Keep the draft in sync when a refresh brings a new title.
+  useEffect(() => setDraft(title), [title]);
+
+  const save = async () => {
+    const next = draft.trim();
+    if (!next || next === title) {
+      setEditing(false);
+      setDraft(title);
+      return;
+    }
+    const ok = await run("Rename Task", async () => {
+      await updateTask(taskId, { title: next });
+      router.refresh();
+      return true;
+    });
+    if (ok) setEditing(false);
+  };
+
+  if (!editing) {
+    return (
+      <div className="flex min-h-12 items-center gap-2 rounded-xl border border-border/60 bg-background/60 px-3 py-2 text-sm">
+        <span className="min-w-0 flex-1 truncate">{title}</span>
+        {editable && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-7 shrink-0 rounded-full text-muted-foreground hover:text-foreground"
+            aria-label="Edit title"
+            onClick={() => setEditing(true)}
+          >
+            <Pencil className="size-3.5" />
+          </Button>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <Input
+        autoFocus
+        value={draft}
+        disabled={loading}
+        onChange={(e) => setDraft(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") void save();
+          if (e.key === "Escape") {
+            setEditing(false);
+            setDraft(title);
+          }
+        }}
+        className="h-12 rounded-xl"
+      />
+      <Button size="sm" disabled={loading || !draft.trim()} onClick={save}>
+        {loading ? <Loader2 className="size-4 animate-spin" /> : <Check className="size-4" />}
+        Save
+      </Button>
+      <Button
+        size="sm"
+        variant="ghost"
+        disabled={loading}
+        onClick={() => {
+          setEditing(false);
+          setDraft(title);
+        }}
+      >
+        Cancel
+      </Button>
     </div>
   );
 }

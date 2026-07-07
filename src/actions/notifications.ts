@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { requireWorkspaceWithMember } from "@/lib/workspace";
+import { pushClearToMember } from "@/lib/push";
 
 export async function getNotifications(limit = 30) {
   const { member } = await requireWorkspaceWithMember();
@@ -24,17 +25,35 @@ export async function getUnreadCount(): Promise<number> {
 export async function markNotificationRead(id: string) {
   const { member } = await requireWorkspaceWithMember();
 
-  await db.notification.updateMany({
+  const row = await db.notification.findFirst({
     where: { id, recipientId: member.id },
+    select: { id: true, tag: true, read: true },
+  });
+  if (!row) return;
+
+  await db.notification.update({
+    where: { id: row.id },
     data: { read: true },
   });
+
+  // Sync other devices: close this notification in their OS tray and fix the
+  // badge. Skipped when it was already read (nothing to clear).
+  if (!row.read) {
+    await pushClearToMember(member.id, { tags: [row.tag ?? row.id] }).catch(
+      () => {},
+    );
+  }
 }
 
 export async function markAllNotificationsRead() {
   const { member } = await requireWorkspaceWithMember();
 
-  await db.notification.updateMany({
+  const { count } = await db.notification.updateMany({
     where: { recipientId: member.id, read: false },
     data: { read: true },
   });
+
+  if (count > 0) {
+    await pushClearToMember(member.id, { clearAll: true }).catch(() => {});
+  }
 }

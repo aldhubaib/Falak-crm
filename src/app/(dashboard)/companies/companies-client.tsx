@@ -235,7 +235,10 @@ export function CompaniesClient({
       {companies.length === 0 ? (
         <div className="flex flex-1 items-center justify-center p-6">
           <EmptyState
-            message="No companies yet. Create your first one to get started."
+            variant="page"
+            icon={Building2}
+            title="You don't have any companies yet"
+            message="Create your first company to get started."
             action={
               editable ? (
                 <button

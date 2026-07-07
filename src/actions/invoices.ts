@@ -8,42 +8,119 @@ import { getLatestRateForCurrency } from "@/actions/currencies";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
 
-const LIST_PAGE_SIZE = 50;
+export type InvoiceListRow = {
+  id: string;
+  number: string;
+  status: string; // DRAFT | SENT | ACCEPTED | REJECTED | PAID | CANCELLED
+  clientName: string;
+  /** Link to the record clientName refers to (company/contact/deal). */
+  clientHref: string | null;
+  projectId: string | null;
+  projectName: string | null;
+  dealId: string | null;
+  dealTitle: string | null;
+  currency: string;
+  subtotal: number;
+  taxAmount: number;
+  discountType: string;
+  discountValue: number;
+  total: number;
+  notes: string | null;
+  issueDate: string; // ISO — falls back to createdAt
+  dueDate: string | null;
+  sentAt: string | null;
+  paidAt: string | null;
+  items: {
+    id: string;
+    title: string;
+    details: string | null;
+    qty: number;
+    rate: number;
+    taxPct: number | null;
+  }[];
+};
 
-export async function getInvoices(opts?: { page?: number }) {
+export async function getInvoices(): Promise<InvoiceListRow[]> {
   const workspace = await requireWorkspace();
-  const page = Math.max(1, opts?.page ?? 1);
   const rows = await db.invoice.findMany({
     where: { workspaceId: workspace.id },
     select: {
       id: true,
       number: true,
       status: true,
+      subtotal: true,
+      taxAmount: true,
+      discountType: true,
+      discountValue: true,
       total: true,
       currency: true,
+      notes: true,
       createdAt: true,
+      issueDate: true,
       dueDate: true,
       sentAt: true,
       paidAt: true,
-      contact: { select: { id: true, firstName: true, lastName: true, mobile: true } },
-      project: {
+      contact: { select: { id: true, firstName: true, lastName: true } },
+      deal: { select: { id: true, title: true, company: { select: { id: true, name: true } } } },
+      project: { select: { id: true, name: true, company: { select: { id: true, name: true } } } },
+      items: {
         select: {
           id: true,
-          name: true,
-          company: { select: { name: true } },
-          deal: { select: { id: true, title: true } },
+          description: true,
+          details: true,
+          quantity: true,
+          unitPrice: true,
+          taxPct: true,
         },
       },
     },
     orderBy: { createdAt: "desc" },
-    skip: (page - 1) * LIST_PAGE_SIZE,
-    take: LIST_PAGE_SIZE + 1,
   });
-  return {
-    items: rows.slice(0, LIST_PAGE_SIZE),
-    page,
-    hasMore: rows.length > LIST_PAGE_SIZE,
-  };
+
+  return rows.map((inv) => ({
+    id: inv.id,
+    number: inv.number,
+    status: inv.status,
+    clientName:
+      inv.deal?.company?.name ??
+      inv.project?.company?.name ??
+      (inv.contact ? `${inv.contact.firstName} ${inv.contact.lastName}` : null) ??
+      inv.deal?.title ??
+      "—",
+    // Mirrors the clientName fallback chain: company → contact → deal.
+    clientHref: inv.deal?.company
+      ? `/companies/${inv.deal.company.id}`
+      : inv.project?.company
+        ? `/companies/${inv.project.company.id}`
+        : inv.contact
+          ? `/contacts/${inv.contact.id}`
+          : inv.deal
+            ? `/deals/${inv.deal.id}`
+            : null,
+    projectId: inv.project?.id ?? null,
+    projectName: inv.project?.name ?? null,
+    dealId: inv.deal?.id ?? null,
+    dealTitle: inv.deal?.title ?? null,
+    currency: inv.currency,
+    subtotal: Number(inv.subtotal),
+    taxAmount: Number(inv.taxAmount),
+    discountType: inv.discountType,
+    discountValue: Number(inv.discountValue),
+    total: Number(inv.total),
+    notes: inv.notes,
+    issueDate: (inv.issueDate ?? inv.createdAt).toISOString(),
+    dueDate: inv.dueDate?.toISOString() ?? null,
+    sentAt: inv.sentAt?.toISOString() ?? null,
+    paidAt: inv.paidAt?.toISOString() ?? null,
+    items: inv.items.map((it) => ({
+      id: it.id,
+      title: it.description,
+      details: it.details,
+      qty: it.quantity,
+      rate: Number(it.unitPrice),
+      taxPct: it.taxPct != null ? Number(it.taxPct) : null,
+    })),
+  }));
 }
 
 export async function getInvoice(id: string) {
@@ -53,7 +130,7 @@ export async function getInvoice(id: string) {
     include: {
       contact: true,
       project: { include: { company: true } },
-      deal: { select: { id: true, title: true, company: { select: { name: true } } } },
+      deal: { select: { id: true, title: true, company: { select: { id: true, name: true } } } },
       items: true,
     },
   });
@@ -219,6 +296,12 @@ export async function createInvoiceDetailed(
     });
     if (!deal) throw new Error("Deal not found");
 
+    if (new Date(input.dueDate) <= new Date(input.issueDate))
+      throw new Error("Due date must be after the invoice date");
+
+    if (!input.projectId || input.projectId !== deal.project?.id)
+      throw new Error("Please select the deal's project");
+
     const items = input.items
       .map((it) => ({
         title: it.title.trim(),
@@ -258,10 +341,7 @@ export async function createInvoiceDetailed(
       data: {
         workspaceId: workspace.id,
         dealId: deal.id,
-        projectId:
-          input.projectId && input.projectId === deal.project?.id
-            ? input.projectId
-            : null,
+        projectId: input.projectId,
         contactId: deal.contactId,
         number,
         status: input.send ? "SENT" : "DRAFT",
@@ -301,6 +381,107 @@ export async function createInvoiceDetailed(
     revalidatePath("/invoices");
     revalidatePath(`/deals/${deal.id}`);
     return { id: invoice.id };
+  });
+}
+
+/** Updates an existing invoice from the invoice form. Keeps the number and,
+ *  unless `send` is set, the current status. */
+export async function updateInvoiceDetailed(
+  invoiceId: string,
+  input: NewInvoiceInput,
+): Promise<ActionResult<{ id: string }>> {
+  return safeAction("Update Invoice", async () => {
+    const { workspace, member } = await requireWorkspaceWithMember();
+    if (!canEdit(member, "invoices")) throw new Error("Permission denied");
+
+    const existing = await db.invoice.findFirst({
+      where: { id: invoiceId, workspaceId: workspace.id },
+      select: { id: true, number: true, status: true, sentAt: true, dealId: true },
+    });
+    if (!existing) throw new Error("Invoice not found");
+
+    const deal = await db.deal.findFirst({
+      where: { id: input.dealId, workspaceId: workspace.id, deletedAt: null },
+      select: { id: true, contactId: true, project: { select: { id: true } } },
+    });
+    if (!deal) throw new Error("Deal not found");
+
+    if (new Date(input.dueDate) <= new Date(input.issueDate))
+      throw new Error("Due date must be after the invoice date");
+
+    if (!input.projectId || input.projectId !== deal.project?.id)
+      throw new Error("Please select the deal's project");
+
+    const items = input.items
+      .map((it) => ({
+        title: it.title.trim(),
+        details: it.details?.trim() || null,
+        qty: Math.max(0, Math.round(it.qty)),
+        rate: Math.max(0, it.rate),
+        taxPct: it.taxPct && it.taxPct > 0 ? it.taxPct : null,
+      }))
+      .filter((it) => it.title);
+    if (items.length === 0) throw new Error("Add at least one line item");
+
+    const subtotal = items.reduce((s, it) => s + it.qty * it.rate, 0);
+    const taxAmount = items.reduce(
+      (s, it) => s + (it.qty * it.rate * (it.taxPct ?? 0)) / 100,
+      0,
+    );
+    const discountValue = Math.max(0, input.discountValue || 0);
+    const discountAmount =
+      input.discountType === "fixed"
+        ? Math.min(discountValue, subtotal)
+        : (subtotal * discountValue) / 100;
+    const total = subtotal + taxAmount - discountAmount;
+
+    const rateToBase = await getLatestRateForCurrency(input.currency);
+
+    await db.invoice.update({
+      where: { id: existing.id },
+      data: {
+        dealId: deal.id,
+        projectId: input.projectId,
+        contactId: deal.contactId,
+        status: input.send ? "SENT" : undefined,
+        sentAt: input.send && !existing.sentAt ? new Date() : undefined,
+        subtotal,
+        taxAmount,
+        discountType: input.discountType,
+        discountValue,
+        total,
+        currency: input.currency,
+        rateToBase,
+        totalInBase: rateToBase != null ? total * rateToBase : null,
+        notes: input.notes?.trim() || null,
+        issueDate: new Date(input.issueDate),
+        dueDate: new Date(input.dueDate),
+        items: {
+          deleteMany: {},
+          create: items.map((it) => ({
+            description: it.title,
+            details: it.details,
+            quantity: it.qty,
+            unitPrice: it.rate,
+            taxPct: it.taxPct,
+            total: it.qty * it.rate,
+          })),
+        },
+      },
+    });
+
+    await logActivity({
+      entityType: "invoice",
+      entityId: existing.id,
+      entityName: existing.number,
+      action: "updated",
+      metadata: { dealId: deal.id, total },
+    });
+
+    revalidatePath("/invoices");
+    revalidatePath(`/invoices/${existing.id}`);
+    revalidatePath(`/deals/${deal.id}`);
+    return { id: existing.id };
   });
 }
 

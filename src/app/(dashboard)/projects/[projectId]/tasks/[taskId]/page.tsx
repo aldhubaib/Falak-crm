@@ -148,6 +148,15 @@ export default async function TaskDetailPage({
   );
   const canDelete = canDeleteTaskAt(access.permissions, task.statusId);
 
+  // Title (and other task fields) are editable with the "Modify" right for
+  // the task's current stage; full project access always qualifies.
+  const canModify =
+    access.permissions.projects === "full" ||
+    (task.statusId
+      ? access.permissions.taskPermissions?.stages?.[task.statusId]?.modify ===
+        true
+      : false);
+
   // Per-stage move rights for the status bar's Back/Next controls (the server
   // enforces the same rule in updateTaskStatus).
   const movePerms = {
@@ -193,6 +202,7 @@ export default async function TaskDetailPage({
       projectId={projectId}
       taskId={taskId}
       canDelete={!trashed && canDelete}
+      canEditTitle={!trashed && canModify}
       trashed={
         trashed
           ? { deletedAt: task.deletedAt!.toISOString(), deletedByName }

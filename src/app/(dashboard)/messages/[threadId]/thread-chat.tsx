@@ -63,6 +63,7 @@ import {
   FilesPanel,
 } from "@/components/messages/chat-attachments";
 import { uploadManager, type UploadItem } from "@/lib/upload-manager";
+import { closeDisplayedNotifications } from "@/lib/app-badge";
 
 const QUICK_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🙏"];
 
@@ -266,6 +267,24 @@ export function ThreadChat({
     setMessages(initialMessages);
     setHasMore(hasMoreOlder);
   }, [initialMessages, hasMoreOlder]);
+
+  // Reading a thread also dismisses its push notifications from the system
+  // tray — Android launchers derive the app icon badge from those, so leaving
+  // them up keeps the badge stuck even after the unread count hits zero.
+  // Mirrors the read-marking rules in the thread page (a project channel is
+  // the "everything feed", so it also covers task URLs within the project).
+  useEffect(() => {
+    void closeDisplayedNotifications((url) => {
+      if (target.conversationId)
+        return url === `/messages/conv-${target.conversationId}`;
+      if (target.taskId)
+        return url === `/projects/${target.projectId}/tasks/${target.taskId}`;
+      return (
+        url === `/messages/project-${target.projectId}` ||
+        url.startsWith(`/projects/${target.projectId}/`)
+      );
+    });
+  }, [target.conversationId, target.taskId, target.projectId]);
 
   // Fetch the previous page (older messages) and prepend it, keeping the
   // viewport anchored so the list doesn't jump.

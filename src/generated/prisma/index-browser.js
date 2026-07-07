@@ -127,6 +127,7 @@ exports.Prisma.WorkspaceScalarFieldEnum = {
   baseCurrency: 'baseCurrency',
   taxRate: 'taxRate',
   logo: 'logo',
+  invoiceLogoSlot: 'invoiceLogoSlot',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -543,6 +544,7 @@ exports.Prisma.NotificationScalarFieldEnum = {
   title: 'title',
   body: 'body',
   linkUrl: 'linkUrl',
+  tag: 'tag',
   read: 'read',
   createdAt: 'createdAt'
 };

@@ -1,0 +1,57 @@
+---
+description: Any record name shown in the UI (company, contact, deal, project, task, invoice) must be a link to that record's page
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# Internal Record Links — Names Are Never Dead Text
+
+Whenever the UI displays the name/title of another record, render it as a link
+to that record. Example: an invoice shows its company name → clicking it opens
+that company. Never show a related record's name as plain text when its id is
+available; if the id isn't fetched, add it to the query.
+
+## Route map
+
+| Record | URL |
+|---|---|
+| Company | `/companies/{companyId}` |
+| Contact | `/contacts/{contactId}` |
+| Deal | `/deals/{dealId}` |
+| Project | `/projects/{projectId}` |
+| Task | `/projects/{projectId}/tasks/{taskId}` |
+| Invoice | `/invoices/{invoiceId}` |
+| DM / thread | `/messages/{threadId}` |
+
+## Pattern
+
+```tsx
+import Link from "next/link";
+
+// ✅ GOOD — name links to the record
+{deal.company && (
+  <Link
+    href={`/companies/${deal.company.id}`}
+    className="text-primary hover:underline"
+  >
+    {deal.company.name}
+  </Link>
+)}
+
+// ❌ BAD — dead text, user has to go search for the company
+<span>{deal.company?.name}</span>
+```
+
+## Rules
+
+- Use next/link (`Link`), never `<a>` or `router.push` in an onClick span.
+- Style: `text-primary hover:underline` so links are recognizable; keep the
+  surrounding text size (`text-sm`, `text-body`, …).
+- Inside a clickable row/card (tables, list rows, kanban cards), stop the
+  parent handler: `onClick={(e) => e.stopPropagation()}` on the Link.
+- Links must keep an adequate tap target in touch contexts — don't shrink
+  below the row's existing line height; add `py-1 -my-1` padding if needed.
+- Composite labels ("Deal title · Company name") link each part to its own
+  record, not the whole string to one of them.
+- Don't link a record to itself (e.g. the company name in the header of that
+  company's own detail page).

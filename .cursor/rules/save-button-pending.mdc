@@ -1,0 +1,57 @@
+---
+description: Any button that creates or saves a record in the DB must show a loading animation and be locked against double-clicks
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# Save Buttons — Pending State Is Mandatory
+
+Every button that triggers a server action which **creates or updates a DB record**
+MUST be disabled and show a spinner while the action is in flight. This prevents
+double-clicks from creating duplicate records.
+
+## Required pattern
+
+1. Get the pending flag from `useAction` / `useActionHandler` (`src/hooks/use-action.ts`),
+   or a local `useState` set **before** the first `await`.
+2. Render the button with `SaveButton` (`src/components/save-button.tsx`) and pass
+   `loading={pending}` — it disables itself and shows `Loader2` + "Saving…".
+3. Guard the handler itself: bail out if a save is already running. The `disabled`
+   attribute alone is not enough for rapid double-taps on touch devices.
+
+```tsx
+// ✅ GOOD
+const { execute, loading } = useAction(createDeal, {
+  onSuccess: () => router.push("/deals"),
+});
+
+async function save() {
+  if (loading) return; // handler-level double-submit guard
+  await execute(form);
+}
+
+<SaveButton onClick={save} loading={loading} ready={canSave} disabled={!canSave} />
+```
+
+```tsx
+// ❌ BAD — no pending state; a double-click creates two records
+<Button onClick={() => createDeal(form)}>Save</Button>
+
+// ❌ BAD — loading set after the await; both clicks pass the check
+async function save() {
+  await createDeal(form);
+  setLoading(true);
+}
+```
+
+## Rules
+
+- NEVER call a create/save server action from an `onClick` without a pending flag.
+- Set the pending flag synchronously before `await`; clear it in `finally`.
+- Prefer `SaveButton` for save/create actions. For other mutating buttons
+  (delete, send, invite), apply the same pattern: `disabled={pending}` + spinner
+  (`<Loader2 className="h-4 w-4 animate-spin" />`).
+- For plain `<form action={...}>` submits, use `useFormStatus().pending` inside
+  the submit button component.
+- Buttons stay `min-h-touch` sized while loading — never swap to a bare spinner
+  that changes layout.

@@ -30,9 +30,9 @@ export type BrandingAssetDTO = {
 };
 
 async function requireSettingsEditor() {
-  const { member } = await requireWorkspaceWithMember();
+  const { workspace, member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "settings")) throw new Error("Permission denied");
-  return member;
+  return { workspace, member };
 }
 
 // Authenticated read for the settings screen (presigned preview URLs).
@@ -52,6 +52,7 @@ export async function getBrandingAssets(): Promise<
     "androidAny",
     "androidMaskable",
     "webLogo",
+    "invoiceLogo",
     "ogImage",
     "androidMonochrome",
     "iosSplash",

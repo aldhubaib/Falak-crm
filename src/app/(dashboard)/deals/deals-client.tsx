@@ -191,7 +191,10 @@ export function DealsClient({
       {deals.length === 0 ? (
         <div className="flex flex-1 items-center justify-center p-6">
           <EmptyState
-            message="No deals yet. Create your first one to get started."
+            variant="page"
+            icon={Handshake}
+            title="You don't have any deals yet"
+            message="Create your first deal to get started."
             action={
               editable ? (
                 <button

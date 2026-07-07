@@ -13,9 +13,10 @@ interface AppHeaderProps {
   backHref?: string;
   /** Node rendered between back/trigger and the title (e.g. avatar). */
   leading?: ReactNode;
-  /** Right-hand actions. Notification bell is always shown unless hideNotifications is true. */
+  /** Right-hand actions, rendered to the left of the notification bell —
+   *  the bell always stays rightmost. */
   actions?: ReactNode;
-  /** Actions rendered to the LEFT of the notification bell (bell stays rightmost). */
+  /** Extra actions rendered before `actions` (also left of the bell). */
   beforeNotifications?: ReactNode;
   /** Hide the default notification bell. */
   hideNotifications?: boolean;
@@ -65,8 +66,8 @@ export function AppHeader({
 
       <div className="ml-auto flex shrink-0 items-center gap-1">
         {beforeNotifications}
-        {!hideNotifications && <NotificationsBell />}
         {actions}
+        {!hideNotifications && <NotificationsBell />}
       </div>
     </header>
   );

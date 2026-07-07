@@ -6311,6 +6311,7 @@ export namespace Prisma {
     baseCurrency: string | null
     taxRate: Decimal | null
     logo: string | null
+    invoiceLogoSlot: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6322,6 +6323,7 @@ export namespace Prisma {
     baseCurrency: string | null
     taxRate: Decimal | null
     logo: string | null
+    invoiceLogoSlot: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6333,6 +6335,7 @@ export namespace Prisma {
     baseCurrency: number
     taxRate: number
     logo: number
+    invoiceLogoSlot: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -6354,6 +6357,7 @@ export namespace Prisma {
     baseCurrency?: true
     taxRate?: true
     logo?: true
+    invoiceLogoSlot?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6365,6 +6369,7 @@ export namespace Prisma {
     baseCurrency?: true
     taxRate?: true
     logo?: true
+    invoiceLogoSlot?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6376,6 +6381,7 @@ export namespace Prisma {
     baseCurrency?: true
     taxRate?: true
     logo?: true
+    invoiceLogoSlot?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -6474,6 +6480,7 @@ export namespace Prisma {
     baseCurrency: string
     taxRate: Decimal
     logo: string | null
+    invoiceLogoSlot: string | null
     createdAt: Date
     updatedAt: Date
     _count: WorkspaceCountAggregateOutputType | null
@@ -6504,6 +6511,7 @@ export namespace Prisma {
     baseCurrency?: boolean
     taxRate?: boolean
     logo?: boolean
+    invoiceLogoSlot?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     members?: boolean | Workspace$membersArgs<ExtArgs>
@@ -6539,6 +6547,7 @@ export namespace Prisma {
     baseCurrency?: boolean
     taxRate?: boolean
     logo?: boolean
+    invoiceLogoSlot?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["workspace"]>
@@ -6550,6 +6559,7 @@ export namespace Prisma {
     baseCurrency?: boolean
     taxRate?: boolean
     logo?: boolean
+    invoiceLogoSlot?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["workspace"]>
@@ -6561,11 +6571,12 @@ export namespace Prisma {
     baseCurrency?: boolean
     taxRate?: boolean
     logo?: boolean
+    invoiceLogoSlot?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type WorkspaceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "baseCurrency" | "taxRate" | "logo" | "createdAt" | "updatedAt", ExtArgs["result"]["workspace"]>
+  export type WorkspaceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "baseCurrency" | "taxRate" | "logo" | "invoiceLogoSlot" | "createdAt" | "updatedAt", ExtArgs["result"]["workspace"]>
   export type WorkspaceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     members?: boolean | Workspace$membersArgs<ExtArgs>
     activityLogs?: boolean | Workspace$activityLogsArgs<ExtArgs>
@@ -6629,6 +6640,7 @@ export namespace Prisma {
       baseCurrency: string
       taxRate: Prisma.Decimal
       logo: string | null
+      invoiceLogoSlot: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["workspace"]>
@@ -7083,6 +7095,7 @@ export namespace Prisma {
     readonly baseCurrency: FieldRef<"Workspace", 'String'>
     readonly taxRate: FieldRef<"Workspace", 'Decimal'>
     readonly logo: FieldRef<"Workspace", 'String'>
+    readonly invoiceLogoSlot: FieldRef<"Workspace", 'String'>
     readonly createdAt: FieldRef<"Workspace", 'DateTime'>
     readonly updatedAt: FieldRef<"Workspace", 'DateTime'>
   }
@@ -45642,6 +45655,7 @@ export namespace Prisma {
     title: string | null
     body: string | null
     linkUrl: string | null
+    tag: string | null
     read: boolean | null
     createdAt: Date | null
   }
@@ -45653,6 +45667,7 @@ export namespace Prisma {
     title: string | null
     body: string | null
     linkUrl: string | null
+    tag: string | null
     read: boolean | null
     createdAt: Date | null
   }
@@ -45664,6 +45679,7 @@ export namespace Prisma {
     title: number
     body: number
     linkUrl: number
+    tag: number
     read: number
     createdAt: number
     _all: number
@@ -45677,6 +45693,7 @@ export namespace Prisma {
     title?: true
     body?: true
     linkUrl?: true
+    tag?: true
     read?: true
     createdAt?: true
   }
@@ -45688,6 +45705,7 @@ export namespace Prisma {
     title?: true
     body?: true
     linkUrl?: true
+    tag?: true
     read?: true
     createdAt?: true
   }
@@ -45699,6 +45717,7 @@ export namespace Prisma {
     title?: true
     body?: true
     linkUrl?: true
+    tag?: true
     read?: true
     createdAt?: true
     _all?: true
@@ -45783,6 +45802,7 @@ export namespace Prisma {
     title: string
     body: string | null
     linkUrl: string | null
+    tag: string | null
     read: boolean
     createdAt: Date
     _count: NotificationCountAggregateOutputType | null
@@ -45811,6 +45831,7 @@ export namespace Prisma {
     title?: boolean
     body?: boolean
     linkUrl?: boolean
+    tag?: boolean
     read?: boolean
     createdAt?: boolean
     recipient?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
@@ -45823,6 +45844,7 @@ export namespace Prisma {
     title?: boolean
     body?: boolean
     linkUrl?: boolean
+    tag?: boolean
     read?: boolean
     createdAt?: boolean
     recipient?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
@@ -45835,6 +45857,7 @@ export namespace Prisma {
     title?: boolean
     body?: boolean
     linkUrl?: boolean
+    tag?: boolean
     read?: boolean
     createdAt?: boolean
     recipient?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
@@ -45847,11 +45870,12 @@ export namespace Prisma {
     title?: boolean
     body?: boolean
     linkUrl?: boolean
+    tag?: boolean
     read?: boolean
     createdAt?: boolean
   }
 
-  export type NotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "recipientId" | "type" | "title" | "body" | "linkUrl" | "read" | "createdAt", ExtArgs["result"]["notification"]>
+  export type NotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "recipientId" | "type" | "title" | "body" | "linkUrl" | "tag" | "read" | "createdAt", ExtArgs["result"]["notification"]>
   export type NotificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     recipient?: boolean | WorkspaceMemberDefaultArgs<ExtArgs>
   }
@@ -45874,6 +45898,7 @@ export namespace Prisma {
       title: string
       body: string | null
       linkUrl: string | null
+      tag: string | null
       read: boolean
       createdAt: Date
     }, ExtArgs["result"]["notification"]>
@@ -46306,6 +46331,7 @@ export namespace Prisma {
     readonly title: FieldRef<"Notification", 'String'>
     readonly body: FieldRef<"Notification", 'String'>
     readonly linkUrl: FieldRef<"Notification", 'String'>
+    readonly tag: FieldRef<"Notification", 'String'>
     readonly read: FieldRef<"Notification", 'Boolean'>
     readonly createdAt: FieldRef<"Notification", 'DateTime'>
   }
@@ -62862,6 +62888,7 @@ export namespace Prisma {
     baseCurrency: 'baseCurrency',
     taxRate: 'taxRate',
     logo: 'logo',
+    invoiceLogoSlot: 'invoiceLogoSlot',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -63374,6 +63401,7 @@ export namespace Prisma {
     title: 'title',
     body: 'body',
     linkUrl: 'linkUrl',
+    tag: 'tag',
     read: 'read',
     createdAt: 'createdAt'
   };
@@ -63889,6 +63917,7 @@ export namespace Prisma {
     baseCurrency?: StringFilter<"Workspace"> | string
     taxRate?: DecimalFilter<"Workspace"> | Decimal | DecimalJsLike | number | string
     logo?: StringNullableFilter<"Workspace"> | string | null
+    invoiceLogoSlot?: StringNullableFilter<"Workspace"> | string | null
     createdAt?: DateTimeFilter<"Workspace"> | Date | string
     updatedAt?: DateTimeFilter<"Workspace"> | Date | string
     members?: WorkspaceMemberListRelationFilter
@@ -63923,6 +63952,7 @@ export namespace Prisma {
     baseCurrency?: SortOrder
     taxRate?: SortOrder
     logo?: SortOrderInput | SortOrder
+    invoiceLogoSlot?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     members?: WorkspaceMemberOrderByRelationAggregateInput
@@ -63960,6 +63990,7 @@ export namespace Prisma {
     baseCurrency?: StringFilter<"Workspace"> | string
     taxRate?: DecimalFilter<"Workspace"> | Decimal | DecimalJsLike | number | string
     logo?: StringNullableFilter<"Workspace"> | string | null
+    invoiceLogoSlot?: StringNullableFilter<"Workspace"> | string | null
     createdAt?: DateTimeFilter<"Workspace"> | Date | string
     updatedAt?: DateTimeFilter<"Workspace"> | Date | string
     members?: WorkspaceMemberListRelationFilter
@@ -63994,6 +64025,7 @@ export namespace Prisma {
     baseCurrency?: SortOrder
     taxRate?: SortOrder
     logo?: SortOrderInput | SortOrder
+    invoiceLogoSlot?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: WorkspaceCountOrderByAggregateInput
@@ -64013,6 +64045,7 @@ export namespace Prisma {
     baseCurrency?: StringWithAggregatesFilter<"Workspace"> | string
     taxRate?: DecimalWithAggregatesFilter<"Workspace"> | Decimal | DecimalJsLike | number | string
     logo?: StringNullableWithAggregatesFilter<"Workspace"> | string | null
+    invoiceLogoSlot?: StringNullableWithAggregatesFilter<"Workspace"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Workspace"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Workspace"> | Date | string
   }
@@ -66807,6 +66840,7 @@ export namespace Prisma {
     title?: StringFilter<"Notification"> | string
     body?: StringNullableFilter<"Notification"> | string | null
     linkUrl?: StringNullableFilter<"Notification"> | string | null
+    tag?: StringNullableFilter<"Notification"> | string | null
     read?: BoolFilter<"Notification"> | boolean
     createdAt?: DateTimeFilter<"Notification"> | Date | string
     recipient?: XOR<WorkspaceMemberScalarRelationFilter, WorkspaceMemberWhereInput>
@@ -66819,6 +66853,7 @@ export namespace Prisma {
     title?: SortOrder
     body?: SortOrderInput | SortOrder
     linkUrl?: SortOrderInput | SortOrder
+    tag?: SortOrderInput | SortOrder
     read?: SortOrder
     createdAt?: SortOrder
     recipient?: WorkspaceMemberOrderByWithRelationInput
@@ -66834,6 +66869,7 @@ export namespace Prisma {
     title?: StringFilter<"Notification"> | string
     body?: StringNullableFilter<"Notification"> | string | null
     linkUrl?: StringNullableFilter<"Notification"> | string | null
+    tag?: StringNullableFilter<"Notification"> | string | null
     read?: BoolFilter<"Notification"> | boolean
     createdAt?: DateTimeFilter<"Notification"> | Date | string
     recipient?: XOR<WorkspaceMemberScalarRelationFilter, WorkspaceMemberWhereInput>
@@ -66846,6 +66882,7 @@ export namespace Prisma {
     title?: SortOrder
     body?: SortOrderInput | SortOrder
     linkUrl?: SortOrderInput | SortOrder
+    tag?: SortOrderInput | SortOrder
     read?: SortOrder
     createdAt?: SortOrder
     _count?: NotificationCountOrderByAggregateInput
@@ -66863,6 +66900,7 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"Notification"> | string
     body?: StringNullableWithAggregatesFilter<"Notification"> | string | null
     linkUrl?: StringNullableWithAggregatesFilter<"Notification"> | string | null
+    tag?: StringNullableWithAggregatesFilter<"Notification"> | string | null
     read?: BoolWithAggregatesFilter<"Notification"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Notification"> | Date | string
   }
@@ -68034,6 +68072,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -68068,6 +68107,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -68102,6 +68142,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -68136,6 +68177,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -68170,6 +68212,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -68181,6 +68224,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -68192,6 +68236,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -71197,6 +71242,7 @@ export namespace Prisma {
     title: string
     body?: string | null
     linkUrl?: string | null
+    tag?: string | null
     read?: boolean
     createdAt?: Date | string
     recipient: WorkspaceMemberCreateNestedOneWithoutNotificationsInput
@@ -71209,6 +71255,7 @@ export namespace Prisma {
     title: string
     body?: string | null
     linkUrl?: string | null
+    tag?: string | null
     read?: boolean
     createdAt?: Date | string
   }
@@ -71219,6 +71266,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: NullableStringFieldUpdateOperationsInput | string | null
     linkUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    tag?: NullableStringFieldUpdateOperationsInput | string | null
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     recipient?: WorkspaceMemberUpdateOneRequiredWithoutNotificationsNestedInput
@@ -71231,6 +71279,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: NullableStringFieldUpdateOperationsInput | string | null
     linkUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    tag?: NullableStringFieldUpdateOperationsInput | string | null
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -71242,6 +71291,7 @@ export namespace Prisma {
     title: string
     body?: string | null
     linkUrl?: string | null
+    tag?: string | null
     read?: boolean
     createdAt?: Date | string
   }
@@ -71252,6 +71302,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: NullableStringFieldUpdateOperationsInput | string | null
     linkUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    tag?: NullableStringFieldUpdateOperationsInput | string | null
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -71263,6 +71314,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: NullableStringFieldUpdateOperationsInput | string | null
     linkUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    tag?: NullableStringFieldUpdateOperationsInput | string | null
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -72823,6 +72875,7 @@ export namespace Prisma {
     baseCurrency?: SortOrder
     taxRate?: SortOrder
     logo?: SortOrder
+    invoiceLogoSlot?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -72838,6 +72891,7 @@ export namespace Prisma {
     baseCurrency?: SortOrder
     taxRate?: SortOrder
     logo?: SortOrder
+    invoiceLogoSlot?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -72849,6 +72903,7 @@ export namespace Prisma {
     baseCurrency?: SortOrder
     taxRate?: SortOrder
     logo?: SortOrder
+    invoiceLogoSlot?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -74942,6 +74997,7 @@ export namespace Prisma {
     title?: SortOrder
     body?: SortOrder
     linkUrl?: SortOrder
+    tag?: SortOrder
     read?: SortOrder
     createdAt?: SortOrder
   }
@@ -74953,6 +75009,7 @@ export namespace Prisma {
     title?: SortOrder
     body?: SortOrder
     linkUrl?: SortOrder
+    tag?: SortOrder
     read?: SortOrder
     createdAt?: SortOrder
   }
@@ -74964,6 +75021,7 @@ export namespace Prisma {
     title?: SortOrder
     body?: SortOrder
     linkUrl?: SortOrder
+    tag?: SortOrder
     read?: SortOrder
     createdAt?: SortOrder
   }
@@ -82390,6 +82448,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -82423,6 +82482,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -82472,6 +82532,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -82505,6 +82566,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -82538,6 +82600,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -82571,6 +82634,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -82620,6 +82684,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -82653,6 +82718,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -82686,6 +82752,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     activityLogs?: ActivityLogCreateNestedManyWithoutWorkspaceInput
@@ -82719,6 +82786,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -82931,6 +82999,7 @@ export namespace Prisma {
     title: string
     body?: string | null
     linkUrl?: string | null
+    tag?: string | null
     read?: boolean
     createdAt?: Date | string
   }
@@ -82941,6 +83010,7 @@ export namespace Prisma {
     title: string
     body?: string | null
     linkUrl?: string | null
+    tag?: string | null
     read?: boolean
     createdAt?: Date | string
   }
@@ -83117,6 +83187,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activityLogs?: ActivityLogUpdateManyWithoutWorkspaceNestedInput
@@ -83150,6 +83221,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activityLogs?: ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -83361,6 +83433,7 @@ export namespace Prisma {
     title?: StringFilter<"Notification"> | string
     body?: StringNullableFilter<"Notification"> | string | null
     linkUrl?: StringNullableFilter<"Notification"> | string | null
+    tag?: StringNullableFilter<"Notification"> | string | null
     read?: BoolFilter<"Notification"> | boolean
     createdAt?: DateTimeFilter<"Notification"> | Date | string
   }
@@ -83502,6 +83575,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -83535,6 +83609,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -83660,6 +83735,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -83693,6 +83769,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -83894,6 +83971,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -83927,6 +84005,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -84142,6 +84221,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -84175,6 +84255,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -84268,6 +84349,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -84301,6 +84383,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -84552,6 +84635,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -84585,6 +84669,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -84932,6 +85017,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -84965,6 +85051,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -85110,6 +85197,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -85143,6 +85231,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -85220,6 +85309,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -85253,6 +85343,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -85402,6 +85493,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -85435,6 +85527,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -85651,6 +85744,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -85684,6 +85778,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -86080,6 +86175,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -86113,6 +86209,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -86809,6 +86906,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -86842,6 +86940,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -86961,6 +87060,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -86994,6 +87094,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -87043,6 +87144,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -87076,6 +87178,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -87620,6 +87723,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -87653,6 +87757,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -88824,6 +88929,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -88857,6 +88963,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -88978,6 +89085,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -89011,6 +89119,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -89908,6 +90017,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -89941,6 +90051,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -90216,6 +90327,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -90249,6 +90361,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -92056,6 +92169,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -92089,6 +92203,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -92200,6 +92315,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -92233,6 +92349,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -92654,6 +92771,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -92687,6 +92805,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -92949,6 +93068,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -92982,6 +93102,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -93378,6 +93499,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -93411,6 +93533,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -93460,6 +93583,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -93493,6 +93617,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -93526,6 +93651,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -93559,6 +93685,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -93608,6 +93735,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -93641,6 +93769,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -93786,6 +93915,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -93819,6 +93949,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -93868,6 +93999,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -93901,6 +94033,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -93934,6 +94067,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -93967,6 +94101,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -94016,6 +94151,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -94049,6 +94185,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -94082,6 +94219,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -94115,6 +94253,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -94164,6 +94303,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -94197,6 +94337,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -94230,6 +94371,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -94263,6 +94405,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -94312,6 +94455,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -94345,6 +94489,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -94378,6 +94523,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -94411,6 +94557,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -94460,6 +94607,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -94493,6 +94641,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -94526,6 +94675,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
@@ -94559,6 +94709,7 @@ export namespace Prisma {
     baseCurrency?: string
     taxRate?: Decimal | DecimalJsLike | number | string
     logo?: string | null
+    invoiceLogoSlot?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -94785,6 +94936,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
@@ -94818,6 +94970,7 @@ export namespace Prisma {
     baseCurrency?: StringFieldUpdateOperationsInput | string
     taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -96339,6 +96492,7 @@ export namespace Prisma {
     title: string
     body?: string | null
     linkUrl?: string | null
+    tag?: string | null
     read?: boolean
     createdAt?: Date | string
   }
@@ -96558,6 +96712,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: NullableStringFieldUpdateOperationsInput | string | null
     linkUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    tag?: NullableStringFieldUpdateOperationsInput | string | null
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -96568,6 +96723,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: NullableStringFieldUpdateOperationsInput | string | null
     linkUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    tag?: NullableStringFieldUpdateOperationsInput | string | null
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -96578,6 +96734,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: NullableStringFieldUpdateOperationsInput | string | null
     linkUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    tag?: NullableStringFieldUpdateOperationsInput | string | null
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

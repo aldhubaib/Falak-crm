@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getInvoice } from "@/actions/invoices";
 import { AppHeader } from "@/components/app-header";
@@ -24,20 +25,54 @@ export default async function InvoiceDetailPage({
               <h2 className="font-mono text-xl font-bold">{invoice.number}</h2>
               {invoice.deal && (
                 <div className="mt-1 text-sm text-muted-foreground">
-                  {invoice.deal.title}
-                  {invoice.deal.company && ` · ${invoice.deal.company.name}`}
+                  <Link
+                    href={`/deals/${invoice.deal.id}`}
+                    className="text-primary hover:underline"
+                  >
+                    {invoice.deal.title}
+                  </Link>
+                  {invoice.deal.company && (
+                    <>
+                      {" · "}
+                      <Link
+                        href={`/companies/${invoice.deal.company.id}`}
+                        className="text-primary hover:underline"
+                      >
+                        {invoice.deal.company.name}
+                      </Link>
+                    </>
+                  )}
                 </div>
               )}
               {invoice.project && (
                 <div className="mt-1 text-sm text-muted-foreground">
-                  {invoice.project.name}
-                  {invoice.project.company &&
-                    ` — ${invoice.project.company.name}`}
+                  <Link
+                    href={`/projects/${invoice.project.id}`}
+                    className="text-primary hover:underline"
+                  >
+                    {invoice.project.name}
+                  </Link>
+                  {invoice.project.company && (
+                    <>
+                      {" — "}
+                      <Link
+                        href={`/companies/${invoice.project.company.id}`}
+                        className="text-primary hover:underline"
+                      >
+                        {invoice.project.company.name}
+                      </Link>
+                    </>
+                  )}
                 </div>
               )}
               {invoice.contact && (
                 <div className="mt-0.5 text-xs text-muted-foreground">
-                  {invoice.contact.firstName} {invoice.contact.lastName}
+                  <Link
+                    href={`/contacts/${invoice.contact.id}`}
+                    className="text-primary hover:underline"
+                  >
+                    {invoice.contact.firstName} {invoice.contact.lastName}
+                  </Link>
                   {invoice.contact.mobile && ` • ${invoice.contact.mobile}`}
                 </div>
               )}

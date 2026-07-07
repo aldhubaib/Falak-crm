@@ -41,6 +41,25 @@ self.addEventListener("push", (event) => {
   if (!event.data) return;
 
   const data = event.data.json();
+
+  // Cross-device clear: notifications were read on another device — close the
+  // matching ones in this device's tray and fix the badge. No new notification
+  // is shown.
+  if (data.type === "clear") {
+    event.waitUntil(
+      self.registration.getNotifications().then((shown) => {
+        for (const n of shown) {
+          if (data.clearAll || (data.tags || []).includes(n.tag)) n.close();
+        }
+        if (!navigator.setAppBadge) return;
+        return data.badge > 0
+          ? navigator.setAppBadge(data.badge)
+          : navigator.clearAppBadge();
+      })
+    );
+    return;
+  }
+
   const { title, body, url, badge, icon } = data;
 
   event.waitUntil(

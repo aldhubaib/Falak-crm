@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, Users, ListTodo } from "lucide-react";
+import { Plus, ListTodo, FolderKanban } from "lucide-react";
 import { getProjects } from "@/actions/projects";
 import { requireWorkspaceWithMember } from "@/lib/workspace";
 import { canEdit } from "@/lib/permissions";
@@ -35,6 +35,26 @@ export default async function ProjectsPage() {
           ) : undefined
         }
       />
+      {projects.length === 0 ? (
+        <main className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto">
+          <EmptyState
+            variant="page"
+            icon={FolderKanban}
+            title="You don't have any projects yet"
+            message="Create your first project to get started."
+            action={
+              editable ? (
+                <Button asChild className="rounded-full">
+                  <Link href="/projects/new">
+                    <Plus className="h-4 w-4" />
+                    New Project
+                  </Link>
+                </Button>
+              ) : undefined
+            }
+          />
+        </main>
+      ) : (
       <main className="min-h-0 flex-1 overflow-y-auto">
         <div className="grid grid-cols-1 gap-3 p-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {projects.map((p) => {
@@ -113,25 +133,9 @@ export default async function ProjectsPage() {
               </Link>
             );
           })}
-
-          {projects.length === 0 && (
-            <EmptyState
-              className="col-span-full p-10"
-              message="No projects yet. Create your first one."
-              action={
-                editable ? (
-                  <Button asChild size="sm">
-                    <Link href="/projects/new">
-                      <Plus className="h-4 w-4" />
-                      New Project
-                    </Link>
-                  </Button>
-                ) : undefined
-              }
-            />
-          )}
         </div>
       </main>
+      )}
     </>
   );
 }

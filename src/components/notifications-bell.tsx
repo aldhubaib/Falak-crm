@@ -19,6 +19,11 @@ import {
 import { useCentrifugo } from "@/components/realtime/centrifugo-provider";
 import { useChannel } from "@/components/realtime/hooks";
 import { userChannel } from "@/lib/channels";
+import {
+  closeDisplayedNotifications,
+  closeDisplayedNotificationsByTag,
+  syncAppBadge,
+} from "@/lib/app-badge";
 
 type Notification = {
   id: string;
@@ -69,20 +74,30 @@ export function NotificationsBell() {
 
   // Mirror the unread count on the OS app icon (installed PWA). The service
   // worker sets it when a push arrives while the app is closed; this keeps it
-  // in sync (and clears it) while the app is in use.
+  // in sync while the app is in use and, once everything is read, also closes
+  // the push notifications left in the system tray (Android launchers derive
+  // the badge from those, so clearAppBadge alone isn't enough).
   useEffect(() => {
-    const nav = navigator as Navigator & {
-      setAppBadge?: (count: number) => Promise<void>;
-      clearAppBadge?: () => Promise<void>;
-    };
-    if (!nav.setAppBadge) return;
-    if (unreadCount > 0) nav.setAppBadge(unreadCount).catch(() => {});
-    else nav.clearAppBadge?.().catch(() => {});
+    void syncAppBadge(unreadCount);
   }, [unreadCount]);
 
   // Instant updates: refresh the moment something lands on our user channel.
+  // A `notification.read` event means notifications were read on another
+  // device — also close the matching push notifications in this device's tray.
   const cent = useCentrifugo();
-  useChannel(cent ? userChannel(cent.memberId) : null, () => refresh());
+  useChannel(cent ? userChannel(cent.memberId) : null, (data) => {
+    refresh();
+    const event = data as {
+      type?: string;
+      clearAll?: boolean;
+      tags?: string[];
+    };
+    if (event?.type === "notification.read") {
+      if (event.clearAll) void closeDisplayedNotifications();
+      else if (event.tags?.length)
+        void closeDisplayedNotificationsByTag(event.tags);
+    }
+  });
 
   useEffect(() => {
     if (open) refresh();

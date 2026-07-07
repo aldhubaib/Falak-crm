@@ -10,14 +10,16 @@ datasource db {
 // ─── Workspace ─────────────────────────────────────────────────────────────────
 
 model Workspace {
-  id           String   @id @default(cuid())
-  name         String
-  slug         String   @unique
-  baseCurrency String   @default("KWD")
-  taxRate      Decimal  @default(15) @db.Decimal(5, 2)
-  logo         String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique
+  baseCurrency    String   @default("KWD")
+  taxRate         Decimal  @default(15) @db.Decimal(5, 2)
+  logo            String?
+  // Branding slot (BrandingSlotId) whose asset is shown on invoices.
+  invoiceLogoSlot String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   members            WorkspaceMember[]
   activityLogs       ActivityLog[]
@@ -731,6 +733,9 @@ model Notification {
   title       String
   body        String?
   linkUrl     String?
+  // Web-push tag the OS notification was shown with — lets us close it on
+  // other devices when this notification is read.
+  tag         String?
   read        Boolean  @default(false)
   createdAt   DateTime @default(now())
 

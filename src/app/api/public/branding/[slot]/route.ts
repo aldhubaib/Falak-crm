@@ -15,6 +15,7 @@ const KNOWN_SLOTS = new Set<string>([
   "androidMaskable192",
   "androidMaskable512",
   "webLogo",
+  "invoiceLogo",
   "ogImage",
   "androidMonochrome",
   "iosSplash",

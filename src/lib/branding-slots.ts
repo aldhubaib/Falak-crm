@@ -9,6 +9,7 @@ export type BrandingSlotId =
   | "androidAny"
   | "androidMaskable"
   | "webLogo"
+  | "invoiceLogo"
   | "ogImage"
   | "androidMonochrome"
   | "iosSplash";
@@ -25,6 +26,7 @@ export type BrandingStorageSlot =
   | "androidMaskable192"
   | "androidMaskable512"
   | "webLogo"
+  | "invoiceLogo"
   | "ogImage"
   | "androidMonochrome"
   | "iosSplash";
@@ -34,6 +36,32 @@ export function storageSlotsFor(slot: BrandingSlotId): BrandingStorageSlot[] {
   if (slot === "androidMaskable")
     return ["androidMaskable192", "androidMaskable512"];
   return [slot];
+}
+
+// Static files shipped with the app, used until a custom asset is uploaded.
+// Lives here (not lib/branding.ts) so client components can use it too.
+export const BRANDING_FALLBACKS: Partial<Record<BrandingStorageSlot, string>> =
+  {
+    favicon: "/favicon.png",
+    faviconDark: "/favicon.png",
+    appleTouchIcon: "/icons/ios-180.png?v=2",
+    androidAny192: "/icons/android-192.png?v=2",
+    androidAny512: "/icons/android-512.png?v=2",
+    androidMaskable192: "/icons/android-192.png?v=2",
+    androidMaskable512: "/icons/android-512.png?v=2",
+    webLogo: "/falak-mark.svg",
+  };
+
+// Built-in default artwork for a settings slot (highest resolution), or null
+// when the slot has no shipped default (e.g. OG image, iOS splash).
+export function brandingFallbackFor(slot: BrandingSlotId): string | null {
+  return (
+    storageSlotsFor(slot)
+      .slice()
+      .reverse()
+      .map((s) => BRANDING_FALLBACKS[s])
+      .find(Boolean) ?? null
+  );
 }
 
 export type BrandingSlotConfig = {
@@ -136,6 +164,18 @@ export const BRANDING_SLOTS: BrandingSlotConfig[] = [
     previewShape: "square",
   },
   {
+    id: "invoiceLogo",
+    title: "Invoice logo",
+    formats: ["image/svg+xml", "image/png", "image/jpeg"],
+    formatsLabel: "SVG, PNG or JPG",
+    accept: ".svg,.png,.jpg,.jpeg,image/svg+xml,image/png,image/jpeg",
+    sizes: [], // any dimensions — rendered small on the document
+    sizesLabel: "Any (recommended ~512×512)",
+    previewClass: "h-20 w-20",
+    previewShape: "square",
+    note: "Shown on invoice documents. Remove it to print invoices without a logo.",
+  },
+  {
     id: "ogImage",
     title: "Social share image (OG image)",
     optional: true,
@@ -203,6 +243,8 @@ export function validateBrandingFile(
   }
   // SVG has no meaningful pixel size — skip dim check
   if (mime === "image/svg+xml") return null;
+  // An empty sizes list means the slot accepts any dimensions.
+  if (slot.sizes.length === 0) return null;
   const sizeOk = slot.sizes.some(
     (s) => s.w === dims.width && s.h === dims.height,
   );

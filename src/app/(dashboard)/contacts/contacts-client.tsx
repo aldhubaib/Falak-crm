@@ -172,7 +172,10 @@ export function ContactsClient({
       {contacts.length === 0 ? (
         <div className="flex flex-1 items-center justify-center p-6">
           <EmptyState
-            message="No contacts yet. Create your first one to get started."
+            variant="page"
+            icon={Users}
+            title="You don't have any contacts yet"
+            message="Create your first contact to get started."
             action={
               editable ? (
                 <button
