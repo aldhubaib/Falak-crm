@@ -27,8 +27,16 @@ export type TaskTypeVM = {
   icon: string | null;
   color: string | null;
   publishToCalendar: boolean;
+  /** Lock rule for the built-in Title (null + false = Auto: locks after Todo). */
+  titleLockedFromStageId: string | null;
+  titleNeverLock: boolean;
   requirementFields: TTField[];
   deliveryFields: TTField[];
+};
+
+export type TitleLockPatch = {
+  lockedFromStageId: string | null;
+  neverLock: boolean;
 };
 
 export type StatusOpt = { id: string; name: string; color: string };

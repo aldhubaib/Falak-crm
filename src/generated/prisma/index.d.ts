@@ -189,6 +189,11 @@ export type PushSubscription = $Result.DefaultSelection<Prisma.$PushSubscription
  */
 export type Invoice = $Result.DefaultSelection<Prisma.$InvoicePayload>
 /**
+ * Model Payment
+ * 
+ */
+export type Payment = $Result.DefaultSelection<Prisma.$PaymentPayload>
+/**
  * Model InvoiceItem
  * 
  */
@@ -295,6 +300,7 @@ export const InvoiceStatus: {
   SENT: 'SENT',
   ACCEPTED: 'ACCEPTED',
   REJECTED: 'REJECTED',
+  PARTIAL: 'PARTIAL',
   PAID: 'PAID',
   CANCELLED: 'CANCELLED'
 };
@@ -850,6 +856,16 @@ export class PrismaClient<
     * ```
     */
   get invoice(): Prisma.InvoiceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.payment`: Exposes CRUD operations for the **Payment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Payments
+    * const payments = await prisma.payment.findMany()
+    * ```
+    */
+  get payment(): Prisma.PaymentDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.invoiceItem`: Exposes CRUD operations for the **InvoiceItem** model.
@@ -1439,6 +1455,7 @@ export namespace Prisma {
     Notification: 'Notification',
     PushSubscription: 'PushSubscription',
     Invoice: 'Invoice',
+    Payment: 'Payment',
     InvoiceItem: 'InvoiceItem',
     WhatsAppConfig: 'WhatsAppConfig',
     WhatsAppTemplate: 'WhatsAppTemplate',
@@ -1466,7 +1483,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "message" | "messageReaction" | "messageMention" | "conversation" | "conversationParticipant" | "notification" | "pushSubscription" | "invoice" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "brandingAsset" | "publishItem"
+      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "message" | "messageReaction" | "messageMention" | "conversation" | "conversationParticipant" | "notification" | "pushSubscription" | "invoice" | "payment" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "brandingAsset" | "publishItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4060,6 +4077,80 @@ export namespace Prisma {
           }
         }
       }
+      Payment: {
+        payload: Prisma.$PaymentPayload<ExtArgs>
+        fields: Prisma.PaymentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PaymentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PaymentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>
+          }
+          findFirst: {
+            args: Prisma.PaymentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PaymentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>
+          }
+          findMany: {
+            args: Prisma.PaymentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>[]
+          }
+          create: {
+            args: Prisma.PaymentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>
+          }
+          createMany: {
+            args: Prisma.PaymentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PaymentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>[]
+          }
+          delete: {
+            args: Prisma.PaymentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>
+          }
+          update: {
+            args: Prisma.PaymentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>
+          }
+          deleteMany: {
+            args: Prisma.PaymentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PaymentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PaymentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>[]
+          }
+          upsert: {
+            args: Prisma.PaymentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>
+          }
+          aggregate: {
+            args: Prisma.PaymentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePayment>
+          }
+          groupBy: {
+            args: Prisma.PaymentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PaymentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PaymentCountArgs<ExtArgs>
+            result: $Utils.Optional<PaymentCountAggregateOutputType> | number
+          }
+        }
+      }
       InvoiceItem: {
         payload: Prisma.$InvoiceItemPayload<ExtArgs>
         fields: Prisma.InvoiceItemFieldRefs
@@ -5091,6 +5182,7 @@ export namespace Prisma {
     notification?: NotificationOmit
     pushSubscription?: PushSubscriptionOmit
     invoice?: InvoiceOmit
+    payment?: PaymentOmit
     invoiceItem?: InvoiceItemOmit
     whatsAppConfig?: WhatsAppConfigOmit
     whatsAppTemplate?: WhatsAppTemplateOmit
@@ -5193,6 +5285,7 @@ export namespace Prisma {
     deals: number
     projects: number
     invoices: number
+    payments: number
     pipelines: number
     projectStatuses: number
     taskStatuses: number
@@ -5218,6 +5311,7 @@ export namespace Prisma {
     deals?: boolean | WorkspaceCountOutputTypeCountDealsArgs
     projects?: boolean | WorkspaceCountOutputTypeCountProjectsArgs
     invoices?: boolean | WorkspaceCountOutputTypeCountInvoicesArgs
+    payments?: boolean | WorkspaceCountOutputTypeCountPaymentsArgs
     pipelines?: boolean | WorkspaceCountOutputTypeCountPipelinesArgs
     projectStatuses?: boolean | WorkspaceCountOutputTypeCountProjectStatusesArgs
     taskStatuses?: boolean | WorkspaceCountOutputTypeCountTaskStatusesArgs
@@ -5311,6 +5405,13 @@ export namespace Prisma {
    */
   export type WorkspaceCountOutputTypeCountInvoicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: InvoiceWhereInput
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeCountPaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentWhereInput
   }
 
   /**
@@ -6071,6 +6172,7 @@ export namespace Prisma {
     visibleFromItems: number
     requiredBeforeItems: number
     lockedFromItems: number
+    titleLockTemplates: number
   }
 
   export type TaskStatusCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6078,6 +6180,7 @@ export namespace Prisma {
     visibleFromItems?: boolean | TaskStatusCountOutputTypeCountVisibleFromItemsArgs
     requiredBeforeItems?: boolean | TaskStatusCountOutputTypeCountRequiredBeforeItemsArgs
     lockedFromItems?: boolean | TaskStatusCountOutputTypeCountLockedFromItemsArgs
+    titleLockTemplates?: boolean | TaskStatusCountOutputTypeCountTitleLockTemplatesArgs
   }
 
   // Custom InputTypes
@@ -6117,6 +6220,13 @@ export namespace Prisma {
    */
   export type TaskStatusCountOutputTypeCountLockedFromItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ChecklistTemplateItemWhereInput
+  }
+
+  /**
+   * TaskStatusCountOutputType without action
+   */
+  export type TaskStatusCountOutputTypeCountTitleLockTemplatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChecklistTemplateWhereInput
   }
 
 
@@ -6255,10 +6365,12 @@ export namespace Prisma {
 
   export type InvoiceCountOutputType = {
     items: number
+    payments: number
   }
 
   export type InvoiceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | InvoiceCountOutputTypeCountItemsArgs
+    payments?: boolean | InvoiceCountOutputTypeCountPaymentsArgs
   }
 
   // Custom InputTypes
@@ -6277,6 +6389,13 @@ export namespace Prisma {
    */
   export type InvoiceCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: InvoiceItemWhereInput
+  }
+
+  /**
+   * InvoiceCountOutputType without action
+   */
+  export type InvoiceCountOutputTypeCountPaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentWhereInput
   }
 
 
@@ -6524,6 +6643,7 @@ export namespace Prisma {
     deals?: boolean | Workspace$dealsArgs<ExtArgs>
     projects?: boolean | Workspace$projectsArgs<ExtArgs>
     invoices?: boolean | Workspace$invoicesArgs<ExtArgs>
+    payments?: boolean | Workspace$paymentsArgs<ExtArgs>
     pipelines?: boolean | Workspace$pipelinesArgs<ExtArgs>
     projectStatuses?: boolean | Workspace$projectStatusesArgs<ExtArgs>
     taskStatuses?: boolean | Workspace$taskStatusesArgs<ExtArgs>
@@ -6588,6 +6708,7 @@ export namespace Prisma {
     deals?: boolean | Workspace$dealsArgs<ExtArgs>
     projects?: boolean | Workspace$projectsArgs<ExtArgs>
     invoices?: boolean | Workspace$invoicesArgs<ExtArgs>
+    payments?: boolean | Workspace$paymentsArgs<ExtArgs>
     pipelines?: boolean | Workspace$pipelinesArgs<ExtArgs>
     projectStatuses?: boolean | Workspace$projectStatusesArgs<ExtArgs>
     taskStatuses?: boolean | Workspace$taskStatusesArgs<ExtArgs>
@@ -6619,6 +6740,7 @@ export namespace Prisma {
       deals: Prisma.$DealPayload<ExtArgs>[]
       projects: Prisma.$ProjectPayload<ExtArgs>[]
       invoices: Prisma.$InvoicePayload<ExtArgs>[]
+      payments: Prisma.$PaymentPayload<ExtArgs>[]
       pipelines: Prisma.$PipelinePayload<ExtArgs>[]
       projectStatuses: Prisma.$ProjectStatusPayload<ExtArgs>[]
       taskStatuses: Prisma.$TaskStatusPayload<ExtArgs>[]
@@ -7047,6 +7169,7 @@ export namespace Prisma {
     deals<T extends Workspace$dealsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$dealsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     projects<T extends Workspace$projectsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     invoices<T extends Workspace$invoicesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    payments<T extends Workspace$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pipelines<T extends Workspace$pipelinesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$pipelinesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipelinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     projectStatuses<T extends Workspace$projectStatusesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$projectStatusesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     taskStatuses<T extends Workspace$taskStatusesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$taskStatusesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -7728,6 +7851,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: InvoiceScalarFieldEnum | InvoiceScalarFieldEnum[]
+  }
+
+  /**
+   * Workspace.payments
+   */
+  export type Workspace$paymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    where?: PaymentWhereInput
+    orderBy?: PaymentOrderByWithRelationInput | PaymentOrderByWithRelationInput[]
+    cursor?: PaymentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
   }
 
   /**
@@ -31143,6 +31290,8 @@ export namespace Prisma {
     color: string | null
     description: string | null
     publishToCalendar: boolean | null
+    titleLockedFromStageId: string | null
+    titleNeverLock: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -31155,6 +31304,8 @@ export namespace Prisma {
     color: string | null
     description: string | null
     publishToCalendar: boolean | null
+    titleLockedFromStageId: string | null
+    titleNeverLock: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -31167,6 +31318,8 @@ export namespace Prisma {
     color: number
     description: number
     publishToCalendar: number
+    titleLockedFromStageId: number
+    titleNeverLock: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -31181,6 +31334,8 @@ export namespace Prisma {
     color?: true
     description?: true
     publishToCalendar?: true
+    titleLockedFromStageId?: true
+    titleNeverLock?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -31193,6 +31348,8 @@ export namespace Prisma {
     color?: true
     description?: true
     publishToCalendar?: true
+    titleLockedFromStageId?: true
+    titleNeverLock?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -31205,6 +31362,8 @@ export namespace Prisma {
     color?: true
     description?: true
     publishToCalendar?: true
+    titleLockedFromStageId?: true
+    titleNeverLock?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -31290,6 +31449,8 @@ export namespace Prisma {
     color: string | null
     description: string | null
     publishToCalendar: boolean
+    titleLockedFromStageId: string | null
+    titleNeverLock: boolean
     createdAt: Date
     updatedAt: Date
     _count: ChecklistTemplateCountAggregateOutputType | null
@@ -31319,9 +31480,12 @@ export namespace Prisma {
     color?: boolean
     description?: boolean
     publishToCalendar?: boolean
+    titleLockedFromStageId?: boolean
+    titleNeverLock?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    titleLockedFromStage?: boolean | ChecklistTemplate$titleLockedFromStageArgs<ExtArgs>
     items?: boolean | ChecklistTemplate$itemsArgs<ExtArgs>
     projects?: boolean | ChecklistTemplate$projectsArgs<ExtArgs>
     _count?: boolean | ChecklistTemplateCountOutputTypeDefaultArgs<ExtArgs>
@@ -31335,9 +31499,12 @@ export namespace Prisma {
     color?: boolean
     description?: boolean
     publishToCalendar?: boolean
+    titleLockedFromStageId?: boolean
+    titleNeverLock?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    titleLockedFromStage?: boolean | ChecklistTemplate$titleLockedFromStageArgs<ExtArgs>
   }, ExtArgs["result"]["checklistTemplate"]>
 
   export type ChecklistTemplateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -31348,9 +31515,12 @@ export namespace Prisma {
     color?: boolean
     description?: boolean
     publishToCalendar?: boolean
+    titleLockedFromStageId?: boolean
+    titleNeverLock?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    titleLockedFromStage?: boolean | ChecklistTemplate$titleLockedFromStageArgs<ExtArgs>
   }, ExtArgs["result"]["checklistTemplate"]>
 
   export type ChecklistTemplateSelectScalar = {
@@ -31361,28 +31531,34 @@ export namespace Prisma {
     color?: boolean
     description?: boolean
     publishToCalendar?: boolean
+    titleLockedFromStageId?: boolean
+    titleNeverLock?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ChecklistTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "name" | "icon" | "color" | "description" | "publishToCalendar" | "createdAt" | "updatedAt", ExtArgs["result"]["checklistTemplate"]>
+  export type ChecklistTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "name" | "icon" | "color" | "description" | "publishToCalendar" | "titleLockedFromStageId" | "titleNeverLock" | "createdAt" | "updatedAt", ExtArgs["result"]["checklistTemplate"]>
   export type ChecklistTemplateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    titleLockedFromStage?: boolean | ChecklistTemplate$titleLockedFromStageArgs<ExtArgs>
     items?: boolean | ChecklistTemplate$itemsArgs<ExtArgs>
     projects?: boolean | ChecklistTemplate$projectsArgs<ExtArgs>
     _count?: boolean | ChecklistTemplateCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ChecklistTemplateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    titleLockedFromStage?: boolean | ChecklistTemplate$titleLockedFromStageArgs<ExtArgs>
   }
   export type ChecklistTemplateIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    titleLockedFromStage?: boolean | ChecklistTemplate$titleLockedFromStageArgs<ExtArgs>
   }
 
   export type $ChecklistTemplatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ChecklistTemplate"
     objects: {
       workspace: Prisma.$WorkspacePayload<ExtArgs>
+      titleLockedFromStage: Prisma.$TaskStatusPayload<ExtArgs> | null
       items: Prisma.$ChecklistTemplateItemPayload<ExtArgs>[]
       projects: Prisma.$ProjectTemplatePayload<ExtArgs>[]
     }
@@ -31394,6 +31570,8 @@ export namespace Prisma {
       color: string | null
       description: string | null
       publishToCalendar: boolean
+      titleLockedFromStageId: string | null
+      titleNeverLock: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["checklistTemplate"]>
@@ -31791,6 +31969,7 @@ export namespace Prisma {
   export interface Prisma__ChecklistTemplateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    titleLockedFromStage<T extends ChecklistTemplate$titleLockedFromStageArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$titleLockedFromStageArgs<ExtArgs>>): Prisma__TaskStatusClient<$Result.GetResult<Prisma.$TaskStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     items<T extends ChecklistTemplate$itemsArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     projects<T extends ChecklistTemplate$projectsArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -31829,6 +32008,8 @@ export namespace Prisma {
     readonly color: FieldRef<"ChecklistTemplate", 'String'>
     readonly description: FieldRef<"ChecklistTemplate", 'String'>
     readonly publishToCalendar: FieldRef<"ChecklistTemplate", 'Boolean'>
+    readonly titleLockedFromStageId: FieldRef<"ChecklistTemplate", 'String'>
+    readonly titleNeverLock: FieldRef<"ChecklistTemplate", 'Boolean'>
     readonly createdAt: FieldRef<"ChecklistTemplate", 'DateTime'>
     readonly updatedAt: FieldRef<"ChecklistTemplate", 'DateTime'>
   }
@@ -32229,6 +32410,25 @@ export namespace Prisma {
      * Limit how many ChecklistTemplates to delete.
      */
     limit?: number
+  }
+
+  /**
+   * ChecklistTemplate.titleLockedFromStage
+   */
+  export type ChecklistTemplate$titleLockedFromStageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskStatus
+     */
+    select?: TaskStatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskStatus
+     */
+    omit?: TaskStatusOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskStatusInclude<ExtArgs> | null
+    where?: TaskStatusWhereInput
   }
 
   /**
@@ -36302,6 +36502,7 @@ export namespace Prisma {
     visibleFromItems?: boolean | TaskStatus$visibleFromItemsArgs<ExtArgs>
     requiredBeforeItems?: boolean | TaskStatus$requiredBeforeItemsArgs<ExtArgs>
     lockedFromItems?: boolean | TaskStatus$lockedFromItemsArgs<ExtArgs>
+    titleLockTemplates?: boolean | TaskStatus$titleLockTemplatesArgs<ExtArgs>
     _count?: boolean | TaskStatusCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["taskStatus"]>
 
@@ -36341,6 +36542,7 @@ export namespace Prisma {
     visibleFromItems?: boolean | TaskStatus$visibleFromItemsArgs<ExtArgs>
     requiredBeforeItems?: boolean | TaskStatus$requiredBeforeItemsArgs<ExtArgs>
     lockedFromItems?: boolean | TaskStatus$lockedFromItemsArgs<ExtArgs>
+    titleLockTemplates?: boolean | TaskStatus$titleLockTemplatesArgs<ExtArgs>
     _count?: boolean | TaskStatusCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TaskStatusIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -36358,6 +36560,7 @@ export namespace Prisma {
       visibleFromItems: Prisma.$ChecklistTemplateItemPayload<ExtArgs>[]
       requiredBeforeItems: Prisma.$ChecklistTemplateItemPayload<ExtArgs>[]
       lockedFromItems: Prisma.$ChecklistTemplateItemPayload<ExtArgs>[]
+      titleLockTemplates: Prisma.$ChecklistTemplatePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -36765,6 +36968,7 @@ export namespace Prisma {
     visibleFromItems<T extends TaskStatus$visibleFromItemsArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$visibleFromItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     requiredBeforeItems<T extends TaskStatus$requiredBeforeItemsArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$requiredBeforeItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     lockedFromItems<T extends TaskStatus$lockedFromItemsArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$lockedFromItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    titleLockTemplates<T extends TaskStatus$titleLockTemplatesArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$titleLockTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -37294,6 +37498,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ChecklistTemplateItemScalarFieldEnum | ChecklistTemplateItemScalarFieldEnum[]
+  }
+
+  /**
+   * TaskStatus.titleLockTemplates
+   */
+  export type TaskStatus$titleLockTemplatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistTemplate
+     */
+    select?: ChecklistTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistTemplate
+     */
+    omit?: ChecklistTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistTemplateInclude<ExtArgs> | null
+    where?: ChecklistTemplateWhereInput
+    orderBy?: ChecklistTemplateOrderByWithRelationInput | ChecklistTemplateOrderByWithRelationInput[]
+    cursor?: ChecklistTemplateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChecklistTemplateScalarFieldEnum | ChecklistTemplateScalarFieldEnum[]
   }
 
   /**
@@ -48220,6 +48448,7 @@ export namespace Prisma {
     contact?: boolean | Invoice$contactArgs<ExtArgs>
     deal?: boolean | Invoice$dealArgs<ExtArgs>
     items?: boolean | Invoice$itemsArgs<ExtArgs>
+    payments?: boolean | Invoice$paymentsArgs<ExtArgs>
     _count?: boolean | InvoiceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
 
@@ -48325,6 +48554,7 @@ export namespace Prisma {
     contact?: boolean | Invoice$contactArgs<ExtArgs>
     deal?: boolean | Invoice$dealArgs<ExtArgs>
     items?: boolean | Invoice$itemsArgs<ExtArgs>
+    payments?: boolean | Invoice$paymentsArgs<ExtArgs>
     _count?: boolean | InvoiceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type InvoiceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -48348,6 +48578,7 @@ export namespace Prisma {
       contact: Prisma.$ContactPayload<ExtArgs> | null
       deal: Prisma.$DealPayload<ExtArgs> | null
       items: Prisma.$InvoiceItemPayload<ExtArgs>[]
+      payments: Prisma.$PaymentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -48775,6 +49006,7 @@ export namespace Prisma {
     contact<T extends Invoice$contactArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$contactArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     deal<T extends Invoice$dealArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$dealArgs<ExtArgs>>): Prisma__DealClient<$Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     items<T extends Invoice$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    payments<T extends Invoice$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -49312,6 +49544,30 @@ export namespace Prisma {
   }
 
   /**
+   * Invoice.payments
+   */
+  export type Invoice$paymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    where?: PaymentWhereInput
+    orderBy?: PaymentOrderByWithRelationInput | PaymentOrderByWithRelationInput[]
+    cursor?: PaymentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
+  }
+
+  /**
    * Invoice without action
    */
   export type InvoiceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -49327,6 +49583,1228 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: InvoiceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Payment
+   */
+
+  export type AggregatePayment = {
+    _count: PaymentCountAggregateOutputType | null
+    _avg: PaymentAvgAggregateOutputType | null
+    _sum: PaymentSumAggregateOutputType | null
+    _min: PaymentMinAggregateOutputType | null
+    _max: PaymentMaxAggregateOutputType | null
+  }
+
+  export type PaymentAvgAggregateOutputType = {
+    amount: Decimal | null
+  }
+
+  export type PaymentSumAggregateOutputType = {
+    amount: Decimal | null
+  }
+
+  export type PaymentMinAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    invoiceId: string | null
+    number: string | null
+    date: Date | null
+    location: string | null
+    type: string | null
+    mode: string | null
+    referenceNumber: string | null
+    amount: Decimal | null
+    currency: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PaymentMaxAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    invoiceId: string | null
+    number: string | null
+    date: Date | null
+    location: string | null
+    type: string | null
+    mode: string | null
+    referenceNumber: string | null
+    amount: Decimal | null
+    currency: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PaymentCountAggregateOutputType = {
+    id: number
+    workspaceId: number
+    invoiceId: number
+    number: number
+    date: number
+    location: number
+    type: number
+    mode: number
+    referenceNumber: number
+    amount: number
+    currency: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PaymentAvgAggregateInputType = {
+    amount?: true
+  }
+
+  export type PaymentSumAggregateInputType = {
+    amount?: true
+  }
+
+  export type PaymentMinAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    invoiceId?: true
+    number?: true
+    date?: true
+    location?: true
+    type?: true
+    mode?: true
+    referenceNumber?: true
+    amount?: true
+    currency?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PaymentMaxAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    invoiceId?: true
+    number?: true
+    date?: true
+    location?: true
+    type?: true
+    mode?: true
+    referenceNumber?: true
+    amount?: true
+    currency?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PaymentCountAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    invoiceId?: true
+    number?: true
+    date?: true
+    location?: true
+    type?: true
+    mode?: true
+    referenceNumber?: true
+    amount?: true
+    currency?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PaymentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Payment to aggregate.
+     */
+    where?: PaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payments to fetch.
+     */
+    orderBy?: PaymentOrderByWithRelationInput | PaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Payments
+    **/
+    _count?: true | PaymentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PaymentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PaymentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PaymentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PaymentMaxAggregateInputType
+  }
+
+  export type GetPaymentAggregateType<T extends PaymentAggregateArgs> = {
+        [P in keyof T & keyof AggregatePayment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePayment[P]>
+      : GetScalarType<T[P], AggregatePayment[P]>
+  }
+
+
+
+
+  export type PaymentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentWhereInput
+    orderBy?: PaymentOrderByWithAggregationInput | PaymentOrderByWithAggregationInput[]
+    by: PaymentScalarFieldEnum[] | PaymentScalarFieldEnum
+    having?: PaymentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PaymentCountAggregateInputType | true
+    _avg?: PaymentAvgAggregateInputType
+    _sum?: PaymentSumAggregateInputType
+    _min?: PaymentMinAggregateInputType
+    _max?: PaymentMaxAggregateInputType
+  }
+
+  export type PaymentGroupByOutputType = {
+    id: string
+    workspaceId: string
+    invoiceId: string
+    number: string
+    date: Date
+    location: string | null
+    type: string
+    mode: string
+    referenceNumber: string | null
+    amount: Decimal
+    currency: string
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PaymentCountAggregateOutputType | null
+    _avg: PaymentAvgAggregateOutputType | null
+    _sum: PaymentSumAggregateOutputType | null
+    _min: PaymentMinAggregateOutputType | null
+    _max: PaymentMaxAggregateOutputType | null
+  }
+
+  type GetPaymentGroupByPayload<T extends PaymentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PaymentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PaymentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PaymentGroupByOutputType[P]>
+            : GetScalarType<T[P], PaymentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PaymentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    invoiceId?: boolean
+    number?: boolean
+    date?: boolean
+    location?: boolean
+    type?: boolean
+    mode?: boolean
+    referenceNumber?: boolean
+    amount?: boolean
+    currency?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["payment"]>
+
+  export type PaymentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    invoiceId?: boolean
+    number?: boolean
+    date?: boolean
+    location?: boolean
+    type?: boolean
+    mode?: boolean
+    referenceNumber?: boolean
+    amount?: boolean
+    currency?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["payment"]>
+
+  export type PaymentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    invoiceId?: boolean
+    number?: boolean
+    date?: boolean
+    location?: boolean
+    type?: boolean
+    mode?: boolean
+    referenceNumber?: boolean
+    amount?: boolean
+    currency?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["payment"]>
+
+  export type PaymentSelectScalar = {
+    id?: boolean
+    workspaceId?: boolean
+    invoiceId?: boolean
+    number?: boolean
+    date?: boolean
+    location?: boolean
+    type?: boolean
+    mode?: boolean
+    referenceNumber?: boolean
+    amount?: boolean
+    currency?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "invoiceId" | "number" | "date" | "location" | "type" | "mode" | "referenceNumber" | "amount" | "currency" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
+  export type PaymentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
+  }
+  export type PaymentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
+  }
+  export type PaymentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
+  }
+
+  export type $PaymentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Payment"
+    objects: {
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
+      invoice: Prisma.$InvoicePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      workspaceId: string
+      invoiceId: string
+      number: string
+      date: Date
+      location: string | null
+      type: string
+      mode: string
+      referenceNumber: string | null
+      amount: Prisma.Decimal
+      currency: string
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["payment"]>
+    composites: {}
+  }
+
+  type PaymentGetPayload<S extends boolean | null | undefined | PaymentDefaultArgs> = $Result.GetResult<Prisma.$PaymentPayload, S>
+
+  type PaymentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PaymentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PaymentCountAggregateInputType | true
+    }
+
+  export interface PaymentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Payment'], meta: { name: 'Payment' } }
+    /**
+     * Find zero or one Payment that matches the filter.
+     * @param {PaymentFindUniqueArgs} args - Arguments to find a Payment
+     * @example
+     * // Get one Payment
+     * const payment = await prisma.payment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PaymentFindUniqueArgs>(args: SelectSubset<T, PaymentFindUniqueArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Payment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PaymentFindUniqueOrThrowArgs} args - Arguments to find a Payment
+     * @example
+     * // Get one Payment
+     * const payment = await prisma.payment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PaymentFindUniqueOrThrowArgs>(args: SelectSubset<T, PaymentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Payment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentFindFirstArgs} args - Arguments to find a Payment
+     * @example
+     * // Get one Payment
+     * const payment = await prisma.payment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PaymentFindFirstArgs>(args?: SelectSubset<T, PaymentFindFirstArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Payment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentFindFirstOrThrowArgs} args - Arguments to find a Payment
+     * @example
+     * // Get one Payment
+     * const payment = await prisma.payment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PaymentFindFirstOrThrowArgs>(args?: SelectSubset<T, PaymentFindFirstOrThrowArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Payments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Payments
+     * const payments = await prisma.payment.findMany()
+     * 
+     * // Get first 10 Payments
+     * const payments = await prisma.payment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const paymentWithIdOnly = await prisma.payment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PaymentFindManyArgs>(args?: SelectSubset<T, PaymentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Payment.
+     * @param {PaymentCreateArgs} args - Arguments to create a Payment.
+     * @example
+     * // Create one Payment
+     * const Payment = await prisma.payment.create({
+     *   data: {
+     *     // ... data to create a Payment
+     *   }
+     * })
+     * 
+     */
+    create<T extends PaymentCreateArgs>(args: SelectSubset<T, PaymentCreateArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Payments.
+     * @param {PaymentCreateManyArgs} args - Arguments to create many Payments.
+     * @example
+     * // Create many Payments
+     * const payment = await prisma.payment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PaymentCreateManyArgs>(args?: SelectSubset<T, PaymentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Payments and returns the data saved in the database.
+     * @param {PaymentCreateManyAndReturnArgs} args - Arguments to create many Payments.
+     * @example
+     * // Create many Payments
+     * const payment = await prisma.payment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Payments and only return the `id`
+     * const paymentWithIdOnly = await prisma.payment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PaymentCreateManyAndReturnArgs>(args?: SelectSubset<T, PaymentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Payment.
+     * @param {PaymentDeleteArgs} args - Arguments to delete one Payment.
+     * @example
+     * // Delete one Payment
+     * const Payment = await prisma.payment.delete({
+     *   where: {
+     *     // ... filter to delete one Payment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PaymentDeleteArgs>(args: SelectSubset<T, PaymentDeleteArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Payment.
+     * @param {PaymentUpdateArgs} args - Arguments to update one Payment.
+     * @example
+     * // Update one Payment
+     * const payment = await prisma.payment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PaymentUpdateArgs>(args: SelectSubset<T, PaymentUpdateArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Payments.
+     * @param {PaymentDeleteManyArgs} args - Arguments to filter Payments to delete.
+     * @example
+     * // Delete a few Payments
+     * const { count } = await prisma.payment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PaymentDeleteManyArgs>(args?: SelectSubset<T, PaymentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Payments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Payments
+     * const payment = await prisma.payment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PaymentUpdateManyArgs>(args: SelectSubset<T, PaymentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Payments and returns the data updated in the database.
+     * @param {PaymentUpdateManyAndReturnArgs} args - Arguments to update many Payments.
+     * @example
+     * // Update many Payments
+     * const payment = await prisma.payment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Payments and only return the `id`
+     * const paymentWithIdOnly = await prisma.payment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PaymentUpdateManyAndReturnArgs>(args: SelectSubset<T, PaymentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Payment.
+     * @param {PaymentUpsertArgs} args - Arguments to update or create a Payment.
+     * @example
+     * // Update or create a Payment
+     * const payment = await prisma.payment.upsert({
+     *   create: {
+     *     // ... data to create a Payment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Payment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PaymentUpsertArgs>(args: SelectSubset<T, PaymentUpsertArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Payments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentCountArgs} args - Arguments to filter Payments to count.
+     * @example
+     * // Count the number of Payments
+     * const count = await prisma.payment.count({
+     *   where: {
+     *     // ... the filter for the Payments we want to count
+     *   }
+     * })
+    **/
+    count<T extends PaymentCountArgs>(
+      args?: Subset<T, PaymentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PaymentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Payment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PaymentAggregateArgs>(args: Subset<T, PaymentAggregateArgs>): Prisma.PrismaPromise<GetPaymentAggregateType<T>>
+
+    /**
+     * Group by Payment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PaymentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PaymentGroupByArgs['orderBy'] }
+        : { orderBy?: PaymentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PaymentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPaymentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Payment model
+   */
+  readonly fields: PaymentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Payment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PaymentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    invoice<T extends InvoiceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InvoiceDefaultArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Payment model
+   */
+  interface PaymentFieldRefs {
+    readonly id: FieldRef<"Payment", 'String'>
+    readonly workspaceId: FieldRef<"Payment", 'String'>
+    readonly invoiceId: FieldRef<"Payment", 'String'>
+    readonly number: FieldRef<"Payment", 'String'>
+    readonly date: FieldRef<"Payment", 'DateTime'>
+    readonly location: FieldRef<"Payment", 'String'>
+    readonly type: FieldRef<"Payment", 'String'>
+    readonly mode: FieldRef<"Payment", 'String'>
+    readonly referenceNumber: FieldRef<"Payment", 'String'>
+    readonly amount: FieldRef<"Payment", 'Decimal'>
+    readonly currency: FieldRef<"Payment", 'String'>
+    readonly notes: FieldRef<"Payment", 'String'>
+    readonly createdAt: FieldRef<"Payment", 'DateTime'>
+    readonly updatedAt: FieldRef<"Payment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Payment findUnique
+   */
+  export type PaymentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Payment to fetch.
+     */
+    where: PaymentWhereUniqueInput
+  }
+
+  /**
+   * Payment findUniqueOrThrow
+   */
+  export type PaymentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Payment to fetch.
+     */
+    where: PaymentWhereUniqueInput
+  }
+
+  /**
+   * Payment findFirst
+   */
+  export type PaymentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Payment to fetch.
+     */
+    where?: PaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payments to fetch.
+     */
+    orderBy?: PaymentOrderByWithRelationInput | PaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Payments.
+     */
+    cursor?: PaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Payments.
+     */
+    distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
+  }
+
+  /**
+   * Payment findFirstOrThrow
+   */
+  export type PaymentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Payment to fetch.
+     */
+    where?: PaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payments to fetch.
+     */
+    orderBy?: PaymentOrderByWithRelationInput | PaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Payments.
+     */
+    cursor?: PaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Payments.
+     */
+    distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
+  }
+
+  /**
+   * Payment findMany
+   */
+  export type PaymentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Payments to fetch.
+     */
+    where?: PaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payments to fetch.
+     */
+    orderBy?: PaymentOrderByWithRelationInput | PaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Payments.
+     */
+    cursor?: PaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Payments.
+     */
+    distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
+  }
+
+  /**
+   * Payment create
+   */
+  export type PaymentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Payment.
+     */
+    data: XOR<PaymentCreateInput, PaymentUncheckedCreateInput>
+  }
+
+  /**
+   * Payment createMany
+   */
+  export type PaymentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Payments.
+     */
+    data: PaymentCreateManyInput | PaymentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Payment createManyAndReturn
+   */
+  export type PaymentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * The data used to create many Payments.
+     */
+    data: PaymentCreateManyInput | PaymentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Payment update
+   */
+  export type PaymentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Payment.
+     */
+    data: XOR<PaymentUpdateInput, PaymentUncheckedUpdateInput>
+    /**
+     * Choose, which Payment to update.
+     */
+    where: PaymentWhereUniqueInput
+  }
+
+  /**
+   * Payment updateMany
+   */
+  export type PaymentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Payments.
+     */
+    data: XOR<PaymentUpdateManyMutationInput, PaymentUncheckedUpdateManyInput>
+    /**
+     * Filter which Payments to update
+     */
+    where?: PaymentWhereInput
+    /**
+     * Limit how many Payments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Payment updateManyAndReturn
+   */
+  export type PaymentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * The data used to update Payments.
+     */
+    data: XOR<PaymentUpdateManyMutationInput, PaymentUncheckedUpdateManyInput>
+    /**
+     * Filter which Payments to update
+     */
+    where?: PaymentWhereInput
+    /**
+     * Limit how many Payments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Payment upsert
+   */
+  export type PaymentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Payment to update in case it exists.
+     */
+    where: PaymentWhereUniqueInput
+    /**
+     * In case the Payment found by the `where` argument doesn't exist, create a new Payment with this data.
+     */
+    create: XOR<PaymentCreateInput, PaymentUncheckedCreateInput>
+    /**
+     * In case the Payment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PaymentUpdateInput, PaymentUncheckedUpdateInput>
+  }
+
+  /**
+   * Payment delete
+   */
+  export type PaymentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * Filter which Payment to delete.
+     */
+    where: PaymentWhereUniqueInput
+  }
+
+  /**
+   * Payment deleteMany
+   */
+  export type PaymentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Payments to delete
+     */
+    where?: PaymentWhereInput
+    /**
+     * Limit how many Payments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Payment without action
+   */
+  export type PaymentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
   }
 
 
@@ -63207,6 +64685,8 @@ export namespace Prisma {
     color: 'color',
     description: 'description',
     publishToCalendar: 'publishToCalendar',
+    titleLockedFromStageId: 'titleLockedFromStageId',
+    titleNeverLock: 'titleNeverLock',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -63451,6 +64931,26 @@ export namespace Prisma {
   };
 
   export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
+
+
+  export const PaymentScalarFieldEnum: {
+    id: 'id',
+    workspaceId: 'workspaceId',
+    invoiceId: 'invoiceId',
+    number: 'number',
+    date: 'date',
+    location: 'location',
+    type: 'type',
+    mode: 'mode',
+    referenceNumber: 'referenceNumber',
+    amount: 'amount',
+    currency: 'currency',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
 
 
   export const InvoiceItemScalarFieldEnum: {
@@ -63930,6 +65430,7 @@ export namespace Prisma {
     deals?: DealListRelationFilter
     projects?: ProjectListRelationFilter
     invoices?: InvoiceListRelationFilter
+    payments?: PaymentListRelationFilter
     pipelines?: PipelineListRelationFilter
     projectStatuses?: ProjectStatusListRelationFilter
     taskStatuses?: TaskStatusListRelationFilter
@@ -63965,6 +65466,7 @@ export namespace Prisma {
     deals?: DealOrderByRelationAggregateInput
     projects?: ProjectOrderByRelationAggregateInput
     invoices?: InvoiceOrderByRelationAggregateInput
+    payments?: PaymentOrderByRelationAggregateInput
     pipelines?: PipelineOrderByRelationAggregateInput
     projectStatuses?: ProjectStatusOrderByRelationAggregateInput
     taskStatuses?: TaskStatusOrderByRelationAggregateInput
@@ -64003,6 +65505,7 @@ export namespace Prisma {
     deals?: DealListRelationFilter
     projects?: ProjectListRelationFilter
     invoices?: InvoiceListRelationFilter
+    payments?: PaymentListRelationFilter
     pipelines?: PipelineListRelationFilter
     projectStatuses?: ProjectStatusListRelationFilter
     taskStatuses?: TaskStatusListRelationFilter
@@ -65761,9 +67264,12 @@ export namespace Prisma {
     color?: StringNullableFilter<"ChecklistTemplate"> | string | null
     description?: StringNullableFilter<"ChecklistTemplate"> | string | null
     publishToCalendar?: BoolFilter<"ChecklistTemplate"> | boolean
+    titleLockedFromStageId?: StringNullableFilter<"ChecklistTemplate"> | string | null
+    titleNeverLock?: BoolFilter<"ChecklistTemplate"> | boolean
     createdAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    titleLockedFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     items?: ChecklistTemplateItemListRelationFilter
     projects?: ProjectTemplateListRelationFilter
   }
@@ -65776,9 +67282,12 @@ export namespace Prisma {
     color?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     publishToCalendar?: SortOrder
+    titleLockedFromStageId?: SortOrderInput | SortOrder
+    titleNeverLock?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
+    titleLockedFromStage?: TaskStatusOrderByWithRelationInput
     items?: ChecklistTemplateItemOrderByRelationAggregateInput
     projects?: ProjectTemplateOrderByRelationAggregateInput
   }
@@ -65794,9 +67303,12 @@ export namespace Prisma {
     color?: StringNullableFilter<"ChecklistTemplate"> | string | null
     description?: StringNullableFilter<"ChecklistTemplate"> | string | null
     publishToCalendar?: BoolFilter<"ChecklistTemplate"> | boolean
+    titleLockedFromStageId?: StringNullableFilter<"ChecklistTemplate"> | string | null
+    titleNeverLock?: BoolFilter<"ChecklistTemplate"> | boolean
     createdAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    titleLockedFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     items?: ChecklistTemplateItemListRelationFilter
     projects?: ProjectTemplateListRelationFilter
   }, "id">
@@ -65809,6 +67321,8 @@ export namespace Prisma {
     color?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     publishToCalendar?: SortOrder
+    titleLockedFromStageId?: SortOrderInput | SortOrder
+    titleNeverLock?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ChecklistTemplateCountOrderByAggregateInput
@@ -65827,6 +67341,8 @@ export namespace Prisma {
     color?: StringNullableWithAggregatesFilter<"ChecklistTemplate"> | string | null
     description?: StringNullableWithAggregatesFilter<"ChecklistTemplate"> | string | null
     publishToCalendar?: BoolWithAggregatesFilter<"ChecklistTemplate"> | boolean
+    titleLockedFromStageId?: StringNullableWithAggregatesFilter<"ChecklistTemplate"> | string | null
+    titleNeverLock?: BoolWithAggregatesFilter<"ChecklistTemplate"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"ChecklistTemplate"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ChecklistTemplate"> | Date | string
   }
@@ -66184,6 +67700,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemListRelationFilter
     requiredBeforeItems?: ChecklistTemplateItemListRelationFilter
     lockedFromItems?: ChecklistTemplateItemListRelationFilter
+    titleLockTemplates?: ChecklistTemplateListRelationFilter
   }
 
   export type TaskStatusOrderByWithRelationInput = {
@@ -66198,6 +67715,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemOrderByRelationAggregateInput
     requiredBeforeItems?: ChecklistTemplateItemOrderByRelationAggregateInput
     lockedFromItems?: ChecklistTemplateItemOrderByRelationAggregateInput
+    titleLockTemplates?: ChecklistTemplateOrderByRelationAggregateInput
   }
 
   export type TaskStatusWhereUniqueInput = Prisma.AtLeast<{
@@ -66216,6 +67734,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemListRelationFilter
     requiredBeforeItems?: ChecklistTemplateItemListRelationFilter
     lockedFromItems?: ChecklistTemplateItemListRelationFilter
+    titleLockTemplates?: ChecklistTemplateListRelationFilter
   }, "id" | "workspaceId_order">
 
   export type TaskStatusOrderByWithAggregationInput = {
@@ -67000,6 +68519,7 @@ export namespace Prisma {
     contact?: XOR<ContactNullableScalarRelationFilter, ContactWhereInput> | null
     deal?: XOR<DealNullableScalarRelationFilter, DealWhereInput> | null
     items?: InvoiceItemListRelationFilter
+    payments?: PaymentListRelationFilter
   }
 
   export type InvoiceOrderByWithRelationInput = {
@@ -67034,6 +68554,7 @@ export namespace Prisma {
     contact?: ContactOrderByWithRelationInput
     deal?: DealOrderByWithRelationInput
     items?: InvoiceItemOrderByRelationAggregateInput
+    payments?: PaymentOrderByRelationAggregateInput
   }
 
   export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
@@ -67071,6 +68592,7 @@ export namespace Prisma {
     contact?: XOR<ContactNullableScalarRelationFilter, ContactWhereInput> | null
     deal?: XOR<DealNullableScalarRelationFilter, DealWhereInput> | null
     items?: InvoiceItemListRelationFilter
+    payments?: PaymentListRelationFilter
   }, "id" | "publicToken">
 
   export type InvoiceOrderByWithAggregationInput = {
@@ -67137,6 +68659,111 @@ export namespace Prisma {
     publicToken?: StringWithAggregatesFilter<"Invoice"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
+  }
+
+  export type PaymentWhereInput = {
+    AND?: PaymentWhereInput | PaymentWhereInput[]
+    OR?: PaymentWhereInput[]
+    NOT?: PaymentWhereInput | PaymentWhereInput[]
+    id?: StringFilter<"Payment"> | string
+    workspaceId?: StringFilter<"Payment"> | string
+    invoiceId?: StringFilter<"Payment"> | string
+    number?: StringFilter<"Payment"> | string
+    date?: DateTimeFilter<"Payment"> | Date | string
+    location?: StringNullableFilter<"Payment"> | string | null
+    type?: StringFilter<"Payment"> | string
+    mode?: StringFilter<"Payment"> | string
+    referenceNumber?: StringNullableFilter<"Payment"> | string | null
+    amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"Payment"> | string
+    notes?: StringNullableFilter<"Payment"> | string | null
+    createdAt?: DateTimeFilter<"Payment"> | Date | string
+    updatedAt?: DateTimeFilter<"Payment"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    invoice?: XOR<InvoiceScalarRelationFilter, InvoiceWhereInput>
+  }
+
+  export type PaymentOrderByWithRelationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    invoiceId?: SortOrder
+    number?: SortOrder
+    date?: SortOrder
+    location?: SortOrderInput | SortOrder
+    type?: SortOrder
+    mode?: SortOrder
+    referenceNumber?: SortOrderInput | SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    workspace?: WorkspaceOrderByWithRelationInput
+    invoice?: InvoiceOrderByWithRelationInput
+  }
+
+  export type PaymentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PaymentWhereInput | PaymentWhereInput[]
+    OR?: PaymentWhereInput[]
+    NOT?: PaymentWhereInput | PaymentWhereInput[]
+    workspaceId?: StringFilter<"Payment"> | string
+    invoiceId?: StringFilter<"Payment"> | string
+    number?: StringFilter<"Payment"> | string
+    date?: DateTimeFilter<"Payment"> | Date | string
+    location?: StringNullableFilter<"Payment"> | string | null
+    type?: StringFilter<"Payment"> | string
+    mode?: StringFilter<"Payment"> | string
+    referenceNumber?: StringNullableFilter<"Payment"> | string | null
+    amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"Payment"> | string
+    notes?: StringNullableFilter<"Payment"> | string | null
+    createdAt?: DateTimeFilter<"Payment"> | Date | string
+    updatedAt?: DateTimeFilter<"Payment"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    invoice?: XOR<InvoiceScalarRelationFilter, InvoiceWhereInput>
+  }, "id">
+
+  export type PaymentOrderByWithAggregationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    invoiceId?: SortOrder
+    number?: SortOrder
+    date?: SortOrder
+    location?: SortOrderInput | SortOrder
+    type?: SortOrder
+    mode?: SortOrder
+    referenceNumber?: SortOrderInput | SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PaymentCountOrderByAggregateInput
+    _avg?: PaymentAvgOrderByAggregateInput
+    _max?: PaymentMaxOrderByAggregateInput
+    _min?: PaymentMinOrderByAggregateInput
+    _sum?: PaymentSumOrderByAggregateInput
+  }
+
+  export type PaymentScalarWhereWithAggregatesInput = {
+    AND?: PaymentScalarWhereWithAggregatesInput | PaymentScalarWhereWithAggregatesInput[]
+    OR?: PaymentScalarWhereWithAggregatesInput[]
+    NOT?: PaymentScalarWhereWithAggregatesInput | PaymentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Payment"> | string
+    workspaceId?: StringWithAggregatesFilter<"Payment"> | string
+    invoiceId?: StringWithAggregatesFilter<"Payment"> | string
+    number?: StringWithAggregatesFilter<"Payment"> | string
+    date?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
+    location?: StringNullableWithAggregatesFilter<"Payment"> | string | null
+    type?: StringWithAggregatesFilter<"Payment"> | string
+    mode?: StringWithAggregatesFilter<"Payment"> | string
+    referenceNumber?: StringNullableWithAggregatesFilter<"Payment"> | string | null
+    amount?: DecimalWithAggregatesFilter<"Payment"> | Decimal | DecimalJsLike | number | string
+    currency?: StringWithAggregatesFilter<"Payment"> | string
+    notes?: StringNullableWithAggregatesFilter<"Payment"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
   }
 
   export type InvoiceItemWhereInput = {
@@ -68085,6 +69712,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -68120,6 +69748,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -68155,6 +69784,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -68190,6 +69820,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -70097,9 +71728,11 @@ export namespace Prisma {
     color?: string | null
     description?: string | null
     publishToCalendar?: boolean
+    titleNeverLock?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
+    titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
     items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
   }
@@ -70112,6 +71745,8 @@ export namespace Prisma {
     color?: string | null
     description?: string | null
     publishToCalendar?: boolean
+    titleLockedFromStageId?: string | null
+    titleNeverLock?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
@@ -70125,9 +71760,11 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
+    titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
     items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
   }
@@ -70140,6 +71777,8 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
@@ -70154,6 +71793,8 @@ export namespace Prisma {
     color?: string | null
     description?: string | null
     publishToCalendar?: boolean
+    titleLockedFromStageId?: string | null
+    titleNeverLock?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -70165,6 +71806,7 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -70177,6 +71819,8 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -70566,6 +72210,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
+    titleLockTemplates?: ChecklistTemplateCreateNestedManyWithoutTitleLockedFromStageInput
   }
 
   export type TaskStatusUncheckedCreateInput = {
@@ -70579,6 +72224,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
+    titleLockTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutTitleLockedFromStageInput
   }
 
   export type TaskStatusUpdateInput = {
@@ -70592,6 +72238,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
+    titleLockTemplates?: ChecklistTemplateUpdateManyWithoutTitleLockedFromStageNestedInput
   }
 
   export type TaskStatusUncheckedUpdateInput = {
@@ -70605,6 +72252,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
+    titleLockTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageNestedInput
   }
 
   export type TaskStatusCreateManyInput = {
@@ -71409,6 +73057,7 @@ export namespace Prisma {
     contact?: ContactCreateNestedOneWithoutInvoicesInput
     deal?: DealCreateNestedOneWithoutInvoicesInput
     items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
+    payments?: PaymentCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateInput = {
@@ -71439,6 +73088,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUpdateInput = {
@@ -71469,6 +73119,7 @@ export namespace Prisma {
     contact?: ContactUpdateOneWithoutInvoicesNestedInput
     deal?: DealUpdateOneWithoutInvoicesNestedInput
     items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
+    payments?: PaymentUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateInput = {
@@ -71499,6 +73150,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceCreateManyInput = {
@@ -71580,6 +73232,123 @@ export namespace Prisma {
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionNote?: NullableStringFieldUpdateOperationsInput | string | null
     publicToken?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentCreateInput = {
+    id?: string
+    number: string
+    date: Date | string
+    location?: string | null
+    type?: string
+    mode?: string
+    referenceNumber?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    currency: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutPaymentsInput
+    invoice: InvoiceCreateNestedOneWithoutPaymentsInput
+  }
+
+  export type PaymentUncheckedCreateInput = {
+    id?: string
+    workspaceId: string
+    invoiceId: string
+    number: string
+    date: Date | string
+    location?: string | null
+    type?: string
+    mode?: string
+    referenceNumber?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    currency: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutPaymentsNestedInput
+    invoice?: InvoiceUpdateOneRequiredWithoutPaymentsNestedInput
+  }
+
+  export type PaymentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    invoiceId?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentCreateManyInput = {
+    id?: string
+    workspaceId: string
+    invoiceId: string
+    number: string
+    date: Date | string
+    location?: string | null
+    type?: string
+    mode?: string
+    referenceNumber?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    currency: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    invoiceId?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -72698,6 +74467,12 @@ export namespace Prisma {
     none?: InvoiceWhereInput
   }
 
+  export type PaymentListRelationFilter = {
+    every?: PaymentWhereInput
+    some?: PaymentWhereInput
+    none?: PaymentWhereInput
+  }
+
   export type PipelineListRelationFilter = {
     every?: PipelineWhereInput
     some?: PipelineWhereInput
@@ -72817,6 +74592,10 @@ export namespace Prisma {
   }
 
   export type InvoiceOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PaymentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -74339,6 +76118,11 @@ export namespace Prisma {
     fileSize?: SortOrder
   }
 
+  export type TaskStatusNullableScalarRelationFilter = {
+    is?: TaskStatusWhereInput | null
+    isNot?: TaskStatusWhereInput | null
+  }
+
   export type ChecklistTemplateItemListRelationFilter = {
     every?: ChecklistTemplateItemWhereInput
     some?: ChecklistTemplateItemWhereInput
@@ -74357,6 +76141,8 @@ export namespace Prisma {
     color?: SortOrder
     description?: SortOrder
     publishToCalendar?: SortOrder
+    titleLockedFromStageId?: SortOrder
+    titleNeverLock?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -74369,6 +76155,8 @@ export namespace Prisma {
     color?: SortOrder
     description?: SortOrder
     publishToCalendar?: SortOrder
+    titleLockedFromStageId?: SortOrder
+    titleNeverLock?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -74381,6 +76169,8 @@ export namespace Prisma {
     color?: SortOrder
     description?: SortOrder
     publishToCalendar?: SortOrder
+    titleLockedFromStageId?: SortOrder
+    titleNeverLock?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -74388,11 +76178,6 @@ export namespace Prisma {
   export type ChecklistTemplateScalarRelationFilter = {
     is?: ChecklistTemplateWhereInput
     isNot?: ChecklistTemplateWhereInput
-  }
-
-  export type TaskStatusNullableScalarRelationFilter = {
-    is?: TaskStatusWhereInput | null
-    isNot?: TaskStatusWhereInput | null
   }
 
   export type TaskChecklistItemListRelationFilter = {
@@ -75190,6 +76975,65 @@ export namespace Prisma {
     isNot?: InvoiceWhereInput
   }
 
+  export type PaymentCountOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    invoiceId?: SortOrder
+    number?: SortOrder
+    date?: SortOrder
+    location?: SortOrder
+    type?: SortOrder
+    mode?: SortOrder
+    referenceNumber?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentAvgOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type PaymentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    invoiceId?: SortOrder
+    number?: SortOrder
+    date?: SortOrder
+    location?: SortOrder
+    type?: SortOrder
+    mode?: SortOrder
+    referenceNumber?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentMinOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    invoiceId?: SortOrder
+    number?: SortOrder
+    date?: SortOrder
+    location?: SortOrder
+    type?: SortOrder
+    mode?: SortOrder
+    referenceNumber?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentSumOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
   export type InvoiceItemCountOrderByAggregateInput = {
     id?: SortOrder
     invoiceId?: SortOrder
@@ -75844,6 +77688,13 @@ export namespace Prisma {
     connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
   }
 
+  export type PaymentCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<PaymentCreateWithoutWorkspaceInput, PaymentUncheckedCreateWithoutWorkspaceInput> | PaymentCreateWithoutWorkspaceInput[] | PaymentUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutWorkspaceInput | PaymentCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: PaymentCreateManyWorkspaceInputEnvelope
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+  }
+
   export type PipelineCreateNestedManyWithoutWorkspaceInput = {
     create?: XOR<PipelineCreateWithoutWorkspaceInput, PipelineUncheckedCreateWithoutWorkspaceInput> | PipelineCreateWithoutWorkspaceInput[] | PipelineUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: PipelineCreateOrConnectWithoutWorkspaceInput | PipelineCreateOrConnectWithoutWorkspaceInput[]
@@ -76002,6 +77853,13 @@ export namespace Prisma {
     connectOrCreate?: InvoiceCreateOrConnectWithoutWorkspaceInput | InvoiceCreateOrConnectWithoutWorkspaceInput[]
     createMany?: InvoiceCreateManyWorkspaceInputEnvelope
     connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+  }
+
+  export type PaymentUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<PaymentCreateWithoutWorkspaceInput, PaymentUncheckedCreateWithoutWorkspaceInput> | PaymentCreateWithoutWorkspaceInput[] | PaymentUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutWorkspaceInput | PaymentCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: PaymentCreateManyWorkspaceInputEnvelope
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
   }
 
   export type PipelineUncheckedCreateNestedManyWithoutWorkspaceInput = {
@@ -76252,6 +78110,20 @@ export namespace Prisma {
     update?: InvoiceUpdateWithWhereUniqueWithoutWorkspaceInput | InvoiceUpdateWithWhereUniqueWithoutWorkspaceInput[]
     updateMany?: InvoiceUpdateManyWithWhereWithoutWorkspaceInput | InvoiceUpdateManyWithWhereWithoutWorkspaceInput[]
     deleteMany?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
+  }
+
+  export type PaymentUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<PaymentCreateWithoutWorkspaceInput, PaymentUncheckedCreateWithoutWorkspaceInput> | PaymentCreateWithoutWorkspaceInput[] | PaymentUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutWorkspaceInput | PaymentCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: PaymentUpsertWithWhereUniqueWithoutWorkspaceInput | PaymentUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: PaymentCreateManyWorkspaceInputEnvelope
+    set?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    disconnect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    delete?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    update?: PaymentUpdateWithWhereUniqueWithoutWorkspaceInput | PaymentUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: PaymentUpdateManyWithWhereWithoutWorkspaceInput | PaymentUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
   }
 
   export type PipelineUpdateManyWithoutWorkspaceNestedInput = {
@@ -76570,6 +78442,20 @@ export namespace Prisma {
     update?: InvoiceUpdateWithWhereUniqueWithoutWorkspaceInput | InvoiceUpdateWithWhereUniqueWithoutWorkspaceInput[]
     updateMany?: InvoiceUpdateManyWithWhereWithoutWorkspaceInput | InvoiceUpdateManyWithWhereWithoutWorkspaceInput[]
     deleteMany?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
+  }
+
+  export type PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<PaymentCreateWithoutWorkspaceInput, PaymentUncheckedCreateWithoutWorkspaceInput> | PaymentCreateWithoutWorkspaceInput[] | PaymentUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutWorkspaceInput | PaymentCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: PaymentUpsertWithWhereUniqueWithoutWorkspaceInput | PaymentUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: PaymentCreateManyWorkspaceInputEnvelope
+    set?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    disconnect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    delete?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    update?: PaymentUpdateWithWhereUniqueWithoutWorkspaceInput | PaymentUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: PaymentUpdateManyWithWhereWithoutWorkspaceInput | PaymentUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
   }
 
   export type PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput = {
@@ -78955,6 +80841,12 @@ export namespace Prisma {
     connect?: WorkspaceWhereUniqueInput
   }
 
+  export type TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput = {
+    create?: XOR<TaskStatusCreateWithoutTitleLockTemplatesInput, TaskStatusUncheckedCreateWithoutTitleLockTemplatesInput>
+    connectOrCreate?: TaskStatusCreateOrConnectWithoutTitleLockTemplatesInput
+    connect?: TaskStatusWhereUniqueInput
+  }
+
   export type ChecklistTemplateItemCreateNestedManyWithoutTemplateInput = {
     create?: XOR<ChecklistTemplateItemCreateWithoutTemplateInput, ChecklistTemplateItemUncheckedCreateWithoutTemplateInput> | ChecklistTemplateItemCreateWithoutTemplateInput[] | ChecklistTemplateItemUncheckedCreateWithoutTemplateInput[]
     connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutTemplateInput | ChecklistTemplateItemCreateOrConnectWithoutTemplateInput[]
@@ -78989,6 +80881,16 @@ export namespace Prisma {
     upsert?: WorkspaceUpsertWithoutChecklistTemplatesInput
     connect?: WorkspaceWhereUniqueInput
     update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutChecklistTemplatesInput, WorkspaceUpdateWithoutChecklistTemplatesInput>, WorkspaceUncheckedUpdateWithoutChecklistTemplatesInput>
+  }
+
+  export type TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput = {
+    create?: XOR<TaskStatusCreateWithoutTitleLockTemplatesInput, TaskStatusUncheckedCreateWithoutTitleLockTemplatesInput>
+    connectOrCreate?: TaskStatusCreateOrConnectWithoutTitleLockTemplatesInput
+    upsert?: TaskStatusUpsertWithoutTitleLockTemplatesInput
+    disconnect?: TaskStatusWhereInput | boolean
+    delete?: TaskStatusWhereInput | boolean
+    connect?: TaskStatusWhereUniqueInput
+    update?: XOR<XOR<TaskStatusUpdateToOneWithWhereWithoutTitleLockTemplatesInput, TaskStatusUpdateWithoutTitleLockTemplatesInput>, TaskStatusUncheckedUpdateWithoutTitleLockTemplatesInput>
   }
 
   export type ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput = {
@@ -79243,6 +81145,13 @@ export namespace Prisma {
     connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
   }
 
+  export type ChecklistTemplateCreateNestedManyWithoutTitleLockedFromStageInput = {
+    create?: XOR<ChecklistTemplateCreateWithoutTitleLockedFromStageInput, ChecklistTemplateUncheckedCreateWithoutTitleLockedFromStageInput> | ChecklistTemplateCreateWithoutTitleLockedFromStageInput[] | ChecklistTemplateUncheckedCreateWithoutTitleLockedFromStageInput[]
+    connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutTitleLockedFromStageInput | ChecklistTemplateCreateOrConnectWithoutTitleLockedFromStageInput[]
+    createMany?: ChecklistTemplateCreateManyTitleLockedFromStageInputEnvelope
+    connect?: ChecklistTemplateWhereUniqueInput | ChecklistTemplateWhereUniqueInput[]
+  }
+
   export type TaskUncheckedCreateNestedManyWithoutStatusInput = {
     create?: XOR<TaskCreateWithoutStatusInput, TaskUncheckedCreateWithoutStatusInput> | TaskCreateWithoutStatusInput[] | TaskUncheckedCreateWithoutStatusInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutStatusInput | TaskCreateOrConnectWithoutStatusInput[]
@@ -79269,6 +81178,13 @@ export namespace Prisma {
     connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutLockedFromStageInput | ChecklistTemplateItemCreateOrConnectWithoutLockedFromStageInput[]
     createMany?: ChecklistTemplateItemCreateManyLockedFromStageInputEnvelope
     connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+  }
+
+  export type ChecklistTemplateUncheckedCreateNestedManyWithoutTitleLockedFromStageInput = {
+    create?: XOR<ChecklistTemplateCreateWithoutTitleLockedFromStageInput, ChecklistTemplateUncheckedCreateWithoutTitleLockedFromStageInput> | ChecklistTemplateCreateWithoutTitleLockedFromStageInput[] | ChecklistTemplateUncheckedCreateWithoutTitleLockedFromStageInput[]
+    connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutTitleLockedFromStageInput | ChecklistTemplateCreateOrConnectWithoutTitleLockedFromStageInput[]
+    createMany?: ChecklistTemplateCreateManyTitleLockedFromStageInputEnvelope
+    connect?: ChecklistTemplateWhereUniqueInput | ChecklistTemplateWhereUniqueInput[]
   }
 
   export type WorkspaceUpdateOneRequiredWithoutTaskStatusesNestedInput = {
@@ -79335,6 +81251,20 @@ export namespace Prisma {
     deleteMany?: ChecklistTemplateItemScalarWhereInput | ChecklistTemplateItemScalarWhereInput[]
   }
 
+  export type ChecklistTemplateUpdateManyWithoutTitleLockedFromStageNestedInput = {
+    create?: XOR<ChecklistTemplateCreateWithoutTitleLockedFromStageInput, ChecklistTemplateUncheckedCreateWithoutTitleLockedFromStageInput> | ChecklistTemplateCreateWithoutTitleLockedFromStageInput[] | ChecklistTemplateUncheckedCreateWithoutTitleLockedFromStageInput[]
+    connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutTitleLockedFromStageInput | ChecklistTemplateCreateOrConnectWithoutTitleLockedFromStageInput[]
+    upsert?: ChecklistTemplateUpsertWithWhereUniqueWithoutTitleLockedFromStageInput | ChecklistTemplateUpsertWithWhereUniqueWithoutTitleLockedFromStageInput[]
+    createMany?: ChecklistTemplateCreateManyTitleLockedFromStageInputEnvelope
+    set?: ChecklistTemplateWhereUniqueInput | ChecklistTemplateWhereUniqueInput[]
+    disconnect?: ChecklistTemplateWhereUniqueInput | ChecklistTemplateWhereUniqueInput[]
+    delete?: ChecklistTemplateWhereUniqueInput | ChecklistTemplateWhereUniqueInput[]
+    connect?: ChecklistTemplateWhereUniqueInput | ChecklistTemplateWhereUniqueInput[]
+    update?: ChecklistTemplateUpdateWithWhereUniqueWithoutTitleLockedFromStageInput | ChecklistTemplateUpdateWithWhereUniqueWithoutTitleLockedFromStageInput[]
+    updateMany?: ChecklistTemplateUpdateManyWithWhereWithoutTitleLockedFromStageInput | ChecklistTemplateUpdateManyWithWhereWithoutTitleLockedFromStageInput[]
+    deleteMany?: ChecklistTemplateScalarWhereInput | ChecklistTemplateScalarWhereInput[]
+  }
+
   export type TaskUncheckedUpdateManyWithoutStatusNestedInput = {
     create?: XOR<TaskCreateWithoutStatusInput, TaskUncheckedCreateWithoutStatusInput> | TaskCreateWithoutStatusInput[] | TaskUncheckedCreateWithoutStatusInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutStatusInput | TaskCreateOrConnectWithoutStatusInput[]
@@ -79389,6 +81319,20 @@ export namespace Prisma {
     update?: ChecklistTemplateItemUpdateWithWhereUniqueWithoutLockedFromStageInput | ChecklistTemplateItemUpdateWithWhereUniqueWithoutLockedFromStageInput[]
     updateMany?: ChecklistTemplateItemUpdateManyWithWhereWithoutLockedFromStageInput | ChecklistTemplateItemUpdateManyWithWhereWithoutLockedFromStageInput[]
     deleteMany?: ChecklistTemplateItemScalarWhereInput | ChecklistTemplateItemScalarWhereInput[]
+  }
+
+  export type ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageNestedInput = {
+    create?: XOR<ChecklistTemplateCreateWithoutTitleLockedFromStageInput, ChecklistTemplateUncheckedCreateWithoutTitleLockedFromStageInput> | ChecklistTemplateCreateWithoutTitleLockedFromStageInput[] | ChecklistTemplateUncheckedCreateWithoutTitleLockedFromStageInput[]
+    connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutTitleLockedFromStageInput | ChecklistTemplateCreateOrConnectWithoutTitleLockedFromStageInput[]
+    upsert?: ChecklistTemplateUpsertWithWhereUniqueWithoutTitleLockedFromStageInput | ChecklistTemplateUpsertWithWhereUniqueWithoutTitleLockedFromStageInput[]
+    createMany?: ChecklistTemplateCreateManyTitleLockedFromStageInputEnvelope
+    set?: ChecklistTemplateWhereUniqueInput | ChecklistTemplateWhereUniqueInput[]
+    disconnect?: ChecklistTemplateWhereUniqueInput | ChecklistTemplateWhereUniqueInput[]
+    delete?: ChecklistTemplateWhereUniqueInput | ChecklistTemplateWhereUniqueInput[]
+    connect?: ChecklistTemplateWhereUniqueInput | ChecklistTemplateWhereUniqueInput[]
+    update?: ChecklistTemplateUpdateWithWhereUniqueWithoutTitleLockedFromStageInput | ChecklistTemplateUpdateWithWhereUniqueWithoutTitleLockedFromStageInput[]
+    updateMany?: ChecklistTemplateUpdateManyWithWhereWithoutTitleLockedFromStageInput | ChecklistTemplateUpdateManyWithWhereWithoutTitleLockedFromStageInput[]
+    deleteMany?: ChecklistTemplateScalarWhereInput | ChecklistTemplateScalarWhereInput[]
   }
 
   export type ProjectCreateNestedOneWithoutTasksInput = {
@@ -80036,11 +81980,25 @@ export namespace Prisma {
     connect?: InvoiceItemWhereUniqueInput | InvoiceItemWhereUniqueInput[]
   }
 
+  export type PaymentCreateNestedManyWithoutInvoiceInput = {
+    create?: XOR<PaymentCreateWithoutInvoiceInput, PaymentUncheckedCreateWithoutInvoiceInput> | PaymentCreateWithoutInvoiceInput[] | PaymentUncheckedCreateWithoutInvoiceInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutInvoiceInput | PaymentCreateOrConnectWithoutInvoiceInput[]
+    createMany?: PaymentCreateManyInvoiceInputEnvelope
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+  }
+
   export type InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput = {
     create?: XOR<InvoiceItemCreateWithoutInvoiceInput, InvoiceItemUncheckedCreateWithoutInvoiceInput> | InvoiceItemCreateWithoutInvoiceInput[] | InvoiceItemUncheckedCreateWithoutInvoiceInput[]
     connectOrCreate?: InvoiceItemCreateOrConnectWithoutInvoiceInput | InvoiceItemCreateOrConnectWithoutInvoiceInput[]
     createMany?: InvoiceItemCreateManyInvoiceInputEnvelope
     connect?: InvoiceItemWhereUniqueInput | InvoiceItemWhereUniqueInput[]
+  }
+
+  export type PaymentUncheckedCreateNestedManyWithoutInvoiceInput = {
+    create?: XOR<PaymentCreateWithoutInvoiceInput, PaymentUncheckedCreateWithoutInvoiceInput> | PaymentCreateWithoutInvoiceInput[] | PaymentUncheckedCreateWithoutInvoiceInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutInvoiceInput | PaymentCreateOrConnectWithoutInvoiceInput[]
+    createMany?: PaymentCreateManyInvoiceInputEnvelope
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
   }
 
   export type EnumInvoiceStatusFieldUpdateOperationsInput = {
@@ -80099,6 +82057,20 @@ export namespace Prisma {
     deleteMany?: InvoiceItemScalarWhereInput | InvoiceItemScalarWhereInput[]
   }
 
+  export type PaymentUpdateManyWithoutInvoiceNestedInput = {
+    create?: XOR<PaymentCreateWithoutInvoiceInput, PaymentUncheckedCreateWithoutInvoiceInput> | PaymentCreateWithoutInvoiceInput[] | PaymentUncheckedCreateWithoutInvoiceInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutInvoiceInput | PaymentCreateOrConnectWithoutInvoiceInput[]
+    upsert?: PaymentUpsertWithWhereUniqueWithoutInvoiceInput | PaymentUpsertWithWhereUniqueWithoutInvoiceInput[]
+    createMany?: PaymentCreateManyInvoiceInputEnvelope
+    set?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    disconnect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    delete?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    update?: PaymentUpdateWithWhereUniqueWithoutInvoiceInput | PaymentUpdateWithWhereUniqueWithoutInvoiceInput[]
+    updateMany?: PaymentUpdateManyWithWhereWithoutInvoiceInput | PaymentUpdateManyWithWhereWithoutInvoiceInput[]
+    deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+  }
+
   export type InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput = {
     create?: XOR<InvoiceItemCreateWithoutInvoiceInput, InvoiceItemUncheckedCreateWithoutInvoiceInput> | InvoiceItemCreateWithoutInvoiceInput[] | InvoiceItemUncheckedCreateWithoutInvoiceInput[]
     connectOrCreate?: InvoiceItemCreateOrConnectWithoutInvoiceInput | InvoiceItemCreateOrConnectWithoutInvoiceInput[]
@@ -80111,6 +82083,48 @@ export namespace Prisma {
     update?: InvoiceItemUpdateWithWhereUniqueWithoutInvoiceInput | InvoiceItemUpdateWithWhereUniqueWithoutInvoiceInput[]
     updateMany?: InvoiceItemUpdateManyWithWhereWithoutInvoiceInput | InvoiceItemUpdateManyWithWhereWithoutInvoiceInput[]
     deleteMany?: InvoiceItemScalarWhereInput | InvoiceItemScalarWhereInput[]
+  }
+
+  export type PaymentUncheckedUpdateManyWithoutInvoiceNestedInput = {
+    create?: XOR<PaymentCreateWithoutInvoiceInput, PaymentUncheckedCreateWithoutInvoiceInput> | PaymentCreateWithoutInvoiceInput[] | PaymentUncheckedCreateWithoutInvoiceInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutInvoiceInput | PaymentCreateOrConnectWithoutInvoiceInput[]
+    upsert?: PaymentUpsertWithWhereUniqueWithoutInvoiceInput | PaymentUpsertWithWhereUniqueWithoutInvoiceInput[]
+    createMany?: PaymentCreateManyInvoiceInputEnvelope
+    set?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    disconnect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    delete?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    update?: PaymentUpdateWithWhereUniqueWithoutInvoiceInput | PaymentUpdateWithWhereUniqueWithoutInvoiceInput[]
+    updateMany?: PaymentUpdateManyWithWhereWithoutInvoiceInput | PaymentUpdateManyWithWhereWithoutInvoiceInput[]
+    deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+  }
+
+  export type WorkspaceCreateNestedOneWithoutPaymentsInput = {
+    create?: XOR<WorkspaceCreateWithoutPaymentsInput, WorkspaceUncheckedCreateWithoutPaymentsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutPaymentsInput
+    connect?: WorkspaceWhereUniqueInput
+  }
+
+  export type InvoiceCreateNestedOneWithoutPaymentsInput = {
+    create?: XOR<InvoiceCreateWithoutPaymentsInput, InvoiceUncheckedCreateWithoutPaymentsInput>
+    connectOrCreate?: InvoiceCreateOrConnectWithoutPaymentsInput
+    connect?: InvoiceWhereUniqueInput
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutPaymentsNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutPaymentsInput, WorkspaceUncheckedCreateWithoutPaymentsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutPaymentsInput
+    upsert?: WorkspaceUpsertWithoutPaymentsInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutPaymentsInput, WorkspaceUpdateWithoutPaymentsInput>, WorkspaceUncheckedUpdateWithoutPaymentsInput>
+  }
+
+  export type InvoiceUpdateOneRequiredWithoutPaymentsNestedInput = {
+    create?: XOR<InvoiceCreateWithoutPaymentsInput, InvoiceUncheckedCreateWithoutPaymentsInput>
+    connectOrCreate?: InvoiceCreateOrConnectWithoutPaymentsInput
+    upsert?: InvoiceUpsertWithoutPaymentsInput
+    connect?: InvoiceWhereUniqueInput
+    update?: XOR<XOR<InvoiceUpdateToOneWithWhereWithoutPaymentsInput, InvoiceUpdateWithoutPaymentsInput>, InvoiceUncheckedUpdateWithoutPaymentsInput>
   }
 
   export type InvoiceCreateNestedOneWithoutItemsInput = {
@@ -81230,6 +83244,7 @@ export namespace Prisma {
     contact?: ContactCreateNestedOneWithoutInvoicesInput
     deal?: DealCreateNestedOneWithoutInvoicesInput
     items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
+    payments?: PaymentCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutWorkspaceInput = {
@@ -81259,6 +83274,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceCreateOrConnectWithoutWorkspaceInput = {
@@ -81268,6 +83284,48 @@ export namespace Prisma {
 
   export type InvoiceCreateManyWorkspaceInputEnvelope = {
     data: InvoiceCreateManyWorkspaceInput | InvoiceCreateManyWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PaymentCreateWithoutWorkspaceInput = {
+    id?: string
+    number: string
+    date: Date | string
+    location?: string | null
+    type?: string
+    mode?: string
+    referenceNumber?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    currency: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    invoice: InvoiceCreateNestedOneWithoutPaymentsInput
+  }
+
+  export type PaymentUncheckedCreateWithoutWorkspaceInput = {
+    id?: string
+    invoiceId: string
+    number: string
+    date: Date | string
+    location?: string | null
+    type?: string
+    mode?: string
+    referenceNumber?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    currency: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentCreateOrConnectWithoutWorkspaceInput = {
+    where: PaymentWhereUniqueInput
+    create: XOR<PaymentCreateWithoutWorkspaceInput, PaymentUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type PaymentCreateManyWorkspaceInputEnvelope = {
+    data: PaymentCreateManyWorkspaceInput | PaymentCreateManyWorkspaceInput[]
     skipDuplicates?: boolean
   }
 
@@ -81337,6 +83395,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
+    titleLockTemplates?: ChecklistTemplateCreateNestedManyWithoutTitleLockedFromStageInput
   }
 
   export type TaskStatusUncheckedCreateWithoutWorkspaceInput = {
@@ -81349,6 +83408,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
+    titleLockTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutTitleLockedFromStageInput
   }
 
   export type TaskStatusCreateOrConnectWithoutWorkspaceInput = {
@@ -81585,8 +83645,10 @@ export namespace Prisma {
     color?: string | null
     description?: string | null
     publishToCalendar?: boolean
+    titleNeverLock?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
     items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
   }
@@ -81598,6 +83660,8 @@ export namespace Prisma {
     color?: string | null
     description?: string | null
     publishToCalendar?: boolean
+    titleLockedFromStageId?: string | null
+    titleNeverLock?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
@@ -82050,6 +84114,42 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
   }
 
+  export type PaymentUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: PaymentWhereUniqueInput
+    update: XOR<PaymentUpdateWithoutWorkspaceInput, PaymentUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<PaymentCreateWithoutWorkspaceInput, PaymentUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type PaymentUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: PaymentWhereUniqueInput
+    data: XOR<PaymentUpdateWithoutWorkspaceInput, PaymentUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type PaymentUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: PaymentScalarWhereInput
+    data: XOR<PaymentUpdateManyMutationInput, PaymentUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type PaymentScalarWhereInput = {
+    AND?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+    OR?: PaymentScalarWhereInput[]
+    NOT?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+    id?: StringFilter<"Payment"> | string
+    workspaceId?: StringFilter<"Payment"> | string
+    invoiceId?: StringFilter<"Payment"> | string
+    number?: StringFilter<"Payment"> | string
+    date?: DateTimeFilter<"Payment"> | Date | string
+    location?: StringNullableFilter<"Payment"> | string | null
+    type?: StringFilter<"Payment"> | string
+    mode?: StringFilter<"Payment"> | string
+    referenceNumber?: StringNullableFilter<"Payment"> | string | null
+    amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"Payment"> | string
+    notes?: StringNullableFilter<"Payment"> | string | null
+    createdAt?: DateTimeFilter<"Payment"> | Date | string
+    updatedAt?: DateTimeFilter<"Payment"> | Date | string
+  }
+
   export type PipelineUpsertWithWhereUniqueWithoutWorkspaceInput = {
     where: PipelineWhereUniqueInput
     update: XOR<PipelineUpdateWithoutWorkspaceInput, PipelineUncheckedUpdateWithoutWorkspaceInput>
@@ -82376,6 +84476,8 @@ export namespace Prisma {
     color?: StringNullableFilter<"ChecklistTemplate"> | string | null
     description?: StringNullableFilter<"ChecklistTemplate"> | string | null
     publishToCalendar?: BoolFilter<"ChecklistTemplate"> | boolean
+    titleLockedFromStageId?: StringNullableFilter<"ChecklistTemplate"> | string | null
+    titleNeverLock?: BoolFilter<"ChecklistTemplate"> | boolean
     createdAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
   }
@@ -82461,6 +84563,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -82495,6 +84598,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -82545,6 +84649,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -82579,6 +84684,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -82613,6 +84719,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -82647,6 +84754,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -82697,6 +84805,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -82731,6 +84840,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -82764,6 +84874,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -82798,6 +84909,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -83199,6 +85311,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -83233,6 +85346,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -83588,6 +85702,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -83622,6 +85737,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -83748,6 +85864,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -83782,6 +85899,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -83983,6 +86101,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -84017,6 +86136,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -84233,6 +86353,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -84267,6 +86388,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -84361,6 +86483,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -84395,6 +86518,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -84538,6 +86662,7 @@ export namespace Prisma {
     project?: ProjectCreateNestedOneWithoutInvoicesInput
     deal?: DealCreateNestedOneWithoutInvoicesInput
     items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
+    payments?: PaymentCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutContactInput = {
@@ -84567,6 +86692,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceCreateOrConnectWithoutContactInput = {
@@ -84647,6 +86773,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -84681,6 +86808,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -85029,6 +87157,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -85063,6 +87192,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -85209,6 +87339,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -85243,6 +87374,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -85322,6 +87454,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
@@ -85356,6 +87489,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -85506,6 +87640,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
@@ -85540,6 +87675,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -85756,6 +87892,7 @@ export namespace Prisma {
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -85790,6 +87927,7 @@ export namespace Prisma {
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -86116,6 +88254,7 @@ export namespace Prisma {
     project?: ProjectCreateNestedOneWithoutInvoicesInput
     contact?: ContactCreateNestedOneWithoutInvoicesInput
     items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
+    payments?: PaymentCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutDealInput = {
@@ -86145,6 +88284,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceCreateOrConnectWithoutDealInput = {
@@ -86187,6 +88327,7 @@ export namespace Prisma {
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -86221,6 +88362,7 @@ export namespace Prisma {
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -86919,6 +89061,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
@@ -86953,6 +89096,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -87073,6 +89217,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
@@ -87107,6 +89252,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -87156,6 +89302,7 @@ export namespace Prisma {
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -87190,6 +89337,7 @@ export namespace Prisma {
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -87452,6 +89600,7 @@ export namespace Prisma {
     contact?: ContactCreateNestedOneWithoutInvoicesInput
     deal?: DealCreateNestedOneWithoutInvoicesInput
     items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
+    payments?: PaymentCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutProjectInput = {
@@ -87481,6 +89630,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceCreateOrConnectWithoutProjectInput = {
@@ -87735,6 +89885,7 @@ export namespace Prisma {
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -87769,6 +89920,7 @@ export namespace Prisma {
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -88942,6 +91094,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -88976,6 +91129,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -88993,6 +91147,37 @@ export namespace Prisma {
   export type WorkspaceCreateOrConnectWithoutChecklistTemplatesInput = {
     where: WorkspaceWhereUniqueInput
     create: XOR<WorkspaceCreateWithoutChecklistTemplatesInput, WorkspaceUncheckedCreateWithoutChecklistTemplatesInput>
+  }
+
+  export type TaskStatusCreateWithoutTitleLockTemplatesInput = {
+    id?: string
+    name: string
+    order: number
+    color?: string
+    createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutTaskStatusesInput
+    tasks?: TaskCreateNestedManyWithoutStatusInput
+    visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
+    requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
+    lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
+  }
+
+  export type TaskStatusUncheckedCreateWithoutTitleLockTemplatesInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    order: number
+    color?: string
+    createdAt?: Date | string
+    tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
+    visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
+    requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
+    lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
+  }
+
+  export type TaskStatusCreateOrConnectWithoutTitleLockTemplatesInput = {
+    where: TaskStatusWhereUniqueInput
+    create: XOR<TaskStatusCreateWithoutTitleLockTemplatesInput, TaskStatusUncheckedCreateWithoutTitleLockTemplatesInput>
   }
 
   export type ChecklistTemplateItemCreateWithoutTemplateInput = {
@@ -89098,6 +91283,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -89132,6 +91318,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -89144,6 +91331,43 @@ export namespace Prisma {
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type TaskStatusUpsertWithoutTitleLockTemplatesInput = {
+    update: XOR<TaskStatusUpdateWithoutTitleLockTemplatesInput, TaskStatusUncheckedUpdateWithoutTitleLockTemplatesInput>
+    create: XOR<TaskStatusCreateWithoutTitleLockTemplatesInput, TaskStatusUncheckedCreateWithoutTitleLockTemplatesInput>
+    where?: TaskStatusWhereInput
+  }
+
+  export type TaskStatusUpdateToOneWithWhereWithoutTitleLockTemplatesInput = {
+    where?: TaskStatusWhereInput
+    data: XOR<TaskStatusUpdateWithoutTitleLockTemplatesInput, TaskStatusUncheckedUpdateWithoutTitleLockTemplatesInput>
+  }
+
+  export type TaskStatusUpdateWithoutTitleLockTemplatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutTaskStatusesNestedInput
+    tasks?: TaskUpdateManyWithoutStatusNestedInput
+    visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
+    requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
+    lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
+  }
+
+  export type TaskStatusUncheckedUpdateWithoutTitleLockTemplatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
+    visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
+    requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
+    lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
   }
 
   export type ChecklistTemplateItemUpsertWithWhereUniqueWithoutTemplateInput = {
@@ -89209,9 +91433,11 @@ export namespace Prisma {
     color?: string | null
     description?: string | null
     publishToCalendar?: boolean
+    titleNeverLock?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
+    titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
     projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
   }
 
@@ -89223,6 +91449,8 @@ export namespace Prisma {
     color?: string | null
     description?: string | null
     publishToCalendar?: boolean
+    titleLockedFromStageId?: string | null
+    titleNeverLock?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
@@ -89243,6 +91471,7 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutStatusInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
+    titleLockTemplates?: ChecklistTemplateCreateNestedManyWithoutTitleLockedFromStageInput
   }
 
   export type TaskStatusUncheckedCreateWithoutVisibleFromItemsInput = {
@@ -89255,6 +91484,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
+    titleLockTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutTitleLockedFromStageInput
   }
 
   export type TaskStatusCreateOrConnectWithoutVisibleFromItemsInput = {
@@ -89272,6 +91502,7 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
     lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
+    titleLockTemplates?: ChecklistTemplateCreateNestedManyWithoutTitleLockedFromStageInput
   }
 
   export type TaskStatusUncheckedCreateWithoutRequiredBeforeItemsInput = {
@@ -89284,6 +91515,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
     lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
+    titleLockTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutTitleLockedFromStageInput
   }
 
   export type TaskStatusCreateOrConnectWithoutRequiredBeforeItemsInput = {
@@ -89301,6 +91533,7 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
+    titleLockTemplates?: ChecklistTemplateCreateNestedManyWithoutTitleLockedFromStageInput
   }
 
   export type TaskStatusUncheckedCreateWithoutLockedFromItemsInput = {
@@ -89313,6 +91546,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
+    titleLockTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutTitleLockedFromStageInput
   }
 
   export type TaskStatusCreateOrConnectWithoutLockedFromItemsInput = {
@@ -89400,9 +91634,11 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
+    titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
     projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
   }
 
@@ -89414,6 +91650,8 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
@@ -89440,6 +91678,7 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutStatusNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
+    titleLockTemplates?: ChecklistTemplateUpdateManyWithoutTitleLockedFromStageNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutVisibleFromItemsInput = {
@@ -89452,6 +91691,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
+    titleLockTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageNestedInput
   }
 
   export type TaskStatusUpsertWithoutRequiredBeforeItemsInput = {
@@ -89475,6 +91715,7 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
+    titleLockTemplates?: ChecklistTemplateUpdateManyWithoutTitleLockedFromStageNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutRequiredBeforeItemsInput = {
@@ -89487,6 +91728,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
+    titleLockTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageNestedInput
   }
 
   export type TaskStatusUpsertWithoutLockedFromItemsInput = {
@@ -89510,6 +91752,7 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
+    titleLockTemplates?: ChecklistTemplateUpdateManyWithoutTitleLockedFromStageNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutLockedFromItemsInput = {
@@ -89522,6 +91765,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
+    titleLockTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageNestedInput
   }
 
   export type TaskChecklistItemUpsertWithWhereUniqueWithoutTemplateItemInput = {
@@ -89642,9 +91886,11 @@ export namespace Prisma {
     color?: string | null
     description?: string | null
     publishToCalendar?: boolean
+    titleNeverLock?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
+    titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
     items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
   }
 
@@ -89656,6 +91902,8 @@ export namespace Prisma {
     color?: string | null
     description?: string | null
     publishToCalendar?: boolean
+    titleLockedFromStageId?: string | null
+    titleNeverLock?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
@@ -89755,9 +92003,11 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
+    titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
     items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
   }
 
@@ -89769,6 +92019,8 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
@@ -90030,6 +92282,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
@@ -90064,6 +92317,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -90309,6 +92563,46 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ChecklistTemplateCreateWithoutTitleLockedFromStageInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    color?: string | null
+    description?: string | null
+    publishToCalendar?: boolean
+    titleNeverLock?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
+    items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
+    projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
+  }
+
+  export type ChecklistTemplateUncheckedCreateWithoutTitleLockedFromStageInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    icon?: string | null
+    color?: string | null
+    description?: string | null
+    publishToCalendar?: boolean
+    titleNeverLock?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
+    projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
+  }
+
+  export type ChecklistTemplateCreateOrConnectWithoutTitleLockedFromStageInput = {
+    where: ChecklistTemplateWhereUniqueInput
+    create: XOR<ChecklistTemplateCreateWithoutTitleLockedFromStageInput, ChecklistTemplateUncheckedCreateWithoutTitleLockedFromStageInput>
+  }
+
+  export type ChecklistTemplateCreateManyTitleLockedFromStageInputEnvelope = {
+    data: ChecklistTemplateCreateManyTitleLockedFromStageInput | ChecklistTemplateCreateManyTitleLockedFromStageInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WorkspaceUpsertWithoutTaskStatusesInput = {
     update: XOR<WorkspaceUpdateWithoutTaskStatusesInput, WorkspaceUncheckedUpdateWithoutTaskStatusesInput>
     create: XOR<WorkspaceCreateWithoutTaskStatusesInput, WorkspaceUncheckedCreateWithoutTaskStatusesInput>
@@ -90340,6 +92634,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
@@ -90374,6 +92669,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -90450,6 +92746,22 @@ export namespace Prisma {
   export type ChecklistTemplateItemUpdateManyWithWhereWithoutLockedFromStageInput = {
     where: ChecklistTemplateItemScalarWhereInput
     data: XOR<ChecklistTemplateItemUpdateManyMutationInput, ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageInput>
+  }
+
+  export type ChecklistTemplateUpsertWithWhereUniqueWithoutTitleLockedFromStageInput = {
+    where: ChecklistTemplateWhereUniqueInput
+    update: XOR<ChecklistTemplateUpdateWithoutTitleLockedFromStageInput, ChecklistTemplateUncheckedUpdateWithoutTitleLockedFromStageInput>
+    create: XOR<ChecklistTemplateCreateWithoutTitleLockedFromStageInput, ChecklistTemplateUncheckedCreateWithoutTitleLockedFromStageInput>
+  }
+
+  export type ChecklistTemplateUpdateWithWhereUniqueWithoutTitleLockedFromStageInput = {
+    where: ChecklistTemplateWhereUniqueInput
+    data: XOR<ChecklistTemplateUpdateWithoutTitleLockedFromStageInput, ChecklistTemplateUncheckedUpdateWithoutTitleLockedFromStageInput>
+  }
+
+  export type ChecklistTemplateUpdateManyWithWhereWithoutTitleLockedFromStageInput = {
+    where: ChecklistTemplateScalarWhereInput
+    data: XOR<ChecklistTemplateUpdateManyMutationInput, ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageInput>
   }
 
   export type ProjectCreateWithoutTasksInput = {
@@ -90562,6 +92874,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
+    titleLockTemplates?: ChecklistTemplateCreateNestedManyWithoutTitleLockedFromStageInput
   }
 
   export type TaskStatusUncheckedCreateWithoutTasksInput = {
@@ -90574,6 +92887,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
+    titleLockTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutTitleLockedFromStageInput
   }
 
   export type TaskStatusCreateOrConnectWithoutTasksInput = {
@@ -90926,6 +93240,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
+    titleLockTemplates?: ChecklistTemplateUpdateManyWithoutTitleLockedFromStageNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutTasksInput = {
@@ -90938,6 +93253,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
+    titleLockTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageNestedInput
   }
 
   export type WorkspaceMemberUpsertWithoutAssignedTasksInput = {
@@ -92182,6 +94498,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -92216,6 +94533,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -92328,6 +94646,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -92362,6 +94681,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -92783,6 +95103,7 @@ export namespace Prisma {
     services?: ServiceCreateNestedManyWithoutWorkspaceInput
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -92817,6 +95138,7 @@ export namespace Prisma {
     services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -93050,6 +95372,48 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type PaymentCreateWithoutInvoiceInput = {
+    id?: string
+    number: string
+    date: Date | string
+    location?: string | null
+    type?: string
+    mode?: string
+    referenceNumber?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    currency: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutPaymentsInput
+  }
+
+  export type PaymentUncheckedCreateWithoutInvoiceInput = {
+    id?: string
+    workspaceId: string
+    number: string
+    date: Date | string
+    location?: string | null
+    type?: string
+    mode?: string
+    referenceNumber?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    currency: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentCreateOrConnectWithoutInvoiceInput = {
+    where: PaymentWhereUniqueInput
+    create: XOR<PaymentCreateWithoutInvoiceInput, PaymentUncheckedCreateWithoutInvoiceInput>
+  }
+
+  export type PaymentCreateManyInvoiceInputEnvelope = {
+    data: PaymentCreateManyInvoiceInput | PaymentCreateManyInvoiceInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WorkspaceUpsertWithoutInvoicesInput = {
     update: XOR<WorkspaceUpdateWithoutInvoicesInput, WorkspaceUncheckedUpdateWithoutInvoicesInput>
     create: XOR<WorkspaceCreateWithoutInvoicesInput, WorkspaceUncheckedCreateWithoutInvoicesInput>
@@ -93080,6 +95444,7 @@ export namespace Prisma {
     services?: ServiceUpdateManyWithoutWorkspaceNestedInput
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -93114,6 +95479,7 @@ export namespace Prisma {
     services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -93360,6 +95726,314 @@ export namespace Prisma {
     total?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
   }
 
+  export type PaymentUpsertWithWhereUniqueWithoutInvoiceInput = {
+    where: PaymentWhereUniqueInput
+    update: XOR<PaymentUpdateWithoutInvoiceInput, PaymentUncheckedUpdateWithoutInvoiceInput>
+    create: XOR<PaymentCreateWithoutInvoiceInput, PaymentUncheckedCreateWithoutInvoiceInput>
+  }
+
+  export type PaymentUpdateWithWhereUniqueWithoutInvoiceInput = {
+    where: PaymentWhereUniqueInput
+    data: XOR<PaymentUpdateWithoutInvoiceInput, PaymentUncheckedUpdateWithoutInvoiceInput>
+  }
+
+  export type PaymentUpdateManyWithWhereWithoutInvoiceInput = {
+    where: PaymentScalarWhereInput
+    data: XOR<PaymentUpdateManyMutationInput, PaymentUncheckedUpdateManyWithoutInvoiceInput>
+  }
+
+  export type WorkspaceCreateWithoutPaymentsInput = {
+    id?: string
+    name: string
+    slug: string
+    baseCurrency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    invoiceLogoSlot?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
+    referrals?: ReferralCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceCreateNestedManyWithoutWorkspaceInput
+    deals?: DealCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
+    checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
+    publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutPaymentsInput = {
+    id?: string
+    name: string
+    slug: string
+    baseCurrency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    invoiceLogoSlot?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
+    checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
+    publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutPaymentsInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutPaymentsInput, WorkspaceUncheckedCreateWithoutPaymentsInput>
+  }
+
+  export type InvoiceCreateWithoutPaymentsInput = {
+    id?: string
+    number: string
+    status?: $Enums.InvoiceStatus
+    subtotal: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
+    total: Decimal | DecimalJsLike | number | string
+    rateToBase?: Decimal | DecimalJsLike | number | string | null
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
+    notes?: string | null
+    issueDate?: Date | string | null
+    dueDate?: Date | string | null
+    sentAt?: Date | string | null
+    acceptedAt?: Date | string | null
+    rejectedAt?: Date | string | null
+    paidAt?: Date | string | null
+    rejectionNote?: string | null
+    publicToken?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutInvoicesInput
+    project?: ProjectCreateNestedOneWithoutInvoicesInput
+    contact?: ContactCreateNestedOneWithoutInvoicesInput
+    deal?: DealCreateNestedOneWithoutInvoicesInput
+    items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
+  }
+
+  export type InvoiceUncheckedCreateWithoutPaymentsInput = {
+    id?: string
+    workspaceId: string
+    projectId?: string | null
+    contactId?: string | null
+    dealId?: string | null
+    number: string
+    status?: $Enums.InvoiceStatus
+    subtotal: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
+    total: Decimal | DecimalJsLike | number | string
+    rateToBase?: Decimal | DecimalJsLike | number | string | null
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
+    notes?: string | null
+    issueDate?: Date | string | null
+    dueDate?: Date | string | null
+    sentAt?: Date | string | null
+    acceptedAt?: Date | string | null
+    rejectedAt?: Date | string | null
+    paidAt?: Date | string | null
+    rejectionNote?: string | null
+    publicToken?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+  }
+
+  export type InvoiceCreateOrConnectWithoutPaymentsInput = {
+    where: InvoiceWhereUniqueInput
+    create: XOR<InvoiceCreateWithoutPaymentsInput, InvoiceUncheckedCreateWithoutPaymentsInput>
+  }
+
+  export type WorkspaceUpsertWithoutPaymentsInput = {
+    update: XOR<WorkspaceUpdateWithoutPaymentsInput, WorkspaceUncheckedUpdateWithoutPaymentsInput>
+    create: XOR<WorkspaceCreateWithoutPaymentsInput, WorkspaceUncheckedCreateWithoutPaymentsInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutPaymentsInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutPaymentsInput, WorkspaceUncheckedUpdateWithoutPaymentsInput>
+  }
+
+  export type WorkspaceUpdateWithoutPaymentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
+    referrals?: ReferralUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
+    checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
+    publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutPaymentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
+    checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
+    publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type InvoiceUpsertWithoutPaymentsInput = {
+    update: XOR<InvoiceUpdateWithoutPaymentsInput, InvoiceUncheckedUpdateWithoutPaymentsInput>
+    create: XOR<InvoiceCreateWithoutPaymentsInput, InvoiceUncheckedCreateWithoutPaymentsInput>
+    where?: InvoiceWhereInput
+  }
+
+  export type InvoiceUpdateToOneWithWhereWithoutPaymentsInput = {
+    where?: InvoiceWhereInput
+    data: XOR<InvoiceUpdateWithoutPaymentsInput, InvoiceUncheckedUpdateWithoutPaymentsInput>
+  }
+
+  export type InvoiceUpdateWithoutPaymentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    publicToken?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutInvoicesNestedInput
+    project?: ProjectUpdateOneWithoutInvoicesNestedInput
+    contact?: ContactUpdateOneWithoutInvoicesNestedInput
+    deal?: DealUpdateOneWithoutInvoicesNestedInput
+    items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
+  }
+
+  export type InvoiceUncheckedUpdateWithoutPaymentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    dealId?: NullableStringFieldUpdateOperationsInput | string | null
+    number?: StringFieldUpdateOperationsInput | string
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    publicToken?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+  }
+
   export type InvoiceCreateWithoutItemsInput = {
     id?: string
     number: string
@@ -93387,6 +96061,7 @@ export namespace Prisma {
     project?: ProjectCreateNestedOneWithoutInvoicesInput
     contact?: ContactCreateNestedOneWithoutInvoicesInput
     deal?: DealCreateNestedOneWithoutInvoicesInput
+    payments?: PaymentCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutItemsInput = {
@@ -93416,6 +96091,7 @@ export namespace Prisma {
     publicToken?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceCreateOrConnectWithoutItemsInput = {
@@ -93461,6 +96137,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneWithoutInvoicesNestedInput
     contact?: ContactUpdateOneWithoutInvoicesNestedInput
     deal?: DealUpdateOneWithoutInvoicesNestedInput
+    payments?: PaymentUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutItemsInput = {
@@ -93490,6 +96167,7 @@ export namespace Prisma {
     publicToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
   export type WorkspaceCreateWithoutWhatsappConfigInput = {
@@ -93512,6 +96190,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -93546,6 +96225,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -93596,6 +96276,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -93630,6 +96311,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -93664,6 +96346,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -93698,6 +96381,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -93748,6 +96432,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -93782,6 +96467,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -93927,6 +96613,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -93961,6 +96648,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -94011,6 +96699,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -94045,6 +96734,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -94079,6 +96769,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -94113,6 +96804,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -94163,6 +96855,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -94197,6 +96890,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -94231,6 +96925,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -94265,6 +96960,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -94315,6 +97011,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -94349,6 +97046,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -94384,6 +97082,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -94418,6 +97117,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -94468,6 +97168,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -94502,6 +97203,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -94536,6 +97238,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -94570,6 +97273,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -94620,6 +97324,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -94654,6 +97359,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -94688,6 +97394,7 @@ export namespace Prisma {
     deals?: DealCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
@@ -94722,6 +97429,7 @@ export namespace Prisma {
     deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
     pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
     projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -94949,6 +97657,7 @@ export namespace Prisma {
     deals?: DealUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
@@ -94983,6 +97692,7 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
     pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
     projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -95362,6 +98072,22 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type PaymentCreateManyWorkspaceInput = {
+    id?: string
+    invoiceId: string
+    number: string
+    date: Date | string
+    location?: string | null
+    type?: string
+    mode?: string
+    referenceNumber?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    currency: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type PipelineCreateManyWorkspaceInput = {
     id?: string
     name: string
@@ -95455,6 +98181,8 @@ export namespace Prisma {
     color?: string | null
     description?: string | null
     publishToCalendar?: boolean
+    titleLockedFromStageId?: string | null
+    titleNeverLock?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -95997,6 +98725,7 @@ export namespace Prisma {
     contact?: ContactUpdateOneWithoutInvoicesNestedInput
     deal?: DealUpdateOneWithoutInvoicesNestedInput
     items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
+    payments?: PaymentUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutWorkspaceInput = {
@@ -96026,6 +98755,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -96052,6 +98782,54 @@ export namespace Prisma {
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionNote?: NullableStringFieldUpdateOperationsInput | string | null
     publicToken?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoice?: InvoiceUpdateOneRequiredWithoutPaymentsNestedInput
+  }
+
+  export type PaymentUncheckedUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invoiceId?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invoiceId?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -96117,6 +98895,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
+    titleLockTemplates?: ChecklistTemplateUpdateManyWithoutTitleLockedFromStageNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutWorkspaceInput = {
@@ -96129,6 +98908,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
+    titleLockTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageNestedInput
   }
 
   export type TaskStatusUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -96339,8 +99119,10 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
     items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
   }
@@ -96352,6 +99134,8 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
@@ -96365,6 +99149,8 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -97431,6 +100217,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneWithoutInvoicesNestedInput
     deal?: DealUpdateOneWithoutInvoicesNestedInput
     items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
+    payments?: PaymentUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutContactInput = {
@@ -97460,6 +100247,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateManyWithoutContactInput = {
@@ -98065,6 +100853,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneWithoutInvoicesNestedInput
     contact?: ContactUpdateOneWithoutInvoicesNestedInput
     items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
+    payments?: PaymentUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutDealInput = {
@@ -98094,6 +100883,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateManyWithoutDealInput = {
@@ -98460,6 +101250,7 @@ export namespace Prisma {
     contact?: ContactUpdateOneWithoutInvoicesNestedInput
     deal?: DealUpdateOneWithoutInvoicesNestedInput
     items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
+    payments?: PaymentUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutProjectInput = {
@@ -98489,6 +101280,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateManyWithoutProjectInput = {
@@ -99112,6 +101904,19 @@ export namespace Prisma {
     order?: number
   }
 
+  export type ChecklistTemplateCreateManyTitleLockedFromStageInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    icon?: string | null
+    color?: string | null
+    description?: string | null
+    publishToCalendar?: boolean
+    titleNeverLock?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type TaskUpdateWithoutStatusInput = {
     id?: StringFieldUpdateOperationsInput | string
     taskNumber?: IntFieldUpdateOperationsInput | number
@@ -99382,6 +102187,49 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ChecklistTemplateUpdateWithoutTitleLockedFromStageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
+    items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
+    projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
+  }
+
+  export type ChecklistTemplateUncheckedUpdateWithoutTitleLockedFromStageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
+    projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
+  }
+
+  export type ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskChecklistItemCreateManyTaskInput = {
@@ -99726,6 +102574,22 @@ export namespace Prisma {
     total: Decimal | DecimalJsLike | number | string
   }
 
+  export type PaymentCreateManyInvoiceInput = {
+    id?: string
+    workspaceId: string
+    number: string
+    date: Date | string
+    location?: string | null
+    type?: string
+    mode?: string
+    referenceNumber?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    currency: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type InvoiceItemUpdateWithoutInvoiceInput = {
     id?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
@@ -99754,6 +102618,54 @@ export namespace Prisma {
     unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxPct?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type PaymentUpdateWithoutInvoiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutPaymentsNestedInput
+  }
+
+  export type PaymentUncheckedUpdateWithoutInvoiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentUncheckedUpdateManyWithoutInvoiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

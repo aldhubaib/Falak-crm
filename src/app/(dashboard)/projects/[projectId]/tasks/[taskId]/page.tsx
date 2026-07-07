@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import { createPresignedGet } from "@/lib/storage";
 import { getProjectAccess } from "@/lib/workspace";
 import { canDeleteTaskAt } from "@/lib/permissions";
-import { fieldConfig, isFieldLocked } from "@/lib/checklist-config";
+import { fieldConfig, isFieldLocked, titleLockConfig } from "@/lib/checklist-config";
 import { normalizeFormats } from "@/lib/formats";
 import { TaskDetailClient, type ChecklistItem } from "./task-detail-client";
 
@@ -157,6 +157,18 @@ export default async function TaskDetailPage({
         true
       : false);
 
+  // Stage lock for the built-in Title, configured on the task's type in
+  // Settings → Task Types (Auto = locks once the task leaves Todo).
+  const taskTemplate =
+    task.checklistItems.find((it) => it.templateItem?.template)?.templateItem
+      ?.template ?? null;
+  const titleLocked = isFieldLocked(
+    titleLockConfig(taskTemplate),
+    currentOrder,
+    orderById,
+    todoOrder,
+  );
+
   // Per-stage move rights for the status bar's Back/Next controls (the server
   // enforces the same rule in updateTaskStatus).
   const movePerms = {
@@ -202,7 +214,7 @@ export default async function TaskDetailPage({
       projectId={projectId}
       taskId={taskId}
       canDelete={!trashed && canDelete}
-      canEditTitle={!trashed && canModify}
+      canEditTitle={!trashed && canModify && !titleLocked}
       trashed={
         trashed
           ? { deletedAt: task.deletedAt!.toISOString(), deletedByName }

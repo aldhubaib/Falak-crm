@@ -36,6 +36,24 @@ export type LockConfig = {
  * Shared by the task page UI and the server-side write guard so both always
  * agree.
  */
+/**
+ * Lock rule for the built-in task Title, configured per task type in
+ * Settings → Task Types. Same semantics as requirement fields: Auto locks the
+ * title once the task leaves Todo. Tasks without a template follow Auto.
+ */
+export function titleLockConfig(
+  tpl:
+    | { titleLockedFromStageId: string | null; titleNeverLock: boolean }
+    | null
+    | undefined,
+): LockConfig {
+  return {
+    phase: "create",
+    lockedFromStageId: tpl?.titleLockedFromStageId ?? null,
+    neverLock: tpl?.titleNeverLock ?? false,
+  };
+}
+
 export function isFieldLocked(
   cfg: LockConfig,
   currentOrder: number | null,

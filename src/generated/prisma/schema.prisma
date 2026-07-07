@@ -31,6 +31,7 @@ model Workspace {
   deals              Deal[]
   projects           Project[]
   invoices           Invoice[]
+  payments           Payment[]
   pipelines          Pipeline[]
   projectStatuses    ProjectStatus[]
   taskStatuses       TaskStatus[]
@@ -469,19 +470,25 @@ model ProjectAsset {
 // ─── Checklist Templates ────────────────────────────────────────────────────────
 
 model ChecklistTemplate {
-  id                String   @id @default(cuid())
-  workspaceId       String
-  name              String
-  icon              String?
-  color             String? // hex color e.g. "#22d3ee"
-  description       String?
-  publishToCalendar Boolean  @default(true) // completed tasks of this type go to the publish calendar
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id                     String   @id @default(cuid())
+  workspaceId            String
+  name                   String
+  icon                   String?
+  color                  String? // hex color e.g. "#22d3ee"
+  description            String?
+  publishToCalendar      Boolean  @default(true) // completed tasks of this type go to the publish calendar
+  // Lock rule for the built-in task Title, same semantics as field locks:
+  // null = Auto (locks once the task leaves Todo), stage id = locks from that
+  // stage, titleNeverLock = editable at every stage.
+  titleLockedFromStageId String?
+  titleNeverLock         Boolean  @default(false)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
 
-  workspace Workspace               @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  items     ChecklistTemplateItem[]
-  projects  ProjectTemplate[]
+  workspace            Workspace               @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  titleLockedFromStage TaskStatus?             @relation("TitleLockedFromStage", fields: [titleLockedFromStageId], references: [id], onDelete: SetNull)
+  items                ChecklistTemplateItem[]
+  projects             ProjectTemplate[]
 }
 
 model ChecklistTemplateItem {
@@ -571,6 +578,7 @@ model TaskStatus {
   visibleFromItems    ChecklistTemplateItem[] @relation("VisibleFromStage")
   requiredBeforeItems ChecklistTemplateItem[] @relation("RequiredBeforeStage")
   lockedFromItems     ChecklistTemplateItem[] @relation("LockedFromStage")
+  titleLockTemplates  ChecklistTemplate[]     @relation("TitleLockedFromStage")
 
   @@unique([workspaceId, order])
 }
@@ -792,6 +800,7 @@ model Invoice {
   contact   Contact?      @relation(fields: [contactId], references: [id], onDelete: SetNull)
   deal      Deal?         @relation(fields: [dealId], references: [id], onDelete: SetNull)
   items     InvoiceItem[]
+  payments  Payment[]
 
   @@index([workspaceId, status])
   @@index([workspaceId, createdAt])
@@ -802,8 +811,34 @@ enum InvoiceStatus {
   SENT
   ACCEPTED
   REJECTED
+  PARTIAL
   PAID
   CANCELLED
+}
+
+// A payment received against an invoice ("Payments Received" module). The
+// sum of an invoice's payments drives its PARTIAL / PAID status.
+model Payment {
+  id              String   @id @default(cuid())
+  workspaceId     String
+  invoiceId       String
+  number          String // Sequential: "1071", "1072", ...
+  date            DateTime
+  location        String?
+  type            String   @default("Invoice Payment") // Invoice Payment | Retainer | Advance
+  mode            String   @default("Bank Transfer") // Cash | Check | Bank Transfer | Credit Card | Other
+  referenceNumber String?
+  amount          Decimal  @db.Decimal(12, 3)
+  currency        String
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  invoice   Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, date])
+  @@index([invoiceId])
 }
 
 model InvoiceItem {

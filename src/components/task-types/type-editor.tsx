@@ -13,7 +13,12 @@ import {
   updateChecklistTemplateItem,
 } from "@/actions/settings";
 import type { Section } from "./constants";
-import type { FieldPatch, StatusOpt, TaskTypeVM } from "./types";
+import type {
+  FieldPatch,
+  StatusOpt,
+  TaskTypeVM,
+  TitleLockPatch,
+} from "./types";
 import { FieldsSection } from "./fields-section";
 
 function buildAddFormData(section: Section, patch: FieldPatch): FormData {
@@ -85,6 +90,14 @@ export function TypeEditor({
     setRenaming(false);
     if (v && v !== type.name) run(() => updateChecklistTemplate(type.id, { name: v }));
   };
+
+  const saveTitleLock = (patch: TitleLockPatch) =>
+    run(() =>
+      updateChecklistTemplate(type.id, {
+        titleLockedFromStageId: patch.lockedFromStageId,
+        titleNeverLock: patch.neverLock,
+      }),
+    );
 
   const addField = (section: Section, patch: FieldPatch) =>
     run(() => addChecklistTemplateItem(type.id, buildAddFormData(section, patch)));
@@ -160,6 +173,11 @@ export function TypeEditor({
         title="Requirements"
         fields={type.requirementFields}
         statuses={statuses}
+        titleLock={{
+          lockedFromStageId: type.titleLockedFromStageId,
+          neverLock: type.titleNeverLock,
+        }}
+        onTitleLockSave={saveTitleLock}
         onAdd={addField}
         onUpdate={updateField}
         onDelete={deleteField}

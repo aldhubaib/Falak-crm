@@ -11,6 +11,7 @@ import {
   Handshake,
   FolderKanban,
   FileText,
+  Wallet,
   CalendarDays,
   Settings,
   LogOut,
@@ -58,6 +59,7 @@ const MODULE_ICONS: Partial<Record<ModuleKey, LucideIcon>> = {
   deals: Handshake,
   projects: FolderKanban,
   invoices: FileText,
+  payments: Wallet,
   publish: CalendarDays,
   settings: Settings,
 };

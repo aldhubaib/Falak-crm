@@ -7,7 +7,15 @@
 import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Mail, Plus, Printer, ReceiptText, Wallet } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Mail,
+  Plus,
+  Printer,
+  ReceiptText,
+  Wallet,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { EmptyState } from "@/components/empty-state";
 import { Button } from "@/components/ui/button";
@@ -27,7 +35,7 @@ import {
   EntityPreviewShell,
 } from "@/components/entity-split";
 import { EntityPreviewToolbar } from "@/components/entity-preview-toolbar";
-import { markInvoicePaid, sendInvoice, type InvoiceListRow } from "@/actions/invoices";
+import { sendInvoice, type InvoiceListRow } from "@/actions/invoices";
 
 /* ------------------------------- Helpers -------------------------------- */
 
@@ -35,6 +43,7 @@ type DisplayStatus =
   | "draft"
   | "sent"
   | "overdue"
+  | "partial"
   | "paid"
   | "accepted"
   | "rejected"
@@ -44,6 +53,8 @@ function displayStatus(inv: InvoiceListRow): DisplayStatus {
   switch (inv.status) {
     case "PAID":
       return "paid";
+    case "PARTIAL":
+      return "partial";
     case "DRAFT":
       return "draft";
     case "ACCEPTED":
@@ -79,7 +90,8 @@ function formatShortDate(iso: string): string {
 }
 
 function balanceDue(inv: InvoiceListRow): number {
-  return inv.status === "PAID" || inv.status === "CANCELLED" ? 0 : inv.total;
+  if (inv.status === "PAID" || inv.status === "CANCELLED") return 0;
+  return Math.max(0, inv.total - inv.paidAmount);
 }
 
 function discountAmount(inv: InvoiceListRow): number {
@@ -95,15 +107,19 @@ function StatusPill({ invoice }: { invoice: InvoiceListRow }) {
   const label =
     status === "overdue"
       ? `OVERDUE BY ${overdueDays} DAY${overdueDays === 1 ? "" : "S"}`
-      : status.toUpperCase();
+      : status === "partial"
+        ? "PARTIALLY PAID"
+        : status.toUpperCase();
   const cls =
     status === "overdue" || status === "rejected"
       ? "text-destructive"
       : status === "paid" || status === "accepted"
         ? "text-emerald-500"
-        : status === "sent"
-          ? "text-primary"
-          : "text-muted-foreground";
+        : status === "partial"
+          ? "text-amber-500"
+          : status === "sent"
+            ? "text-primary"
+            : "text-muted-foreground";
   return (
     <span className={cn("text-[11px] font-semibold uppercase tracking-wide", cls)}>
       {label}
@@ -129,15 +145,22 @@ export function InvoicesClient({
   invoices,
   editable,
   logoUrl,
+  initialOpenId = null,
 }: {
   invoices: InvoiceListRow[];
   editable: boolean;
   /** Logo chosen in Settings → App Logo to appear on invoice documents. */
   logoUrl: string | null;
+  /** From `?open=` — preselects an invoice (links from payment receipts). */
+  initialOpenId?: string | null;
 }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(
+    initialOpenId && invoices.some((i) => i.id === initialOpenId)
+      ? initialOpenId
+      : null,
+  );
   const [visible, setVisible] = useState<Record<ColumnKey, boolean>>({
     date: true,
     number: true,
@@ -390,16 +413,13 @@ function InvoicePreview({
   const [pending, startTransition] = useTransition();
   const status = displayStatus(invoice);
   const canRecordPayment =
-    editable && (status === "sent" || status === "overdue" || status === "accepted");
+    editable &&
+    (status === "sent" ||
+      status === "overdue" ||
+      status === "accepted" ||
+      status === "partial");
   const canSend = editable && status === "draft";
 
-  const recordPayment = () => {
-    if (pending) return;
-    startTransition(async () => {
-      await markInvoicePaid(invoice.id);
-      router.refresh();
-    });
-  };
   const send = () => {
     if (pending) return;
     startTransition(async () => {
@@ -447,9 +467,10 @@ function InvoicePreview({
               ? [
                   {
                     key: "record",
-                    label: pending ? "Recording…" : "Record Payment",
+                    label: "Record Payment",
                     icon: <Wallet className="h-4 w-4" />,
-                    onClick: recordPayment,
+                    onClick: () =>
+                      router.push(`/payments/new?invoice=${invoice.id}`),
                   },
                 ]
               : []),
@@ -457,8 +478,87 @@ function InvoicePreview({
         />
       }
     >
+      <PaymentsReceivedSection invoice={invoice} />
       <InvoiceDocument invoice={invoice} logoUrl={logoUrl} />
     </EntityPreviewShell>
+  );
+}
+
+/* -------------------------- Payments Received --------------------------- */
+
+// Collapsible card above the invoice document listing recorded payments,
+// per the Lovable design. Payment numbers link into the Payments module.
+function PaymentsReceivedSection({ invoice }: { invoice: InvoiceListRow }) {
+  const [open, setOpen] = useState(false);
+  const count = invoice.payments.length;
+  if (count === 0) return null;
+
+  return (
+    <section className="mx-auto mb-6 max-w-3xl overflow-hidden rounded-lg border border-border/60 bg-surface">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between px-4 py-4 text-left sm:px-6"
+        aria-expanded={open}
+      >
+        <span className="flex items-center gap-2 text-sm font-semibold">
+          Payments Received
+          <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary/10 px-1.5 text-xs font-medium text-primary">
+            {count}
+          </span>
+        </span>
+        {open ? (
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        ) : (
+          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        )}
+      </button>
+      {open && (
+        <div className="overflow-x-auto border-t border-border/60">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
+                <th className="px-4 py-2 text-left font-medium sm:px-6">Date</th>
+                <th className="px-4 py-2 text-left font-medium sm:px-6">
+                  Payment #
+                </th>
+                <th className="px-4 py-2 text-left font-medium sm:px-6">
+                  Reference#
+                </th>
+                <th className="px-4 py-2 text-left font-medium sm:px-6">
+                  Payment Mode
+                </th>
+                <th className="px-4 py-2 text-right font-medium sm:px-6">
+                  Amount
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoice.payments.map((p) => (
+                <tr key={p.id} className="border-t border-border/60">
+                  <td className="px-4 py-3 sm:px-6">{formatShortDate(p.date)}</td>
+                  <td className="px-4 py-3 sm:px-6">
+                    <Link
+                      href={`/payments?open=${p.id}`}
+                      className="text-primary hover:underline"
+                    >
+                      {p.number}
+                    </Link>
+                  </td>
+                  <td className="px-4 py-3 sm:px-6">
+                    {p.referenceNumber ?? "—"}
+                  </td>
+                  <td className="px-4 py-3 sm:px-6">{p.mode}</td>
+                  <td className="px-4 py-3 text-right sm:px-6">
+                    {formatMoney(p.currency, p.amount)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -468,6 +568,7 @@ const RIBBONS: Record<DisplayStatus, { label: string; cls: string }> = {
   draft: { label: "Draft", cls: "bg-zinc-500 text-white" },
   sent: { label: "Sent", cls: "bg-blue-500 text-white" },
   overdue: { label: "Overdue", cls: "bg-amber-500 text-black" },
+  partial: { label: "Partial", cls: "bg-amber-500 text-black" },
   paid: { label: "Paid", cls: "bg-emerald-500 text-black" },
   accepted: { label: "Accepted", cls: "bg-emerald-500 text-black" },
   rejected: { label: "Rejected", cls: "bg-red-500 text-white" },
@@ -632,6 +733,21 @@ function InvoiceDocument({
             <dd className="text-right text-base font-semibold">
               {formatMoney(invoice.currency, invoice.total)}
             </dd>
+            {invoice.paidAmount > 0 && (
+              <>
+                <dt className="text-muted-foreground">Payments Received</dt>
+                <dd className="text-right font-medium text-emerald-500">
+                  &minus;{formatMoney(invoice.currency, invoice.paidAmount)}
+                </dd>
+                <dt className="font-semibold">Balance Due</dt>
+                <dd className="text-right font-semibold">
+                  {formatMoney(
+                    invoice.currency,
+                    Math.max(0, invoice.total - invoice.paidAmount),
+                  )}
+                </dd>
+              </>
+            )}
           </dl>
         </div>
       </div>

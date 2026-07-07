@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, Loader2, Plus } from "lucide-react";
+import { Check, Eye, Loader2, Lock, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,10 +11,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { getChecklistTemplateItemUsage } from "@/actions/settings";
 import { cn } from "@/lib/utils";
 import type { Section } from "./constants";
-import type { FieldPatch, StatusOpt, TTField } from "./types";
+import type { FieldPatch, StatusOpt, TitleLockPatch, TTField } from "./types";
 import { FieldRow } from "./field-row";
 import { FieldEditor } from "./field-editor";
 
@@ -23,6 +30,8 @@ export function FieldsSection({
   title,
   fields,
   statuses,
+  titleLock,
+  onTitleLockSave,
   onAdd,
   onUpdate,
   onDelete,
@@ -33,6 +42,9 @@ export function FieldsSection({
   title: string;
   fields: TTField[];
   statuses: StatusOpt[];
+  /** Built-in Title lock rule — renders a pinned, non-deletable Title row. */
+  titleLock?: TitleLockPatch;
+  onTitleLockSave?: (patch: TitleLockPatch) => void;
   onAdd: (section: Section, patch: FieldPatch) => void;
   onUpdate: (fieldId: string, patch: FieldPatch) => void;
   onDelete: (fieldId: string) => void;
@@ -114,6 +126,20 @@ export function FieldsSection({
           over && "border-primary/60 bg-primary/5",
         )}
       >
+        {titleLock && onTitleLockSave && (
+          <div
+            className={cn(
+              (fields.length > 0 || adding) && "border-b border-border/40",
+            )}
+          >
+            <TitleLockRow
+              lock={titleLock}
+              statuses={statuses}
+              onSave={onTitleLockSave}
+            />
+          </div>
+        )}
+
         {adding && (
           <div className={cn(fields.length > 0 && "border-b border-border/40")}>
             <FieldEditor
@@ -241,5 +267,120 @@ export function FieldsSection({
         </DialogContent>
       </Dialog>
     </section>
+  );
+}
+
+/**
+ * Pinned row for the built-in task Title. It can't be deleted, hidden, or
+ * reordered — every task has a title — but its lock stage is configurable
+ * with the same semantics as regular fields (Auto = locks after Todo).
+ */
+function TitleLockRow({
+  lock,
+  statuses,
+  onSave,
+}: {
+  lock: TitleLockPatch;
+  statuses: StatusOpt[];
+  onSave: (patch: TitleLockPatch) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState<TitleLockPatch>(lock);
+
+  const lockLabel = lock.neverLock
+    ? "Never locks"
+    : lock.lockedFromStageId
+      ? `Locks from ${statuses.find((s) => s.id === lock.lockedFromStageId)?.name ?? "a removed stage"}`
+      : "Locks after Todo";
+
+  if (!editing) {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          setDraft(lock);
+          setEditing(true);
+        }}
+        aria-label="Edit title lock rule"
+        className="group flex w-full items-center gap-3 p-3 text-left transition-colors hover:bg-background/40"
+      >
+        <span className="grid h-6 w-4 shrink-0 place-items-center text-muted-foreground/40">
+          <Lock className="h-3.5 w-3.5" />
+        </span>
+        <span className="w-5 shrink-0 text-xs text-muted-foreground">•</span>
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-sm">Title</div>
+          <div className="mt-0.5 truncate text-xs text-muted-foreground">
+            Built-in · {lockLabel}
+          </div>
+        </div>
+      </button>
+    );
+  }
+
+  return (
+    <div className="space-y-4 bg-background/40 p-4">
+      <div className="text-sm font-medium">Title</div>
+      <p className="text-xs text-muted-foreground">
+        The task title is built in — it can&apos;t be deleted or hidden. Choose
+        the stage from which it becomes read-only.
+      </p>
+      <div className="max-w-xs">
+        <div className="mb-1 text-xxs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+          Locked From
+        </div>
+        <Select
+          value={
+            draft.neverLock ? "never" : (draft.lockedFromStageId ?? "auto")
+          }
+          onValueChange={(v) =>
+            setDraft(
+              v === "never"
+                ? { neverLock: true, lockedFromStageId: null }
+                : v === "auto"
+                  ? { neverLock: false, lockedFromStageId: null }
+                  : { neverLock: false, lockedFromStageId: v },
+            )
+          }
+        >
+          <SelectTrigger className="h-10">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="auto">Auto (after Todo)</SelectItem>
+            <SelectItem value="never">Never</SelectItem>
+            {statuses.map((s) => (
+              <SelectItem key={s.id} value={s.id}>
+                {s.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex items-center justify-end gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setEditing(false)}
+          aria-label="Cancel"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+        <Button
+          size="icon"
+          onClick={() => {
+            onSave(draft);
+            setEditing(false);
+          }}
+          disabled={
+            draft.neverLock === lock.neverLock &&
+            draft.lockedFromStageId === lock.lockedFromStageId
+          }
+          aria-label="Save"
+        >
+          <Check className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
   );
 }

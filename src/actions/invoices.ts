@@ -30,6 +30,17 @@ export type InvoiceListRow = {
   dueDate: string | null;
   sentAt: string | null;
   paidAt: string | null;
+  /** Sum of recorded payments (drives PARTIAL/PAID + balance due). */
+  paidAmount: number;
+  payments: {
+    id: string;
+    number: string;
+    date: string; // ISO
+    referenceNumber: string | null;
+    mode: string;
+    amount: number;
+    currency: string;
+  }[];
   items: {
     id: string;
     title: string;
@@ -73,6 +84,18 @@ export async function getInvoices(): Promise<InvoiceListRow[]> {
           taxPct: true,
         },
       },
+      payments: {
+        select: {
+          id: true,
+          number: true,
+          date: true,
+          referenceNumber: true,
+          mode: true,
+          amount: true,
+          currency: true,
+        },
+        orderBy: { date: "desc" },
+      },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -112,6 +135,16 @@ export async function getInvoices(): Promise<InvoiceListRow[]> {
     dueDate: inv.dueDate?.toISOString() ?? null,
     sentAt: inv.sentAt?.toISOString() ?? null,
     paidAt: inv.paidAt?.toISOString() ?? null,
+    paidAmount: inv.payments.reduce((s, p) => s + Number(p.amount), 0),
+    payments: inv.payments.map((p) => ({
+      id: p.id,
+      number: p.number,
+      date: p.date.toISOString(),
+      referenceNumber: p.referenceNumber,
+      mode: p.mode,
+      amount: Number(p.amount),
+      currency: p.currency,
+    })),
     items: inv.items.map((it) => ({
       id: it.id,
       title: it.description,

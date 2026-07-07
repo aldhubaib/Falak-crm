@@ -4,7 +4,7 @@ import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { requireWorkspace, requireWorkspaceWithMember, requireProjectAssign, requireProjectSettings, requireProjectWork, getProjectAccess } from "@/lib/workspace";
 import { canEdit, canDeleteTaskAt, canMoveTaskFrom } from "@/lib/permissions";
-import { fieldConfig, isFieldLocked } from "@/lib/checklist-config";
+import { fieldConfig, isFieldLocked, titleLockConfig } from "@/lib/checklist-config";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
@@ -328,6 +328,11 @@ export async function createFullTask(data: {
           data: allItems.map((item) => {
             const answer = data.answers?.[item.id] ?? null;
             const hasAnswer = !!answer?.trim();
+            // Copyright "Yes" is only complete once its file lands — the
+            // upload starts right after creation and completes the item.
+            const completed =
+              hasAnswer &&
+              !(item.type === "copyright" && answer!.trim() !== "no");
             return {
               taskId: task.id,
               templateItemId: item.id,
@@ -347,8 +352,8 @@ export async function createFullTask(data: {
               publishCard: item.publishCard,
               order: item.order,
               textValue: hasAnswer ? answer : null,
-              completed: hasAnswer,
-              completedAt: hasAnswer ? new Date() : null,
+              completed,
+              completedAt: completed ? new Date() : null,
             };
           }),
         });
@@ -829,7 +834,18 @@ export async function getTask(taskId: string) {
         orderBy: { order: "asc" },
         include: {
           templateItem: {
-            include: { template: { select: { id: true, name: true, icon: true, color: true } } },
+            include: {
+              template: {
+                select: {
+                  id: true,
+                  name: true,
+                  icon: true,
+                  color: true,
+                  titleLockedFromStageId: true,
+                  titleNeverLock: true,
+                },
+              },
+            },
           },
         },
       },
@@ -880,6 +896,39 @@ export async function updateTask(taskId: string, data: {
     throw new Error("Task title cannot be empty");
   }
   if (data.title !== undefined) data.title = data.title.trim();
+
+  // Title lock: configured per task type in Settings → Task Types (built-in
+  // "Title" row). Same stage semantics as checklist fields; the UI hides the
+  // pencil, this is the guarantee.
+  if (data.title !== undefined && data.title !== task.title) {
+    const templateLink = await db.taskChecklistItem.findFirst({
+      where: { taskId, templateItemId: { not: null } },
+      select: {
+        templateItem: {
+          select: {
+            template: {
+              select: { titleLockedFromStageId: true, titleNeverLock: true },
+            },
+          },
+        },
+      },
+    });
+    const statuses = await db.taskStatus.findMany({
+      where: { workspaceId: task.project.workspaceId },
+      select: { id: true, order: true },
+    });
+    const orderById = new Map(statuses.map((s) => [s.id, s.order]));
+    const todoOrder = statuses.length
+      ? Math.min(...statuses.map((s) => s.order))
+      : 0;
+    const currentOrder = task.statusId
+      ? (orderById.get(task.statusId) ?? null)
+      : null;
+    const cfg = titleLockConfig(templateLink?.templateItem?.template);
+    if (isFieldLocked(cfg, currentOrder, orderById, todoOrder)) {
+      throw new Error("The title is locked at this stage");
+    }
+  }
 
   await db.task.update({ where: { id: taskId }, data });
 
@@ -991,12 +1040,28 @@ export async function saveChecklistItemText(itemId: string, textValue: string, p
   await requireProjectWork(projectId);
   await assertChecklistItemWritable(itemId);
 
+  // Copyright answered "Yes" is only complete once its file is attached —
+  // the file upload is the mandatory part of a Yes answer.
+  const item = await db.taskChecklistItem.findUnique({
+    where: { id: itemId },
+    select: {
+      type: true,
+      attachmentId: true,
+      templateItem: { select: { type: true } },
+    },
+  });
+  const kind = item?.templateItem?.type ?? item?.type;
+  const answeredYes = !!textValue.trim() && textValue.trim() !== "no";
+  const completed =
+    !!textValue.trim() &&
+    !(kind === "copyright" && answeredYes && !item?.attachmentId);
+
   await db.taskChecklistItem.update({
     where: { id: itemId },
     data: {
       textValue,
-      completed: !!textValue.trim(),
-      completedAt: textValue.trim() ? new Date() : null,
+      completed,
+      completedAt: completed ? new Date() : null,
     },
   });
 
@@ -1290,8 +1355,40 @@ export async function getStageGateBlockers(taskId: string, targetStatusId: strin
 
     let isComplete = ci.completed;
     if (!isComplete && (cfg.type === "mention" || cfg.type === "copyright")) {
-      const parsed = (() => { try { return JSON.parse(ci.textValue || "{}"); } catch { return {}; } })();
-      isComplete = parsed.enabled === true ? !!parsed.text : true;
+      // Yes/No kinds only block when answered "Yes" without their follow-up:
+      // Mention needs its text, Copyright needs its file.
+      const raw = (ci.textValue ?? "").trim();
+      let value: "yes" | "no" | null = null;
+      let text = "";
+      if (raw === "yes" || raw === "no") value = raw;
+      else if (raw) {
+        try {
+          const o = JSON.parse(raw) as {
+            v?: string;
+            t?: string;
+            enabled?: boolean;
+            text?: string;
+          };
+          if (o?.v === "yes" || o?.v === "no") {
+            value = o.v;
+            text = o.t ?? "";
+          } else if (typeof o?.enabled === "boolean") {
+            // Legacy {enabled, text} format.
+            value = o.enabled ? "yes" : "no";
+            text = o.text ?? "";
+          }
+        } catch {
+          // Legacy plain text — a "yes" with text.
+          value = "yes";
+          text = raw;
+        }
+      }
+      if (value === "yes") {
+        isComplete =
+          cfg.type === "copyright" ? !!ci.attachmentId : !!text.trim();
+      } else {
+        isComplete = true;
+      }
     }
     if (isComplete) continue;
 

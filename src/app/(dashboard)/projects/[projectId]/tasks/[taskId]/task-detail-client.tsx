@@ -1616,6 +1616,7 @@ function FollowUpFile({
   const router = useRouter();
   const [, startTransition] = useTransition();
   const upload = useChecklistUpload(item.id);
+  const required = !!yesFollowUp(item.type)?.file?.required;
 
   useEffect(() => {
     if (upload?.status === "done") router.refresh();
@@ -1707,10 +1708,16 @@ function FollowUpFile({
       <button
         type="button"
         onClick={() => document.getElementById(`yfile-${item.id}`)?.click()}
-        className="flex w-full items-center gap-2 rounded-xl border border-dashed border-border/70 bg-surface/40 px-3 py-3 text-left text-sm text-muted-foreground transition-colors hover:border-border hover:bg-surface"
+        className={cn(
+          "flex w-full items-center gap-2 rounded-xl border border-dashed bg-surface/40 px-3 py-3 text-left text-sm text-muted-foreground transition-colors hover:border-border hover:bg-surface",
+          required ? "border-destructive/50" : "border-border/70",
+        )}
       >
         <Paperclip className="h-4 w-4" />
-        <span>Attach file</span>
+        <span>
+          Attach file
+          {required && <span className="ml-1 text-destructive">*</span>}
+        </span>
         <span className="ml-auto text-xs text-muted-foreground/70">Any file</span>
       </button>
       <input

@@ -60,6 +60,7 @@ export function isFieldFilled(
     if (answer.value === "yes") {
       const followUp = yesFollowUp(field.type);
       if (followUp?.text && !(answer.text ?? "").trim()) return false;
+      if (followUp?.file?.required && !answer.file) return false;
     }
     return true;
   }
@@ -67,18 +68,18 @@ export function isFieldFilled(
 }
 
 // Follow-up inputs revealed when a Yes/No field is answered "Yes". Mention asks
-// for an account name; Copyright asks for the copyright text plus an optional
-// file. Other yes/no kinds have no follow-up.
+// for an account name; Copyright asks for the copyright file (mandatory).
+// Other yes/no kinds have no follow-up.
 export function yesFollowUp(
   type: string,
-): { text?: { placeholder: string }; file?: { accept: string } } | null {
+): {
+  text?: { placeholder: string };
+  file?: { accept: string; required?: boolean };
+} | null {
   if (type === "mention")
     return { text: { placeholder: "Enter account name (e.g. @username)" } };
   if (type === "copyright")
-    return {
-      text: { placeholder: "Enter copyright text" },
-      file: { accept: "Any file" },
-    };
+    return { file: { accept: "Any file", required: true } };
   return null;
 }
 

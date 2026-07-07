@@ -1,43 +1,43 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { getInvoices } from "@/actions/invoices";
+import { getPayments } from "@/actions/payments";
 import { requireWorkspaceWithMember } from "@/lib/workspace";
 import { canEdit } from "@/lib/permissions";
 import { getInvoiceLogoUrl } from "@/lib/branding";
 import { AppHeader } from "@/components/app-header";
 import { Button } from "@/components/ui/button";
-import { InvoicesClient } from "./invoices-client";
+import { PaymentsClient } from "./payments-client";
 
-export default async function InvoicesPage({
+export default async function PaymentsPage({
   searchParams,
 }: {
   searchParams: Promise<{ open?: string }>;
 }) {
-  const [invoices, { member }, logoUrl, { open }] = await Promise.all([
-    getInvoices(),
+  const [payments, { member }, logoUrl, { open }] = await Promise.all([
+    getPayments(),
     requireWorkspaceWithMember(),
     getInvoiceLogoUrl(),
     searchParams,
   ]);
-  const editable = canEdit(member, "invoices");
+  const editable = canEdit(member, "payments");
 
   return (
     <>
       <AppHeader
-        title="Invoices"
+        title="Payments Received"
         actions={
           editable ? (
             <Button asChild size="sm" className="rounded-full">
-              <Link href="/invoices/new">
+              <Link href="/payments/new">
                 <Plus className="h-4 w-4" />
-                New Invoice
+                Record Payment
               </Link>
             </Button>
           ) : undefined
         }
       />
-      <InvoicesClient
-        invoices={invoices}
+      <PaymentsClient
+        payments={payments}
         editable={editable}
         logoUrl={logoUrl}
         initialOpenId={open ?? null}

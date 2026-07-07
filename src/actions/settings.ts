@@ -190,7 +190,7 @@ export async function createChecklistTemplate(formData: FormData) {
   revalidatePath("/settings/checklists");
 }
 
-export async function updateChecklistTemplate(id: string, data: { name?: string; icon?: string | null; color?: string | null; publishToCalendar?: boolean }) {
+export async function updateChecklistTemplate(id: string, data: { name?: string; icon?: string | null; color?: string | null; publishToCalendar?: boolean; titleLockedFromStageId?: string | null; titleNeverLock?: boolean }) {
   const { member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");
   await db.checklistTemplate.update({ where: { id }, data });

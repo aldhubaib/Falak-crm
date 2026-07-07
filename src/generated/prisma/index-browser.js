@@ -386,6 +386,8 @@ exports.Prisma.ChecklistTemplateScalarFieldEnum = {
   color: 'color',
   description: 'description',
   publishToCalendar: 'publishToCalendar',
+  titleLockedFromStageId: 'titleLockedFromStageId',
+  titleNeverLock: 'titleNeverLock',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -583,6 +585,23 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   paidAt: 'paidAt',
   rejectionNote: 'rejectionNote',
   publicToken: 'publicToken',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PaymentScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  invoiceId: 'invoiceId',
+  number: 'number',
+  date: 'date',
+  location: 'location',
+  type: 'type',
+  mode: 'mode',
+  referenceNumber: 'referenceNumber',
+  amount: 'amount',
+  currency: 'currency',
+  notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -791,6 +810,7 @@ exports.InvoiceStatus = exports.$Enums.InvoiceStatus = {
   SENT: 'SENT',
   ACCEPTED: 'ACCEPTED',
   REJECTED: 'REJECTED',
+  PARTIAL: 'PARTIAL',
   PAID: 'PAID',
   CANCELLED: 'CANCELLED'
 };
@@ -860,6 +880,7 @@ exports.Prisma.ModelName = {
   Notification: 'Notification',
   PushSubscription: 'PushSubscription',
   Invoice: 'Invoice',
+  Payment: 'Payment',
   InvoiceItem: 'InvoiceItem',
   WhatsAppConfig: 'WhatsAppConfig',
   WhatsAppTemplate: 'WhatsAppTemplate',
