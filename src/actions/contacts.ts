@@ -46,7 +46,7 @@ export async function getContactOptions() {
   const workspace = await requireWorkspace();
   return db.contact.findMany({
     where: { workspaceId: workspace.id, deletedAt: null },
-    select: { id: true, firstName: true, lastName: true },
+    select: { id: true, firstName: true, lastName: true, email: true, mobile: true },
     orderBy: [{ firstName: "asc" }, { lastName: "asc" }],
   });
 }
@@ -57,7 +57,9 @@ export async function getContact(id: string) {
     where: { id, workspaceId: workspace.id, deletedAt: null },
     include: {
       companies: {
-        include: { company: { select: { id: true, name: true } } },
+        include: {
+          company: { select: { id: true, name: true, email: true, phone: true } },
+        },
         orderBy: { primary: "desc" },
       },
       deals: { where: { deletedAt: null }, include: { stage: true } },

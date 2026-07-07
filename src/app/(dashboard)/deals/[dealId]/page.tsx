@@ -1,10 +1,13 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getDeal } from "@/actions/deals";
+import { getCompanyOptions } from "@/actions/companies";
+import { getContactOptions } from "@/actions/contacts";
 import { AppHeader } from "@/components/app-header";
 import { SurfaceCard } from "@/components/surface-card";
 import { Badge } from "@/components/ui/badge";
 import { DealActions } from "./deal-actions";
+import { DealRelated } from "./deal-related";
 
 export default async function DealDetailPage({
   params,
@@ -12,7 +15,11 @@ export default async function DealDetailPage({
   params: Promise<{ dealId: string }>;
 }) {
   const { dealId } = await params;
-  const deal = await getDeal(dealId);
+  const [deal, companyOptions, contactOptions] = await Promise.all([
+    getDeal(dealId),
+    getCompanyOptions(),
+    getContactOptions(),
+  ]);
   if (!deal) notFound();
 
   const subtotal = deal.items.reduce(
@@ -111,6 +118,42 @@ export default async function DealDetailPage({
               </div>
             </SurfaceCard>
           )}
+
+          <DealRelated
+            dealId={deal.id}
+            company={
+              deal.company
+                ? {
+                    id: deal.company.id,
+                    name: deal.company.name,
+                    email: deal.company.email,
+                    phone: deal.company.phone,
+                  }
+                : null
+            }
+            contact={
+              deal.contact
+                ? {
+                    id: deal.contact.id,
+                    name: [deal.contact.firstName, deal.contact.lastName]
+                      .filter(Boolean)
+                      .join(" "),
+                    email: deal.contact.email,
+                    phone: deal.contact.mobile,
+                  }
+                : null
+            }
+            companyOptions={companyOptions.map((c) => ({
+              id: c.id,
+              title: c.name,
+              subtitle: [c.email, c.phone].filter(Boolean).join(" · "),
+            }))}
+            contactOptions={contactOptions.map((c) => ({
+              id: c.id,
+              title: [c.firstName, c.lastName].filter(Boolean).join(" "),
+              subtitle: [c.email, c.mobile].filter(Boolean).join(" · "),
+            }))}
+          />
 
           <DealActions
             dealId={deal.id}

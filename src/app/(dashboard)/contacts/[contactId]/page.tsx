@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Phone, Mail, MapPin, Building2, Briefcase, FileText } from "lucide-react";
+import { Phone, Mail, MapPin, FileText } from "lucide-react";
 import { getContact } from "@/actions/contacts";
+import { getCompanyOptions } from "@/actions/companies";
+import { getDealOptions } from "@/actions/deals";
 import { AppHeader } from "@/components/app-header";
 import { SurfaceCard } from "@/components/surface-card";
-import { Badge } from "@/components/ui/badge";
+import { ContactRelated } from "./contact-related";
 
 export default async function ContactDetailPage({
   params,
@@ -12,7 +14,11 @@ export default async function ContactDetailPage({
   params: Promise<{ contactId: string }>;
 }) {
   const { contactId } = await params;
-  const contact = await getContact(contactId);
+  const [contact, companyOptions, dealOptions] = await Promise.all([
+    getContact(contactId),
+    getCompanyOptions(),
+    getDealOptions(),
+  ]);
   if (!contact) notFound();
 
   const fullName = [contact.firstName, contact.middleName, contact.lastName]
@@ -54,58 +60,31 @@ export default async function ContactDetailPage({
             </div>
           </SurfaceCard>
 
-          {contact.companies.length > 0 && (
-            <SurfaceCard>
-              <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                <Building2 className="h-3.5 w-3.5" /> Companies
-              </div>
-              <div className="space-y-2">
-                {contact.companies.map((cc) => (
-                  <Link
-                    key={cc.company.id}
-                    href={`/companies/${cc.company.id}`}
-                    className="flex items-center gap-2 rounded-md p-2 text-sm hover:bg-accent/40"
-                  >
-                    <span className="font-medium">{cc.company.name}</span>
-                    {cc.role && (
-                      <span className="text-xs text-muted-foreground">
-                        ({cc.role})
-                      </span>
-                    )}
-                    {cc.primary && (
-                      <Badge variant="secondary" className="ml-auto text-xxs">
-                        Primary
-                      </Badge>
-                    )}
-                  </Link>
-                ))}
-              </div>
-            </SurfaceCard>
-          )}
-
-          {contact.deals.length > 0 && (
-            <SurfaceCard>
-              <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                <Briefcase className="h-3.5 w-3.5" /> Deals
-              </div>
-              <div className="space-y-2">
-                {contact.deals.map((d) => (
-                  <Link
-                    key={d.id}
-                    href={`/deals/${d.id}`}
-                    className="flex items-center justify-between rounded-md p-2 text-sm hover:bg-accent/40"
-                  >
-                    <span className="font-medium">{d.title}</span>
-                    <Badge
-                      variant={d.stage?.type === "WON" ? "default" : "secondary"}
-                    >
-                      {d.stage?.name ?? "—"}
-                    </Badge>
-                  </Link>
-                ))}
-              </div>
-            </SurfaceCard>
-          )}
+          <ContactRelated
+            contactId={contact.id}
+            companies={contact.companies.map((cc) => ({
+              id: cc.company.id,
+              name: cc.company.name,
+              email: cc.company.email,
+              phone: cc.company.phone,
+            }))}
+            deals={contact.deals.map((d) => ({
+              id: d.id,
+              title: d.title,
+              stageName: d.stage?.name ?? null,
+              value: Number(d.value),
+            }))}
+            companyOptions={companyOptions.map((c) => ({
+              id: c.id,
+              title: c.name,
+              subtitle: [c.email, c.phone].filter(Boolean).join(" · "),
+            }))}
+            dealOptions={dealOptions.map((d) => ({
+              id: d.id,
+              title: d.title,
+              subtitle: d.stage?.name ?? "",
+            }))}
+          />
 
           {contact.invoices.length > 0 && (
             <SurfaceCard>

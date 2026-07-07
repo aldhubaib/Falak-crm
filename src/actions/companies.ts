@@ -67,7 +67,7 @@ export async function getCompanyOptions() {
   const workspace = await requireWorkspace();
   return db.company.findMany({
     where: { workspaceId: workspace.id, deletedAt: null },
-    select: { id: true, name: true },
+    select: { id: true, name: true, email: true, phone: true },
     orderBy: { name: "asc" },
   });
 }

@@ -87,6 +87,72 @@ export async function getDeals(opts?: { page?: number }) {
   };
 }
 
+// Slim list for link pickers (e.g. the Related Data "+" on companies/contacts).
+export async function getDealOptions() {
+  const workspace = await requireWorkspace();
+  return db.deal.findMany({
+    where: { workspaceId: workspace.id, deletedAt: null },
+    select: {
+      id: true,
+      title: true,
+      companyId: true,
+      contactId: true,
+      stage: { select: { name: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+async function requireDealsEdit() {
+  const { member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "deals")) throw new Error("Permission denied");
+}
+
+// Link/unlink a deal to a company (null unlinks). Used by the Related Data
+// tables on the company and deal detail pages.
+export async function setDealCompany(
+  dealId: string,
+  companyId: string | null,
+): Promise<ActionResult> {
+  return safeAction("Link Deal to Company", async () => {
+    await requireDealsEdit();
+    const workspace = await requireWorkspace();
+    const deal = await db.deal.findFirst({
+      where: { id: dealId, workspaceId: workspace.id },
+    });
+    if (!deal) throw new Error("Deal not found");
+
+    await db.deal.update({ where: { id: dealId }, data: { companyId } });
+
+    revalidatePath(`/deals/${dealId}`);
+    revalidatePath("/deals");
+    if (companyId) revalidatePath(`/companies/${companyId}`);
+    if (deal.companyId) revalidatePath(`/companies/${deal.companyId}`);
+  });
+}
+
+// Link/unlink a deal to a contact (null unlinks).
+export async function setDealContact(
+  dealId: string,
+  contactId: string | null,
+): Promise<ActionResult> {
+  return safeAction("Link Deal to Contact", async () => {
+    await requireDealsEdit();
+    const workspace = await requireWorkspace();
+    const deal = await db.deal.findFirst({
+      where: { id: dealId, workspaceId: workspace.id },
+    });
+    if (!deal) throw new Error("Deal not found");
+
+    await db.deal.update({ where: { id: dealId }, data: { contactId } });
+
+    revalidatePath(`/deals/${dealId}`);
+    revalidatePath("/deals");
+    if (contactId) revalidatePath(`/contacts/${contactId}`);
+    if (deal.contactId) revalidatePath(`/contacts/${deal.contactId}`);
+  });
+}
+
 export async function getDeal(id: string) {
   const workspace = await requireWorkspace();
   return db.deal.findFirst({

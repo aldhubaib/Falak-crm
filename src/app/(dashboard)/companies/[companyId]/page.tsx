@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Phone, Mail, Globe, MapPin, Users, Briefcase, FolderKanban } from "lucide-react";
+import { Phone, Mail, Globe, MapPin, FolderKanban } from "lucide-react";
 import { getCompany } from "@/actions/companies";
+import { getContactOptions } from "@/actions/contacts";
+import { getDealOptions } from "@/actions/deals";
 import { AppHeader } from "@/components/app-header";
 import { SurfaceCard } from "@/components/surface-card";
-import { Badge } from "@/components/ui/badge";
+import { CompanyRelated } from "./company-related";
 
 export default async function CompanyDetailPage({
   params,
@@ -12,7 +14,11 @@ export default async function CompanyDetailPage({
   params: Promise<{ companyId: string }>;
 }) {
   const { companyId } = await params;
-  const company = await getCompany(companyId);
+  const [company, contactOptions, dealOptions] = await Promise.all([
+    getCompany(companyId),
+    getContactOptions(),
+    getDealOptions(),
+  ]);
   if (!company) notFound();
 
   return (
@@ -54,66 +60,35 @@ export default async function CompanyDetailPage({
             </div>
           </SurfaceCard>
 
-          {company.contacts.length > 0 && (
-            <SurfaceCard>
-              <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                <Users className="h-3.5 w-3.5" /> Contacts
-              </div>
-              <div className="space-y-2">
-                {company.contacts
-                  .filter((cc) => !cc.contact.deletedAt)
-                  .map((cc) => (
-                    <Link
-                      key={cc.contact.id}
-                      href={`/contacts/${cc.contact.id}`}
-                      className="flex items-center gap-3 rounded-md p-2 text-sm hover:bg-accent/40"
-                    >
-                      <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-muted/50 text-xs font-medium">
-                        {(cc.contact.firstName?.[0] ?? "").toUpperCase()}
-                        {(cc.contact.lastName?.[0] ?? "").toUpperCase()}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <span className="font-medium">
-                          {cc.contact.firstName} {cc.contact.lastName}
-                        </span>
-                        {cc.role && (
-                          <span className="ml-2 text-xs text-muted-foreground">
-                            ({cc.role})
-                          </span>
-                        )}
-                      </div>
-                      {cc.primary && (
-                        <Badge variant="secondary" className="text-xxs">Primary</Badge>
-                      )}
-                    </Link>
-                  ))}
-              </div>
-            </SurfaceCard>
-          )}
-
-          {company.deals.length > 0 && (
-            <SurfaceCard>
-              <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                <Briefcase className="h-3.5 w-3.5" /> Deals
-              </div>
-              <div className="space-y-2">
-                {company.deals.map((d) => (
-                  <Link
-                    key={d.id}
-                    href={`/deals/${d.id}`}
-                    className="flex items-center justify-between rounded-md p-2 text-sm hover:bg-accent/40"
-                  >
-                    <span className="font-medium">{d.title}</span>
-                    <Badge
-                      variant={d.stage?.type === "WON" ? "default" : "secondary"}
-                    >
-                      {d.stage?.name ?? "—"}
-                    </Badge>
-                  </Link>
-                ))}
-              </div>
-            </SurfaceCard>
-          )}
+          <CompanyRelated
+            companyId={company.id}
+            contacts={company.contacts
+              .filter((cc) => !cc.contact.deletedAt)
+              .map((cc) => ({
+                id: cc.contact.id,
+                name: [cc.contact.firstName, cc.contact.lastName]
+                  .filter(Boolean)
+                  .join(" "),
+                email: cc.contact.email,
+                phone: cc.contact.mobile,
+              }))}
+            deals={company.deals.map((d) => ({
+              id: d.id,
+              title: d.title,
+              stageName: d.stage?.name ?? null,
+              value: Number(d.value),
+            }))}
+            contactOptions={contactOptions.map((c) => ({
+              id: c.id,
+              title: [c.firstName, c.lastName].filter(Boolean).join(" "),
+              subtitle: [c.email, c.mobile].filter(Boolean).join(" · "),
+            }))}
+            dealOptions={dealOptions.map((d) => ({
+              id: d.id,
+              title: d.title,
+              subtitle: d.stage?.name ?? "",
+            }))}
+          />
 
           {company.projects.length > 0 && (
             <SurfaceCard>
