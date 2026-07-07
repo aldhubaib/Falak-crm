@@ -202,6 +202,7 @@ export function ThreadChat({
   hasMoreOlder = false,
   memberNames = {},
   peerMemberIds = [],
+  mentionables = [],
   archived = false,
   readOnly = false,
 }: {
@@ -215,6 +216,8 @@ export function ThreadChat({
   hasMoreOlder?: boolean;
   memberNames?: Record<string, string>;
   peerMemberIds?: string[];
+  /** People involved in this thread, offered by the @ mention autocomplete. */
+  mentionables?: { id: string; name: string }[];
   archived?: boolean;
   readOnly?: boolean;
 }) {
@@ -416,6 +419,48 @@ export function ThreadChat({
     setTimeout(() => composerRef.current?.focus(), 0);
   };
 
+  // Detect a trailing "@query" token in the draft — opens the member picker.
+  // Mentions display as plain "@Name" while typing; on send each picked name
+  // becomes the "@[Name](memberId)" token that sendMessage parses to notify
+  // the member.
+  const mentionToken = useMemo(() => {
+    if (mentionables.length === 0) return null;
+    const m = /(^|\s)@([^\s@]*)$/.exec(draft);
+    if (!m) return null;
+    return { start: m.index + m[1].length, query: m[2].toLowerCase() };
+  }, [draft, mentionables.length]);
+
+  const mentionResults = useMemo(() => {
+    if (!mentionToken) return [];
+    const q = mentionToken.query;
+    const filtered = q
+      ? mentionables.filter((m) => m.name.toLowerCase().includes(q))
+      : mentionables;
+    return filtered.slice(0, 6);
+  }, [mentionToken, mentionables]);
+  const mentionPickerOpen = !!mentionToken && mentionResults.length > 0;
+  const [mentionIndex, setMentionIndex] = useState(0);
+  const [pickedMentions, setPickedMentions] = useState<
+    { id: string; name: string }[]
+  >([]);
+
+  useEffect(() => {
+    setMentionIndex(0);
+  }, [mentionToken?.query, mentionResults.length]);
+
+  const pickMention = (m: { id: string; name: string }) => {
+    if (!mentionToken) return;
+    const before = draft.slice(0, mentionToken.start);
+    const after = draft.slice(
+      mentionToken.start + 1 + mentionToken.query.length,
+    );
+    setDraft(`${before}@${m.name} ${after}`.replace(/ {2,}/g, " "));
+    setPickedMentions((prev) =>
+      prev.some((p) => p.id === m.id) ? prev : [...prev, m],
+    );
+    setTimeout(() => composerRef.current?.focus(), 0);
+  };
+
   // Files wait locally (no upload) until the user presses Send — WhatsApp-style.
   const pickFiles = (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -552,8 +597,16 @@ export function ThreadChat({
   }, [outbox, uploadById, deliver]);
 
   const send = () => {
-    const text = draft.trim();
+    let text = draft.trim();
     if (!text && pending.length === 0) return;
+    // Convert picked "@Name" mentions into @[Name](id) tokens the server
+    // parses. Longest names first so "@Adham Ali" isn't clobbered by "@Adham".
+    const sortedMentions = [...pickedMentions].sort(
+      (a, b) => b.name.length - a.name.length,
+    );
+    for (const m of sortedMentions) {
+      text = text.split(`@${m.name}`).join(`@[${m.name}](${m.id})`);
+    }
     const files = [...pending];
     const replyId = replyTo;
     const taskRefId = pendingTaskRef?.id ?? null;
@@ -561,6 +614,7 @@ export function ThreadChat({
     setPending([]);
     setReplyTo(null);
     setPendingTaskRef(null);
+    setPickedMentions([]);
 
     if (files.length === 0) {
       // Text-only: send straight away (no upload phase).
@@ -1374,6 +1428,41 @@ export function ThreadChat({
               </div>
             </div>
           )}
+          {mentionPickerOpen && (
+            <div className="relative">
+              <div className="absolute -top-1 left-0 z-10 w-full max-w-sm -translate-y-full overflow-hidden rounded-lg border border-border/60 bg-popover shadow-lg">
+                <div className="border-b border-border/60 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                  Mention someone
+                </div>
+                <ul className="max-h-52 overflow-y-auto py-1">
+                  {mentionResults.map((m, i) => (
+                    <li key={m.id}>
+                      <button
+                        type="button"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          pickMention(m);
+                        }}
+                        onMouseEnter={() => setMentionIndex(i)}
+                        className={cn(
+                          "flex w-full items-center gap-2.5 px-3 py-1.5 text-left text-sm",
+                          i === mentionIndex ? "bg-surface" : "hover:bg-surface/60",
+                        )}
+                      >
+                        <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-primary/15 text-[10px] font-semibold text-primary">
+                          {m.name.charAt(0).toUpperCase()}
+                        </span>
+                        <span className="min-w-0 flex-1 truncate">{m.name}</span>
+                        {online.has(m.id) && (
+                          <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500" />
+                        )}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
           {replyingTo && (
             <div className="mb-2 flex items-start gap-2 rounded-t-2xl border border-b-0 border-border/60 bg-surface/60 px-3 py-2">
               <Reply className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
@@ -1540,6 +1629,31 @@ export function ThreadChat({
                     return;
                   }
                 }
+                if (mentionPickerOpen) {
+                  if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    setMentionIndex((i) => (i + 1) % mentionResults.length);
+                    return;
+                  }
+                  if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    setMentionIndex(
+                      (i) =>
+                        (i - 1 + mentionResults.length) % mentionResults.length,
+                    );
+                    return;
+                  }
+                  if (e.key === "Enter" || e.key === "Tab") {
+                    e.preventDefault();
+                    pickMention(mentionResults[mentionIndex]);
+                    return;
+                  }
+                  if (e.key === "Escape") {
+                    e.preventDefault();
+                    setDraft((d) => d.replace(/(^|\s)@[^\s@]*$/, "$1"));
+                    return;
+                  }
+                }
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   send();
@@ -1553,7 +1667,7 @@ export function ThreadChat({
                 replyingTo
                   ? "Reply…"
                   : isProjectChannel
-                    ? `Message ${title} — type # to link a task`
+                    ? `Message ${title} — # links a task, @ mentions`
                     : `Message ${title}`
               }
               className="min-h-10 flex-1 resize-none border-0 bg-transparent p-2 text-sm shadow-none focus-visible:ring-0"

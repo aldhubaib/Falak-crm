@@ -1,9 +1,17 @@
 "use client";
 
+// New Contact form, matching the Lovable design: field cards in a two-column
+// grid with the save action in the header. The phone input carries a country
+// dial-code picker; the contact's country is derived from it.
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { AppHeader } from "@/components/app-header";
+import { PageContainer } from "@/components/page-container";
+import { SaveButton } from "@/components/save-button";
+import { FieldCard } from "@/components/crm/field-card";
+import { PhoneInput, parsePhone } from "@/components/phone-input";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -11,33 +19,45 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PageContainer } from "@/components/page-container";
 import { createContact } from "@/actions/contacts";
+
+const INPUT_CLS =
+  "h-9 border-0 bg-transparent px-0 shadow-none focus-visible:ring-0";
+const TRIGGER_CLS =
+  "h-9 border-0 bg-transparent px-0 shadow-none focus:ring-0";
 
 export function NewContactClient({
   companies,
+  initialCompanyId,
 }: {
   companies: { id: string; name: string }[];
+  initialCompanyId?: string;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [mobile, setMobile] = useState("");
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
-  const [country, setCountry] = useState("");
-  const [companyId, setCompanyId] = useState("");
+  const [companyId, setCompanyId] = useState(initialCompanyId ?? "");
+
+  // Mobile is required + unique per workspace in the schema, so the national
+  // part of the phone must be filled before saving.
+  const hasPhone = !!parsePhone(phone).national.trim();
+  const canSave = !!firstName.trim() && !!lastName.trim() && hasPhone;
 
   const save = () => {
-    if (!firstName.trim() || !lastName.trim()) return;
+    if (!canSave || pending) return;
     const fd = new FormData();
     fd.set("firstName", firstName.trim());
     fd.set("lastName", lastName.trim());
-    fd.set("mobile", mobile.trim());
-    if (email) fd.set("email", email.trim());
-    if (role) fd.set("role", role.trim());
-    if (country) fd.set("country", country.trim());
+    fd.set("mobile", phone.trim());
+    if (email.trim()) fd.set("email", email.trim());
+    if (role.trim()) fd.set("role", role.trim());
+    // Derive the contact's country from the phone dial code.
+    fd.set("country", parsePhone(phone).country.name);
     if (companyId) fd.set("companyId", companyId);
     startTransition(async () => {
       const result = await createContact(fd);
@@ -46,55 +66,82 @@ export function NewContactClient({
   };
 
   return (
-    <PageContainer className="mx-auto max-w-lg space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <Section label="FIRST NAME" required>
-          <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First name" autoFocus />
-        </Section>
-        <Section label="LAST NAME" required>
-          <Input value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last name" />
-        </Section>
-      </div>
-      <Section label="MOBILE">
-        <Input value={mobile} onChange={(e) => setMobile(e.target.value)} placeholder="+966..." />
-      </Section>
-      <Section label="EMAIL">
-        <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@example.com" />
-      </Section>
-      <Section label="ROLE">
-        <Input value={role} onChange={(e) => setRole(e.target.value)} placeholder="e.g. CEO, Manager" />
-      </Section>
-      <Section label="COUNTRY">
-        <Input value={country} onChange={(e) => setCountry(e.target.value)} placeholder="e.g. Saudi Arabia" />
-      </Section>
-      {companies.length > 0 && (
-        <Section label="COMPANY">
-          <Select value={companyId} onValueChange={setCompanyId}>
-            <SelectTrigger><SelectValue placeholder="Select company" /></SelectTrigger>
-            <SelectContent>
-              {companies.map((c) => (
-                <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Section>
-      )}
-      <div className="flex justify-end pt-2">
-        <Button onClick={save} disabled={!firstName.trim() || !lastName.trim() || pending}>
-          Create Contact
-        </Button>
-      </div>
-    </PageContainer>
-  );
-}
-
-function Section({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
-  return (
-    <div className="rounded-lg border border-border/60 bg-surface/50 p-4">
-      <div className="mb-2 text-tiny font-medium uppercase tracking-[0.14em] text-muted-foreground">
-        {label}{required && <span className="text-destructive"> *</span>}
-      </div>
-      {children}
-    </div>
+    <>
+      <AppHeader
+        title="New Contact"
+        backHref="/contacts"
+        actions={
+          <SaveButton
+            onClick={save}
+            loading={pending}
+            ready={canSave}
+            disabled={!canSave}
+          />
+        }
+      />
+      <main className="min-h-0 flex-1 overflow-y-auto">
+        <PageContainer className="mx-auto w-full max-w-4xl pb-10">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <FieldCard label="FIRST NAME" required>
+              <Input
+                placeholder="e.g. Sara"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                autoFocus
+                className={INPUT_CLS}
+              />
+            </FieldCard>
+            <FieldCard label="LAST NAME" required>
+              <Input
+                placeholder="e.g. Al-Ahmad"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className={INPUT_CLS}
+              />
+            </FieldCard>
+            <FieldCard label="EMAIL">
+              <Input
+                type="email"
+                inputMode="email"
+                placeholder="name@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={INPUT_CLS}
+              />
+            </FieldCard>
+            <FieldCard label="PHONE" required>
+              <PhoneInput value={phone} onChange={setPhone} />
+            </FieldCard>
+            <FieldCard label="COMPANY">
+              <Select value={companyId} onValueChange={setCompanyId}>
+                <SelectTrigger className={TRIGGER_CLS}>
+                  <SelectValue placeholder="No company" />
+                </SelectTrigger>
+                <SelectContent>
+                  {companies.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.name}
+                    </SelectItem>
+                  ))}
+                  {companies.length === 0 && (
+                    <div className="px-2 py-1.5 text-xs text-muted-foreground">
+                      No companies yet.
+                    </div>
+                  )}
+                </SelectContent>
+              </Select>
+            </FieldCard>
+            <FieldCard label="ROLE">
+              <Input
+                placeholder="e.g. CMO"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className={INPUT_CLS}
+              />
+            </FieldCard>
+          </div>
+        </PageContainer>
+      </main>
+    </>
   );
 }

@@ -29,6 +29,8 @@ export default async function ThreadPage({
   let peerMemberIds: string[] = [];
   let archived = false;
   const memberNames: Record<string, string> = {};
+  // Who can be @mentioned in this thread's composer.
+  let mentionables: { id: string; name: string }[] = [];
 
   if (threadId.startsWith("task-")) {
     const taskId = threadId.slice(5);
@@ -81,6 +83,7 @@ export default async function ThreadPage({
       memberNames[p.member.id] = p.member.name ?? p.member.email;
     }
     peerMemberIds = others.map((m) => m.id);
+    mentionables = others.map((m) => ({ id: m.id, name: m.name ?? m.email }));
     target = { conversationId: convo.id };
     channel = conversationChannel(convo.id);
     presenceChannel = workspacePresenceChannel(workspace.id);
@@ -92,6 +95,28 @@ export default async function ThreadPage({
     notFound();
   }
 
+  // Project/task threads: anyone involved in the project can be @mentioned —
+  // the project's team plus workspace owners (owners see every project but
+  // aren't project members).
+  if (target.projectId) {
+    const [projectMembers, owners] = await Promise.all([
+      db.projectMember.findMany({
+        where: { projectId: target.projectId },
+        select: { member: { select: { id: true, name: true, email: true } } },
+      }),
+      db.workspaceMember.findMany({
+        where: { workspaceId: workspace.id, type: "OWNER" },
+        select: { id: true, name: true, email: true },
+      }),
+    ]);
+    const map = new Map<string, { id: string; name: string }>();
+    for (const m of [...projectMembers.map((pm) => pm.member), ...owners]) {
+      map.set(m.id, { id: m.id, name: m.name ?? m.email });
+    }
+    map.delete(member.id);
+    mentionables = [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   // Chat-module "view" members can read DMs and project channels but not
   // write to them. Task comment threads follow project permissions instead.
   const chatReadOnly = !target.taskId && !canEdit(member, "chat");
@@ -99,17 +124,41 @@ export default async function ThreadPage({
   // Latest page only (50 messages) — older pages load on demand in the client.
   const page = await getThreadMessages(target);
 
-  // Mark this thread's notifications as read.
-  const linkUrl =
-    target.conversationId
-      ? `/messages/conv-${target.conversationId}`
-      : target.taskId
-        ? `/projects/${target.projectId}/tasks/${target.taskId}`
-        : `/messages/project-${target.projectId}`;
-  await db.notification.updateMany({
-    where: { recipientId: member.id, read: false, linkUrl },
-    data: { read: true },
-  });
+  // Mark this thread's notifications as read. A project thread is the
+  // "everything feed" — its inbox counter also rolls up task-level
+  // notifications (mentions, rejections) within the project, so opening it
+  // must clear those too or the counter never reaches zero.
+  if (target.conversationId) {
+    await db.notification.updateMany({
+      where: {
+        recipientId: member.id,
+        read: false,
+        linkUrl: `/messages/conv-${target.conversationId}`,
+      },
+      data: { read: true },
+    });
+  } else if (target.taskId) {
+    await db.notification.updateMany({
+      where: {
+        recipientId: member.id,
+        read: false,
+        linkUrl: `/projects/${target.projectId}/tasks/${target.taskId}`,
+      },
+      data: { read: true },
+    });
+  } else {
+    await db.notification.updateMany({
+      where: {
+        recipientId: member.id,
+        read: false,
+        OR: [
+          { linkUrl: `/messages/project-${target.projectId}` },
+          { linkUrl: { startsWith: `/projects/${target.projectId}/` } },
+        ],
+      },
+      data: { read: true },
+    });
+  }
 
   return (
     <ThreadChat
@@ -123,6 +172,7 @@ export default async function ThreadPage({
       hasMoreOlder={page.hasMore}
       memberNames={memberNames}
       peerMemberIds={peerMemberIds}
+      mentionables={mentionables}
       archived={archived}
       readOnly={chatReadOnly}
     />

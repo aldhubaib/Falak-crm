@@ -13,12 +13,13 @@ async function requireContactsEdit() {
   if (!canEdit(member, "contacts")) throw new Error("Permission denied");
 }
 
-const LIST_PAGE_SIZE = 50;
+// The contacts table filters/sorts/paginates client-side (like the Lovable
+// design), so this returns the whole list capped at a sane maximum.
+const LIST_MAX = 1000;
 
-export async function getContacts(opts?: { page?: number }) {
+export async function getContacts() {
   const workspace = await requireWorkspace();
-  const page = Math.max(1, opts?.page ?? 1);
-  const rows = await db.contact.findMany({
+  return db.contact.findMany({
     where: { workspaceId: workspace.id, deletedAt: null },
     select: {
       id: true,
@@ -36,14 +37,8 @@ export async function getContacts(opts?: { page?: number }) {
       },
     },
     orderBy: { createdAt: "desc" },
-    skip: (page - 1) * LIST_PAGE_SIZE,
-    take: LIST_PAGE_SIZE + 1,
+    take: LIST_MAX,
   });
-  return {
-    items: rows.slice(0, LIST_PAGE_SIZE),
-    page,
-    hasMore: rows.length > LIST_PAGE_SIZE,
-  };
 }
 
 // Slim id/name list for pickers — avoids paying for the full contact graph.

@@ -93,6 +93,14 @@ export function ThreadSidebar({ threads }: { threads: InboxThread[] }) {
     if (d?.type === "inbox") router.refresh();
   });
 
+  // Opening a thread marks its notifications read on the server, but this
+  // sidebar lives in the layout and keeps its stale thread list across
+  // navigations — refetch it so the unread counter clears.
+  useEffect(() => {
+    if (onThread) router.refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
   const allRows = useMemo(() => {
     return threads
       .filter((t) => (tab === "all" ? true : t.kind === tab))
@@ -312,7 +320,9 @@ function ThreadRow({
             : thread.subtitle}
         </div>
       </div>
-      {thread.unread > 0 && (
+      {/* The open thread is being read right now — its badge clears
+          immediately instead of waiting for the server refetch. */}
+      {thread.unread > 0 && !active && (
         <span
           className={cn(
             // Compact 14px circle with a 9px digit so it reads the same as the

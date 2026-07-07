@@ -13944,6 +13944,7 @@ export namespace Prisma {
     email: number
     website: number
     address: number
+    countries: number
     logo: number
     notes: number
     customFields: number
@@ -14013,6 +14014,7 @@ export namespace Prisma {
     email?: true
     website?: true
     address?: true
+    countries?: true
     logo?: true
     notes?: true
     customFields?: true
@@ -14109,6 +14111,7 @@ export namespace Prisma {
     email: string | null
     website: string | null
     address: string | null
+    countries: string[]
     logo: string | null
     notes: string | null
     customFields: JsonValue | null
@@ -14149,6 +14152,7 @@ export namespace Prisma {
     email?: boolean
     website?: boolean
     address?: boolean
+    countries?: boolean
     logo?: boolean
     notes?: boolean
     customFields?: boolean
@@ -14177,6 +14181,7 @@ export namespace Prisma {
     email?: boolean
     website?: boolean
     address?: boolean
+    countries?: boolean
     logo?: boolean
     notes?: boolean
     customFields?: boolean
@@ -14201,6 +14206,7 @@ export namespace Prisma {
     email?: boolean
     website?: boolean
     address?: boolean
+    countries?: boolean
     logo?: boolean
     notes?: boolean
     customFields?: boolean
@@ -14225,6 +14231,7 @@ export namespace Prisma {
     email?: boolean
     website?: boolean
     address?: boolean
+    countries?: boolean
     logo?: boolean
     notes?: boolean
     customFields?: boolean
@@ -14234,7 +14241,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "ownerId" | "ownerName" | "name" | "nameAr" | "industry" | "referral" | "phone" | "whatsappNumber" | "email" | "website" | "address" | "logo" | "notes" | "customFields" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["company"]>
+  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "ownerId" | "ownerName" | "name" | "nameAr" | "industry" | "referral" | "phone" | "whatsappNumber" | "email" | "website" | "address" | "countries" | "logo" | "notes" | "customFields" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["company"]>
   export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     contacts?: boolean | Company$contactsArgs<ExtArgs>
@@ -14271,6 +14278,7 @@ export namespace Prisma {
       email: string | null
       website: string | null
       address: string | null
+      countries: string[]
       logo: string | null
       notes: string | null
       customFields: Prisma.JsonValue | null
@@ -14718,6 +14726,7 @@ export namespace Prisma {
     readonly email: FieldRef<"Company", 'String'>
     readonly website: FieldRef<"Company", 'String'>
     readonly address: FieldRef<"Company", 'String'>
+    readonly countries: FieldRef<"Company", 'String[]'>
     readonly logo: FieldRef<"Company", 'String'>
     readonly notes: FieldRef<"Company", 'String'>
     readonly customFields: FieldRef<"Company", 'Json'>
@@ -62789,6 +62798,7 @@ export namespace Prisma {
     email: 'email',
     website: 'website',
     address: 'address',
+    countries: 'countries',
     logo: 'logo',
     notes: 'notes',
     customFields: 'customFields',
@@ -64237,6 +64247,7 @@ export namespace Prisma {
     email?: StringNullableFilter<"Company"> | string | null
     website?: StringNullableFilter<"Company"> | string | null
     address?: StringNullableFilter<"Company"> | string | null
+    countries?: StringNullableListFilter<"Company">
     logo?: StringNullableFilter<"Company"> | string | null
     notes?: StringNullableFilter<"Company"> | string | null
     customFields?: JsonNullableFilter<"Company">
@@ -64264,6 +64275,7 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     website?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
+    countries?: SortOrder
     logo?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     customFields?: SortOrderInput | SortOrder
@@ -64294,6 +64306,7 @@ export namespace Prisma {
     email?: StringNullableFilter<"Company"> | string | null
     website?: StringNullableFilter<"Company"> | string | null
     address?: StringNullableFilter<"Company"> | string | null
+    countries?: StringNullableListFilter<"Company">
     logo?: StringNullableFilter<"Company"> | string | null
     notes?: StringNullableFilter<"Company"> | string | null
     customFields?: JsonNullableFilter<"Company">
@@ -64321,6 +64334,7 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     website?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
+    countries?: SortOrder
     logo?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     customFields?: SortOrderInput | SortOrder
@@ -64350,6 +64364,7 @@ export namespace Prisma {
     email?: StringNullableWithAggregatesFilter<"Company"> | string | null
     website?: StringNullableWithAggregatesFilter<"Company"> | string | null
     address?: StringNullableWithAggregatesFilter<"Company"> | string | null
+    countries?: StringNullableListFilter<"Company">
     logo?: StringNullableWithAggregatesFilter<"Company"> | string | null
     notes?: StringNullableWithAggregatesFilter<"Company"> | string | null
     customFields?: JsonNullableWithAggregatesFilter<"Company">
@@ -68394,6 +68409,7 @@ export namespace Prisma {
     email?: string | null
     website?: string | null
     address?: string | null
+    countries?: CompanyCreatecountriesInput | string[]
     logo?: string | null
     notes?: string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -68421,6 +68437,7 @@ export namespace Prisma {
     email?: string | null
     website?: string | null
     address?: string | null
+    countries?: CompanyCreatecountriesInput | string[]
     logo?: string | null
     notes?: string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -68446,6 +68463,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    countries?: CompanyUpdatecountriesInput | string[]
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -68473,6 +68491,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    countries?: CompanyUpdatecountriesInput | string[]
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -68499,6 +68518,7 @@ export namespace Prisma {
     email?: string | null
     website?: string | null
     address?: string | null
+    countries?: CompanyCreatecountriesInput | string[]
     logo?: string | null
     notes?: string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -68521,6 +68541,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    countries?: CompanyUpdatecountriesInput | string[]
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -68544,6 +68565,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    countries?: CompanyUpdatecountriesInput | string[]
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -73035,6 +73057,14 @@ export namespace Prisma {
     _min?: NestedEnumCollaboratorStatusFilter<$PrismaModel>
     _max?: NestedEnumCollaboratorStatusFilter<$PrismaModel>
   }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
   export type JsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -73094,6 +73124,7 @@ export namespace Prisma {
     email?: SortOrder
     website?: SortOrder
     address?: SortOrder
+    countries?: SortOrder
     logo?: SortOrder
     notes?: SortOrder
     customFields?: SortOrder
@@ -77004,6 +77035,10 @@ export namespace Prisma {
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutCollaboratorsInput, ProjectUpdateWithoutCollaboratorsInput>, ProjectUncheckedUpdateWithoutCollaboratorsInput>
   }
 
+  export type CompanyCreatecountriesInput = {
+    set: string[]
+  }
+
   export type WorkspaceCreateNestedOneWithoutCompaniesInput = {
     create?: XOR<WorkspaceCreateWithoutCompaniesInput, WorkspaceUncheckedCreateWithoutCompaniesInput>
     connectOrCreate?: WorkspaceCreateOrConnectWithoutCompaniesInput
@@ -77050,6 +77085,11 @@ export namespace Prisma {
     connectOrCreate?: ProjectCreateOrConnectWithoutCompanyInput | ProjectCreateOrConnectWithoutCompanyInput[]
     createMany?: ProjectCreateManyCompanyInputEnvelope
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type CompanyUpdatecountriesInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -80501,6 +80541,7 @@ export namespace Prisma {
     email?: string | null
     website?: string | null
     address?: string | null
+    countries?: CompanyCreatecountriesInput | string[]
     logo?: string | null
     notes?: string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -80526,6 +80567,7 @@ export namespace Prisma {
     email?: string | null
     website?: string | null
     address?: string | null
+    countries?: CompanyCreatecountriesInput | string[]
     logo?: string | null
     notes?: string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -81405,6 +81447,7 @@ export namespace Prisma {
     email?: StringNullableFilter<"Company"> | string | null
     website?: StringNullableFilter<"Company"> | string | null
     address?: StringNullableFilter<"Company"> | string | null
+    countries?: StringNullableListFilter<"Company">
     logo?: StringNullableFilter<"Company"> | string | null
     notes?: StringNullableFilter<"Company"> | string | null
     customFields?: JsonNullableFilter<"Company">
@@ -84373,6 +84416,7 @@ export namespace Prisma {
     email?: string | null
     website?: string | null
     address?: string | null
+    countries?: CompanyCreatecountriesInput | string[]
     logo?: string | null
     notes?: string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -84399,6 +84443,7 @@ export namespace Prisma {
     email?: string | null
     website?: string | null
     address?: string | null
+    countries?: CompanyCreatecountriesInput | string[]
     logo?: string | null
     notes?: string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -84498,6 +84543,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    countries?: CompanyUpdatecountriesInput | string[]
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -84524,6 +84570,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    countries?: CompanyUpdatecountriesInput | string[]
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -85382,6 +85429,7 @@ export namespace Prisma {
     email?: string | null
     website?: string | null
     address?: string | null
+    countries?: CompanyCreatecountriesInput | string[]
     logo?: string | null
     notes?: string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -85408,6 +85456,7 @@ export namespace Prisma {
     email?: string | null
     website?: string | null
     address?: string | null
+    countries?: CompanyCreatecountriesInput | string[]
     logo?: string | null
     notes?: string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -85759,6 +85808,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    countries?: CompanyUpdatecountriesInput | string[]
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -85785,6 +85835,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    countries?: CompanyUpdatecountriesInput | string[]
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -86693,6 +86744,7 @@ export namespace Prisma {
     email?: string | null
     website?: string | null
     address?: string | null
+    countries?: CompanyCreatecountriesInput | string[]
     logo?: string | null
     notes?: string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -86719,6 +86771,7 @@ export namespace Prisma {
     email?: string | null
     website?: string | null
     address?: string | null
+    countries?: CompanyCreatecountriesInput | string[]
     logo?: string | null
     notes?: string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -87270,6 +87323,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    countries?: CompanyUpdatecountriesInput | string[]
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -87296,6 +87350,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    countries?: CompanyUpdatecountriesInput | string[]
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -94427,6 +94482,7 @@ export namespace Prisma {
     email?: string | null
     website?: string | null
     address?: string | null
+    countries?: CompanyCreatecountriesInput | string[]
     logo?: string | null
     notes?: string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -94808,6 +94864,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    countries?: CompanyUpdatecountriesInput | string[]
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -94833,6 +94890,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    countries?: CompanyUpdatecountriesInput | string[]
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue
@@ -94858,6 +94916,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    countries?: CompanyUpdatecountriesInput | string[]
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     customFields?: NullableJsonNullValueInput | InputJsonValue

@@ -13,12 +13,28 @@ async function requireCompaniesEdit() {
   if (!canEdit(member, "companies")) throw new Error("Permission denied");
 }
 
-const LIST_PAGE_SIZE = 50;
+// Company logos are small: downscale to 128px webp (~5-10 KB) and store as a
+// data URL directly on the row, so the table can render them with no extra
+// fetches or storage round-trips.
+async function processLogo(entry: FormDataEntryValue | null): Promise<string | undefined> {
+  if (!entry || typeof entry === "string" || entry.size === 0) return undefined;
+  if (entry.size > 5 * 1024 * 1024) throw new Error("Logo must be under 5 MB");
+  const { default: sharp } = await import("sharp");
+  const input = Buffer.from(await entry.arrayBuffer());
+  const out = await sharp(input)
+    .resize(128, 128, { fit: "cover" })
+    .webp({ quality: 82 })
+    .toBuffer();
+  return `data:image/webp;base64,${out.toString("base64")}`;
+}
 
-export async function getCompanies(opts?: { page?: number }) {
+// The companies table filters/sorts/paginates client-side (like the Lovable
+// design), so this returns the whole list capped at a sane maximum.
+const LIST_MAX = 1000;
+
+export async function getCompanies() {
   const workspace = await requireWorkspace();
-  const page = Math.max(1, opts?.page ?? 1);
-  const rows = await db.company.findMany({
+  return db.company.findMany({
     where: { workspaceId: workspace.id, deletedAt: null },
     select: {
       id: true,
@@ -26,6 +42,9 @@ export async function getCompanies(opts?: { page?: number }) {
       nameAr: true,
       industry: true,
       referral: true,
+      website: true,
+      countries: true,
+      logo: true,
       address: true,
       phone: true,
       email: true,
@@ -39,14 +58,8 @@ export async function getCompanies(opts?: { page?: number }) {
       },
     },
     orderBy: { createdAt: "desc" },
-    skip: (page - 1) * LIST_PAGE_SIZE,
-    take: LIST_PAGE_SIZE + 1,
+    take: LIST_MAX,
   });
-  return {
-    items: rows.slice(0, LIST_PAGE_SIZE),
-    page,
-    hasMore: rows.length > LIST_PAGE_SIZE,
-  };
 }
 
 // Slim id/name list for pickers (selects, comboboxes) — no counts or details.
@@ -102,6 +115,8 @@ export async function createCompany(formData: FormData): Promise<ActionResult<{ 
     const email = (formData.get("email") as string) || undefined;
     const website = (formData.get("website") as string) || undefined;
     const address = (formData.get("address") as string) || undefined;
+    const countries = formData.getAll("countries").map(String).filter(Boolean);
+    const logo = await processLogo(formData.get("logo"));
 
     const company = await db.company.create({
       data: {
@@ -117,6 +132,8 @@ export async function createCompany(formData: FormData): Promise<ActionResult<{ 
         email,
         website,
         address,
+        countries,
+        logo,
       },
     });
 

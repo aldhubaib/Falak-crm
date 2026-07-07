@@ -748,6 +748,41 @@ function CommentComposer({
   const [picked, setPicked] = useState<{ id: string; name: string }[]>([]);
   const [pickerIndex, setPickerIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  // Picked "@Name" mentions render in blue while typing. An input can only
+  // have one text color, so a mirror overlay paints the highlighted text and
+  // the input's own text turns transparent (keeping the caret) on top of it.
+  const highlightParts = useMemo(() => {
+    if (picked.length === 0) return null;
+    const names = picked
+      .map((p) => `@${p.name}`)
+      .sort((a, b) => b.length - a.length);
+    const nameSet = new Set(names);
+    const escaped = names.map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    const re = new RegExp(`(${escaped.join("|")})`, "g");
+    const parts = draft.split(re).filter((p) => p !== "");
+    if (!parts.some((p) => nameSet.has(p))) return null;
+    return parts.map((part, i) =>
+      nameSet.has(part) ? (
+        <span key={i} className="font-medium text-primary">
+          {part}
+        </span>
+      ) : (
+        <span key={i}>{part}</span>
+      ),
+    );
+  }, [draft, picked]);
+
+  const syncOverlayScroll = () => {
+    if (overlayRef.current && inputRef.current) {
+      overlayRef.current.scrollLeft = inputRef.current.scrollLeft;
+    }
+  };
+
+  useEffect(() => {
+    syncOverlayScroll();
+  }, [draft]);
 
   // Trailing "@query" token in the draft opens the member picker.
   const mentionToken = useMemo(() => {
@@ -830,10 +865,21 @@ function CommentComposer({
       )}
       <div className="flex items-center gap-2 rounded-md border border-border/60 bg-surface px-3 py-2">
         <AtSign className="h-4 w-4 shrink-0 text-muted-foreground" />
+        <div className="relative min-w-0 flex-1">
+          {highlightParts && (
+            <div
+              ref={overlayRef}
+              aria-hidden
+              className="pointer-events-none absolute inset-0 flex h-9 items-center overflow-hidden whitespace-pre text-base text-foreground md:text-sm"
+            >
+              {highlightParts}
+            </div>
+          )}
         <Input
           ref={inputRef}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
+          onScroll={syncOverlayScroll}
           onKeyDown={(e) => {
             if (pickerOpen) {
               if (e.key === "ArrowDown") {
@@ -865,8 +911,12 @@ function CommentComposer({
             }
           }}
           placeholder="Write a comment... Use @ to mention"
-          className="h-9 border-0 bg-transparent px-0 focus-visible:ring-0"
+          className={cn(
+            "relative h-9 border-0 bg-transparent px-0 focus-visible:ring-0",
+            highlightParts && "text-transparent caret-foreground",
+          )}
         />
+        </div>
         <Button
           size="icon"
           className="h-9 w-9 shrink-0 rounded-md"

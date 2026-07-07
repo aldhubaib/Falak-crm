@@ -1,26 +1,34 @@
 import { getCompanyOptions } from "@/actions/companies";
 import { getContactOptions } from "@/actions/contacts";
-import { AppHeader } from "@/components/app-header";
+import { getPipelineStages } from "@/actions/deals";
 import { NewDealClient } from "./new-deal-client";
 
-export default async function NewDealPage() {
-  const [companies, contacts] = await Promise.all([
+export default async function NewDealPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ companyId?: string }>;
+}) {
+  const [{ companyId }, companies, contacts, pipeline] = await Promise.all([
+    searchParams,
     getCompanyOptions(),
     getContactOptions(),
+    getPipelineStages(),
   ]);
 
   return (
-    <>
-      <AppHeader title="New Deal" />
-      <main className="min-h-0 flex-1 overflow-y-auto">
-        <NewDealClient
-          companies={companies}
-          contacts={contacts.map((c) => ({
-            id: c.id,
-            name: `${c.firstName} ${c.lastName}`,
-          }))}
-        />
-      </main>
-    </>
+    <NewDealClient
+      companies={companies}
+      contacts={contacts.map((c) => ({
+        id: c.id,
+        name: `${c.firstName} ${c.lastName}`,
+      }))}
+      pipelineId={pipeline?.id ?? ""}
+      stages={(pipeline?.stages ?? []).map((s) => ({
+        id: s.id,
+        name: s.name,
+        color: s.color,
+      }))}
+      initialCompanyId={companyId}
+    />
   );
 }

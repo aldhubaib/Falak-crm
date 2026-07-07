@@ -195,6 +195,7 @@ exports.Prisma.CompanyScalarFieldEnum = {
   email: 'email',
   website: 'website',
   address: 'address',
+  countries: 'countries',
   logo: 'logo',
   notes: 'notes',
   customFields: 'customFields',

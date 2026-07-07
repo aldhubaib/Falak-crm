@@ -162,6 +162,7 @@ model Company {
   email          String?
   website        String?
   address        String?
+  countries      String[]  @default([]) // ISO2 codes of operating countries
   logo           String?
   notes          String?
   customFields   Json?
