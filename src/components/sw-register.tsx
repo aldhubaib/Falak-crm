@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Bell, RefreshCw, X } from "lucide-react";
+import { Bell, X } from "lucide-react";
 import { pushSupported, syncPushSubscription } from "@/lib/push-client";
 
 const PUSH_DISMISSED_KEY = "falak-push-dismissed-at";
@@ -127,17 +127,27 @@ export function ServiceWorkerRegister() {
   if (showUpdate) {
     return (
       <div className="fixed inset-x-3 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-[9999] flex justify-center animate-in slide-in-from-bottom-4 fade-in duration-300 sm:inset-x-0 sm:bottom-6">
-        <div className="flex w-full max-w-sm items-center gap-3 rounded-2xl bg-primary px-4 py-3 text-primary-foreground shadow-2xl shadow-primary/20">
-          <RefreshCw className="h-5 w-5 shrink-0" />
-          <span className="min-w-0 flex-1 text-sm font-medium">
-            A new version is available
-          </span>
-          <button
-            onClick={handleUpdate}
-            className="flex h-9 shrink-0 items-center rounded-xl bg-white/20 px-4 text-sm font-bold transition-colors hover:bg-white/30 active:bg-white/40"
-          >
-            Update
-          </button>
+        <div className="flex w-full max-w-sm items-start gap-3.5 rounded-2xl border border-border bg-card p-4 text-foreground shadow-2xl">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/api/public/branding/appleTouchIcon"
+            alt=""
+            className="h-10 w-10 shrink-0 rounded-xl"
+          />
+          <div className="min-w-0 flex-1">
+            <div className="text-sm font-semibold">
+              A new version is available
+            </div>
+            <div className="mt-0.5 text-sm leading-snug text-muted-foreground">
+              Update now to get the latest features and fixes.
+            </div>
+            <button
+              onClick={handleUpdate}
+              className="mt-3 flex h-9 items-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90 active:bg-primary/80"
+            >
+              Update now
+            </button>
+          </div>
         </div>
       </div>
     );
