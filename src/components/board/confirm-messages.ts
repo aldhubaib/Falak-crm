@@ -2,13 +2,20 @@
 // board's drag-drop flow and the task detail page's Back/Next controls.
 export const CONFIRM_MESSAGES: Record<
   string,
-  { title: string; description: string; confirmLabel?: string }
+  {
+    title: string;
+    description: string;
+    confirmLabel?: string;
+    /** Show the ESTIMATED TIME picker in the confirm dialog. */
+    withEstimate?: boolean;
+  }
 > = {
   "In Progress": {
     title: "Move to In Progress",
     description:
       "By confirming, you acknowledge that you understand the requirements and are taking ownership of this task.",
     confirmLabel: "I Understand",
+    withEstimate: true,
   },
   "Internal Review": {
     title: "Submit for Internal Review",

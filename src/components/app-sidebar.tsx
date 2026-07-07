@@ -138,10 +138,10 @@ export function AppSidebar() {
                 <img
                   src={user.imageUrl}
                   alt={user.fullName ?? "You"}
-                  className="h-8 w-8 shrink-0 rounded-full object-cover"
+                  className="h-7 w-7 shrink-0 rounded-full object-cover"
                 />
               ) : (
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-500/80 text-sm font-semibold text-white">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal-500/80 text-xs font-semibold text-white">
                   {initials}
                 </div>
               )}

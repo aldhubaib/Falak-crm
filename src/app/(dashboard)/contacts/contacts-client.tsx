@@ -223,6 +223,15 @@ export function ContactsClient({
                     ? () => router.push(`/contacts/${selected.id}`)
                     : undefined
                 }
+                onWhatsapp={
+                  selected.phone
+                    ? () =>
+                        window.open(
+                          `https://wa.me/${selected.phone!.replace(/[^\d]/g, "")}`,
+                          "_blank",
+                        )
+                    : undefined
+                }
               />
             }
           >

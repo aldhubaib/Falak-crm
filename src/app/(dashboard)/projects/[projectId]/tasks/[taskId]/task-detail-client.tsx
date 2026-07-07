@@ -36,6 +36,7 @@ import {
   HelpCircle,
   LayoutGrid,
   Package,
+  Timer,
   Type as TypeIcon,
   VideoOff,
 } from "lucide-react";
@@ -96,6 +97,7 @@ import {
 } from "@/components/projects/dynamic-field";
 import { uploadManager, type UploadItem } from "@/lib/upload-manager";
 import { FormSection } from "@/components/projects/form-section";
+import { formatEstimate } from "@/lib/estimate";
 import { boardQueryKey } from "../../use-board";
 import type { BoardData } from "@/actions/board";
 
@@ -171,6 +173,7 @@ export function TaskDetailClient({
   taskNumber,
   typeName,
   priority,
+  estimateMin,
   statusName,
   statusColor,
   stageEnteredAt,
@@ -192,6 +195,8 @@ export function TaskDetailClient({
   taskNumber: number;
   typeName: string | null;
   priority: number | null;
+  /** Estimate picked when the task moved to In Progress (minutes). */
+  estimateMin: number | null;
   statusName: string | null;
   statusColor: string;
   stageEnteredAt: string | null;
@@ -427,6 +432,23 @@ export function TaskDetailClient({
             <PriorityDisplay value={priority} />
           </FormSection>
 
+          <FormSection
+            icon={<Timer className="size-4" />}
+            title="Estimated Time"
+            hint="Picked by the assignee when the task moved to In Progress."
+          >
+            {estimateMin != null ? (
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/60 bg-primary/10 px-3.5 py-1.5 text-xs font-medium tabular-nums text-primary">
+                <Timer className="size-3.5" />
+                {formatEstimate(estimateMin)}
+              </span>
+            ) : (
+              <span className="text-xs text-muted-foreground">
+                Not set yet — chosen when the task moves to In Progress.
+              </span>
+            )}
+          </FormSection>
+
           {/* Requirements */}
           <FormSection
             icon={<HelpCircle className="size-4" />}
@@ -511,6 +533,7 @@ export function TaskDetailClient({
           stageEnteredAt={stageEnteredAt}
           history={history}
           totalTimeMs={totalTimeMs}
+          estimateMin={estimateMin}
           tab={historyTab}
           onTabChange={setHistoryTab}
           onClose={() => setHistoryOpen(false)}
@@ -565,10 +588,20 @@ function StatusMoveBar({
 
   if (!current || (!showNext && !showBack)) return null;
 
-  const doMove = async (targetId: string): Promise<boolean> => {
+  const doMove = async (
+    targetId: string,
+    estimateMin?: number | null,
+  ): Promise<boolean> => {
     setMoving(true);
     try {
-      await updateTaskStatus(taskId, targetId, projectId);
+      await updateTaskStatus(
+        taskId,
+        targetId,
+        projectId,
+        undefined,
+        undefined,
+        estimateMin,
+      );
       // The board keeps its own client cache — refetch it so the card is in
       // the right column when the user navigates back.
       void queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
@@ -692,13 +725,14 @@ function StatusMoveBar({
       <ConfirmStatusDialog
         open={confirmNext}
         onClose={() => setConfirmNext(false)}
-        onConfirm={() => {
+        onConfirm={(estimateMin) => {
           setConfirmNext(false);
-          if (next) void doMove(next.id);
+          if (next) void doMove(next.id, estimateMin);
         }}
         title={confirmMsg?.title ?? ""}
         description={confirmMsg?.description ?? ""}
         confirmLabel={confirmMsg?.confirmLabel}
+        withEstimate={!!confirmMsg?.withEstimate}
       />
 
       {/* Backward move decline */}
@@ -1040,6 +1074,7 @@ function TaskHistoryPanel({
   stageEnteredAt,
   history,
   totalTimeMs,
+  estimateMin,
   tab,
   onTabChange,
   onClose,
@@ -1049,6 +1084,7 @@ function TaskHistoryPanel({
   stageEnteredAt: string | null;
   history: HistoryEntry[];
   totalTimeMs: number;
+  estimateMin: number | null;
   tab: "all" | "comments" | "status";
   onTabChange: (tab: "all" | "comments" | "status") => void;
   onClose: () => void;
@@ -1073,10 +1109,18 @@ function TaskHistoryPanel({
       <div className="flex items-center gap-3 border-b border-border/60 px-4 py-3">
         <History className="h-4 w-4 text-muted-foreground" />
         <span className="text-sm font-semibold">Task History</span>
-        <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-[10px] font-mono tabular-nums text-muted-foreground">
-          <Clock className="h-3 w-3" />
-          Total {formatDurationMs(totalTimeMs)}
-        </span>
+        <div className="ml-auto flex items-center gap-1.5">
+          {estimateMin != null && (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[10px] font-mono tabular-nums text-primary">
+              <Timer className="h-3 w-3" />
+              Est {formatEstimate(estimateMin)}
+            </span>
+          )}
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-[10px] font-mono tabular-nums text-muted-foreground">
+            <Clock className="h-3 w-3" />
+            Total {formatDurationMs(totalTimeMs)}
+          </span>
+        </div>
         <button
           type="button"
           onClick={onClose}

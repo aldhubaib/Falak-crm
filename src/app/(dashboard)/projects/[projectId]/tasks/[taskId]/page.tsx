@@ -203,6 +203,7 @@ export default async function TaskDetailPage({
       taskNumber={task.taskNumber}
       typeName={typeName}
       priority={task.priority}
+      estimateMin={task.estimateMin}
       statusName={task.status?.name ?? null}
       statusColor={task.status?.color ?? "#3b82f6"}
       move={{

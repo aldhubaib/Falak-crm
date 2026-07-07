@@ -489,6 +489,8 @@ export async function updateTaskStatus(
   projectId: string,
   dealId?: string,
   actorClientId?: string | null,
+  /** Estimate picked in the In Progress confirm dialog; saved with the move. */
+  estimateMin?: number | null,
 ) {
   const access = await requireProjectWork(projectId);
   const { workspace, member } = access;
@@ -617,6 +619,7 @@ export async function updateTaskStatus(
         assignmentHistory: history,
         stageTimings: timings,
         stageEnteredAt: now,
+        ...(estimateMin !== undefined ? { estimateMin } : {}),
         rejectionCount: !isForward ? { increment: 1 } : undefined,
         completedAt: targetStatus?.name === "Completed" || targetStatus?.name === "Published" ? now : null,
       },

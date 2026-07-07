@@ -354,8 +354,19 @@ export function ProjectBoardClient({
   );
 
   const moveMutation = useMutation({
-    mutationFn: (vars: { taskId: string; statusId: string }) =>
-      updateTaskStatus(vars.taskId, vars.statusId, projectId, undefined, clientId),
+    mutationFn: (vars: {
+      taskId: string;
+      statusId: string;
+      estimateMin?: number | null;
+    }) =>
+      updateTaskStatus(
+        vars.taskId,
+        vars.statusId,
+        projectId,
+        undefined,
+        clientId,
+        vars.estimateMin,
+      ),
     onMutate: async (vars) => {
       const key = boardQueryKey(projectId);
       await queryClient.cancelQueries({ queryKey: key });
@@ -411,8 +422,8 @@ export function ProjectBoardClient({
   });
 
   const moveTask = useCallback(
-    (taskId: string, statusId: string) => {
-      moveMutation.mutate({ taskId, statusId });
+    (taskId: string, statusId: string, estimateMin?: number | null) => {
+      moveMutation.mutate({ taskId, statusId, estimateMin });
     },
     [moveMutation],
   );
@@ -685,13 +696,15 @@ export function ProjectBoardClient({
       <ConfirmStatusDialog
         open={confirmMove !== null}
         onClose={() => setConfirmMove(null)}
-        onConfirm={() => {
-          if (confirmMove) moveTask(confirmMove.taskId, confirmMove.toStatusId);
+        onConfirm={(estimateMin) => {
+          if (confirmMove)
+            moveTask(confirmMove.taskId, confirmMove.toStatusId, estimateMin);
           setConfirmMove(null);
         }}
         title={confirmMsg?.title ?? ""}
         description={confirmMsg?.description ?? ""}
         confirmLabel={confirmMsg?.confirmLabel}
+        withEstimate={!!confirmMsg?.withEstimate}
       />
 
       {/* Backward move decline */}

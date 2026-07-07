@@ -461,6 +461,42 @@ export function ThreadChat({
     setTimeout(() => composerRef.current?.focus(), 0);
   };
 
+  // Picked "@Name" mentions render in blue while typing. A textarea can only
+  // have one text color, so a mirror overlay paints the highlighted text and
+  // the textarea's own text turns transparent (keeping the caret) on top.
+  const mentionOverlayRef = useRef<HTMLDivElement>(null);
+  const mentionHighlight = useMemo(() => {
+    if (pickedMentions.length === 0) return null;
+    const names = pickedMentions
+      .map((p) => `@${p.name}`)
+      .sort((a, b) => b.length - a.length);
+    const nameSet = new Set(names);
+    const escaped = names.map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    const re = new RegExp(`(${escaped.join("|")})`, "g");
+    const parts = draft.split(re).filter((p) => p !== "");
+    if (!parts.some((p) => nameSet.has(p))) return null;
+    return parts.map((part, i) =>
+      nameSet.has(part) ? (
+        <span key={i} className="font-medium text-primary">
+          {part}
+        </span>
+      ) : (
+        <span key={i}>{part}</span>
+      ),
+    );
+  }, [draft, pickedMentions]);
+
+  const syncMentionOverlay = () => {
+    if (mentionOverlayRef.current && composerRef.current) {
+      mentionOverlayRef.current.scrollTop = composerRef.current.scrollTop;
+    }
+  };
+
+  useEffect(() => {
+    syncMentionOverlay();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft]);
+
   // Files wait locally (no upload) until the user presses Send — WhatsApp-style.
   const pickFiles = (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -1597,6 +1633,16 @@ export function ThreadChat({
             >
               <Paperclip className="h-4 w-4" />
             </Button>
+            <div className="relative min-w-0 flex-1">
+              {mentionHighlight && (
+                <div
+                  ref={mentionOverlayRef}
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words p-2 text-sm text-foreground"
+                >
+                  {mentionHighlight}
+                </div>
+              )}
             <Textarea
               ref={composerRef}
               value={draft}
@@ -1604,6 +1650,7 @@ export function ThreadChat({
                 setDraft(e.target.value);
                 notifyTyping();
               }}
+              onScroll={syncMentionOverlay}
               onKeyDown={(e) => {
                 if (pickerOpen) {
                   if (e.key === "ArrowDown") {
@@ -1670,9 +1717,13 @@ export function ThreadChat({
                     ? `Message ${title} — # links a task, @ mentions`
                     : `Message ${title}`
               }
-              className="min-h-10 flex-1 resize-none border-0 bg-transparent p-2 text-sm shadow-none focus-visible:ring-0"
+              className={cn(
+                "relative min-h-10 w-full resize-none border-0 bg-transparent p-2 text-sm shadow-none focus-visible:ring-0",
+                mentionHighlight && "text-transparent caret-foreground",
+              )}
               rows={1}
             />
+            </div>
             {draft.trim() || pending.length > 0 ? (
               <Button
                 size="icon"
