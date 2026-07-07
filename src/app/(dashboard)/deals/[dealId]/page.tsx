@@ -1,11 +1,15 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { Edit3 } from "lucide-react";
 import { getDeal } from "@/actions/deals";
 import { getCompanyOptions } from "@/actions/companies";
 import { getContactOptions } from "@/actions/contacts";
+import { requireWorkspaceWithMember } from "@/lib/workspace";
+import { canEdit } from "@/lib/permissions";
 import { AppHeader } from "@/components/app-header";
 import { SurfaceCard } from "@/components/surface-card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { DealActions } from "./deal-actions";
 import { DealRelated } from "./deal-related";
 
@@ -15,12 +19,14 @@ export default async function DealDetailPage({
   params: Promise<{ dealId: string }>;
 }) {
   const { dealId } = await params;
-  const [deal, companyOptions, contactOptions] = await Promise.all([
+  const [{ member }, deal, companyOptions, contactOptions] = await Promise.all([
+    requireWorkspaceWithMember(),
     getDeal(dealId),
     getCompanyOptions(),
     getContactOptions(),
   ]);
   if (!deal) notFound();
+  const editable = canEdit(member, "deals");
 
   const subtotal = deal.items.reduce(
     (sum, item) => sum + Number(item.unitPrice) * item.quantity,
@@ -29,7 +35,25 @@ export default async function DealDetailPage({
 
   return (
     <>
-      <AppHeader title={deal.title} />
+      <AppHeader
+        title={deal.title}
+        backHref="/deals"
+        actions={
+          editable ? (
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="rounded-full"
+            >
+              <Link href={`/deals/${deal.id}/edit`}>
+                <Edit3 className="h-4 w-4" />
+                Edit
+              </Link>
+            </Button>
+          ) : undefined
+        }
+      />
       <main className="min-h-0 flex-1 overflow-y-auto">
         <div className="mx-auto max-w-3xl space-y-4 p-5">
           <SurfaceCard className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

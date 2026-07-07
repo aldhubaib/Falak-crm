@@ -238,7 +238,9 @@ export function DealsClient({
             toolbar={
               <EntityPreviewToolbar
                 onEdit={
-                  editable ? () => router.push(`/deals/${selected.id}`) : undefined
+                  editable
+                    ? () => router.push(`/deals/${selected.id}/edit`)
+                    : undefined
                 }
               />
             }

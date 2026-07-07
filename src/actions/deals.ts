@@ -226,6 +226,56 @@ export async function createDeal(formData: FormData): Promise<ActionResult<{ id:
   }, { formFields: Object.fromEntries(formData) });
 }
 
+export async function updateDeal(
+  id: string,
+  formData: FormData,
+): Promise<ActionResult<{ id: string }>> {
+  return safeAction("Update Deal", async () => {
+    const { workspace, member } = await requireWorkspaceWithMember();
+    if (!canEdit(member, "deals")) throw new Error("Permission denied");
+
+    const existing = await db.deal.findFirst({
+      where: { id, workspaceId: workspace.id, deletedAt: null },
+      select: { id: true, currency: true },
+    });
+    if (!existing) throw new Error("Deal not found");
+
+    const title = (formData.get("title") as string)?.trim();
+    if (!title) throw new Error("Title is required");
+    const value = parseFloat(formData.get("value") as string) || 0;
+    const companyId = (formData.get("companyId") as string) || null;
+    const contactId = (formData.get("contactId") as string) || null;
+    const stageId = (formData.get("stageId") as string) || undefined;
+
+    const rateToBase = await getLatestRateForCurrency(existing.currency);
+    const valueInBase = rateToBase != null ? value * rateToBase : null;
+
+    await db.deal.update({
+      where: { id: existing.id },
+      data: {
+        title,
+        value,
+        rateToBase,
+        valueInBase,
+        companyId,
+        contactId,
+        ...(stageId ? { stageId } : {}),
+      },
+    });
+
+    await logActivity({
+      entityType: "deal",
+      entityId: existing.id,
+      entityName: title,
+      action: "updated",
+    });
+
+    revalidatePath("/deals");
+    revalidatePath(`/deals/${existing.id}`);
+    return { id: existing.id };
+  }, { formFields: Object.fromEntries(formData) });
+}
+
 export async function moveDeal(id: string, stageId: string): Promise<ActionResult> {
   return safeAction("Move Deal", async () => {
     const { workspace, member } = await requireWorkspaceWithMember();

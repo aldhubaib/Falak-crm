@@ -2,13 +2,49 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, ArrowDown } from "lucide-react";
+import { Loader2, ArrowDown, TriangleAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Distance (px) the finger must travel before releasing triggers a refresh.
 const TRIGGER_PX = 70;
 // Cap so the indicator stops following the finger at some point.
 const MAX_PULL_PX = 110;
+
+// True when any form control on the page holds text/choices the user entered
+// but hasn't saved — refreshing would throw that work away. Compares each
+// control's live value against the value it was rendered with, so pre-filled
+// edit forms only count once the user actually changes something.
+function hasUnsavedInput(): boolean {
+  const els = document.querySelectorAll<HTMLElement>(
+    "input, textarea, [contenteditable='true'], [contenteditable='']",
+  );
+  for (const el of els) {
+    // Opt-out hatch for controls whose content is not worth protecting.
+    if (el.closest("[data-refresh-safe]")) continue;
+    if (el instanceof HTMLInputElement) {
+      if (el.disabled || el.readOnly) continue;
+      const type = el.type;
+      if (["hidden", "submit", "button", "reset", "range"].includes(type)) continue;
+      // Search/filter boxes aren't "work" — losing them to a refresh is fine.
+      // The app's search inputs are plain text inputs with "Search…"
+      // placeholders, so match those too.
+      if (type === "search" || el.getAttribute("role") === "searchbox") continue;
+      if (/^search/i.test(el.placeholder)) continue;
+      if (type === "checkbox" || type === "radio") {
+        if (el.checked !== el.defaultChecked) return true;
+      } else if (type === "file") {
+        if ((el.files?.length ?? 0) > 0) return true;
+      } else if (el.value !== el.defaultValue) {
+        return true;
+      }
+    } else if (el instanceof HTMLTextAreaElement) {
+      if (!el.disabled && !el.readOnly && el.value !== el.defaultValue) return true;
+    } else if (el.isContentEditable) {
+      if ((el.textContent ?? "").trim().length > 0) return true;
+    }
+  }
+  return false;
+}
 
 // Pull-to-refresh for the installed PWA. Browsers provide this natively, but
 // standalone mode (iOS/Android home-screen installs) has no way to reload a
@@ -20,8 +56,13 @@ export function PullToRefresh() {
   const [pull, setPull] = useState(0);
   const [refreshing, startTransition] = useTransition();
   const [enabled, setEnabled] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const startYRef = useRef<number | null>(null);
   const armedRef = useRef(false);
+  // Checked once when the gesture arms — querying the whole DOM on every
+  // touchmove would be wasteful.
+  const dirtyRef = useRef(false);
+  const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
     const standalone =
@@ -46,6 +87,10 @@ export function PullToRefresh() {
       if (e.touches.length !== 1) return;
       armedRef.current = atTop(e.target);
       startYRef.current = e.touches[0].clientY;
+      if (armedRef.current) {
+        dirtyRef.current = hasUnsavedInput();
+        setDirty(dirtyRef.current);
+      }
     };
 
     const onMove = (e: TouchEvent) => {
@@ -62,7 +107,12 @@ export function PullToRefresh() {
     const onEnd = () => {
       if (armedRef.current && startYRef.current != null) {
         setPull((p) => {
-          if (p >= TRIGGER_PX) startTransition(() => router.refresh());
+          if (p >= TRIGGER_PX) {
+            // Unsaved form data on the page? Ask before throwing it away —
+            // this gesture is easy to hit accidentally while scrolling.
+            if (dirtyRef.current) setConfirmOpen(true);
+            else startTransition(() => router.refresh());
+          }
           return 0;
         });
       }
@@ -82,36 +132,93 @@ export function PullToRefresh() {
     };
   }, [enabled, router]);
 
-  const visible = pull > 8 || refreshing;
-  if (!enabled || !visible) return null;
+  if (!enabled) return null;
 
+  const visible = pull > 8 || refreshing;
   const ready = pull >= TRIGGER_PX;
 
+  const confirmRefresh = () => {
+    setConfirmOpen(false);
+    startTransition(() => router.refresh());
+  };
+
   return (
-    <div
-      className="pointer-events-none fixed inset-x-0 top-0 z-[60] flex justify-center"
-      style={{
-        transform: `translateY(${refreshing ? 16 : Math.max(pull - 40, -40)}px)`,
-        transition: pull === 0 ? "transform 200ms ease" : undefined,
-      }}
-    >
-      <div
-        className={cn(
-          "grid h-9 w-9 place-items-center rounded-full border border-border/60 bg-surface shadow-lg",
-          ready && !refreshing && "border-primary/50",
-        )}
-      >
-        {refreshing ? (
-          <Loader2 className="h-4 w-4 animate-spin text-primary" />
-        ) : (
-          <ArrowDown
+    <>
+      {visible && (
+        <div
+          className="pointer-events-none fixed inset-x-0 top-0 z-[60] flex justify-center"
+          style={{
+            transform: `translateY(${refreshing ? 16 : Math.max(pull - 40, -40)}px)`,
+            transition: pull === 0 ? "transform 200ms ease" : undefined,
+          }}
+        >
+          <div
             className={cn(
-              "h-4 w-4 transition-transform",
-              ready ? "rotate-180 text-primary" : "text-muted-foreground",
+              "grid h-9 w-9 place-items-center rounded-full border border-border/60 bg-surface shadow-lg",
+              ready && !refreshing && (dirty ? "border-amber-500/60" : "border-primary/50"),
             )}
+          >
+            {refreshing ? (
+              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+            ) : ready && dirty ? (
+              <TriangleAlert className="h-4 w-4 text-amber-400" />
+            ) : (
+              <ArrowDown
+                className={cn(
+                  "h-4 w-4 transition-transform",
+                  ready ? "rotate-180 text-primary" : "text-muted-foreground",
+                )}
+              />
+            )}
+          </div>
+        </div>
+      )}
+
+      {confirmOpen && (
+        <div className="fixed inset-0 z-[600] flex items-end justify-center lg:items-center">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setConfirmOpen(false)}
           />
-        )}
-      </div>
-    </div>
+          <div
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="ptr-confirm-title"
+            className="relative w-full rounded-t-2xl border border-border bg-background p-card pb-[max(env(safe-area-inset-bottom),16px)] lg:w-[420px] lg:rounded-2xl lg:pb-card"
+            style={{ containerType: "inline-size" }}
+          >
+            <div className="flex items-start gap-3">
+              <div className="grid size-10 shrink-0 place-items-center rounded-full bg-amber-500/15">
+                <TriangleAlert className="w-icon-md h-icon-md text-amber-400" />
+              </div>
+              <div className="min-w-0">
+                <h2 id="ptr-confirm-title" className="text-subheading font-semibold">
+                  Refresh this page?
+                </h2>
+                <p className="mt-1 text-sub text-muted-foreground">
+                  You have unsaved changes — refreshing will discard them.
+                </p>
+              </div>
+            </div>
+            <div className="mt-5 flex flex-col gap-2 @md:flex-row-reverse">
+              <button
+                type="button"
+                onClick={() => setConfirmOpen(false)}
+                className="min-h-touch w-full rounded-xl bg-primary px-6 text-button font-semibold text-primary-foreground active:opacity-80 @md:w-auto"
+              >
+                Stay here
+              </button>
+              <button
+                type="button"
+                onClick={confirmRefresh}
+                className="min-h-touch w-full rounded-xl border border-border px-4 text-button font-medium text-muted-foreground hover:bg-muted/20 active:opacity-80 @md:w-auto"
+              >
+                Refresh & discard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

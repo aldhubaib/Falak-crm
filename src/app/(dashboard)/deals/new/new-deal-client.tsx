@@ -1,8 +1,8 @@
 "use client";
 
-// New Deal form, matching the Lovable design: title/value/stage/company (and
-// contact) field cards in a two-column grid with the save action in the
-// header.
+// New Deal / Edit Deal form, matching the Lovable design: title/value/stage/
+// company (and contact) field cards in a two-column grid with the save action
+// in the header.
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -18,12 +18,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createDeal } from "@/actions/deals";
+import { createDeal, updateDeal } from "@/actions/deals";
 
 const INPUT_CLS =
   "h-9 border-0 bg-transparent px-0 shadow-none focus-visible:ring-0";
 const TRIGGER_CLS =
   "h-9 border-0 bg-transparent px-0 shadow-none focus:ring-0";
+
+export type DealFormInitial = {
+  title: string;
+  value: number;
+  stageId: string;
+  companyId: string;
+  contactId: string;
+};
 
 export function NewDealClient({
   companies,
@@ -31,21 +39,33 @@ export function NewDealClient({
   pipelineId,
   stages,
   initialCompanyId,
+  dealId,
+  initial,
 }: {
   companies: { id: string; name: string }[];
   contacts: { id: string; name: string }[];
   pipelineId: string;
   stages: { id: string; name: string; color: string }[];
   initialCompanyId?: string;
+  /** When set, the form edits this deal instead of creating a new one. */
+  dealId?: string;
+  initial?: DealFormInitial;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const isEdit = !!dealId;
 
-  const [title, setTitle] = useState("");
-  const [value, setValue] = useState("");
-  const [stageId, setStageId] = useState(stages[0]?.id ?? "");
-  const [companyId, setCompanyId] = useState(initialCompanyId ?? "");
-  const [contactId, setContactId] = useState("");
+  const [title, setTitle] = useState(initial?.title ?? "");
+  const [value, setValue] = useState(
+    initial && initial.value ? String(initial.value) : "",
+  );
+  const [stageId, setStageId] = useState(
+    initial?.stageId || stages[0]?.id || "",
+  );
+  const [companyId, setCompanyId] = useState(
+    initial?.companyId ?? initialCompanyId ?? "",
+  );
+  const [contactId, setContactId] = useState(initial?.contactId ?? "");
 
   const canSave = !!title.trim();
 
@@ -61,7 +81,9 @@ export function NewDealClient({
     if (companyId) fd.set("companyId", companyId);
     if (contactId) fd.set("contactId", contactId);
     startTransition(async () => {
-      const result = await createDeal(fd);
+      const result = dealId
+        ? await updateDeal(dealId, fd)
+        : await createDeal(fd);
       if (result.ok) router.push(`/deals/${result.data.id}`);
     });
   };
@@ -69,8 +91,8 @@ export function NewDealClient({
   return (
     <>
       <AppHeader
-        title="New Deal"
-        backHref="/deals"
+        title={isEdit ? "Edit Deal" : "New Deal"}
+        backHref={isEdit ? `/deals/${dealId}` : "/deals"}
         actions={
           <SaveButton
             onClick={save}
