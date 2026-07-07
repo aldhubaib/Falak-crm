@@ -1,4 +1,4 @@
-const CACHE_NAME = "falak-crm-d9fd96f4";
+const CACHE_NAME = "falak-crm-9574f3f7";
 
 self.addEventListener("install", () => {
   // Don't skipWaiting automatically — wait for user to accept the update

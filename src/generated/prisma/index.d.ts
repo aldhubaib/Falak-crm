@@ -5775,11 +5775,13 @@ export namespace Prisma {
   export type DealCountOutputType = {
     items: number
     accessGrants: number
+    invoices: number
   }
 
   export type DealCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | DealCountOutputTypeCountItemsArgs
     accessGrants?: boolean | DealCountOutputTypeCountAccessGrantsArgs
+    invoices?: boolean | DealCountOutputTypeCountInvoicesArgs
   }
 
   // Custom InputTypes
@@ -5805,6 +5807,13 @@ export namespace Prisma {
    */
   export type DealCountOutputTypeCountAccessGrantsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DealAccessWhereInput
+  }
+
+  /**
+   * DealCountOutputType without action
+   */
+  export type DealCountOutputTypeCountInvoicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InvoiceWhereInput
   }
 
 
@@ -21524,6 +21533,7 @@ export namespace Prisma {
     items?: boolean | Deal$itemsArgs<ExtArgs>
     project?: boolean | Deal$projectArgs<ExtArgs>
     accessGrants?: boolean | Deal$accessGrantsArgs<ExtArgs>
+    invoices?: boolean | Deal$invoicesArgs<ExtArgs>
     _count?: boolean | DealCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["deal"]>
 
@@ -21628,6 +21638,7 @@ export namespace Prisma {
     items?: boolean | Deal$itemsArgs<ExtArgs>
     project?: boolean | Deal$projectArgs<ExtArgs>
     accessGrants?: boolean | Deal$accessGrantsArgs<ExtArgs>
+    invoices?: boolean | Deal$invoicesArgs<ExtArgs>
     _count?: boolean | DealCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DealIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -21656,6 +21667,7 @@ export namespace Prisma {
       items: Prisma.$DealItemPayload<ExtArgs>[]
       project: Prisma.$ProjectPayload<ExtArgs> | null
       accessGrants: Prisma.$DealAccessPayload<ExtArgs>[]
+      invoices: Prisma.$InvoicePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -22084,6 +22096,7 @@ export namespace Prisma {
     items<T extends Deal$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Deal$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DealItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     project<T extends Deal$projectArgs<ExtArgs> = {}>(args?: Subset<T, Deal$projectArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     accessGrants<T extends Deal$accessGrantsArgs<ExtArgs> = {}>(args?: Subset<T, Deal$accessGrantsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DealAccessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    invoices<T extends Deal$invoicesArgs<ExtArgs> = {}>(args?: Subset<T, Deal$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -22640,6 +22653,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DealAccessScalarFieldEnum | DealAccessScalarFieldEnum[]
+  }
+
+  /**
+   * Deal.invoices
+   */
+  export type Deal$invoicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Invoice
+     */
+    select?: InvoiceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Invoice
+     */
+    omit?: InvoiceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InvoiceInclude<ExtArgs> | null
+    where?: InvoiceWhereInput
+    orderBy?: InvoiceOrderByWithRelationInput | InvoiceOrderByWithRelationInput[]
+    cursor?: InvoiceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InvoiceScalarFieldEnum | InvoiceScalarFieldEnum[]
   }
 
   /**
@@ -47781,6 +47818,7 @@ export namespace Prisma {
   export type InvoiceAvgAggregateOutputType = {
     subtotal: Decimal | null
     taxAmount: Decimal | null
+    discountValue: Decimal | null
     total: Decimal | null
     rateToBase: Decimal | null
     totalInBase: Decimal | null
@@ -47789,6 +47827,7 @@ export namespace Prisma {
   export type InvoiceSumAggregateOutputType = {
     subtotal: Decimal | null
     taxAmount: Decimal | null
+    discountValue: Decimal | null
     total: Decimal | null
     rateToBase: Decimal | null
     totalInBase: Decimal | null
@@ -47799,15 +47838,19 @@ export namespace Prisma {
     workspaceId: string | null
     projectId: string | null
     contactId: string | null
+    dealId: string | null
     number: string | null
     status: $Enums.InvoiceStatus | null
     subtotal: Decimal | null
     taxAmount: Decimal | null
+    discountType: string | null
+    discountValue: Decimal | null
     total: Decimal | null
     rateToBase: Decimal | null
     totalInBase: Decimal | null
     currency: string | null
     notes: string | null
+    issueDate: Date | null
     dueDate: Date | null
     sentAt: Date | null
     acceptedAt: Date | null
@@ -47824,15 +47867,19 @@ export namespace Prisma {
     workspaceId: string | null
     projectId: string | null
     contactId: string | null
+    dealId: string | null
     number: string | null
     status: $Enums.InvoiceStatus | null
     subtotal: Decimal | null
     taxAmount: Decimal | null
+    discountType: string | null
+    discountValue: Decimal | null
     total: Decimal | null
     rateToBase: Decimal | null
     totalInBase: Decimal | null
     currency: string | null
     notes: string | null
+    issueDate: Date | null
     dueDate: Date | null
     sentAt: Date | null
     acceptedAt: Date | null
@@ -47849,15 +47896,19 @@ export namespace Prisma {
     workspaceId: number
     projectId: number
     contactId: number
+    dealId: number
     number: number
     status: number
     subtotal: number
     taxAmount: number
+    discountType: number
+    discountValue: number
     total: number
     rateToBase: number
     totalInBase: number
     currency: number
     notes: number
+    issueDate: number
     dueDate: number
     sentAt: number
     acceptedAt: number
@@ -47874,6 +47925,7 @@ export namespace Prisma {
   export type InvoiceAvgAggregateInputType = {
     subtotal?: true
     taxAmount?: true
+    discountValue?: true
     total?: true
     rateToBase?: true
     totalInBase?: true
@@ -47882,6 +47934,7 @@ export namespace Prisma {
   export type InvoiceSumAggregateInputType = {
     subtotal?: true
     taxAmount?: true
+    discountValue?: true
     total?: true
     rateToBase?: true
     totalInBase?: true
@@ -47892,15 +47945,19 @@ export namespace Prisma {
     workspaceId?: true
     projectId?: true
     contactId?: true
+    dealId?: true
     number?: true
     status?: true
     subtotal?: true
     taxAmount?: true
+    discountType?: true
+    discountValue?: true
     total?: true
     rateToBase?: true
     totalInBase?: true
     currency?: true
     notes?: true
+    issueDate?: true
     dueDate?: true
     sentAt?: true
     acceptedAt?: true
@@ -47917,15 +47974,19 @@ export namespace Prisma {
     workspaceId?: true
     projectId?: true
     contactId?: true
+    dealId?: true
     number?: true
     status?: true
     subtotal?: true
     taxAmount?: true
+    discountType?: true
+    discountValue?: true
     total?: true
     rateToBase?: true
     totalInBase?: true
     currency?: true
     notes?: true
+    issueDate?: true
     dueDate?: true
     sentAt?: true
     acceptedAt?: true
@@ -47942,15 +48003,19 @@ export namespace Prisma {
     workspaceId?: true
     projectId?: true
     contactId?: true
+    dealId?: true
     number?: true
     status?: true
     subtotal?: true
     taxAmount?: true
+    discountType?: true
+    discountValue?: true
     total?: true
     rateToBase?: true
     totalInBase?: true
     currency?: true
     notes?: true
+    issueDate?: true
     dueDate?: true
     sentAt?: true
     acceptedAt?: true
@@ -48054,15 +48119,19 @@ export namespace Prisma {
     workspaceId: string
     projectId: string | null
     contactId: string | null
+    dealId: string | null
     number: string
     status: $Enums.InvoiceStatus
     subtotal: Decimal
     taxAmount: Decimal
+    discountType: string
+    discountValue: Decimal
     total: Decimal
     rateToBase: Decimal | null
     totalInBase: Decimal | null
     currency: string
     notes: string | null
+    issueDate: Date | null
     dueDate: Date | null
     sentAt: Date | null
     acceptedAt: Date | null
@@ -48098,15 +48167,19 @@ export namespace Prisma {
     workspaceId?: boolean
     projectId?: boolean
     contactId?: boolean
+    dealId?: boolean
     number?: boolean
     status?: boolean
     subtotal?: boolean
     taxAmount?: boolean
+    discountType?: boolean
+    discountValue?: boolean
     total?: boolean
     rateToBase?: boolean
     totalInBase?: boolean
     currency?: boolean
     notes?: boolean
+    issueDate?: boolean
     dueDate?: boolean
     sentAt?: boolean
     acceptedAt?: boolean
@@ -48119,6 +48192,7 @@ export namespace Prisma {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     project?: boolean | Invoice$projectArgs<ExtArgs>
     contact?: boolean | Invoice$contactArgs<ExtArgs>
+    deal?: boolean | Invoice$dealArgs<ExtArgs>
     items?: boolean | Invoice$itemsArgs<ExtArgs>
     _count?: boolean | InvoiceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
@@ -48128,15 +48202,19 @@ export namespace Prisma {
     workspaceId?: boolean
     projectId?: boolean
     contactId?: boolean
+    dealId?: boolean
     number?: boolean
     status?: boolean
     subtotal?: boolean
     taxAmount?: boolean
+    discountType?: boolean
+    discountValue?: boolean
     total?: boolean
     rateToBase?: boolean
     totalInBase?: boolean
     currency?: boolean
     notes?: boolean
+    issueDate?: boolean
     dueDate?: boolean
     sentAt?: boolean
     acceptedAt?: boolean
@@ -48149,6 +48227,7 @@ export namespace Prisma {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     project?: boolean | Invoice$projectArgs<ExtArgs>
     contact?: boolean | Invoice$contactArgs<ExtArgs>
+    deal?: boolean | Invoice$dealArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
 
   export type InvoiceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -48156,15 +48235,19 @@ export namespace Prisma {
     workspaceId?: boolean
     projectId?: boolean
     contactId?: boolean
+    dealId?: boolean
     number?: boolean
     status?: boolean
     subtotal?: boolean
     taxAmount?: boolean
+    discountType?: boolean
+    discountValue?: boolean
     total?: boolean
     rateToBase?: boolean
     totalInBase?: boolean
     currency?: boolean
     notes?: boolean
+    issueDate?: boolean
     dueDate?: boolean
     sentAt?: boolean
     acceptedAt?: boolean
@@ -48177,6 +48260,7 @@ export namespace Prisma {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     project?: boolean | Invoice$projectArgs<ExtArgs>
     contact?: boolean | Invoice$contactArgs<ExtArgs>
+    deal?: boolean | Invoice$dealArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
 
   export type InvoiceSelectScalar = {
@@ -48184,15 +48268,19 @@ export namespace Prisma {
     workspaceId?: boolean
     projectId?: boolean
     contactId?: boolean
+    dealId?: boolean
     number?: boolean
     status?: boolean
     subtotal?: boolean
     taxAmount?: boolean
+    discountType?: boolean
+    discountValue?: boolean
     total?: boolean
     rateToBase?: boolean
     totalInBase?: boolean
     currency?: boolean
     notes?: boolean
+    issueDate?: boolean
     dueDate?: boolean
     sentAt?: boolean
     acceptedAt?: boolean
@@ -48204,11 +48292,12 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "projectId" | "contactId" | "number" | "status" | "subtotal" | "taxAmount" | "total" | "rateToBase" | "totalInBase" | "currency" | "notes" | "dueDate" | "sentAt" | "acceptedAt" | "rejectedAt" | "paidAt" | "rejectionNote" | "publicToken" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "projectId" | "contactId" | "dealId" | "number" | "status" | "subtotal" | "taxAmount" | "discountType" | "discountValue" | "total" | "rateToBase" | "totalInBase" | "currency" | "notes" | "issueDate" | "dueDate" | "sentAt" | "acceptedAt" | "rejectedAt" | "paidAt" | "rejectionNote" | "publicToken" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     project?: boolean | Invoice$projectArgs<ExtArgs>
     contact?: boolean | Invoice$contactArgs<ExtArgs>
+    deal?: boolean | Invoice$dealArgs<ExtArgs>
     items?: boolean | Invoice$itemsArgs<ExtArgs>
     _count?: boolean | InvoiceCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -48216,11 +48305,13 @@ export namespace Prisma {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     project?: boolean | Invoice$projectArgs<ExtArgs>
     contact?: boolean | Invoice$contactArgs<ExtArgs>
+    deal?: boolean | Invoice$dealArgs<ExtArgs>
   }
   export type InvoiceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     project?: boolean | Invoice$projectArgs<ExtArgs>
     contact?: boolean | Invoice$contactArgs<ExtArgs>
+    deal?: boolean | Invoice$dealArgs<ExtArgs>
   }
 
   export type $InvoicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -48229,6 +48320,7 @@ export namespace Prisma {
       workspace: Prisma.$WorkspacePayload<ExtArgs>
       project: Prisma.$ProjectPayload<ExtArgs> | null
       contact: Prisma.$ContactPayload<ExtArgs> | null
+      deal: Prisma.$DealPayload<ExtArgs> | null
       items: Prisma.$InvoiceItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -48236,15 +48328,19 @@ export namespace Prisma {
       workspaceId: string
       projectId: string | null
       contactId: string | null
+      dealId: string | null
       number: string
       status: $Enums.InvoiceStatus
       subtotal: Prisma.Decimal
       taxAmount: Prisma.Decimal
+      discountType: string
+      discountValue: Prisma.Decimal
       total: Prisma.Decimal
       rateToBase: Prisma.Decimal | null
       totalInBase: Prisma.Decimal | null
       currency: string
       notes: string | null
+      issueDate: Date | null
       dueDate: Date | null
       sentAt: Date | null
       acceptedAt: Date | null
@@ -48651,6 +48747,7 @@ export namespace Prisma {
     workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     project<T extends Invoice$projectArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$projectArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     contact<T extends Invoice$contactArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$contactArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    deal<T extends Invoice$dealArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$dealArgs<ExtArgs>>): Prisma__DealClient<$Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     items<T extends Invoice$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -48685,15 +48782,19 @@ export namespace Prisma {
     readonly workspaceId: FieldRef<"Invoice", 'String'>
     readonly projectId: FieldRef<"Invoice", 'String'>
     readonly contactId: FieldRef<"Invoice", 'String'>
+    readonly dealId: FieldRef<"Invoice", 'String'>
     readonly number: FieldRef<"Invoice", 'String'>
     readonly status: FieldRef<"Invoice", 'InvoiceStatus'>
     readonly subtotal: FieldRef<"Invoice", 'Decimal'>
     readonly taxAmount: FieldRef<"Invoice", 'Decimal'>
+    readonly discountType: FieldRef<"Invoice", 'String'>
+    readonly discountValue: FieldRef<"Invoice", 'Decimal'>
     readonly total: FieldRef<"Invoice", 'Decimal'>
     readonly rateToBase: FieldRef<"Invoice", 'Decimal'>
     readonly totalInBase: FieldRef<"Invoice", 'Decimal'>
     readonly currency: FieldRef<"Invoice", 'String'>
     readonly notes: FieldRef<"Invoice", 'String'>
+    readonly issueDate: FieldRef<"Invoice", 'DateTime'>
     readonly dueDate: FieldRef<"Invoice", 'DateTime'>
     readonly sentAt: FieldRef<"Invoice", 'DateTime'>
     readonly acceptedAt: FieldRef<"Invoice", 'DateTime'>
@@ -49142,6 +49243,25 @@ export namespace Prisma {
   }
 
   /**
+   * Invoice.deal
+   */
+  export type Invoice$dealArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Deal
+     */
+    select?: DealSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Deal
+     */
+    omit?: DealOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealInclude<ExtArgs> | null
+    where?: DealWhereInput
+  }
+
+  /**
    * Invoice.items
    */
   export type Invoice$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -49199,12 +49319,14 @@ export namespace Prisma {
   export type InvoiceItemAvgAggregateOutputType = {
     quantity: number | null
     unitPrice: Decimal | null
+    taxPct: Decimal | null
     total: Decimal | null
   }
 
   export type InvoiceItemSumAggregateOutputType = {
     quantity: number | null
     unitPrice: Decimal | null
+    taxPct: Decimal | null
     total: Decimal | null
   }
 
@@ -49212,8 +49334,10 @@ export namespace Prisma {
     id: string | null
     invoiceId: string | null
     description: string | null
+    details: string | null
     quantity: number | null
     unitPrice: Decimal | null
+    taxPct: Decimal | null
     total: Decimal | null
   }
 
@@ -49221,8 +49345,10 @@ export namespace Prisma {
     id: string | null
     invoiceId: string | null
     description: string | null
+    details: string | null
     quantity: number | null
     unitPrice: Decimal | null
+    taxPct: Decimal | null
     total: Decimal | null
   }
 
@@ -49230,8 +49356,10 @@ export namespace Prisma {
     id: number
     invoiceId: number
     description: number
+    details: number
     quantity: number
     unitPrice: number
+    taxPct: number
     total: number
     _all: number
   }
@@ -49240,12 +49368,14 @@ export namespace Prisma {
   export type InvoiceItemAvgAggregateInputType = {
     quantity?: true
     unitPrice?: true
+    taxPct?: true
     total?: true
   }
 
   export type InvoiceItemSumAggregateInputType = {
     quantity?: true
     unitPrice?: true
+    taxPct?: true
     total?: true
   }
 
@@ -49253,8 +49383,10 @@ export namespace Prisma {
     id?: true
     invoiceId?: true
     description?: true
+    details?: true
     quantity?: true
     unitPrice?: true
+    taxPct?: true
     total?: true
   }
 
@@ -49262,8 +49394,10 @@ export namespace Prisma {
     id?: true
     invoiceId?: true
     description?: true
+    details?: true
     quantity?: true
     unitPrice?: true
+    taxPct?: true
     total?: true
   }
 
@@ -49271,8 +49405,10 @@ export namespace Prisma {
     id?: true
     invoiceId?: true
     description?: true
+    details?: true
     quantity?: true
     unitPrice?: true
+    taxPct?: true
     total?: true
     _all?: true
   }
@@ -49367,8 +49503,10 @@ export namespace Prisma {
     id: string
     invoiceId: string
     description: string
+    details: string | null
     quantity: number
     unitPrice: Decimal
+    taxPct: Decimal | null
     total: Decimal
     _count: InvoiceItemCountAggregateOutputType | null
     _avg: InvoiceItemAvgAggregateOutputType | null
@@ -49395,8 +49533,10 @@ export namespace Prisma {
     id?: boolean
     invoiceId?: boolean
     description?: boolean
+    details?: boolean
     quantity?: boolean
     unitPrice?: boolean
+    taxPct?: boolean
     total?: boolean
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoiceItem"]>
@@ -49405,8 +49545,10 @@ export namespace Prisma {
     id?: boolean
     invoiceId?: boolean
     description?: boolean
+    details?: boolean
     quantity?: boolean
     unitPrice?: boolean
+    taxPct?: boolean
     total?: boolean
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoiceItem"]>
@@ -49415,8 +49557,10 @@ export namespace Prisma {
     id?: boolean
     invoiceId?: boolean
     description?: boolean
+    details?: boolean
     quantity?: boolean
     unitPrice?: boolean
+    taxPct?: boolean
     total?: boolean
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoiceItem"]>
@@ -49425,12 +49569,14 @@ export namespace Prisma {
     id?: boolean
     invoiceId?: boolean
     description?: boolean
+    details?: boolean
     quantity?: boolean
     unitPrice?: boolean
+    taxPct?: boolean
     total?: boolean
   }
 
-  export type InvoiceItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceId" | "description" | "quantity" | "unitPrice" | "total", ExtArgs["result"]["invoiceItem"]>
+  export type InvoiceItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceId" | "description" | "details" | "quantity" | "unitPrice" | "taxPct" | "total", ExtArgs["result"]["invoiceItem"]>
   export type InvoiceItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
   }
@@ -49450,8 +49596,10 @@ export namespace Prisma {
       id: string
       invoiceId: string
       description: string
+      details: string | null
       quantity: number
       unitPrice: Prisma.Decimal
+      taxPct: Prisma.Decimal | null
       total: Prisma.Decimal
     }, ExtArgs["result"]["invoiceItem"]>
     composites: {}
@@ -49880,8 +50028,10 @@ export namespace Prisma {
     readonly id: FieldRef<"InvoiceItem", 'String'>
     readonly invoiceId: FieldRef<"InvoiceItem", 'String'>
     readonly description: FieldRef<"InvoiceItem", 'String'>
+    readonly details: FieldRef<"InvoiceItem", 'String'>
     readonly quantity: FieldRef<"InvoiceItem", 'Int'>
     readonly unitPrice: FieldRef<"InvoiceItem", 'Decimal'>
+    readonly taxPct: FieldRef<"InvoiceItem", 'Decimal'>
     readonly total: FieldRef<"InvoiceItem", 'Decimal'>
   }
     
@@ -63248,15 +63398,19 @@ export namespace Prisma {
     workspaceId: 'workspaceId',
     projectId: 'projectId',
     contactId: 'contactId',
+    dealId: 'dealId',
     number: 'number',
     status: 'status',
     subtotal: 'subtotal',
     taxAmount: 'taxAmount',
+    discountType: 'discountType',
+    discountValue: 'discountValue',
     total: 'total',
     rateToBase: 'rateToBase',
     totalInBase: 'totalInBase',
     currency: 'currency',
     notes: 'notes',
+    issueDate: 'issueDate',
     dueDate: 'dueDate',
     sentAt: 'sentAt',
     acceptedAt: 'acceptedAt',
@@ -63275,8 +63429,10 @@ export namespace Prisma {
     id: 'id',
     invoiceId: 'invoiceId',
     description: 'description',
+    details: 'details',
     quantity: 'quantity',
     unitPrice: 'unitPrice',
+    taxPct: 'taxPct',
     total: 'total'
   };
 
@@ -64832,6 +64988,7 @@ export namespace Prisma {
     items?: DealItemListRelationFilter
     project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
     accessGrants?: DealAccessListRelationFilter
+    invoices?: InvoiceListRelationFilter
   }
 
   export type DealOrderByWithRelationInput = {
@@ -64867,6 +65024,7 @@ export namespace Prisma {
     items?: DealItemOrderByRelationAggregateInput
     project?: ProjectOrderByWithRelationInput
     accessGrants?: DealAccessOrderByRelationAggregateInput
+    invoices?: InvoiceOrderByRelationAggregateInput
   }
 
   export type DealWhereUniqueInput = Prisma.AtLeast<{
@@ -64905,6 +65063,7 @@ export namespace Prisma {
     items?: DealItemListRelationFilter
     project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
     accessGrants?: DealAccessListRelationFilter
+    invoices?: InvoiceListRelationFilter
   }, "id">
 
   export type DealOrderByWithAggregationInput = {
@@ -66776,15 +66935,19 @@ export namespace Prisma {
     workspaceId?: StringFilter<"Invoice"> | string
     projectId?: StringNullableFilter<"Invoice"> | string | null
     contactId?: StringNullableFilter<"Invoice"> | string | null
+    dealId?: StringNullableFilter<"Invoice"> | string | null
     number?: StringFilter<"Invoice"> | string
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
     subtotal?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"Invoice"> | string
+    discountValue?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     total?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     rateToBase?: DecimalNullableFilter<"Invoice"> | Decimal | DecimalJsLike | number | string | null
     totalInBase?: DecimalNullableFilter<"Invoice"> | Decimal | DecimalJsLike | number | string | null
     currency?: StringFilter<"Invoice"> | string
     notes?: StringNullableFilter<"Invoice"> | string | null
+    issueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     dueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     sentAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     acceptedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
@@ -66797,6 +66960,7 @@ export namespace Prisma {
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
     contact?: XOR<ContactNullableScalarRelationFilter, ContactWhereInput> | null
+    deal?: XOR<DealNullableScalarRelationFilter, DealWhereInput> | null
     items?: InvoiceItemListRelationFilter
   }
 
@@ -66805,15 +66969,19 @@ export namespace Prisma {
     workspaceId?: SortOrder
     projectId?: SortOrderInput | SortOrder
     contactId?: SortOrderInput | SortOrder
+    dealId?: SortOrderInput | SortOrder
     number?: SortOrder
     status?: SortOrder
     subtotal?: SortOrder
     taxAmount?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
     total?: SortOrder
     rateToBase?: SortOrderInput | SortOrder
     totalInBase?: SortOrderInput | SortOrder
     currency?: SortOrder
     notes?: SortOrderInput | SortOrder
+    issueDate?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
     sentAt?: SortOrderInput | SortOrder
     acceptedAt?: SortOrderInput | SortOrder
@@ -66826,6 +66994,7 @@ export namespace Prisma {
     workspace?: WorkspaceOrderByWithRelationInput
     project?: ProjectOrderByWithRelationInput
     contact?: ContactOrderByWithRelationInput
+    deal?: DealOrderByWithRelationInput
     items?: InvoiceItemOrderByRelationAggregateInput
   }
 
@@ -66838,15 +67007,19 @@ export namespace Prisma {
     workspaceId?: StringFilter<"Invoice"> | string
     projectId?: StringNullableFilter<"Invoice"> | string | null
     contactId?: StringNullableFilter<"Invoice"> | string | null
+    dealId?: StringNullableFilter<"Invoice"> | string | null
     number?: StringFilter<"Invoice"> | string
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
     subtotal?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"Invoice"> | string
+    discountValue?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     total?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     rateToBase?: DecimalNullableFilter<"Invoice"> | Decimal | DecimalJsLike | number | string | null
     totalInBase?: DecimalNullableFilter<"Invoice"> | Decimal | DecimalJsLike | number | string | null
     currency?: StringFilter<"Invoice"> | string
     notes?: StringNullableFilter<"Invoice"> | string | null
+    issueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     dueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     sentAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     acceptedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
@@ -66858,6 +67031,7 @@ export namespace Prisma {
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
     contact?: XOR<ContactNullableScalarRelationFilter, ContactWhereInput> | null
+    deal?: XOR<DealNullableScalarRelationFilter, DealWhereInput> | null
     items?: InvoiceItemListRelationFilter
   }, "id" | "publicToken">
 
@@ -66866,15 +67040,19 @@ export namespace Prisma {
     workspaceId?: SortOrder
     projectId?: SortOrderInput | SortOrder
     contactId?: SortOrderInput | SortOrder
+    dealId?: SortOrderInput | SortOrder
     number?: SortOrder
     status?: SortOrder
     subtotal?: SortOrder
     taxAmount?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
     total?: SortOrder
     rateToBase?: SortOrderInput | SortOrder
     totalInBase?: SortOrderInput | SortOrder
     currency?: SortOrder
     notes?: SortOrderInput | SortOrder
+    issueDate?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
     sentAt?: SortOrderInput | SortOrder
     acceptedAt?: SortOrderInput | SortOrder
@@ -66899,15 +67077,19 @@ export namespace Prisma {
     workspaceId?: StringWithAggregatesFilter<"Invoice"> | string
     projectId?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     contactId?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
+    dealId?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     number?: StringWithAggregatesFilter<"Invoice"> | string
     status?: EnumInvoiceStatusWithAggregatesFilter<"Invoice"> | $Enums.InvoiceStatus
     subtotal?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringWithAggregatesFilter<"Invoice"> | string
+    discountValue?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     total?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     rateToBase?: DecimalNullableWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string | null
     totalInBase?: DecimalNullableWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string | null
     currency?: StringWithAggregatesFilter<"Invoice"> | string
     notes?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
+    issueDate?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     dueDate?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     sentAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     acceptedAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
@@ -66926,8 +67108,10 @@ export namespace Prisma {
     id?: StringFilter<"InvoiceItem"> | string
     invoiceId?: StringFilter<"InvoiceItem"> | string
     description?: StringFilter<"InvoiceItem"> | string
+    details?: StringNullableFilter<"InvoiceItem"> | string | null
     quantity?: IntFilter<"InvoiceItem"> | number
     unitPrice?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    taxPct?: DecimalNullableFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string | null
     total?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     invoice?: XOR<InvoiceScalarRelationFilter, InvoiceWhereInput>
   }
@@ -66936,8 +67120,10 @@ export namespace Prisma {
     id?: SortOrder
     invoiceId?: SortOrder
     description?: SortOrder
+    details?: SortOrderInput | SortOrder
     quantity?: SortOrder
     unitPrice?: SortOrder
+    taxPct?: SortOrderInput | SortOrder
     total?: SortOrder
     invoice?: InvoiceOrderByWithRelationInput
   }
@@ -66949,8 +67135,10 @@ export namespace Prisma {
     NOT?: InvoiceItemWhereInput | InvoiceItemWhereInput[]
     invoiceId?: StringFilter<"InvoiceItem"> | string
     description?: StringFilter<"InvoiceItem"> | string
+    details?: StringNullableFilter<"InvoiceItem"> | string | null
     quantity?: IntFilter<"InvoiceItem"> | number
     unitPrice?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    taxPct?: DecimalNullableFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string | null
     total?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     invoice?: XOR<InvoiceScalarRelationFilter, InvoiceWhereInput>
   }, "id">
@@ -66959,8 +67147,10 @@ export namespace Prisma {
     id?: SortOrder
     invoiceId?: SortOrder
     description?: SortOrder
+    details?: SortOrderInput | SortOrder
     quantity?: SortOrder
     unitPrice?: SortOrder
+    taxPct?: SortOrderInput | SortOrder
     total?: SortOrder
     _count?: InvoiceItemCountOrderByAggregateInput
     _avg?: InvoiceItemAvgOrderByAggregateInput
@@ -66976,8 +67166,10 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"InvoiceItem"> | string
     invoiceId?: StringWithAggregatesFilter<"InvoiceItem"> | string
     description?: StringWithAggregatesFilter<"InvoiceItem"> | string
+    details?: StringNullableWithAggregatesFilter<"InvoiceItem"> | string | null
     quantity?: IntWithAggregatesFilter<"InvoiceItem"> | number
     unitPrice?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    taxPct?: DecimalNullableWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string | null
     total?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
   }
 
@@ -69067,6 +69259,7 @@ export namespace Prisma {
     items?: DealItemCreateNestedManyWithoutDealInput
     project?: ProjectCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessCreateNestedManyWithoutDealInput
+    invoices?: InvoiceCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateInput = {
@@ -69097,6 +69290,7 @@ export namespace Prisma {
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealUpdateInput = {
@@ -69127,6 +69321,7 @@ export namespace Prisma {
     items?: DealItemUpdateManyWithoutDealNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateInput = {
@@ -69157,6 +69352,7 @@ export namespace Prisma {
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealCreateManyInput = {
@@ -71139,11 +71335,14 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
     rateToBase?: Decimal | DecimalJsLike | number | string | null
     totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
+    issueDate?: Date | string | null
     dueDate?: Date | string | null
     sentAt?: Date | string | null
     acceptedAt?: Date | string | null
@@ -71156,6 +71355,7 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutInvoicesInput
     project?: ProjectCreateNestedOneWithoutInvoicesInput
     contact?: ContactCreateNestedOneWithoutInvoicesInput
+    deal?: DealCreateNestedOneWithoutInvoicesInput
     items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
   }
 
@@ -71164,15 +71364,19 @@ export namespace Prisma {
     workspaceId: string
     projectId?: string | null
     contactId?: string | null
+    dealId?: string | null
     number: string
     status?: $Enums.InvoiceStatus
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
     rateToBase?: Decimal | DecimalJsLike | number | string | null
     totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
+    issueDate?: Date | string | null
     dueDate?: Date | string | null
     sentAt?: Date | string | null
     acceptedAt?: Date | string | null
@@ -71191,11 +71395,14 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -71208,6 +71415,7 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutInvoicesNestedInput
     project?: ProjectUpdateOneWithoutInvoicesNestedInput
     contact?: ContactUpdateOneWithoutInvoicesNestedInput
+    deal?: DealUpdateOneWithoutInvoicesNestedInput
     items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
   }
 
@@ -71216,15 +71424,19 @@ export namespace Prisma {
     workspaceId?: StringFieldUpdateOperationsInput | string
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    dealId?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -71242,15 +71454,19 @@ export namespace Prisma {
     workspaceId: string
     projectId?: string | null
     contactId?: string | null
+    dealId?: string | null
     number: string
     status?: $Enums.InvoiceStatus
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
     rateToBase?: Decimal | DecimalJsLike | number | string | null
     totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
+    issueDate?: Date | string | null
     dueDate?: Date | string | null
     sentAt?: Date | string | null
     acceptedAt?: Date | string | null
@@ -71268,11 +71484,14 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -71289,15 +71508,19 @@ export namespace Prisma {
     workspaceId?: StringFieldUpdateOperationsInput | string
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    dealId?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -71312,8 +71535,10 @@ export namespace Prisma {
   export type InvoiceItemCreateInput = {
     id?: string
     description: string
+    details?: string | null
     quantity?: number
     unitPrice: Decimal | DecimalJsLike | number | string
+    taxPct?: Decimal | DecimalJsLike | number | string | null
     total: Decimal | DecimalJsLike | number | string
     invoice: InvoiceCreateNestedOneWithoutItemsInput
   }
@@ -71322,16 +71547,20 @@ export namespace Prisma {
     id?: string
     invoiceId: string
     description: string
+    details?: string | null
     quantity?: number
     unitPrice: Decimal | DecimalJsLike | number | string
+    taxPct?: Decimal | DecimalJsLike | number | string | null
     total: Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    details?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
     unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxPct?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     invoice?: InvoiceUpdateOneRequiredWithoutItemsNestedInput
   }
@@ -71340,8 +71569,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     invoiceId?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    details?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
     unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxPct?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
@@ -71349,16 +71580,20 @@ export namespace Prisma {
     id?: string
     invoiceId: string
     description: string
+    details?: string | null
     quantity?: number
     unitPrice: Decimal | DecimalJsLike | number | string
+    taxPct?: Decimal | DecimalJsLike | number | string | null
     total: Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    details?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
     unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxPct?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
@@ -71366,8 +71601,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     invoiceId?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    details?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
     unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxPct?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
@@ -74780,15 +75017,19 @@ export namespace Prisma {
     workspaceId?: SortOrder
     projectId?: SortOrder
     contactId?: SortOrder
+    dealId?: SortOrder
     number?: SortOrder
     status?: SortOrder
     subtotal?: SortOrder
     taxAmount?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
     total?: SortOrder
     rateToBase?: SortOrder
     totalInBase?: SortOrder
     currency?: SortOrder
     notes?: SortOrder
+    issueDate?: SortOrder
     dueDate?: SortOrder
     sentAt?: SortOrder
     acceptedAt?: SortOrder
@@ -74803,6 +75044,7 @@ export namespace Prisma {
   export type InvoiceAvgOrderByAggregateInput = {
     subtotal?: SortOrder
     taxAmount?: SortOrder
+    discountValue?: SortOrder
     total?: SortOrder
     rateToBase?: SortOrder
     totalInBase?: SortOrder
@@ -74813,15 +75055,19 @@ export namespace Prisma {
     workspaceId?: SortOrder
     projectId?: SortOrder
     contactId?: SortOrder
+    dealId?: SortOrder
     number?: SortOrder
     status?: SortOrder
     subtotal?: SortOrder
     taxAmount?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
     total?: SortOrder
     rateToBase?: SortOrder
     totalInBase?: SortOrder
     currency?: SortOrder
     notes?: SortOrder
+    issueDate?: SortOrder
     dueDate?: SortOrder
     sentAt?: SortOrder
     acceptedAt?: SortOrder
@@ -74838,15 +75084,19 @@ export namespace Prisma {
     workspaceId?: SortOrder
     projectId?: SortOrder
     contactId?: SortOrder
+    dealId?: SortOrder
     number?: SortOrder
     status?: SortOrder
     subtotal?: SortOrder
     taxAmount?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
     total?: SortOrder
     rateToBase?: SortOrder
     totalInBase?: SortOrder
     currency?: SortOrder
     notes?: SortOrder
+    issueDate?: SortOrder
     dueDate?: SortOrder
     sentAt?: SortOrder
     acceptedAt?: SortOrder
@@ -74861,6 +75111,7 @@ export namespace Prisma {
   export type InvoiceSumOrderByAggregateInput = {
     subtotal?: SortOrder
     taxAmount?: SortOrder
+    discountValue?: SortOrder
     total?: SortOrder
     rateToBase?: SortOrder
     totalInBase?: SortOrder
@@ -74885,14 +75136,17 @@ export namespace Prisma {
     id?: SortOrder
     invoiceId?: SortOrder
     description?: SortOrder
+    details?: SortOrder
     quantity?: SortOrder
     unitPrice?: SortOrder
+    taxPct?: SortOrder
     total?: SortOrder
   }
 
   export type InvoiceItemAvgOrderByAggregateInput = {
     quantity?: SortOrder
     unitPrice?: SortOrder
+    taxPct?: SortOrder
     total?: SortOrder
   }
 
@@ -74900,8 +75154,10 @@ export namespace Prisma {
     id?: SortOrder
     invoiceId?: SortOrder
     description?: SortOrder
+    details?: SortOrder
     quantity?: SortOrder
     unitPrice?: SortOrder
+    taxPct?: SortOrder
     total?: SortOrder
   }
 
@@ -74909,14 +75165,17 @@ export namespace Prisma {
     id?: SortOrder
     invoiceId?: SortOrder
     description?: SortOrder
+    details?: SortOrder
     quantity?: SortOrder
     unitPrice?: SortOrder
+    taxPct?: SortOrder
     total?: SortOrder
   }
 
   export type InvoiceItemSumOrderByAggregateInput = {
     quantity?: SortOrder
     unitPrice?: SortOrder
+    taxPct?: SortOrder
     total?: SortOrder
   }
 
@@ -77716,6 +77975,13 @@ export namespace Prisma {
     connect?: DealAccessWhereUniqueInput | DealAccessWhereUniqueInput[]
   }
 
+  export type InvoiceCreateNestedManyWithoutDealInput = {
+    create?: XOR<InvoiceCreateWithoutDealInput, InvoiceUncheckedCreateWithoutDealInput> | InvoiceCreateWithoutDealInput[] | InvoiceUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutDealInput | InvoiceCreateOrConnectWithoutDealInput[]
+    createMany?: InvoiceCreateManyDealInputEnvelope
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+  }
+
   export type DealItemUncheckedCreateNestedManyWithoutDealInput = {
     create?: XOR<DealItemCreateWithoutDealInput, DealItemUncheckedCreateWithoutDealInput> | DealItemCreateWithoutDealInput[] | DealItemUncheckedCreateWithoutDealInput[]
     connectOrCreate?: DealItemCreateOrConnectWithoutDealInput | DealItemCreateOrConnectWithoutDealInput[]
@@ -77734,6 +78000,13 @@ export namespace Prisma {
     connectOrCreate?: DealAccessCreateOrConnectWithoutDealInput | DealAccessCreateOrConnectWithoutDealInput[]
     createMany?: DealAccessCreateManyDealInputEnvelope
     connect?: DealAccessWhereUniqueInput | DealAccessWhereUniqueInput[]
+  }
+
+  export type InvoiceUncheckedCreateNestedManyWithoutDealInput = {
+    create?: XOR<InvoiceCreateWithoutDealInput, InvoiceUncheckedCreateWithoutDealInput> | InvoiceCreateWithoutDealInput[] | InvoiceUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutDealInput | InvoiceCreateOrConnectWithoutDealInput[]
+    createMany?: InvoiceCreateManyDealInputEnvelope
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
   }
 
   export type NullableDecimalFieldUpdateOperationsInput = {
@@ -77826,6 +78099,20 @@ export namespace Prisma {
     deleteMany?: DealAccessScalarWhereInput | DealAccessScalarWhereInput[]
   }
 
+  export type InvoiceUpdateManyWithoutDealNestedInput = {
+    create?: XOR<InvoiceCreateWithoutDealInput, InvoiceUncheckedCreateWithoutDealInput> | InvoiceCreateWithoutDealInput[] | InvoiceUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutDealInput | InvoiceCreateOrConnectWithoutDealInput[]
+    upsert?: InvoiceUpsertWithWhereUniqueWithoutDealInput | InvoiceUpsertWithWhereUniqueWithoutDealInput[]
+    createMany?: InvoiceCreateManyDealInputEnvelope
+    set?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    disconnect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    delete?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    update?: InvoiceUpdateWithWhereUniqueWithoutDealInput | InvoiceUpdateWithWhereUniqueWithoutDealInput[]
+    updateMany?: InvoiceUpdateManyWithWhereWithoutDealInput | InvoiceUpdateManyWithWhereWithoutDealInput[]
+    deleteMany?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
+  }
+
   export type DealItemUncheckedUpdateManyWithoutDealNestedInput = {
     create?: XOR<DealItemCreateWithoutDealInput, DealItemUncheckedCreateWithoutDealInput> | DealItemCreateWithoutDealInput[] | DealItemUncheckedCreateWithoutDealInput[]
     connectOrCreate?: DealItemCreateOrConnectWithoutDealInput | DealItemCreateOrConnectWithoutDealInput[]
@@ -77862,6 +78149,20 @@ export namespace Prisma {
     update?: DealAccessUpdateWithWhereUniqueWithoutDealInput | DealAccessUpdateWithWhereUniqueWithoutDealInput[]
     updateMany?: DealAccessUpdateManyWithWhereWithoutDealInput | DealAccessUpdateManyWithWhereWithoutDealInput[]
     deleteMany?: DealAccessScalarWhereInput | DealAccessScalarWhereInput[]
+  }
+
+  export type InvoiceUncheckedUpdateManyWithoutDealNestedInput = {
+    create?: XOR<InvoiceCreateWithoutDealInput, InvoiceUncheckedCreateWithoutDealInput> | InvoiceCreateWithoutDealInput[] | InvoiceUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutDealInput | InvoiceCreateOrConnectWithoutDealInput[]
+    upsert?: InvoiceUpsertWithWhereUniqueWithoutDealInput | InvoiceUpsertWithWhereUniqueWithoutDealInput[]
+    createMany?: InvoiceCreateManyDealInputEnvelope
+    set?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    disconnect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    delete?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    update?: InvoiceUpdateWithWhereUniqueWithoutDealInput | InvoiceUpdateWithWhereUniqueWithoutDealInput[]
+    updateMany?: InvoiceUpdateManyWithWhereWithoutDealInput | InvoiceUpdateManyWithWhereWithoutDealInput[]
+    deleteMany?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
   }
 
   export type DealCreateNestedOneWithoutAccessGrantsInput = {
@@ -79664,6 +79965,12 @@ export namespace Prisma {
     connect?: ContactWhereUniqueInput
   }
 
+  export type DealCreateNestedOneWithoutInvoicesInput = {
+    create?: XOR<DealCreateWithoutInvoicesInput, DealUncheckedCreateWithoutInvoicesInput>
+    connectOrCreate?: DealCreateOrConnectWithoutInvoicesInput
+    connect?: DealWhereUniqueInput
+  }
+
   export type InvoiceItemCreateNestedManyWithoutInvoiceInput = {
     create?: XOR<InvoiceItemCreateWithoutInvoiceInput, InvoiceItemUncheckedCreateWithoutInvoiceInput> | InvoiceItemCreateWithoutInvoiceInput[] | InvoiceItemUncheckedCreateWithoutInvoiceInput[]
     connectOrCreate?: InvoiceItemCreateOrConnectWithoutInvoiceInput | InvoiceItemCreateOrConnectWithoutInvoiceInput[]
@@ -79708,6 +80015,16 @@ export namespace Prisma {
     delete?: ContactWhereInput | boolean
     connect?: ContactWhereUniqueInput
     update?: XOR<XOR<ContactUpdateToOneWithWhereWithoutInvoicesInput, ContactUpdateWithoutInvoicesInput>, ContactUncheckedUpdateWithoutInvoicesInput>
+  }
+
+  export type DealUpdateOneWithoutInvoicesNestedInput = {
+    create?: XOR<DealCreateWithoutInvoicesInput, DealUncheckedCreateWithoutInvoicesInput>
+    connectOrCreate?: DealCreateOrConnectWithoutInvoicesInput
+    upsert?: DealUpsertWithoutInvoicesInput
+    disconnect?: DealWhereInput | boolean
+    delete?: DealWhereInput | boolean
+    connect?: DealWhereUniqueInput
+    update?: XOR<XOR<DealUpdateToOneWithWhereWithoutInvoicesInput, DealUpdateWithoutInvoicesInput>, DealUncheckedUpdateWithoutInvoicesInput>
   }
 
   export type InvoiceItemUpdateManyWithoutInvoiceNestedInput = {
@@ -80715,6 +81032,7 @@ export namespace Prisma {
     items?: DealItemCreateNestedManyWithoutDealInput
     project?: ProjectCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessCreateNestedManyWithoutDealInput
+    invoices?: InvoiceCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutWorkspaceInput = {
@@ -80744,6 +81062,7 @@ export namespace Prisma {
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutWorkspaceInput = {
@@ -80832,11 +81151,14 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
     rateToBase?: Decimal | DecimalJsLike | number | string | null
     totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
+    issueDate?: Date | string | null
     dueDate?: Date | string | null
     sentAt?: Date | string | null
     acceptedAt?: Date | string | null
@@ -80848,6 +81170,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     project?: ProjectCreateNestedOneWithoutInvoicesInput
     contact?: ContactCreateNestedOneWithoutInvoicesInput
+    deal?: DealCreateNestedOneWithoutInvoicesInput
     items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
   }
 
@@ -80855,15 +81178,19 @@ export namespace Prisma {
     id?: string
     projectId?: string | null
     contactId?: string | null
+    dealId?: string | null
     number: string
     status?: $Enums.InvoiceStatus
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
     rateToBase?: Decimal | DecimalJsLike | number | string | null
     totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
+    issueDate?: Date | string | null
     dueDate?: Date | string | null
     sentAt?: Date | string | null
     acceptedAt?: Date | string | null
@@ -81641,15 +81968,19 @@ export namespace Prisma {
     workspaceId?: StringFilter<"Invoice"> | string
     projectId?: StringNullableFilter<"Invoice"> | string | null
     contactId?: StringNullableFilter<"Invoice"> | string | null
+    dealId?: StringNullableFilter<"Invoice"> | string | null
     number?: StringFilter<"Invoice"> | string
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
     subtotal?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    discountType?: StringFilter<"Invoice"> | string
+    discountValue?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     total?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     rateToBase?: DecimalNullableFilter<"Invoice"> | Decimal | DecimalJsLike | number | string | null
     totalInBase?: DecimalNullableFilter<"Invoice"> | Decimal | DecimalJsLike | number | string | null
     currency?: StringFilter<"Invoice"> | string
     notes?: StringNullableFilter<"Invoice"> | string | null
+    issueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     dueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     sentAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     acceptedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
@@ -83680,6 +84011,7 @@ export namespace Prisma {
     items?: DealItemCreateNestedManyWithoutDealInput
     project?: ProjectCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessCreateNestedManyWithoutDealInput
+    invoices?: InvoiceCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutCompanyInput = {
@@ -83709,6 +84041,7 @@ export namespace Prisma {
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutCompanyInput = {
@@ -84052,6 +84385,7 @@ export namespace Prisma {
     items?: DealItemCreateNestedManyWithoutDealInput
     project?: ProjectCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessCreateNestedManyWithoutDealInput
+    invoices?: InvoiceCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutContactInput = {
@@ -84081,6 +84415,7 @@ export namespace Prisma {
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutContactInput = {
@@ -84099,11 +84434,14 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
     rateToBase?: Decimal | DecimalJsLike | number | string | null
     totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
+    issueDate?: Date | string | null
     dueDate?: Date | string | null
     sentAt?: Date | string | null
     acceptedAt?: Date | string | null
@@ -84115,6 +84453,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutInvoicesInput
     project?: ProjectCreateNestedOneWithoutInvoicesInput
+    deal?: DealCreateNestedOneWithoutInvoicesInput
     items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
   }
 
@@ -84122,15 +84461,19 @@ export namespace Prisma {
     id?: string
     workspaceId: string
     projectId?: string | null
+    dealId?: string | null
     number: string
     status?: $Enums.InvoiceStatus
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
     rateToBase?: Decimal | DecimalJsLike | number | string | null
     totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
+    issueDate?: Date | string | null
     dueDate?: Date | string | null
     sentAt?: Date | string | null
     acceptedAt?: Date | string | null
@@ -84998,6 +85341,7 @@ export namespace Prisma {
     items?: DealItemCreateNestedManyWithoutDealInput
     project?: ProjectCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessCreateNestedManyWithoutDealInput
+    invoices?: InvoiceCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutPipelineInput = {
@@ -85027,6 +85371,7 @@ export namespace Prisma {
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutPipelineInput = {
@@ -85211,6 +85556,7 @@ export namespace Prisma {
     items?: DealItemCreateNestedManyWithoutDealInput
     project?: ProjectCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessCreateNestedManyWithoutDealInput
+    invoices?: InvoiceCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutStageInput = {
@@ -85240,6 +85586,7 @@ export namespace Prisma {
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutStageInput = {
@@ -85647,6 +85994,74 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type InvoiceCreateWithoutDealInput = {
+    id?: string
+    number: string
+    status?: $Enums.InvoiceStatus
+    subtotal: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
+    total: Decimal | DecimalJsLike | number | string
+    rateToBase?: Decimal | DecimalJsLike | number | string | null
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
+    notes?: string | null
+    issueDate?: Date | string | null
+    dueDate?: Date | string | null
+    sentAt?: Date | string | null
+    acceptedAt?: Date | string | null
+    rejectedAt?: Date | string | null
+    paidAt?: Date | string | null
+    rejectionNote?: string | null
+    publicToken?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutInvoicesInput
+    project?: ProjectCreateNestedOneWithoutInvoicesInput
+    contact?: ContactCreateNestedOneWithoutInvoicesInput
+    items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
+  }
+
+  export type InvoiceUncheckedCreateWithoutDealInput = {
+    id?: string
+    workspaceId: string
+    projectId?: string | null
+    contactId?: string | null
+    number: string
+    status?: $Enums.InvoiceStatus
+    subtotal: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
+    total: Decimal | DecimalJsLike | number | string
+    rateToBase?: Decimal | DecimalJsLike | number | string | null
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
+    notes?: string | null
+    issueDate?: Date | string | null
+    dueDate?: Date | string | null
+    sentAt?: Date | string | null
+    acceptedAt?: Date | string | null
+    rejectedAt?: Date | string | null
+    paidAt?: Date | string | null
+    rejectionNote?: string | null
+    publicToken?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+  }
+
+  export type InvoiceCreateOrConnectWithoutDealInput = {
+    where: InvoiceWhereUniqueInput
+    create: XOR<InvoiceCreateWithoutDealInput, InvoiceUncheckedCreateWithoutDealInput>
+  }
+
+  export type InvoiceCreateManyDealInputEnvelope = {
+    data: InvoiceCreateManyDealInput | InvoiceCreateManyDealInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WorkspaceUpsertWithoutDealsInput = {
     update: XOR<WorkspaceUpdateWithoutDealsInput, WorkspaceUncheckedUpdateWithoutDealsInput>
     create: XOR<WorkspaceCreateWithoutDealsInput, WorkspaceUncheckedCreateWithoutDealsInput>
@@ -86023,6 +86438,22 @@ export namespace Prisma {
     expiresAt?: DateTimeNullableFilter<"DealAccess"> | Date | string | null
   }
 
+  export type InvoiceUpsertWithWhereUniqueWithoutDealInput = {
+    where: InvoiceWhereUniqueInput
+    update: XOR<InvoiceUpdateWithoutDealInput, InvoiceUncheckedUpdateWithoutDealInput>
+    create: XOR<InvoiceCreateWithoutDealInput, InvoiceUncheckedCreateWithoutDealInput>
+  }
+
+  export type InvoiceUpdateWithWhereUniqueWithoutDealInput = {
+    where: InvoiceWhereUniqueInput
+    data: XOR<InvoiceUpdateWithoutDealInput, InvoiceUncheckedUpdateWithoutDealInput>
+  }
+
+  export type InvoiceUpdateManyWithWhereWithoutDealInput = {
+    where: InvoiceScalarWhereInput
+    data: XOR<InvoiceUpdateManyMutationInput, InvoiceUncheckedUpdateManyWithoutDealInput>
+  }
+
   export type DealCreateWithoutAccessGrantsInput = {
     id?: string
     ownerId?: string | null
@@ -86050,6 +86481,7 @@ export namespace Prisma {
     contact?: ContactCreateNestedOneWithoutDealsInput
     items?: DealItemCreateNestedManyWithoutDealInput
     project?: ProjectCreateNestedOneWithoutDealInput
+    invoices?: InvoiceCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutAccessGrantsInput = {
@@ -86079,6 +86511,7 @@ export namespace Prisma {
     deletedBy?: string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutAccessGrantsInput = {
@@ -86124,6 +86557,7 @@ export namespace Prisma {
     contact?: ContactUpdateOneWithoutDealsNestedInput
     items?: DealItemUpdateManyWithoutDealNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
+    invoices?: InvoiceUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutAccessGrantsInput = {
@@ -86153,6 +86587,7 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealCreateWithoutItemsInput = {
@@ -86182,6 +86617,7 @@ export namespace Prisma {
     contact?: ContactCreateNestedOneWithoutDealsInput
     project?: ProjectCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessCreateNestedManyWithoutDealInput
+    invoices?: InvoiceCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutItemsInput = {
@@ -86211,6 +86647,7 @@ export namespace Prisma {
     deletedBy?: string | null
     project?: ProjectUncheckedCreateNestedOneWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutItemsInput = {
@@ -86291,6 +86728,7 @@ export namespace Prisma {
     contact?: ContactUpdateOneWithoutDealsNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutItemsInput = {
@@ -86320,6 +86758,7 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type ServiceUpsertWithoutDealItemsInput = {
@@ -86695,6 +87134,7 @@ export namespace Prisma {
     contact?: ContactCreateNestedOneWithoutDealsInput
     items?: DealItemCreateNestedManyWithoutDealInput
     accessGrants?: DealAccessCreateNestedManyWithoutDealInput
+    invoices?: InvoiceCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutProjectInput = {
@@ -86724,6 +87164,7 @@ export namespace Prisma {
     deletedBy?: string | null
     items?: DealItemUncheckedCreateNestedManyWithoutDealInput
     accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutProjectInput = {
@@ -86887,11 +87328,14 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
     rateToBase?: Decimal | DecimalJsLike | number | string | null
     totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
+    issueDate?: Date | string | null
     dueDate?: Date | string | null
     sentAt?: Date | string | null
     acceptedAt?: Date | string | null
@@ -86903,6 +87347,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutInvoicesInput
     contact?: ContactCreateNestedOneWithoutInvoicesInput
+    deal?: DealCreateNestedOneWithoutInvoicesInput
     items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
   }
 
@@ -86910,15 +87355,19 @@ export namespace Prisma {
     id?: string
     workspaceId: string
     contactId?: string | null
+    dealId?: string | null
     number: string
     status?: $Enums.InvoiceStatus
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
     rateToBase?: Decimal | DecimalJsLike | number | string | null
     totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
+    issueDate?: Date | string | null
     dueDate?: Date | string | null
     sentAt?: Date | string | null
     acceptedAt?: Date | string | null
@@ -87268,6 +87717,7 @@ export namespace Prisma {
     contact?: ContactUpdateOneWithoutDealsNestedInput
     items?: DealItemUpdateManyWithoutDealNestedInput
     accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutProjectInput = {
@@ -87297,6 +87747,7 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type CompanyUpsertWithoutProjectsInput = {
@@ -92385,19 +92836,88 @@ export namespace Prisma {
     create: XOR<ContactCreateWithoutInvoicesInput, ContactUncheckedCreateWithoutInvoicesInput>
   }
 
+  export type DealCreateWithoutInvoicesInput = {
+    id?: string
+    ownerId?: string | null
+    ownerName?: string | null
+    title: string
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    rateToBase?: Decimal | DecimalJsLike | number | string | null
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
+    expectedCloseDate?: Date | string | null
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
+    lostReason?: string | null
+    notes?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    closedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    workspace: WorkspaceCreateNestedOneWithoutDealsInput
+    pipeline: PipelineCreateNestedOneWithoutDealsInput
+    stage: PipelineStageCreateNestedOneWithoutDealsInput
+    company?: CompanyCreateNestedOneWithoutDealsInput
+    contact?: ContactCreateNestedOneWithoutDealsInput
+    items?: DealItemCreateNestedManyWithoutDealInput
+    project?: ProjectCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessCreateNestedManyWithoutDealInput
+  }
+
+  export type DealUncheckedCreateWithoutInvoicesInput = {
+    id?: string
+    workspaceId: string
+    pipelineId: string
+    stageId: string
+    companyId?: string | null
+    contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
+    title: string
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    rateToBase?: Decimal | DecimalJsLike | number | string | null
+    valueInBase?: Decimal | DecimalJsLike | number | string | null
+    expectedCloseDate?: Date | string | null
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
+    lostReason?: string | null
+    notes?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    closedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    items?: DealItemUncheckedCreateNestedManyWithoutDealInput
+    project?: ProjectUncheckedCreateNestedOneWithoutDealInput
+    accessGrants?: DealAccessUncheckedCreateNestedManyWithoutDealInput
+  }
+
+  export type DealCreateOrConnectWithoutInvoicesInput = {
+    where: DealWhereUniqueInput
+    create: XOR<DealCreateWithoutInvoicesInput, DealUncheckedCreateWithoutInvoicesInput>
+  }
+
   export type InvoiceItemCreateWithoutInvoiceInput = {
     id?: string
     description: string
+    details?: string | null
     quantity?: number
     unitPrice: Decimal | DecimalJsLike | number | string
+    taxPct?: Decimal | DecimalJsLike | number | string | null
     total: Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemUncheckedCreateWithoutInvoiceInput = {
     id?: string
     description: string
+    details?: string | null
     quantity?: number
     unitPrice: Decimal | DecimalJsLike | number | string
+    taxPct?: Decimal | DecimalJsLike | number | string | null
     total: Decimal | DecimalJsLike | number | string
   }
 
@@ -92618,6 +93138,77 @@ export namespace Prisma {
     whatsappMessages?: WhatsAppMessageUncheckedUpdateManyWithoutContactNestedInput
   }
 
+  export type DealUpsertWithoutInvoicesInput = {
+    update: XOR<DealUpdateWithoutInvoicesInput, DealUncheckedUpdateWithoutInvoicesInput>
+    create: XOR<DealCreateWithoutInvoicesInput, DealUncheckedCreateWithoutInvoicesInput>
+    where?: DealWhereInput
+  }
+
+  export type DealUpdateToOneWithWhereWithoutInvoicesInput = {
+    where?: DealWhereInput
+    data: XOR<DealUpdateWithoutInvoicesInput, DealUncheckedUpdateWithoutInvoicesInput>
+  }
+
+  export type DealUpdateWithoutInvoicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    workspace?: WorkspaceUpdateOneRequiredWithoutDealsNestedInput
+    pipeline?: PipelineUpdateOneRequiredWithoutDealsNestedInput
+    stage?: PipelineStageUpdateOneRequiredWithoutDealsNestedInput
+    company?: CompanyUpdateOneWithoutDealsNestedInput
+    contact?: ContactUpdateOneWithoutDealsNestedInput
+    items?: DealItemUpdateManyWithoutDealNestedInput
+    project?: ProjectUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
+  }
+
+  export type DealUncheckedUpdateWithoutInvoicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    pipelineId?: StringFieldUpdateOperationsInput | string
+    stageId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    valueInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
+    project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
+    accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
+  }
+
   export type InvoiceItemUpsertWithWhereUniqueWithoutInvoiceInput = {
     where: InvoiceItemWhereUniqueInput
     update: XOR<InvoiceItemUpdateWithoutInvoiceInput, InvoiceItemUncheckedUpdateWithoutInvoiceInput>
@@ -92641,8 +93232,10 @@ export namespace Prisma {
     id?: StringFilter<"InvoiceItem"> | string
     invoiceId?: StringFilter<"InvoiceItem"> | string
     description?: StringFilter<"InvoiceItem"> | string
+    details?: StringNullableFilter<"InvoiceItem"> | string | null
     quantity?: IntFilter<"InvoiceItem"> | number
     unitPrice?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    taxPct?: DecimalNullableFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string | null
     total?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
   }
 
@@ -92652,11 +93245,14 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
     rateToBase?: Decimal | DecimalJsLike | number | string | null
     totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
+    issueDate?: Date | string | null
     dueDate?: Date | string | null
     sentAt?: Date | string | null
     acceptedAt?: Date | string | null
@@ -92669,6 +93265,7 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutInvoicesInput
     project?: ProjectCreateNestedOneWithoutInvoicesInput
     contact?: ContactCreateNestedOneWithoutInvoicesInput
+    deal?: DealCreateNestedOneWithoutInvoicesInput
   }
 
   export type InvoiceUncheckedCreateWithoutItemsInput = {
@@ -92676,15 +93273,19 @@ export namespace Prisma {
     workspaceId: string
     projectId?: string | null
     contactId?: string | null
+    dealId?: string | null
     number: string
     status?: $Enums.InvoiceStatus
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
     rateToBase?: Decimal | DecimalJsLike | number | string | null
     totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
+    issueDate?: Date | string | null
     dueDate?: Date | string | null
     sentAt?: Date | string | null
     acceptedAt?: Date | string | null
@@ -92718,11 +93319,14 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -92735,6 +93339,7 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutInvoicesNestedInput
     project?: ProjectUpdateOneWithoutInvoicesNestedInput
     contact?: ContactUpdateOneWithoutInvoicesNestedInput
+    deal?: DealUpdateOneWithoutInvoicesNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutItemsInput = {
@@ -92742,15 +93347,19 @@ export namespace Prisma {
     workspaceId?: StringFieldUpdateOperationsInput | string
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    dealId?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -94576,15 +95185,19 @@ export namespace Prisma {
     id?: string
     projectId?: string | null
     contactId?: string | null
+    dealId?: string | null
     number: string
     status?: $Enums.InvoiceStatus
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
     rateToBase?: Decimal | DecimalJsLike | number | string | null
     totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
+    issueDate?: Date | string | null
     dueDate?: Date | string | null
     sentAt?: Date | string | null
     acceptedAt?: Date | string | null
@@ -95064,6 +95677,7 @@ export namespace Prisma {
     items?: DealItemUpdateManyWithoutDealNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutWorkspaceInput = {
@@ -95093,6 +95707,7 @@ export namespace Prisma {
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -95208,11 +95823,14 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -95224,6 +95842,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneWithoutInvoicesNestedInput
     contact?: ContactUpdateOneWithoutInvoicesNestedInput
+    deal?: DealUpdateOneWithoutInvoicesNestedInput
     items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
   }
 
@@ -95231,15 +95850,19 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    dealId?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -95256,15 +95879,19 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    dealId?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96294,6 +96921,7 @@ export namespace Prisma {
     items?: DealItemUpdateManyWithoutDealNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutCompanyInput = {
@@ -96323,6 +96951,7 @@ export namespace Prisma {
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateManyWithoutCompanyInput = {
@@ -96470,15 +97099,19 @@ export namespace Prisma {
     id?: string
     workspaceId: string
     projectId?: string | null
+    dealId?: string | null
     number: string
     status?: $Enums.InvoiceStatus
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
     rateToBase?: Decimal | DecimalJsLike | number | string | null
     totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
+    issueDate?: Date | string | null
     dueDate?: Date | string | null
     sentAt?: Date | string | null
     acceptedAt?: Date | string | null
@@ -96555,6 +97188,7 @@ export namespace Prisma {
     items?: DealItemUpdateManyWithoutDealNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutContactInput = {
@@ -96584,6 +97218,7 @@ export namespace Prisma {
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateManyWithoutContactInput = {
@@ -96618,11 +97253,14 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96634,6 +97272,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutInvoicesNestedInput
     project?: ProjectUpdateOneWithoutInvoicesNestedInput
+    deal?: DealUpdateOneWithoutInvoicesNestedInput
     items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
   }
 
@@ -96641,15 +97280,19 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    dealId?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96666,15 +97309,19 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    dealId?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96963,6 +97610,7 @@ export namespace Prisma {
     items?: DealItemUpdateManyWithoutDealNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutPipelineInput = {
@@ -96992,6 +97640,7 @@ export namespace Prisma {
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateManyWithoutPipelineInput = {
@@ -97073,6 +97722,7 @@ export namespace Prisma {
     items?: DealItemUpdateManyWithoutDealNestedInput
     project?: ProjectUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutStageInput = {
@@ -97102,6 +97752,7 @@ export namespace Prisma {
     items?: DealItemUncheckedUpdateManyWithoutDealNestedInput
     project?: ProjectUncheckedUpdateOneWithoutDealNestedInput
     accessGrants?: DealAccessUncheckedUpdateManyWithoutDealNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateManyWithoutStageInput = {
@@ -97146,6 +97797,34 @@ export namespace Prisma {
     permissions: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     expiresAt?: Date | string | null
+  }
+
+  export type InvoiceCreateManyDealInput = {
+    id?: string
+    workspaceId: string
+    projectId?: string | null
+    contactId?: string | null
+    number: string
+    status?: $Enums.InvoiceStatus
+    subtotal: Decimal | DecimalJsLike | number | string
+    taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
+    total: Decimal | DecimalJsLike | number | string
+    rateToBase?: Decimal | DecimalJsLike | number | string | null
+    totalInBase?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
+    notes?: string | null
+    issueDate?: Date | string | null
+    dueDate?: Date | string | null
+    sentAt?: Date | string | null
+    acceptedAt?: Date | string | null
+    rejectedAt?: Date | string | null
+    paidAt?: Date | string | null
+    rejectionNote?: string | null
+    publicToken?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DealItemUpdateWithoutDealInput = {
@@ -97200,6 +97879,92 @@ export namespace Prisma {
     permissions?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type InvoiceUpdateWithoutDealInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    publicToken?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutInvoicesNestedInput
+    project?: ProjectUpdateOneWithoutInvoicesNestedInput
+    contact?: ContactUpdateOneWithoutInvoicesNestedInput
+    items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
+  }
+
+  export type InvoiceUncheckedUpdateWithoutDealInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    number?: StringFieldUpdateOperationsInput | string
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    publicToken?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+  }
+
+  export type InvoiceUncheckedUpdateManyWithoutDealInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    number?: StringFieldUpdateOperationsInput | string
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    publicToken?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectCreateManyStatusInput = {
@@ -97334,15 +98099,19 @@ export namespace Prisma {
     id?: string
     workspaceId: string
     contactId?: string | null
+    dealId?: string | null
     number: string
     status?: $Enums.InvoiceStatus
     subtotal: Decimal | DecimalJsLike | number | string
     taxAmount: Decimal | DecimalJsLike | number | string
+    discountType?: string
+    discountValue?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
     rateToBase?: Decimal | DecimalJsLike | number | string | null
     totalInBase?: Decimal | DecimalJsLike | number | string | null
     currency?: string
     notes?: string | null
+    issueDate?: Date | string | null
     dueDate?: Date | string | null
     sentAt?: Date | string | null
     acceptedAt?: Date | string | null
@@ -97513,11 +98282,14 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -97529,6 +98301,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutInvoicesNestedInput
     contact?: ContactUpdateOneWithoutInvoicesNestedInput
+    deal?: DealUpdateOneWithoutInvoicesNestedInput
     items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
   }
 
@@ -97536,15 +98309,19 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    dealId?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -97561,15 +98338,19 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    dealId?: NullableStringFieldUpdateOperationsInput | string | null
     number?: StringFieldUpdateOperationsInput | string
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     taxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rateToBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalInBase?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -98781,32 +99562,40 @@ export namespace Prisma {
   export type InvoiceItemCreateManyInvoiceInput = {
     id?: string
     description: string
+    details?: string | null
     quantity?: number
     unitPrice: Decimal | DecimalJsLike | number | string
+    taxPct?: Decimal | DecimalJsLike | number | string | null
     total: Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemUpdateWithoutInvoiceInput = {
     id?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    details?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
     unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxPct?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemUncheckedUpdateWithoutInvoiceInput = {
     id?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    details?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
     unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxPct?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemUncheckedUpdateManyWithoutInvoiceInput = {
     id?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    details?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
     unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    taxPct?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 

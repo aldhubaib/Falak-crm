@@ -22,6 +22,12 @@ export default async function InvoiceDetailPage({
           <SurfaceCard className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <h2 className="font-mono text-xl font-bold">{invoice.number}</h2>
+              {invoice.deal && (
+                <div className="mt-1 text-sm text-muted-foreground">
+                  {invoice.deal.title}
+                  {invoice.deal.company && ` · ${invoice.deal.company.name}`}
+                </div>
+              )}
               {invoice.project && (
                 <div className="mt-1 text-sm text-muted-foreground">
                   {invoice.project.name}
@@ -66,12 +72,24 @@ export default async function InvoiceDetailPage({
               {invoice.items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between text-sm"
+                  className="flex items-start justify-between gap-4 text-sm"
                 >
-                  <span>{item.description}</span>
-                  <span className="tabular-nums text-muted-foreground">
+                  <div className="min-w-0">
+                    <span>{item.description}</span>
+                    {item.details && (
+                      <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+                        {item.details}
+                      </p>
+                    )}
+                  </div>
+                  <span className="shrink-0 tabular-nums text-muted-foreground">
                     {item.quantity} &times;{" "}
                     {Number(item.unitPrice).toLocaleString()}
+                    {item.taxPct != null && Number(item.taxPct) > 0 && (
+                      <span className="ml-1 text-xs">
+                        (+{Number(item.taxPct)}% tax)
+                      </span>
+                    )}
                   </span>
                 </div>
               ))}
@@ -91,6 +109,24 @@ export default async function InvoiceDetailPage({
                   </span>
                 </div>
               )}
+              {Number(invoice.discountValue) > 0 && (
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>
+                    Discount
+                    {invoice.discountType === "percent" &&
+                      ` (${Number(invoice.discountValue)}%)`}
+                  </span>
+                  <span className="tabular-nums">
+                    &minus;
+                    {(invoice.discountType === "percent"
+                      ? (Number(invoice.subtotal) *
+                          Number(invoice.discountValue)) /
+                        100
+                      : Number(invoice.discountValue)
+                    ).toLocaleString()}
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between font-semibold text-sm">
                 <span>Total</span>
                 <span className="tabular-nums">
@@ -99,6 +135,17 @@ export default async function InvoiceDetailPage({
               </div>
             </div>
           </SurfaceCard>
+
+          {invoice.notes && (
+            <SurfaceCard>
+              <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Customer Notes
+              </div>
+              <p className="whitespace-pre-wrap text-sm text-muted-foreground">
+                {invoice.notes}
+              </p>
+            </SurfaceCard>
+          )}
 
           <SurfaceCard>
             <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -109,6 +156,17 @@ export default async function InvoiceDetailPage({
                 Created:{" "}
                 {new Date(invoice.createdAt).toLocaleDateString()}
               </div>
+              {invoice.issueDate && (
+                <div>
+                  Invoice date:{" "}
+                  {new Date(invoice.issueDate).toLocaleDateString()}
+                </div>
+              )}
+              {invoice.dueDate && (
+                <div>
+                  Due: {new Date(invoice.dueDate).toLocaleDateString()}
+                </div>
+              )}
               {invoice.sentAt && (
                 <div>
                   Sent: {new Date(invoice.sentAt).toLocaleDateString()}

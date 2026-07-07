@@ -53,6 +53,7 @@ export async function getInvoice(id: string) {
     include: {
       contact: true,
       project: { include: { company: true } },
+      deal: { select: { id: true, title: true, company: { select: { name: true } } } },
       items: true,
     },
   });
@@ -128,6 +129,179 @@ export async function createInvoiceFromProject(projectId: string, taskIds: strin
   revalidatePath(`/projects/${projectId}`);
   if (dealId) revalidatePath(`/deals/${dealId}`);
   return invoice;
+}
+
+/** Everything the New Invoice form needs, in one round trip. */
+export async function getNewInvoiceData() {
+  const workspace = await requireWorkspace();
+  const [lastInvoice, deals, services, currencies] = await Promise.all([
+    db.invoice.findFirst({
+      where: { workspaceId: workspace.id },
+      orderBy: { createdAt: "desc" },
+      select: { number: true },
+    }),
+    db.deal.findMany({
+      where: { workspaceId: workspace.id, deletedAt: null },
+      select: {
+        id: true,
+        title: true,
+        currency: true,
+        company: { select: { name: true } },
+        project: { select: { id: true, name: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+    db.service.findMany({
+      where: { workspaceId: workspace.id, active: true },
+      select: { id: true, name: true, description: true, unitPrice: true },
+      orderBy: { name: "asc" },
+    }),
+    db.currency.findMany({
+      where: { workspaceId: workspace.id, active: true },
+      select: { code: true, name: true },
+      orderBy: { code: "asc" },
+    }),
+  ]);
+
+  const lastNum = lastInvoice
+    ? parseInt(lastInvoice.number.replace(/\D/g, ""), 10) || 0
+    : 0;
+
+  return {
+    nextNumber: `INV-${String(lastNum + 1).padStart(6, "0")}`,
+    baseCurrency: workspace.baseCurrency,
+    deals: deals.map((d) => ({
+      id: d.id,
+      title: d.title,
+      companyName: d.company?.name ?? null,
+      project: d.project,
+    })),
+    services: services.map((s) => ({
+      id: s.id,
+      name: s.name,
+      description: s.description,
+      unitPrice: Number(s.unitPrice),
+    })),
+    currencies,
+  };
+}
+
+export type NewInvoiceInput = {
+  dealId: string;
+  projectId?: string | null;
+  issueDate: string; // yyyy-mm-dd
+  dueDate: string; // yyyy-mm-dd
+  currency: string;
+  notes?: string;
+  discountType: "percent" | "fixed";
+  discountValue: number;
+  items: {
+    title: string;
+    details?: string;
+    qty: number;
+    rate: number;
+    taxPct?: number;
+  }[];
+  send?: boolean;
+};
+
+/** Creates an invoice from the New Invoice form (deal-based, line items, discount). */
+export async function createInvoiceDetailed(
+  input: NewInvoiceInput,
+): Promise<ActionResult<{ id: string }>> {
+  return safeAction("Create Invoice", async () => {
+    const { workspace, member } = await requireWorkspaceWithMember();
+    if (!canEdit(member, "invoices")) throw new Error("Permission denied");
+
+    const deal = await db.deal.findFirst({
+      where: { id: input.dealId, workspaceId: workspace.id, deletedAt: null },
+      select: { id: true, contactId: true, project: { select: { id: true } } },
+    });
+    if (!deal) throw new Error("Deal not found");
+
+    const items = input.items
+      .map((it) => ({
+        title: it.title.trim(),
+        details: it.details?.trim() || null,
+        qty: Math.max(0, Math.round(it.qty)),
+        rate: Math.max(0, it.rate),
+        taxPct: it.taxPct && it.taxPct > 0 ? it.taxPct : null,
+      }))
+      .filter((it) => it.title);
+    if (items.length === 0) throw new Error("Add at least one line item");
+
+    const subtotal = items.reduce((s, it) => s + it.qty * it.rate, 0);
+    const taxAmount = items.reduce(
+      (s, it) => s + (it.qty * it.rate * (it.taxPct ?? 0)) / 100,
+      0,
+    );
+    const discountValue = Math.max(0, input.discountValue || 0);
+    const discountAmount =
+      input.discountType === "fixed"
+        ? Math.min(discountValue, subtotal)
+        : (subtotal * discountValue) / 100;
+    const total = subtotal + taxAmount - discountAmount;
+
+    const lastInvoice = await db.invoice.findFirst({
+      where: { workspaceId: workspace.id },
+      orderBy: { createdAt: "desc" },
+      select: { number: true },
+    });
+    const lastNum = lastInvoice
+      ? parseInt(lastInvoice.number.replace(/\D/g, ""), 10) || 0
+      : 0;
+    const number = `INV-${String(lastNum + 1).padStart(6, "0")}`;
+
+    const rateToBase = await getLatestRateForCurrency(input.currency);
+
+    const invoice = await db.invoice.create({
+      data: {
+        workspaceId: workspace.id,
+        dealId: deal.id,
+        projectId:
+          input.projectId && input.projectId === deal.project?.id
+            ? input.projectId
+            : null,
+        contactId: deal.contactId,
+        number,
+        status: input.send ? "SENT" : "DRAFT",
+        sentAt: input.send ? new Date() : null,
+        subtotal,
+        taxAmount,
+        discountType: input.discountType,
+        discountValue,
+        total,
+        currency: input.currency,
+        rateToBase,
+        totalInBase: rateToBase != null ? total * rateToBase : null,
+        notes: input.notes?.trim() || null,
+        issueDate: new Date(input.issueDate),
+        dueDate: new Date(input.dueDate),
+        items: {
+          create: items.map((it) => ({
+            description: it.title,
+            details: it.details,
+            quantity: it.qty,
+            unitPrice: it.rate,
+            taxPct: it.taxPct,
+            total: it.qty * it.rate,
+          })),
+        },
+      },
+    });
+
+    await logActivity({
+      entityType: "invoice",
+      entityId: invoice.id,
+      entityName: number,
+      action: input.send ? "sent" : "created",
+      metadata: { dealId: deal.id, total },
+    });
+
+    revalidatePath("/invoices");
+    revalidatePath(`/deals/${deal.id}`);
+    return { id: invoice.id };
+  });
 }
 
 export async function createInvoice(formData: FormData): Promise<ActionResult<{ id: string }>> {
