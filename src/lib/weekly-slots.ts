@@ -47,4 +47,62 @@ export async function ensureWeeklySlots(projectId: string): Promise<void> {
   if (data.length > 0) {
     await db.weeklySlot.createMany({ data });
   }
+
+  await adoptTodoTasksIntoSlots(projectId, weekStart);
+}
+
+// Tasks that are ALREADY sitting in Todo but aren't bound to any slot (they
+// were there before the weekly plan existed, or before this week's slots were
+// seeded) adopt the week's free slots of their type. Without this the counter
+// reads 0/N with dashed placeholders below real cards.
+async function adoptTodoTasksIntoSlots(
+  projectId: string,
+  weekStart: Date,
+): Promise<void> {
+  const freeSlots = await db.weeklySlot.findMany({
+    where: { projectId, weekStart, taskId: null, removedAt: null },
+    orderBy: { createdAt: "asc" },
+    select: { id: true, templateId: true },
+  });
+  if (freeSlots.length === 0) return;
+
+  const unbound = await db.task.findMany({
+    where: {
+      projectId,
+      deletedAt: null,
+      status: { name: "Todo" },
+      weeklySlot: null,
+    },
+    orderBy: { createdAt: "asc" },
+    select: {
+      id: true,
+      checklistItems: {
+        select: { templateItem: { select: { templateId: true } } },
+      },
+    },
+  });
+  if (unbound.length === 0) return;
+
+  // Same type resolution the board and the move gate use: the first checklist
+  // item that traces back to a template.
+  const queue = new Map<string, string[]>();
+  for (const t of unbound) {
+    const templateId =
+      t.checklistItems.find((ci) => ci.templateItem?.templateId)?.templateItem
+        ?.templateId ?? null;
+    if (!templateId) continue;
+    const ids = queue.get(templateId) ?? [];
+    ids.push(t.id);
+    queue.set(templateId, ids);
+  }
+
+  for (const slot of freeSlots) {
+    const taskId = queue.get(slot.templateId)?.shift();
+    if (!taskId) continue;
+    // `taskId: null` guard keeps a concurrent claim from being overwritten.
+    await db.weeklySlot.updateMany({
+      where: { id: slot.id, taskId: null },
+      data: { taskId },
+    });
+  }
 }

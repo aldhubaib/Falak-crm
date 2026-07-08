@@ -269,14 +269,10 @@ const BoardColumn = memo(function BoardColumn({
     />
   );
 
-  // Weekly Plan rendering (Todo only): tasks grouped under their type with a
-  // filled/total counter, dashed placeholders for the week's open slots, and
-  // any tasks of unplanned types listed below.
+  // Weekly Plan rendering (Todo only): tasks render as usual, and each open
+  // slot for the week shows as a dashed placeholder labelled with its task
+  // type and slot number (e.g. "AI VIDEO 9:16 #2").
   const weeklyGroups = weekly && weekly.length > 0 ? weekly : null;
-  const plannedTemplateIds = new Set(weeklyGroups?.map((g) => g.templateId));
-  const unplannedTasks = weeklyGroups
-    ? col.tasks.filter((t) => !t.templateId || !plannedTemplateIds.has(t.templateId))
-    : col.tasks;
 
   return (
     <div className="flex min-w-0 flex-col md:w-[312px] md:min-w-[312px] md:shrink-0">
@@ -339,51 +335,40 @@ const BoardColumn = memo(function BoardColumn({
       >
         {weeklyGroups ? (
           <>
-            {weeklyGroups.map((g) => {
-              const groupTasks = col.tasks.filter(
-                (t) => t.templateId === g.templateId,
-              );
+            {col.tasks.map(renderCard)}
+            {weeklyGroups.flatMap((g) => {
               const filled = g.total - g.emptySlotIds.length;
-              return (
-                <div key={g.templateId} className="space-y-2">
-                  <div className="flex items-center gap-1.5 px-1 pt-1 text-[10px] font-semibold uppercase tracking-[0.14em]">
+              return g.emptySlotIds.map((slotId, i) => (
+                <div
+                  key={slotId}
+                  className="group/slot relative grid h-[72px] place-items-center rounded-lg border border-dashed border-border/80"
+                >
+                  <span className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
                     <span
                       className="h-1.5 w-1.5 shrink-0 rounded-full"
                       style={{ backgroundColor: g.templateColor ?? "#f59e0b" }}
                     />
-                    <span className="truncate text-foreground">
-                      {g.templateName}
+                    <span className="truncate">
+                      {g.templateName}{" "}
+                      <span className="text-muted-foreground/40">
+                        #{filled + i + 1}
+                      </span>
                     </span>
-                    <span className="text-muted-foreground">
-                      {filled}/{g.total}
-                    </span>
-                  </div>
-                  {groupTasks.map(renderCard)}
-                  {g.emptySlotIds.map((slotId) => (
-                    <div
-                      key={slotId}
-                      className="group/slot relative grid h-[72px] place-items-center rounded-lg border border-dashed border-border/80 text-sm text-muted-foreground/50"
+                  </span>
+                  {canRemoveSlot && onRemoveSlot && (
+                    <button
+                      type="button"
+                      aria-label="Remove this slot"
+                      title="Remove slot (admin)"
+                      onClick={() => onRemoveSlot(slotId)}
+                      className="absolute right-1.5 top-1.5 hidden size-5 place-items-center rounded-full text-muted-foreground/60 transition-colors hover:bg-destructive/15 hover:text-destructive group-hover/slot:grid"
                     >
-                      Empty slot
-                      {canRemoveSlot && onRemoveSlot && (
-                        <button
-                          type="button"
-                          aria-label="Remove this slot"
-                          title="Remove slot (admin)"
-                          onClick={() => onRemoveSlot(slotId)}
-                          className="absolute right-1.5 top-1.5 hidden size-5 place-items-center rounded-full text-muted-foreground/60 transition-colors hover:bg-destructive/15 hover:text-destructive group-hover/slot:grid"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      )}
-                    </div>
-                  ))}
+                      <X className="h-3 w-3" />
+                    </button>
+                  )}
                 </div>
-              );
+              ));
             })}
-            {unplannedTasks.length > 0 && (
-              <div className="space-y-2 pt-1">{unplannedTasks.map(renderCard)}</div>
-            )}
           </>
         ) : col.tasks.length === 0 ? (
           <div className="grid h-24 place-items-center text-xs text-muted-foreground">
