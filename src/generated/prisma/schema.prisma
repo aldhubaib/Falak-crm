@@ -841,6 +841,7 @@ model Payment {
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   invoice   Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 
+  @@unique([workspaceId, number])
   @@index([workspaceId, date])
   @@index([invoiceId])
 }

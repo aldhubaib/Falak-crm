@@ -68742,6 +68742,7 @@ export namespace Prisma {
 
   export type PaymentWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    workspaceId_number?: PaymentWorkspaceIdNumberCompoundUniqueInput
     AND?: PaymentWhereInput | PaymentWhereInput[]
     OR?: PaymentWhereInput[]
     NOT?: PaymentWhereInput | PaymentWhereInput[]
@@ -68760,7 +68761,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     invoice?: XOR<InvoiceScalarRelationFilter, InvoiceWhereInput>
-  }, "id">
+  }, "id" | "workspaceId_number">
 
   export type PaymentOrderByWithAggregationInput = {
     id?: SortOrder
@@ -77031,6 +77032,11 @@ export namespace Prisma {
   export type InvoiceScalarRelationFilter = {
     is?: InvoiceWhereInput
     isNot?: InvoiceWhereInput
+  }
+
+  export type PaymentWorkspaceIdNumberCompoundUniqueInput = {
+    workspaceId: string
+    number: string
   }
 
   export type PaymentCountOrderByAggregateInput = {

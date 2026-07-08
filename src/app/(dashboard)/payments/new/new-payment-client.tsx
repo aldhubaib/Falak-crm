@@ -1,8 +1,10 @@
 "use client";
 
-// Record Payment form matching the Lovable design: invoice picker with the
-// outstanding balance hint, payment number/date, type, mode, reference,
-// location, amount and notes. Also drives the edit flow (`?edit=`).
+// Record Payment form: invoice picker with the outstanding balance hint
+// (locked when opened from an invoice), a system-generated payment number,
+// date, type, mode, reference, amount with a "Full payment" shortcut and a
+// live remaining-balance preview, and notes. Also drives the edit flow
+// (`?edit=`).
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -37,7 +39,6 @@ export type PaymentFormInitial = {
   number: string;
   invoiceId: string;
   date: string; // yyyy-mm-dd
-  location: string;
   type: string;
   mode: string;
   referenceNumber: string;
@@ -70,7 +71,14 @@ export function NewPaymentClient({
   const router = useRouter();
   const isEdit = !!paymentId;
 
-  const [number, setNumber] = useState(initial?.number ?? nextNumber);
+  // The payment number is system-generated and never editable.
+  const number = initial?.number ?? nextNumber;
+  // Opened from an invoice ("Record Payment" on its preview) — lock it.
+  const invoiceLocked =
+    !isEdit &&
+    !!preselectInvoiceId &&
+    invoices.some((i) => i.id === preselectInvoiceId);
+
   const [invoiceId, setInvoiceId] = useState(
     initial?.invoiceId ??
       (preselectInvoiceId && invoices.some((i) => i.id === preselectInvoiceId)
@@ -85,7 +93,6 @@ export function NewPaymentClient({
   const [referenceNumber, setReferenceNumber] = useState(
     initial?.referenceNumber ?? "",
   );
-  const [location, setLocation] = useState(initial?.location ?? "Kuwait");
   const selectedInvoice = useMemo(
     () => invoices.find((i) => i.id === invoiceId) ?? null,
     [invoices, invoiceId],
@@ -103,9 +110,19 @@ export function NewPaymentClient({
 
   const currency = selectedInvoice?.currency ?? "KWD";
   const amountNum = Number(amount) || 0;
-  const balance = selectedInvoice
-    ? Math.max(0, selectedInvoice.total - selectedInvoice.paid)
+  // When editing, this payment's own amount is already inside `paid` — take
+  // it back out so the balance reflects what the other payments cover.
+  const paidByOthers = selectedInvoice
+    ? selectedInvoice.paid -
+      (isEdit && initial && initial.invoiceId === invoiceId
+        ? initial.amount
+        : 0)
     : 0;
+  const balance = selectedInvoice
+    ? Math.max(0, selectedInvoice.total - paidByOthers)
+    : 0;
+  const remaining = balance - amountNum;
+  const settlesInFull = Math.abs(remaining) < 0.0005;
 
   const pickInvoice = (id: string) => {
     setInvoiceId(id);
@@ -123,9 +140,7 @@ export function NewPaymentClient({
 
     const result = await submit({
       invoiceId,
-      number,
       date,
-      location: location || undefined,
       type,
       mode,
       referenceNumber: referenceNumber || undefined,
@@ -148,10 +163,12 @@ export function NewPaymentClient({
               <SearchableSelect
                 value={invoiceId}
                 onValueChange={pickInvoice}
+                disabled={invoiceLocked}
                 placeholder="Select invoice"
                 searchPlaceholder="Search invoices…"
                 className={cn(
-                  "w-full",
+                  "w-full disabled:opacity-100",
+                  invoiceLocked && "cursor-default bg-muted/30 [&>svg]:hidden",
                   invalid.invoice &&
                     "border-destructive focus-visible:ring-destructive/30",
                 )}
@@ -169,19 +186,22 @@ export function NewPaymentClient({
                 <div className="mt-2 text-xs text-muted-foreground">
                   Invoice total:{" "}
                   {formatMoney(selectedInvoice.currency, selectedInvoice.total)}
-                  {selectedInvoice.paid > 0 && (
-                    <>
-                      {" "}
-                      · Balance due: {formatMoney(selectedInvoice.currency, balance)}
-                    </>
-                  )}
+                  {" "}
+                  · Balance due: {formatMoney(selectedInvoice.currency, balance)}
                 </div>
               )}
             </Field>
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Field label="Payment #">
-                <Input value={number} onChange={(e) => setNumber(e.target.value)} />
+                <Input
+                  value={number}
+                  readOnly
+                  className="cursor-default bg-muted/30 focus-visible:ring-0"
+                />
+                <p className="mt-1 text-tiny text-muted-foreground">
+                  System generated
+                </p>
               </Field>
               <Field label="Payment Date">
                 <div className="relative">
@@ -223,32 +243,60 @@ export function NewPaymentClient({
                 />
               </Field>
 
-              <Field label="Location">
-                <Input
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                />
-              </Field>
-
               <Field label={`Amount (${currency})`} required>
-                <Input
-                  type="number"
-                  step="0.001"
-                  min="0"
-                  value={amount}
-                  aria-invalid={invalid.amount || undefined}
-                  onChange={(e) => {
-                    setAmount(e.target.value);
-                    setInvalid((v) => ({ ...v, amount: false }));
-                  }}
-                  className={cn(
-                    invalid.amount &&
-                      "border-destructive focus-visible:ring-destructive/30",
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="number"
+                    step="0.001"
+                    min="0"
+                    value={amount}
+                    aria-invalid={invalid.amount || undefined}
+                    onChange={(e) => {
+                      setAmount(e.target.value);
+                      setInvalid((v) => ({ ...v, amount: false }));
+                    }}
+                    className={cn(
+                      "flex-1",
+                      invalid.amount &&
+                        "border-destructive focus-visible:ring-destructive/30",
+                    )}
+                  />
+                  {selectedInvoice && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="h-9 shrink-0 rounded-md text-xs"
+                      onClick={() => {
+                        setAmount(String(balance));
+                        setInvalid((v) => ({ ...v, amount: false }));
+                      }}
+                    >
+                      Full payment
+                    </Button>
                   )}
-                />
+                </div>
                 {invalid.amount && (
                   <p className="mt-1.5 text-xs text-destructive">
                     Enter an amount greater than zero.
+                  </p>
+                )}
+                {selectedInvoice && amountNum > 0 && (
+                  <p
+                    className={cn(
+                      "mt-1.5 text-xs",
+                      settlesInFull
+                        ? "text-emerald-500"
+                        : remaining > 0
+                          ? "text-muted-foreground"
+                          : "text-amber-500",
+                    )}
+                  >
+                    {settlesInFull
+                      ? "This settles the invoice in full."
+                      : remaining > 0
+                        ? `Remaining after this payment: ${formatMoney(currency, remaining)}`
+                        : `Overpays the invoice by ${formatMoney(currency, -remaining)}.`}
                   </p>
                 )}
               </Field>

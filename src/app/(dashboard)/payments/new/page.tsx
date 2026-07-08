@@ -32,7 +32,6 @@ export default async function NewPaymentPage({
       number: payment.number,
       invoiceId: payment.invoiceId,
       date: payment.date.toISOString().slice(0, 10),
-      location: payment.location ?? "",
       type: payment.type,
       mode: payment.mode,
       referenceNumber: payment.referenceNumber ?? "",

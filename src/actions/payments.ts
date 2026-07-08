@@ -15,7 +15,6 @@ export type PaymentRow = {
   id: string;
   number: string;
   date: string; // ISO
-  location: string | null;
   type: string;
   mode: string;
   referenceNumber: string | null;
@@ -71,7 +70,6 @@ export async function getPayments(): Promise<PaymentRow[]> {
     id: p.id,
     number: p.number,
     date: p.date.toISOString(),
-    location: p.location,
     type: p.type,
     mode: p.mode,
     referenceNumber: p.referenceNumber,
@@ -89,7 +87,7 @@ export async function getPayments(): Promise<PaymentRow[]> {
 /** Everything the Record Payment form needs, in one round trip. */
 export async function getNewPaymentData() {
   const workspace = await requireWorkspace();
-  const [invoices, lastPayment] = await Promise.all([
+  const [invoices, nextNumber] = await Promise.all([
     db.invoice.findMany({
       where: {
         workspaceId: workspace.id,
@@ -101,19 +99,11 @@ export async function getNewPaymentData() {
       },
       orderBy: { createdAt: "desc" },
     }),
-    db.payment.findFirst({
-      where: { workspaceId: workspace.id },
-      orderBy: { createdAt: "desc" },
-      select: { number: true },
-    }),
+    nextPaymentNumber(workspace.id),
   ]);
 
-  const lastNum = lastPayment
-    ? parseInt(lastPayment.number.replace(/\D/g, ""), 10) || 0
-    : 1069; // First payment number is 1070, matching the design.
-
   return {
-    nextNumber: String(lastNum + 1),
+    nextNumber,
     invoices: invoices.map((inv) => ({
       id: inv.id,
       number: inv.number,
@@ -127,15 +117,28 @@ export async function getNewPaymentData() {
 
 export type PaymentInput = {
   invoiceId: string;
-  number: string;
   date: string; // yyyy-mm-dd
-  location?: string;
   type: string;
   mode: string;
   referenceNumber?: string;
   amount: number;
   notes?: string;
 };
+
+// Payment numbers are system-generated and sequential per workspace
+// ("1070", "1071", ...). A unique index on (workspaceId, number) guards
+// against concurrent inserts — on collision we re-read and retry.
+async function nextPaymentNumber(workspaceId: string): Promise<string> {
+  const last = await db.payment.findFirst({
+    where: { workspaceId },
+    orderBy: { createdAt: "desc" },
+    select: { number: true },
+  });
+  const lastNum = last
+    ? parseInt(last.number.replace(/\D/g, ""), 10) || 0
+    : 1069; // First payment number is 1070, matching the design.
+  return String(lastNum + 1);
+}
 
 // Re-derives the invoice status from its payments. Fully covered → PAID,
 // partially covered → PARTIAL, none → back to SENT/DRAFT (only when the
@@ -182,7 +185,6 @@ function validateInput(input: PaymentInput) {
   if (!(input.amount > 0)) throw new Error("Enter an amount greater than zero");
   if (!input.date || Number.isNaN(new Date(input.date).getTime()))
     throw new Error("Pick a valid payment date");
-  if (!input.number.trim()) throw new Error("Payment number is required");
 }
 
 function revalidatePayments(invoiceId: string) {
@@ -206,21 +208,32 @@ export async function createPayment(
     });
     if (!invoice) throw new Error("Invoice not found");
 
-    const payment = await db.payment.create({
-      data: {
-        workspaceId: workspace.id,
-        invoiceId: invoice.id,
-        number: input.number.trim(),
-        date: new Date(input.date),
-        location: input.location?.trim() || null,
-        type: input.type,
-        mode: input.mode,
-        referenceNumber: input.referenceNumber?.trim() || null,
-        amount: input.amount,
-        currency: invoice.currency,
-        notes: input.notes?.trim() || null,
-      },
-    });
+    const data = {
+      workspaceId: workspace.id,
+      invoiceId: invoice.id,
+      date: new Date(input.date),
+      type: input.type,
+      mode: input.mode,
+      referenceNumber: input.referenceNumber?.trim() || null,
+      amount: input.amount,
+      currency: invoice.currency,
+      notes: input.notes?.trim() || null,
+    };
+
+    let payment;
+    for (let attempt = 0; ; attempt++) {
+      try {
+        payment = await db.payment.create({
+          data: { ...data, number: await nextPaymentNumber(workspace.id) },
+        });
+        break;
+      } catch (e) {
+        // P2002 = unique violation (another payment grabbed this number).
+        const isCollision =
+          typeof e === "object" && e !== null && "code" in e && e.code === "P2002";
+        if (!isCollision || attempt >= 2) throw e;
+      }
+    }
 
     await recomputeInvoiceFromPayments(invoice.id);
 
@@ -259,13 +272,12 @@ export async function updatePayment(
     });
     if (!invoice) throw new Error("Invoice not found");
 
+    // The number stays as originally generated — it's never client-editable.
     await db.payment.update({
       where: { id: existing.id },
       data: {
         invoiceId: invoice.id,
-        number: input.number.trim(),
         date: new Date(input.date),
-        location: input.location?.trim() || null,
         type: input.type,
         mode: input.mode,
         referenceNumber: input.referenceNumber?.trim() || null,
@@ -285,7 +297,7 @@ export async function updatePayment(
     await logActivity({
       entityType: "payment",
       entityId: existing.id,
-      entityName: `#${input.number.trim()}`,
+      entityName: `#${existing.number}`,
       action: "updated",
       metadata: { invoiceNumber: invoice.number, amount: input.amount },
     });

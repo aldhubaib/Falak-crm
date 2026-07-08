@@ -69,7 +69,6 @@ function formatShortDate(iso: string): string {
 
 const COLUMNS = [
   { key: "date", label: "Date" },
-  { key: "location", label: "Location" },
   { key: "number", label: "Payment #" },
   { key: "type", label: "Type" },
   { key: "reference", label: "Reference Number" },
@@ -102,7 +101,6 @@ export function PaymentsClient({
   );
   const [visible, setVisible] = useState<Record<ColumnKey, boolean>>({
     date: true,
-    location: true,
     number: true,
     type: true,
     reference: true,
@@ -138,13 +136,6 @@ export function PaymentsClient({
       sortValue: (p) => new Date(p.date),
       mobile: "hide",
       cell: (p) => formatShortDate(p.date),
-    },
-    {
-      key: "location",
-      header: "Location",
-      mobile: "hide",
-      cell: (p) =>
-        p.location ?? <span className="text-muted-foreground/60">—</span>,
     },
     {
       key: "number",
@@ -384,7 +375,7 @@ function PaymentPreview({
 
   return (
     <EntityPreviewShell
-      eyebrow={`Location: ${payment.location ?? "—"}`}
+      eyebrow="Payment"
       title={payment.number}
       onClose={onClose}
       toolbar={
