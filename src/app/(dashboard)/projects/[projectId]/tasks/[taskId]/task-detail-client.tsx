@@ -595,7 +595,7 @@ function StatusMoveBar({
   ): Promise<boolean> => {
     setMoving(true);
     try {
-      await updateTaskStatus(
+      const result = await updateTaskStatus(
         taskId,
         targetId,
         projectId,
@@ -603,6 +603,12 @@ function StatusMoveBar({
         undefined,
         estimateMin,
       );
+      // Blocked moves come back as data (not a thrown error) so the friendly
+      // message survives production builds.
+      if (!result.ok) {
+        setMoveError(result.error);
+        return false;
+      }
       // The board keeps its own client cache — refetch it so the card is in
       // the right column when the user navigates back.
       void queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
@@ -623,7 +629,9 @@ function StatusMoveBar({
       deliveryIncomplete.length > 0
     ) {
       const names = deliveryIncomplete.map((n) => `"${n}"`).join(", ");
-      setMoveError(`Complete delivery items first: ${names}`);
+      setMoveError(
+        `This task's delivery items aren't complete yet, so it can't be submitted for review. Still missing: ${names}. If you believe this is a mistake, please contact the task creator.`,
+      );
       return;
     }
     if (CONFIRM_MESSAGES[next.name]) setConfirmNext(true);

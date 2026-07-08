@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { fieldConfig } from "@/lib/checklist-config";
+import { fieldConfig, requiredIncompleteForNextStage } from "@/lib/checklist-config";
 import { requireProjectWork } from "@/lib/workspace";
 
 export type BoardStatus = {
@@ -31,6 +31,13 @@ export type BoardTask = {
   checklistTotal: number;
   checklistDone: number;
   deliveryIncomplete: string[];
+  /**
+   * Names of required fields that would block moving the task to its NEXT
+   * stage right now ("Required Before" gates, plus mandatory delivery items
+   * when the next stage is Internal Review). Non-empty → card shows a red
+   * border.
+   */
+  requiredIncomplete: string[];
   submittedById: string | null;
   submittedByName: string | null;
   rejectionCount: number;
@@ -69,13 +76,24 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         checklistItems: {
           select: {
             name: true,
+            type: true,
             phase: true,
             mandatory: true,
             completed: true,
             hidden: true,
+            requiredBeforeStageId: true,
+            textValue: true,
+            attachmentId: true,
             // Live template config — the per-task copy is only a fallback.
             templateItem: {
-              select: { name: true, phase: true, mandatory: true, hidden: true },
+              select: {
+                name: true,
+                type: true,
+                phase: true,
+                mandatory: true,
+                hidden: true,
+                requiredBeforeStageId: true,
+              },
             },
           },
         },
@@ -148,6 +166,12 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
     const checklist = t.checklistItems
       .map((i) => ({ cfg: fieldConfig(i), completed: i.completed }))
       .filter((i) => !i.cfg.hidden);
+    const requiredIncomplete = requiredIncompleteForNextStage(
+      t.checklistItems,
+      t.statusId,
+      statuses,
+    );
+
     return {
       id: t.id,
       taskNumber: t.taskNumber,
@@ -170,6 +194,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
       deliveryIncomplete: checklist
         .filter((i) => i.cfg.phase === "delivery" && i.cfg.mandatory && !i.completed)
         .map((i) => i.cfg.name),
+      requiredIncomplete,
       submittedById: submittedBy.get(t.id)?.id ?? null,
       submittedByName: submittedBy.get(t.id)?.name ?? null,
       rejectionCount: t.rejectionCount ?? 0,

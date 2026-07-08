@@ -21,6 +21,122 @@ export function fieldConfig<T extends object, U extends object>(
   return item.templateItem ?? item;
 }
 
+/**
+ * Whether a checklist field counts as complete for stage-gate purposes.
+ * Yes/No kinds (mention, copyright) only block when answered "Yes" without
+ * their follow-up: Mention needs its text, Copyright needs its file.
+ */
+export function isGateComplete(
+  item: {
+    completed: boolean;
+    textValue?: string | null;
+    attachmentId?: string | null;
+  },
+  cfg: { type?: string },
+): boolean {
+  if (item.completed) return true;
+  if (cfg.type !== "mention" && cfg.type !== "copyright") return false;
+
+  const raw = (item.textValue ?? "").trim();
+  let value: "yes" | "no" | null = null;
+  let text = "";
+  if (raw === "yes" || raw === "no") value = raw;
+  else if (raw) {
+    try {
+      const o = JSON.parse(raw) as {
+        v?: string;
+        t?: string;
+        enabled?: boolean;
+        text?: string;
+      };
+      if (o?.v === "yes" || o?.v === "no") {
+        value = o.v;
+        text = o.t ?? "";
+      } else if (typeof o?.enabled === "boolean") {
+        // Legacy {enabled, text} format.
+        value = o.enabled ? "yes" : "no";
+        text = o.text ?? "";
+      }
+    } catch {
+      // Legacy plain text — a "yes" with text.
+      value = "yes";
+      text = raw;
+    }
+  }
+  if (value === "yes") {
+    return cfg.type === "copyright" ? !!item.attachmentId : !!text.trim();
+  }
+  return true;
+}
+
+type GateFieldConfig = {
+  name: string;
+  type?: string;
+  phase: string;
+  mandatory: boolean;
+  hidden: boolean;
+  requiredBeforeStageId: string | null;
+};
+
+/**
+ * Names of required fields that would block moving the task to its NEXT
+ * stage right now: "Required Before" gates at or before the next stage, plus
+ * mandatory delivery items when the next stage is Internal Review. Mirrors
+ * the server checks in updateTaskStatus/getStageGateBlockers so a red card
+ * border matches exactly what a move would reject.
+ */
+export function requiredIncompleteForNextStage(
+  items: Array<
+    GateFieldConfig & {
+      completed: boolean;
+      textValue?: string | null;
+      attachmentId?: string | null;
+      templateItem?: GateFieldConfig | null;
+    }
+  >,
+  currentStatusId: string | null,
+  /** All workspace stages, any order. */
+  statuses: Array<{ id: string; name: string; order: number }>,
+): string[] {
+  const orderById = new Map(statuses.map((s) => [s.id, s.order]));
+  const currentOrder = currentStatusId
+    ? (orderById.get(currentStatusId) ?? null)
+    : null;
+  if (currentOrder == null) return [];
+  const nextStatus = statuses
+    .filter((s) => s.order > currentOrder)
+    .sort((a, b) => a.order - b.order)[0];
+  if (!nextStatus) return [];
+
+  const missing = new Set<string>();
+  for (const item of items) {
+    const cfg = fieldConfig(item);
+    if (cfg.hidden) continue;
+
+    const gateId = cfg.requiredBeforeStageId;
+    if (gateId) {
+      const gateOrder = orderById.get(gateId);
+      if (
+        gateOrder != null &&
+        gateOrder <= nextStatus.order &&
+        !isGateComplete(item, cfg)
+      ) {
+        missing.add(cfg.name);
+      }
+    }
+
+    if (
+      nextStatus.name.toLowerCase() === "internal review" &&
+      cfg.phase === "delivery" &&
+      cfg.mandatory &&
+      !item.completed
+    ) {
+      missing.add(cfg.name);
+    }
+  }
+  return [...missing];
+}
+
 export type LockConfig = {
   phase: string;
   lockedFromStageId: string | null;

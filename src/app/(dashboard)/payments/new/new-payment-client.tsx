@@ -189,14 +189,6 @@ export function NewPaymentClient({
                   Select an invoice.
                 </p>
               )}
-              {selectedInvoice && (
-                <div className="mt-2 text-xs text-muted-foreground">
-                  Invoice total:{" "}
-                  {formatMoney(selectedInvoice.currency, selectedInvoice.total)}
-                  {" "}
-                  · Balance due: {formatMoney(selectedInvoice.currency, balance)}
-                </div>
-              )}
             </Field>
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -217,7 +209,8 @@ export function NewPaymentClient({
                     type="date"
                     value={date}
                     onChange={(e) => e.target.value && setDate(e.target.value)}
-                    className="pl-9 [&::-webkit-calendar-picker-indicator]:opacity-60"
+                    onClick={(e) => e.currentTarget.showPicker?.()}
+                    className="pl-9 [&::-webkit-calendar-picker-indicator]:hidden"
                   />
                 </div>
               </Field>
@@ -288,22 +281,29 @@ export function NewPaymentClient({
                     Enter an amount greater than zero.
                   </p>
                 )}
-                {selectedInvoice && amountNum > 0 && (
+                {selectedInvoice && (
                   <p
                     className={cn(
-                      "mt-1.5 text-xs font-medium",
-                      settlesInFull
-                        ? "text-emerald-500"
-                        : remaining > 0
-                          ? "text-amber-500"
-                          : "text-destructive",
+                      "mt-1.5 text-xs",
+                      amountNum <= 0
+                        ? "text-muted-foreground"
+                        : cn(
+                            "font-medium",
+                            settlesInFull
+                              ? "text-emerald-500"
+                              : remaining > 0
+                                ? "text-destructive"
+                                : "text-amber-500",
+                          ),
                     )}
                   >
-                    {settlesInFull
-                      ? "This settles the invoice in full."
-                      : remaining > 0
-                        ? `Remaining after this payment: ${formatMoney(currency, remaining)}`
-                        : `Overpays the invoice by ${formatMoney(currency, -remaining)}.`}
+                    {amountNum <= 0
+                      ? `Invoice total: ${formatMoney(selectedInvoice.currency, selectedInvoice.total)} · Balance due: ${formatMoney(selectedInvoice.currency, balance)}`
+                      : settlesInFull
+                        ? "This settles the invoice in full."
+                        : remaining > 0
+                          ? `Remaining after this payment: ${formatMoney(currency, remaining)}`
+                          : `Overpays the invoice by ${formatMoney(currency, -remaining)}.`}
                   </p>
                 )}
               </Field>

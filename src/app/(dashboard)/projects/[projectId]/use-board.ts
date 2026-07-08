@@ -115,6 +115,8 @@ function applyBoardEvent(
                 checklistTotal: checklist.checklistTotal,
                 checklistDone: checklist.checklistDone,
                 deliveryIncomplete: checklist.deliveryIncomplete,
+                requiredIncomplete:
+                  checklist.requiredIncomplete ?? t.requiredIncomplete,
               }
             : t,
         ),

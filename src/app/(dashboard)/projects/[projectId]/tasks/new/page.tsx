@@ -46,6 +46,27 @@ export default async function NewTaskPage({
     statuses[0]?.id ??
     null;
 
+  // A field whose "Required Before" gate sits at or before the stage right
+  // after the initial one must be filled at creation — otherwise the task is
+  // born stuck: it saves fine but the very first forward move is rejected.
+  const orderById = new Map(statuses.map((s) => [s.id, s.order]));
+  const defaultOrder = defaultStatusId ? orderById.get(defaultStatusId) : undefined;
+  const firstMoveOrder =
+    defaultOrder != null
+      ? statuses
+          .filter((s) => s.order > defaultOrder)
+          .sort((a, b) => a.order - b.order)[0]?.order
+      : undefined;
+  const requiredAtCreate = (it: {
+    mandatory: boolean;
+    requiredBeforeStageId: string | null;
+  }): boolean => {
+    if (it.mandatory) return true;
+    if (!it.requiredBeforeStageId || firstMoveOrder == null) return false;
+    const gateOrder = orderById.get(it.requiredBeforeStageId);
+    return gateOrder != null && gateOrder <= firstMoveOrder;
+  };
+
   const parseArray = (raw: string | null): string[] => {
     if (!raw) return [];
     try {
@@ -71,7 +92,9 @@ export default async function NewTaskPage({
         id: it.id,
         name: it.name,
         type: it.type,
-        mandatory: it.mandatory,
+        // "Required" from the form's perspective: explicitly mandatory OR
+        // gated before the first forward move (drives the * and the save gate).
+        mandatory: requiredAtCreate(it),
         options: parseArray(it.options),
         allowedFileTypes: it.allowedFileTypes,
         allowedFormats: normalizeFormats(parseArray(it.allowedFormats)),

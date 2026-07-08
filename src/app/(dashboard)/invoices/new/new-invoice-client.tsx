@@ -936,9 +936,10 @@ function DateField({
         type="date"
         value={value}
         onChange={(e) => e.target.value && onChange(e.target.value)}
+        onClick={(e) => e.currentTarget.showPicker?.()}
         aria-invalid={invalid || undefined}
         className={cn(
-          "h-9 pl-9 [&::-webkit-calendar-picker-indicator]:opacity-60",
+          "h-9 pl-9 [&::-webkit-calendar-picker-indicator]:hidden",
           invalid &&
             "border-destructive text-destructive focus-visible:ring-destructive/30",
         )}

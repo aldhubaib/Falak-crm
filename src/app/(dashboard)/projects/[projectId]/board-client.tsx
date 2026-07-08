@@ -168,10 +168,13 @@ const BoardCard = memo(function BoardCard({
       onClick={() => onOpen(task.id)}
       style={{ opacity: isDragging ? 0.4 : 1 }}
       className={cn(
-        "group/card relative block select-none rounded-lg border border-border/60 bg-background p-3 text-left transition-colors hover:border-muted-foreground/20",
+        "group/card relative block select-none rounded-lg border border-border/60 bg-surface p-3 text-left transition-colors hover:border-muted-foreground/20",
         // touch-none suppresses native scrolling from a touch on the card, so
         // only apply it when the card is actually draggable.
         !dragDisabled && "cursor-grab touch-none active:cursor-grabbing",
+        // Required fields still missing for the next stage — flag the card.
+        task.requiredIncomplete.length > 0 &&
+          "border-destructive/60 hover:border-destructive",
         remoteDragger && "border-primary/60 ring-1 ring-primary/40",
       )}
     >
@@ -366,7 +369,12 @@ export function ProjectBoardClient({
         undefined,
         clientId,
         vars.estimateMin,
-      ),
+      ).then((result) => {
+        // Blocked moves come back as data (not a thrown error) so the message
+        // survives production builds — rethrow here to reuse the error path.
+        if (!result.ok) throw new Error(result.error);
+        return result;
+      }),
     onMutate: async (vars) => {
       const key = boardQueryKey(projectId);
       await queryClient.cancelQueries({ queryKey: key });
@@ -567,7 +575,9 @@ export function ProjectBoardClient({
               freshTask?.deliveryIncomplete ?? task.deliveryIncomplete;
             if (incomplete.length > 0) {
               const names = incomplete.map((n) => `"${n}"`).join(", ");
-              setMoveError(`Complete delivery items first: ${names}`);
+              setMoveError(
+                `This task's delivery items aren't complete yet, so it can't be submitted for review. Still missing: ${names}. If you believe this is a mistake, please contact the task creator.`,
+              );
               return;
             }
             proceedForward();
@@ -685,7 +695,7 @@ export function ProjectBoardClient({
 
         <DragOverlay>
           {activeTask ? (
-            <div className="w-full cursor-grabbing rounded-lg border border-primary/40 bg-background p-3 shadow-lg">
+            <div className="w-full cursor-grabbing rounded-lg border border-primary/40 bg-surface p-3 shadow-lg">
               <CardBody task={activeTask} />
             </div>
           ) : null}

@@ -4,7 +4,7 @@ import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { requireWorkspace, requireWorkspaceWithMember, requireProjectAssign, requireProjectSettings, requireProjectWork, getProjectAccess } from "@/lib/workspace";
 import { canEdit, canDeleteTaskAt, canMoveTaskFrom } from "@/lib/permissions";
-import { fieldConfig, isFieldLocked, titleLockConfig } from "@/lib/checklist-config";
+import { fieldConfig, isFieldLocked, isGateComplete, requiredIncompleteForNextStage, titleLockConfig } from "@/lib/checklist-config";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
@@ -268,9 +268,9 @@ export async function createFullTask(data: {
   }>
 > {
   return safeAction("Create Task", async () => {
-    const { member } = await requireProjectWork(data.projectId);
+    const { member, workspace } = await requireProjectWork(data.projectId);
 
-    const [lastTask, lastNumber, initialStatus, creator, templates] = await Promise.all([
+    const [lastTask, lastNumber, initialStatus, creator, templates, allStages] = await Promise.all([
       db.task.findFirst({
         where: { projectId: data.projectId },
         orderBy: { order: "desc" },
@@ -294,7 +294,39 @@ export async function createFullTask(data: {
             include: { items: { where: { hidden: false }, orderBy: { order: "asc" } } },
           })
         : Promise.resolve([]),
+      db.taskStatus.findMany({
+        where: { workspaceId: workspace.id },
+        select: { id: true, name: true, order: true },
+      }),
     ]);
+
+    // Server-side mirror of the form's required gate: explicitly mandatory
+    // fields and fields gated before the first forward move must have an
+    // answer, otherwise the task would save but be immediately stuck. File
+    // answers upload after creation, so file-only kinds can't be checked here.
+    const stageOrderById = new Map(allStages.map((s) => [s.id, s.order]));
+    const startOrder = stageOrderById.get(data.statusId);
+    const firstMoveOrder =
+      startOrder != null
+        ? allStages
+            .filter((s) => s.order > startOrder)
+            .sort((a, b) => a.order - b.order)[0]?.order
+        : undefined;
+    for (const item of templates.flatMap((t) => t.items)) {
+      if (item.phase === "delivery" || item.type === "file_upload") continue;
+      const gateOrder = item.requiredBeforeStageId
+        ? stageOrderById.get(item.requiredBeforeStageId)
+        : undefined;
+      const required =
+        item.mandatory ||
+        (gateOrder != null &&
+          firstMoveOrder != null &&
+          gateOrder <= firstMoveOrder);
+      if (!required) continue;
+      if (!(data.answers?.[item.id] ?? "").trim()) {
+        throw new Error(`"${item.name}" is required before the task can be created`);
+      }
+    }
 
     const task = await db.task.create({
       data: {
@@ -368,9 +400,14 @@ export async function createFullTask(data: {
         id: true,
         templateItemId: true,
         name: true,
+        type: true,
         phase: true,
         mandatory: true,
         completed: true,
+        hidden: true,
+        requiredBeforeStageId: true,
+        textValue: true,
+        attachmentId: true,
       },
     });
 
@@ -400,6 +437,11 @@ export async function createFullTask(data: {
       deliveryIncomplete: createdItems
         .filter((i) => i.phase === "delivery" && i.mandatory && !i.completed)
         .map((i) => i.name),
+      requiredIncomplete: requiredIncompleteForNextStage(
+        createdItems,
+        task.statusId,
+        allStages,
+      ),
       submittedById: member.id,
       submittedByName: creatorName,
       rejectionCount: 0,
@@ -490,6 +532,15 @@ export async function createTask(projectId: string, formData: FormData, dealId?:
   if (dealId) revalidatePath(`/deals/${dealId}`);
 }
 
+export type MoveTaskResult =
+  | {
+      ok: true;
+      taskId: string;
+      statusId: string;
+      assignee: { id: string; name: string; imageUrl: string | null } | null;
+    }
+  | { ok: false; error: string };
+
 export async function updateTaskStatus(
   taskId: string,
   statusId: string,
@@ -498,7 +549,7 @@ export async function updateTaskStatus(
   actorClientId?: string | null,
   /** Estimate picked in the In Progress confirm dialog; saved with the move. */
   estimateMin?: number | null,
-) {
+): Promise<MoveTaskResult> {
   const access = await requireProjectWork(projectId);
   const { workspace, member } = access;
 
@@ -532,7 +583,10 @@ export async function updateTaskStatus(
 
   if (blockers.length > 0) {
     const names = blockers.map((b) => `"${b.itemName}"`).join(", ");
-    throw new Error(`Complete these checklist items first: ${names}`);
+    return {
+      ok: false,
+      error: `This task's details aren't complete yet, so it can't be moved right now. Still missing: ${names}. If you believe this is a mistake, please contact the task creator.`,
+    };
   }
 
   const fromOrder = task?.status ? allStatuses.find((s) => s.id === task.status!.id)?.order ?? 0 : 0;
@@ -549,9 +603,10 @@ export async function updateTaskStatus(
     )
   ) {
     const stageName = task?.status?.name ?? "this stage";
-    throw new Error(
-      `You don't have permission to move tasks ${isForward ? "forward" : "back"} from ${stageName}`,
-    );
+    return {
+      ok: false,
+      error: `You don't have permission to move tasks ${isForward ? "forward" : "back"} from ${stageName}.`,
+    };
   }
 
   // Block submission for Internal Review if mandatory delivery items are still
@@ -570,7 +625,10 @@ export async function updateTaskStatus(
       );
     if (incomplete.length > 0) {
       const names = incomplete.map((i) => `"${i.cfg.name}"`).join(", ");
-      throw new Error(`Complete delivery items first: ${names}`);
+      return {
+        ok: false,
+        error: `This task's delivery items aren't complete yet, so it can't be submitted for review. Still missing: ${names}. If you believe this is a mistake, please contact the task creator.`,
+      };
     }
   }
 
@@ -713,6 +771,7 @@ export async function updateTaskStatus(
   // Return the resolved assignee so the board can patch its cache immediately
   // (self-assign on forward moves, previous owner on rollbacks, auto-assign).
   return {
+    ok: true,
     taskId,
     statusId,
     assignee: newAssignee
@@ -1003,22 +1062,44 @@ async function publishChecklistProgress(itemId: string, projectId: string) {
   try {
     const item = await db.taskChecklistItem.findUnique({
       where: { id: itemId },
-      select: { taskId: true },
-    });
-    if (!item) return;
-    const rows = await db.taskChecklistItem.findMany({
-      where: { taskId: item.taskId },
       select: {
-        name: true,
-        phase: true,
-        mandatory: true,
-        completed: true,
-        hidden: true,
-        templateItem: {
-          select: { name: true, phase: true, mandatory: true, hidden: true },
-        },
+        taskId: true,
+        task: { select: { statusId: true, status: { select: { workspaceId: true } } } },
       },
     });
+    if (!item) return;
+    const [rows, stages] = await Promise.all([
+      db.taskChecklistItem.findMany({
+        where: { taskId: item.taskId },
+        select: {
+          name: true,
+          type: true,
+          phase: true,
+          mandatory: true,
+          completed: true,
+          hidden: true,
+          requiredBeforeStageId: true,
+          textValue: true,
+          attachmentId: true,
+          templateItem: {
+            select: {
+              name: true,
+              type: true,
+              phase: true,
+              mandatory: true,
+              hidden: true,
+              requiredBeforeStageId: true,
+            },
+          },
+        },
+      }),
+      item.task.status
+        ? db.taskStatus.findMany({
+            where: { workspaceId: item.task.status.workspaceId },
+            select: { id: true, name: true, order: true },
+          })
+        : Promise.resolve([]),
+    ]);
     const checklistItems = rows
       .map((r) => ({ cfg: fieldConfig(r), completed: r.completed }))
       .filter((r) => !r.cfg.hidden);
@@ -1031,6 +1112,11 @@ async function publishChecklistProgress(itemId: string, projectId: string) {
         deliveryIncomplete: checklistItems
           .filter((i) => i.cfg.phase === "delivery" && i.cfg.mandatory && !i.completed)
           .map((i) => i.cfg.name),
+        requiredIncomplete: requiredIncompleteForNextStage(
+          rows,
+          item.task.statusId,
+          stages,
+        ),
       },
     });
   } catch {
@@ -1355,44 +1441,7 @@ export async function getStageGateBlockers(taskId: string, targetStatusId: strin
     const cfg = fieldConfig(ci);
     if (cfg.hidden) continue;
 
-    let isComplete = ci.completed;
-    if (!isComplete && (cfg.type === "mention" || cfg.type === "copyright")) {
-      // Yes/No kinds only block when answered "Yes" without their follow-up:
-      // Mention needs its text, Copyright needs its file.
-      const raw = (ci.textValue ?? "").trim();
-      let value: "yes" | "no" | null = null;
-      let text = "";
-      if (raw === "yes" || raw === "no") value = raw;
-      else if (raw) {
-        try {
-          const o = JSON.parse(raw) as {
-            v?: string;
-            t?: string;
-            enabled?: boolean;
-            text?: string;
-          };
-          if (o?.v === "yes" || o?.v === "no") {
-            value = o.v;
-            text = o.t ?? "";
-          } else if (typeof o?.enabled === "boolean") {
-            // Legacy {enabled, text} format.
-            value = o.enabled ? "yes" : "no";
-            text = o.text ?? "";
-          }
-        } catch {
-          // Legacy plain text — a "yes" with text.
-          value = "yes";
-          text = raw;
-        }
-      }
-      if (value === "yes") {
-        isComplete =
-          cfg.type === "copyright" ? !!ci.attachmentId : !!text.trim();
-      } else {
-        isComplete = true;
-      }
-    }
-    if (isComplete) continue;
+    if (isGateComplete(ci, cfg)) continue;
 
     const gateStageId = cfg.requiredBeforeStageId;
     if (!gateStageId) continue;

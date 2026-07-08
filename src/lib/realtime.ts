@@ -30,6 +30,7 @@ export type BoardChecklistPatch = {
   checklistTotal: number;
   checklistDone: number;
   deliveryIncomplete: string[];
+  requiredIncomplete: string[];
 };
 
 // Event payload broadcast to every client subscribed to a project's board.
