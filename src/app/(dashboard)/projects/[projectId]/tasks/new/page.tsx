@@ -62,6 +62,8 @@ export default async function NewTaskPage({
   const taskTypes = project.projectTemplates.map((pt) => ({
     id: pt.template.id,
     name: pt.template.name,
+    titleLabel: pt.template.titleLabel,
+    titleHelp: pt.template.titleHelp,
     count: countByTemplate[pt.template.id] ?? 0,
     fields: pt.template.items
       .filter((it) => it.phase !== "delivery")

@@ -96,6 +96,8 @@ export function TypeEditor({
       updateChecklistTemplate(type.id, {
         titleLockedFromStageId: patch.lockedFromStageId,
         titleNeverLock: patch.neverLock,
+        titleLabel: patch.label?.trim() || null,
+        titleHelp: patch.help?.trim() || null,
       }),
     );
 
@@ -176,6 +178,8 @@ export function TypeEditor({
         titleLock={{
           lockedFromStageId: type.titleLockedFromStageId,
           neverLock: type.titleNeverLock,
+          label: type.titleLabel,
+          help: type.titleHelp,
         }}
         onTitleLockSave={saveTitleLock}
         onAdd={addField}

@@ -77,6 +77,8 @@ export default async function TaskTypesPage() {
       publishToCalendar: t.publishToCalendar,
       titleLockedFromStageId: t.titleLockedFromStageId,
       titleNeverLock: t.titleNeverLock,
+      titleLabel: t.titleLabel,
+      titleHelp: t.titleHelp,
       requirementFields: fields
         .filter((f) => f.phase === "create")
         .sort((a, b) => a.order - b.order),

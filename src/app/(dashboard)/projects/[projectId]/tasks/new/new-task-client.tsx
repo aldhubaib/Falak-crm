@@ -26,7 +26,15 @@ import {
 import { uploadManager } from "@/lib/upload-manager";
 import { useUnsaved } from "@/lib/unsaved";
 
-type TaskType = { id: string; name: string; count: number; fields: CreateField[] };
+type TaskType = {
+  id: string;
+  name: string;
+  /** Custom display for the built-in Title (null = default copy). */
+  titleLabel: string | null;
+  titleHelp: string | null;
+  count: number;
+  fields: CreateField[];
+};
 
 export function NewTaskClient({
   projectId,
@@ -204,8 +212,11 @@ export function NewTaskClient({
 
           <Section
             icon={<TypeIcon className="size-4" />}
-            title="Task Title"
-            hint="A short, clear summary of what needs to be done."
+            title={type?.titleLabel?.trim() || "Task Title"}
+            hint={
+              type?.titleHelp?.trim() ||
+              "A short, clear summary of what needs to be done."
+            }
           >
             <Input
               placeholder="What needs to be done?"

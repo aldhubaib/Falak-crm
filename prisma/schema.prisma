@@ -482,6 +482,10 @@ model ChecklistTemplate {
   // stage, titleNeverLock = editable at every stage.
   titleLockedFromStageId String?
   titleNeverLock         Boolean @default(false)
+  // Custom display of the built-in Title on task forms — rendering only,
+  // tasks still store a plain Task.title. Null = default "Task Title" copy.
+  titleLabel             String?
+  titleHelp              String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 

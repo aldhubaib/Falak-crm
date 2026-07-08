@@ -30,6 +30,9 @@ export type TaskTypeVM = {
   /** Lock rule for the built-in Title (null + false = Auto: locks after Todo). */
   titleLockedFromStageId: string | null;
   titleNeverLock: boolean;
+  /** Custom display copy for the built-in Title (null = default). */
+  titleLabel: string | null;
+  titleHelp: string | null;
   requirementFields: TTField[];
   deliveryFields: TTField[];
 };
@@ -37,6 +40,10 @@ export type TaskTypeVM = {
 export type TitleLockPatch = {
   lockedFromStageId: string | null;
   neverLock: boolean;
+  /** Rendered label for the Title field; null/empty = "Task Title". */
+  label: string | null;
+  /** Helper text under the label; null/empty = the default hint. */
+  help: string | null;
 };
 
 export type StatusOpt = { id: string; name: string; color: string };

@@ -31292,6 +31292,8 @@ export namespace Prisma {
     publishToCalendar: boolean | null
     titleLockedFromStageId: string | null
     titleNeverLock: boolean | null
+    titleLabel: string | null
+    titleHelp: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -31306,6 +31308,8 @@ export namespace Prisma {
     publishToCalendar: boolean | null
     titleLockedFromStageId: string | null
     titleNeverLock: boolean | null
+    titleLabel: string | null
+    titleHelp: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -31320,6 +31324,8 @@ export namespace Prisma {
     publishToCalendar: number
     titleLockedFromStageId: number
     titleNeverLock: number
+    titleLabel: number
+    titleHelp: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -31336,6 +31342,8 @@ export namespace Prisma {
     publishToCalendar?: true
     titleLockedFromStageId?: true
     titleNeverLock?: true
+    titleLabel?: true
+    titleHelp?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -31350,6 +31358,8 @@ export namespace Prisma {
     publishToCalendar?: true
     titleLockedFromStageId?: true
     titleNeverLock?: true
+    titleLabel?: true
+    titleHelp?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -31364,6 +31374,8 @@ export namespace Prisma {
     publishToCalendar?: true
     titleLockedFromStageId?: true
     titleNeverLock?: true
+    titleLabel?: true
+    titleHelp?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -31451,6 +31463,8 @@ export namespace Prisma {
     publishToCalendar: boolean
     titleLockedFromStageId: string | null
     titleNeverLock: boolean
+    titleLabel: string | null
+    titleHelp: string | null
     createdAt: Date
     updatedAt: Date
     _count: ChecklistTemplateCountAggregateOutputType | null
@@ -31482,6 +31496,8 @@ export namespace Prisma {
     publishToCalendar?: boolean
     titleLockedFromStageId?: boolean
     titleNeverLock?: boolean
+    titleLabel?: boolean
+    titleHelp?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
@@ -31501,6 +31517,8 @@ export namespace Prisma {
     publishToCalendar?: boolean
     titleLockedFromStageId?: boolean
     titleNeverLock?: boolean
+    titleLabel?: boolean
+    titleHelp?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
@@ -31517,6 +31535,8 @@ export namespace Prisma {
     publishToCalendar?: boolean
     titleLockedFromStageId?: boolean
     titleNeverLock?: boolean
+    titleLabel?: boolean
+    titleHelp?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
@@ -31533,11 +31553,13 @@ export namespace Prisma {
     publishToCalendar?: boolean
     titleLockedFromStageId?: boolean
     titleNeverLock?: boolean
+    titleLabel?: boolean
+    titleHelp?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ChecklistTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "name" | "icon" | "color" | "description" | "publishToCalendar" | "titleLockedFromStageId" | "titleNeverLock" | "createdAt" | "updatedAt", ExtArgs["result"]["checklistTemplate"]>
+  export type ChecklistTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "name" | "icon" | "color" | "description" | "publishToCalendar" | "titleLockedFromStageId" | "titleNeverLock" | "titleLabel" | "titleHelp" | "createdAt" | "updatedAt", ExtArgs["result"]["checklistTemplate"]>
   export type ChecklistTemplateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     titleLockedFromStage?: boolean | ChecklistTemplate$titleLockedFromStageArgs<ExtArgs>
@@ -31572,6 +31594,8 @@ export namespace Prisma {
       publishToCalendar: boolean
       titleLockedFromStageId: string | null
       titleNeverLock: boolean
+      titleLabel: string | null
+      titleHelp: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["checklistTemplate"]>
@@ -32010,6 +32034,8 @@ export namespace Prisma {
     readonly publishToCalendar: FieldRef<"ChecklistTemplate", 'Boolean'>
     readonly titleLockedFromStageId: FieldRef<"ChecklistTemplate", 'String'>
     readonly titleNeverLock: FieldRef<"ChecklistTemplate", 'Boolean'>
+    readonly titleLabel: FieldRef<"ChecklistTemplate", 'String'>
+    readonly titleHelp: FieldRef<"ChecklistTemplate", 'String'>
     readonly createdAt: FieldRef<"ChecklistTemplate", 'DateTime'>
     readonly updatedAt: FieldRef<"ChecklistTemplate", 'DateTime'>
   }
@@ -64687,6 +64713,8 @@ export namespace Prisma {
     publishToCalendar: 'publishToCalendar',
     titleLockedFromStageId: 'titleLockedFromStageId',
     titleNeverLock: 'titleNeverLock',
+    titleLabel: 'titleLabel',
+    titleHelp: 'titleHelp',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -67266,6 +67294,8 @@ export namespace Prisma {
     publishToCalendar?: BoolFilter<"ChecklistTemplate"> | boolean
     titleLockedFromStageId?: StringNullableFilter<"ChecklistTemplate"> | string | null
     titleNeverLock?: BoolFilter<"ChecklistTemplate"> | boolean
+    titleLabel?: StringNullableFilter<"ChecklistTemplate"> | string | null
+    titleHelp?: StringNullableFilter<"ChecklistTemplate"> | string | null
     createdAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
@@ -67284,6 +67314,8 @@ export namespace Prisma {
     publishToCalendar?: SortOrder
     titleLockedFromStageId?: SortOrderInput | SortOrder
     titleNeverLock?: SortOrder
+    titleLabel?: SortOrderInput | SortOrder
+    titleHelp?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
@@ -67305,6 +67337,8 @@ export namespace Prisma {
     publishToCalendar?: BoolFilter<"ChecklistTemplate"> | boolean
     titleLockedFromStageId?: StringNullableFilter<"ChecklistTemplate"> | string | null
     titleNeverLock?: BoolFilter<"ChecklistTemplate"> | boolean
+    titleLabel?: StringNullableFilter<"ChecklistTemplate"> | string | null
+    titleHelp?: StringNullableFilter<"ChecklistTemplate"> | string | null
     createdAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
@@ -67323,6 +67357,8 @@ export namespace Prisma {
     publishToCalendar?: SortOrder
     titleLockedFromStageId?: SortOrderInput | SortOrder
     titleNeverLock?: SortOrder
+    titleLabel?: SortOrderInput | SortOrder
+    titleHelp?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ChecklistTemplateCountOrderByAggregateInput
@@ -67343,6 +67379,8 @@ export namespace Prisma {
     publishToCalendar?: BoolWithAggregatesFilter<"ChecklistTemplate"> | boolean
     titleLockedFromStageId?: StringNullableWithAggregatesFilter<"ChecklistTemplate"> | string | null
     titleNeverLock?: BoolWithAggregatesFilter<"ChecklistTemplate"> | boolean
+    titleLabel?: StringNullableWithAggregatesFilter<"ChecklistTemplate"> | string | null
+    titleHelp?: StringNullableWithAggregatesFilter<"ChecklistTemplate"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ChecklistTemplate"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ChecklistTemplate"> | Date | string
   }
@@ -71729,6 +71767,8 @@ export namespace Prisma {
     description?: string | null
     publishToCalendar?: boolean
     titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
@@ -71747,6 +71787,8 @@ export namespace Prisma {
     publishToCalendar?: boolean
     titleLockedFromStageId?: string | null
     titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
@@ -71761,6 +71803,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
@@ -71779,6 +71823,8 @@ export namespace Prisma {
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
@@ -71795,6 +71841,8 @@ export namespace Prisma {
     publishToCalendar?: boolean
     titleLockedFromStageId?: string | null
     titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -71807,6 +71855,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -71821,6 +71871,8 @@ export namespace Prisma {
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -76143,6 +76195,8 @@ export namespace Prisma {
     publishToCalendar?: SortOrder
     titleLockedFromStageId?: SortOrder
     titleNeverLock?: SortOrder
+    titleLabel?: SortOrder
+    titleHelp?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -76157,6 +76211,8 @@ export namespace Prisma {
     publishToCalendar?: SortOrder
     titleLockedFromStageId?: SortOrder
     titleNeverLock?: SortOrder
+    titleLabel?: SortOrder
+    titleHelp?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -76171,6 +76227,8 @@ export namespace Prisma {
     publishToCalendar?: SortOrder
     titleLockedFromStageId?: SortOrder
     titleNeverLock?: SortOrder
+    titleLabel?: SortOrder
+    titleHelp?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -83646,6 +83704,8 @@ export namespace Prisma {
     description?: string | null
     publishToCalendar?: boolean
     titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
@@ -83662,6 +83722,8 @@ export namespace Prisma {
     publishToCalendar?: boolean
     titleLockedFromStageId?: string | null
     titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
@@ -84478,6 +84540,8 @@ export namespace Prisma {
     publishToCalendar?: BoolFilter<"ChecklistTemplate"> | boolean
     titleLockedFromStageId?: StringNullableFilter<"ChecklistTemplate"> | string | null
     titleNeverLock?: BoolFilter<"ChecklistTemplate"> | boolean
+    titleLabel?: StringNullableFilter<"ChecklistTemplate"> | string | null
+    titleHelp?: StringNullableFilter<"ChecklistTemplate"> | string | null
     createdAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"ChecklistTemplate"> | Date | string
   }
@@ -91434,6 +91498,8 @@ export namespace Prisma {
     description?: string | null
     publishToCalendar?: boolean
     titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
@@ -91451,6 +91517,8 @@ export namespace Prisma {
     publishToCalendar?: boolean
     titleLockedFromStageId?: string | null
     titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
@@ -91635,6 +91703,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
@@ -91652,6 +91722,8 @@ export namespace Prisma {
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
@@ -91887,6 +91959,8 @@ export namespace Prisma {
     description?: string | null
     publishToCalendar?: boolean
     titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
@@ -91904,6 +91978,8 @@ export namespace Prisma {
     publishToCalendar?: boolean
     titleLockedFromStageId?: string | null
     titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
@@ -92004,6 +92080,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
@@ -92021,6 +92099,8 @@ export namespace Prisma {
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
@@ -92571,6 +92651,8 @@ export namespace Prisma {
     description?: string | null
     publishToCalendar?: boolean
     titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
@@ -92587,6 +92669,8 @@ export namespace Prisma {
     description?: string | null
     publishToCalendar?: boolean
     titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
@@ -98183,6 +98267,8 @@ export namespace Prisma {
     publishToCalendar?: boolean
     titleLockedFromStageId?: string | null
     titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -99120,6 +99206,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
@@ -99136,6 +99224,8 @@ export namespace Prisma {
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
@@ -99151,6 +99241,8 @@ export namespace Prisma {
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -101913,6 +102005,8 @@ export namespace Prisma {
     description?: string | null
     publishToCalendar?: boolean
     titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -102197,6 +102291,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
@@ -102213,6 +102309,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
@@ -102228,6 +102326,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
     titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

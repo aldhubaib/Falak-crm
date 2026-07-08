@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, ArrowDown, TriangleAlert } from "lucide-react";
+import { Loader2, ArrowDown, TriangleAlert, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { pageHasUnsavedWork } from "@/lib/unsaved";
 
@@ -151,45 +151,51 @@ export function PullToRefresh() {
       )}
 
       {confirmOpen && (
-        <div className="fixed inset-0 z-[600] flex items-end justify-center lg:items-center">
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setConfirmOpen(false)}
-          />
-          <div
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="ptr-confirm-title"
-            className="relative w-full rounded-t-2xl border border-border bg-background p-card pb-[max(env(safe-area-inset-bottom),16px)] lg:w-[420px] lg:rounded-2xl lg:pb-card"
-            style={{ containerType: "inline-size" }}
-          >
-            <div className="flex items-start gap-3">
-              <div className="grid size-10 shrink-0 place-items-center rounded-full bg-amber-500/15">
-                <TriangleAlert className="w-icon-md h-icon-md text-amber-400" />
+        <div className="fixed inset-0 z-[9999]">
+          {/* Invisible click-catcher: tapping outside dismisses, same as Stay. */}
+          <div className="absolute inset-0" onClick={() => setConfirmOpen(false)} />
+          {/* Same floating card as the app-update popup in sw-register.tsx. */}
+          <div className="fixed inset-x-3 bottom-[calc(5rem+env(safe-area-inset-bottom))] flex justify-center animate-in slide-in-from-bottom-4 fade-in duration-300 sm:inset-x-0 sm:bottom-6">
+            <div
+              role="alertdialog"
+              aria-modal="true"
+              aria-labelledby="ptr-confirm-title"
+              className="flex w-full max-w-sm items-start gap-3.5 rounded-2xl border border-border bg-card p-4 text-foreground shadow-2xl"
+            >
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber-500/15">
+                <TriangleAlert className="h-5 w-5 text-amber-400" />
               </div>
-              <div className="min-w-0">
-                <h2 id="ptr-confirm-title" className="text-subheading font-semibold">
+              <div className="min-w-0 flex-1">
+                <div id="ptr-confirm-title" className="text-sm font-semibold">
                   Refresh this page?
-                </h2>
-                <p className="mt-1 text-sub text-muted-foreground">
+                </div>
+                <div className="mt-0.5 text-sm leading-snug text-muted-foreground">
                   You have unsaved changes — refreshing will discard them.
-                </p>
+                </div>
+                <div className="mt-3 flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setConfirmOpen(false)}
+                    className="flex h-9 items-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90 active:bg-primary/80"
+                  >
+                    Stay here
+                  </button>
+                  <button
+                    type="button"
+                    onClick={confirmRefresh}
+                    className="flex h-9 items-center rounded-xl border border-border px-4 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground"
+                  >
+                    Refresh & discard
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="mt-5 flex flex-col gap-2 @md:flex-row-reverse">
               <button
                 type="button"
                 onClick={() => setConfirmOpen(false)}
-                className="min-h-touch w-full rounded-xl bg-primary px-6 text-button font-semibold text-primary-foreground active:opacity-80 @md:w-auto"
+                aria-label="Dismiss"
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-muted-foreground hover:bg-muted/40 hover:text-foreground"
               >
-                Stay here
-              </button>
-              <button
-                type="button"
-                onClick={confirmRefresh}
-                className="min-h-touch w-full rounded-xl border border-border px-4 text-button font-medium text-muted-foreground hover:bg-muted/20 active:opacity-80 @md:w-auto"
-              >
-                Refresh & discard
+                <X className="h-4 w-4" />
               </button>
             </div>
           </div>

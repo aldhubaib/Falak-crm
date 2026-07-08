@@ -80,6 +80,8 @@ export async function getProjectTaskTemplates(id: string) {
             select: {
               id: true,
               name: true,
+              titleLabel: true,
+              titleHelp: true,
               items: { where: { hidden: false }, orderBy: { order: "asc" } },
             },
           },

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check, Eye, Loader2, Lock, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -267,7 +268,9 @@ export function FieldsSection({
 /**
  * Pinned row for the built-in task Title. It can't be deleted, hidden, or
  * reordered — every task has a title — but its lock stage is configurable
- * with the same semantics as regular fields (Auto = locks after Todo).
+ * with the same semantics as regular fields (Auto = locks after Todo), and
+ * its label + helper text can be renamed to fit the task type. Rendering
+ * only: tasks still store a plain title.
  */
 function TitleLockRow({
   lock,
@@ -281,6 +284,7 @@ function TitleLockRow({
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<TitleLockPatch>(lock);
 
+  const displayLabel = lock.label?.trim() || "Title";
   const lockLabel = lock.neverLock
     ? "Never locks"
     : lock.lockedFromStageId
@@ -295,7 +299,7 @@ function TitleLockRow({
           setDraft(lock);
           setEditing(true);
         }}
-        aria-label="Edit title lock rule"
+        aria-label="Edit title field"
         className="group flex w-full items-center gap-3 p-3 text-left transition-colors hover:bg-background/40"
       >
         <span className="grid h-6 w-4 shrink-0 place-items-center text-muted-foreground/40">
@@ -303,46 +307,77 @@ function TitleLockRow({
         </span>
         <span className="w-5 shrink-0 text-xs text-muted-foreground">•</span>
         <div className="min-w-0 flex-1">
-          <div className="truncate text-sm">Title</div>
+          <div className="truncate text-sm">{displayLabel}</div>
           <div className="mt-0.5 truncate text-xs text-muted-foreground">
-            Built-in · {lockLabel}
+            Built-in title · {lockLabel}
           </div>
         </div>
       </button>
     );
   }
 
+  const dirty =
+    draft.neverLock !== lock.neverLock ||
+    draft.lockedFromStageId !== lock.lockedFromStageId ||
+    (draft.label?.trim() || "") !== (lock.label?.trim() || "") ||
+    (draft.help?.trim() || "") !== (lock.help?.trim() || "");
+
   return (
     <div className="space-y-4 bg-background/40 p-4">
-      <div className="text-sm font-medium">Title</div>
+      <div className="text-sm font-medium">Title field</div>
       <p className="text-xs text-muted-foreground">
-        The task title is built in — it can&apos;t be deleted or hidden. Choose
-        the stage from which it becomes read-only.
+        The task title is built in — it can&apos;t be deleted or hidden, and
+        tasks always store it as the title. You can rename how it appears on
+        the task form and choose the stage from which it becomes read-only.
       </p>
-      <div className="max-w-xs">
-        <div className="mb-1 text-xxs font-medium uppercase tracking-[0.14em] text-muted-foreground">
-          Locked From
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <div className="mb-1 text-xxs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+            Label
+          </div>
+          <Input
+            value={draft.label ?? ""}
+            onChange={(e) => setDraft({ ...draft, label: e.target.value })}
+            placeholder="Task Title"
+            className="h-10"
+          />
         </div>
-        <SearchableSelect
-          value={
-            draft.neverLock ? "never" : (draft.lockedFromStageId ?? "auto")
-          }
-          onValueChange={(v) =>
-            setDraft(
-              v === "never"
-                ? { neverLock: true, lockedFromStageId: null }
-                : v === "auto"
-                  ? { neverLock: false, lockedFromStageId: null }
-                  : { neverLock: false, lockedFromStageId: v },
-            )
-          }
-          searchPlaceholder="Search stages…"
+        <div>
+          <div className="mb-1 text-xxs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+            Locked From
+          </div>
+          <SearchableSelect
+            value={
+              draft.neverLock ? "never" : (draft.lockedFromStageId ?? "auto")
+            }
+            onValueChange={(v) =>
+              setDraft(
+                v === "never"
+                  ? { ...draft, neverLock: true, lockedFromStageId: null }
+                  : v === "auto"
+                    ? { ...draft, neverLock: false, lockedFromStageId: null }
+                    : { ...draft, neverLock: false, lockedFromStageId: v },
+              )
+            }
+            searchPlaceholder="Search stages…"
+            className="h-10"
+            options={[
+              { value: "auto", label: "Auto (after Todo)" },
+              { value: "never", label: "Never" },
+              ...statuses.map((s) => ({ value: s.id, label: s.name })),
+            ]}
+          />
+        </div>
+      </div>
+      <div>
+        <div className="mb-1 text-xxs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+          Helper Text
+        </div>
+        <Input
+          value={draft.help ?? ""}
+          onChange={(e) => setDraft({ ...draft, help: e.target.value })}
+          placeholder="A short, clear summary of what needs to be done."
           className="h-10"
-          options={[
-            { value: "auto", label: "Auto (after Todo)" },
-            { value: "never", label: "Never" },
-            ...statuses.map((s) => ({ value: s.id, label: s.name })),
-          ]}
         />
       </div>
       <div className="flex items-center justify-end gap-2">
@@ -360,10 +395,7 @@ function TitleLockRow({
             onSave(draft);
             setEditing(false);
           }}
-          disabled={
-            draft.neverLock === lock.neverLock &&
-            draft.lockedFromStageId === lock.lockedFromStageId
-          }
+          disabled={!dirty}
           aria-label="Save"
         >
           <Check className="h-4 w-4" />

@@ -388,6 +388,8 @@ exports.Prisma.ChecklistTemplateScalarFieldEnum = {
   publishToCalendar: 'publishToCalendar',
   titleLockedFromStageId: 'titleLockedFromStageId',
   titleNeverLock: 'titleNeverLock',
+  titleLabel: 'titleLabel',
+  titleHelp: 'titleHelp',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
