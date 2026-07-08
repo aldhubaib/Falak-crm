@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { AppHeader } from "@/components/app-header";
+import { ProjectPhotoButton } from "@/components/projects/project-photo-button";
 import { Section } from "@/components/project-settings/section";
 import { cn } from "@/lib/utils";
 import {
@@ -42,6 +44,8 @@ const STATUS_TONES: Record<string, string> = {
 
 export function ProjectSettingsClient({
   projectId,
+  projectName,
+  thumbnailId,
   currentStatusId,
   description: initialDescription,
   requirePublishing: initialRequirePublishing,
@@ -51,6 +55,8 @@ export function ProjectSettingsClient({
   weeklyTargets: initialWeeklyTargets,
 }: {
   projectId: string;
+  projectName: string;
+  thumbnailId: string | null;
   currentStatusId: string | null;
   description: string;
   requirePublishing: boolean;
@@ -69,7 +75,9 @@ export function ProjectSettingsClient({
   );
   const [templateIds, setTemplateIds] = useState(initialTemplateIds);
   const [weekly, setWeekly] = useState<Record<string, number>>(() =>
-    Object.fromEntries(initialWeeklyTargets.map((t) => [t.templateId, t.perWeek])),
+    Object.fromEntries(
+      initialWeeklyTargets.map((t) => [t.templateId, t.perWeek]),
+    ),
   );
 
   const serializeWeekly = (w: Record<string, number>) =>
@@ -79,7 +87,9 @@ export function ProjectSettingsClient({
       .map(([id, n]) => `${id}:${n}`)
       .join(",");
   const initialWeeklyKey = serializeWeekly(
-    Object.fromEntries(initialWeeklyTargets.map((t) => [t.templateId, t.perWeek])),
+    Object.fromEntries(
+      initialWeeklyTargets.map((t) => [t.templateId, t.perWeek]),
+    ),
   );
   const weeklyDirty = serializeWeekly(weekly) !== initialWeeklyKey;
 
@@ -131,215 +141,229 @@ export function ProjectSettingsClient({
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 p-5 pb-10">
-      {/* Save bar */}
-      {dirty && (
-        <div className="flex justify-end">
-          <Button onClick={save} disabled={pending} size="sm">
-            {pending ? "Saving..." : "Save Changes"}
-          </Button>
-        </div>
-      )}
-
-      {/* Project Status */}
-      <Section
-        icon={<Activity className="size-4" />}
-        title="Project Status"
-        hint="Set the current status of this project."
-      >
-        <div className="flex flex-wrap gap-2">
-          {projectStatuses.map((s) => {
-            const active = statusId === s.id;
-            const tone =
-              STATUS_TONES[s.name] ??
-              "text-foreground border-border/60 bg-surface";
-            return (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => setStatusId(s.id)}
-                className={cn(
-                  "inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all",
-                  active
-                    ? tone
-                    : "border-border/60 bg-surface text-muted-foreground hover:border-border hover:text-foreground",
-                )}
-              >
-                {active && <Check className="size-3" />}
-                {s.name}
-              </button>
-            );
-          })}
-        </div>
-      </Section>
-
-      {/* Description */}
-      <Section
-        icon={<FileText className="size-4" />}
-        title="Project Description"
-        hint="Add a description to help your team understand this project."
-      >
-        <Textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows={6}
-          className="resize-none rounded-xl border-border/60 bg-background/60 text-sm leading-relaxed"
-          placeholder="What is this project about?"
-        />
-        <div className="mt-2 text-right text-tiny text-muted-foreground">
-          {description.length} chars
-        </div>
-      </Section>
-
-      {/* Require Publishing */}
-      <Section
-        icon={<ClipboardCheck className="size-4" />}
-        title="Require Publishing"
-        hint="When enabled, completed tasks must go through a publishing step before they are finalized."
-      >
-        <div className="flex items-center justify-between rounded-xl border border-border/60 bg-surface px-4 py-3">
-          <div className="text-sm">
-            <div className="font-medium">
-              {requirePublishing
-                ? "Publishing required"
-                : "Publishing optional"}
-            </div>
-            <div className="text-xs text-muted-foreground">
-              Tasks marked complete{" "}
-              {requirePublishing
-                ? "await publish approval"
-                : "are finalized immediately"}
-              .
-            </div>
-          </div>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={requirePublishing}
-            onClick={() => setRequirePublishing((v) => !v)}
-            className={cn(
-              "relative h-6 w-11 shrink-0 rounded-full border transition-colors",
-              requirePublishing
-                ? "border-primary/60 bg-primary"
-                : "border-border bg-surface",
-            )}
+    <>
+      <AppHeader
+        backHref={`/projects/${projectId}`}
+        title="Project Settings"
+        leading={
+          <ProjectPhotoButton
+            projectId={projectId}
+            name={projectName}
+            thumbnailId={thumbnailId}
+          />
+        }
+        actions={
+          dirty ? (
+            <Button onClick={save} disabled={pending} size="sm">
+              {pending ? "Saving..." : "Save Changes"}
+            </Button>
+          ) : undefined
+        }
+      />
+      <main className="min-h-0 flex-1 overflow-y-auto">
+        <div className="mx-auto max-w-3xl space-y-6 p-5 pb-10">
+          {/* Project Status */}
+          <Section
+            icon={<Activity className="size-4" />}
+            title="Project Status"
+            hint="Set the current status of this project."
           >
-            <span
-              className={cn(
-                "absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
-                requirePublishing && "translate-x-5",
-              )}
-            />
-          </button>
-        </div>
-      </Section>
-
-      {/* Checklist Templates */}
-      <Section
-        icon={<CheckSquare className="size-4" />}
-        title="Checklist Templates"
-        hint="Select which checklist templates apply to tasks in this project. When a new task is created, all items from linked templates will be added automatically."
-      >
-        <div className="space-y-2">
-          {templates.length === 0 && (
-            <div className="py-4 text-center text-xs text-muted-foreground">
-              No templates yet.
+            <div className="flex flex-wrap gap-2">
+              {projectStatuses.map((s) => {
+                const active = statusId === s.id;
+                const tone =
+                  STATUS_TONES[s.name] ??
+                  "text-foreground border-border/60 bg-surface";
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => setStatusId(s.id)}
+                    className={cn(
+                      "inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all",
+                      active
+                        ? tone
+                        : "border-border/60 bg-surface text-muted-foreground hover:border-border hover:text-foreground",
+                    )}
+                  >
+                    {active && <Check className="size-3" />}
+                    {s.name}
+                  </button>
+                );
+              })}
             </div>
-          )}
-          {templates.map((t) => {
-            const active = templateIds.includes(t.id);
-            return (
+          </Section>
+
+          {/* Description */}
+          <Section
+            icon={<FileText className="size-4" />}
+            title="Project Description"
+            hint="Add a description to help your team understand this project."
+          >
+            <Textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={6}
+              className="resize-none rounded-xl border-border/60 bg-background/60 text-sm leading-relaxed"
+              placeholder="What is this project about?"
+            />
+            <div className="mt-2 text-right text-tiny text-muted-foreground">
+              {description.length} chars
+            </div>
+          </Section>
+
+          {/* Require Publishing */}
+          <Section
+            icon={<ClipboardCheck className="size-4" />}
+            title="Require Publishing"
+            hint="When enabled, completed tasks must go through a publishing step before they are finalized."
+          >
+            <div className="flex items-center justify-between rounded-xl border border-border/60 bg-surface px-4 py-3">
+              <div className="text-sm">
+                <div className="font-medium">
+                  {requirePublishing
+                    ? "Publishing required"
+                    : "Publishing optional"}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Tasks marked complete{" "}
+                  {requirePublishing
+                    ? "await publish approval"
+                    : "are finalized immediately"}
+                  .
+                </div>
+              </div>
               <button
-                key={t.id}
                 type="button"
-                onClick={() => toggleTemplate(t.id)}
+                role="switch"
+                aria-checked={requirePublishing}
+                onClick={() => setRequirePublishing((v) => !v)}
                 className={cn(
-                  "flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all",
-                  active
-                    ? "border-primary/50 bg-primary/5"
-                    : "border-border/60 bg-surface hover:border-border",
+                  "relative h-6 w-11 shrink-0 rounded-full border transition-colors",
+                  requirePublishing
+                    ? "border-primary/60 bg-primary"
+                    : "border-border bg-surface",
                 )}
               >
                 <span
                   className={cn(
-                    "grid size-5 shrink-0 place-items-center rounded-md border transition-colors",
-                    active
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border",
+                    "absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                    requirePublishing && "translate-x-5",
                   )}
-                >
-                  {active && <Check className="size-3.5" />}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">{t.name}</span>
-                    <span className="rounded-md bg-muted/40 px-1.5 py-0.5 text-xxs text-muted-foreground">
-                      {t.itemCount} items
-                    </span>
-                  </div>
-                </div>
-                <ChevronRight className="size-4 text-muted-foreground" />
+                />
               </button>
-            );
-          })}
-        </div>
-      </Section>
+            </div>
+          </Section>
 
-      {/* Weekly Plan */}
-      <Section
-        icon={<CalendarClock className="size-4" />}
-        title="Weekly Plan"
-        hint="Set how many tasks of each type this project should deliver per week. Each week the Todo column gets that many slots — a task can only move from Backlog to Todo while a free slot remains. Raising the target mid-week adds slots to the current week."
-      >
-        {templateIds.length === 0 ? (
-          <div className="py-4 text-center text-xs text-muted-foreground">
-            Attach a checklist template first — the plan is set per task type.
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {templates
-              .filter((t) => templateIds.includes(t.id))
-              .map((t) => {
-                const count = weekly[t.id] ?? 0;
+          {/* Checklist Templates */}
+          <Section
+            icon={<CheckSquare className="size-4" />}
+            title="Checklist Templates"
+            hint="Select which checklist templates apply to tasks in this project. When a new task is created, all items from linked templates will be added automatically."
+          >
+            <div className="space-y-2">
+              {templates.length === 0 && (
+                <div className="py-4 text-center text-xs text-muted-foreground">
+                  No templates yet.
+                </div>
+              )}
+              {templates.map((t) => {
+                const active = templateIds.includes(t.id);
                 return (
-                  <div
+                  <button
                     key={t.id}
-                    className="flex items-center justify-between gap-3 rounded-xl border border-border/60 bg-surface px-4 py-3"
+                    type="button"
+                    onClick={() => toggleTemplate(t.id)}
+                    className={cn(
+                      "flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all",
+                      active
+                        ? "border-primary/50 bg-primary/5"
+                        : "border-border/60 bg-surface hover:border-border",
+                    )}
                   >
-                    <span className="min-w-0 truncate text-sm font-medium">
-                      {t.name}
+                    <span
+                      className={cn(
+                        "grid size-5 shrink-0 place-items-center rounded-md border transition-colors",
+                        active
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-border",
+                      )}
+                    >
+                      {active && <Check className="size-3.5" />}
                     </span>
-                    <div className="flex shrink-0 items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => bumpWeekly(t.id, -1)}
-                        disabled={count === 0}
-                        aria-label={`Fewer ${t.name} per week`}
-                        className="grid size-7 place-items-center rounded-lg border border-border/60 bg-muted/30 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 disabled:hover:text-muted-foreground"
-                      >
-                        <Minus className="size-3.5" />
-                      </button>
-                      <span className="w-6 text-center text-sm font-semibold tabular-nums">
-                        {count}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => bumpWeekly(t.id, 1)}
-                        aria-label={`More ${t.name} per week`}
-                        className="grid size-7 place-items-center rounded-lg border border-border/60 bg-muted/30 text-muted-foreground transition-colors hover:text-foreground"
-                      >
-                        <Plus className="size-3.5" />
-                      </button>
-                      <span className="text-xs text-muted-foreground">
-                        / week
-                      </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">{t.name}</span>
+                        <span className="rounded-md bg-muted/40 px-1.5 py-0.5 text-xxs text-muted-foreground">
+                          {t.itemCount} items
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                    <ChevronRight className="size-4 text-muted-foreground" />
+                  </button>
                 );
               })}
-          </div>
-        )}
-      </Section>
-    </div>
+            </div>
+          </Section>
+
+          {/* Weekly Plan */}
+          <Section
+            icon={<CalendarClock className="size-4" />}
+            title="Weekly Plan"
+            hint="Set how many tasks of each type this project should deliver per week. Each week the Todo column gets that many slots — a task can only move from Backlog to Todo while a free slot remains. Raising the target mid-week adds slots to the current week."
+          >
+            {templateIds.length === 0 ? (
+              <div className="py-4 text-center text-xs text-muted-foreground">
+                Attach a checklist template first — the plan is set per task
+                type.
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {templates
+                  .filter((t) => templateIds.includes(t.id))
+                  .map((t) => {
+                    const count = weekly[t.id] ?? 0;
+                    return (
+                      <div
+                        key={t.id}
+                        className="flex items-center justify-between gap-3 rounded-xl border border-border/60 bg-surface px-4 py-3"
+                      >
+                        <span className="min-w-0 truncate text-sm font-medium">
+                          {t.name}
+                        </span>
+                        <div className="flex shrink-0 items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => bumpWeekly(t.id, -1)}
+                            disabled={count === 0}
+                            aria-label={`Fewer ${t.name} per week`}
+                            className="grid size-7 place-items-center rounded-lg border border-border/60 bg-muted/30 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 disabled:hover:text-muted-foreground"
+                          >
+                            <Minus className="size-3.5" />
+                          </button>
+                          <span className="w-6 text-center text-sm font-semibold tabular-nums">
+                            {count}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => bumpWeekly(t.id, 1)}
+                            aria-label={`More ${t.name} per week`}
+                            className="grid size-7 place-items-center rounded-lg border border-border/60 bg-muted/30 text-muted-foreground transition-colors hover:text-foreground"
+                          >
+                            <Plus className="size-3.5" />
+                          </button>
+                          <span className="text-xs text-muted-foreground">
+                            / week
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
+          </Section>
+        </div>
+      </main>
+    </>
   );
 }
