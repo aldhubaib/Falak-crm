@@ -4,7 +4,7 @@ import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { requireWorkspace, requireWorkspaceWithMember, requireProjectAssign, requireProjectSettings, requireProjectWork, getProjectAccess } from "@/lib/workspace";
 import { canEdit, canDeleteTaskAt, canMoveTaskFrom } from "@/lib/permissions";
-import { fieldConfig, isFieldLocked, isGateComplete, requiredIncompleteForNextStage, titleLockConfig } from "@/lib/checklist-config";
+import { fieldConfig, isFieldLocked, isGateComplete, titleLockConfig } from "@/lib/checklist-config";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
@@ -400,14 +400,9 @@ export async function createFullTask(data: {
         id: true,
         templateItemId: true,
         name: true,
-        type: true,
         phase: true,
         mandatory: true,
         completed: true,
-        hidden: true,
-        requiredBeforeStageId: true,
-        textValue: true,
-        attachmentId: true,
       },
     });
 
@@ -427,7 +422,6 @@ export async function createFullTask(data: {
       assigneeAvatar: creator?.imageUrl ?? null,
       serviceName: null,
       priority: task.priority,
-      estimateMin: task.estimateMin,
       stageEnteredAt: task.stageEnteredAt?.toISOString() ?? null,
       completedAt: null,
       createdAt: task.createdAt.toISOString(),
@@ -437,11 +431,6 @@ export async function createFullTask(data: {
       deliveryIncomplete: createdItems
         .filter((i) => i.phase === "delivery" && i.mandatory && !i.completed)
         .map((i) => i.name),
-      requiredIncomplete: requiredIncompleteForNextStage(
-        createdItems,
-        task.statusId,
-        allStages,
-      ),
       submittedById: member.id,
       submittedByName: creatorName,
       rejectionCount: 0,
@@ -547,8 +536,6 @@ export async function updateTaskStatus(
   projectId: string,
   dealId?: string,
   actorClientId?: string | null,
-  /** Estimate picked in the In Progress confirm dialog; saved with the move. */
-  estimateMin?: number | null,
 ): Promise<MoveTaskResult> {
   const access = await requireProjectWork(projectId);
   const { workspace, member } = access;
@@ -684,7 +671,6 @@ export async function updateTaskStatus(
         assignmentHistory: history,
         stageTimings: timings,
         stageEnteredAt: now,
-        ...(estimateMin !== undefined ? { estimateMin } : {}),
         rejectionCount: !isForward ? { increment: 1 } : undefined,
         completedAt: targetStatus?.name === "Completed" || targetStatus?.name === "Published" ? now : null,
       },
@@ -785,20 +771,70 @@ export async function updateTaskStatus(
 }
 
 export async function assignTaskToMe(taskId: string, projectId: string) {
-  const { member } = await requireProjectWork(projectId);
+  const access = await requireProjectWork(projectId);
+  const { member } = access;
 
-  const task = await db.task.findUnique({ where: { id: taskId } });
+  const task = await db.task.findUnique({
+    where: { id: taskId },
+    include: { assignee: { select: { name: true, email: true } } },
+  });
   if (!task) throw new Error("Task not found");
+  if (task.deletedAt) throw new Error("Task is in the trash");
+
+  // Self-assign requires the "Modify" right for the task's CURRENT stage —
+  // same rule as editing task fields (full project access always qualifies).
+  const canModify =
+    access.permissions.projects === "full" ||
+    (task.statusId
+      ? access.permissions.taskPermissions?.stages?.[task.statusId]?.modify ===
+        true
+      : false);
+  if (!canModify) {
+    throw new Error("You don't have permission to assign tasks at this stage");
+  }
 
   const history: Record<string, string> = (task.assignmentHistory as Record<string, string>) ?? {};
   if (task.statusId) {
     history[task.statusId] = member.id;
   }
 
-  await db.task.update({
-    where: { id: taskId },
-    data: { assigneeId: member.id, assignmentHistory: history },
+  const [, me] = await Promise.all([
+    db.task.update({
+      where: { id: taskId },
+      data: { assigneeId: member.id, assignmentHistory: history },
+    }),
+    db.workspaceMember.findUnique({
+      where: { id: member.id },
+      select: { id: true, name: true, email: true, imageUrl: true },
+    }),
+  ]);
+
+  // Let every open board patch the card's avatar without a refetch.
+  publishTaskEvent(projectId, {
+    type: "task.updated",
+    taskId,
+    assignee: me
+      ? {
+          id: me.id,
+          name: me.name ?? me.email,
+          avatar: me.imageUrl ?? null,
+        }
+      : null,
   });
+
+  void logActivity({
+    entityType: "task",
+    entityId: taskId,
+    entityName: task.title,
+    action: "updated",
+    changes: {
+      assignee: {
+        from: task.assignee ? (task.assignee.name ?? task.assignee.email) : null,
+        to: me?.name ?? me?.email ?? null,
+      },
+    },
+    metadata: { projectId },
+  }).catch(() => {});
 
   revalidatePath(`/projects/${projectId}`);
 }
@@ -932,7 +968,6 @@ export async function updateTask(taskId: string, data: {
   description?: string | null;
   assigneeId?: string | null;
   priority?: number | null;
-  estimateMin?: number | null;
 }) {
   await requireWorkspaceWithMember();
 
@@ -1062,44 +1097,22 @@ async function publishChecklistProgress(itemId: string, projectId: string) {
   try {
     const item = await db.taskChecklistItem.findUnique({
       where: { id: itemId },
-      select: {
-        taskId: true,
-        task: { select: { statusId: true, status: { select: { workspaceId: true } } } },
-      },
+      select: { taskId: true },
     });
     if (!item) return;
-    const [rows, stages] = await Promise.all([
-      db.taskChecklistItem.findMany({
-        where: { taskId: item.taskId },
-        select: {
-          name: true,
-          type: true,
-          phase: true,
-          mandatory: true,
-          completed: true,
-          hidden: true,
-          requiredBeforeStageId: true,
-          textValue: true,
-          attachmentId: true,
-          templateItem: {
-            select: {
-              name: true,
-              type: true,
-              phase: true,
-              mandatory: true,
-              hidden: true,
-              requiredBeforeStageId: true,
-            },
-          },
+    const rows = await db.taskChecklistItem.findMany({
+      where: { taskId: item.taskId },
+      select: {
+        name: true,
+        phase: true,
+        mandatory: true,
+        completed: true,
+        hidden: true,
+        templateItem: {
+          select: { name: true, phase: true, mandatory: true, hidden: true },
         },
-      }),
-      item.task.status
-        ? db.taskStatus.findMany({
-            where: { workspaceId: item.task.status.workspaceId },
-            select: { id: true, name: true, order: true },
-          })
-        : Promise.resolve([]),
-    ]);
+      },
+    });
     const checklistItems = rows
       .map((r) => ({ cfg: fieldConfig(r), completed: r.completed }))
       .filter((r) => !r.cfg.hidden);
@@ -1112,11 +1125,6 @@ async function publishChecklistProgress(itemId: string, projectId: string) {
         deliveryIncomplete: checklistItems
           .filter((i) => i.cfg.phase === "delivery" && i.cfg.mandatory && !i.completed)
           .map((i) => i.cfg.name),
-        requiredIncomplete: requiredIncompleteForNextStage(
-          rows,
-          item.task.statusId,
-          stages,
-        ),
       },
     });
   } catch {

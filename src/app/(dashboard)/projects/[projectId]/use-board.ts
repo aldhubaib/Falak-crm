@@ -28,6 +28,7 @@ type BoardEvent = {
   patch?: BoardTaskMovePatch;
   checklist?: BoardChecklistPatch;
   snapshot?: BoardTask;
+  assignee?: { id: string; name: string; avatar: string | null } | null;
 };
 
 // Ephemeral drag broadcast, published client-to-client over the Centrifugo
@@ -99,6 +100,29 @@ function applyBoardEvent(
     return;
   }
 
+  // Task reassigned (avatar self-assign) — patch the card's owner in memory.
+  if (event.type === "task.updated" && event.assignee !== undefined && event.taskId) {
+    const assignee = event.assignee;
+    queryClient.setQueryData<BoardData>(key, (old) => {
+      if (!old) return old;
+      if (!old.tasks.some((t) => t.id === event.taskId)) return old;
+      return {
+        ...old,
+        tasks: old.tasks.map((t) =>
+          t.id === event.taskId
+            ? {
+                ...t,
+                assigneeId: assignee?.id ?? null,
+                assigneeName: assignee?.name ?? null,
+                assigneeAvatar: assignee?.avatar ?? null,
+              }
+            : t,
+        ),
+      };
+    });
+    return;
+  }
+
   // Checklist progress changed (upload finished, text saved, file removed) —
   // update the card's counters and the delivery drag gate in memory.
   if (event.type === "task.updated" && event.checklist && event.taskId) {
@@ -115,8 +139,6 @@ function applyBoardEvent(
                 checklistTotal: checklist.checklistTotal,
                 checklistDone: checklist.checklistDone,
                 deliveryIncomplete: checklist.deliveryIncomplete,
-                requiredIncomplete:
-                  checklist.requiredIncomplete ?? t.requiredIncomplete,
               }
             : t,
         ),

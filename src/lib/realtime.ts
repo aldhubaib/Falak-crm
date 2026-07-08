@@ -30,7 +30,6 @@ export type BoardChecklistPatch = {
   checklistTotal: number;
   checklistDone: number;
   deliveryIncomplete: string[];
-  requiredIncomplete: string[];
 };
 
 // Event payload broadcast to every client subscribed to a project's board.
@@ -44,6 +43,8 @@ export type RealtimeEvent = {
   actorClientId?: string | null;
   patch?: BoardTaskMovePatch;
   checklist?: BoardChecklistPatch;
+  /** New owner after a self-assign — boards patch the card's avatar in place. */
+  assignee?: { id: string; name: string; avatar: string | null } | null;
   // Full BoardTask snapshot (typed loosely to avoid importing action types here).
   snapshot?: Record<string, unknown>;
 };

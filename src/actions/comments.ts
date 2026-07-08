@@ -73,7 +73,7 @@ export async function getTaskHistory(taskId: string) {
   return db.taskStatusChange.findMany({
     where: { taskId },
     include: {
-      member: { select: { id: true, name: true, email: true } },
+      member: { select: { id: true, name: true, email: true, imageUrl: true } },
     },
     orderBy: { createdAt: "desc" },
   });

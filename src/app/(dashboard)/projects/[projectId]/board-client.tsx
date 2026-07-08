@@ -40,7 +40,7 @@ import { DeclineDialog } from "@/components/board/decline-dialog";
 import { CONFIRM_MESSAGES } from "@/components/board/confirm-messages";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { updateTaskStatus } from "@/actions/projects";
+import { assignTaskToMe, updateTaskStatus } from "@/actions/projects";
 import { addTaskComment } from "@/actions/comments";
 import { uploadManager } from "@/lib/upload-manager";
 import type { BoardData, BoardStatus, BoardTask } from "@/actions/board";
@@ -81,7 +81,26 @@ function formatSince(iso: string) {
 
 // ─── Card ────────────────────────────────────────────────────────────────────
 
-function CardBody({ task }: { task: BoardTask }) {
+function CardBody({
+  task,
+  onSelfAssign,
+}: {
+  task: BoardTask;
+  /** Present only when the viewer may claim this task at its current stage. */
+  onSelfAssign?: () => void;
+}) {
+  const avatar = (
+    <Avatar className="h-5 w-5">
+      <AvatarImage
+        src={task.assigneeAvatar ?? undefined}
+        alt={task.assigneeName ?? "Unassigned"}
+      />
+      <AvatarFallback className="bg-muted text-[9px] font-semibold text-muted-foreground">
+        {(task.assigneeName ?? "?").charAt(0).toUpperCase()}
+      </AvatarFallback>
+    </Avatar>
+  );
+
   return (
     <div className="min-w-0">
       <span className="text-[10px] font-mono text-muted-foreground/60">
@@ -106,17 +125,31 @@ function CardBody({ task }: { task: BoardTask }) {
         <div className="ml-auto flex items-center gap-1">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Avatar className="h-5 w-5">
-                <AvatarImage
-                  src={task.assigneeAvatar ?? undefined}
-                  alt={task.assigneeName ?? "Unassigned"}
-                />
-                <AvatarFallback className="bg-muted text-[9px] font-semibold text-muted-foreground">
-                  {(task.assigneeName ?? "?").charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              {onSelfAssign ? (
+                <button
+                  type="button"
+                  aria-label="Assign this task to me"
+                  // Stop pointerdown so a tap on the avatar never starts a drag,
+                  // and stop click so it doesn't open the task page.
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelfAssign();
+                  }}
+                  className="cursor-pointer rounded-full transition-shadow hover:ring-2 hover:ring-primary/60"
+                >
+                  {avatar}
+                </button>
+              ) : (
+                avatar
+              )}
             </TooltipTrigger>
-            <TooltipContent>{task.assigneeName ?? "Unassigned"}</TooltipContent>
+            <TooltipContent>
+              {task.assigneeName ?? "Unassigned"}
+              {onSelfAssign && (
+                <span className="block opacity-70">Click to assign to me</span>
+              )}
+            </TooltipContent>
           </Tooltip>
         </div>
       </div>
@@ -146,6 +179,7 @@ const BoardCard = memo(function BoardCard({
   onOpen,
   remoteDragger,
   dragDisabled,
+  onSelfAssign,
 }: {
   task: BoardTask;
   onOpen: (taskId: string) => void;
@@ -153,6 +187,7 @@ const BoardCard = memo(function BoardCard({
   remoteDragger: string | null;
   /** Mobile: dragging is off so touch scrolls the board (move via task page). */
   dragDisabled: boolean;
+  onSelfAssign?: () => void;
 }) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: task.id,
@@ -172,9 +207,6 @@ const BoardCard = memo(function BoardCard({
         // touch-none suppresses native scrolling from a touch on the card, so
         // only apply it when the card is actually draggable.
         !dragDisabled && "cursor-grab touch-none active:cursor-grabbing",
-        // Required fields still missing for the next stage — flag the card.
-        task.requiredIncomplete.length > 0 &&
-          "border-destructive/60 hover:border-destructive",
         remoteDragger && "border-primary/60 ring-1 ring-primary/40",
       )}
     >
@@ -183,7 +215,7 @@ const BoardCard = memo(function BoardCard({
           {remoteDragger} is moving…
         </span>
       )}
-      <CardBody task={task} />
+      <CardBody task={task} onSelfAssign={onSelfAssign} />
     </div>
   );
 });
@@ -200,6 +232,8 @@ const BoardColumn = memo(function BoardColumn({
   highlight,
   remoteDrags,
   dragDisabled,
+  canSelfAssign,
+  onSelfAssign,
 }: {
   col: Column;
   projectId: string;
@@ -210,6 +244,8 @@ const BoardColumn = memo(function BoardColumn({
   highlight: boolean;
   remoteDrags: RemoteDrags;
   dragDisabled: boolean;
+  canSelfAssign: (task: BoardTask) => boolean;
+  onSelfAssign: (task: BoardTask) => void;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: col.id });
 
@@ -284,6 +320,9 @@ const BoardColumn = memo(function BoardColumn({
               onOpen={onOpen}
               remoteDragger={remoteDrags[task.id]?.name ?? null}
               dragDisabled={dragDisabled}
+              onSelfAssign={
+                canSelfAssign(task) ? () => onSelfAssign(task) : undefined
+              }
             />
           ))
         )}
@@ -297,19 +336,26 @@ const BoardColumn = memo(function BoardColumn({
 // Per-stage move rights computed server-side from the member's project role.
 export type BoardMovePerms = {
   full: boolean;
-  stages: Record<string, { forward: boolean; rollback: boolean }>;
+  stages: Record<
+    string,
+    { forward: boolean; rollback: boolean; modify: boolean }
+  >;
 };
 
 export function ProjectBoardClient({
   projectId,
   initialData,
   movePerms,
+  currentMemberId,
   currentMemberName,
+  currentMemberAvatar,
 }: {
   projectId: string;
   initialData: BoardData;
   movePerms: BoardMovePerms;
+  currentMemberId?: string;
   currentMemberName?: string;
+  currentMemberAvatar?: string | null;
 }) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -339,6 +385,8 @@ export function ProjectBoardClient({
   const [showArchived, setShowArchived] = useState(false);
   const [confirmMove, setConfirmMove] = useState<PendingMove>(null);
   const [moveError, setMoveError] = useState<string | null>(null);
+  // Task whose avatar was clicked — pending the "assign to me" confirmation.
+  const [assignTarget, setAssignTarget] = useState<BoardTask | null>(null);
   const [declineMove, setDeclineMove] = useState<{
     taskId: string;
     toStatusId: string;
@@ -357,18 +405,13 @@ export function ProjectBoardClient({
   );
 
   const moveMutation = useMutation({
-    mutationFn: (vars: {
-      taskId: string;
-      statusId: string;
-      estimateMin?: number | null;
-    }) =>
+    mutationFn: (vars: { taskId: string; statusId: string }) =>
       updateTaskStatus(
         vars.taskId,
         vars.statusId,
         projectId,
         undefined,
         clientId,
-        vars.estimateMin,
       ).then((result) => {
         // Blocked moves come back as data (not a thrown error) so the message
         // survives production builds — rethrow here to reuse the error path.
@@ -430,11 +473,59 @@ export function ProjectBoardClient({
   });
 
   const moveTask = useCallback(
-    (taskId: string, statusId: string, estimateMin?: number | null) => {
-      moveMutation.mutate({ taskId, statusId, estimateMin });
+    (taskId: string, statusId: string) => {
+      moveMutation.mutate({ taskId, statusId });
     },
     [moveMutation],
   );
+
+  // Claim a task by clicking its avatar. Offered only when the viewer holds
+  // the "Modify" right for the task's current stage (server re-checks).
+  const canSelfAssign = useCallback(
+    (task: BoardTask) => {
+      if (movePerms.full) return true;
+      if (!task.statusId) return false;
+      return movePerms.stages[task.statusId]?.modify === true;
+    },
+    [movePerms],
+  );
+
+  const selfAssignMutation = useMutation({
+    mutationFn: (taskId: string) => assignTaskToMe(taskId, projectId),
+    onMutate: async (taskId) => {
+      const key = boardQueryKey(projectId);
+      await queryClient.cancelQueries({ queryKey: key });
+      const prev = queryClient.getQueryData<BoardData>(key);
+      queryClient.setQueryData<BoardData>(key, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          tasks: old.tasks.map((t) =>
+            t.id === taskId
+              ? {
+                  ...t,
+                  assigneeId: currentMemberId ?? t.assigneeId,
+                  assigneeName: currentMemberName ?? t.assigneeName,
+                  assigneeAvatar: currentMemberAvatar ?? null,
+                }
+              : t,
+          ),
+        };
+      });
+      return { prev };
+    },
+    onError: (_err, _taskId, ctx) => {
+      if (ctx?.prev) queryClient.setQueryData(boardQueryKey(projectId), ctx.prev);
+      setMoveError("The task couldn't be assigned to you. Please try again.");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
+    },
+  });
+
+  const openSelfAssign = useCallback((task: BoardTask) => {
+    setAssignTarget(task);
+  }, []);
 
   // Decline a task backward: record the reason as a comment that @mentions the
   // person who submitted it (locked in the dialog), then move it back. The move
@@ -655,6 +746,10 @@ export function ProjectBoardClient({
         description: `Are you sure you want to move this task to ${confirmTarget.name}?`,
       })
     : null;
+  // Current owner shown in the confirm dialog's ownership hand-off chips.
+  const confirmTask = confirmMove
+    ? (tasks.find((t) => t.id === confirmMove.taskId) ?? null)
+    : null;
 
   return (
     <TooltipProvider delayDuration={150}>
@@ -689,6 +784,8 @@ export function ProjectBoardClient({
               highlight={activeId != null && activeSourceCol !== col.id}
               remoteDrags={remoteDrags}
               dragDisabled={isMobile}
+              canSelfAssign={canSelfAssign}
+              onSelfAssign={openSelfAssign}
             />
           ))}
         </div>
@@ -706,15 +803,37 @@ export function ProjectBoardClient({
       <ConfirmStatusDialog
         open={confirmMove !== null}
         onClose={() => setConfirmMove(null)}
-        onConfirm={(estimateMin) => {
+        onConfirm={() => {
           if (confirmMove)
-            moveTask(confirmMove.taskId, confirmMove.toStatusId, estimateMin);
+            moveTask(confirmMove.taskId, confirmMove.toStatusId);
           setConfirmMove(null);
         }}
         title={confirmMsg?.title ?? ""}
         description={confirmMsg?.description ?? ""}
         confirmLabel={confirmMsg?.confirmLabel}
-        withEstimate={!!confirmMsg?.withEstimate}
+        assignToMe={!!confirmMsg?.assignToMe}
+        currentAssigneeName={confirmTask?.assigneeName}
+        currentAssigneeAvatar={confirmTask?.assigneeAvatar}
+        meName={currentMemberName}
+        meAvatar={currentMemberAvatar}
+      />
+
+      {/* Avatar click — assign to me */}
+      <ConfirmStatusDialog
+        open={assignTarget !== null}
+        onClose={() => setAssignTarget(null)}
+        onConfirm={() => {
+          if (assignTarget) selfAssignMutation.mutate(assignTarget.id);
+          setAssignTarget(null);
+        }}
+        title="Assign to me"
+        description="By confirming, this task will be assigned to you and you take ownership of it."
+        confirmLabel="Assign to Me"
+        assignToMe
+        currentAssigneeName={assignTarget?.assigneeName}
+        currentAssigneeAvatar={assignTarget?.assigneeAvatar}
+        meName={currentMemberName}
+        meAvatar={currentMemberAvatar}
       />
 
       {/* Backward move decline */}
@@ -723,6 +842,8 @@ export function ProjectBoardClient({
         fromLabel={declineMove?.fromName ?? ""}
         toLabel={declineMove?.toName ?? ""}
         mentionName={declineMove?.mentionName ?? null}
+        meName={currentMemberName}
+        meAvatar={currentMemberAvatar}
         onClose={() => setDeclineMove(null)}
         onConfirm={(reason, file) => {
           if (declineMove)

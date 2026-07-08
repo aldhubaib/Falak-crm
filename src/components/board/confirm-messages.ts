@@ -6,8 +6,8 @@ export const CONFIRM_MESSAGES: Record<
     title: string;
     description: string;
     confirmLabel?: string;
-    /** Show the ESTIMATED TIME picker in the confirm dialog. */
-    withEstimate?: boolean;
+    /** Show the "taking ownership" hand-off chips (assignee → me). */
+    assignToMe?: boolean;
   }
 > = {
   "In Progress": {
@@ -15,7 +15,7 @@ export const CONFIRM_MESSAGES: Record<
     description:
       "By confirming, you acknowledge that you understand the requirements and are taking ownership of this task.",
     confirmLabel: "I Understand",
-    withEstimate: true,
+    assignToMe: true,
   },
   "Internal Review": {
     title: "Submit for Internal Review",

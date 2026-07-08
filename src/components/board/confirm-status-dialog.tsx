@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Timer } from "lucide-react";
+import { ArrowRight, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
@@ -11,8 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ESTIMATE_OPTIONS } from "@/lib/estimate";
-import { cn } from "@/lib/utils";
 
 export function ConfirmStatusDialog({
   open,
@@ -21,73 +19,95 @@ export function ConfirmStatusDialog({
   title,
   description,
   confirmLabel = "Confirm",
-  withEstimate = false,
+  assignToMe = false,
+  currentAssigneeName,
+  currentAssigneeAvatar,
+  meName,
+  meAvatar,
 }: {
   open: boolean;
   onClose: () => void;
-  /** `estimateMin` is set only when the dialog shows the estimate picker and the user picked a chip. */
-  onConfirm: (estimateMin?: number | null) => void;
+  onConfirm: () => void;
   title: string;
   description: string;
   confirmLabel?: string;
-  /** Show the ESTIMATED TIME chips + timer note (the Todo → In Progress move). */
-  withEstimate?: boolean;
+  /** Render the "taking ownership" hand-off chips (current assignee → me). */
+  assignToMe?: boolean;
+  currentAssigneeName?: string | null;
+  currentAssigneeAvatar?: string | null;
+  meName?: string | null;
+  meAvatar?: string | null;
 }) {
-  const [estimate, setEstimate] = useState<number | null>(null);
-
-  // A fresh dialog shouldn't remember the estimate picked for another task.
-  useEffect(() => {
-    if (open) setEstimate(null);
-  }, [open]);
+  const me = meName || "You";
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
+      <DialogContent className="gap-3 sm:max-w-lg sm:gap-4 [&>button[type=button]]:hidden">
+        <DialogHeader className="sr-only">
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
-        {withEstimate && (
-          <div className="space-y-3">
-            <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                Estimated time
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {ESTIMATE_OPTIONS.map((opt) => (
-                  <button
-                    key={opt.min}
-                    type="button"
-                    onClick={() =>
-                      setEstimate((cur) => (cur === opt.min ? null : opt.min))
-                    }
-                    className={cn(
-                      "rounded-lg border px-4 py-2 text-sm font-medium transition-colors",
-                      estimate === opt.min
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border/60 bg-background text-foreground hover:border-muted-foreground/40",
-                    )}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="flex items-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-sm text-amber-500">
-              <Timer className="h-4 w-4 shrink-0" />
-              The task timer will start once you confirm.
-            </div>
+        <div className="flex items-start gap-3 rounded-lg border border-border/60 bg-surface/60 p-3">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary/15 text-primary sm:h-10 sm:w-10">
+            <UserCheck className="h-4 w-4 sm:h-5 sm:w-5" />
           </div>
-        )}
+          {assignToMe ? (
+            <div className="min-w-0 flex-1 space-y-2">
+              <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Taking ownership
+              </div>
+              <div className="flex min-w-0 flex-wrap items-center gap-2 text-sm sm:flex-nowrap">
+                {currentAssigneeName ? (
+                  <span className="inline-flex min-w-0 max-w-full items-center gap-1.5 rounded-full bg-muted/50 py-0.5 pl-0.5 pr-2.5 text-muted-foreground">
+                    <Avatar className="h-5 w-5">
+                      {currentAssigneeAvatar && (
+                        <AvatarImage
+                          src={currentAssigneeAvatar}
+                          alt={currentAssigneeName}
+                        />
+                      )}
+                      <AvatarFallback className="bg-muted text-[10px] font-semibold text-muted-foreground">
+                        {currentAssigneeName.slice(0, 1).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="truncate">{currentAssigneeName}</span>
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/50 px-2.5 py-1 text-muted-foreground">
+                    Unassigned
+                  </span>
+                )}
+                <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+                <span className="inline-flex min-w-0 max-w-full items-center gap-1.5 rounded-full bg-primary/15 py-0.5 pl-0.5 pr-2.5 font-medium text-primary">
+                  <Avatar className="h-5 w-5">
+                    {meAvatar && <AvatarImage src={meAvatar} alt={me} />}
+                    <AvatarFallback className="bg-primary text-[10px] font-bold text-primary-foreground">
+                      {me.slice(0, 1).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="truncate">{me}</span>
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground">{description}</p>
+            </div>
+          ) : (
+            <div className="min-w-0 flex-1 space-y-1">
+              <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                {title}
+              </div>
+              <p className="text-sm text-muted-foreground">{description}</p>
+            </div>
+          )}
+        </div>
 
-        <DialogFooter>
-          <Button variant="ghost" onClick={onClose}>
+        <DialogFooter className="flex-col-reverse gap-2 sm:flex-row sm:gap-0">
+          <Button variant="ghost" onClick={onClose} className="w-full sm:w-auto">
             Cancel
           </Button>
           <Button
-            className="bg-primary text-primary-foreground hover:bg-primary/90"
-            onClick={() => onConfirm(withEstimate ? estimate : undefined)}
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
+            onClick={onConfirm}
           >
             {confirmLabel}
           </Button>

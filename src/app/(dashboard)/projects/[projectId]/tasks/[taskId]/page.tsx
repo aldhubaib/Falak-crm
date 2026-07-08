@@ -129,7 +129,7 @@ export default async function TaskDetailPage({
 
   // Who can be @mentioned in comments: the project's team plus workspace
   // owners (owners see every project but aren't project members).
-  const [projectMembers, owners] = await Promise.all([
+  const [projectMembers, owners, selfMember] = await Promise.all([
     db.projectMember.findMany({
       where: { projectId },
       select: { member: { select: { id: true, name: true, email: true } } },
@@ -137,6 +137,11 @@ export default async function TaskDetailPage({
     db.workspaceMember.findMany({
       where: { workspaceId: access.workspace.id, type: "OWNER" },
       select: { id: true, name: true, email: true },
+    }),
+    // Display identity for the move dialogs' ownership chips ("→ me").
+    db.workspaceMember.findUnique({
+      where: { id: access.member.id },
+      select: { name: true, email: true, imageUrl: true },
     }),
   ]);
   const mentionableMap = new Map<string, { id: string; name: string }>();
@@ -194,13 +199,15 @@ export default async function TaskDetailPage({
     ? {
         id: submitted.member.id,
         name: submitted.member.name ?? submitted.member.email,
+        avatar: submitted.member.imageUrl ?? null,
       }
     : task.assignee
       ? {
           id: task.assignee.id,
           name: task.assignee.name ?? task.assignee.email,
+          avatar: task.assignee.imageUrl ?? null,
         }
-      : { id: null, name: null };
+      : { id: null, name: null, avatar: null };
 
   let deletedByName: string | null = null;
   if (trashed && task.deletedBy) {
@@ -227,7 +234,6 @@ export default async function TaskDetailPage({
       taskNumber={task.taskNumber}
       typeName={typeName}
       priority={task.priority}
-      estimateMin={task.estimateMin}
       statusName={task.status?.name ?? null}
       statusColor={task.status?.color ?? "#3b82f6"}
       move={{
@@ -237,6 +243,18 @@ export default async function TaskDetailPage({
         statusId: task.statusId,
         perms: movePerms,
         submittedBy,
+        assignee: task.assignee
+          ? {
+              name: task.assignee.name ?? task.assignee.email,
+              avatar: task.assignee.imageUrl ?? null,
+            }
+          : null,
+        me: selfMember
+          ? {
+              name: selfMember.name ?? selfMember.email,
+              avatar: selfMember.imageUrl ?? null,
+            }
+          : null,
       }}
       mentionables={mentionables}
       stageEnteredAt={task.stageEnteredAt?.toISOString() ?? null}

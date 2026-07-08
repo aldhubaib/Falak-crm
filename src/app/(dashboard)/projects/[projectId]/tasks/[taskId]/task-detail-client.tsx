@@ -37,7 +37,6 @@ import {
   LayoutGrid,
   Package,
   Pencil,
-  Timer,
   Type as TypeIcon,
   VideoOff,
 } from "lucide-react";
@@ -93,7 +92,6 @@ import {
 } from "@/components/projects/dynamic-field";
 import { uploadManager, type UploadItem } from "@/lib/upload-manager";
 import { FormSection } from "@/components/projects/form-section";
-import { formatEstimate } from "@/lib/estimate";
 import { boardQueryKey } from "../../use-board";
 import type { BoardData } from "@/actions/board";
 
@@ -156,7 +154,11 @@ export type TaskMoveData = {
     full: boolean;
     stages: Record<string, { forward: boolean; rollback: boolean }>;
   };
-  submittedBy: { id: string | null; name: string | null };
+  submittedBy: { id: string | null; name: string | null; avatar?: string | null };
+  /** Current assignee — shown in the confirm dialog's ownership chips. */
+  assignee?: { name: string; avatar: string | null } | null;
+  /** Current viewer — the "→ me" side of the ownership chips. */
+  me?: { name: string; avatar: string | null } | null;
 };
 
 export function TaskDetailClient({
@@ -170,7 +172,6 @@ export function TaskDetailClient({
   taskNumber,
   typeName,
   priority,
-  estimateMin,
   statusName,
   statusColor,
   stageEnteredAt,
@@ -194,8 +195,6 @@ export function TaskDetailClient({
   taskNumber: number;
   typeName: string | null;
   priority: number | null;
-  /** Estimate picked when the task moved to In Progress (minutes). */
-  estimateMin: number | null;
   statusName: string | null;
   statusColor: string;
   stageEnteredAt: string | null;
@@ -433,23 +432,6 @@ export function TaskDetailClient({
             <PriorityDisplay value={priority} />
           </FormSection>
 
-          <FormSection
-            icon={<Timer className="size-4" />}
-            title="Estimated Time"
-            hint="Picked by the assignee when the task moved to In Progress."
-          >
-            {estimateMin != null ? (
-              <span className="inline-flex items-center gap-2 rounded-full border border-primary/60 bg-primary/10 px-3.5 py-1.5 text-xs font-medium tabular-nums text-primary">
-                <Timer className="size-3.5" />
-                {formatEstimate(estimateMin)}
-              </span>
-            ) : (
-              <span className="text-xs text-muted-foreground">
-                Not set yet — chosen when the task moves to In Progress.
-              </span>
-            )}
-          </FormSection>
-
           {/* Requirements */}
           <FormSection
             icon={<HelpCircle className="size-4" />}
@@ -534,7 +516,6 @@ export function TaskDetailClient({
           stageEnteredAt={stageEnteredAt}
           history={history}
           totalTimeMs={totalTimeMs}
-          estimateMin={estimateMin}
           tab={historyTab}
           onTabChange={setHistoryTab}
           onClose={() => setHistoryOpen(false)}
@@ -589,20 +570,10 @@ function StatusMoveBar({
 
   if (!current || (!showNext && !showBack)) return null;
 
-  const doMove = async (
-    targetId: string,
-    estimateMin?: number | null,
-  ): Promise<boolean> => {
+  const doMove = async (targetId: string): Promise<boolean> => {
     setMoving(true);
     try {
-      const result = await updateTaskStatus(
-        taskId,
-        targetId,
-        projectId,
-        undefined,
-        undefined,
-        estimateMin,
-      );
+      const result = await updateTaskStatus(taskId, targetId, projectId);
       // Blocked moves come back as data (not a thrown error) so the friendly
       // message survives production builds.
       if (!result.ok) {
@@ -734,14 +705,18 @@ function StatusMoveBar({
       <ConfirmStatusDialog
         open={confirmNext}
         onClose={() => setConfirmNext(false)}
-        onConfirm={(estimateMin) => {
+        onConfirm={() => {
           setConfirmNext(false);
-          if (next) void doMove(next.id, estimateMin);
+          if (next) void doMove(next.id);
         }}
         title={confirmMsg?.title ?? ""}
         description={confirmMsg?.description ?? ""}
         confirmLabel={confirmMsg?.confirmLabel}
-        withEstimate={!!confirmMsg?.withEstimate}
+        assignToMe={!!confirmMsg?.assignToMe}
+        currentAssigneeName={move.assignee?.name}
+        currentAssigneeAvatar={move.assignee?.avatar}
+        meName={move.me?.name}
+        meAvatar={move.me?.avatar}
       />
 
       {/* Backward move decline */}
@@ -750,6 +725,9 @@ function StatusMoveBar({
         fromLabel={current.name}
         toLabel={prev?.name ?? ""}
         mentionName={move.submittedBy.name}
+        mentionAvatar={move.submittedBy.avatar}
+        meName={move.me?.name}
+        meAvatar={move.me?.avatar}
         onClose={() => setDeclineOpen(false)}
         onConfirm={(reason, file) => {
           setDeclineOpen(false);
@@ -1090,7 +1068,6 @@ function TaskHistoryPanel({
   stageEnteredAt,
   history,
   totalTimeMs,
-  estimateMin,
   tab,
   onTabChange,
   onClose,
@@ -1100,7 +1077,6 @@ function TaskHistoryPanel({
   stageEnteredAt: string | null;
   history: HistoryEntry[];
   totalTimeMs: number;
-  estimateMin: number | null;
   tab: "all" | "comments" | "status";
   onTabChange: (tab: "all" | "comments" | "status") => void;
   onClose: () => void;
@@ -1126,12 +1102,6 @@ function TaskHistoryPanel({
         <History className="h-4 w-4 text-muted-foreground" />
         <span className="text-sm font-semibold">Task History</span>
         <div className="ml-auto flex items-center gap-1.5">
-          {estimateMin != null && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[10px] font-mono tabular-nums text-primary">
-              <Timer className="h-3 w-3" />
-              Est {formatEstimate(estimateMin)}
-            </span>
-          )}
           <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-[10px] font-mono tabular-nums text-muted-foreground">
             <Clock className="h-3 w-3" />
             Total {formatDurationMs(totalTimeMs)}

@@ -51,6 +51,7 @@ export default async function ProjectDetailPage({
   // moving a card.
   const self = team.allMembers.find((m) => m.id === access.member.id);
   const currentMemberName = self ? (self.name ?? self.email) : undefined;
+  const currentMemberAvatar = self?.imageUrl ?? null;
   const canEditSettings = hasCap(access.permissions, "projects", "editSettings");
 
   // Per-stage move rights for the board's drag handler (server enforces the
@@ -61,7 +62,11 @@ export default async function ProjectDetailPage({
       Object.entries(access.permissions.taskPermissions?.stages ?? {}).map(
         ([stageId, sp]) => [
           stageId,
-          { forward: sp.forward === true, rollback: sp.rollback === true },
+          {
+            forward: sp.forward === true,
+            rollback: sp.rollback === true,
+            modify: sp.modify === true,
+          },
         ],
       ),
     ),
@@ -88,7 +93,9 @@ export default async function ProjectDetailPage({
           projectId={project.id}
           initialData={initialData}
           movePerms={movePerms}
+          currentMemberId={access.member.id}
           currentMemberName={currentMemberName}
+          currentMemberAvatar={currentMemberAvatar}
         />
       </main>
     </>

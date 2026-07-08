@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { fieldConfig, requiredIncompleteForNextStage } from "@/lib/checklist-config";
+import { fieldConfig } from "@/lib/checklist-config";
 import { requireProjectWork } from "@/lib/workspace";
 
 export type BoardStatus = {
@@ -23,7 +23,6 @@ export type BoardTask = {
   assigneeAvatar: string | null;
   serviceName: string | null;
   priority: number | null;
-  estimateMin: number | null;
   stageEnteredAt: string | null;
   completedAt: string | null;
   createdAt: string;
@@ -31,13 +30,6 @@ export type BoardTask = {
   checklistTotal: number;
   checklistDone: number;
   deliveryIncomplete: string[];
-  /**
-   * Names of required fields that would block moving the task to its NEXT
-   * stage right now ("Required Before" gates, plus mandatory delivery items
-   * when the next stage is Internal Review). Non-empty → card shows a red
-   * border.
-   */
-  requiredIncomplete: string[];
   submittedById: string | null;
   submittedByName: string | null;
   rejectionCount: number;
@@ -64,7 +56,6 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         title: true,
         statusId: true,
         priority: true,
-        estimateMin: true,
         stageEnteredAt: true,
         completedAt: true,
         createdAt: true,
@@ -76,24 +67,13 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         checklistItems: {
           select: {
             name: true,
-            type: true,
             phase: true,
             mandatory: true,
             completed: true,
             hidden: true,
-            requiredBeforeStageId: true,
-            textValue: true,
-            attachmentId: true,
             // Live template config — the per-task copy is only a fallback.
             templateItem: {
-              select: {
-                name: true,
-                type: true,
-                phase: true,
-                mandatory: true,
-                hidden: true,
-                requiredBeforeStageId: true,
-              },
+              select: { name: true, phase: true, mandatory: true, hidden: true },
             },
           },
         },
@@ -166,12 +146,6 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
     const checklist = t.checklistItems
       .map((i) => ({ cfg: fieldConfig(i), completed: i.completed }))
       .filter((i) => !i.cfg.hidden);
-    const requiredIncomplete = requiredIncompleteForNextStage(
-      t.checklistItems,
-      t.statusId,
-      statuses,
-    );
-
     return {
       id: t.id,
       taskNumber: t.taskNumber,
@@ -184,7 +158,6 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
       assigneeAvatar: t.assignee?.imageUrl ?? null,
       serviceName: t.service?.name ?? null,
       priority: t.priority,
-      estimateMin: t.estimateMin,
       stageEnteredAt: t.stageEnteredAt?.toISOString() ?? null,
       completedAt: t.completedAt?.toISOString() ?? null,
       createdAt: t.createdAt.toISOString(),
@@ -194,7 +167,6 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
       deliveryIncomplete: checklist
         .filter((i) => i.cfg.phase === "delivery" && i.cfg.mandatory && !i.completed)
         .map((i) => i.cfg.name),
-      requiredIncomplete,
       submittedById: submittedBy.get(t.id)?.id ?? null,
       submittedByName: submittedBy.get(t.id)?.name ?? null,
       rejectionCount: t.rejectionCount ?? 0,
