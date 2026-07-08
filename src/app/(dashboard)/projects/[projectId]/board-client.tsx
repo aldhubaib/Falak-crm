@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/tooltip";
 import { PriorityBadge } from "@/components/priority-badge";
 import { TaskTypeIcon } from "@/components/task-type-chip";
+import { TypeIcon } from "@/components/task-types/task-type-visuals";
 import {
   Dialog,
   DialogContent,
@@ -344,9 +345,10 @@ const BoardColumn = memo(function BoardColumn({
                   className="group/slot relative grid h-[72px] place-items-center rounded-lg border border-dashed border-border/80"
                 >
                   <span className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
-                    <span
-                      className="h-1.5 w-1.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: g.templateColor ?? "#f59e0b" }}
+                    <TypeIcon
+                      name={g.templateIcon}
+                      className="h-3.5 w-3.5 shrink-0"
+                      style={{ color: g.templateColor ?? "#f59e0b" }}
                     />
                     <span className="truncate">
                       {g.templateName}{" "}

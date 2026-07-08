@@ -45,6 +45,7 @@ export type WeeklyGroup = {
   templateId: string;
   templateName: string;
   templateColor: string | null;
+  templateIcon: string | null;
   total: number;
   emptySlotIds: string[];
 };
@@ -141,7 +142,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         id: true,
         templateId: true,
         taskId: true,
-        template: { select: { name: true, color: true } },
+        template: { select: { name: true, color: true, icon: true } },
       },
     }),
   ]);
@@ -219,6 +220,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         templateId: s.templateId,
         templateName: s.template.name,
         templateColor: s.template.color,
+        templateIcon: s.template.icon,
         total: 0,
         emptySlotIds: [],
       };

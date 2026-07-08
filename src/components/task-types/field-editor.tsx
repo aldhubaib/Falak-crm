@@ -157,7 +157,7 @@ export function FieldEditor({
             searchPlaceholder="Search stages…"
             className="h-10"
             options={[
-              { value: "no_gate", label: "No gate" },
+              { value: "no_gate", label: "Never" },
               ...statuses.map((s) => ({ value: s.id, label: s.name })),
             ]}
           />

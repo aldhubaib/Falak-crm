@@ -47,10 +47,12 @@ export const TYPE_ICONS: Record<string, LucideIcon> = {
 export function TypeIcon({
   name,
   className,
+  style,
 }: {
   name?: string | null;
   className?: string;
+  style?: React.CSSProperties;
 }) {
   const Icon = (name && TYPE_ICONS[name]) || Film;
-  return <Icon className={className} />;
+  return <Icon className={className} style={style} />;
 }
