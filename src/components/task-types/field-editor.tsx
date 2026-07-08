@@ -5,13 +5,7 @@ import { Check, Eye, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { cn } from "@/lib/utils";
 import { normalizeFormats } from "@/lib/formats";
 import { ASPECTS, FILE_CATEGORIES, FORMATS, KIND_LABELS, KINDS } from "./constants";
@@ -123,7 +117,7 @@ export function FieldEditor({
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <LabeledField label="Type">
-          <Select
+          <SearchableSelect
             value={draft.kind}
             onValueChange={(v) => {
               const patch: Partial<Draft> = { kind: v };
@@ -135,61 +129,41 @@ export function FieldEditor({
               if (v !== "select") patch.optionsText = "";
               setField(patch);
             }}
-          >
-            <SelectTrigger className="h-10">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {KINDS.map((k) => (
-                <SelectItem key={k} value={k}>
-                  {KIND_LABELS[k]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            searchPlaceholder="Search types…"
+            className="h-10"
+            options={KINDS.map((k) => ({ value: k, label: KIND_LABELS[k] }))}
+          />
         </LabeledField>
         <LabeledField label="Visible From">
-          <Select
+          <SearchableSelect
             value={draft.visibleFromStageId ?? "always"}
             onValueChange={(v) =>
               setField({ visibleFromStageId: v === "always" ? null : v })
             }
-          >
-            <SelectTrigger className="h-10">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="always">Always</SelectItem>
-              {statuses.map((s) => (
-                <SelectItem key={s.id} value={s.id}>
-                  {s.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            searchPlaceholder="Search stages…"
+            className="h-10"
+            options={[
+              { value: "always", label: "Always" },
+              ...statuses.map((s) => ({ value: s.id, label: s.name })),
+            ]}
+          />
         </LabeledField>
         <LabeledField label="Required Before">
-          <Select
+          <SearchableSelect
             value={draft.requiredBeforeStageId ?? "no_gate"}
             onValueChange={(v) =>
               setField({ requiredBeforeStageId: v === "no_gate" ? null : v })
             }
-          >
-            <SelectTrigger className="h-10">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="no_gate">No gate</SelectItem>
-              {statuses.map((s) => (
-                <SelectItem key={s.id} value={s.id}>
-                  {s.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            searchPlaceholder="Search stages…"
+            className="h-10"
+            options={[
+              { value: "no_gate", label: "No gate" },
+              ...statuses.map((s) => ({ value: s.id, label: s.name })),
+            ]}
+          />
         </LabeledField>
         <LabeledField label="Locked From">
-          <Select
+          <SearchableSelect
             value={
               draft.neverLock ? "never" : (draft.lockedFromStageId ?? "auto")
             }
@@ -202,20 +176,14 @@ export function FieldEditor({
                     : { neverLock: false, lockedFromStageId: v },
               )
             }
-          >
-            <SelectTrigger className="h-10">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="auto">Auto</SelectItem>
-              <SelectItem value="never">Never</SelectItem>
-              {statuses.map((s) => (
-                <SelectItem key={s.id} value={s.id}>
-                  {s.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            searchPlaceholder="Search stages…"
+            className="h-10"
+            options={[
+              { value: "auto", label: "Auto" },
+              { value: "never", label: "Never" },
+              ...statuses.map((s) => ({ value: s.id, label: s.name })),
+            ]}
+          />
         </LabeledField>
       </div>
 
@@ -344,19 +312,18 @@ export function FieldEditor({
             title="Where this field's value appears on the publish calendar card: hidden, only when the card is opened, or always (below the title even when collapsed)"
           >
             Publish card
-            <Select
+            <SearchableSelect
               value={draft.publishCard}
               onValueChange={(v) => setField({ publishCard: v })}
-            >
-              <SelectTrigger className="h-8 w-36">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="hidden">Hidden</SelectItem>
-                <SelectItem value="expanded">When expanded</SelectItem>
-                <SelectItem value="always">Always visible</SelectItem>
-              </SelectContent>
-            </Select>
+              searchPlaceholder="Search…"
+              className="h-8 w-36"
+              contentClassName="w-44 min-w-44"
+              options={[
+                { value: "hidden", label: "Hidden" },
+                { value: "expanded", label: "When expanded" },
+                { value: "always", label: "Always visible" },
+              ]}
+            />
           </div>
         </div>
         <div className="flex items-center gap-2">

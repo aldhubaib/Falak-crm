@@ -13,13 +13,7 @@ import { SaveButton } from "@/components/save-button";
 import { FieldCard, LogoPicker } from "@/components/crm/field-card";
 import { CountryMultiSelect } from "@/components/country-multi-select";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { createCompany } from "@/actions/companies";
 
 const INPUT_CLS =
@@ -151,42 +145,34 @@ export function NewCompanyClient({
           {/* Classification */}
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             <FieldCard label="INDUSTRY">
-              <Select value={industry} onValueChange={setIndustry}>
-                <SelectTrigger className={TRIGGER_CLS}>
-                  <SelectValue placeholder="Select industry" />
-                </SelectTrigger>
-                <SelectContent>
-                  {industries.map((o) => (
-                    <SelectItem key={o} value={o}>
-                      {o}
-                    </SelectItem>
-                  ))}
-                  {industries.length === 0 && (
-                    <div className="px-2 py-1.5 text-xs text-muted-foreground">
-                      No options — add in Settings.
-                    </div>
-                  )}
-                </SelectContent>
-              </Select>
+              <SearchableSelect
+                value={industry}
+                onValueChange={setIndustry}
+                placeholder="Select industry"
+                searchPlaceholder="Search industries…"
+                emptyText={
+                  industries.length === 0
+                    ? "No options — add in Settings."
+                    : "No results."
+                }
+                className={TRIGGER_CLS}
+                options={industries.map((o) => ({ value: o, label: o }))}
+              />
             </FieldCard>
             <FieldCard label="REFERRAL SOURCE">
-              <Select value={referral} onValueChange={setReferral}>
-                <SelectTrigger className={TRIGGER_CLS}>
-                  <SelectValue placeholder="Select source" />
-                </SelectTrigger>
-                <SelectContent>
-                  {referrals.map((o) => (
-                    <SelectItem key={o} value={o}>
-                      {o}
-                    </SelectItem>
-                  ))}
-                  {referrals.length === 0 && (
-                    <div className="px-2 py-1.5 text-xs text-muted-foreground">
-                      No options — add in Settings.
-                    </div>
-                  )}
-                </SelectContent>
-              </Select>
+              <SearchableSelect
+                value={referral}
+                onValueChange={setReferral}
+                placeholder="Select source"
+                searchPlaceholder="Search sources…"
+                emptyText={
+                  referrals.length === 0
+                    ? "No options — add in Settings."
+                    : "No results."
+                }
+                className={TRIGGER_CLS}
+                options={referrals.map((o) => ({ value: o, label: o }))}
+              />
             </FieldCard>
             <FieldCard label="WEBSITE" icon={<Globe className="h-3 w-3" />}>
               <Input

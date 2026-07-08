@@ -5,13 +5,7 @@ import { useRouter } from "next/navigation";
 import { Plus, GripVertical, Pencil, Check, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { PageContainer } from "@/components/page-container";
 import { SurfaceCard } from "@/components/surface-card";
 import { EmptyState } from "@/components/empty-state";
@@ -219,26 +213,24 @@ function StageRow({ stage }: { stage: Stage }) {
 
       {!editing && <div className="flex-1" />}
 
-      <Select
+      <SearchableSelect
         disabled={!editing}
         value={type}
         onValueChange={(v) => setType(v)}
-      >
-        <SelectTrigger
-          className={cn(
-            "h-6 w-auto gap-1.5 rounded-md border-0 px-2 text-tiny font-medium uppercase tracking-wide [&>svg]:opacity-60 disabled:cursor-default disabled:opacity-100",
-            !editing && "[&>svg]:hidden",
-            OUTCOME_BADGE[type] ?? OUTCOME_BADGE.OPEN,
-          )}
-        >
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent align="end">
-          <SelectItem value="OPEN">open</SelectItem>
-          <SelectItem value="WON">won</SelectItem>
-          <SelectItem value="LOST">lost</SelectItem>
-        </SelectContent>
-      </Select>
+        align="end"
+        searchPlaceholder="Search…"
+        className={cn(
+          "h-6 w-auto gap-1.5 rounded-md border-0 px-2 text-tiny font-medium uppercase tracking-wide shadow-none [&>svg]:opacity-60 disabled:cursor-default disabled:opacity-100",
+          !editing && "[&>svg]:hidden",
+          OUTCOME_BADGE[type] ?? OUTCOME_BADGE.OPEN,
+        )}
+        contentClassName="w-36 min-w-36"
+        options={[
+          { value: "OPEN", label: "open" },
+          { value: "WON", label: "won" },
+          { value: "LOST", label: "lost" },
+        ]}
+      />
 
       <IconButton
         aria-label={editing ? "Save stage" : "Edit stage"}

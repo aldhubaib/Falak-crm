@@ -4,13 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ShieldPlus, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import {
   Dialog,
   DialogContent,
@@ -160,24 +154,19 @@ export function RolesClient({
               <label className="text-xs font-medium text-muted-foreground">
                 Move members to
               </label>
-              <Select value={reassignTo} onValueChange={setReassignTo}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a role" />
-                </SelectTrigger>
-                <SelectContent>
-                  {targets.length === 0 ? (
-                    <div className="px-2 py-1.5 text-xs text-muted-foreground">
-                      No other roles available
-                    </div>
-                  ) : (
-                    targets.map((r) => (
-                      <SelectItem key={r.id} value={r.id}>
-                        {r.name}
-                      </SelectItem>
-                    ))
-                  )}
-                </SelectContent>
-              </Select>
+              <SearchableSelect
+                value={reassignTo}
+                onValueChange={setReassignTo}
+                placeholder="Select a role"
+                searchPlaceholder="Search roles…"
+                emptyText={
+                  targets.length === 0
+                    ? "No other roles available"
+                    : "No results."
+                }
+                className="w-full"
+                options={targets.map((r) => ({ value: r.id, label: r.name }))}
+              />
             </div>
           )}
 

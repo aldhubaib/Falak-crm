@@ -119,24 +119,26 @@ export function NewDealClient({
               />
             </FieldCard>
             <FieldCard label="STAGE">
-              <Select value={stageId} onValueChange={setStageId}>
-                <SelectTrigger className={TRIGGER_CLS}>
-                  <SelectValue placeholder="Select stage" />
-                </SelectTrigger>
-                <SelectContent>
-                  {stages.map((s) => (
-                    <SelectItem key={s.id} value={s.id}>
-                      <span className="inline-flex items-center gap-1.5">
-                        <span
-                          className="h-1.5 w-1.5 shrink-0 rounded-full"
-                          style={{ backgroundColor: s.color }}
-                        />
-                        {s.name}
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <SearchableSelect
+                value={stageId}
+                onValueChange={setStageId}
+                placeholder="Select stage"
+                searchPlaceholder="Search stages…"
+                className={TRIGGER_CLS}
+                options={stages.map((s) => ({
+                  value: s.id,
+                  label: s.name,
+                  node: (
+                    <span className="inline-flex items-center gap-1.5">
+                      <span
+                        className="h-1.5 w-1.5 shrink-0 rounded-full"
+                        style={{ backgroundColor: s.color }}
+                      />
+                      {s.name}
+                    </span>
+                  ),
+                }))}
+              />
             </FieldCard>
             <FieldCard
               label="COMPANY"
@@ -145,42 +147,30 @@ export function NewDealClient({
                 !companyId && title.trim() ? "Company is required" : undefined
               }
             >
-              <Select value={companyId} onValueChange={setCompanyId}>
-                <SelectTrigger className={TRIGGER_CLS}>
-                  <SelectValue placeholder="Select company" />
-                </SelectTrigger>
-                <SelectContent>
-                  {companies.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.name}
-                    </SelectItem>
-                  ))}
-                  {companies.length === 0 && (
-                    <div className="px-2 py-1.5 text-xs text-muted-foreground">
-                      No companies yet.
-                    </div>
-                  )}
-                </SelectContent>
-              </Select>
+              <SearchableSelect
+                value={companyId}
+                onValueChange={setCompanyId}
+                placeholder="Select company"
+                searchPlaceholder="Search companies…"
+                emptyText={
+                  companies.length === 0 ? "No companies yet." : "No results."
+                }
+                className={TRIGGER_CLS}
+                options={companies.map((c) => ({ value: c.id, label: c.name }))}
+              />
             </FieldCard>
             <FieldCard label="CONTACT">
-              <Select value={contactId} onValueChange={setContactId}>
-                <SelectTrigger className={TRIGGER_CLS}>
-                  <SelectValue placeholder="No contact" />
-                </SelectTrigger>
-                <SelectContent>
-                  {contacts.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.name}
-                    </SelectItem>
-                  ))}
-                  {contacts.length === 0 && (
-                    <div className="px-2 py-1.5 text-xs text-muted-foreground">
-                      No contacts yet.
-                    </div>
-                  )}
-                </SelectContent>
-              </Select>
+              <SearchableSelect
+                value={contactId}
+                onValueChange={setContactId}
+                placeholder="No contact"
+                searchPlaceholder="Search contacts…"
+                emptyText={
+                  contacts.length === 0 ? "No contacts yet." : "No results."
+                }
+                className={TRIGGER_CLS}
+                options={contacts.map((c) => ({ value: c.id, label: c.name }))}
+              />
             </FieldCard>
           </div>
         </PageContainer>

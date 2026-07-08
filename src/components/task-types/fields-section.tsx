@@ -11,13 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { getChecklistTemplateItemUsage } from "@/actions/settings";
 import { cn } from "@/lib/utils";
 import type { Section } from "./constants";
@@ -329,7 +323,7 @@ function TitleLockRow({
         <div className="mb-1 text-xxs font-medium uppercase tracking-[0.14em] text-muted-foreground">
           Locked From
         </div>
-        <Select
+        <SearchableSelect
           value={
             draft.neverLock ? "never" : (draft.lockedFromStageId ?? "auto")
           }
@@ -342,20 +336,14 @@ function TitleLockRow({
                   : { neverLock: false, lockedFromStageId: v },
             )
           }
-        >
-          <SelectTrigger className="h-10">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="auto">Auto (after Todo)</SelectItem>
-            <SelectItem value="never">Never</SelectItem>
-            {statuses.map((s) => (
-              <SelectItem key={s.id} value={s.id}>
-                {s.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          searchPlaceholder="Search stages…"
+          className="h-10"
+          options={[
+            { value: "auto", label: "Auto (after Todo)" },
+            { value: "never", label: "Never" },
+            ...statuses.map((s) => ({ value: s.id, label: s.name })),
+          ]}
+        />
       </div>
       <div className="flex items-center justify-end gap-2">
         <Button

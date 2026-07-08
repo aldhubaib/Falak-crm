@@ -14,13 +14,7 @@ import { cn } from "@/lib/utils";
 import { dotExt, normalizeFormats } from "@/lib/formats";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 
 export type CreateField = {
   id: string;
@@ -223,21 +217,14 @@ function FieldControl({
   if (field.type === "select") {
     const value = answer?.kind === "text" ? answer.value : "";
     return (
-      <Select
+      <SearchableSelect
         value={value || undefined}
         onValueChange={(v) => onChange({ kind: "text", value: v })}
-      >
-        <SelectTrigger className="h-11 rounded-xl border-border/60 bg-background/60">
-          <SelectValue placeholder="Select an option…" />
-        </SelectTrigger>
-        <SelectContent>
-          {field.options.map((o) => (
-            <SelectItem key={o} value={o}>
-              {o}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        placeholder="Select an option…"
+        searchPlaceholder="Search options…"
+        className="h-11 rounded-xl border-border/60 bg-background/60"
+        options={field.options.map((o) => ({ value: o, label: o }))}
+      />
     );
   }
 

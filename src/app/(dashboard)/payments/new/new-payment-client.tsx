@@ -12,13 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { cn } from "@/lib/utils";
 import { useAction } from "@/hooks/use-action";
 import {
@@ -151,25 +145,21 @@ export function NewPaymentClient({
         <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
           <div className="space-y-5 rounded-xl border border-border/60 bg-surface p-4 sm:p-6">
             <Field label="Invoice" required>
-              <Select value={invoiceId} onValueChange={pickInvoice}>
-                <SelectTrigger
-                  aria-invalid={invalid.invoice || undefined}
-                  className={cn(
-                    "w-full",
-                    invalid.invoice &&
-                      "border-destructive focus-visible:ring-destructive/30",
-                  )}
-                >
-                  <SelectValue placeholder="Select invoice" />
-                </SelectTrigger>
-                <SelectContent>
-                  {invoices.map((inv) => (
-                    <SelectItem key={inv.id} value={inv.id}>
-                      {inv.number} — {inv.clientName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <SearchableSelect
+                value={invoiceId}
+                onValueChange={pickInvoice}
+                placeholder="Select invoice"
+                searchPlaceholder="Search invoices…"
+                className={cn(
+                  "w-full",
+                  invalid.invoice &&
+                    "border-destructive focus-visible:ring-destructive/30",
+                )}
+                options={invoices.map((inv) => ({
+                  value: inv.id,
+                  label: `${inv.number} — ${inv.clientName}`,
+                }))}
+              />
               {invalid.invoice && (
                 <p className="mt-1.5 text-xs text-destructive">
                   Select an invoice.
@@ -206,33 +196,23 @@ export function NewPaymentClient({
               </Field>
 
               <Field label="Type">
-                <Select value={type} onValueChange={setType}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {TYPES.map((t) => (
-                      <SelectItem key={t} value={t}>
-                        {t}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <SearchableSelect
+                  value={type}
+                  onValueChange={setType}
+                  searchPlaceholder="Search types…"
+                  className="w-full"
+                  options={TYPES.map((t) => ({ value: t, label: t }))}
+                />
               </Field>
 
               <Field label="Payment Mode">
-                <Select value={mode} onValueChange={setMode}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {MODES.map((m) => (
-                      <SelectItem key={m} value={m}>
-                        {m}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <SearchableSelect
+                  value={mode}
+                  onValueChange={setMode}
+                  searchPlaceholder="Search modes…"
+                  className="w-full"
+                  options={MODES.map((m) => ({ value: m, label: m }))}
+                />
               </Field>
 
               <Field label="Reference Number">

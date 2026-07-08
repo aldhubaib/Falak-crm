@@ -33,13 +33,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { cn } from "@/lib/utils";
 import { useAction } from "@/hooks/use-action";
 import {
@@ -419,7 +413,7 @@ export function NewInvoiceClient({
 
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Deal" required>
-              <Select
+              <SearchableSelect
                 value={dealId}
                 onValueChange={(v) => {
                   setDealId(v);
@@ -428,51 +422,38 @@ export function NewInvoiceClient({
                     deals.find((d) => d.id === v)?.project?.id ?? "",
                   );
                 }}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a deal" />
-                </SelectTrigger>
-                <SelectContent>
-                  {deals.length === 0 ? (
-                    <div className="px-2 py-1.5 text-sm text-muted-foreground">
-                      No deals available
-                    </div>
-                  ) : (
-                    deals.map((d) => (
-                      <SelectItem key={d.id} value={d.id}>
-                        {d.title}
-                        {d.companyName ? ` · ${d.companyName}` : ""}
-                      </SelectItem>
-                    ))
-                  )}
-                </SelectContent>
-              </Select>
+                placeholder="Select a deal"
+                searchPlaceholder="Search deals…"
+                emptyText={
+                  deals.length === 0 ? "No deals available" : "No results."
+                }
+                className="w-full"
+                options={deals.map((d) => ({
+                  value: d.id,
+                  label: `${d.title}${d.companyName ? ` · ${d.companyName}` : ""}`,
+                }))}
+              />
             </Field>
             <Field label="Project" required>
-              <Select
+              <SearchableSelect
                 value={projectId}
                 onValueChange={setProjectId}
                 disabled={!dealId || !dealProject}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue
-                    placeholder={
-                      !dealId
-                        ? "Select a deal first"
-                        : !dealProject
-                          ? "No projects for this deal"
-                          : "Select a project"
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {dealProject && (
-                    <SelectItem value={dealProject.id}>
-                      {dealProject.name}
-                    </SelectItem>
-                  )}
-                </SelectContent>
-              </Select>
+                placeholder={
+                  !dealId
+                    ? "Select a deal first"
+                    : !dealProject
+                      ? "No projects for this deal"
+                      : "Select a project"
+                }
+                searchPlaceholder="Search projects…"
+                className="w-full"
+                options={
+                  dealProject
+                    ? [{ value: dealProject.id, label: dealProject.name }]
+                    : []
+                }
+              />
               {projectMissing && (
                 <p className="flex items-center gap-1.5 text-xs text-destructive">
                   <AlertCircle className="h-3.5 w-3.5 shrink-0" />
@@ -498,18 +479,17 @@ export function NewInvoiceClient({
               )}
             </Field>
             <Field label="Currency">
-              <Select value={currency} onValueChange={setCurrency}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select currency" />
-                </SelectTrigger>
-                <SelectContent>
-                  {currencies.map((c) => (
-                    <SelectItem key={c.code} value={c.code}>
-                      {c.code}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <SearchableSelect
+                value={currency}
+                onValueChange={setCurrency}
+                placeholder="Select currency"
+                searchPlaceholder="Search currencies…"
+                className="w-full"
+                options={currencies.map((c) => ({
+                  value: c.code,
+                  label: c.code,
+                }))}
+              />
             </Field>
           </section>
 
@@ -869,20 +849,19 @@ export function NewInvoiceClient({
                       onChange={(e) => setDiscountValue(e.target.value)}
                       className="h-full w-20 rounded-none border-0 text-right shadow-none focus-visible:ring-0"
                     />
-                    <Select
+                    <SearchableSelect
                       value={discountMode}
                       onValueChange={(v) =>
                         setDiscountMode(v as "percent" | "fixed")
                       }
-                    >
-                      <SelectTrigger className="h-full w-16 gap-1 rounded-none border-0 border-l border-border/60 px-2 shadow-none focus:ring-0">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent align="end">
-                        <SelectItem value="percent">%</SelectItem>
-                        <SelectItem value="fixed">{currency}</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      align="end"
+                      className="h-full w-16 gap-1 rounded-none border-0 border-l border-border/60 px-2 shadow-none focus:ring-0"
+                      contentClassName="w-36 min-w-36"
+                      options={[
+                        { value: "percent", label: "%" },
+                        { value: "fixed", label: currency },
+                      ]}
+                    />
                   </span>
                   <span className="ml-2 w-24 text-right font-medium tabular-nums">
                     {formatMoney(currency, discountAmount)}

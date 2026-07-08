@@ -12,13 +12,7 @@ import { SaveButton } from "@/components/save-button";
 import { FieldCard } from "@/components/crm/field-card";
 import { PhoneInput, parsePhone } from "@/components/phone-input";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { createContact } from "@/actions/contacts";
 
 const INPUT_CLS =
@@ -113,23 +107,17 @@ export function NewContactClient({
               <PhoneInput value={phone} onChange={setPhone} />
             </FieldCard>
             <FieldCard label="COMPANY">
-              <Select value={companyId} onValueChange={setCompanyId}>
-                <SelectTrigger className={TRIGGER_CLS}>
-                  <SelectValue placeholder="No company" />
-                </SelectTrigger>
-                <SelectContent>
-                  {companies.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.name}
-                    </SelectItem>
-                  ))}
-                  {companies.length === 0 && (
-                    <div className="px-2 py-1.5 text-xs text-muted-foreground">
-                      No companies yet.
-                    </div>
-                  )}
-                </SelectContent>
-              </Select>
+              <SearchableSelect
+                value={companyId}
+                onValueChange={setCompanyId}
+                placeholder="No company"
+                searchPlaceholder="Search companies…"
+                emptyText={
+                  companies.length === 0 ? "No companies yet." : "No results."
+                }
+                className={TRIGGER_CLS}
+                options={companies.map((c) => ({ value: c.id, label: c.name }))}
+              />
             </FieldCard>
             <FieldCard label="ROLE">
               <Input

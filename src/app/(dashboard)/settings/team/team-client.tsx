@@ -5,13 +5,7 @@ import { useRouter } from "next/navigation";
 import { UserPlus, Trash2, Save, AlertTriangle, Pencil, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import {
   Dialog,
   DialogContent,
@@ -260,25 +254,19 @@ export function TeamClient({
               </div>
             </div>
             <div className="col-span-3 flex items-center gap-2 sm:col-span-1">
-              <Select
+              <SearchableSelect
                 value={m.role?.id ?? "none"}
                 onValueChange={(v) => handleAssignRole(m.id, v)}
                 disabled={m.type === "OWNER"}
-              >
-                <SelectTrigger className="h-8 w-full text-xs sm:w-32">
-                  <SelectValue>
-                    {m.role?.name ?? "No role"}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">No role</SelectItem>
-                  {roles.map((r) => (
-                    <SelectItem key={r.id} value={r.id}>
-                      {r.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                searchPlaceholder="Search roles…"
+                className="h-8 w-full text-xs sm:w-32"
+                contentClassName="w-48 min-w-48"
+                renderValue={() => m.role?.name ?? "No role"}
+                options={[
+                  { value: "none", label: "No role" },
+                  ...roles.map((r) => ({ value: r.id, label: r.name })),
+                ]}
+              />
               {m.type !== "OWNER" && (
                 <IconButton
                   aria-label="Remove member"

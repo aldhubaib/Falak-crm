@@ -44,13 +44,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -1380,22 +1374,15 @@ function TaskFieldControl({
 
   if (item.type === "select") {
     return (
-      <Select
+      <SearchableSelect
         value={item.textValue || undefined}
         disabled={readOnly}
         onValueChange={(v) => saveText(v)}
-      >
-        <SelectTrigger className="h-11 rounded-xl border-border/60 bg-background/60">
-          <SelectValue placeholder="Select an option…" />
-        </SelectTrigger>
-        <SelectContent>
-          {item.options.map((o) => (
-            <SelectItem key={o} value={o}>
-              {o}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        placeholder="Select an option…"
+        searchPlaceholder="Search options…"
+        className="h-11 rounded-xl border-border/60 bg-background/60"
+        options={item.options.map((o) => ({ value: o, label: o }))}
+      />
     );
   }
 

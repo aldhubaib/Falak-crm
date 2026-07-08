@@ -8,13 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { Input } from "@/components/ui/input";
 import {
   addProjectMember,
@@ -233,22 +227,19 @@ export function ProjectTeamStack({
                   </div>
                   <div className="mt-1.5 pl-10">
                     {canEdit ? (
-                      <Select
+                      <SearchableSelect
                         value={m.roleId ?? ""}
                         onValueChange={(v) => changeRole(m.memberId, v)}
                         disabled={pending || roles.length === 0}
-                      >
-                        <SelectTrigger className="h-7 w-full border-transparent bg-muted/40 text-xs hover:bg-muted [&>span]:truncate">
-                          <SelectValue>{roleName(m.roleId)}</SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {roles.map((r) => (
-                            <SelectItem key={r.id} value={r.id}>
-                              {r.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        searchPlaceholder="Search roles…"
+                        className="h-7 w-full border-transparent bg-muted/40 text-xs shadow-none hover:bg-muted"
+                        contentClassName="w-48 min-w-48"
+                        renderValue={() => roleName(m.roleId)}
+                        options={roles.map((r) => ({
+                          value: r.id,
+                          label: r.name,
+                        }))}
+                      />
                     ) : (
                       <span className="inline-block rounded-md bg-muted/40 px-2 py-1 text-xs text-muted-foreground">
                         {roleName(m.roleId)}

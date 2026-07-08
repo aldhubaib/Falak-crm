@@ -15,13 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { IconButton } from "@/components/icon-button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -162,7 +156,7 @@ function RuleRow<Row>({
   return (
     <div className="grid grid-cols-[1fr_auto_2fr_auto] items-center gap-2">
       {/* Field */}
-      <Select
+      <SearchableSelect
         value={field.id}
         onValueChange={(id) => {
           const next = fields.find((f) => f.id === id)!;
@@ -172,21 +166,13 @@ function RuleRow<Row>({
             value: undefined,
           });
         }}
-      >
-        <SelectTrigger className="h-9">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {fields.map((f) => (
-            <SelectItem key={f.id} value={f.id}>
-              {f.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        searchPlaceholder="Search fields…"
+        className="h-9"
+        options={fields.map((f) => ({ value: f.id, label: f.label }))}
+      />
 
       {/* Operator */}
-      <Select
+      <SearchableSelect
         value={rule.op}
         onValueChange={(op) =>
           onChange({
@@ -197,18 +183,11 @@ function RuleRow<Row>({
                 : undefined,
           })
         }
-      >
-        <SelectTrigger className="h-9 w-[150px]">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {ops.map((o) => (
-            <SelectItem key={o.op} value={o.op}>
-              {o.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        searchPlaceholder="Search…"
+        className="h-9 w-[150px]"
+        contentClassName="w-48 min-w-48"
+        options={ops.map((o) => ({ value: o.op, label: o.label }))}
+      />
 
       {/* Value */}
       <div>
