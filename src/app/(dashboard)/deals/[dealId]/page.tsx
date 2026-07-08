@@ -11,7 +11,7 @@ import { SurfaceCard } from "@/components/surface-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DealActions } from "./deal-actions";
-import { DealRelated } from "./deal-related";
+import { RelatedData } from "@/components/crm/related-records";
 import { DealStagePath } from "./deal-stage-path";
 
 export default async function DealDetailPage({
@@ -142,31 +142,26 @@ export default async function DealDetailPage({
             </SurfaceCard>
           )}
 
-          <DealRelated
-            dealId={deal.id}
-            company={
+          <RelatedData
+            entity={{
+              type: "deal",
+              id: deal.id,
+              companyId: deal.company?.id ?? null,
+              companyName: deal.company?.name ?? null,
+            }}
+            companies={
               deal.company
-                ? {
-                    id: deal.company.id,
-                    name: deal.company.name,
-                    email: deal.company.email,
-                    phone: deal.company.phone,
-                  }
-                : null
+                ? [
+                    {
+                      id: deal.company.id,
+                      name: deal.company.name,
+                      email: deal.company.email,
+                      phone: deal.company.phone,
+                    },
+                  ]
+                : []
             }
-            contact={
-              deal.contact
-                ? {
-                    id: deal.contact.id,
-                    name: [deal.contact.firstName, deal.contact.lastName]
-                      .filter(Boolean)
-                      .join(" "),
-                    email: deal.contact.email,
-                    phone: deal.contact.mobile,
-                  }
-                : null
-            }
-            companyContacts={(deal.company?.contacts ?? []).map((link) => ({
+            contacts={(deal.company?.contacts ?? []).map((link) => ({
               id: link.contact.id,
               name: [link.contact.firstName, link.contact.lastName]
                 .filter(Boolean)

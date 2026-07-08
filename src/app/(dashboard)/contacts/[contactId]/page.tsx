@@ -6,7 +6,7 @@ import { getCompanyOptions } from "@/actions/companies";
 import { getDealOptions } from "@/actions/deals";
 import { AppHeader } from "@/components/app-header";
 import { SurfaceCard } from "@/components/surface-card";
-import { ContactRelated } from "./contact-related";
+import { RelatedData } from "@/components/crm/related-records";
 
 export default async function ContactDetailPage({
   params,
@@ -60,8 +60,8 @@ export default async function ContactDetailPage({
             </div>
           </SurfaceCard>
 
-          <ContactRelated
-            contactId={contact.id}
+          <RelatedData
+            entity={{ type: "contact", id: contact.id }}
             companies={contact.companies.map((cc) => ({
               id: cc.company.id,
               name: cc.company.name,
