@@ -889,9 +889,16 @@ function CommentComposer({
                   )}
                 >
                   <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-primary/15 text-[10px] font-semibold text-primary">
-                    {m.name.charAt(0).toUpperCase()}
+                    {m.id === "all" ? "@" : m.name.charAt(0).toUpperCase()}
                   </span>
-                  <span className="min-w-0 flex-1 truncate">{m.name}</span>
+                  <span className="min-w-0 flex-1 truncate">
+                    {m.name}
+                    {m.id === "all" && (
+                      <span className="ml-2 text-xs text-muted-foreground">
+                        Notify everyone
+                      </span>
+                    )}
+                  </span>
                 </button>
               </li>
             ))}

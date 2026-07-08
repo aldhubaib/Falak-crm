@@ -114,7 +114,11 @@ export default async function ThreadPage({
       map.set(m.id, { id: m.id, name: m.name ?? m.email });
     }
     map.delete(member.id);
-    mentionables = [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
+    // "@all" notifies the whole thread audience — expanded server-side.
+    mentionables = [
+      { id: "all", name: "all" },
+      ...[...map.values()].sort((a, b) => a.name.localeCompare(b.name)),
+    ];
   }
 
   // Chat-module "view" members can read DMs and project channels but not

@@ -143,9 +143,11 @@ export default async function TaskDetailPage({
   for (const m of [...projectMembers.map((pm) => pm.member), ...owners]) {
     mentionableMap.set(m.id, { id: m.id, name: m.name ?? m.email });
   }
-  const mentionables = [...mentionableMap.values()].sort((a, b) =>
-    a.name.localeCompare(b.name),
-  );
+  // "@all" notifies the whole thread audience — expanded server-side.
+  const mentionables = [
+    { id: "all", name: "all" },
+    ...[...mentionableMap.values()].sort((a, b) => a.name.localeCompare(b.name)),
+  ];
   const canDelete = canDeleteTaskAt(access.permissions, task.statusId);
 
   // Title (and other task fields) are editable with the "Modify" right for

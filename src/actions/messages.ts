@@ -359,7 +359,33 @@ export async function sendMessage(
       throw new Error("No thread specified");
     }
 
-    const mentionedIds = parseMentions(body);
+    let mentionedIds = parseMentions(body);
+
+    // "@all" fans out to the whole thread audience — the project's team plus
+    // workspace owners (the same list the composer's @ picker offers). DMs
+    // already notify every participant, so there "all" is just stripped.
+    if (mentionedIds.includes("all")) {
+      mentionedIds = mentionedIds.filter((id) => id !== "all");
+      if (projectId) {
+        const [projectMembers, owners] = await Promise.all([
+          db.projectMember.findMany({
+            where: { projectId },
+            select: { memberId: true },
+          }),
+          db.workspaceMember.findMany({
+            where: { workspaceId: workspace.id, type: "OWNER" },
+            select: { id: true },
+          }),
+        ]);
+        const everyone = new Set([
+          ...mentionedIds,
+          ...projectMembers.map((m) => m.memberId),
+          ...owners.map((o) => o.id),
+        ]);
+        everyone.delete(member.id);
+        mentionedIds = [...everyone];
+      }
+    }
 
     const message = await db.message.create({
       data: {
