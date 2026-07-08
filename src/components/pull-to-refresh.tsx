@@ -4,47 +4,12 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, ArrowDown, TriangleAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { pageHasUnsavedWork } from "@/lib/unsaved";
 
 // Distance (px) the finger must travel before releasing triggers a refresh.
 const TRIGGER_PX = 70;
 // Cap so the indicator stops following the finger at some point.
 const MAX_PULL_PX = 110;
-
-// True when any form control on the page holds text/choices the user entered
-// but hasn't saved — refreshing would throw that work away. Compares each
-// control's live value against the value it was rendered with, so pre-filled
-// edit forms only count once the user actually changes something.
-function hasUnsavedInput(): boolean {
-  const els = document.querySelectorAll<HTMLElement>(
-    "input, textarea, [contenteditable='true'], [contenteditable='']",
-  );
-  for (const el of els) {
-    // Opt-out hatch for controls whose content is not worth protecting.
-    if (el.closest("[data-refresh-safe]")) continue;
-    if (el instanceof HTMLInputElement) {
-      if (el.disabled || el.readOnly) continue;
-      const type = el.type;
-      if (["hidden", "submit", "button", "reset", "range"].includes(type)) continue;
-      // Search/filter boxes aren't "work" — losing them to a refresh is fine.
-      // The app's search inputs are plain text inputs with "Search…"
-      // placeholders, so match those too.
-      if (type === "search" || el.getAttribute("role") === "searchbox") continue;
-      if (/^search/i.test(el.placeholder)) continue;
-      if (type === "checkbox" || type === "radio") {
-        if (el.checked !== el.defaultChecked) return true;
-      } else if (type === "file") {
-        if ((el.files?.length ?? 0) > 0) return true;
-      } else if (el.value !== el.defaultValue) {
-        return true;
-      }
-    } else if (el instanceof HTMLTextAreaElement) {
-      if (!el.disabled && !el.readOnly && el.value !== el.defaultValue) return true;
-    } else if (el.isContentEditable) {
-      if ((el.textContent ?? "").trim().length > 0) return true;
-    }
-  }
-  return false;
-}
 
 // Pull-to-refresh for the installed PWA. Browsers provide this natively, but
 // standalone mode (iOS/Android home-screen installs) has no way to reload a
@@ -71,6 +36,17 @@ export function PullToRefresh() {
     setEnabled(standalone);
   }, []);
 
+  // Full-page unloads (browser-tab pull-to-refresh, reload button, tab close)
+  // bypass the custom gesture entirely — the browser's own confirm dialog is
+  // the only protection there. Registered regardless of standalone mode.
+  useEffect(() => {
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (pageHasUnsavedWork()) e.preventDefault();
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, []);
+
   useEffect(() => {
     if (!enabled) return;
 
@@ -88,7 +64,7 @@ export function PullToRefresh() {
       armedRef.current = atTop(e.target);
       startYRef.current = e.touches[0].clientY;
       if (armedRef.current) {
-        dirtyRef.current = hasUnsavedInput();
+        dirtyRef.current = pageHasUnsavedWork();
         setDirty(dirtyRef.current);
       }
     };

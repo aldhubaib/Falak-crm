@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DealActions } from "./deal-actions";
 import { DealRelated } from "./deal-related";
+import { DealStagePath } from "./deal-stage-path";
 
 export default async function DealDetailPage({
   params,
@@ -27,6 +28,7 @@ export default async function DealDetailPage({
   ]);
   if (!deal) notFound();
   const editable = canEdit(member, "deals");
+  const canMoveStage = canEdit(member, "pipeline");
 
   const subtotal = deal.items.reduce(
     (sum, item) => sum + Number(item.unitPrice) * item.quantity,
@@ -98,20 +100,17 @@ export default async function DealDetailPage({
               <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Pipeline Progress
               </div>
-              <div className="flex gap-1">
-                {deal.pipeline.stages.map((s) => (
-                  <div
-                    key={s.id}
-                    className="h-2 flex-1 rounded-full transition-colors"
-                    style={{
-                      backgroundColor:
-                        s.order <= (deal.stage?.order ?? 0)
-                          ? s.color
-                          : "var(--muted)",
-                    }}
-                  />
-                ))}
-              </div>
+              <DealStagePath
+                dealId={deal.id}
+                stages={deal.pipeline.stages.map((s) => ({
+                  id: s.id,
+                  name: s.name,
+                  order: s.order,
+                }))}
+                currentStageId={deal.stage?.id ?? null}
+                currentOrder={deal.stage?.order ?? 0}
+                editable={canMoveStage}
+              />
             </SurfaceCard>
           )}
 
@@ -167,6 +166,14 @@ export default async function DealDetailPage({
                   }
                 : null
             }
+            companyContacts={(deal.company?.contacts ?? []).map((link) => ({
+              id: link.contact.id,
+              name: [link.contact.firstName, link.contact.lastName]
+                .filter(Boolean)
+                .join(" "),
+              email: link.contact.email,
+              phone: link.contact.mobile,
+            }))}
             companyOptions={companyOptions.map((c) => ({
               id: c.id,
               title: c.name,

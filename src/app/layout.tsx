@@ -85,7 +85,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
+      // overscroll-none must be on <html>: Chrome 93+ reads the viewport's
+      // overscroll-behavior from the root element, so body alone doesn't
+      // block the browser's native pull-to-refresh reload.
+      className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased overscroll-none`}
     >
       <body className="min-h-full bg-background text-foreground overscroll-none">
         <ClerkProvider

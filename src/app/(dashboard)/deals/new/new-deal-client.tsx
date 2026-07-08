@@ -11,13 +11,7 @@ import { PageContainer } from "@/components/page-container";
 import { SaveButton } from "@/components/save-button";
 import { FieldCard } from "@/components/crm/field-card";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { createDeal, updateDeal } from "@/actions/deals";
 
 const INPUT_CLS =
@@ -67,7 +61,7 @@ export function NewDealClient({
   );
   const [contactId, setContactId] = useState(initial?.contactId ?? "");
 
-  const canSave = !!title.trim();
+  const canSave = !!title.trim() && !!companyId;
 
   const save = () => {
     if (!canSave || pending) return;
@@ -78,7 +72,7 @@ export function NewDealClient({
       fd.set("pipelineId", pipelineId);
       fd.set("stageId", stageId);
     }
-    if (companyId) fd.set("companyId", companyId);
+    fd.set("companyId", companyId);
     if (contactId) fd.set("contactId", contactId);
     startTransition(async () => {
       const result = dealId
@@ -144,10 +138,16 @@ export function NewDealClient({
                 </SelectContent>
               </Select>
             </FieldCard>
-            <FieldCard label="COMPANY">
+            <FieldCard
+              label="COMPANY"
+              required
+              error={
+                !companyId && title.trim() ? "Company is required" : undefined
+              }
+            >
               <Select value={companyId} onValueChange={setCompanyId}>
                 <SelectTrigger className={TRIGGER_CLS}>
-                  <SelectValue placeholder="No company" />
+                  <SelectValue placeholder="Select company" />
                 </SelectTrigger>
                 <SelectContent>
                   {companies.map((c) => (

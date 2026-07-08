@@ -158,7 +158,25 @@ export async function getDeal(id: string) {
   return db.deal.findFirst({
     where: { id, workspaceId: workspace.id, deletedAt: null },
     include: {
-      company: true,
+      company: {
+        include: {
+          contacts: {
+            where: { contact: { deletedAt: null } },
+            include: {
+              contact: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                  email: true,
+                  mobile: true,
+                },
+              },
+            },
+            orderBy: { createdAt: "asc" },
+          },
+        },
+      },
       contact: true,
       stage: true,
       pipeline: { include: { stages: { orderBy: { order: "asc" } } } },
@@ -175,9 +193,11 @@ export async function createDeal(formData: FormData): Promise<ActionResult<{ id:
     const { userId } = await auth();
     const user = await currentUser();
 
-    const title = formData.get("title") as string;
+    const title = (formData.get("title") as string)?.trim();
+    if (!title) throw new Error("Title is required");
     const value = parseFloat(formData.get("value") as string) || 0;
     const companyId = (formData.get("companyId") as string) || undefined;
+    if (!companyId) throw new Error("Company is required");
     const contactId = (formData.get("contactId") as string) || undefined;
     let pipelineId = (formData.get("pipelineId") as string) || "";
     let stageId = (formData.get("stageId") as string) || "";
@@ -244,6 +264,7 @@ export async function updateDeal(
     if (!title) throw new Error("Title is required");
     const value = parseFloat(formData.get("value") as string) || 0;
     const companyId = (formData.get("companyId") as string) || null;
+    if (!companyId) throw new Error("Company is required");
     const contactId = (formData.get("contactId") as string) || null;
     const stageId = (formData.get("stageId") as string) || undefined;
 
@@ -302,6 +323,7 @@ export async function moveDeal(id: string, stageId: string): Promise<ActionResul
     });
 
     revalidatePath("/deals");
+    revalidatePath(`/deals/${id}`);
   }, { dealId: id, stageId });
 }
 

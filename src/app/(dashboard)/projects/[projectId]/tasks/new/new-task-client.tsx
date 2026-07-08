@@ -24,6 +24,7 @@ import {
   type FieldAnswer,
 } from "@/components/projects/dynamic-field";
 import { uploadManager } from "@/lib/upload-manager";
+import { useUnsaved } from "@/lib/unsaved";
 
 type TaskType = { id: string; name: string; count: number; fields: CreateField[] };
 
@@ -52,6 +53,16 @@ export function NewTaskClient({
   // a successful save.
   const submittingRef = useRef(false);
   const [submitting, setSubmitting] = useState(false);
+
+  // Anything entered here lives only in memory until Save — protect it from
+  // pull-to-refresh and browser reloads. Priority and yes/no answers are
+  // button-driven, so the generic DOM input scan can't see them.
+  useUnsaved(
+    !submitting &&
+      (title.trim().length > 0 ||
+        priority !== null ||
+        Object.keys(answers).length > 0),
+  );
 
   const type = taskTypes.find((t) => t.id === typeId);
   const mandatoryFilled =
