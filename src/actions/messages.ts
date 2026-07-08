@@ -76,6 +76,7 @@ export type MessageDTO = {
   kind: string;
   authorId: string;
   authorName: string;
+  authorImageUrl: string | null;
   body: string;
   createdAt: string;
   attachments: MessageAttachment[];
@@ -102,6 +103,7 @@ export type ThreadMessage = {
   id: string;
   authorId: string;
   authorName: string;
+  authorImageUrl: string | null;
   body: string;
   createdAt: string;
   replyToId: string | null;
@@ -163,7 +165,7 @@ export async function getThreadMessages(input: {
   const rows = await db.message.findMany({
     where,
     include: {
-      author: { select: { id: true, name: true, email: true } },
+      author: { select: { id: true, name: true, email: true, imageUrl: true } },
       reactions: { select: { emoji: true, memberId: true }, orderBy: { createdAt: "asc" } },
       task: { select: { id: true, taskNumber: true, title: true, projectId: true } },
     },
@@ -206,6 +208,7 @@ export async function getThreadMessages(input: {
       id: c.id,
       authorId: c.authorId,
       authorName: c.author.name ?? c.author.email,
+      authorImageUrl: c.author.imageUrl ?? null,
       body: toDisplayBody(c.body),
       createdAt: c.createdAt.toISOString(),
       replyToId: c.replyToId ?? null,
@@ -444,6 +447,7 @@ export async function sendMessage(
       kind: message.kind,
       authorId: member.id,
       authorName,
+      authorImageUrl: message.author.imageUrl ?? null,
       body: display,
       createdAt: message.createdAt.toISOString(),
       attachments,
@@ -650,6 +654,8 @@ export type InboxThread = {
   unread: number;
   avatar: string;
   initials: string;
+  /** 1:1 DMs: the other member's profile photo (photo beats initials). */
+  imageUrl: string | null;
   /** Project threads only: true when the project status is anything but Active. */
   archived: boolean;
 };
@@ -694,7 +700,11 @@ export async function getInboxThreads(): Promise<InboxThread[]> {
       },
       include: {
         participants: {
-          include: { member: { select: { id: true, name: true, email: true } } },
+          include: {
+            member: {
+              select: { id: true, name: true, email: true, imageUrl: true },
+            },
+          },
         },
         messages: {
           orderBy: { createdAt: "desc" },
@@ -739,6 +749,7 @@ export async function getInboxThreads(): Promise<InboxThread[]> {
       unread,
       avatar: generateColor(p.name),
       initials: p.name.charAt(0).toUpperCase(),
+      imageUrl: null,
       archived: isArchivedStatus(p.status?.name),
     };
   });
@@ -768,6 +779,8 @@ export async function getInboxThreads(): Promise<InboxThread[]> {
         unread: unreadMap.get(`/messages/conv-${c.id}`) ?? 0,
         avatar: generateColor(name),
         initials: name.charAt(0).toUpperCase(),
+        // 1:1 chats show the other person's photo; groups keep initials.
+        imageUrl: !c.isGroup && others.length === 1 ? (others[0].imageUrl ?? null) : null,
         archived: false,
       };
     });

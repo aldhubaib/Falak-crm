@@ -280,20 +280,30 @@ function ThreadRow({
       )}
     >
       <div className="relative shrink-0">
-        <PublishAvatar
-          name={thread.name}
-          thumbnailId={thread.thumbnailId}
-          size={36}
-          fallback={
-            <div
-              className="grid h-9 w-9 place-items-center rounded-full text-tiny font-semibold text-white"
-              style={{ background: thread.avatar }}
-              aria-hidden
-            >
-              {thread.initials}
-            </div>
-          }
-        />
+        {thread.imageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={thread.imageUrl}
+            alt={thread.name}
+            referrerPolicy="no-referrer"
+            className="h-9 w-9 rounded-full object-cover"
+          />
+        ) : (
+          <PublishAvatar
+            name={thread.name}
+            thumbnailId={thread.thumbnailId}
+            size={36}
+            fallback={
+              <div
+                className="grid h-9 w-9 place-items-center rounded-full text-tiny font-semibold text-white"
+                style={{ background: thread.avatar }}
+                aria-hidden
+              >
+                {thread.initials}
+              </div>
+            }
+          />
+        )}
         {isOnline && (
           <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-background bg-emerald-500" />
         )}

@@ -160,23 +160,30 @@ export function NewPaymentClient({
         <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
           <div className="space-y-5 rounded-xl border border-border/60 bg-surface p-4 sm:p-6">
             <Field label="Invoice" required>
-              <SearchableSelect
-                value={invoiceId}
-                onValueChange={pickInvoice}
-                disabled={invoiceLocked}
-                placeholder="Select invoice"
-                searchPlaceholder="Search invoices…"
-                className={cn(
-                  "w-full disabled:opacity-100",
-                  invoiceLocked && "cursor-default bg-muted/30 [&>svg]:hidden",
-                  invalid.invoice &&
-                    "border-destructive focus-visible:ring-destructive/30",
-                )}
-                options={invoices.map((inv) => ({
-                  value: inv.id,
-                  label: `${inv.number} — ${inv.clientName}`,
-                }))}
-              />
+              {invoiceLocked && selectedInvoice ? (
+                <Input
+                  value={`${selectedInvoice.number} — ${selectedInvoice.clientName}`}
+                  readOnly
+                  tabIndex={-1}
+                  className="cursor-default bg-muted/30 focus-visible:ring-0"
+                />
+              ) : (
+                <SearchableSelect
+                  value={invoiceId}
+                  onValueChange={pickInvoice}
+                  placeholder="Select invoice"
+                  searchPlaceholder="Search invoices…"
+                  className={cn(
+                    "w-full",
+                    invalid.invoice &&
+                      "border-destructive focus-visible:ring-destructive/30",
+                  )}
+                  options={invoices.map((inv) => ({
+                    value: inv.id,
+                    label: `${inv.number} — ${inv.clientName}`,
+                  }))}
+                />
+              )}
               {invalid.invoice && (
                 <p className="mt-1.5 text-xs text-destructive">
                   Select an invoice.
@@ -284,12 +291,12 @@ export function NewPaymentClient({
                 {selectedInvoice && amountNum > 0 && (
                   <p
                     className={cn(
-                      "mt-1.5 text-xs",
+                      "mt-1.5 text-xs font-medium",
                       settlesInFull
                         ? "text-emerald-500"
                         : remaining > 0
-                          ? "text-muted-foreground"
-                          : "text-amber-500",
+                          ? "text-amber-500"
+                          : "text-destructive",
                     )}
                   >
                     {settlesInFull

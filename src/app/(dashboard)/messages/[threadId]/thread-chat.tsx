@@ -74,6 +74,7 @@ export type ChatMessage = {
   id: string;
   authorId: string;
   authorName: string;
+  authorImageUrl?: string | null;
   body: string;
   createdAt: string;
   attachments: MessageAttachment[];
@@ -352,6 +353,7 @@ export function ThreadChat({
             id: m.id,
             authorId: m.authorId,
             authorName: m.authorName,
+            authorImageUrl: m.authorImageUrl ?? null,
             body: m.body,
             createdAt: m.createdAt,
             attachments: m.attachments ?? [],
@@ -603,6 +605,7 @@ export function ThreadChat({
                     id: m.id,
                     authorId: m.authorId,
                     authorName: m.authorName,
+                    authorImageUrl: m.authorImageUrl ?? null,
                     body: m.body,
                     createdAt: m.createdAt,
                     attachments: m.attachments,
@@ -1148,19 +1151,28 @@ export function ThreadChat({
                 >
                   {!mine && (
                     <div className="w-8 shrink-0 self-start">
-                      {showAuthor && (
-                        <div
-                          className="grid h-8 w-8 place-items-center rounded-full bg-primary/20 text-xxs font-semibold text-primary"
-                          aria-hidden
-                        >
-                          {m.authorName
-                            .split(" ")
-                            .map((s) => s[0])
-                            .slice(0, 2)
-                            .join("")
-                            .toUpperCase()}
-                        </div>
-                      )}
+                      {showAuthor &&
+                        (m.authorImageUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={m.authorImageUrl}
+                            alt={m.authorName}
+                            referrerPolicy="no-referrer"
+                            className="h-8 w-8 rounded-full object-cover"
+                          />
+                        ) : (
+                          <div
+                            className="grid h-8 w-8 place-items-center rounded-full bg-primary/20 text-xxs font-semibold text-primary"
+                            aria-hidden
+                          >
+                            {m.authorName
+                              .split(" ")
+                              .map((s) => s[0])
+                              .slice(0, 2)
+                              .join("")
+                              .toUpperCase()}
+                          </div>
+                        ))}
                     </div>
                   )}
                   <div className={cn("flex max-w-[70%] flex-col gap-1.5", mine && "items-end")}>
