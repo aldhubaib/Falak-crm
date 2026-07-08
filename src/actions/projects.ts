@@ -979,6 +979,15 @@ export async function createProject(formData: FormData): Promise<ActionResult<{ 
     const dealId = (formData.get("dealId") as string) || undefined;
     const templateIds = formData.getAll("templateIds") as string[];
 
+    // Every project is backed by exactly one deal.
+    if (!dealId) throw new Error("A project must be linked to a deal");
+    const deal = await db.deal.findFirst({
+      where: { id: dealId, workspaceId: workspace.id, deletedAt: null },
+      select: { companyId: true, contactId: true, project: { select: { id: true } } },
+    });
+    if (!deal) throw new Error("Deal not found");
+    if (deal.project) throw new Error("This deal is already linked to a project");
+
     const firstStatus = await db.projectStatus.findFirst({
       where: { workspaceId: workspace.id },
       orderBy: { order: "asc" },
@@ -990,9 +999,9 @@ export async function createProject(formData: FormData): Promise<ActionResult<{ 
         name: name.trim(),
         type,
         description,
-        companyId: companyId || null,
-        dealId: dealId || null,
-        contactId: null,
+        companyId: companyId || deal.companyId || null,
+        dealId,
+        contactId: deal.contactId ?? null,
         ownerId: userId,
         ownerName: user?.fullName || user?.firstName || undefined,
         statusId: firstStatus?.id,

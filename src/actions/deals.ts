@@ -98,6 +98,10 @@ export async function getDealOptions() {
       companyId: true,
       contactId: true,
       stage: { select: { name: true } },
+      company: { select: { name: true } },
+      // A deal can back at most one project — pickers that create projects
+      // use this to hide deals that are already linked.
+      project: { select: { id: true } },
     },
     orderBy: { createdAt: "desc" },
   });
