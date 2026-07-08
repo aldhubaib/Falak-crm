@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { getProjectMeta } from "@/actions/projects";
+import { getWeeklyTargets } from "@/actions/weekly-plan";
 import { getProjectStatuses, getChecklistTemplates } from "@/actions/settings";
 import { getProjectAccess } from "@/lib/workspace";
 import { hasCap } from "@/lib/permissions";
@@ -21,11 +22,13 @@ export default async function ProjectSettingsPage({
     redirect(`/projects/${projectId}`);
   }
 
-  const [project, projectStatuses, templates] = await Promise.all([
-    getProjectMeta(projectId),
-    getProjectStatuses(),
-    getChecklistTemplates(),
-  ]);
+  const [project, projectStatuses, templates, weeklyTargets] =
+    await Promise.all([
+      getProjectMeta(projectId),
+      getProjectStatuses(),
+      getChecklistTemplates(),
+      getWeeklyTargets(projectId),
+    ]);
 
   if (!project) notFound();
 
@@ -59,6 +62,7 @@ export default async function ProjectSettingsPage({
             name: t.name,
             itemCount: t.items.length,
           }))}
+          weeklyTargets={weeklyTargets}
         />
       </main>
     </>

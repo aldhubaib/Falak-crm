@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import { createPresignedGet } from "@/lib/storage";
 import { getProjectAccess } from "@/lib/workspace";
 import { canDeleteTaskAt } from "@/lib/permissions";
-import { fieldConfig, isFieldLocked, titleLockConfig } from "@/lib/checklist-config";
+import { autoLockOrder, fieldConfig, isFieldLocked, titleLockConfig } from "@/lib/checklist-config";
 import { normalizeFormats } from "@/lib/formats";
 import { TaskDetailClient, type ChecklistItem } from "./task-detail-client";
 
@@ -79,9 +79,7 @@ export default async function TaskDetailPage({
   // the task's current stage.
   const statuses = await getTaskStatuses();
   const orderById = new Map(statuses.map((s) => [s.id, s.order]));
-  const todoOrder = statuses.length
-    ? Math.min(...statuses.map((s) => s.order))
-    : 0;
+  const todoOrder = autoLockOrder(statuses);
   const currentOrder = task.status?.order ?? null;
 
   const trashed = task.deletedAt !== null;

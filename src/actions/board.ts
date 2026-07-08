@@ -3,6 +3,8 @@
 import { db } from "@/lib/db";
 import { fieldConfig } from "@/lib/checklist-config";
 import { requireProjectWork } from "@/lib/workspace";
+import { weekStartOf } from "@/lib/week";
+import { ensureWeeklySlots } from "@/lib/weekly-slots";
 
 export type BoardStatus = {
   id: string;
@@ -33,11 +35,24 @@ export type BoardTask = {
   submittedById: string | null;
   submittedByName: string | null;
   rejectionCount: number;
+  /** Task type (ChecklistTemplate id) — groups the Todo column's weekly slots. */
+  templateId: string | null;
+};
+
+// Weekly Plan capacity for one task type in the current week. `total` counts
+// live slots (admin-removed excluded); `emptySlotIds` are still claimable.
+export type WeeklyGroup = {
+  templateId: string;
+  templateName: string;
+  templateColor: string | null;
+  total: number;
+  emptySlotIds: string[];
 };
 
 export type BoardData = {
   tasks: BoardTask[];
   statuses: BoardStatus[];
+  weekly: WeeklyGroup[];
 };
 
 // Lightweight board payload — selects ONLY the fields a card renders, so a
@@ -46,7 +61,11 @@ export type BoardData = {
 export async function getBoardData(projectId: string): Promise<BoardData> {
   const { workspace } = await requireProjectWork(projectId);
 
-  const [tasks, statuses, changes] = await Promise.all([
+  // Materialise this week's Todo slots from the weekly targets before reading
+  // them back — the first board visit of a new week creates the fresh slots.
+  await ensureWeeklySlots(projectId);
+
+  const [tasks, statuses, changes, slots] = await Promise.all([
     db.task.findMany({
       where: { projectId, deletedAt: null },
       orderBy: { order: "asc" },
@@ -73,7 +92,13 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
             hidden: true,
             // Live template config — the per-task copy is only a fallback.
             templateItem: {
-              select: { name: true, phase: true, mandatory: true, hidden: true },
+              select: {
+                name: true,
+                phase: true,
+                mandatory: true,
+                hidden: true,
+                templateId: true,
+              },
             },
           },
         },
@@ -109,6 +134,16 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         AND t."deletedAt" IS NULL
       ORDER BY c."taskId", c."createdAt" DESC
     `,
+    db.weeklySlot.findMany({
+      where: { projectId, weekStart: weekStartOf(), removedAt: null },
+      orderBy: { createdAt: "asc" },
+      select: {
+        id: true,
+        templateId: true,
+        taskId: true,
+        template: { select: { name: true, color: true } },
+      },
+    }),
   ]);
 
   // Resolve who to @mention (and cannot be changed) when a task is declined.
@@ -170,11 +205,32 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
       submittedById: submittedBy.get(t.id)?.id ?? null,
       submittedByName: submittedBy.get(t.id)?.name ?? null,
       rejectionCount: t.rejectionCount ?? 0,
+      templateId:
+        t.checklistItems.find((i) => i.templateItem?.templateId)?.templateItem
+          ?.templateId ?? null,
     };
   });
+
+  const weekly: WeeklyGroup[] = [];
+  for (const s of slots) {
+    let group = weekly.find((g) => g.templateId === s.templateId);
+    if (!group) {
+      group = {
+        templateId: s.templateId,
+        templateName: s.template.name,
+        templateColor: s.template.color,
+        total: 0,
+        emptySlotIds: [],
+      };
+      weekly.push(group);
+    }
+    group.total += 1;
+    if (!s.taskId) group.emptySlotIds.push(s.id);
+  }
 
   return {
     tasks: mappedTasks,
     statuses: statuses.filter((s) => s.name !== "Published"),
+    weekly,
   };
 }

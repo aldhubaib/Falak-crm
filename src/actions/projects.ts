@@ -4,7 +4,7 @@ import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { requireWorkspace, requireWorkspaceWithMember, requireProjectAssign, requireProjectSettings, requireProjectWork, getProjectAccess } from "@/lib/workspace";
 import { canEdit, canDeleteTaskAt, canMoveTaskFrom } from "@/lib/permissions";
-import { fieldConfig, isFieldLocked, isGateComplete, titleLockConfig } from "@/lib/checklist-config";
+import { autoLockOrder, fieldConfig, isFieldLocked, isGateComplete, titleLockConfig } from "@/lib/checklist-config";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
@@ -13,6 +13,7 @@ import { sendNotification } from "@/lib/push";
 import { publishTaskEvent } from "@/lib/realtime";
 import type { BoardTask } from "@/actions/board";
 import { invalidateCache, claimThrottle } from "@/lib/cache";
+import { weekStartOf } from "@/lib/week";
 
 export async function getProjects() {
   const { workspace, member } = await requireWorkspaceWithMember();
@@ -434,6 +435,7 @@ export async function createFullTask(data: {
       submittedById: member.id,
       submittedByName: creatorName,
       rejectionCount: 0,
+      templateId: templates[0]?.id ?? null,
     };
 
     revalidatePath(`/projects/${data.projectId}`);
@@ -555,7 +557,13 @@ export async function updateTaskStatus(
             completed: true,
             hidden: true,
             templateItem: {
-              select: { name: true, phase: true, mandatory: true, hidden: true },
+              select: {
+                name: true,
+                phase: true,
+                mandatory: true,
+                hidden: true,
+                templateId: true,
+              },
             },
           },
         },
@@ -618,6 +626,60 @@ export async function updateTaskStatus(
       };
     }
   }
+
+  // Weekly Plan gate: moving forward INTO Todo consumes one of this week's
+  // slots for the task's type. With no free slot left the move is blocked for
+  // everyone — raising the weekly target in project settings is how an admin
+  // makes room (it tops the current week up immediately).
+  let claimSlotId: string | null = null;
+  let createExtraSlot = false;
+  const taskTemplateId =
+    task?.checklistItems.find((ci) => ci.templateItem?.templateId)
+      ?.templateItem?.templateId ?? null;
+  if (task && isForward && targetStatus?.name === "Todo" && taskTemplateId) {
+    const weekStart = weekStartOf();
+    const [target, alreadyBound, freeSlot, weekRows] = await Promise.all([
+      db.projectWeeklyTarget.findUnique({
+        where: {
+          projectId_templateId: { projectId, templateId: taskTemplateId },
+        },
+      }),
+      db.weeklySlot.findUnique({ where: { taskId } }),
+      db.weeklySlot.findFirst({
+        where: {
+          projectId,
+          templateId: taskTemplateId,
+          weekStart,
+          taskId: null,
+          removedAt: null,
+        },
+        orderBy: { createdAt: "asc" },
+      }),
+      db.weeklySlot.count({
+        where: { projectId, templateId: taskTemplateId, weekStart },
+      }),
+    ]);
+    if (target && target.perWeek > 0 && !alreadyBound) {
+      if (freeSlot) {
+        claimSlotId = freeSlot.id;
+      } else if (weekRows < target.perWeek) {
+        // This week's slots weren't materialised yet (board not opened since
+        // the week rolled over) — the move itself creates the missing slot.
+        createExtraSlot = true;
+      } else {
+        const tpl = await db.checklistTemplate.findUnique({
+          where: { id: taskTemplateId },
+          select: { name: true },
+        });
+        return {
+          ok: false,
+          error: `This week's plan for ${tpl ? `"${tpl.name}"` : "this task type"} is already full, so the task can't move to Todo right now. New slots open next week — or ask an admin to make room.`,
+        };
+      }
+    }
+  }
+  // Rolling back OUT of Todo frees the task's slot for someone else this week.
+  const releaseSlot = !isForward && task?.status?.name === "Todo";
 
   const history: Record<string, string> = (task?.assignmentHistory as Record<string, string>) ?? {};
 
@@ -687,6 +749,36 @@ export async function updateTaskStatus(
         durationMs: durationMs != null ? Math.max(0, Math.round(durationMs)) : null,
       },
     }),
+    // Weekly Plan slot bookkeeping (see the gate above). The `taskId: null`
+    // guard means a concurrently claimed slot is simply left alone.
+    ...(claimSlotId
+      ? [
+          db.weeklySlot.updateMany({
+            where: { id: claimSlotId, taskId: null },
+            data: { taskId },
+          }),
+        ]
+      : []),
+    ...(createExtraSlot && taskTemplateId
+      ? [
+          db.weeklySlot.create({
+            data: {
+              projectId,
+              templateId: taskTemplateId,
+              weekStart: weekStartOf(),
+              taskId,
+            },
+          }),
+        ]
+      : []),
+    ...(releaseSlot
+      ? [
+          db.weeklySlot.updateMany({
+            where: { taskId },
+            data: { taskId: null },
+          }),
+        ]
+      : []),
   ]);
 
   // Resolve the new assignee and the mover before broadcasting so the event
@@ -858,6 +950,13 @@ export async function deleteTask(taskId: string, projectId: string, dealId?: str
     data: { deletedAt: new Date(), deletedBy: access.member.id },
   });
 
+  // Free the task's Weekly Plan slot for this week — a trashed task won't
+  // deliver, so the capacity goes back to the team.
+  await db.weeklySlot.updateMany({
+    where: { taskId, weekStart: weekStartOf() },
+    data: { taskId: null },
+  });
+
   publishTaskEvent(projectId, { type: "task.deleted", taskId });
 
   revalidatePath(`/projects/${projectId}`);
@@ -1011,12 +1110,10 @@ export async function updateTask(taskId: string, data: {
     });
     const statuses = await db.taskStatus.findMany({
       where: { workspaceId: task.project.workspaceId },
-      select: { id: true, order: true },
+      select: { id: true, name: true, order: true },
     });
     const orderById = new Map(statuses.map((s) => [s.id, s.order]));
-    const todoOrder = statuses.length
-      ? Math.min(...statuses.map((s) => s.order))
-      : 0;
+    const todoOrder = autoLockOrder(statuses);
     const currentOrder = task.statusId
       ? (orderById.get(task.statusId) ?? null)
       : null;
@@ -1060,12 +1157,10 @@ async function assertChecklistItemWritable(itemId: string) {
 
   const statuses = await db.taskStatus.findMany({
     where: { workspaceId: item.task.project.workspaceId },
-    select: { id: true, order: true },
+    select: { id: true, name: true, order: true },
   });
   const orderById = new Map(statuses.map((s) => [s.id, s.order]));
-  const todoOrder = statuses.length
-    ? Math.min(...statuses.map((s) => s.order))
-    : 0;
+  const todoOrder = autoLockOrder(statuses);
   const currentOrder = item.task.status?.order ?? null;
 
   if (isFieldLocked(cfg, currentOrder, orderById, todoOrder)) {

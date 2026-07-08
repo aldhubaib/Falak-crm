@@ -76,6 +76,20 @@ export type LockConfig = {
 };
 
 /**
+ * Stage order the "Auto" lock rule anchors to: fields lock once the task
+ * moves PAST this stage. That's the stage named "Todo" — stages before it
+ * (e.g. Backlog) are pre-work, so fields stay editable there too. Falls back
+ * to the first stage when no "Todo" exists.
+ */
+export function autoLockOrder(
+  statuses: { name?: string | null; order: number }[],
+): number {
+  const todo = statuses.find((s) => s.name === "Todo");
+  if (todo) return todo.order;
+  return statuses.length ? Math.min(...statuses.map((s) => s.order)) : 0;
+}
+
+/**
  * A field is read-only once the task reaches its "Locked From" stage.
  * "Never" keeps it editable at every stage. With no stage set ("Auto") the
  * built-in rule applies: requirement fields lock once the task moves past

@@ -346,6 +346,23 @@ exports.Prisma.ProjectScalarFieldEnum = {
   deletedBy: 'deletedBy'
 };
 
+exports.Prisma.ProjectWeeklyTargetScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  templateId: 'templateId',
+  perWeek: 'perWeek'
+};
+
+exports.Prisma.WeeklySlotScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  templateId: 'templateId',
+  weekStart: 'weekStart',
+  taskId: 'taskId',
+  removedAt: 'removedAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.ProjectMemberScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
@@ -864,6 +881,8 @@ exports.Prisma.ModelName = {
   DealItem: 'DealItem',
   ProjectStatus: 'ProjectStatus',
   Project: 'Project',
+  ProjectWeeklyTarget: 'ProjectWeeklyTarget',
+  WeeklySlot: 'WeeklySlot',
   ProjectMember: 'ProjectMember',
   ProjectFolder: 'ProjectFolder',
   ProjectAsset: 'ProjectAsset',

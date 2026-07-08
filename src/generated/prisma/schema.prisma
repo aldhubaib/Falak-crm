@@ -410,8 +410,45 @@ model Project {
   publishItems     PublishItem[]
   members          ProjectMember[]
   messages         Message[]
+  weeklyTargets    ProjectWeeklyTarget[]
+  weeklySlots      WeeklySlot[]
 
   @@index([workspaceId, deletedAt])
+}
+
+// ─── Weekly Plan ────────────────────────────────────────────────────────────────
+
+// Per-project weekly capacity: how many tasks of each type the project should
+// deliver per week. Drives the empty slots shown in the Todo column.
+model ProjectWeeklyTarget {
+  id         String @id @default(cuid())
+  projectId  String
+  templateId String
+  perWeek    Int    @default(0)
+
+  project  Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  template ChecklistTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, templateId])
+}
+
+// One row per Todo slot per week. Seeded lazily from the weekly targets when
+// the board loads; a slot is "filled" once a task claims it by moving into
+// Todo. Admins can soft-remove empty slots for the current week (removedAt).
+model WeeklySlot {
+  id         String    @id @default(cuid())
+  projectId  String
+  templateId String
+  weekStart  DateTime // Monday 00:00 UTC of the slot's week
+  taskId     String?   @unique
+  removedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  project  Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  template ChecklistTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  task     Task?             @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  @@index([projectId, weekStart])
 }
 
 model ProjectMember {
@@ -493,6 +530,8 @@ model ChecklistTemplate {
   titleLockedFromStage TaskStatus?             @relation("TitleLockedFromStage", fields: [titleLockedFromStageId], references: [id], onDelete: SetNull)
   items                ChecklistTemplateItem[]
   projects             ProjectTemplate[]
+  weeklyTargets        ProjectWeeklyTarget[]
+  weeklySlots          WeeklySlot[]
 }
 
 model ChecklistTemplateItem {
@@ -620,6 +659,7 @@ model Task {
   checklistItems TaskChecklistItem[]
   comments       Message[]
   publishItem    PublishItem?
+  weeklySlot     WeeklySlot?
 
   statusChanges TaskStatusChange[]
 

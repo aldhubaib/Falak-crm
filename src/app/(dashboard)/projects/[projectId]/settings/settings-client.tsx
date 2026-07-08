@@ -4,11 +4,14 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   Activity,
+  CalendarClock,
   Check,
   CheckSquare,
   ChevronRight,
   ClipboardCheck,
   FileText,
+  Minus,
+  Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,6 +23,7 @@ import {
   updateProjectStatus,
   updateProjectTemplates,
 } from "@/actions/projects";
+import { setWeeklyTargets, type WeeklyTarget } from "@/actions/weekly-plan";
 
 type ProjectStatusOption = { id: string; name: string; color: string };
 
@@ -44,6 +48,7 @@ export function ProjectSettingsClient({
   templateIds: initialTemplateIds,
   projectStatuses,
   templates,
+  weeklyTargets: initialWeeklyTargets,
 }: {
   projectId: string;
   currentStatusId: string | null;
@@ -52,6 +57,7 @@ export function ProjectSettingsClient({
   templateIds: string[];
   projectStatuses: ProjectStatusOption[];
   templates: Template[];
+  weeklyTargets: WeeklyTarget[];
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -62,12 +68,27 @@ export function ProjectSettingsClient({
     initialRequirePublishing,
   );
   const [templateIds, setTemplateIds] = useState(initialTemplateIds);
+  const [weekly, setWeekly] = useState<Record<string, number>>(() =>
+    Object.fromEntries(initialWeeklyTargets.map((t) => [t.templateId, t.perWeek])),
+  );
+
+  const serializeWeekly = (w: Record<string, number>) =>
+    Object.entries(w)
+      .filter(([, n]) => n > 0)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([id, n]) => `${id}:${n}`)
+      .join(",");
+  const initialWeeklyKey = serializeWeekly(
+    Object.fromEntries(initialWeeklyTargets.map((t) => [t.templateId, t.perWeek])),
+  );
+  const weeklyDirty = serializeWeekly(weekly) !== initialWeeklyKey;
 
   const dirty =
     statusId !== currentStatusId ||
     description !== initialDescription ||
     requirePublishing !== initialRequirePublishing ||
-    templateIds.join(",") !== initialTemplateIds.join(",");
+    templateIds.join(",") !== initialTemplateIds.join(",") ||
+    weeklyDirty;
 
   const save = () => {
     startTransition(async () => {
@@ -83,8 +104,24 @@ export function ProjectSettingsClient({
       if (templateIds.join(",") !== initialTemplateIds.join(",")) {
         await updateProjectTemplates(projectId, templateIds);
       }
+      if (weeklyDirty) {
+        await setWeeklyTargets(
+          projectId,
+          Object.entries(weekly)
+            // Only types still attached to the project carry a target.
+            .filter(([id, n]) => n > 0 && templateIds.includes(id))
+            .map(([templateId, perWeek]) => ({ templateId, perWeek })),
+        );
+      }
       router.refresh();
     });
+  };
+
+  const bumpWeekly = (templateId: string, delta: number) => {
+    setWeekly((prev) => ({
+      ...prev,
+      [templateId]: Math.max(0, Math.min(50, (prev[templateId] ?? 0) + delta)),
+    }));
   };
 
   const toggleTemplate = (id: string) => {
@@ -246,6 +283,62 @@ export function ProjectSettingsClient({
             );
           })}
         </div>
+      </Section>
+
+      {/* Weekly Plan */}
+      <Section
+        icon={<CalendarClock className="size-4" />}
+        title="Weekly Plan"
+        hint="Set how many tasks of each type this project should deliver per week. Each week the Todo column gets that many slots — a task can only move from Backlog to Todo while a free slot remains. Raising the target mid-week adds slots to the current week."
+      >
+        {templateIds.length === 0 ? (
+          <div className="py-4 text-center text-xs text-muted-foreground">
+            Attach a checklist template first — the plan is set per task type.
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {templates
+              .filter((t) => templateIds.includes(t.id))
+              .map((t) => {
+                const count = weekly[t.id] ?? 0;
+                return (
+                  <div
+                    key={t.id}
+                    className="flex items-center justify-between gap-3 rounded-xl border border-border/60 bg-surface px-4 py-3"
+                  >
+                    <span className="min-w-0 truncate text-sm font-medium">
+                      {t.name}
+                    </span>
+                    <div className="flex shrink-0 items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => bumpWeekly(t.id, -1)}
+                        disabled={count === 0}
+                        aria-label={`Fewer ${t.name} per week`}
+                        className="grid size-7 place-items-center rounded-lg border border-border/60 bg-muted/30 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 disabled:hover:text-muted-foreground"
+                      >
+                        <Minus className="size-3.5" />
+                      </button>
+                      <span className="w-6 text-center text-sm font-semibold tabular-nums">
+                        {count}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => bumpWeekly(t.id, 1)}
+                        aria-label={`More ${t.name} per week`}
+                        className="grid size-7 place-items-center rounded-lg border border-border/60 bg-muted/30 text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        <Plus className="size-3.5" />
+                      </button>
+                      <span className="text-xs text-muted-foreground">
+                        / week
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        )}
       </Section>
     </div>
   );

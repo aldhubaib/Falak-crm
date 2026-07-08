@@ -97,6 +97,9 @@ function applyBoardEvent(
         ),
       };
     });
+    // A move into/out of Todo may have claimed or freed a Weekly Plan slot —
+    // refetch in the background so the slot placeholders stay truthful.
+    invalidate();
     return;
   }
 
@@ -152,6 +155,8 @@ function applyBoardEvent(
       if (!old) return old;
       return { ...old, tasks: old.tasks.filter((t) => t.id !== event.taskId) };
     });
+    // Deleting a Todo task frees its Weekly Plan slot — refresh in background.
+    invalidate();
     return;
   }
 

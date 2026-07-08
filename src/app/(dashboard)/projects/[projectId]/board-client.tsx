@@ -17,7 +17,7 @@ import {
   type DragStartEvent,
 } from "@dnd-kit/core";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AlertCircle, Clock, Eye, EyeOff, Plus, RotateCcw, Timer } from "lucide-react";
+import { AlertCircle, Clock, Eye, EyeOff, Plus, RotateCcw, Timer, X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,9 +41,10 @@ import { CONFIRM_MESSAGES } from "@/components/board/confirm-messages";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { assignTaskToMe, updateTaskStatus } from "@/actions/projects";
+import { removeWeeklySlot } from "@/actions/weekly-plan";
 import { addTaskComment } from "@/actions/comments";
 import { uploadManager } from "@/lib/upload-manager";
-import type { BoardData, BoardStatus, BoardTask } from "@/actions/board";
+import type { BoardData, BoardStatus, BoardTask, WeeklyGroup } from "@/actions/board";
 import {
   boardQueryKey,
   useBoardData,
@@ -200,6 +201,7 @@ const BoardCard = memo(function BoardCard({
       ref={setNodeRef}
       {...listeners}
       {...attributes}
+      data-task-card
       onClick={() => onOpen(task.id)}
       style={{ opacity: isDragging ? 0.4 : 1 }}
       className={cn(
@@ -234,6 +236,9 @@ const BoardColumn = memo(function BoardColumn({
   dragDisabled,
   canSelfAssign,
   onSelfAssign,
+  weekly,
+  canRemoveSlot,
+  onRemoveSlot,
 }: {
   col: Column;
   projectId: string;
@@ -246,11 +251,35 @@ const BoardColumn = memo(function BoardColumn({
   dragDisabled: boolean;
   canSelfAssign: (task: BoardTask) => boolean;
   onSelfAssign: (task: BoardTask) => void;
+  /** Weekly Plan groups — only passed to the Todo column. */
+  weekly?: WeeklyGroup[];
+  canRemoveSlot?: boolean;
+  onRemoveSlot?: (slotId: string) => void;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: col.id });
 
+  const renderCard = (task: BoardTask) => (
+    <BoardCard
+      key={task.id}
+      task={task}
+      onOpen={onOpen}
+      remoteDragger={remoteDrags[task.id]?.name ?? null}
+      dragDisabled={dragDisabled}
+      onSelfAssign={canSelfAssign(task) ? () => onSelfAssign(task) : undefined}
+    />
+  );
+
+  // Weekly Plan rendering (Todo only): tasks grouped under their type with a
+  // filled/total counter, dashed placeholders for the week's open slots, and
+  // any tasks of unplanned types listed below.
+  const weeklyGroups = weekly && weekly.length > 0 ? weekly : null;
+  const plannedTemplateIds = new Set(weeklyGroups?.map((g) => g.templateId));
+  const unplannedTasks = weeklyGroups
+    ? col.tasks.filter((t) => !t.templateId || !plannedTemplateIds.has(t.templateId))
+    : col.tasks;
+
   return (
-    <div className="flex min-w-0 flex-col">
+    <div className="flex min-w-0 flex-col md:w-[312px] md:min-w-[312px] md:shrink-0">
       <div className="mb-3 flex h-6 items-center gap-2 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.14em]">
         <span
           className="h-1.5 w-1.5 shrink-0 rounded-full"
@@ -308,23 +337,60 @@ const BoardColumn = memo(function BoardColumn({
           isOver && "border-primary bg-primary/10",
         )}
       >
-        {col.tasks.length === 0 ? (
+        {weeklyGroups ? (
+          <>
+            {weeklyGroups.map((g) => {
+              const groupTasks = col.tasks.filter(
+                (t) => t.templateId === g.templateId,
+              );
+              const filled = g.total - g.emptySlotIds.length;
+              return (
+                <div key={g.templateId} className="space-y-2">
+                  <div className="flex items-center gap-1.5 px-1 pt-1 text-[10px] font-semibold uppercase tracking-[0.14em]">
+                    <span
+                      className="h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: g.templateColor ?? "#f59e0b" }}
+                    />
+                    <span className="truncate text-foreground">
+                      {g.templateName}
+                    </span>
+                    <span className="text-muted-foreground">
+                      {filled}/{g.total}
+                    </span>
+                  </div>
+                  {groupTasks.map(renderCard)}
+                  {g.emptySlotIds.map((slotId) => (
+                    <div
+                      key={slotId}
+                      className="group/slot relative grid h-[72px] place-items-center rounded-lg border border-dashed border-border/80 text-sm text-muted-foreground/50"
+                    >
+                      Empty slot
+                      {canRemoveSlot && onRemoveSlot && (
+                        <button
+                          type="button"
+                          aria-label="Remove this slot"
+                          title="Remove slot (admin)"
+                          onClick={() => onRemoveSlot(slotId)}
+                          className="absolute right-1.5 top-1.5 hidden size-5 place-items-center rounded-full text-muted-foreground/60 transition-colors hover:bg-destructive/15 hover:text-destructive group-hover/slot:grid"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+            {unplannedTasks.length > 0 && (
+              <div className="space-y-2 pt-1">{unplannedTasks.map(renderCard)}</div>
+            )}
+          </>
+        ) : col.tasks.length === 0 ? (
           <div className="grid h-24 place-items-center text-xs text-muted-foreground">
             No tasks
           </div>
         ) : (
-          col.tasks.map((task) => (
-            <BoardCard
-              key={task.id}
-              task={task}
-              onOpen={onOpen}
-              remoteDragger={remoteDrags[task.id]?.name ?? null}
-              dragDisabled={dragDisabled}
-              onSelfAssign={
-                canSelfAssign(task) ? () => onSelfAssign(task) : undefined
-              }
-            />
-          ))
+          col.tasks.map(renderCard)
         )}
       </div>
     </div>
@@ -399,6 +465,41 @@ export function ProjectBoardClient({
   // Suppress the synthetic click that fires right after a drag so a drop
   // doesn't also navigate into the task.
   const justDraggedRef = useRef(false);
+
+  // Drag-to-pan: grabbing empty board space with the mouse scrolls the row
+  // sideways. Task cards and interactive elements are excluded so card drags
+  // and clicks behave exactly as before.
+  const panScrollRef = useRef<HTMLDivElement>(null);
+  const panRef = useRef<{ startX: number; startScroll: number } | null>(null);
+  const onPanPointerDown = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (isMobile || e.pointerType !== "mouse" || e.button !== 0) return;
+      const target = e.target as HTMLElement;
+      if (target.closest("[data-task-card],button,a,input,textarea")) return;
+      const el = panScrollRef.current;
+      if (!el) return;
+      panRef.current = { startX: e.clientX, startScroll: el.scrollLeft };
+      el.setPointerCapture(e.pointerId);
+    },
+    [isMobile],
+  );
+  const onPanPointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      const pan = panRef.current;
+      const el = panScrollRef.current;
+      if (!pan || !el) return;
+      el.scrollLeft = pan.startScroll - (e.clientX - pan.startX);
+    },
+    [],
+  );
+  const onPanPointerEnd = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (!panRef.current) return;
+      panRef.current = null;
+      panScrollRef.current?.releasePointerCapture(e.pointerId);
+    },
+    [],
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -526,6 +627,44 @@ export function ProjectBoardClient({
   const openSelfAssign = useCallback((task: BoardTask) => {
     setAssignTarget(task);
   }, []);
+
+  // Admin-only: drop one of this week's open Todo slots. Optimistic — the
+  // placeholder disappears immediately and comes back if the server refuses.
+  const removeSlotMutation = useMutation({
+    mutationFn: (slotId: string) => removeWeeklySlot(slotId, projectId),
+    onMutate: async (slotId) => {
+      const key = boardQueryKey(projectId);
+      await queryClient.cancelQueries({ queryKey: key });
+      const prev = queryClient.getQueryData<BoardData>(key);
+      queryClient.setQueryData<BoardData>(key, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          weekly: old.weekly.map((g) =>
+            g.emptySlotIds.includes(slotId)
+              ? {
+                  ...g,
+                  total: g.total - 1,
+                  emptySlotIds: g.emptySlotIds.filter((id) => id !== slotId),
+                }
+              : g,
+          ),
+        };
+      });
+      return { prev };
+    },
+    onError: (_err, _slotId, ctx) => {
+      if (ctx?.prev) queryClient.setQueryData(boardQueryKey(projectId), ctx.prev);
+      setMoveError("The slot couldn't be removed. Please try again.");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
+    },
+  });
+  const removeSlot = useCallback(
+    (slotId: string) => removeSlotMutation.mutate(slotId),
+    [removeSlotMutation],
+  );
 
   // Decline a task backward: record the reason as a comment that @mentions the
   // person who submitted it (locked in the dialog), then move it back. The move
@@ -754,23 +893,25 @@ export function ProjectBoardClient({
   return (
     <TooltipProvider delayDuration={150}>
       <DndContext
+        // Stable id — dnd-kit's auto-generated counter id differs between
+        // server and client renders and trips React hydration.
+        id={`board-${projectId}`}
         sensors={sensors}
         collisionDetection={pointerWithin}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
         onDragCancel={onDragCancel}
       >
+        {/* Desktop: fixed-width columns in one horizontally scrollable row —
+            grab empty space to pan it sideways. Mobile: stages stack
+            vertically (dragging is off there anyway). */}
         <div
-          className={cn(
-            // Either every stage fits in one row, or the board stacks like the
-            // mobile view — intermediate widths must not wrap into a 2×N grid.
-            "grid min-h-[calc(100vh-3.5rem)] gap-4 p-5",
-            grouped.length <= 3
-              ? "grid-cols-1 md:grid-cols-3"
-              : grouped.length === 4
-                ? "grid-cols-1 xl:grid-cols-4"
-                : "grid-cols-1 xl:grid-cols-5",
-          )}
+          ref={panScrollRef}
+          onPointerDown={onPanPointerDown}
+          onPointerMove={onPanPointerMove}
+          onPointerUp={onPanPointerEnd}
+          onPointerCancel={onPanPointerEnd}
+          className="flex min-h-[calc(100vh-3.5rem)] flex-col gap-4 p-5 md:cursor-grab md:flex-row md:overflow-x-auto md:active:cursor-grabbing"
         >
           {grouped.map((col, i) => (
             <BoardColumn
@@ -786,6 +927,9 @@ export function ProjectBoardClient({
               dragDisabled={isMobile}
               canSelfAssign={canSelfAssign}
               onSelfAssign={openSelfAssign}
+              weekly={col.name === "Todo" ? data.weekly : undefined}
+              canRemoveSlot={movePerms.full}
+              onRemoveSlot={removeSlot}
             />
           ))}
         </div>

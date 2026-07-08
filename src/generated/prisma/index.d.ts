@@ -99,6 +99,16 @@ export type ProjectStatus = $Result.DefaultSelection<Prisma.$ProjectStatusPayloa
  */
 export type Project = $Result.DefaultSelection<Prisma.$ProjectPayload>
 /**
+ * Model ProjectWeeklyTarget
+ * 
+ */
+export type ProjectWeeklyTarget = $Result.DefaultSelection<Prisma.$ProjectWeeklyTargetPayload>
+/**
+ * Model WeeklySlot
+ * 
+ */
+export type WeeklySlot = $Result.DefaultSelection<Prisma.$WeeklySlotPayload>
+/**
  * Model ProjectMember
  * 
  */
@@ -676,6 +686,26 @@ export class PrismaClient<
     * ```
     */
   get project(): Prisma.ProjectDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.projectWeeklyTarget`: Exposes CRUD operations for the **ProjectWeeklyTarget** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProjectWeeklyTargets
+    * const projectWeeklyTargets = await prisma.projectWeeklyTarget.findMany()
+    * ```
+    */
+  get projectWeeklyTarget(): Prisma.ProjectWeeklyTargetDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.weeklySlot`: Exposes CRUD operations for the **WeeklySlot** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WeeklySlots
+    * const weeklySlots = await prisma.weeklySlot.findMany()
+    * ```
+    */
+  get weeklySlot(): Prisma.WeeklySlotDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.projectMember`: Exposes CRUD operations for the **ProjectMember** model.
@@ -1437,6 +1467,8 @@ export namespace Prisma {
     DealItem: 'DealItem',
     ProjectStatus: 'ProjectStatus',
     Project: 'Project',
+    ProjectWeeklyTarget: 'ProjectWeeklyTarget',
+    WeeklySlot: 'WeeklySlot',
     ProjectMember: 'ProjectMember',
     ProjectFolder: 'ProjectFolder',
     ProjectAsset: 'ProjectAsset',
@@ -1483,7 +1515,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "message" | "messageReaction" | "messageMention" | "conversation" | "conversationParticipant" | "notification" | "pushSubscription" | "invoice" | "payment" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "brandingAsset" | "publishItem"
+      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectWeeklyTarget" | "weeklySlot" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "message" | "messageReaction" | "messageMention" | "conversation" | "conversationParticipant" | "notification" | "pushSubscription" | "invoice" | "payment" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "brandingAsset" | "publishItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2742,6 +2774,154 @@ export namespace Prisma {
           count: {
             args: Prisma.ProjectCountArgs<ExtArgs>
             result: $Utils.Optional<ProjectCountAggregateOutputType> | number
+          }
+        }
+      }
+      ProjectWeeklyTarget: {
+        payload: Prisma.$ProjectWeeklyTargetPayload<ExtArgs>
+        fields: Prisma.ProjectWeeklyTargetFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProjectWeeklyTargetFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWeeklyTargetPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProjectWeeklyTargetFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWeeklyTargetPayload>
+          }
+          findFirst: {
+            args: Prisma.ProjectWeeklyTargetFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWeeklyTargetPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProjectWeeklyTargetFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWeeklyTargetPayload>
+          }
+          findMany: {
+            args: Prisma.ProjectWeeklyTargetFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWeeklyTargetPayload>[]
+          }
+          create: {
+            args: Prisma.ProjectWeeklyTargetCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWeeklyTargetPayload>
+          }
+          createMany: {
+            args: Prisma.ProjectWeeklyTargetCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProjectWeeklyTargetCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWeeklyTargetPayload>[]
+          }
+          delete: {
+            args: Prisma.ProjectWeeklyTargetDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWeeklyTargetPayload>
+          }
+          update: {
+            args: Prisma.ProjectWeeklyTargetUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWeeklyTargetPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProjectWeeklyTargetDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProjectWeeklyTargetUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProjectWeeklyTargetUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWeeklyTargetPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProjectWeeklyTargetUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWeeklyTargetPayload>
+          }
+          aggregate: {
+            args: Prisma.ProjectWeeklyTargetAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProjectWeeklyTarget>
+          }
+          groupBy: {
+            args: Prisma.ProjectWeeklyTargetGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProjectWeeklyTargetGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProjectWeeklyTargetCountArgs<ExtArgs>
+            result: $Utils.Optional<ProjectWeeklyTargetCountAggregateOutputType> | number
+          }
+        }
+      }
+      WeeklySlot: {
+        payload: Prisma.$WeeklySlotPayload<ExtArgs>
+        fields: Prisma.WeeklySlotFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WeeklySlotFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WeeklySlotPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WeeklySlotFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WeeklySlotPayload>
+          }
+          findFirst: {
+            args: Prisma.WeeklySlotFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WeeklySlotPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WeeklySlotFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WeeklySlotPayload>
+          }
+          findMany: {
+            args: Prisma.WeeklySlotFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WeeklySlotPayload>[]
+          }
+          create: {
+            args: Prisma.WeeklySlotCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WeeklySlotPayload>
+          }
+          createMany: {
+            args: Prisma.WeeklySlotCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WeeklySlotCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WeeklySlotPayload>[]
+          }
+          delete: {
+            args: Prisma.WeeklySlotDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WeeklySlotPayload>
+          }
+          update: {
+            args: Prisma.WeeklySlotUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WeeklySlotPayload>
+          }
+          deleteMany: {
+            args: Prisma.WeeklySlotDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WeeklySlotUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WeeklySlotUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WeeklySlotPayload>[]
+          }
+          upsert: {
+            args: Prisma.WeeklySlotUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WeeklySlotPayload>
+          }
+          aggregate: {
+            args: Prisma.WeeklySlotAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWeeklySlot>
+          }
+          groupBy: {
+            args: Prisma.WeeklySlotGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WeeklySlotGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WeeklySlotCountArgs<ExtArgs>
+            result: $Utils.Optional<WeeklySlotCountAggregateOutputType> | number
           }
         }
       }
@@ -5164,6 +5344,8 @@ export namespace Prisma {
     dealItem?: DealItemOmit
     projectStatus?: ProjectStatusOmit
     project?: ProjectOmit
+    projectWeeklyTarget?: ProjectWeeklyTargetOmit
+    weeklySlot?: WeeklySlotOmit
     projectMember?: ProjectMemberOmit
     projectFolder?: ProjectFolderOmit
     projectAsset?: ProjectAssetOmit
@@ -5963,6 +6145,8 @@ export namespace Prisma {
     publishItems: number
     members: number
     messages: number
+    weeklyTargets: number
+    weeklySlots: number
   }
 
   export type ProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5975,6 +6159,8 @@ export namespace Prisma {
     publishItems?: boolean | ProjectCountOutputTypeCountPublishItemsArgs
     members?: boolean | ProjectCountOutputTypeCountMembersArgs
     messages?: boolean | ProjectCountOutputTypeCountMessagesArgs
+    weeklyTargets?: boolean | ProjectCountOutputTypeCountWeeklyTargetsArgs
+    weeklySlots?: boolean | ProjectCountOutputTypeCountWeeklySlotsArgs
   }
 
   // Custom InputTypes
@@ -6051,6 +6237,20 @@ export namespace Prisma {
     where?: MessageWhereInput
   }
 
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountWeeklyTargetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWeeklyTargetWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountWeeklySlotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WeeklySlotWhereInput
+  }
+
 
   /**
    * Count Type ProjectFolderCountOutputType
@@ -6099,11 +6299,15 @@ export namespace Prisma {
   export type ChecklistTemplateCountOutputType = {
     items: number
     projects: number
+    weeklyTargets: number
+    weeklySlots: number
   }
 
   export type ChecklistTemplateCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | ChecklistTemplateCountOutputTypeCountItemsArgs
     projects?: boolean | ChecklistTemplateCountOutputTypeCountProjectsArgs
+    weeklyTargets?: boolean | ChecklistTemplateCountOutputTypeCountWeeklyTargetsArgs
+    weeklySlots?: boolean | ChecklistTemplateCountOutputTypeCountWeeklySlotsArgs
   }
 
   // Custom InputTypes
@@ -6129,6 +6333,20 @@ export namespace Prisma {
    */
   export type ChecklistTemplateCountOutputTypeCountProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectTemplateWhereInput
+  }
+
+  /**
+   * ChecklistTemplateCountOutputType without action
+   */
+  export type ChecklistTemplateCountOutputTypeCountWeeklyTargetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWeeklyTargetWhereInput
+  }
+
+  /**
+   * ChecklistTemplateCountOutputType without action
+   */
+  export type ChecklistTemplateCountOutputTypeCountWeeklySlotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WeeklySlotWhereInput
   }
 
 
@@ -26507,6 +26725,8 @@ export namespace Prisma {
     publishItems?: boolean | Project$publishItemsArgs<ExtArgs>
     members?: boolean | Project$membersArgs<ExtArgs>
     messages?: boolean | Project$messagesArgs<ExtArgs>
+    weeklyTargets?: boolean | Project$weeklyTargetsArgs<ExtArgs>
+    weeklySlots?: boolean | Project$weeklySlotsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -26599,6 +26819,8 @@ export namespace Prisma {
     publishItems?: boolean | Project$publishItemsArgs<ExtArgs>
     members?: boolean | Project$membersArgs<ExtArgs>
     messages?: boolean | Project$messagesArgs<ExtArgs>
+    weeklyTargets?: boolean | Project$weeklyTargetsArgs<ExtArgs>
+    weeklySlots?: boolean | Project$weeklySlotsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -26630,6 +26852,8 @@ export namespace Prisma {
       publishItems: Prisma.$PublishItemPayload<ExtArgs>[]
       members: Prisma.$ProjectMemberPayload<ExtArgs>[]
       messages: Prisma.$MessagePayload<ExtArgs>[]
+      weeklyTargets: Prisma.$ProjectWeeklyTargetPayload<ExtArgs>[]
+      weeklySlots: Prisma.$WeeklySlotPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -27058,6 +27282,8 @@ export namespace Prisma {
     publishItems<T extends Project$publishItemsArgs<ExtArgs> = {}>(args?: Subset<T, Project$publishItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PublishItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     members<T extends Project$membersArgs<ExtArgs> = {}>(args?: Subset<T, Project$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     messages<T extends Project$messagesArgs<ExtArgs> = {}>(args?: Subset<T, Project$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    weeklyTargets<T extends Project$weeklyTargetsArgs<ExtArgs> = {}>(args?: Subset<T, Project$weeklyTargetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectWeeklyTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    weeklySlots<T extends Project$weeklySlotsArgs<ExtArgs> = {}>(args?: Subset<T, Project$weeklySlotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -27780,6 +28006,54 @@ export namespace Prisma {
   }
 
   /**
+   * Project.weeklyTargets
+   */
+  export type Project$weeklyTargetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWeeklyTarget
+     */
+    select?: ProjectWeeklyTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectWeeklyTarget
+     */
+    omit?: ProjectWeeklyTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWeeklyTargetInclude<ExtArgs> | null
+    where?: ProjectWeeklyTargetWhereInput
+    orderBy?: ProjectWeeklyTargetOrderByWithRelationInput | ProjectWeeklyTargetOrderByWithRelationInput[]
+    cursor?: ProjectWeeklyTargetWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectWeeklyTargetScalarFieldEnum | ProjectWeeklyTargetScalarFieldEnum[]
+  }
+
+  /**
+   * Project.weeklySlots
+   */
+  export type Project$weeklySlotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotInclude<ExtArgs> | null
+    where?: WeeklySlotWhereInput
+    orderBy?: WeeklySlotOrderByWithRelationInput | WeeklySlotOrderByWithRelationInput[]
+    cursor?: WeeklySlotWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WeeklySlotScalarFieldEnum | WeeklySlotScalarFieldEnum[]
+  }
+
+  /**
    * Project without action
    */
   export type ProjectDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -27795,6 +28069,2222 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ProjectInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ProjectWeeklyTarget
+   */
+
+  export type AggregateProjectWeeklyTarget = {
+    _count: ProjectWeeklyTargetCountAggregateOutputType | null
+    _avg: ProjectWeeklyTargetAvgAggregateOutputType | null
+    _sum: ProjectWeeklyTargetSumAggregateOutputType | null
+    _min: ProjectWeeklyTargetMinAggregateOutputType | null
+    _max: ProjectWeeklyTargetMaxAggregateOutputType | null
+  }
+
+  export type ProjectWeeklyTargetAvgAggregateOutputType = {
+    perWeek: number | null
+  }
+
+  export type ProjectWeeklyTargetSumAggregateOutputType = {
+    perWeek: number | null
+  }
+
+  export type ProjectWeeklyTargetMinAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    templateId: string | null
+    perWeek: number | null
+  }
+
+  export type ProjectWeeklyTargetMaxAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    templateId: string | null
+    perWeek: number | null
+  }
+
+  export type ProjectWeeklyTargetCountAggregateOutputType = {
+    id: number
+    projectId: number
+    templateId: number
+    perWeek: number
+    _all: number
+  }
+
+
+  export type ProjectWeeklyTargetAvgAggregateInputType = {
+    perWeek?: true
+  }
+
+  export type ProjectWeeklyTargetSumAggregateInputType = {
+    perWeek?: true
+  }
+
+  export type ProjectWeeklyTargetMinAggregateInputType = {
+    id?: true
+    projectId?: true
+    templateId?: true
+    perWeek?: true
+  }
+
+  export type ProjectWeeklyTargetMaxAggregateInputType = {
+    id?: true
+    projectId?: true
+    templateId?: true
+    perWeek?: true
+  }
+
+  export type ProjectWeeklyTargetCountAggregateInputType = {
+    id?: true
+    projectId?: true
+    templateId?: true
+    perWeek?: true
+    _all?: true
+  }
+
+  export type ProjectWeeklyTargetAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProjectWeeklyTarget to aggregate.
+     */
+    where?: ProjectWeeklyTargetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectWeeklyTargets to fetch.
+     */
+    orderBy?: ProjectWeeklyTargetOrderByWithRelationInput | ProjectWeeklyTargetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProjectWeeklyTargetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectWeeklyTargets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectWeeklyTargets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProjectWeeklyTargets
+    **/
+    _count?: true | ProjectWeeklyTargetCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProjectWeeklyTargetAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProjectWeeklyTargetSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProjectWeeklyTargetMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProjectWeeklyTargetMaxAggregateInputType
+  }
+
+  export type GetProjectWeeklyTargetAggregateType<T extends ProjectWeeklyTargetAggregateArgs> = {
+        [P in keyof T & keyof AggregateProjectWeeklyTarget]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProjectWeeklyTarget[P]>
+      : GetScalarType<T[P], AggregateProjectWeeklyTarget[P]>
+  }
+
+
+
+
+  export type ProjectWeeklyTargetGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWeeklyTargetWhereInput
+    orderBy?: ProjectWeeklyTargetOrderByWithAggregationInput | ProjectWeeklyTargetOrderByWithAggregationInput[]
+    by: ProjectWeeklyTargetScalarFieldEnum[] | ProjectWeeklyTargetScalarFieldEnum
+    having?: ProjectWeeklyTargetScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProjectWeeklyTargetCountAggregateInputType | true
+    _avg?: ProjectWeeklyTargetAvgAggregateInputType
+    _sum?: ProjectWeeklyTargetSumAggregateInputType
+    _min?: ProjectWeeklyTargetMinAggregateInputType
+    _max?: ProjectWeeklyTargetMaxAggregateInputType
+  }
+
+  export type ProjectWeeklyTargetGroupByOutputType = {
+    id: string
+    projectId: string
+    templateId: string
+    perWeek: number
+    _count: ProjectWeeklyTargetCountAggregateOutputType | null
+    _avg: ProjectWeeklyTargetAvgAggregateOutputType | null
+    _sum: ProjectWeeklyTargetSumAggregateOutputType | null
+    _min: ProjectWeeklyTargetMinAggregateOutputType | null
+    _max: ProjectWeeklyTargetMaxAggregateOutputType | null
+  }
+
+  type GetProjectWeeklyTargetGroupByPayload<T extends ProjectWeeklyTargetGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProjectWeeklyTargetGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProjectWeeklyTargetGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProjectWeeklyTargetGroupByOutputType[P]>
+            : GetScalarType<T[P], ProjectWeeklyTargetGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProjectWeeklyTargetSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    templateId?: boolean
+    perWeek?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["projectWeeklyTarget"]>
+
+  export type ProjectWeeklyTargetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    templateId?: boolean
+    perWeek?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["projectWeeklyTarget"]>
+
+  export type ProjectWeeklyTargetSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    templateId?: boolean
+    perWeek?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["projectWeeklyTarget"]>
+
+  export type ProjectWeeklyTargetSelectScalar = {
+    id?: boolean
+    projectId?: boolean
+    templateId?: boolean
+    perWeek?: boolean
+  }
+
+  export type ProjectWeeklyTargetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "templateId" | "perWeek", ExtArgs["result"]["projectWeeklyTarget"]>
+  export type ProjectWeeklyTargetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+  }
+  export type ProjectWeeklyTargetIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+  }
+  export type ProjectWeeklyTargetIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+  }
+
+  export type $ProjectWeeklyTargetPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProjectWeeklyTarget"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+      template: Prisma.$ChecklistTemplatePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      projectId: string
+      templateId: string
+      perWeek: number
+    }, ExtArgs["result"]["projectWeeklyTarget"]>
+    composites: {}
+  }
+
+  type ProjectWeeklyTargetGetPayload<S extends boolean | null | undefined | ProjectWeeklyTargetDefaultArgs> = $Result.GetResult<Prisma.$ProjectWeeklyTargetPayload, S>
+
+  type ProjectWeeklyTargetCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProjectWeeklyTargetFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProjectWeeklyTargetCountAggregateInputType | true
+    }
+
+  export interface ProjectWeeklyTargetDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProjectWeeklyTarget'], meta: { name: 'ProjectWeeklyTarget' } }
+    /**
+     * Find zero or one ProjectWeeklyTarget that matches the filter.
+     * @param {ProjectWeeklyTargetFindUniqueArgs} args - Arguments to find a ProjectWeeklyTarget
+     * @example
+     * // Get one ProjectWeeklyTarget
+     * const projectWeeklyTarget = await prisma.projectWeeklyTarget.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProjectWeeklyTargetFindUniqueArgs>(args: SelectSubset<T, ProjectWeeklyTargetFindUniqueArgs<ExtArgs>>): Prisma__ProjectWeeklyTargetClient<$Result.GetResult<Prisma.$ProjectWeeklyTargetPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ProjectWeeklyTarget that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProjectWeeklyTargetFindUniqueOrThrowArgs} args - Arguments to find a ProjectWeeklyTarget
+     * @example
+     * // Get one ProjectWeeklyTarget
+     * const projectWeeklyTarget = await prisma.projectWeeklyTarget.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProjectWeeklyTargetFindUniqueOrThrowArgs>(args: SelectSubset<T, ProjectWeeklyTargetFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProjectWeeklyTargetClient<$Result.GetResult<Prisma.$ProjectWeeklyTargetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProjectWeeklyTarget that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectWeeklyTargetFindFirstArgs} args - Arguments to find a ProjectWeeklyTarget
+     * @example
+     * // Get one ProjectWeeklyTarget
+     * const projectWeeklyTarget = await prisma.projectWeeklyTarget.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProjectWeeklyTargetFindFirstArgs>(args?: SelectSubset<T, ProjectWeeklyTargetFindFirstArgs<ExtArgs>>): Prisma__ProjectWeeklyTargetClient<$Result.GetResult<Prisma.$ProjectWeeklyTargetPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProjectWeeklyTarget that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectWeeklyTargetFindFirstOrThrowArgs} args - Arguments to find a ProjectWeeklyTarget
+     * @example
+     * // Get one ProjectWeeklyTarget
+     * const projectWeeklyTarget = await prisma.projectWeeklyTarget.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProjectWeeklyTargetFindFirstOrThrowArgs>(args?: SelectSubset<T, ProjectWeeklyTargetFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProjectWeeklyTargetClient<$Result.GetResult<Prisma.$ProjectWeeklyTargetPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ProjectWeeklyTargets that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectWeeklyTargetFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProjectWeeklyTargets
+     * const projectWeeklyTargets = await prisma.projectWeeklyTarget.findMany()
+     * 
+     * // Get first 10 ProjectWeeklyTargets
+     * const projectWeeklyTargets = await prisma.projectWeeklyTarget.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const projectWeeklyTargetWithIdOnly = await prisma.projectWeeklyTarget.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProjectWeeklyTargetFindManyArgs>(args?: SelectSubset<T, ProjectWeeklyTargetFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectWeeklyTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ProjectWeeklyTarget.
+     * @param {ProjectWeeklyTargetCreateArgs} args - Arguments to create a ProjectWeeklyTarget.
+     * @example
+     * // Create one ProjectWeeklyTarget
+     * const ProjectWeeklyTarget = await prisma.projectWeeklyTarget.create({
+     *   data: {
+     *     // ... data to create a ProjectWeeklyTarget
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProjectWeeklyTargetCreateArgs>(args: SelectSubset<T, ProjectWeeklyTargetCreateArgs<ExtArgs>>): Prisma__ProjectWeeklyTargetClient<$Result.GetResult<Prisma.$ProjectWeeklyTargetPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ProjectWeeklyTargets.
+     * @param {ProjectWeeklyTargetCreateManyArgs} args - Arguments to create many ProjectWeeklyTargets.
+     * @example
+     * // Create many ProjectWeeklyTargets
+     * const projectWeeklyTarget = await prisma.projectWeeklyTarget.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProjectWeeklyTargetCreateManyArgs>(args?: SelectSubset<T, ProjectWeeklyTargetCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProjectWeeklyTargets and returns the data saved in the database.
+     * @param {ProjectWeeklyTargetCreateManyAndReturnArgs} args - Arguments to create many ProjectWeeklyTargets.
+     * @example
+     * // Create many ProjectWeeklyTargets
+     * const projectWeeklyTarget = await prisma.projectWeeklyTarget.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProjectWeeklyTargets and only return the `id`
+     * const projectWeeklyTargetWithIdOnly = await prisma.projectWeeklyTarget.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProjectWeeklyTargetCreateManyAndReturnArgs>(args?: SelectSubset<T, ProjectWeeklyTargetCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectWeeklyTargetPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ProjectWeeklyTarget.
+     * @param {ProjectWeeklyTargetDeleteArgs} args - Arguments to delete one ProjectWeeklyTarget.
+     * @example
+     * // Delete one ProjectWeeklyTarget
+     * const ProjectWeeklyTarget = await prisma.projectWeeklyTarget.delete({
+     *   where: {
+     *     // ... filter to delete one ProjectWeeklyTarget
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProjectWeeklyTargetDeleteArgs>(args: SelectSubset<T, ProjectWeeklyTargetDeleteArgs<ExtArgs>>): Prisma__ProjectWeeklyTargetClient<$Result.GetResult<Prisma.$ProjectWeeklyTargetPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ProjectWeeklyTarget.
+     * @param {ProjectWeeklyTargetUpdateArgs} args - Arguments to update one ProjectWeeklyTarget.
+     * @example
+     * // Update one ProjectWeeklyTarget
+     * const projectWeeklyTarget = await prisma.projectWeeklyTarget.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProjectWeeklyTargetUpdateArgs>(args: SelectSubset<T, ProjectWeeklyTargetUpdateArgs<ExtArgs>>): Prisma__ProjectWeeklyTargetClient<$Result.GetResult<Prisma.$ProjectWeeklyTargetPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ProjectWeeklyTargets.
+     * @param {ProjectWeeklyTargetDeleteManyArgs} args - Arguments to filter ProjectWeeklyTargets to delete.
+     * @example
+     * // Delete a few ProjectWeeklyTargets
+     * const { count } = await prisma.projectWeeklyTarget.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProjectWeeklyTargetDeleteManyArgs>(args?: SelectSubset<T, ProjectWeeklyTargetDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProjectWeeklyTargets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectWeeklyTargetUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProjectWeeklyTargets
+     * const projectWeeklyTarget = await prisma.projectWeeklyTarget.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProjectWeeklyTargetUpdateManyArgs>(args: SelectSubset<T, ProjectWeeklyTargetUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProjectWeeklyTargets and returns the data updated in the database.
+     * @param {ProjectWeeklyTargetUpdateManyAndReturnArgs} args - Arguments to update many ProjectWeeklyTargets.
+     * @example
+     * // Update many ProjectWeeklyTargets
+     * const projectWeeklyTarget = await prisma.projectWeeklyTarget.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ProjectWeeklyTargets and only return the `id`
+     * const projectWeeklyTargetWithIdOnly = await prisma.projectWeeklyTarget.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProjectWeeklyTargetUpdateManyAndReturnArgs>(args: SelectSubset<T, ProjectWeeklyTargetUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectWeeklyTargetPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ProjectWeeklyTarget.
+     * @param {ProjectWeeklyTargetUpsertArgs} args - Arguments to update or create a ProjectWeeklyTarget.
+     * @example
+     * // Update or create a ProjectWeeklyTarget
+     * const projectWeeklyTarget = await prisma.projectWeeklyTarget.upsert({
+     *   create: {
+     *     // ... data to create a ProjectWeeklyTarget
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProjectWeeklyTarget we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProjectWeeklyTargetUpsertArgs>(args: SelectSubset<T, ProjectWeeklyTargetUpsertArgs<ExtArgs>>): Prisma__ProjectWeeklyTargetClient<$Result.GetResult<Prisma.$ProjectWeeklyTargetPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ProjectWeeklyTargets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectWeeklyTargetCountArgs} args - Arguments to filter ProjectWeeklyTargets to count.
+     * @example
+     * // Count the number of ProjectWeeklyTargets
+     * const count = await prisma.projectWeeklyTarget.count({
+     *   where: {
+     *     // ... the filter for the ProjectWeeklyTargets we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProjectWeeklyTargetCountArgs>(
+      args?: Subset<T, ProjectWeeklyTargetCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProjectWeeklyTargetCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProjectWeeklyTarget.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectWeeklyTargetAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProjectWeeklyTargetAggregateArgs>(args: Subset<T, ProjectWeeklyTargetAggregateArgs>): Prisma.PrismaPromise<GetProjectWeeklyTargetAggregateType<T>>
+
+    /**
+     * Group by ProjectWeeklyTarget.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectWeeklyTargetGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProjectWeeklyTargetGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProjectWeeklyTargetGroupByArgs['orderBy'] }
+        : { orderBy?: ProjectWeeklyTargetGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProjectWeeklyTargetGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProjectWeeklyTargetGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProjectWeeklyTarget model
+   */
+  readonly fields: ProjectWeeklyTargetFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProjectWeeklyTarget.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProjectWeeklyTargetClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    template<T extends ChecklistTemplateDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateDefaultArgs<ExtArgs>>): Prisma__ChecklistTemplateClient<$Result.GetResult<Prisma.$ChecklistTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProjectWeeklyTarget model
+   */
+  interface ProjectWeeklyTargetFieldRefs {
+    readonly id: FieldRef<"ProjectWeeklyTarget", 'String'>
+    readonly projectId: FieldRef<"ProjectWeeklyTarget", 'String'>
+    readonly templateId: FieldRef<"ProjectWeeklyTarget", 'String'>
+    readonly perWeek: FieldRef<"ProjectWeeklyTarget", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProjectWeeklyTarget findUnique
+   */
+  export type ProjectWeeklyTargetFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWeeklyTarget
+     */
+    select?: ProjectWeeklyTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectWeeklyTarget
+     */
+    omit?: ProjectWeeklyTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWeeklyTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectWeeklyTarget to fetch.
+     */
+    where: ProjectWeeklyTargetWhereUniqueInput
+  }
+
+  /**
+   * ProjectWeeklyTarget findUniqueOrThrow
+   */
+  export type ProjectWeeklyTargetFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWeeklyTarget
+     */
+    select?: ProjectWeeklyTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectWeeklyTarget
+     */
+    omit?: ProjectWeeklyTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWeeklyTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectWeeklyTarget to fetch.
+     */
+    where: ProjectWeeklyTargetWhereUniqueInput
+  }
+
+  /**
+   * ProjectWeeklyTarget findFirst
+   */
+  export type ProjectWeeklyTargetFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWeeklyTarget
+     */
+    select?: ProjectWeeklyTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectWeeklyTarget
+     */
+    omit?: ProjectWeeklyTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWeeklyTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectWeeklyTarget to fetch.
+     */
+    where?: ProjectWeeklyTargetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectWeeklyTargets to fetch.
+     */
+    orderBy?: ProjectWeeklyTargetOrderByWithRelationInput | ProjectWeeklyTargetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProjectWeeklyTargets.
+     */
+    cursor?: ProjectWeeklyTargetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectWeeklyTargets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectWeeklyTargets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectWeeklyTargets.
+     */
+    distinct?: ProjectWeeklyTargetScalarFieldEnum | ProjectWeeklyTargetScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectWeeklyTarget findFirstOrThrow
+   */
+  export type ProjectWeeklyTargetFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWeeklyTarget
+     */
+    select?: ProjectWeeklyTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectWeeklyTarget
+     */
+    omit?: ProjectWeeklyTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWeeklyTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectWeeklyTarget to fetch.
+     */
+    where?: ProjectWeeklyTargetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectWeeklyTargets to fetch.
+     */
+    orderBy?: ProjectWeeklyTargetOrderByWithRelationInput | ProjectWeeklyTargetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProjectWeeklyTargets.
+     */
+    cursor?: ProjectWeeklyTargetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectWeeklyTargets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectWeeklyTargets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectWeeklyTargets.
+     */
+    distinct?: ProjectWeeklyTargetScalarFieldEnum | ProjectWeeklyTargetScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectWeeklyTarget findMany
+   */
+  export type ProjectWeeklyTargetFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWeeklyTarget
+     */
+    select?: ProjectWeeklyTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectWeeklyTarget
+     */
+    omit?: ProjectWeeklyTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWeeklyTargetInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectWeeklyTargets to fetch.
+     */
+    where?: ProjectWeeklyTargetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectWeeklyTargets to fetch.
+     */
+    orderBy?: ProjectWeeklyTargetOrderByWithRelationInput | ProjectWeeklyTargetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProjectWeeklyTargets.
+     */
+    cursor?: ProjectWeeklyTargetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectWeeklyTargets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectWeeklyTargets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectWeeklyTargets.
+     */
+    distinct?: ProjectWeeklyTargetScalarFieldEnum | ProjectWeeklyTargetScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectWeeklyTarget create
+   */
+  export type ProjectWeeklyTargetCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWeeklyTarget
+     */
+    select?: ProjectWeeklyTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectWeeklyTarget
+     */
+    omit?: ProjectWeeklyTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWeeklyTargetInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProjectWeeklyTarget.
+     */
+    data: XOR<ProjectWeeklyTargetCreateInput, ProjectWeeklyTargetUncheckedCreateInput>
+  }
+
+  /**
+   * ProjectWeeklyTarget createMany
+   */
+  export type ProjectWeeklyTargetCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProjectWeeklyTargets.
+     */
+    data: ProjectWeeklyTargetCreateManyInput | ProjectWeeklyTargetCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProjectWeeklyTarget createManyAndReturn
+   */
+  export type ProjectWeeklyTargetCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWeeklyTarget
+     */
+    select?: ProjectWeeklyTargetSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectWeeklyTarget
+     */
+    omit?: ProjectWeeklyTargetOmit<ExtArgs> | null
+    /**
+     * The data used to create many ProjectWeeklyTargets.
+     */
+    data: ProjectWeeklyTargetCreateManyInput | ProjectWeeklyTargetCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWeeklyTargetIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProjectWeeklyTarget update
+   */
+  export type ProjectWeeklyTargetUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWeeklyTarget
+     */
+    select?: ProjectWeeklyTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectWeeklyTarget
+     */
+    omit?: ProjectWeeklyTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWeeklyTargetInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProjectWeeklyTarget.
+     */
+    data: XOR<ProjectWeeklyTargetUpdateInput, ProjectWeeklyTargetUncheckedUpdateInput>
+    /**
+     * Choose, which ProjectWeeklyTarget to update.
+     */
+    where: ProjectWeeklyTargetWhereUniqueInput
+  }
+
+  /**
+   * ProjectWeeklyTarget updateMany
+   */
+  export type ProjectWeeklyTargetUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProjectWeeklyTargets.
+     */
+    data: XOR<ProjectWeeklyTargetUpdateManyMutationInput, ProjectWeeklyTargetUncheckedUpdateManyInput>
+    /**
+     * Filter which ProjectWeeklyTargets to update
+     */
+    where?: ProjectWeeklyTargetWhereInput
+    /**
+     * Limit how many ProjectWeeklyTargets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProjectWeeklyTarget updateManyAndReturn
+   */
+  export type ProjectWeeklyTargetUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWeeklyTarget
+     */
+    select?: ProjectWeeklyTargetSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectWeeklyTarget
+     */
+    omit?: ProjectWeeklyTargetOmit<ExtArgs> | null
+    /**
+     * The data used to update ProjectWeeklyTargets.
+     */
+    data: XOR<ProjectWeeklyTargetUpdateManyMutationInput, ProjectWeeklyTargetUncheckedUpdateManyInput>
+    /**
+     * Filter which ProjectWeeklyTargets to update
+     */
+    where?: ProjectWeeklyTargetWhereInput
+    /**
+     * Limit how many ProjectWeeklyTargets to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWeeklyTargetIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProjectWeeklyTarget upsert
+   */
+  export type ProjectWeeklyTargetUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWeeklyTarget
+     */
+    select?: ProjectWeeklyTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectWeeklyTarget
+     */
+    omit?: ProjectWeeklyTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWeeklyTargetInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProjectWeeklyTarget to update in case it exists.
+     */
+    where: ProjectWeeklyTargetWhereUniqueInput
+    /**
+     * In case the ProjectWeeklyTarget found by the `where` argument doesn't exist, create a new ProjectWeeklyTarget with this data.
+     */
+    create: XOR<ProjectWeeklyTargetCreateInput, ProjectWeeklyTargetUncheckedCreateInput>
+    /**
+     * In case the ProjectWeeklyTarget was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProjectWeeklyTargetUpdateInput, ProjectWeeklyTargetUncheckedUpdateInput>
+  }
+
+  /**
+   * ProjectWeeklyTarget delete
+   */
+  export type ProjectWeeklyTargetDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWeeklyTarget
+     */
+    select?: ProjectWeeklyTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectWeeklyTarget
+     */
+    omit?: ProjectWeeklyTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWeeklyTargetInclude<ExtArgs> | null
+    /**
+     * Filter which ProjectWeeklyTarget to delete.
+     */
+    where: ProjectWeeklyTargetWhereUniqueInput
+  }
+
+  /**
+   * ProjectWeeklyTarget deleteMany
+   */
+  export type ProjectWeeklyTargetDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProjectWeeklyTargets to delete
+     */
+    where?: ProjectWeeklyTargetWhereInput
+    /**
+     * Limit how many ProjectWeeklyTargets to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProjectWeeklyTarget without action
+   */
+  export type ProjectWeeklyTargetDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWeeklyTarget
+     */
+    select?: ProjectWeeklyTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectWeeklyTarget
+     */
+    omit?: ProjectWeeklyTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWeeklyTargetInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WeeklySlot
+   */
+
+  export type AggregateWeeklySlot = {
+    _count: WeeklySlotCountAggregateOutputType | null
+    _min: WeeklySlotMinAggregateOutputType | null
+    _max: WeeklySlotMaxAggregateOutputType | null
+  }
+
+  export type WeeklySlotMinAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    templateId: string | null
+    weekStart: Date | null
+    taskId: string | null
+    removedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type WeeklySlotMaxAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    templateId: string | null
+    weekStart: Date | null
+    taskId: string | null
+    removedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type WeeklySlotCountAggregateOutputType = {
+    id: number
+    projectId: number
+    templateId: number
+    weekStart: number
+    taskId: number
+    removedAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type WeeklySlotMinAggregateInputType = {
+    id?: true
+    projectId?: true
+    templateId?: true
+    weekStart?: true
+    taskId?: true
+    removedAt?: true
+    createdAt?: true
+  }
+
+  export type WeeklySlotMaxAggregateInputType = {
+    id?: true
+    projectId?: true
+    templateId?: true
+    weekStart?: true
+    taskId?: true
+    removedAt?: true
+    createdAt?: true
+  }
+
+  export type WeeklySlotCountAggregateInputType = {
+    id?: true
+    projectId?: true
+    templateId?: true
+    weekStart?: true
+    taskId?: true
+    removedAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type WeeklySlotAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WeeklySlot to aggregate.
+     */
+    where?: WeeklySlotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WeeklySlots to fetch.
+     */
+    orderBy?: WeeklySlotOrderByWithRelationInput | WeeklySlotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WeeklySlotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WeeklySlots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WeeklySlots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WeeklySlots
+    **/
+    _count?: true | WeeklySlotCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WeeklySlotMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WeeklySlotMaxAggregateInputType
+  }
+
+  export type GetWeeklySlotAggregateType<T extends WeeklySlotAggregateArgs> = {
+        [P in keyof T & keyof AggregateWeeklySlot]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWeeklySlot[P]>
+      : GetScalarType<T[P], AggregateWeeklySlot[P]>
+  }
+
+
+
+
+  export type WeeklySlotGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WeeklySlotWhereInput
+    orderBy?: WeeklySlotOrderByWithAggregationInput | WeeklySlotOrderByWithAggregationInput[]
+    by: WeeklySlotScalarFieldEnum[] | WeeklySlotScalarFieldEnum
+    having?: WeeklySlotScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WeeklySlotCountAggregateInputType | true
+    _min?: WeeklySlotMinAggregateInputType
+    _max?: WeeklySlotMaxAggregateInputType
+  }
+
+  export type WeeklySlotGroupByOutputType = {
+    id: string
+    projectId: string
+    templateId: string
+    weekStart: Date
+    taskId: string | null
+    removedAt: Date | null
+    createdAt: Date
+    _count: WeeklySlotCountAggregateOutputType | null
+    _min: WeeklySlotMinAggregateOutputType | null
+    _max: WeeklySlotMaxAggregateOutputType | null
+  }
+
+  type GetWeeklySlotGroupByPayload<T extends WeeklySlotGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WeeklySlotGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WeeklySlotGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WeeklySlotGroupByOutputType[P]>
+            : GetScalarType<T[P], WeeklySlotGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WeeklySlotSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    templateId?: boolean
+    weekStart?: boolean
+    taskId?: boolean
+    removedAt?: boolean
+    createdAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+    task?: boolean | WeeklySlot$taskArgs<ExtArgs>
+  }, ExtArgs["result"]["weeklySlot"]>
+
+  export type WeeklySlotSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    templateId?: boolean
+    weekStart?: boolean
+    taskId?: boolean
+    removedAt?: boolean
+    createdAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+    task?: boolean | WeeklySlot$taskArgs<ExtArgs>
+  }, ExtArgs["result"]["weeklySlot"]>
+
+  export type WeeklySlotSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    templateId?: boolean
+    weekStart?: boolean
+    taskId?: boolean
+    removedAt?: boolean
+    createdAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+    task?: boolean | WeeklySlot$taskArgs<ExtArgs>
+  }, ExtArgs["result"]["weeklySlot"]>
+
+  export type WeeklySlotSelectScalar = {
+    id?: boolean
+    projectId?: boolean
+    templateId?: boolean
+    weekStart?: boolean
+    taskId?: boolean
+    removedAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type WeeklySlotOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "templateId" | "weekStart" | "taskId" | "removedAt" | "createdAt", ExtArgs["result"]["weeklySlot"]>
+  export type WeeklySlotInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+    task?: boolean | WeeklySlot$taskArgs<ExtArgs>
+  }
+  export type WeeklySlotIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+    task?: boolean | WeeklySlot$taskArgs<ExtArgs>
+  }
+  export type WeeklySlotIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+    task?: boolean | WeeklySlot$taskArgs<ExtArgs>
+  }
+
+  export type $WeeklySlotPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WeeklySlot"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+      template: Prisma.$ChecklistTemplatePayload<ExtArgs>
+      task: Prisma.$TaskPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      projectId: string
+      templateId: string
+      weekStart: Date
+      taskId: string | null
+      removedAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["weeklySlot"]>
+    composites: {}
+  }
+
+  type WeeklySlotGetPayload<S extends boolean | null | undefined | WeeklySlotDefaultArgs> = $Result.GetResult<Prisma.$WeeklySlotPayload, S>
+
+  type WeeklySlotCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WeeklySlotFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WeeklySlotCountAggregateInputType | true
+    }
+
+  export interface WeeklySlotDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WeeklySlot'], meta: { name: 'WeeklySlot' } }
+    /**
+     * Find zero or one WeeklySlot that matches the filter.
+     * @param {WeeklySlotFindUniqueArgs} args - Arguments to find a WeeklySlot
+     * @example
+     * // Get one WeeklySlot
+     * const weeklySlot = await prisma.weeklySlot.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WeeklySlotFindUniqueArgs>(args: SelectSubset<T, WeeklySlotFindUniqueArgs<ExtArgs>>): Prisma__WeeklySlotClient<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WeeklySlot that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WeeklySlotFindUniqueOrThrowArgs} args - Arguments to find a WeeklySlot
+     * @example
+     * // Get one WeeklySlot
+     * const weeklySlot = await prisma.weeklySlot.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WeeklySlotFindUniqueOrThrowArgs>(args: SelectSubset<T, WeeklySlotFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WeeklySlotClient<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WeeklySlot that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WeeklySlotFindFirstArgs} args - Arguments to find a WeeklySlot
+     * @example
+     * // Get one WeeklySlot
+     * const weeklySlot = await prisma.weeklySlot.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WeeklySlotFindFirstArgs>(args?: SelectSubset<T, WeeklySlotFindFirstArgs<ExtArgs>>): Prisma__WeeklySlotClient<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WeeklySlot that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WeeklySlotFindFirstOrThrowArgs} args - Arguments to find a WeeklySlot
+     * @example
+     * // Get one WeeklySlot
+     * const weeklySlot = await prisma.weeklySlot.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WeeklySlotFindFirstOrThrowArgs>(args?: SelectSubset<T, WeeklySlotFindFirstOrThrowArgs<ExtArgs>>): Prisma__WeeklySlotClient<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WeeklySlots that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WeeklySlotFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WeeklySlots
+     * const weeklySlots = await prisma.weeklySlot.findMany()
+     * 
+     * // Get first 10 WeeklySlots
+     * const weeklySlots = await prisma.weeklySlot.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const weeklySlotWithIdOnly = await prisma.weeklySlot.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WeeklySlotFindManyArgs>(args?: SelectSubset<T, WeeklySlotFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WeeklySlot.
+     * @param {WeeklySlotCreateArgs} args - Arguments to create a WeeklySlot.
+     * @example
+     * // Create one WeeklySlot
+     * const WeeklySlot = await prisma.weeklySlot.create({
+     *   data: {
+     *     // ... data to create a WeeklySlot
+     *   }
+     * })
+     * 
+     */
+    create<T extends WeeklySlotCreateArgs>(args: SelectSubset<T, WeeklySlotCreateArgs<ExtArgs>>): Prisma__WeeklySlotClient<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WeeklySlots.
+     * @param {WeeklySlotCreateManyArgs} args - Arguments to create many WeeklySlots.
+     * @example
+     * // Create many WeeklySlots
+     * const weeklySlot = await prisma.weeklySlot.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WeeklySlotCreateManyArgs>(args?: SelectSubset<T, WeeklySlotCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WeeklySlots and returns the data saved in the database.
+     * @param {WeeklySlotCreateManyAndReturnArgs} args - Arguments to create many WeeklySlots.
+     * @example
+     * // Create many WeeklySlots
+     * const weeklySlot = await prisma.weeklySlot.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WeeklySlots and only return the `id`
+     * const weeklySlotWithIdOnly = await prisma.weeklySlot.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WeeklySlotCreateManyAndReturnArgs>(args?: SelectSubset<T, WeeklySlotCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WeeklySlot.
+     * @param {WeeklySlotDeleteArgs} args - Arguments to delete one WeeklySlot.
+     * @example
+     * // Delete one WeeklySlot
+     * const WeeklySlot = await prisma.weeklySlot.delete({
+     *   where: {
+     *     // ... filter to delete one WeeklySlot
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WeeklySlotDeleteArgs>(args: SelectSubset<T, WeeklySlotDeleteArgs<ExtArgs>>): Prisma__WeeklySlotClient<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WeeklySlot.
+     * @param {WeeklySlotUpdateArgs} args - Arguments to update one WeeklySlot.
+     * @example
+     * // Update one WeeklySlot
+     * const weeklySlot = await prisma.weeklySlot.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WeeklySlotUpdateArgs>(args: SelectSubset<T, WeeklySlotUpdateArgs<ExtArgs>>): Prisma__WeeklySlotClient<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WeeklySlots.
+     * @param {WeeklySlotDeleteManyArgs} args - Arguments to filter WeeklySlots to delete.
+     * @example
+     * // Delete a few WeeklySlots
+     * const { count } = await prisma.weeklySlot.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WeeklySlotDeleteManyArgs>(args?: SelectSubset<T, WeeklySlotDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WeeklySlots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WeeklySlotUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WeeklySlots
+     * const weeklySlot = await prisma.weeklySlot.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WeeklySlotUpdateManyArgs>(args: SelectSubset<T, WeeklySlotUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WeeklySlots and returns the data updated in the database.
+     * @param {WeeklySlotUpdateManyAndReturnArgs} args - Arguments to update many WeeklySlots.
+     * @example
+     * // Update many WeeklySlots
+     * const weeklySlot = await prisma.weeklySlot.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WeeklySlots and only return the `id`
+     * const weeklySlotWithIdOnly = await prisma.weeklySlot.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WeeklySlotUpdateManyAndReturnArgs>(args: SelectSubset<T, WeeklySlotUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WeeklySlot.
+     * @param {WeeklySlotUpsertArgs} args - Arguments to update or create a WeeklySlot.
+     * @example
+     * // Update or create a WeeklySlot
+     * const weeklySlot = await prisma.weeklySlot.upsert({
+     *   create: {
+     *     // ... data to create a WeeklySlot
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WeeklySlot we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WeeklySlotUpsertArgs>(args: SelectSubset<T, WeeklySlotUpsertArgs<ExtArgs>>): Prisma__WeeklySlotClient<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WeeklySlots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WeeklySlotCountArgs} args - Arguments to filter WeeklySlots to count.
+     * @example
+     * // Count the number of WeeklySlots
+     * const count = await prisma.weeklySlot.count({
+     *   where: {
+     *     // ... the filter for the WeeklySlots we want to count
+     *   }
+     * })
+    **/
+    count<T extends WeeklySlotCountArgs>(
+      args?: Subset<T, WeeklySlotCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WeeklySlotCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WeeklySlot.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WeeklySlotAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WeeklySlotAggregateArgs>(args: Subset<T, WeeklySlotAggregateArgs>): Prisma.PrismaPromise<GetWeeklySlotAggregateType<T>>
+
+    /**
+     * Group by WeeklySlot.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WeeklySlotGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WeeklySlotGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WeeklySlotGroupByArgs['orderBy'] }
+        : { orderBy?: WeeklySlotGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WeeklySlotGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWeeklySlotGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WeeklySlot model
+   */
+  readonly fields: WeeklySlotFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WeeklySlot.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WeeklySlotClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    template<T extends ChecklistTemplateDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateDefaultArgs<ExtArgs>>): Prisma__ChecklistTemplateClient<$Result.GetResult<Prisma.$ChecklistTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    task<T extends WeeklySlot$taskArgs<ExtArgs> = {}>(args?: Subset<T, WeeklySlot$taskArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WeeklySlot model
+   */
+  interface WeeklySlotFieldRefs {
+    readonly id: FieldRef<"WeeklySlot", 'String'>
+    readonly projectId: FieldRef<"WeeklySlot", 'String'>
+    readonly templateId: FieldRef<"WeeklySlot", 'String'>
+    readonly weekStart: FieldRef<"WeeklySlot", 'DateTime'>
+    readonly taskId: FieldRef<"WeeklySlot", 'String'>
+    readonly removedAt: FieldRef<"WeeklySlot", 'DateTime'>
+    readonly createdAt: FieldRef<"WeeklySlot", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WeeklySlot findUnique
+   */
+  export type WeeklySlotFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotInclude<ExtArgs> | null
+    /**
+     * Filter, which WeeklySlot to fetch.
+     */
+    where: WeeklySlotWhereUniqueInput
+  }
+
+  /**
+   * WeeklySlot findUniqueOrThrow
+   */
+  export type WeeklySlotFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotInclude<ExtArgs> | null
+    /**
+     * Filter, which WeeklySlot to fetch.
+     */
+    where: WeeklySlotWhereUniqueInput
+  }
+
+  /**
+   * WeeklySlot findFirst
+   */
+  export type WeeklySlotFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotInclude<ExtArgs> | null
+    /**
+     * Filter, which WeeklySlot to fetch.
+     */
+    where?: WeeklySlotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WeeklySlots to fetch.
+     */
+    orderBy?: WeeklySlotOrderByWithRelationInput | WeeklySlotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WeeklySlots.
+     */
+    cursor?: WeeklySlotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WeeklySlots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WeeklySlots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WeeklySlots.
+     */
+    distinct?: WeeklySlotScalarFieldEnum | WeeklySlotScalarFieldEnum[]
+  }
+
+  /**
+   * WeeklySlot findFirstOrThrow
+   */
+  export type WeeklySlotFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotInclude<ExtArgs> | null
+    /**
+     * Filter, which WeeklySlot to fetch.
+     */
+    where?: WeeklySlotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WeeklySlots to fetch.
+     */
+    orderBy?: WeeklySlotOrderByWithRelationInput | WeeklySlotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WeeklySlots.
+     */
+    cursor?: WeeklySlotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WeeklySlots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WeeklySlots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WeeklySlots.
+     */
+    distinct?: WeeklySlotScalarFieldEnum | WeeklySlotScalarFieldEnum[]
+  }
+
+  /**
+   * WeeklySlot findMany
+   */
+  export type WeeklySlotFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotInclude<ExtArgs> | null
+    /**
+     * Filter, which WeeklySlots to fetch.
+     */
+    where?: WeeklySlotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WeeklySlots to fetch.
+     */
+    orderBy?: WeeklySlotOrderByWithRelationInput | WeeklySlotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WeeklySlots.
+     */
+    cursor?: WeeklySlotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WeeklySlots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WeeklySlots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WeeklySlots.
+     */
+    distinct?: WeeklySlotScalarFieldEnum | WeeklySlotScalarFieldEnum[]
+  }
+
+  /**
+   * WeeklySlot create
+   */
+  export type WeeklySlotCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WeeklySlot.
+     */
+    data: XOR<WeeklySlotCreateInput, WeeklySlotUncheckedCreateInput>
+  }
+
+  /**
+   * WeeklySlot createMany
+   */
+  export type WeeklySlotCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WeeklySlots.
+     */
+    data: WeeklySlotCreateManyInput | WeeklySlotCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WeeklySlot createManyAndReturn
+   */
+  export type WeeklySlotCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * The data used to create many WeeklySlots.
+     */
+    data: WeeklySlotCreateManyInput | WeeklySlotCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WeeklySlot update
+   */
+  export type WeeklySlotUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WeeklySlot.
+     */
+    data: XOR<WeeklySlotUpdateInput, WeeklySlotUncheckedUpdateInput>
+    /**
+     * Choose, which WeeklySlot to update.
+     */
+    where: WeeklySlotWhereUniqueInput
+  }
+
+  /**
+   * WeeklySlot updateMany
+   */
+  export type WeeklySlotUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WeeklySlots.
+     */
+    data: XOR<WeeklySlotUpdateManyMutationInput, WeeklySlotUncheckedUpdateManyInput>
+    /**
+     * Filter which WeeklySlots to update
+     */
+    where?: WeeklySlotWhereInput
+    /**
+     * Limit how many WeeklySlots to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WeeklySlot updateManyAndReturn
+   */
+  export type WeeklySlotUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * The data used to update WeeklySlots.
+     */
+    data: XOR<WeeklySlotUpdateManyMutationInput, WeeklySlotUncheckedUpdateManyInput>
+    /**
+     * Filter which WeeklySlots to update
+     */
+    where?: WeeklySlotWhereInput
+    /**
+     * Limit how many WeeklySlots to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WeeklySlot upsert
+   */
+  export type WeeklySlotUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WeeklySlot to update in case it exists.
+     */
+    where: WeeklySlotWhereUniqueInput
+    /**
+     * In case the WeeklySlot found by the `where` argument doesn't exist, create a new WeeklySlot with this data.
+     */
+    create: XOR<WeeklySlotCreateInput, WeeklySlotUncheckedCreateInput>
+    /**
+     * In case the WeeklySlot was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WeeklySlotUpdateInput, WeeklySlotUncheckedUpdateInput>
+  }
+
+  /**
+   * WeeklySlot delete
+   */
+  export type WeeklySlotDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotInclude<ExtArgs> | null
+    /**
+     * Filter which WeeklySlot to delete.
+     */
+    where: WeeklySlotWhereUniqueInput
+  }
+
+  /**
+   * WeeklySlot deleteMany
+   */
+  export type WeeklySlotDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WeeklySlots to delete
+     */
+    where?: WeeklySlotWhereInput
+    /**
+     * Limit how many WeeklySlots to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WeeklySlot.task
+   */
+  export type WeeklySlot$taskArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    where?: TaskWhereInput
+  }
+
+  /**
+   * WeeklySlot without action
+   */
+  export type WeeklySlotDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotInclude<ExtArgs> | null
   }
 
 
@@ -31504,6 +33994,8 @@ export namespace Prisma {
     titleLockedFromStage?: boolean | ChecklistTemplate$titleLockedFromStageArgs<ExtArgs>
     items?: boolean | ChecklistTemplate$itemsArgs<ExtArgs>
     projects?: boolean | ChecklistTemplate$projectsArgs<ExtArgs>
+    weeklyTargets?: boolean | ChecklistTemplate$weeklyTargetsArgs<ExtArgs>
+    weeklySlots?: boolean | ChecklistTemplate$weeklySlotsArgs<ExtArgs>
     _count?: boolean | ChecklistTemplateCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["checklistTemplate"]>
 
@@ -31565,6 +34057,8 @@ export namespace Prisma {
     titleLockedFromStage?: boolean | ChecklistTemplate$titleLockedFromStageArgs<ExtArgs>
     items?: boolean | ChecklistTemplate$itemsArgs<ExtArgs>
     projects?: boolean | ChecklistTemplate$projectsArgs<ExtArgs>
+    weeklyTargets?: boolean | ChecklistTemplate$weeklyTargetsArgs<ExtArgs>
+    weeklySlots?: boolean | ChecklistTemplate$weeklySlotsArgs<ExtArgs>
     _count?: boolean | ChecklistTemplateCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ChecklistTemplateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -31583,6 +34077,8 @@ export namespace Prisma {
       titleLockedFromStage: Prisma.$TaskStatusPayload<ExtArgs> | null
       items: Prisma.$ChecklistTemplateItemPayload<ExtArgs>[]
       projects: Prisma.$ProjectTemplatePayload<ExtArgs>[]
+      weeklyTargets: Prisma.$ProjectWeeklyTargetPayload<ExtArgs>[]
+      weeklySlots: Prisma.$WeeklySlotPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -31996,6 +34492,8 @@ export namespace Prisma {
     titleLockedFromStage<T extends ChecklistTemplate$titleLockedFromStageArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$titleLockedFromStageArgs<ExtArgs>>): Prisma__TaskStatusClient<$Result.GetResult<Prisma.$TaskStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     items<T extends ChecklistTemplate$itemsArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     projects<T extends ChecklistTemplate$projectsArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    weeklyTargets<T extends ChecklistTemplate$weeklyTargetsArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$weeklyTargetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectWeeklyTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    weeklySlots<T extends ChecklistTemplate$weeklySlotsArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$weeklySlotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -32503,6 +35001,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProjectTemplateScalarFieldEnum | ProjectTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * ChecklistTemplate.weeklyTargets
+   */
+  export type ChecklistTemplate$weeklyTargetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWeeklyTarget
+     */
+    select?: ProjectWeeklyTargetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectWeeklyTarget
+     */
+    omit?: ProjectWeeklyTargetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWeeklyTargetInclude<ExtArgs> | null
+    where?: ProjectWeeklyTargetWhereInput
+    orderBy?: ProjectWeeklyTargetOrderByWithRelationInput | ProjectWeeklyTargetOrderByWithRelationInput[]
+    cursor?: ProjectWeeklyTargetWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectWeeklyTargetScalarFieldEnum | ProjectWeeklyTargetScalarFieldEnum[]
+  }
+
+  /**
+   * ChecklistTemplate.weeklySlots
+   */
+  export type ChecklistTemplate$weeklySlotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotInclude<ExtArgs> | null
+    where?: WeeklySlotWhereInput
+    orderBy?: WeeklySlotOrderByWithRelationInput | WeeklySlotOrderByWithRelationInput[]
+    cursor?: WeeklySlotWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WeeklySlotScalarFieldEnum | WeeklySlotScalarFieldEnum[]
   }
 
   /**
@@ -37938,6 +40484,7 @@ export namespace Prisma {
     checklistItems?: boolean | Task$checklistItemsArgs<ExtArgs>
     comments?: boolean | Task$commentsArgs<ExtArgs>
     publishItem?: boolean | Task$publishItemArgs<ExtArgs>
+    weeklySlot?: boolean | Task$weeklySlotArgs<ExtArgs>
     statusChanges?: boolean | Task$statusChangesArgs<ExtArgs>
     _count?: boolean | TaskCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
@@ -38040,6 +40587,7 @@ export namespace Prisma {
     checklistItems?: boolean | Task$checklistItemsArgs<ExtArgs>
     comments?: boolean | Task$commentsArgs<ExtArgs>
     publishItem?: boolean | Task$publishItemArgs<ExtArgs>
+    weeklySlot?: boolean | Task$weeklySlotArgs<ExtArgs>
     statusChanges?: boolean | Task$statusChangesArgs<ExtArgs>
     _count?: boolean | TaskCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -38066,6 +40614,7 @@ export namespace Prisma {
       checklistItems: Prisma.$TaskChecklistItemPayload<ExtArgs>[]
       comments: Prisma.$MessagePayload<ExtArgs>[]
       publishItem: Prisma.$PublishItemPayload<ExtArgs> | null
+      weeklySlot: Prisma.$WeeklySlotPayload<ExtArgs> | null
       statusChanges: Prisma.$TaskStatusChangePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -38494,6 +41043,7 @@ export namespace Prisma {
     checklistItems<T extends Task$checklistItemsArgs<ExtArgs> = {}>(args?: Subset<T, Task$checklistItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskChecklistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends Task$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Task$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     publishItem<T extends Task$publishItemArgs<ExtArgs> = {}>(args?: Subset<T, Task$publishItemArgs<ExtArgs>>): Prisma__PublishItemClient<$Result.GetResult<Prisma.$PublishItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    weeklySlot<T extends Task$weeklySlotArgs<ExtArgs> = {}>(args?: Subset<T, Task$weeklySlotArgs<ExtArgs>>): Prisma__WeeklySlotClient<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     statusChanges<T extends Task$statusChangesArgs<ExtArgs> = {}>(args?: Subset<T, Task$statusChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskStatusChangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -39070,6 +41620,25 @@ export namespace Prisma {
      */
     include?: PublishItemInclude<ExtArgs> | null
     where?: PublishItemWhereInput
+  }
+
+  /**
+   * Task.weeklySlot
+   */
+  export type Task$weeklySlotArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WeeklySlot
+     */
+    select?: WeeklySlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WeeklySlot
+     */
+    omit?: WeeklySlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WeeklySlotInclude<ExtArgs> | null
+    where?: WeeklySlotWhereInput
   }
 
   /**
@@ -64662,6 +67231,29 @@ export namespace Prisma {
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
 
 
+  export const ProjectWeeklyTargetScalarFieldEnum: {
+    id: 'id',
+    projectId: 'projectId',
+    templateId: 'templateId',
+    perWeek: 'perWeek'
+  };
+
+  export type ProjectWeeklyTargetScalarFieldEnum = (typeof ProjectWeeklyTargetScalarFieldEnum)[keyof typeof ProjectWeeklyTargetScalarFieldEnum]
+
+
+  export const WeeklySlotScalarFieldEnum: {
+    id: 'id',
+    projectId: 'projectId',
+    templateId: 'templateId',
+    weekStart: 'weekStart',
+    taskId: 'taskId',
+    removedAt: 'removedAt',
+    createdAt: 'createdAt'
+  };
+
+  export type WeeklySlotScalarFieldEnum = (typeof WeeklySlotScalarFieldEnum)[keyof typeof WeeklySlotScalarFieldEnum]
+
+
   export const ProjectMemberScalarFieldEnum: {
     id: 'id',
     projectId: 'projectId',
@@ -66930,6 +69522,8 @@ export namespace Prisma {
     publishItems?: PublishItemListRelationFilter
     members?: ProjectMemberListRelationFilter
     messages?: MessageListRelationFilter
+    weeklyTargets?: ProjectWeeklyTargetListRelationFilter
+    weeklySlots?: WeeklySlotListRelationFilter
   }
 
   export type ProjectOrderByWithRelationInput = {
@@ -66965,6 +69559,8 @@ export namespace Prisma {
     publishItems?: PublishItemOrderByRelationAggregateInput
     members?: ProjectMemberOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
+    weeklyTargets?: ProjectWeeklyTargetOrderByRelationAggregateInput
+    weeklySlots?: WeeklySlotOrderByRelationAggregateInput
   }
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -67003,6 +69599,8 @@ export namespace Prisma {
     publishItems?: PublishItemListRelationFilter
     members?: ProjectMemberListRelationFilter
     messages?: MessageListRelationFilter
+    weeklyTargets?: ProjectWeeklyTargetListRelationFilter
+    weeklySlots?: WeeklySlotListRelationFilter
   }, "id" | "dealId">
 
   export type ProjectOrderByWithAggregationInput = {
@@ -67053,6 +69651,133 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     deletedBy?: StringNullableWithAggregatesFilter<"Project"> | string | null
+  }
+
+  export type ProjectWeeklyTargetWhereInput = {
+    AND?: ProjectWeeklyTargetWhereInput | ProjectWeeklyTargetWhereInput[]
+    OR?: ProjectWeeklyTargetWhereInput[]
+    NOT?: ProjectWeeklyTargetWhereInput | ProjectWeeklyTargetWhereInput[]
+    id?: StringFilter<"ProjectWeeklyTarget"> | string
+    projectId?: StringFilter<"ProjectWeeklyTarget"> | string
+    templateId?: StringFilter<"ProjectWeeklyTarget"> | string
+    perWeek?: IntFilter<"ProjectWeeklyTarget"> | number
+    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
+  }
+
+  export type ProjectWeeklyTargetOrderByWithRelationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    templateId?: SortOrder
+    perWeek?: SortOrder
+    project?: ProjectOrderByWithRelationInput
+    template?: ChecklistTemplateOrderByWithRelationInput
+  }
+
+  export type ProjectWeeklyTargetWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    projectId_templateId?: ProjectWeeklyTargetProjectIdTemplateIdCompoundUniqueInput
+    AND?: ProjectWeeklyTargetWhereInput | ProjectWeeklyTargetWhereInput[]
+    OR?: ProjectWeeklyTargetWhereInput[]
+    NOT?: ProjectWeeklyTargetWhereInput | ProjectWeeklyTargetWhereInput[]
+    projectId?: StringFilter<"ProjectWeeklyTarget"> | string
+    templateId?: StringFilter<"ProjectWeeklyTarget"> | string
+    perWeek?: IntFilter<"ProjectWeeklyTarget"> | number
+    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
+  }, "id" | "projectId_templateId">
+
+  export type ProjectWeeklyTargetOrderByWithAggregationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    templateId?: SortOrder
+    perWeek?: SortOrder
+    _count?: ProjectWeeklyTargetCountOrderByAggregateInput
+    _avg?: ProjectWeeklyTargetAvgOrderByAggregateInput
+    _max?: ProjectWeeklyTargetMaxOrderByAggregateInput
+    _min?: ProjectWeeklyTargetMinOrderByAggregateInput
+    _sum?: ProjectWeeklyTargetSumOrderByAggregateInput
+  }
+
+  export type ProjectWeeklyTargetScalarWhereWithAggregatesInput = {
+    AND?: ProjectWeeklyTargetScalarWhereWithAggregatesInput | ProjectWeeklyTargetScalarWhereWithAggregatesInput[]
+    OR?: ProjectWeeklyTargetScalarWhereWithAggregatesInput[]
+    NOT?: ProjectWeeklyTargetScalarWhereWithAggregatesInput | ProjectWeeklyTargetScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProjectWeeklyTarget"> | string
+    projectId?: StringWithAggregatesFilter<"ProjectWeeklyTarget"> | string
+    templateId?: StringWithAggregatesFilter<"ProjectWeeklyTarget"> | string
+    perWeek?: IntWithAggregatesFilter<"ProjectWeeklyTarget"> | number
+  }
+
+  export type WeeklySlotWhereInput = {
+    AND?: WeeklySlotWhereInput | WeeklySlotWhereInput[]
+    OR?: WeeklySlotWhereInput[]
+    NOT?: WeeklySlotWhereInput | WeeklySlotWhereInput[]
+    id?: StringFilter<"WeeklySlot"> | string
+    projectId?: StringFilter<"WeeklySlot"> | string
+    templateId?: StringFilter<"WeeklySlot"> | string
+    weekStart?: DateTimeFilter<"WeeklySlot"> | Date | string
+    taskId?: StringNullableFilter<"WeeklySlot"> | string | null
+    removedAt?: DateTimeNullableFilter<"WeeklySlot"> | Date | string | null
+    createdAt?: DateTimeFilter<"WeeklySlot"> | Date | string
+    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
+    task?: XOR<TaskNullableScalarRelationFilter, TaskWhereInput> | null
+  }
+
+  export type WeeklySlotOrderByWithRelationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    templateId?: SortOrder
+    weekStart?: SortOrder
+    taskId?: SortOrderInput | SortOrder
+    removedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    project?: ProjectOrderByWithRelationInput
+    template?: ChecklistTemplateOrderByWithRelationInput
+    task?: TaskOrderByWithRelationInput
+  }
+
+  export type WeeklySlotWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    taskId?: string
+    AND?: WeeklySlotWhereInput | WeeklySlotWhereInput[]
+    OR?: WeeklySlotWhereInput[]
+    NOT?: WeeklySlotWhereInput | WeeklySlotWhereInput[]
+    projectId?: StringFilter<"WeeklySlot"> | string
+    templateId?: StringFilter<"WeeklySlot"> | string
+    weekStart?: DateTimeFilter<"WeeklySlot"> | Date | string
+    removedAt?: DateTimeNullableFilter<"WeeklySlot"> | Date | string | null
+    createdAt?: DateTimeFilter<"WeeklySlot"> | Date | string
+    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
+    task?: XOR<TaskNullableScalarRelationFilter, TaskWhereInput> | null
+  }, "id" | "taskId">
+
+  export type WeeklySlotOrderByWithAggregationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    templateId?: SortOrder
+    weekStart?: SortOrder
+    taskId?: SortOrderInput | SortOrder
+    removedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: WeeklySlotCountOrderByAggregateInput
+    _max?: WeeklySlotMaxOrderByAggregateInput
+    _min?: WeeklySlotMinOrderByAggregateInput
+  }
+
+  export type WeeklySlotScalarWhereWithAggregatesInput = {
+    AND?: WeeklySlotScalarWhereWithAggregatesInput | WeeklySlotScalarWhereWithAggregatesInput[]
+    OR?: WeeklySlotScalarWhereWithAggregatesInput[]
+    NOT?: WeeklySlotScalarWhereWithAggregatesInput | WeeklySlotScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"WeeklySlot"> | string
+    projectId?: StringWithAggregatesFilter<"WeeklySlot"> | string
+    templateId?: StringWithAggregatesFilter<"WeeklySlot"> | string
+    weekStart?: DateTimeWithAggregatesFilter<"WeeklySlot"> | Date | string
+    taskId?: StringNullableWithAggregatesFilter<"WeeklySlot"> | string | null
+    removedAt?: DateTimeNullableWithAggregatesFilter<"WeeklySlot"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"WeeklySlot"> | Date | string
   }
 
   export type ProjectMemberWhereInput = {
@@ -67302,6 +70027,8 @@ export namespace Prisma {
     titleLockedFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     items?: ChecklistTemplateItemListRelationFilter
     projects?: ProjectTemplateListRelationFilter
+    weeklyTargets?: ProjectWeeklyTargetListRelationFilter
+    weeklySlots?: WeeklySlotListRelationFilter
   }
 
   export type ChecklistTemplateOrderByWithRelationInput = {
@@ -67322,6 +70049,8 @@ export namespace Prisma {
     titleLockedFromStage?: TaskStatusOrderByWithRelationInput
     items?: ChecklistTemplateItemOrderByRelationAggregateInput
     projects?: ProjectTemplateOrderByRelationAggregateInput
+    weeklyTargets?: ProjectWeeklyTargetOrderByRelationAggregateInput
+    weeklySlots?: WeeklySlotOrderByRelationAggregateInput
   }
 
   export type ChecklistTemplateWhereUniqueInput = Prisma.AtLeast<{
@@ -67345,6 +70074,8 @@ export namespace Prisma {
     titleLockedFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     items?: ChecklistTemplateItemListRelationFilter
     projects?: ProjectTemplateListRelationFilter
+    weeklyTargets?: ProjectWeeklyTargetListRelationFilter
+    weeklySlots?: WeeklySlotListRelationFilter
   }, "id">
 
   export type ChecklistTemplateOrderByWithAggregationInput = {
@@ -67836,6 +70567,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemListRelationFilter
     comments?: MessageListRelationFilter
     publishItem?: XOR<PublishItemNullableScalarRelationFilter, PublishItemWhereInput> | null
+    weeklySlot?: XOR<WeeklySlotNullableScalarRelationFilter, WeeklySlotWhereInput> | null
     statusChanges?: TaskStatusChangeListRelationFilter
   }
 
@@ -67871,6 +70603,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemOrderByRelationAggregateInput
     comments?: MessageOrderByRelationAggregateInput
     publishItem?: PublishItemOrderByWithRelationInput
+    weeklySlot?: WeeklySlotOrderByWithRelationInput
     statusChanges?: TaskStatusChangeOrderByRelationAggregateInput
   }
 
@@ -67909,6 +70642,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemListRelationFilter
     comments?: MessageListRelationFilter
     publishItem?: XOR<PublishItemNullableScalarRelationFilter, PublishItemWhereInput> | null
+    weeklySlot?: XOR<WeeklySlotNullableScalarRelationFilter, WeeklySlotWhereInput> | null
     statusChanges?: TaskStatusChangeListRelationFilter
   }, "id">
 
@@ -71378,6 +74112,8 @@ export namespace Prisma {
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateInput = {
@@ -71409,6 +74145,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUpdateInput = {
@@ -71440,6 +74178,8 @@ export namespace Prisma {
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateInput = {
@@ -71471,6 +74211,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateManyInput = {
@@ -71533,6 +74275,120 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ProjectWeeklyTargetCreateInput = {
+    id?: string
+    perWeek?: number
+    project: ProjectCreateNestedOneWithoutWeeklyTargetsInput
+    template: ChecklistTemplateCreateNestedOneWithoutWeeklyTargetsInput
+  }
+
+  export type ProjectWeeklyTargetUncheckedCreateInput = {
+    id?: string
+    projectId: string
+    templateId: string
+    perWeek?: number
+  }
+
+  export type ProjectWeeklyTargetUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    perWeek?: IntFieldUpdateOperationsInput | number
+    project?: ProjectUpdateOneRequiredWithoutWeeklyTargetsNestedInput
+    template?: ChecklistTemplateUpdateOneRequiredWithoutWeeklyTargetsNestedInput
+  }
+
+  export type ProjectWeeklyTargetUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    perWeek?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProjectWeeklyTargetCreateManyInput = {
+    id?: string
+    projectId: string
+    templateId: string
+    perWeek?: number
+  }
+
+  export type ProjectWeeklyTargetUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    perWeek?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProjectWeeklyTargetUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    perWeek?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type WeeklySlotCreateInput = {
+    id?: string
+    weekStart: Date | string
+    removedAt?: Date | string | null
+    createdAt?: Date | string
+    project: ProjectCreateNestedOneWithoutWeeklySlotsInput
+    template: ChecklistTemplateCreateNestedOneWithoutWeeklySlotsInput
+    task?: TaskCreateNestedOneWithoutWeeklySlotInput
+  }
+
+  export type WeeklySlotUncheckedCreateInput = {
+    id?: string
+    projectId: string
+    templateId: string
+    weekStart: Date | string
+    taskId?: string | null
+    removedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type WeeklySlotUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutWeeklySlotsNestedInput
+    template?: ChecklistTemplateUpdateOneRequiredWithoutWeeklySlotsNestedInput
+    task?: TaskUpdateOneWithoutWeeklySlotNestedInput
+  }
+
+  export type WeeklySlotUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WeeklySlotCreateManyInput = {
+    id?: string
+    projectId: string
+    templateId: string
+    weekStart: Date | string
+    taskId?: string | null
+    removedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type WeeklySlotUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WeeklySlotUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectMemberCreateInput = {
@@ -71776,6 +74632,8 @@ export namespace Prisma {
     titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
     items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutTemplateInput
   }
 
   export type ChecklistTemplateUncheckedCreateInput = {
@@ -71794,6 +74652,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput
   }
 
   export type ChecklistTemplateUpdateInput = {
@@ -71812,6 +74672,8 @@ export namespace Prisma {
     titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
     items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutTemplateNestedInput
   }
 
   export type ChecklistTemplateUncheckedUpdateInput = {
@@ -71830,6 +74692,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
   export type ChecklistTemplateCreateManyInput = {
@@ -72362,6 +75226,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
@@ -72393,6 +75258,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
@@ -72424,6 +75290,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
@@ -72455,6 +75322,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
@@ -75970,6 +78838,18 @@ export namespace Prisma {
     none?: ProjectAssetWhereInput
   }
 
+  export type ProjectWeeklyTargetListRelationFilter = {
+    every?: ProjectWeeklyTargetWhereInput
+    some?: ProjectWeeklyTargetWhereInput
+    none?: ProjectWeeklyTargetWhereInput
+  }
+
+  export type WeeklySlotListRelationFilter = {
+    every?: WeeklySlotWhereInput
+    some?: WeeklySlotWhereInput
+    none?: WeeklySlotWhereInput
+  }
+
   export type ProjectCollaboratorOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -75983,6 +78863,14 @@ export namespace Prisma {
   }
 
   export type ProjectAssetOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProjectWeeklyTargetOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WeeklySlotOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -76050,6 +78938,80 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrder
     deletedBy?: SortOrder
+  }
+
+  export type ChecklistTemplateScalarRelationFilter = {
+    is?: ChecklistTemplateWhereInput
+    isNot?: ChecklistTemplateWhereInput
+  }
+
+  export type ProjectWeeklyTargetProjectIdTemplateIdCompoundUniqueInput = {
+    projectId: string
+    templateId: string
+  }
+
+  export type ProjectWeeklyTargetCountOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    templateId?: SortOrder
+    perWeek?: SortOrder
+  }
+
+  export type ProjectWeeklyTargetAvgOrderByAggregateInput = {
+    perWeek?: SortOrder
+  }
+
+  export type ProjectWeeklyTargetMaxOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    templateId?: SortOrder
+    perWeek?: SortOrder
+  }
+
+  export type ProjectWeeklyTargetMinOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    templateId?: SortOrder
+    perWeek?: SortOrder
+  }
+
+  export type ProjectWeeklyTargetSumOrderByAggregateInput = {
+    perWeek?: SortOrder
+  }
+
+  export type TaskNullableScalarRelationFilter = {
+    is?: TaskWhereInput | null
+    isNot?: TaskWhereInput | null
+  }
+
+  export type WeeklySlotCountOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    templateId?: SortOrder
+    weekStart?: SortOrder
+    taskId?: SortOrder
+    removedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type WeeklySlotMaxOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    templateId?: SortOrder
+    weekStart?: SortOrder
+    taskId?: SortOrder
+    removedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type WeeklySlotMinOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    templateId?: SortOrder
+    weekStart?: SortOrder
+    taskId?: SortOrder
+    removedAt?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type WorkspaceMemberScalarRelationFilter = {
@@ -76232,11 +79194,6 @@ export namespace Prisma {
     titleHelp?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type ChecklistTemplateScalarRelationFilter = {
-    is?: ChecklistTemplateWhereInput
-    isNot?: ChecklistTemplateWhereInput
   }
 
   export type TaskChecklistItemListRelationFilter = {
@@ -76508,6 +79465,11 @@ export namespace Prisma {
     isNot?: PublishItemWhereInput | null
   }
 
+  export type WeeklySlotNullableScalarRelationFilter = {
+    is?: WeeklySlotWhereInput | null
+    isNot?: WeeklySlotWhereInput | null
+  }
+
   export type TaskCountOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
@@ -76664,11 +79626,6 @@ export namespace Prisma {
 
   export type TaskStatusChangeSumOrderByAggregateInput = {
     durationMs?: SortOrder
-  }
-
-  export type TaskNullableScalarRelationFilter = {
-    is?: TaskWhereInput | null
-    isNot?: TaskWhereInput | null
   }
 
   export type ConversationNullableScalarRelationFilter = {
@@ -80358,6 +83315,20 @@ export namespace Prisma {
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
+  export type ProjectWeeklyTargetCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ProjectWeeklyTargetCreateWithoutProjectInput, ProjectWeeklyTargetUncheckedCreateWithoutProjectInput> | ProjectWeeklyTargetCreateWithoutProjectInput[] | ProjectWeeklyTargetUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectWeeklyTargetCreateOrConnectWithoutProjectInput | ProjectWeeklyTargetCreateOrConnectWithoutProjectInput[]
+    createMany?: ProjectWeeklyTargetCreateManyProjectInputEnvelope
+    connect?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+  }
+
+  export type WeeklySlotCreateNestedManyWithoutProjectInput = {
+    create?: XOR<WeeklySlotCreateWithoutProjectInput, WeeklySlotUncheckedCreateWithoutProjectInput> | WeeklySlotCreateWithoutProjectInput[] | WeeklySlotUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: WeeklySlotCreateOrConnectWithoutProjectInput | WeeklySlotCreateOrConnectWithoutProjectInput[]
+    createMany?: WeeklySlotCreateManyProjectInputEnvelope
+    connect?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+  }
+
   export type TaskUncheckedCreateNestedManyWithoutProjectInput = {
     create?: XOR<TaskCreateWithoutProjectInput, TaskUncheckedCreateWithoutProjectInput> | TaskCreateWithoutProjectInput[] | TaskUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutProjectInput | TaskCreateOrConnectWithoutProjectInput[]
@@ -80419,6 +83390,20 @@ export namespace Prisma {
     connectOrCreate?: MessageCreateOrConnectWithoutProjectInput | MessageCreateOrConnectWithoutProjectInput[]
     createMany?: MessageCreateManyProjectInputEnvelope
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ProjectWeeklyTargetCreateWithoutProjectInput, ProjectWeeklyTargetUncheckedCreateWithoutProjectInput> | ProjectWeeklyTargetCreateWithoutProjectInput[] | ProjectWeeklyTargetUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectWeeklyTargetCreateOrConnectWithoutProjectInput | ProjectWeeklyTargetCreateOrConnectWithoutProjectInput[]
+    createMany?: ProjectWeeklyTargetCreateManyProjectInputEnvelope
+    connect?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+  }
+
+  export type WeeklySlotUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<WeeklySlotCreateWithoutProjectInput, WeeklySlotUncheckedCreateWithoutProjectInput> | WeeklySlotCreateWithoutProjectInput[] | WeeklySlotUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: WeeklySlotCreateOrConnectWithoutProjectInput | WeeklySlotCreateOrConnectWithoutProjectInput[]
+    createMany?: WeeklySlotCreateManyProjectInputEnvelope
+    connect?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
   }
 
   export type WorkspaceUpdateOneRequiredWithoutProjectsNestedInput = {
@@ -80585,6 +83570,34 @@ export namespace Prisma {
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
+  export type ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ProjectWeeklyTargetCreateWithoutProjectInput, ProjectWeeklyTargetUncheckedCreateWithoutProjectInput> | ProjectWeeklyTargetCreateWithoutProjectInput[] | ProjectWeeklyTargetUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectWeeklyTargetCreateOrConnectWithoutProjectInput | ProjectWeeklyTargetCreateOrConnectWithoutProjectInput[]
+    upsert?: ProjectWeeklyTargetUpsertWithWhereUniqueWithoutProjectInput | ProjectWeeklyTargetUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ProjectWeeklyTargetCreateManyProjectInputEnvelope
+    set?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    disconnect?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    delete?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    connect?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    update?: ProjectWeeklyTargetUpdateWithWhereUniqueWithoutProjectInput | ProjectWeeklyTargetUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ProjectWeeklyTargetUpdateManyWithWhereWithoutProjectInput | ProjectWeeklyTargetUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ProjectWeeklyTargetScalarWhereInput | ProjectWeeklyTargetScalarWhereInput[]
+  }
+
+  export type WeeklySlotUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<WeeklySlotCreateWithoutProjectInput, WeeklySlotUncheckedCreateWithoutProjectInput> | WeeklySlotCreateWithoutProjectInput[] | WeeklySlotUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: WeeklySlotCreateOrConnectWithoutProjectInput | WeeklySlotCreateOrConnectWithoutProjectInput[]
+    upsert?: WeeklySlotUpsertWithWhereUniqueWithoutProjectInput | WeeklySlotUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: WeeklySlotCreateManyProjectInputEnvelope
+    set?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    disconnect?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    delete?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    connect?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    update?: WeeklySlotUpdateWithWhereUniqueWithoutProjectInput | WeeklySlotUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: WeeklySlotUpdateManyWithWhereWithoutProjectInput | WeeklySlotUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: WeeklySlotScalarWhereInput | WeeklySlotScalarWhereInput[]
+  }
+
   export type TaskUncheckedUpdateManyWithoutProjectNestedInput = {
     create?: XOR<TaskCreateWithoutProjectInput, TaskUncheckedCreateWithoutProjectInput> | TaskCreateWithoutProjectInput[] | TaskUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutProjectInput | TaskCreateOrConnectWithoutProjectInput[]
@@ -80709,6 +83722,106 @@ export namespace Prisma {
     update?: MessageUpdateWithWhereUniqueWithoutProjectInput | MessageUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: MessageUpdateManyWithWhereWithoutProjectInput | MessageUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ProjectWeeklyTargetCreateWithoutProjectInput, ProjectWeeklyTargetUncheckedCreateWithoutProjectInput> | ProjectWeeklyTargetCreateWithoutProjectInput[] | ProjectWeeklyTargetUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectWeeklyTargetCreateOrConnectWithoutProjectInput | ProjectWeeklyTargetCreateOrConnectWithoutProjectInput[]
+    upsert?: ProjectWeeklyTargetUpsertWithWhereUniqueWithoutProjectInput | ProjectWeeklyTargetUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ProjectWeeklyTargetCreateManyProjectInputEnvelope
+    set?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    disconnect?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    delete?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    connect?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    update?: ProjectWeeklyTargetUpdateWithWhereUniqueWithoutProjectInput | ProjectWeeklyTargetUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ProjectWeeklyTargetUpdateManyWithWhereWithoutProjectInput | ProjectWeeklyTargetUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ProjectWeeklyTargetScalarWhereInput | ProjectWeeklyTargetScalarWhereInput[]
+  }
+
+  export type WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<WeeklySlotCreateWithoutProjectInput, WeeklySlotUncheckedCreateWithoutProjectInput> | WeeklySlotCreateWithoutProjectInput[] | WeeklySlotUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: WeeklySlotCreateOrConnectWithoutProjectInput | WeeklySlotCreateOrConnectWithoutProjectInput[]
+    upsert?: WeeklySlotUpsertWithWhereUniqueWithoutProjectInput | WeeklySlotUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: WeeklySlotCreateManyProjectInputEnvelope
+    set?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    disconnect?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    delete?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    connect?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    update?: WeeklySlotUpdateWithWhereUniqueWithoutProjectInput | WeeklySlotUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: WeeklySlotUpdateManyWithWhereWithoutProjectInput | WeeklySlotUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: WeeklySlotScalarWhereInput | WeeklySlotScalarWhereInput[]
+  }
+
+  export type ProjectCreateNestedOneWithoutWeeklyTargetsInput = {
+    create?: XOR<ProjectCreateWithoutWeeklyTargetsInput, ProjectUncheckedCreateWithoutWeeklyTargetsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutWeeklyTargetsInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type ChecklistTemplateCreateNestedOneWithoutWeeklyTargetsInput = {
+    create?: XOR<ChecklistTemplateCreateWithoutWeeklyTargetsInput, ChecklistTemplateUncheckedCreateWithoutWeeklyTargetsInput>
+    connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutWeeklyTargetsInput
+    connect?: ChecklistTemplateWhereUniqueInput
+  }
+
+  export type ProjectUpdateOneRequiredWithoutWeeklyTargetsNestedInput = {
+    create?: XOR<ProjectCreateWithoutWeeklyTargetsInput, ProjectUncheckedCreateWithoutWeeklyTargetsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutWeeklyTargetsInput
+    upsert?: ProjectUpsertWithoutWeeklyTargetsInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutWeeklyTargetsInput, ProjectUpdateWithoutWeeklyTargetsInput>, ProjectUncheckedUpdateWithoutWeeklyTargetsInput>
+  }
+
+  export type ChecklistTemplateUpdateOneRequiredWithoutWeeklyTargetsNestedInput = {
+    create?: XOR<ChecklistTemplateCreateWithoutWeeklyTargetsInput, ChecklistTemplateUncheckedCreateWithoutWeeklyTargetsInput>
+    connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutWeeklyTargetsInput
+    upsert?: ChecklistTemplateUpsertWithoutWeeklyTargetsInput
+    connect?: ChecklistTemplateWhereUniqueInput
+    update?: XOR<XOR<ChecklistTemplateUpdateToOneWithWhereWithoutWeeklyTargetsInput, ChecklistTemplateUpdateWithoutWeeklyTargetsInput>, ChecklistTemplateUncheckedUpdateWithoutWeeklyTargetsInput>
+  }
+
+  export type ProjectCreateNestedOneWithoutWeeklySlotsInput = {
+    create?: XOR<ProjectCreateWithoutWeeklySlotsInput, ProjectUncheckedCreateWithoutWeeklySlotsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutWeeklySlotsInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type ChecklistTemplateCreateNestedOneWithoutWeeklySlotsInput = {
+    create?: XOR<ChecklistTemplateCreateWithoutWeeklySlotsInput, ChecklistTemplateUncheckedCreateWithoutWeeklySlotsInput>
+    connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutWeeklySlotsInput
+    connect?: ChecklistTemplateWhereUniqueInput
+  }
+
+  export type TaskCreateNestedOneWithoutWeeklySlotInput = {
+    create?: XOR<TaskCreateWithoutWeeklySlotInput, TaskUncheckedCreateWithoutWeeklySlotInput>
+    connectOrCreate?: TaskCreateOrConnectWithoutWeeklySlotInput
+    connect?: TaskWhereUniqueInput
+  }
+
+  export type ProjectUpdateOneRequiredWithoutWeeklySlotsNestedInput = {
+    create?: XOR<ProjectCreateWithoutWeeklySlotsInput, ProjectUncheckedCreateWithoutWeeklySlotsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutWeeklySlotsInput
+    upsert?: ProjectUpsertWithoutWeeklySlotsInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutWeeklySlotsInput, ProjectUpdateWithoutWeeklySlotsInput>, ProjectUncheckedUpdateWithoutWeeklySlotsInput>
+  }
+
+  export type ChecklistTemplateUpdateOneRequiredWithoutWeeklySlotsNestedInput = {
+    create?: XOR<ChecklistTemplateCreateWithoutWeeklySlotsInput, ChecklistTemplateUncheckedCreateWithoutWeeklySlotsInput>
+    connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutWeeklySlotsInput
+    upsert?: ChecklistTemplateUpsertWithoutWeeklySlotsInput
+    connect?: ChecklistTemplateWhereUniqueInput
+    update?: XOR<XOR<ChecklistTemplateUpdateToOneWithWhereWithoutWeeklySlotsInput, ChecklistTemplateUpdateWithoutWeeklySlotsInput>, ChecklistTemplateUncheckedUpdateWithoutWeeklySlotsInput>
+  }
+
+  export type TaskUpdateOneWithoutWeeklySlotNestedInput = {
+    create?: XOR<TaskCreateWithoutWeeklySlotInput, TaskUncheckedCreateWithoutWeeklySlotInput>
+    connectOrCreate?: TaskCreateOrConnectWithoutWeeklySlotInput
+    upsert?: TaskUpsertWithoutWeeklySlotInput
+    disconnect?: TaskWhereInput | boolean
+    delete?: TaskWhereInput | boolean
+    connect?: TaskWhereUniqueInput
+    update?: XOR<XOR<TaskUpdateToOneWithWhereWithoutWeeklySlotInput, TaskUpdateWithoutWeeklySlotInput>, TaskUncheckedUpdateWithoutWeeklySlotInput>
   }
 
   export type ProjectCreateNestedOneWithoutMembersInput = {
@@ -80925,6 +84038,20 @@ export namespace Prisma {
     connect?: ProjectTemplateWhereUniqueInput | ProjectTemplateWhereUniqueInput[]
   }
 
+  export type ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput = {
+    create?: XOR<ProjectWeeklyTargetCreateWithoutTemplateInput, ProjectWeeklyTargetUncheckedCreateWithoutTemplateInput> | ProjectWeeklyTargetCreateWithoutTemplateInput[] | ProjectWeeklyTargetUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: ProjectWeeklyTargetCreateOrConnectWithoutTemplateInput | ProjectWeeklyTargetCreateOrConnectWithoutTemplateInput[]
+    createMany?: ProjectWeeklyTargetCreateManyTemplateInputEnvelope
+    connect?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+  }
+
+  export type WeeklySlotCreateNestedManyWithoutTemplateInput = {
+    create?: XOR<WeeklySlotCreateWithoutTemplateInput, WeeklySlotUncheckedCreateWithoutTemplateInput> | WeeklySlotCreateWithoutTemplateInput[] | WeeklySlotUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: WeeklySlotCreateOrConnectWithoutTemplateInput | WeeklySlotCreateOrConnectWithoutTemplateInput[]
+    createMany?: WeeklySlotCreateManyTemplateInputEnvelope
+    connect?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+  }
+
   export type ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput = {
     create?: XOR<ChecklistTemplateItemCreateWithoutTemplateInput, ChecklistTemplateItemUncheckedCreateWithoutTemplateInput> | ChecklistTemplateItemCreateWithoutTemplateInput[] | ChecklistTemplateItemUncheckedCreateWithoutTemplateInput[]
     connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutTemplateInput | ChecklistTemplateItemCreateOrConnectWithoutTemplateInput[]
@@ -80937,6 +84064,20 @@ export namespace Prisma {
     connectOrCreate?: ProjectTemplateCreateOrConnectWithoutTemplateInput | ProjectTemplateCreateOrConnectWithoutTemplateInput[]
     createMany?: ProjectTemplateCreateManyTemplateInputEnvelope
     connect?: ProjectTemplateWhereUniqueInput | ProjectTemplateWhereUniqueInput[]
+  }
+
+  export type ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput = {
+    create?: XOR<ProjectWeeklyTargetCreateWithoutTemplateInput, ProjectWeeklyTargetUncheckedCreateWithoutTemplateInput> | ProjectWeeklyTargetCreateWithoutTemplateInput[] | ProjectWeeklyTargetUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: ProjectWeeklyTargetCreateOrConnectWithoutTemplateInput | ProjectWeeklyTargetCreateOrConnectWithoutTemplateInput[]
+    createMany?: ProjectWeeklyTargetCreateManyTemplateInputEnvelope
+    connect?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+  }
+
+  export type WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput = {
+    create?: XOR<WeeklySlotCreateWithoutTemplateInput, WeeklySlotUncheckedCreateWithoutTemplateInput> | WeeklySlotCreateWithoutTemplateInput[] | WeeklySlotUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: WeeklySlotCreateOrConnectWithoutTemplateInput | WeeklySlotCreateOrConnectWithoutTemplateInput[]
+    createMany?: WeeklySlotCreateManyTemplateInputEnvelope
+    connect?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
   }
 
   export type WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput = {
@@ -80985,6 +84126,34 @@ export namespace Prisma {
     deleteMany?: ProjectTemplateScalarWhereInput | ProjectTemplateScalarWhereInput[]
   }
 
+  export type ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput = {
+    create?: XOR<ProjectWeeklyTargetCreateWithoutTemplateInput, ProjectWeeklyTargetUncheckedCreateWithoutTemplateInput> | ProjectWeeklyTargetCreateWithoutTemplateInput[] | ProjectWeeklyTargetUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: ProjectWeeklyTargetCreateOrConnectWithoutTemplateInput | ProjectWeeklyTargetCreateOrConnectWithoutTemplateInput[]
+    upsert?: ProjectWeeklyTargetUpsertWithWhereUniqueWithoutTemplateInput | ProjectWeeklyTargetUpsertWithWhereUniqueWithoutTemplateInput[]
+    createMany?: ProjectWeeklyTargetCreateManyTemplateInputEnvelope
+    set?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    disconnect?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    delete?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    connect?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    update?: ProjectWeeklyTargetUpdateWithWhereUniqueWithoutTemplateInput | ProjectWeeklyTargetUpdateWithWhereUniqueWithoutTemplateInput[]
+    updateMany?: ProjectWeeklyTargetUpdateManyWithWhereWithoutTemplateInput | ProjectWeeklyTargetUpdateManyWithWhereWithoutTemplateInput[]
+    deleteMany?: ProjectWeeklyTargetScalarWhereInput | ProjectWeeklyTargetScalarWhereInput[]
+  }
+
+  export type WeeklySlotUpdateManyWithoutTemplateNestedInput = {
+    create?: XOR<WeeklySlotCreateWithoutTemplateInput, WeeklySlotUncheckedCreateWithoutTemplateInput> | WeeklySlotCreateWithoutTemplateInput[] | WeeklySlotUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: WeeklySlotCreateOrConnectWithoutTemplateInput | WeeklySlotCreateOrConnectWithoutTemplateInput[]
+    upsert?: WeeklySlotUpsertWithWhereUniqueWithoutTemplateInput | WeeklySlotUpsertWithWhereUniqueWithoutTemplateInput[]
+    createMany?: WeeklySlotCreateManyTemplateInputEnvelope
+    set?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    disconnect?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    delete?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    connect?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    update?: WeeklySlotUpdateWithWhereUniqueWithoutTemplateInput | WeeklySlotUpdateWithWhereUniqueWithoutTemplateInput[]
+    updateMany?: WeeklySlotUpdateManyWithWhereWithoutTemplateInput | WeeklySlotUpdateManyWithWhereWithoutTemplateInput[]
+    deleteMany?: WeeklySlotScalarWhereInput | WeeklySlotScalarWhereInput[]
+  }
+
   export type ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput = {
     create?: XOR<ChecklistTemplateItemCreateWithoutTemplateInput, ChecklistTemplateItemUncheckedCreateWithoutTemplateInput> | ChecklistTemplateItemCreateWithoutTemplateInput[] | ChecklistTemplateItemUncheckedCreateWithoutTemplateInput[]
     connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutTemplateInput | ChecklistTemplateItemCreateOrConnectWithoutTemplateInput[]
@@ -81011,6 +84180,34 @@ export namespace Prisma {
     update?: ProjectTemplateUpdateWithWhereUniqueWithoutTemplateInput | ProjectTemplateUpdateWithWhereUniqueWithoutTemplateInput[]
     updateMany?: ProjectTemplateUpdateManyWithWhereWithoutTemplateInput | ProjectTemplateUpdateManyWithWhereWithoutTemplateInput[]
     deleteMany?: ProjectTemplateScalarWhereInput | ProjectTemplateScalarWhereInput[]
+  }
+
+  export type ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput = {
+    create?: XOR<ProjectWeeklyTargetCreateWithoutTemplateInput, ProjectWeeklyTargetUncheckedCreateWithoutTemplateInput> | ProjectWeeklyTargetCreateWithoutTemplateInput[] | ProjectWeeklyTargetUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: ProjectWeeklyTargetCreateOrConnectWithoutTemplateInput | ProjectWeeklyTargetCreateOrConnectWithoutTemplateInput[]
+    upsert?: ProjectWeeklyTargetUpsertWithWhereUniqueWithoutTemplateInput | ProjectWeeklyTargetUpsertWithWhereUniqueWithoutTemplateInput[]
+    createMany?: ProjectWeeklyTargetCreateManyTemplateInputEnvelope
+    set?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    disconnect?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    delete?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    connect?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+    update?: ProjectWeeklyTargetUpdateWithWhereUniqueWithoutTemplateInput | ProjectWeeklyTargetUpdateWithWhereUniqueWithoutTemplateInput[]
+    updateMany?: ProjectWeeklyTargetUpdateManyWithWhereWithoutTemplateInput | ProjectWeeklyTargetUpdateManyWithWhereWithoutTemplateInput[]
+    deleteMany?: ProjectWeeklyTargetScalarWhereInput | ProjectWeeklyTargetScalarWhereInput[]
+  }
+
+  export type WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput = {
+    create?: XOR<WeeklySlotCreateWithoutTemplateInput, WeeklySlotUncheckedCreateWithoutTemplateInput> | WeeklySlotCreateWithoutTemplateInput[] | WeeklySlotUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: WeeklySlotCreateOrConnectWithoutTemplateInput | WeeklySlotCreateOrConnectWithoutTemplateInput[]
+    upsert?: WeeklySlotUpsertWithWhereUniqueWithoutTemplateInput | WeeklySlotUpsertWithWhereUniqueWithoutTemplateInput[]
+    createMany?: WeeklySlotCreateManyTemplateInputEnvelope
+    set?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    disconnect?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    delete?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    connect?: WeeklySlotWhereUniqueInput | WeeklySlotWhereUniqueInput[]
+    update?: WeeklySlotUpdateWithWhereUniqueWithoutTemplateInput | WeeklySlotUpdateWithWhereUniqueWithoutTemplateInput[]
+    updateMany?: WeeklySlotUpdateManyWithWhereWithoutTemplateInput | WeeklySlotUpdateManyWithWhereWithoutTemplateInput[]
+    deleteMany?: WeeklySlotScalarWhereInput | WeeklySlotScalarWhereInput[]
   }
 
   export type ChecklistTemplateCreateNestedOneWithoutItemsInput = {
@@ -81443,6 +84640,12 @@ export namespace Prisma {
     connect?: PublishItemWhereUniqueInput
   }
 
+  export type WeeklySlotCreateNestedOneWithoutTaskInput = {
+    create?: XOR<WeeklySlotCreateWithoutTaskInput, WeeklySlotUncheckedCreateWithoutTaskInput>
+    connectOrCreate?: WeeklySlotCreateOrConnectWithoutTaskInput
+    connect?: WeeklySlotWhereUniqueInput
+  }
+
   export type TaskStatusChangeCreateNestedManyWithoutTaskInput = {
     create?: XOR<TaskStatusChangeCreateWithoutTaskInput, TaskStatusChangeUncheckedCreateWithoutTaskInput> | TaskStatusChangeCreateWithoutTaskInput[] | TaskStatusChangeUncheckedCreateWithoutTaskInput[]
     connectOrCreate?: TaskStatusChangeCreateOrConnectWithoutTaskInput | TaskStatusChangeCreateOrConnectWithoutTaskInput[]
@@ -81468,6 +84671,12 @@ export namespace Prisma {
     create?: XOR<PublishItemCreateWithoutTaskInput, PublishItemUncheckedCreateWithoutTaskInput>
     connectOrCreate?: PublishItemCreateOrConnectWithoutTaskInput
     connect?: PublishItemWhereUniqueInput
+  }
+
+  export type WeeklySlotUncheckedCreateNestedOneWithoutTaskInput = {
+    create?: XOR<WeeklySlotCreateWithoutTaskInput, WeeklySlotUncheckedCreateWithoutTaskInput>
+    connectOrCreate?: WeeklySlotCreateOrConnectWithoutTaskInput
+    connect?: WeeklySlotWhereUniqueInput
   }
 
   export type TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput = {
@@ -81561,6 +84770,16 @@ export namespace Prisma {
     update?: XOR<XOR<PublishItemUpdateToOneWithWhereWithoutTaskInput, PublishItemUpdateWithoutTaskInput>, PublishItemUncheckedUpdateWithoutTaskInput>
   }
 
+  export type WeeklySlotUpdateOneWithoutTaskNestedInput = {
+    create?: XOR<WeeklySlotCreateWithoutTaskInput, WeeklySlotUncheckedCreateWithoutTaskInput>
+    connectOrCreate?: WeeklySlotCreateOrConnectWithoutTaskInput
+    upsert?: WeeklySlotUpsertWithoutTaskInput
+    disconnect?: WeeklySlotWhereInput | boolean
+    delete?: WeeklySlotWhereInput | boolean
+    connect?: WeeklySlotWhereUniqueInput
+    update?: XOR<XOR<WeeklySlotUpdateToOneWithWhereWithoutTaskInput, WeeklySlotUpdateWithoutTaskInput>, WeeklySlotUncheckedUpdateWithoutTaskInput>
+  }
+
   export type TaskStatusChangeUpdateManyWithoutTaskNestedInput = {
     create?: XOR<TaskStatusChangeCreateWithoutTaskInput, TaskStatusChangeUncheckedCreateWithoutTaskInput> | TaskStatusChangeCreateWithoutTaskInput[] | TaskStatusChangeUncheckedCreateWithoutTaskInput[]
     connectOrCreate?: TaskStatusChangeCreateOrConnectWithoutTaskInput | TaskStatusChangeCreateOrConnectWithoutTaskInput[]
@@ -81611,6 +84830,16 @@ export namespace Prisma {
     delete?: PublishItemWhereInput | boolean
     connect?: PublishItemWhereUniqueInput
     update?: XOR<XOR<PublishItemUpdateToOneWithWhereWithoutTaskInput, PublishItemUpdateWithoutTaskInput>, PublishItemUncheckedUpdateWithoutTaskInput>
+  }
+
+  export type WeeklySlotUncheckedUpdateOneWithoutTaskNestedInput = {
+    create?: XOR<WeeklySlotCreateWithoutTaskInput, WeeklySlotUncheckedCreateWithoutTaskInput>
+    connectOrCreate?: WeeklySlotCreateOrConnectWithoutTaskInput
+    upsert?: WeeklySlotUpsertWithoutTaskInput
+    disconnect?: WeeklySlotWhereInput | boolean
+    delete?: WeeklySlotWhereInput | boolean
+    connect?: WeeklySlotWhereUniqueInput
+    update?: XOR<XOR<WeeklySlotUpdateToOneWithWhereWithoutTaskInput, WeeklySlotUpdateWithoutTaskInput>, WeeklySlotUncheckedUpdateWithoutTaskInput>
   }
 
   export type TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput = {
@@ -83239,6 +86468,8 @@ export namespace Prisma {
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutWorkspaceInput = {
@@ -83269,6 +86500,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutWorkspaceInput = {
@@ -83717,6 +86950,8 @@ export namespace Prisma {
     titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
     items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutTemplateInput
   }
 
   export type ChecklistTemplateUncheckedCreateWithoutWorkspaceInput = {
@@ -83734,6 +86969,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput
   }
 
   export type ChecklistTemplateCreateOrConnectWithoutWorkspaceInput = {
@@ -85050,6 +88287,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
@@ -85080,6 +88318,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
@@ -86044,6 +89283,8 @@ export namespace Prisma {
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutCollaboratorsInput = {
@@ -86074,6 +89315,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutCollaboratorsInput = {
@@ -86120,6 +89363,8 @@ export namespace Prisma {
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutCollaboratorsInput = {
@@ -86150,6 +89395,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type WorkspaceCreateWithoutCompaniesInput = {
@@ -86351,6 +89598,8 @@ export namespace Prisma {
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutCompanyInput = {
@@ -86381,6 +89630,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutCompanyInput = {
@@ -87336,6 +90587,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
@@ -87366,6 +90618,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
@@ -88230,6 +91483,8 @@ export namespace Prisma {
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutDealInput = {
@@ -88260,6 +91515,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutDealInput = {
@@ -88685,6 +91942,8 @@ export namespace Prisma {
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutDealInput = {
@@ -88715,6 +91974,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type DealAccessUpsertWithWhereUniqueWithoutDealInput = {
@@ -89214,6 +92475,8 @@ export namespace Prisma {
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutStatusInput = {
@@ -89244,6 +92507,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutStatusInput = {
@@ -89600,6 +92865,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
@@ -89630,6 +92896,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
@@ -89922,6 +93189,56 @@ export namespace Prisma {
 
   export type MessageCreateManyProjectInputEnvelope = {
     data: MessageCreateManyProjectInput | MessageCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectWeeklyTargetCreateWithoutProjectInput = {
+    id?: string
+    perWeek?: number
+    template: ChecklistTemplateCreateNestedOneWithoutWeeklyTargetsInput
+  }
+
+  export type ProjectWeeklyTargetUncheckedCreateWithoutProjectInput = {
+    id?: string
+    templateId: string
+    perWeek?: number
+  }
+
+  export type ProjectWeeklyTargetCreateOrConnectWithoutProjectInput = {
+    where: ProjectWeeklyTargetWhereUniqueInput
+    create: XOR<ProjectWeeklyTargetCreateWithoutProjectInput, ProjectWeeklyTargetUncheckedCreateWithoutProjectInput>
+  }
+
+  export type ProjectWeeklyTargetCreateManyProjectInputEnvelope = {
+    data: ProjectWeeklyTargetCreateManyProjectInput | ProjectWeeklyTargetCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WeeklySlotCreateWithoutProjectInput = {
+    id?: string
+    weekStart: Date | string
+    removedAt?: Date | string | null
+    createdAt?: Date | string
+    template: ChecklistTemplateCreateNestedOneWithoutWeeklySlotsInput
+    task?: TaskCreateNestedOneWithoutWeeklySlotInput
+  }
+
+  export type WeeklySlotUncheckedCreateWithoutProjectInput = {
+    id?: string
+    templateId: string
+    weekStart: Date | string
+    taskId?: string | null
+    removedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type WeeklySlotCreateOrConnectWithoutProjectInput = {
+    where: WeeklySlotWhereUniqueInput
+    create: XOR<WeeklySlotCreateWithoutProjectInput, WeeklySlotUncheckedCreateWithoutProjectInput>
+  }
+
+  export type WeeklySlotCreateManyProjectInputEnvelope = {
+    data: WeeklySlotCreateManyProjectInput | WeeklySlotCreateManyProjectInput[]
     skipDuplicates?: boolean
   }
 
@@ -90364,6 +93681,673 @@ export namespace Prisma {
     data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutProjectInput>
   }
 
+  export type ProjectWeeklyTargetUpsertWithWhereUniqueWithoutProjectInput = {
+    where: ProjectWeeklyTargetWhereUniqueInput
+    update: XOR<ProjectWeeklyTargetUpdateWithoutProjectInput, ProjectWeeklyTargetUncheckedUpdateWithoutProjectInput>
+    create: XOR<ProjectWeeklyTargetCreateWithoutProjectInput, ProjectWeeklyTargetUncheckedCreateWithoutProjectInput>
+  }
+
+  export type ProjectWeeklyTargetUpdateWithWhereUniqueWithoutProjectInput = {
+    where: ProjectWeeklyTargetWhereUniqueInput
+    data: XOR<ProjectWeeklyTargetUpdateWithoutProjectInput, ProjectWeeklyTargetUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type ProjectWeeklyTargetUpdateManyWithWhereWithoutProjectInput = {
+    where: ProjectWeeklyTargetScalarWhereInput
+    data: XOR<ProjectWeeklyTargetUpdateManyMutationInput, ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type ProjectWeeklyTargetScalarWhereInput = {
+    AND?: ProjectWeeklyTargetScalarWhereInput | ProjectWeeklyTargetScalarWhereInput[]
+    OR?: ProjectWeeklyTargetScalarWhereInput[]
+    NOT?: ProjectWeeklyTargetScalarWhereInput | ProjectWeeklyTargetScalarWhereInput[]
+    id?: StringFilter<"ProjectWeeklyTarget"> | string
+    projectId?: StringFilter<"ProjectWeeklyTarget"> | string
+    templateId?: StringFilter<"ProjectWeeklyTarget"> | string
+    perWeek?: IntFilter<"ProjectWeeklyTarget"> | number
+  }
+
+  export type WeeklySlotUpsertWithWhereUniqueWithoutProjectInput = {
+    where: WeeklySlotWhereUniqueInput
+    update: XOR<WeeklySlotUpdateWithoutProjectInput, WeeklySlotUncheckedUpdateWithoutProjectInput>
+    create: XOR<WeeklySlotCreateWithoutProjectInput, WeeklySlotUncheckedCreateWithoutProjectInput>
+  }
+
+  export type WeeklySlotUpdateWithWhereUniqueWithoutProjectInput = {
+    where: WeeklySlotWhereUniqueInput
+    data: XOR<WeeklySlotUpdateWithoutProjectInput, WeeklySlotUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type WeeklySlotUpdateManyWithWhereWithoutProjectInput = {
+    where: WeeklySlotScalarWhereInput
+    data: XOR<WeeklySlotUpdateManyMutationInput, WeeklySlotUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type WeeklySlotScalarWhereInput = {
+    AND?: WeeklySlotScalarWhereInput | WeeklySlotScalarWhereInput[]
+    OR?: WeeklySlotScalarWhereInput[]
+    NOT?: WeeklySlotScalarWhereInput | WeeklySlotScalarWhereInput[]
+    id?: StringFilter<"WeeklySlot"> | string
+    projectId?: StringFilter<"WeeklySlot"> | string
+    templateId?: StringFilter<"WeeklySlot"> | string
+    weekStart?: DateTimeFilter<"WeeklySlot"> | Date | string
+    taskId?: StringNullableFilter<"WeeklySlot"> | string | null
+    removedAt?: DateTimeNullableFilter<"WeeklySlot"> | Date | string | null
+    createdAt?: DateTimeFilter<"WeeklySlot"> | Date | string
+  }
+
+  export type ProjectCreateWithoutWeeklyTargetsInput = {
+    id?: string
+    contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
+    name: string
+    type?: string
+    thumbnailId?: string | null
+    description?: string | null
+    requirePublishing?: boolean
+    startDate?: Date | string | null
+    deadline?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    workspace: WorkspaceCreateNestedOneWithoutProjectsInput
+    deal?: DealCreateNestedOneWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    status?: ProjectStatusCreateNestedOneWithoutProjectsInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    invoices?: InvoiceCreateNestedManyWithoutProjectInput
+    collaborators?: ProjectCollaboratorCreateNestedManyWithoutProjectInput
+    projectTemplates?: ProjectTemplateCreateNestedManyWithoutProjectInput
+    folders?: ProjectFolderCreateNestedManyWithoutProjectInput
+    assets?: ProjectAssetCreateNestedManyWithoutProjectInput
+    publishItems?: PublishItemCreateNestedManyWithoutProjectInput
+    members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutWeeklyTargetsInput = {
+    id?: string
+    workspaceId: string
+    dealId?: string | null
+    companyId?: string | null
+    contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
+    statusId?: string | null
+    name: string
+    type?: string
+    thumbnailId?: string | null
+    description?: string | null
+    requirePublishing?: boolean
+    startDate?: Date | string | null
+    deadline?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
+    collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
+    projectTemplates?: ProjectTemplateUncheckedCreateNestedManyWithoutProjectInput
+    folders?: ProjectFolderUncheckedCreateNestedManyWithoutProjectInput
+    assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
+    publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
+    members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutWeeklyTargetsInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutWeeklyTargetsInput, ProjectUncheckedCreateWithoutWeeklyTargetsInput>
+  }
+
+  export type ChecklistTemplateCreateWithoutWeeklyTargetsInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    color?: string | null
+    description?: string | null
+    publishToCalendar?: boolean
+    titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
+    titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
+    items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
+    projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutTemplateInput
+  }
+
+  export type ChecklistTemplateUncheckedCreateWithoutWeeklyTargetsInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    icon?: string | null
+    color?: string | null
+    description?: string | null
+    publishToCalendar?: boolean
+    titleLockedFromStageId?: string | null
+    titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
+    projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput
+  }
+
+  export type ChecklistTemplateCreateOrConnectWithoutWeeklyTargetsInput = {
+    where: ChecklistTemplateWhereUniqueInput
+    create: XOR<ChecklistTemplateCreateWithoutWeeklyTargetsInput, ChecklistTemplateUncheckedCreateWithoutWeeklyTargetsInput>
+  }
+
+  export type ProjectUpsertWithoutWeeklyTargetsInput = {
+    update: XOR<ProjectUpdateWithoutWeeklyTargetsInput, ProjectUncheckedUpdateWithoutWeeklyTargetsInput>
+    create: XOR<ProjectCreateWithoutWeeklyTargetsInput, ProjectUncheckedCreateWithoutWeeklyTargetsInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutWeeklyTargetsInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutWeeklyTargetsInput, ProjectUncheckedUpdateWithoutWeeklyTargetsInput>
+  }
+
+  export type ProjectUpdateWithoutWeeklyTargetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
+    deal?: DealUpdateOneWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    status?: ProjectStatusUpdateOneWithoutProjectsNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    invoices?: InvoiceUpdateManyWithoutProjectNestedInput
+    collaborators?: ProjectCollaboratorUpdateManyWithoutProjectNestedInput
+    projectTemplates?: ProjectTemplateUpdateManyWithoutProjectNestedInput
+    folders?: ProjectFolderUpdateManyWithoutProjectNestedInput
+    assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
+    publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
+    members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutWeeklyTargetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    dealId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
+    statusId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
+    collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
+    projectTemplates?: ProjectTemplateUncheckedUpdateManyWithoutProjectNestedInput
+    folders?: ProjectFolderUncheckedUpdateManyWithoutProjectNestedInput
+    assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
+    publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
+    members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ChecklistTemplateUpsertWithoutWeeklyTargetsInput = {
+    update: XOR<ChecklistTemplateUpdateWithoutWeeklyTargetsInput, ChecklistTemplateUncheckedUpdateWithoutWeeklyTargetsInput>
+    create: XOR<ChecklistTemplateCreateWithoutWeeklyTargetsInput, ChecklistTemplateUncheckedCreateWithoutWeeklyTargetsInput>
+    where?: ChecklistTemplateWhereInput
+  }
+
+  export type ChecklistTemplateUpdateToOneWithWhereWithoutWeeklyTargetsInput = {
+    where?: ChecklistTemplateWhereInput
+    data: XOR<ChecklistTemplateUpdateWithoutWeeklyTargetsInput, ChecklistTemplateUncheckedUpdateWithoutWeeklyTargetsInput>
+  }
+
+  export type ChecklistTemplateUpdateWithoutWeeklyTargetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
+    titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
+    items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
+    projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutTemplateNestedInput
+  }
+
+  export type ChecklistTemplateUncheckedUpdateWithoutWeeklyTargetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
+    projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput
+  }
+
+  export type ProjectCreateWithoutWeeklySlotsInput = {
+    id?: string
+    contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
+    name: string
+    type?: string
+    thumbnailId?: string | null
+    description?: string | null
+    requirePublishing?: boolean
+    startDate?: Date | string | null
+    deadline?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    workspace: WorkspaceCreateNestedOneWithoutProjectsInput
+    deal?: DealCreateNestedOneWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    status?: ProjectStatusCreateNestedOneWithoutProjectsInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    invoices?: InvoiceCreateNestedManyWithoutProjectInput
+    collaborators?: ProjectCollaboratorCreateNestedManyWithoutProjectInput
+    projectTemplates?: ProjectTemplateCreateNestedManyWithoutProjectInput
+    folders?: ProjectFolderCreateNestedManyWithoutProjectInput
+    assets?: ProjectAssetCreateNestedManyWithoutProjectInput
+    publishItems?: PublishItemCreateNestedManyWithoutProjectInput
+    members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutWeeklySlotsInput = {
+    id?: string
+    workspaceId: string
+    dealId?: string | null
+    companyId?: string | null
+    contactId?: string | null
+    ownerId?: string | null
+    ownerName?: string | null
+    statusId?: string | null
+    name: string
+    type?: string
+    thumbnailId?: string | null
+    description?: string | null
+    requirePublishing?: boolean
+    startDate?: Date | string | null
+    deadline?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutProjectInput
+    collaborators?: ProjectCollaboratorUncheckedCreateNestedManyWithoutProjectInput
+    projectTemplates?: ProjectTemplateUncheckedCreateNestedManyWithoutProjectInput
+    folders?: ProjectFolderUncheckedCreateNestedManyWithoutProjectInput
+    assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
+    publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
+    members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutWeeklySlotsInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutWeeklySlotsInput, ProjectUncheckedCreateWithoutWeeklySlotsInput>
+  }
+
+  export type ChecklistTemplateCreateWithoutWeeklySlotsInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    color?: string | null
+    description?: string | null
+    publishToCalendar?: boolean
+    titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
+    titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
+    items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
+    projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput
+  }
+
+  export type ChecklistTemplateUncheckedCreateWithoutWeeklySlotsInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    icon?: string | null
+    color?: string | null
+    description?: string | null
+    publishToCalendar?: boolean
+    titleLockedFromStageId?: string | null
+    titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
+    projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput
+  }
+
+  export type ChecklistTemplateCreateOrConnectWithoutWeeklySlotsInput = {
+    where: ChecklistTemplateWhereUniqueInput
+    create: XOR<ChecklistTemplateCreateWithoutWeeklySlotsInput, ChecklistTemplateUncheckedCreateWithoutWeeklySlotsInput>
+  }
+
+  export type TaskCreateWithoutWeeklySlotInput = {
+    id?: string
+    taskNumber?: number
+    title: string
+    description?: string | null
+    billable?: boolean
+    price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
+    priority?: number | null
+    estimateMin?: number | null
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
+    rejectionCount?: number
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    project: ProjectCreateNestedOneWithoutTasksInput
+    service?: ServiceCreateNestedOneWithoutTasksInput
+    status?: TaskStatusCreateNestedOneWithoutTasksInput
+    assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
+    checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
+    comments?: MessageCreateNestedManyWithoutTaskInput
+    publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
+  }
+
+  export type TaskUncheckedCreateWithoutWeeklySlotInput = {
+    id?: string
+    projectId: string
+    taskNumber?: number
+    serviceId?: string | null
+    statusId?: string | null
+    assigneeId?: string | null
+    title: string
+    description?: string | null
+    billable?: boolean
+    price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
+    priority?: number | null
+    estimateMin?: number | null
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
+    rejectionCount?: number
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
+    comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
+    publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
+  }
+
+  export type TaskCreateOrConnectWithoutWeeklySlotInput = {
+    where: TaskWhereUniqueInput
+    create: XOR<TaskCreateWithoutWeeklySlotInput, TaskUncheckedCreateWithoutWeeklySlotInput>
+  }
+
+  export type ProjectUpsertWithoutWeeklySlotsInput = {
+    update: XOR<ProjectUpdateWithoutWeeklySlotsInput, ProjectUncheckedUpdateWithoutWeeklySlotsInput>
+    create: XOR<ProjectCreateWithoutWeeklySlotsInput, ProjectUncheckedCreateWithoutWeeklySlotsInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutWeeklySlotsInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutWeeklySlotsInput, ProjectUncheckedUpdateWithoutWeeklySlotsInput>
+  }
+
+  export type ProjectUpdateWithoutWeeklySlotsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
+    deal?: DealUpdateOneWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    status?: ProjectStatusUpdateOneWithoutProjectsNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    invoices?: InvoiceUpdateManyWithoutProjectNestedInput
+    collaborators?: ProjectCollaboratorUpdateManyWithoutProjectNestedInput
+    projectTemplates?: ProjectTemplateUpdateManyWithoutProjectNestedInput
+    folders?: ProjectFolderUpdateManyWithoutProjectNestedInput
+    assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
+    publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
+    members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutWeeklySlotsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    dealId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerName?: NullableStringFieldUpdateOperationsInput | string | null
+    statusId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutProjectNestedInput
+    collaborators?: ProjectCollaboratorUncheckedUpdateManyWithoutProjectNestedInput
+    projectTemplates?: ProjectTemplateUncheckedUpdateManyWithoutProjectNestedInput
+    folders?: ProjectFolderUncheckedUpdateManyWithoutProjectNestedInput
+    assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
+    publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
+    members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ChecklistTemplateUpsertWithoutWeeklySlotsInput = {
+    update: XOR<ChecklistTemplateUpdateWithoutWeeklySlotsInput, ChecklistTemplateUncheckedUpdateWithoutWeeklySlotsInput>
+    create: XOR<ChecklistTemplateCreateWithoutWeeklySlotsInput, ChecklistTemplateUncheckedCreateWithoutWeeklySlotsInput>
+    where?: ChecklistTemplateWhereInput
+  }
+
+  export type ChecklistTemplateUpdateToOneWithWhereWithoutWeeklySlotsInput = {
+    where?: ChecklistTemplateWhereInput
+    data: XOR<ChecklistTemplateUpdateWithoutWeeklySlotsInput, ChecklistTemplateUncheckedUpdateWithoutWeeklySlotsInput>
+  }
+
+  export type ChecklistTemplateUpdateWithoutWeeklySlotsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
+    titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
+    items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
+    projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput
+  }
+
+  export type ChecklistTemplateUncheckedUpdateWithoutWeeklySlotsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
+    projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput
+  }
+
+  export type TaskUpsertWithoutWeeklySlotInput = {
+    update: XOR<TaskUpdateWithoutWeeklySlotInput, TaskUncheckedUpdateWithoutWeeklySlotInput>
+    create: XOR<TaskCreateWithoutWeeklySlotInput, TaskUncheckedCreateWithoutWeeklySlotInput>
+    where?: TaskWhereInput
+  }
+
+  export type TaskUpdateToOneWithWhereWithoutWeeklySlotInput = {
+    where?: TaskWhereInput
+    data: XOR<TaskUpdateWithoutWeeklySlotInput, TaskUncheckedUpdateWithoutWeeklySlotInput>
+  }
+
+  export type TaskUpdateWithoutWeeklySlotInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskNumber?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
+    priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionCount?: IntFieldUpdateOperationsInput | number
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    service?: ServiceUpdateOneWithoutTasksNestedInput
+    status?: TaskStatusUpdateOneWithoutTasksNestedInput
+    assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
+    checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
+    comments?: MessageUpdateManyWithoutTaskNestedInput
+    publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutWeeklySlotInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    taskNumber?: IntFieldUpdateOperationsInput | number
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    statusId?: NullableStringFieldUpdateOperationsInput | string | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
+    priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionCount?: IntFieldUpdateOperationsInput | number
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
+    comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
+    publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
+  }
+
   export type ProjectCreateWithoutMembersInput = {
     id?: string
     contactId?: string | null
@@ -90392,6 +94376,8 @@ export namespace Prisma {
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutMembersInput = {
@@ -90422,6 +94408,8 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutMembersInput = {
@@ -90538,6 +94526,8 @@ export namespace Prisma {
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutMembersInput = {
@@ -90568,6 +94558,8 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type WorkspaceMemberUpsertWithoutProjectMembershipsInput = {
@@ -90680,6 +94672,8 @@ export namespace Prisma {
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutFoldersInput = {
@@ -90710,6 +94704,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutFoldersInput = {
@@ -90851,6 +94847,8 @@ export namespace Prisma {
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutFoldersInput = {
@@ -90881,6 +94879,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectFolderUpsertWithoutChildrenInput = {
@@ -90976,6 +94976,8 @@ export namespace Prisma {
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutAssetsInput = {
@@ -91006,6 +95008,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutAssetsInput = {
@@ -91079,6 +95083,8 @@ export namespace Prisma {
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutAssetsInput = {
@@ -91109,6 +95115,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectFolderUpsertWithoutAssetsInput = {
@@ -91322,6 +95330,56 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProjectWeeklyTargetCreateWithoutTemplateInput = {
+    id?: string
+    perWeek?: number
+    project: ProjectCreateNestedOneWithoutWeeklyTargetsInput
+  }
+
+  export type ProjectWeeklyTargetUncheckedCreateWithoutTemplateInput = {
+    id?: string
+    projectId: string
+    perWeek?: number
+  }
+
+  export type ProjectWeeklyTargetCreateOrConnectWithoutTemplateInput = {
+    where: ProjectWeeklyTargetWhereUniqueInput
+    create: XOR<ProjectWeeklyTargetCreateWithoutTemplateInput, ProjectWeeklyTargetUncheckedCreateWithoutTemplateInput>
+  }
+
+  export type ProjectWeeklyTargetCreateManyTemplateInputEnvelope = {
+    data: ProjectWeeklyTargetCreateManyTemplateInput | ProjectWeeklyTargetCreateManyTemplateInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WeeklySlotCreateWithoutTemplateInput = {
+    id?: string
+    weekStart: Date | string
+    removedAt?: Date | string | null
+    createdAt?: Date | string
+    project: ProjectCreateNestedOneWithoutWeeklySlotsInput
+    task?: TaskCreateNestedOneWithoutWeeklySlotInput
+  }
+
+  export type WeeklySlotUncheckedCreateWithoutTemplateInput = {
+    id?: string
+    projectId: string
+    weekStart: Date | string
+    taskId?: string | null
+    removedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type WeeklySlotCreateOrConnectWithoutTemplateInput = {
+    where: WeeklySlotWhereUniqueInput
+    create: XOR<WeeklySlotCreateWithoutTemplateInput, WeeklySlotUncheckedCreateWithoutTemplateInput>
+  }
+
+  export type WeeklySlotCreateManyTemplateInputEnvelope = {
+    data: WeeklySlotCreateManyTemplateInput | WeeklySlotCreateManyTemplateInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WorkspaceUpsertWithoutChecklistTemplatesInput = {
     update: XOR<WorkspaceUpdateWithoutChecklistTemplatesInput, WorkspaceUncheckedUpdateWithoutChecklistTemplatesInput>
     create: XOR<WorkspaceCreateWithoutChecklistTemplatesInput, WorkspaceUncheckedCreateWithoutChecklistTemplatesInput>
@@ -91496,6 +95554,38 @@ export namespace Prisma {
     data: XOR<ProjectTemplateUpdateManyMutationInput, ProjectTemplateUncheckedUpdateManyWithoutTemplateInput>
   }
 
+  export type ProjectWeeklyTargetUpsertWithWhereUniqueWithoutTemplateInput = {
+    where: ProjectWeeklyTargetWhereUniqueInput
+    update: XOR<ProjectWeeklyTargetUpdateWithoutTemplateInput, ProjectWeeklyTargetUncheckedUpdateWithoutTemplateInput>
+    create: XOR<ProjectWeeklyTargetCreateWithoutTemplateInput, ProjectWeeklyTargetUncheckedCreateWithoutTemplateInput>
+  }
+
+  export type ProjectWeeklyTargetUpdateWithWhereUniqueWithoutTemplateInput = {
+    where: ProjectWeeklyTargetWhereUniqueInput
+    data: XOR<ProjectWeeklyTargetUpdateWithoutTemplateInput, ProjectWeeklyTargetUncheckedUpdateWithoutTemplateInput>
+  }
+
+  export type ProjectWeeklyTargetUpdateManyWithWhereWithoutTemplateInput = {
+    where: ProjectWeeklyTargetScalarWhereInput
+    data: XOR<ProjectWeeklyTargetUpdateManyMutationInput, ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateInput>
+  }
+
+  export type WeeklySlotUpsertWithWhereUniqueWithoutTemplateInput = {
+    where: WeeklySlotWhereUniqueInput
+    update: XOR<WeeklySlotUpdateWithoutTemplateInput, WeeklySlotUncheckedUpdateWithoutTemplateInput>
+    create: XOR<WeeklySlotCreateWithoutTemplateInput, WeeklySlotUncheckedCreateWithoutTemplateInput>
+  }
+
+  export type WeeklySlotUpdateWithWhereUniqueWithoutTemplateInput = {
+    where: WeeklySlotWhereUniqueInput
+    data: XOR<WeeklySlotUpdateWithoutTemplateInput, WeeklySlotUncheckedUpdateWithoutTemplateInput>
+  }
+
+  export type WeeklySlotUpdateManyWithWhereWithoutTemplateInput = {
+    where: WeeklySlotScalarWhereInput
+    data: XOR<WeeklySlotUpdateManyMutationInput, WeeklySlotUncheckedUpdateManyWithoutTemplateInput>
+  }
+
   export type ChecklistTemplateCreateWithoutItemsInput = {
     id?: string
     name: string
@@ -91511,6 +95601,8 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
     titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
     projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutTemplateInput
   }
 
   export type ChecklistTemplateUncheckedCreateWithoutItemsInput = {
@@ -91528,6 +95620,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput
   }
 
   export type ChecklistTemplateCreateOrConnectWithoutItemsInput = {
@@ -91716,6 +95810,8 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
     titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
     projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutTemplateNestedInput
   }
 
   export type ChecklistTemplateUncheckedUpdateWithoutItemsInput = {
@@ -91733,6 +95829,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
   export type TaskStatusUpsertWithoutVisibleFromItemsInput = {
@@ -91920,6 +96018,8 @@ export namespace Prisma {
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutProjectTemplatesInput = {
@@ -91950,6 +96050,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutProjectTemplatesInput = {
@@ -91972,6 +96074,8 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
     titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
     items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutTemplateInput
   }
 
   export type ChecklistTemplateUncheckedCreateWithoutProjectsInput = {
@@ -91989,6 +96093,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput
   }
 
   export type ChecklistTemplateCreateOrConnectWithoutProjectsInput = {
@@ -92035,6 +96141,8 @@ export namespace Prisma {
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutProjectTemplatesInput = {
@@ -92065,6 +96173,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ChecklistTemplateUpsertWithoutProjectsInput = {
@@ -92093,6 +96203,8 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
     titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
     items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutTemplateNestedInput
   }
 
   export type ChecklistTemplateUncheckedUpdateWithoutProjectsInput = {
@@ -92110,6 +96222,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
   export type TaskCreateWithoutChecklistItemsInput = {
@@ -92139,6 +96253,7 @@ export namespace Prisma {
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
@@ -92169,6 +96284,7 @@ export namespace Prisma {
     deletedBy?: string | null
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
@@ -92262,6 +96378,7 @@ export namespace Prisma {
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
@@ -92292,6 +96409,7 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
@@ -92450,6 +96568,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
@@ -92480,6 +96599,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
@@ -92664,6 +96784,8 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
     items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutTemplateInput
   }
 
   export type ChecklistTemplateUncheckedCreateWithoutTitleLockedFromStageInput = {
@@ -92681,6 +96803,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput
   }
 
   export type ChecklistTemplateCreateOrConnectWithoutTitleLockedFromStageInput = {
@@ -92882,6 +97006,8 @@ export namespace Prisma {
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTasksInput = {
@@ -92912,6 +97038,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTasksInput = {
@@ -93163,6 +97291,29 @@ export namespace Prisma {
     create: XOR<PublishItemCreateWithoutTaskInput, PublishItemUncheckedCreateWithoutTaskInput>
   }
 
+  export type WeeklySlotCreateWithoutTaskInput = {
+    id?: string
+    weekStart: Date | string
+    removedAt?: Date | string | null
+    createdAt?: Date | string
+    project: ProjectCreateNestedOneWithoutWeeklySlotsInput
+    template: ChecklistTemplateCreateNestedOneWithoutWeeklySlotsInput
+  }
+
+  export type WeeklySlotUncheckedCreateWithoutTaskInput = {
+    id?: string
+    projectId: string
+    templateId: string
+    weekStart: Date | string
+    removedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type WeeklySlotCreateOrConnectWithoutTaskInput = {
+    where: WeeklySlotWhereUniqueInput
+    create: XOR<WeeklySlotCreateWithoutTaskInput, WeeklySlotUncheckedCreateWithoutTaskInput>
+  }
+
   export type TaskStatusChangeCreateWithoutTaskInput = {
     id?: string
     action: string
@@ -93236,6 +97387,8 @@ export namespace Prisma {
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTasksInput = {
@@ -93266,6 +97419,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ServiceUpsertWithoutTasksInput = {
@@ -93468,6 +97623,35 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type WeeklySlotUpsertWithoutTaskInput = {
+    update: XOR<WeeklySlotUpdateWithoutTaskInput, WeeklySlotUncheckedUpdateWithoutTaskInput>
+    create: XOR<WeeklySlotCreateWithoutTaskInput, WeeklySlotUncheckedCreateWithoutTaskInput>
+    where?: WeeklySlotWhereInput
+  }
+
+  export type WeeklySlotUpdateToOneWithWhereWithoutTaskInput = {
+    where?: WeeklySlotWhereInput
+    data: XOR<WeeklySlotUpdateWithoutTaskInput, WeeklySlotUncheckedUpdateWithoutTaskInput>
+  }
+
+  export type WeeklySlotUpdateWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutWeeklySlotsNestedInput
+    template?: ChecklistTemplateUpdateOneRequiredWithoutWeeklySlotsNestedInput
+  }
+
+  export type WeeklySlotUncheckedUpdateWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type TaskStatusChangeUpsertWithWhereUniqueWithoutTaskInput = {
     where: TaskStatusChangeWhereUniqueInput
     update: XOR<TaskStatusChangeUpdateWithoutTaskInput, TaskStatusChangeUncheckedUpdateWithoutTaskInput>
@@ -93512,6 +97696,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotCreateNestedOneWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutStatusChangesInput = {
@@ -93542,6 +97727,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotUncheckedCreateNestedOneWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutStatusChangesInput = {
@@ -93635,6 +97821,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUpdateOneWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutStatusChangesInput = {
@@ -93665,6 +97852,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUncheckedUpdateOneWithoutTaskNestedInput
   }
 
   export type WorkspaceMemberUpsertWithoutStatusChangesInput = {
@@ -93747,6 +97935,7 @@ export namespace Prisma {
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
@@ -93777,6 +97966,7 @@ export namespace Prisma {
     deletedBy?: string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
@@ -93813,6 +98003,8 @@ export namespace Prisma {
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutMessagesInput = {
@@ -93843,6 +98035,8 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutMessagesInput = {
@@ -94004,6 +98198,7 @@ export namespace Prisma {
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
@@ -94034,6 +98229,7 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
@@ -94076,6 +98272,8 @@ export namespace Prisma {
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutMessagesInput = {
@@ -94106,6 +98304,8 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ConversationUpsertWithoutMessagesInput = {
@@ -95277,6 +99477,8 @@ export namespace Prisma {
     publishItems?: PublishItemCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutInvoicesInput = {
@@ -95307,6 +99509,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutInvoicesInput = {
@@ -95624,6 +99828,8 @@ export namespace Prisma {
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutInvoicesInput = {
@@ -95654,6 +99860,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ContactUpsertWithoutInvoicesInput = {
@@ -97567,6 +101775,8 @@ export namespace Prisma {
     assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     messages?: MessageCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutPublishItemsInput = {
@@ -97597,6 +101807,8 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     messages?: MessageUncheckedCreateNestedManyWithoutProjectInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutProjectInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutPublishItemsInput = {
@@ -97631,6 +101843,7 @@ export namespace Prisma {
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
+    weeklySlot?: WeeklySlotCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
   }
 
@@ -97661,6 +101874,7 @@ export namespace Prisma {
     deletedBy?: string | null
     checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
     comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
+    weeklySlot?: WeeklySlotUncheckedCreateNestedOneWithoutTaskInput
     statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
   }
 
@@ -97836,6 +102050,8 @@ export namespace Prisma {
     assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutPublishItemsInput = {
@@ -97866,6 +102082,8 @@ export namespace Prisma {
     assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type TaskUpsertWithoutPublishItemInput = {
@@ -97906,6 +102124,7 @@ export namespace Prisma {
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
@@ -97936,6 +102155,7 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
@@ -98737,6 +102957,8 @@ export namespace Prisma {
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutWorkspaceInput = {
@@ -98767,6 +102989,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -99219,6 +103443,8 @@ export namespace Prisma {
     titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
     items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutTemplateNestedInput
   }
 
   export type ChecklistTemplateUncheckedUpdateWithoutWorkspaceInput = {
@@ -99236,6 +103462,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
   export type ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -99455,6 +103683,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
@@ -99485,6 +103714,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
@@ -100049,6 +104279,8 @@ export namespace Prisma {
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutCompanyInput = {
@@ -100079,6 +104311,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutCompanyInput = {
@@ -100503,6 +104737,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
@@ -100533,6 +104768,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
@@ -101061,6 +105297,8 @@ export namespace Prisma {
     publishItems?: PublishItemUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     messages?: MessageUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutStatusInput = {
@@ -101091,6 +105329,8 @@ export namespace Prisma {
     publishItems?: PublishItemUncheckedUpdateManyWithoutProjectNestedInput
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     messages?: MessageUncheckedUpdateManyWithoutProjectNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutStatusInput = {
@@ -101235,6 +105475,21 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ProjectWeeklyTargetCreateManyProjectInput = {
+    id?: string
+    templateId: string
+    perWeek?: number
+  }
+
+  export type WeeklySlotCreateManyProjectInput = {
+    id?: string
+    templateId: string
+    weekStart: Date | string
+    taskId?: string | null
+    removedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
   export type TaskUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     taskNumber?: IntFieldUpdateOperationsInput | number
@@ -101262,6 +105517,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
@@ -101292,6 +105548,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
@@ -101618,6 +105875,51 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectWeeklyTargetUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    perWeek?: IntFieldUpdateOperationsInput | number
+    template?: ChecklistTemplateUpdateOneRequiredWithoutWeeklyTargetsNestedInput
+  }
+
+  export type ProjectWeeklyTargetUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    perWeek?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProjectWeeklyTargetUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    perWeek?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type WeeklySlotUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    template?: ChecklistTemplateUpdateOneRequiredWithoutWeeklySlotsNestedInput
+    task?: TaskUpdateOneWithoutWeeklySlotNestedInput
+  }
+
+  export type WeeklySlotUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WeeklySlotUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProjectFolderCreateManyParentInput = {
     id?: string
     projectId: string
@@ -101735,6 +106037,21 @@ export namespace Prisma {
     projectId: string
   }
 
+  export type ProjectWeeklyTargetCreateManyTemplateInput = {
+    id?: string
+    projectId: string
+    perWeek?: number
+  }
+
+  export type WeeklySlotCreateManyTemplateInput = {
+    id?: string
+    projectId: string
+    weekStart: Date | string
+    taskId?: string | null
+    removedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
   export type ChecklistTemplateItemUpdateWithoutTemplateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -101810,6 +106127,51 @@ export namespace Prisma {
   export type ProjectTemplateUncheckedUpdateManyWithoutTemplateInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ProjectWeeklyTargetUpdateWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    perWeek?: IntFieldUpdateOperationsInput | number
+    project?: ProjectUpdateOneRequiredWithoutWeeklyTargetsNestedInput
+  }
+
+  export type ProjectWeeklyTargetUncheckedUpdateWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    perWeek?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    perWeek?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type WeeklySlotUpdateWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutWeeklySlotsNestedInput
+    task?: TaskUpdateOneWithoutWeeklySlotNestedInput
+  }
+
+  export type WeeklySlotUncheckedUpdateWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WeeklySlotUncheckedUpdateManyWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskChecklistItemCreateManyTemplateItemInput = {
@@ -102044,6 +106406,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
   }
 
@@ -102074,6 +106437,7 @@ export namespace Prisma {
     checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
     comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUncheckedUpdateOneWithoutTaskNestedInput
     statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
   }
 
@@ -102304,6 +106668,8 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
     items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutTemplateNestedInput
   }
 
   export type ChecklistTemplateUncheckedUpdateWithoutTitleLockedFromStageInput = {
@@ -102321,6 +106687,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
   export type ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageInput = {

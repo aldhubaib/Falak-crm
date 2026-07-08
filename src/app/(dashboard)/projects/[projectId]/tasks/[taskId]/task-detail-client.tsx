@@ -252,7 +252,9 @@ export function TaskDetailClient({
   const delItems = items.filter((i) => i.phase === "delivery");
 
   // Requirements are locked once the task leaves Todo; delivery unlocks then.
-  const isTodo = !statusName || statusName === "Todo";
+  // Backlog sits before Todo, so it's pre-work too — delivery stays hidden.
+  const isTodo =
+    !statusName || statusName === "Todo" || statusName === "Backlog";
   const showDelivery = !isTodo;
 
   const sendComment = (body: string) => {
