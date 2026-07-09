@@ -106,6 +106,46 @@ Order matters: only scale to multiple replicas **after** Redis is configured
 3. Centrifugo can stay at 1 replica; with the Redis engine it can be scaled
    later without config changes.
 
+### Connection pool guards (shipped in code)
+
+Each replica's `pg.Pool` now enforces: `connectionTimeoutMillis: 10s` (fail
+fast when the pool is exhausted), `idleTimeoutMillis: 30s` (release idle
+connections), `statement_timeout: 30s` and
+`idle_in_transaction_session_timeout: 30s` (no query or forgotten transaction
+can hold a connection forever).
+
+### PgBouncer (when scaling past ~3 replicas)
+
+When `replicas × DB_POOL_MAX` approaches Postgres `max_connections`, put
+PgBouncer in front of Postgres instead of raising the limit:
+
+1. Deploy the `pgbouncer` template on Railway, point it at the Postgres
+   service, set `pool_mode = transaction`.
+2. Point the app's `DATABASE_URL` at PgBouncer and add
+   `?pgbouncer=true` so Prisma disables prepared statements (required in
+   transaction pooling mode).
+3. Lower `DB_POOL_MAX` per replica (e.g. 10) — PgBouncer multiplexes them onto
+   a small number of real connections.
+
+## 5b. Clerk session settings (fixes the intermittent logouts)
+
+The "app randomly signs me out" reports are Clerk session expiry, not app
+code — nothing in the codebase calls `signOut`. The dashboard layout logs
+every forced redirect (`[auth] dashboard layout redirect -> /sign-in ...` in
+Railway logs) so you can verify frequency before/after changing these.
+
+In the **Clerk Dashboard → Configure → Sessions**:
+
+1. **Inactivity timeout** — turn it **off** (or set it to ≥ 30 days). This is
+   the main culprit: a phone PWA that sits backgrounded past the timeout gets
+   a dead session cookie, and the next server render redirects to `/sign-in`.
+2. **Maximum lifetime** — set to ≥ 30 days (the absolute cap on a session).
+3. Leave "Multi-session handling" as-is; it does not affect expiry.
+
+Code-side mitigations already shipped (no action needed): clerk-js refreshes
+its token whenever the PWA foregrounds, and realtime reconnects no longer
+trigger a full server refresh with a possibly-stale cookie.
+
 ## 6. Observability
 
 - Railway → Postgres → enable slow query logging:
@@ -122,3 +162,9 @@ Order matters: only scale to multiple replicas **after** Redis is configured
 |---|---|---|
 | `REDIS_URL` | app | SSE bus across replicas + short-TTL caches |
 | `CENTRIFUGO_ENGINE_REDIS_ADDRESS` | centrifugo | Redis engine (state survives restarts / replicas) |
+| `SENTRY_DSN` | app | Server-side error tracking (optional, no-op when empty) |
+| `NEXT_PUBLIC_SENTRY_DSN` | app | Browser error tracking (optional) |
+| `SENTRY_AUTH_TOKEN` | app (build) | Source-map upload during `next build` (optional) |
+
+The app exposes `GET /api/health` (DB / Redis / R2 probe; 503 when the DB is
+down) and `railway.toml` points Railway's healthcheck at it.

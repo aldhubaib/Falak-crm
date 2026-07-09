@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import {
@@ -136,10 +137,11 @@ export function AppSidebar() {
               className="flex items-center gap-2.5 rounded-lg p-1 text-left transition-colors hover:bg-accent/60 group-data-[collapsible=icon]:justify-center"
             >
               {user?.imageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={user.imageUrl}
                   alt={user.fullName ?? "You"}
+                  width={28}
+                  height={28}
                   className="h-7 w-7 shrink-0 rounded-full object-cover"
                 />
               ) : (

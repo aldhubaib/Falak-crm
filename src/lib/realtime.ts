@@ -1,9 +1,21 @@
 import { EventEmitter } from "node:events";
-import Redis from "ioredis";
 import {
   publish as centrifugoPublish,
   projectChannel as centrifugoProjectChannel,
+  isCentrifugoConfigured,
 } from "@/lib/centrifugo";
+
+// Weekly Plan slot bookkeeping carried on a move event, so boards can patch
+// their slot placeholders in memory instead of refetching the whole board.
+export type BoardWeeklyDelta = {
+  templateId: string;
+  /** A previously-empty slot was claimed by the moved task. */
+  claimedSlotId?: string;
+  /** A brand-new (bound) slot was created because this week wasn't materialised. */
+  createdExtra?: boolean;
+  /** The task rolled back out of Todo and freed this slot. */
+  releasedSlotId?: string;
+};
 
 // Changed card fields for a `task.moved` event, so subscribed boards can patch
 // their cache in memory instead of refetching the whole board. With 100 open
@@ -21,6 +33,8 @@ export type BoardTaskMovePatch = {
   submittedById: string | null;
   submittedByName: string | null;
   rejectionCountDelta: number;
+  /** Weekly Plan slot change caused by this move, if any. */
+  weekly?: BoardWeeklyDelta | null;
 };
 
 // Checklist progress for a task's board card, broadcast whenever a checklist
@@ -49,9 +63,9 @@ export type RealtimeEvent = {
   snapshot?: Record<string, unknown>;
 };
 
-// Minimal transport interface. `RedisBus` (used when REDIS_URL is set) works
-// across multiple app replicas; `InProcessBus` is the single-instance fallback
-// for local development.
+// Minimal transport interface. Centrifugo is the single production transport;
+// `InProcessBus` remains only as the SSE fallback for local dev (single
+// instance, no Centrifugo configured).
 export interface RealtimeBus {
   publish(channel: string, event: RealtimeEvent): void;
   subscribe(channel: string, listener: (event: RealtimeEvent) => void): () => void;
@@ -76,80 +90,11 @@ class InProcessBus implements RealtimeBus {
   }
 }
 
-// Redis pub/sub bus so SSE events reach clients connected to any app replica.
-// Uses two connections: one for PUBLISH (a subscriber connection cannot issue
-// other commands) and one in subscriber mode. Local dispatch goes through an
-// EventEmitter; Redis channels are SUBSCRIBEd on first local listener and
-// UNSUBSCRIBEd when the last one disconnects.
-class RedisBus implements RealtimeBus {
-  private readonly emitter = new EventEmitter();
-  private readonly pub: Redis;
-  private readonly sub: Redis;
-  private readonly listenerCounts = new Map<string, number>();
-
-  constructor(url: string) {
-    this.emitter.setMaxListeners(0);
-    const options = {
-      lazyConnect: true,
-      maxRetriesPerRequest: 2,
-      enableOfflineQueue: true,
-    };
-    this.pub = new Redis(url, options);
-    this.sub = new Redis(url, options);
-    // Realtime is best-effort: log connection problems, never throw.
-    this.pub.on("error", (err) => console.error("[realtime] redis pub error:", err.message));
-    this.sub.on("error", (err) => console.error("[realtime] redis sub error:", err.message));
-
-    this.sub.on("message", (channel: string, raw: string) => {
-      try {
-        this.emitter.emit(channel, JSON.parse(raw) as RealtimeEvent);
-      } catch {
-        // Malformed payload — drop it.
-      }
-    });
-  }
-
-  publish(channel: string, event: RealtimeEvent): void {
-    this.pub.publish(channel, JSON.stringify(event)).catch(() => {
-      // Best-effort; a dropped broadcast must never break the write path.
-    });
-  }
-
-  subscribe(channel: string, listener: (event: RealtimeEvent) => void): () => void {
-    this.emitter.on(channel, listener);
-    const count = (this.listenerCounts.get(channel) ?? 0) + 1;
-    this.listenerCounts.set(channel, count);
-    if (count === 1) {
-      this.sub.subscribe(channel).catch(() => {});
-    }
-
-    let unsubscribed = false;
-    return () => {
-      if (unsubscribed) return;
-      unsubscribed = true;
-      this.emitter.off(channel, listener);
-      const remaining = (this.listenerCounts.get(channel) ?? 1) - 1;
-      if (remaining <= 0) {
-        this.listenerCounts.delete(channel);
-        this.sub.unsubscribe(channel).catch(() => {});
-      } else {
-        this.listenerCounts.set(channel, remaining);
-      }
-    };
-  }
-}
-
-function createBus(): RealtimeBus {
-  const url = process.env.REDIS_URL;
-  if (url) return new RedisBus(url);
-  return new InProcessBus();
-}
-
-// Persist the bus across dev HMR / module reloads so publishers and subscribers
-// share the same instance (and we don't leak Redis connections).
+// Persist the bus across dev HMR / module reloads so publishers and
+// subscribers share the same instance.
 const globalForBus = globalThis as unknown as { realtimeBus: RealtimeBus | undefined };
 
-export const realtimeBus: RealtimeBus = globalForBus.realtimeBus ?? createBus();
+export const realtimeBus: RealtimeBus = globalForBus.realtimeBus ?? new InProcessBus();
 globalForBus.realtimeBus = realtimeBus;
 
 export function projectChannel(projectId: string): string {
@@ -157,16 +102,20 @@ export function projectChannel(projectId: string): string {
 }
 
 // Convenience publisher used by server actions after a successful write.
-// Publishes to both the SSE bus (Redis-backed in production) and to
-// Centrifugo's project channel (the primary transport across replicas/clients).
+// Centrifugo is the single production transport. The in-process SSE bus is
+// only fed when Centrifugo isn't configured (local dev) — publishing to both
+// would double every event's fan-out for no benefit.
 export function publishTaskEvent(
   projectId: string,
   event: RealtimeEvent,
 ): void {
+  if (isCentrifugoConfigured()) {
+    void centrifugoPublish(centrifugoProjectChannel(projectId), event);
+    return;
+  }
   try {
     realtimeBus.publish(projectChannel(projectId), event);
   } catch {
     // Realtime is best-effort; never let a broadcast failure break the write.
   }
-  void centrifugoPublish(centrifugoProjectChannel(projectId), event);
 }

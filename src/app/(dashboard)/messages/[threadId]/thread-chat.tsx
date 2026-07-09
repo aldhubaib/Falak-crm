@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, useTransition } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -14,8 +16,6 @@ import {
   Search,
   Files as FilesIcon,
   Mic,
-  Pause,
-  Play,
   MoreVertical,
   ChevronDown,
   Reply,
@@ -58,17 +58,29 @@ import { useChannel, usePresence, useTyping } from "@/components/realtime/hooks"
 import {
   AttachmentBubble,
   isVoiceAttachment,
-  Lightbox,
   useLightbox,
-  FilesPanel,
 } from "@/components/messages/chat-attachments";
 import { uploadManager, type UploadItem } from "@/lib/upload-manager";
 import { closeDisplayedNotifications } from "@/lib/app-badge";
+import {
+  ComposerLinkPreview,
+  BubbleLinkPreview,
+  extractFirstUrl,
+  URL_RE,
+} from "@/components/messages/link-preview";
+
+// Rarely-shown heavy views load in their own chunks, not the thread bundle.
+const Lightbox = dynamic(() => import("@/components/messages/lightbox"), {
+  ssr: false,
+});
+const FilesPanel = dynamic(() => import("@/components/messages/files-panel"), {
+  ssr: false,
+});
+const VoiceRecorderBar = dynamic(() => import("./voice-recorder"), {
+  ssr: false,
+});
 
 const QUICK_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🙏"];
-
-// Number of bars in the live recording waveform.
-const VOICE_BAR_COUNT = 40;
 
 export type ChatMessage = {
   id: string;
@@ -124,6 +136,58 @@ function renderBodyWithMentions(
     last = match.index + match[0].length;
   }
   if (last < text.length) parts.push(text.slice(last));
+  return <>{parts}</>;
+}
+
+// Message body renderer: URLs become clickable links (underlined, opening in
+// a new tab) and the remaining text keeps the @mention chip treatment.
+function renderBody(
+  text: string,
+  mentions: string[] | undefined,
+  mine: boolean,
+) {
+  URL_RE.lastIndex = 0;
+  if (!URL_RE.test(text)) return renderBodyWithMentions(text, mentions, mine);
+
+  const parts: React.ReactNode[] = [];
+  let last = 0;
+  let match: RegExpExecArray | null;
+  let key = 0;
+  URL_RE.lastIndex = 0;
+  while ((match = URL_RE.exec(text)) !== null) {
+    if (match.index > last) {
+      parts.push(
+        <span key={`t-${key++}`}>
+          {renderBodyWithMentions(text.slice(last, match.index), mentions, mine)}
+        </span>,
+      );
+    }
+    parts.push(
+      <a
+        key={`u-${key++}`}
+        href={match[0]}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(e) => e.stopPropagation()}
+        className={cn(
+          "break-all underline underline-offset-2",
+          mine
+            ? "text-primary-foreground decoration-primary-foreground/60"
+            : "text-primary decoration-primary/60",
+        )}
+      >
+        {match[0]}
+      </a>,
+    );
+    last = match.index + match[0].length;
+  }
+  if (last < text.length) {
+    parts.push(
+      <span key={`t-${key++}`}>
+        {renderBodyWithMentions(text.slice(last), mentions, mine)}
+      </span>,
+    );
+  }
   return <>{parts}</>;
 }
 
@@ -229,6 +293,9 @@ export function ThreadChat({
   const skipAutoScrollRef = useRef(false);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState<PendingFile[]>([]);
+  // Link preview above the composer: first URL in the draft, unless dismissed.
+  const draftUrl = useMemo(() => extractFirstUrl(draft), [draft]);
+  const [dismissedLinkUrl, setDismissedLinkUrl] = useState<string | null>(null);
   const [outbox, setOutbox] = useState<OutboxEntry[]>([]);
   const dispatchedRef = useRef<Set<string>>(new Set());
   const [, startTransition] = useTransition();
@@ -617,7 +684,10 @@ export function ThreadChat({
                   },
                 ],
           );
-          router.refresh();
+          // No router.refresh() here: the message is already in local state
+          // and the inbox sidebar updates via its own realtime "inbox" event.
+          // A full RSC refresh per sent message was a major re-render tax and
+          // could bounce users to /sign-in when the session cookie was stale.
         } else {
           dispatchedRef.current.delete(entry.tempId);
           setOutbox((prev) =>
@@ -673,6 +743,7 @@ export function ThreadChat({
     setReplyTo(null);
     setPendingTaskRef(null);
     setPickedMentions([]);
+    setDismissedLinkUrl(null);
 
     if (files.length === 0) {
       // Text-only: send straight away (no upload phase).
@@ -712,26 +783,14 @@ export function ThreadChat({
   };
 
   // --- Voice messages ---
+  // The recorder itself (MediaRecorder + waveform) is a lazy component; this
+  // component only tracks whether it's mounted and surfaces its errors.
   const [recording, setRecording] = useState(false);
-  const [recordPaused, setRecordPaused] = useState(false);
-  const [recordSecs, setRecordSecs] = useState(0);
-  const [recordLevels, setRecordLevels] = useState<number[]>(() =>
-    new Array(VOICE_BAR_COUNT).fill(0),
-  );
   const [recordError, setRecordError] = useState<string | null>(null);
-  const recorderRef = useRef<MediaRecorder | null>(null);
-  const recordChunksRef = useRef<Blob[]>([]);
-  const recordTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const discardRecordingRef = useRef(false);
-  // Elapsed-time bookkeeping that survives pause/resume.
-  const recordStartedAtRef = useRef(0);
-  const recordAccumulatedRef = useRef(0);
-  // Live waveform visualizer.
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const rafRef = useRef<number | null>(null);
-  const levelsRef = useRef<number[]>(new Array(VOICE_BAR_COUNT).fill(0));
-  const recordPausedRef = useRef(false);
+  const showRecordError = useCallback((message: string) => {
+    setRecordError(message);
+    setTimeout(() => setRecordError(null), 5000);
+  }, []);
 
   // Send a finished recording through the normal attachment pipeline, so it
   // gets the optimistic bubble, upload progress, retry, reactions and replies
@@ -760,160 +819,6 @@ export function ThreadChat({
     },
     [replyTo],
   );
-
-  // Scrolls the waveform: samples the mic level each frame, shifts the bar
-  // buffer left and appends the newest peak.
-  const runVisualizer = useCallback(() => {
-    const analyser = analyserRef.current;
-    if (!analyser) return;
-    const data = new Uint8Array(analyser.fftSize);
-    const loop = () => {
-      if (!recordPausedRef.current) {
-        analyser.getByteTimeDomainData(data);
-        let peak = 0;
-        for (let i = 0; i < data.length; i++) {
-          const v = Math.abs(data[i] - 128) / 128;
-          if (v > peak) peak = v;
-        }
-        // Amplify so quiet speech is visible.
-        const level = Math.min(1, peak * 2.5);
-        const shifted = levelsRef.current.slice(1);
-        shifted.push(level);
-        levelsRef.current = shifted;
-        setRecordLevels([...shifted]);
-      }
-      rafRef.current = requestAnimationFrame(loop);
-    };
-    rafRef.current = requestAnimationFrame(loop);
-  }, []);
-
-  const cleanupRecordingResources = () => {
-    if (recordTimerRef.current) {
-      clearInterval(recordTimerRef.current);
-      recordTimerRef.current = null;
-    }
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-    }
-    audioCtxRef.current?.close().catch(() => {});
-    audioCtxRef.current = null;
-    analyserRef.current = null;
-  };
-
-  const startRecording = async () => {
-    if (recording) return;
-    if (typeof MediaRecorder === "undefined" || !navigator.mediaDevices?.getUserMedia) {
-      setRecordError("Voice recording is not supported in this browser.");
-      setTimeout(() => setRecordError(null), 4000);
-      return;
-    }
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      // Safari (iOS) records AAC in mp4; Chrome/Firefox record Opus in webm.
-      const mimeType = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"].find(
-        (t) => MediaRecorder.isTypeSupported(t),
-      );
-      const rec = mimeType
-        ? new MediaRecorder(stream, { mimeType })
-        : new MediaRecorder(stream);
-      recordChunksRef.current = [];
-      discardRecordingRef.current = false;
-      recordAccumulatedRef.current = 0;
-      recordPausedRef.current = false;
-      levelsRef.current = new Array(VOICE_BAR_COUNT).fill(0);
-      setRecordLevels(levelsRef.current);
-      setRecordPaused(false);
-      rec.ondataavailable = (e) => {
-        if (e.data.size > 0) recordChunksRef.current.push(e.data);
-      };
-      rec.onstop = () => {
-        stream.getTracks().forEach((t) => t.stop());
-        cleanupRecordingResources();
-        if (!discardRecordingRef.current && recordChunksRef.current.length > 0) {
-          const type = rec.mimeType || "audio/webm";
-          const ext = type.includes("mp4") ? "m4a" : type.includes("ogg") ? "ogg" : "webm";
-          const stamp = new Date();
-          const name = `Voice message ${stamp.toLocaleDateString()} ${stamp
-            .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-            .replace(/:/g, ".")}.${ext}`;
-          const file = new File([new Blob(recordChunksRef.current, { type })], name, { type });
-          sendVoice(file);
-        }
-        recordChunksRef.current = [];
-      };
-      // Visualizer setup — recording continues fine without it.
-      try {
-        const AC =
-          window.AudioContext ??
-          (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-        const ctx = new AC();
-        const src = ctx.createMediaStreamSource(stream);
-        const analyser = ctx.createAnalyser();
-        analyser.fftSize = 256;
-        src.connect(analyser);
-        audioCtxRef.current = ctx;
-        analyserRef.current = analyser;
-        runVisualizer();
-      } catch {}
-      recorderRef.current = rec;
-      rec.start(250);
-      recordStartedAtRef.current = Date.now();
-      setRecordSecs(0);
-      setRecording(true);
-      recordTimerRef.current = setInterval(() => {
-        const running = recordStartedAtRef.current
-          ? Date.now() - recordStartedAtRef.current
-          : 0;
-        setRecordSecs(Math.floor((recordAccumulatedRef.current + running) / 1000));
-      }, 250);
-    } catch {
-      setRecordError("Microphone access was denied. Allow it in your browser settings to send voice messages.");
-      setTimeout(() => setRecordError(null), 5000);
-    }
-  };
-
-  const togglePauseRecording = () => {
-    const rec = recorderRef.current;
-    if (!rec) return;
-    if (rec.state === "recording") {
-      rec.pause();
-      recordAccumulatedRef.current += Date.now() - recordStartedAtRef.current;
-      recordStartedAtRef.current = 0;
-      recordPausedRef.current = true;
-      setRecordPaused(true);
-    } else if (rec.state === "paused") {
-      rec.resume();
-      recordStartedAtRef.current = Date.now();
-      recordPausedRef.current = false;
-      setRecordPaused(false);
-    }
-  };
-
-  const stopRecording = (sendIt: boolean) => {
-    discardRecordingRef.current = !sendIt;
-    try {
-      if (recorderRef.current?.state === "paused") recorderRef.current.resume();
-      recorderRef.current?.stop();
-    } catch {}
-    recorderRef.current = null;
-    setRecording(false);
-    setRecordPaused(false);
-    recordPausedRef.current = false;
-  };
-
-  // Don't leave the mic on if the user navigates away mid-recording.
-  useEffect(() => {
-    return () => {
-      discardRecordingRef.current = true;
-      if (recordTimerRef.current) clearInterval(recordTimerRef.current);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      audioCtxRef.current?.close().catch(() => {});
-      try {
-        recorderRef.current?.stop();
-      } catch {}
-    };
-  }, []);
 
   const retryOutbox = (tempId: string) => {
     const entry = outbox.find((o) => o.tempId === tempId);
@@ -1132,9 +1037,22 @@ export function ThreadChat({
             const replied = m.replyToId ? byId.get(m.replyToId) : null;
             const imageAtts = m.attachments.filter((a) => a.isImage);
             const fileAtts = m.attachments.filter((a) => !a.isImage);
+            const bodyUrl =
+              m.body && m.kind !== "rejection" ? extractFirstUrl(m.body) : null;
 
             return (
-              <div key={m.id} id={`msg-${m.id}`} className={cn("contents", dimmed && "opacity-30")}>
+              <div
+                key={m.id}
+                id={`msg-${m.id}`}
+                className={cn("flex flex-col gap-1.5", dimmed && "opacity-30")}
+                style={{
+                  // Virtualization: rows outside the viewport skip layout and
+                  // paint; the box keeps its last rendered height so scroll
+                  // position and "jump to message" stay stable.
+                  contentVisibility: "auto",
+                  containIntrinsicSize: "auto 48px",
+                }}
+              >
                 {showDay && (
                   <div className="my-2 flex items-center justify-center">
                     <span className="rounded-full bg-surface px-3 py-1 text-tiny font-medium text-muted-foreground">
@@ -1153,10 +1071,11 @@ export function ThreadChat({
                     <div className="w-8 shrink-0 self-start">
                       {showAuthor &&
                         (m.authorImageUrl ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
+                          <Image
                             src={m.authorImageUrl}
                             alt={m.authorName}
+                            width={32}
+                            height={32}
                             referrerPolicy="no-referrer"
                             className="h-8 w-8 rounded-full object-cover"
                           />
@@ -1289,7 +1208,7 @@ export function ThreadChat({
                             ) : (
                               <div className={cn("flex items-end gap-2", notice && "px-0.5")}>
                                 <span className="whitespace-pre-wrap break-words">
-                                  {renderBodyWithMentions(m.body, m.mentions, blue)}
+                                  {renderBody(m.body, m.mentions, blue)}
                                 </span>
                                 <span
                                   className={cn(
@@ -1303,6 +1222,7 @@ export function ThreadChat({
                                 </span>
                               </div>
                             ))}
+                          {bodyUrl && <BubbleLinkPreview url={bodyUrl} />}
                         </div>
                         {/* Message caret dropdown */}
                         <MessageCaret
@@ -1593,63 +1513,18 @@ export function ThreadChat({
               {recordError}
             </div>
           )}
+          {draftUrl && draftUrl !== dismissedLinkUrl && !recording && (
+            <ComposerLinkPreview
+              url={draftUrl}
+              onDismiss={() => setDismissedLinkUrl(draftUrl)}
+            />
+          )}
           {recording ? (
-            <div className="flex items-center gap-2 rounded-2xl border border-border/60 bg-surface/40 p-2 sm:gap-3">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="shrink-0 rounded-full text-muted-foreground hover:text-destructive"
-                aria-label="Discard recording"
-                onClick={() => stopRecording(false)}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-              <div className="flex shrink-0 items-center gap-1.5 text-sm">
-                <span
-                  className={cn(
-                    "h-2 w-2 rounded-full bg-destructive",
-                    !recordPaused && "animate-pulse",
-                  )}
-                  aria-hidden
-                />
-                <span className="font-medium tabular-nums">
-                  {Math.floor(recordSecs / 60)}:{String(recordSecs % 60).padStart(2, "0")}
-                </span>
-              </div>
-              <div
-                className="flex min-w-0 flex-1 items-center justify-center gap-[2px]"
-                aria-hidden
-              >
-                {recordLevels.map((v, i) => (
-                  <span
-                    key={i}
-                    className="w-[2px] rounded-full bg-muted-foreground/70"
-                    style={{
-                      height: `${Math.max(3, Math.round(v * 26))}px`,
-                      opacity: recordPaused ? 0.35 : 0.5 + v * 0.5,
-                      transition: "height 90ms linear",
-                    }}
-                  />
-                ))}
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="shrink-0 rounded-full text-destructive hover:text-destructive"
-                onClick={togglePauseRecording}
-                aria-label={recordPaused ? "Resume recording" : "Pause recording"}
-              >
-                {recordPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
-              </Button>
-              <Button
-                size="icon"
-                className="shrink-0 rounded-full bg-success text-background hover:bg-success/90"
-                onClick={() => stopRecording(true)}
-                aria-label="Send voice message"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
+            <VoiceRecorderBar
+              onFinish={sendVoice}
+              onClose={() => setRecording(false)}
+              onError={showRecordError}
+            />
           ) : (
           <div className="flex items-end gap-2 rounded-2xl border border-border/60 bg-surface/40 p-2">
             <input
@@ -1776,7 +1651,7 @@ export function ThreadChat({
                 variant="ghost"
                 size="icon"
                 className="rounded-full"
-                onClick={startRecording}
+                onClick={() => setRecording(true)}
                 aria-label="Record voice message"
               >
                 <Mic className="h-4 w-4" />

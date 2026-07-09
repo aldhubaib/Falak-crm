@@ -191,6 +191,26 @@ export async function uploadBytes(
   );
 }
 
+// Streaming PUT for the upload proxy fallback: pipes the request body straight
+// to R2 without buffering the whole file in memory. Requires the exact byte
+// length up front (single-part S3 PUTs cannot be chunked).
+export async function uploadStream(
+  body: import("node:stream").Readable,
+  contentLength: number,
+  key: string,
+  contentType: string
+): Promise<void> {
+  await s3.send(
+    new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+      Body: body,
+      ContentLength: contentLength,
+      ContentType: contentType,
+    })
+  );
+}
+
 export async function headBucket(): Promise<boolean> {
   try {
     await s3.send(new HeadBucketCommand({ Bucket: BUCKET }));

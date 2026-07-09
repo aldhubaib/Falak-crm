@@ -19,6 +19,16 @@ function createClient() {
   const pool = globalForPrisma.pool ?? new pg.Pool({
     connectionString,
     max: POOL_MAX,
+    // Fail fast instead of queueing forever when the pool is exhausted or the
+    // database is unreachable — surfaces as an error rather than a hung page.
+    connectionTimeoutMillis: 10_000,
+    // Return idle connections to Postgres so replicas don't pin the server's
+    // connection budget.
+    idleTimeoutMillis: 30_000,
+    // Server-side guards: no single query or forgotten transaction may hold a
+    // connection indefinitely.
+    statement_timeout: 30_000,
+    idle_in_transaction_session_timeout: 30_000,
   });
   globalForPrisma.pool = pool;
 

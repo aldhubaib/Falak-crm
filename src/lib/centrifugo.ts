@@ -89,8 +89,10 @@ async function apiCall(method: string, params: unknown): Promise<void> {
         "X-API-Key": API_KEY,
       },
       body: JSON.stringify(params),
-      // Never let a realtime broadcast delay or break the originating request.
+      // Never let a realtime broadcast delay or break the originating request:
+      // a hung Centrifugo node must not hold server actions open.
       cache: "no-store",
+      signal: AbortSignal.timeout(5_000),
     });
     if (!res.ok) {
       console.error(

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import * as Sentry from "@sentry/nextjs";
 import { AlertTriangle, RotateCcw, Copy, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { createAppError, formatErrorForClipboard, type AppError } from "@/lib/errors";
 
@@ -16,6 +17,7 @@ export default function GlobalError({
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
+    Sentry.captureException(error);
     const err = createAppError(error, {
       action: "Application rendering",
       context: { digest: error.digest },

@@ -25,6 +25,8 @@ export async function getProjectAssets(projectId: string, folderId?: string | nu
     db.projectAsset.findMany({
       where: { projectId, folderId: folderId || null, deletedAt: null },
       orderBy: { createdAt: "desc" },
+      // Newest 500 per folder — bounds the query for bulk-imported folders.
+      take: 500,
     }),
   ]);
 

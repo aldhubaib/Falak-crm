@@ -98,6 +98,9 @@ export async function getInvoices(): Promise<InvoiceListRow[]> {
       },
     },
     orderBy: { createdAt: "desc" },
+    // Bounded: the list renders the newest window; anything older is reachable
+    // by direct link/search rather than one ever-growing query.
+    take: 500,
   });
 
   return rows.map((inv) => ({

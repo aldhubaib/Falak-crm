@@ -47,6 +47,7 @@ import { addTaskComment } from "@/actions/comments";
 import { uploadManager } from "@/lib/upload-manager";
 import type { BoardData, BoardStatus, BoardTask, WeeklyGroup } from "@/actions/board";
 import {
+  applyWeeklyDelta,
   boardQueryKey,
   useBoardData,
   useBoardStream,
@@ -204,7 +205,13 @@ const BoardCard = memo(function BoardCard({
       {...attributes}
       data-task-card
       onClick={() => onOpen(task.id)}
-      style={{ opacity: isDragging ? 0.4 : 1 }}
+      style={{
+        opacity: isDragging ? 0.4 : 1,
+        // Virtualization: off-screen cards skip layout/paint entirely; the
+        // box keeps its last rendered size so column scrolling stays stable.
+        contentVisibility: "auto",
+        containIntrinsicSize: "auto 120px",
+      }}
       className={cn(
         "group/card relative block select-none rounded-lg border border-border/60 bg-surface p-3 text-left transition-colors hover:border-muted-foreground/20",
         // touch-none suppresses native scrolling from a touch on the card, so
@@ -535,12 +542,13 @@ export function ProjectBoardClient({
       setMoveError(err instanceof Error ? err.message : "Failed to move task");
     },
     // The server resolves who owns the task after a move (self-assign going
-    // forward, auto-assign stages, previous owner on rejection). Patch the
-    // card immediately instead of waiting for the background refetch.
+    // forward, auto-assign stages, previous owner on rejection) plus any
+    // Weekly Plan slot change. Patch the cache from the result — no
+    // invalidate-and-refetch; remote boards sync via the realtime patch.
     onSuccess: (result, vars) => {
       queryClient.setQueryData<BoardData>(boardQueryKey(projectId), (old) => {
         if (!old) return old;
-        return {
+        const withTask = {
           ...old,
           tasks: old.tasks.map((t) =>
             t.id === vars.taskId
@@ -553,10 +561,8 @@ export function ProjectBoardClient({
               : t,
           ),
         };
+        return applyWeeklyDelta(withTask, result.weekly);
       });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
     },
   });
 
@@ -606,9 +612,8 @@ export function ProjectBoardClient({
       if (ctx?.prev) queryClient.setQueryData(boardQueryKey(projectId), ctx.prev);
       setMoveError("The task couldn't be assigned to you. Please try again.");
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
-    },
+    // No onSettled invalidate: the optimistic patch above is the final state
+    // and remote boards sync via the task.updated broadcast.
   });
 
   const openSelfAssign = useCallback((task: BoardTask) => {
@@ -644,9 +649,7 @@ export function ProjectBoardClient({
       if (ctx?.prev) queryClient.setQueryData(boardQueryKey(projectId), ctx.prev);
       setMoveError("The slot couldn't be removed. Please try again.");
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
-    },
+    // No onSettled invalidate: the optimistic removal is the final state.
   });
   const removeSlot = useCallback(
     (slotId: string) => removeSlotMutation.mutate(slotId),

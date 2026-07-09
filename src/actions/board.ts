@@ -1,7 +1,6 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { fieldConfig } from "@/lib/checklist-config";
 import { requireProjectWork } from "@/lib/workspace";
 import { weekStartOf } from "@/lib/week";
 import { ensureWeeklySlots } from "@/lib/weekly-slots";
@@ -66,7 +65,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
   // them back — the first board visit of a new week creates the fresh slots.
   await ensureWeeklySlots(projectId);
 
-  const [tasks, statuses, changes, slots] = await Promise.all([
+  const [tasks, statuses, changes, checklistAgg, slots] = await Promise.all([
     db.task.findMany({
       where: { projectId, deletedAt: null },
       orderBy: { order: "asc" },
@@ -84,25 +83,6 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         status: { select: { name: true, color: true } },
         assignee: { select: { id: true, name: true, email: true, imageUrl: true } },
         service: { select: { name: true } },
-        checklistItems: {
-          select: {
-            name: true,
-            phase: true,
-            mandatory: true,
-            completed: true,
-            hidden: true,
-            // Live template config — the per-task copy is only a fallback.
-            templateItem: {
-              select: {
-                name: true,
-                phase: true,
-                mandatory: true,
-                hidden: true,
-                templateId: true,
-              },
-            },
-          },
-        },
       },
     }),
     db.taskStatus.findMany({
@@ -134,6 +114,44 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         AND t."projectId" = ${projectId}
         AND t."deletedAt" IS NULL
       ORDER BY c."taskId", c."createdAt" DESC
+    `,
+    // Checklist progress per card, aggregated in the database instead of
+    // loading every checklist row (with its template item) for every task.
+    // Config precedence matches fieldConfig(): the LIVE template item wins
+    // when the field is still linked; the per-task snapshot is the fallback.
+    db.$queryRaw<
+      {
+        taskId: string;
+        total: number;
+        done: number;
+        deliveryIncomplete: string[];
+        templateId: string | null;
+      }[]
+    >`
+      SELECT
+        ci."taskId" AS "taskId",
+        COUNT(*) FILTER (
+          WHERE NOT COALESCE(ti."hidden", ci."hidden")
+        )::int AS "total",
+        COUNT(*) FILTER (
+          WHERE NOT COALESCE(ti."hidden", ci."hidden") AND ci."completed"
+        )::int AS "done",
+        COALESCE(
+          array_agg(COALESCE(ti."name", ci."name")) FILTER (
+            WHERE NOT COALESCE(ti."hidden", ci."hidden")
+              AND COALESCE(ti."phase", ci."phase") = 'delivery'
+              AND COALESCE(ti."mandatory", ci."mandatory")
+              AND NOT ci."completed"
+          ),
+          '{}'
+        ) AS "deliveryIncomplete",
+        MAX(ti."templateId") AS "templateId"
+      FROM "TaskChecklistItem" ci
+      JOIN "Task" t ON t."id" = ci."taskId"
+      LEFT JOIN "ChecklistTemplateItem" ti ON ti."id" = ci."templateItemId"
+      WHERE t."projectId" = ${projectId}
+        AND t."deletedAt" IS NULL
+      GROUP BY ci."taskId"
     `,
     db.weeklySlot.findMany({
       where: { projectId, weekStart: weekStartOf(), removedAt: null },
@@ -169,6 +187,8 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
     }
   }
 
+  const checklistByTask = new Map(checklistAgg.map((row) => [row.taskId, row]));
+
   const now = Date.now();
   const mappedTasks: BoardTask[] = tasks.map((t) => {
     const pastMs = Object.values(
@@ -177,11 +197,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
     const currentMs = t.stageEnteredAt
       ? now - t.stageEnteredAt.getTime()
       : 0;
-    // Counts follow the LIVE template config (hidden/phase/mandatory), so a
-    // settings change is reflected on every card without touching tasks.
-    const checklist = t.checklistItems
-      .map((i) => ({ cfg: fieldConfig(i), completed: i.completed }))
-      .filter((i) => !i.cfg.hidden);
+    const checklist = checklistByTask.get(t.id);
     return {
       id: t.id,
       taskNumber: t.taskNumber,
@@ -198,17 +214,13 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
       completedAt: t.completedAt?.toISOString() ?? null,
       createdAt: t.createdAt.toISOString(),
       totalTimeMs: pastMs + currentMs,
-      checklistTotal: checklist.length,
-      checklistDone: checklist.filter((i) => i.completed).length,
-      deliveryIncomplete: checklist
-        .filter((i) => i.cfg.phase === "delivery" && i.cfg.mandatory && !i.completed)
-        .map((i) => i.cfg.name),
+      checklistTotal: checklist?.total ?? 0,
+      checklistDone: checklist?.done ?? 0,
+      deliveryIncomplete: checklist?.deliveryIncomplete ?? [],
       submittedById: submittedBy.get(t.id)?.id ?? null,
       submittedByName: submittedBy.get(t.id)?.name ?? null,
       rejectionCount: t.rejectionCount ?? 0,
-      templateId:
-        t.checklistItems.find((i) => i.templateItem?.templateId)?.templateItem
-          ?.templateId ?? null,
+      templateId: checklist?.templateId ?? null,
     };
   });
 

@@ -25,13 +25,18 @@ export async function addTaskComment(
 export async function getTaskComments(taskId: string) {
   const { workspace } = await requireWorkspaceWithMember();
 
-  const comments = await db.message.findMany({
-    where: { taskId },
-    include: {
-      author: { select: { id: true, userId: true, name: true, email: true } },
-    },
-    orderBy: { createdAt: "asc" },
-  });
+  // Newest 100, rendered oldest → newest. Busy tasks used to load their whole
+  // comment history on every task page render.
+  const comments = (
+    await db.message.findMany({
+      where: { taskId },
+      include: {
+        author: { select: { id: true, userId: true, name: true, email: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 100,
+    })
+  ).reverse();
 
   // Attachments live in their own table keyed by entity — join them in so the
   // task page can render files posted with a comment (e.g. decline screenshots).
@@ -76,6 +81,8 @@ export async function getTaskHistory(taskId: string) {
       member: { select: { id: true, name: true, email: true, imageUrl: true } },
     },
     orderBy: { createdAt: "desc" },
+    // Newest 100 status changes — enough for the history panel.
+    take: 100,
   });
 }
 

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import {
   Search,
@@ -23,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import {
+  getInboxThreads,
   getMessageableMembers,
   getOrCreateDirectConversation,
   type InboxThread,
@@ -70,7 +72,7 @@ export function MessagesMain({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function ThreadSidebar({ threads }: { threads: InboxThread[] }) {
+export function ThreadSidebar({ threads: initialThreads }: { threads: InboxThread[] }) {
   const pathname = usePathname();
   const router = useRouter();
   const onThread = useOnThread();
@@ -81,23 +83,46 @@ export function ThreadSidebar({ threads }: { threads: InboxThread[] }) {
   const permissions = usePermissions();
   const canCompose = permissions.chat === "full";
 
+  // The thread list lives in local state and refetches via the server action —
+  // NOT router.refresh(), which re-rendered the whole RSC tree (layout + open
+  // thread) on every inbox ping and thread switch.
+  const [threads, setThreads] = useState<InboxThread[]>(initialThreads);
+  useEffect(() => setThreads(initialThreads), [initialThreads]);
+  const refetching = useRef(false);
+  const refetchThreads = useCallback(() => {
+    if (refetching.current) return;
+    refetching.current = true;
+    getInboxThreads()
+      .then(setThreads)
+      .catch(() => {})
+      .finally(() => {
+        refetching.current = false;
+      });
+  }, []);
+
   const cent = useCentrifugo();
   const online = usePresence(
     cent ? workspacePresenceChannel(cent.workspaceId) : null,
   );
 
-  // Live inbox: refresh the server-rendered thread list when anything lands on
-  // our user channel.
+  // Live inbox: refetch the thread list when anything lands on our user channel.
   useChannel(cent ? userChannel(cent.memberId) : null, (data) => {
     const d = data as { type?: string } | null;
-    if (d?.type === "inbox") router.refresh();
+    if (d?.type === "inbox") refetchThreads();
   });
+
+  // Resync after a realtime outage (see CentrifugoProvider).
+  useEffect(() => {
+    const onResync = () => refetchThreads();
+    window.addEventListener("realtime:resync", onResync);
+    return () => window.removeEventListener("realtime:resync", onResync);
+  }, [refetchThreads]);
 
   // Opening a thread marks its notifications read on the server, but this
   // sidebar lives in the layout and keeps its stale thread list across
   // navigations — refetch it so the unread counter clears.
   useEffect(() => {
-    if (onThread) router.refresh();
+    if (onThread) refetchThreads();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
@@ -281,10 +306,11 @@ function ThreadRow({
     >
       <div className="relative shrink-0">
         {thread.imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={thread.imageUrl}
             alt={thread.name}
+            width={36}
+            height={36}
             referrerPolicy="no-referrer"
             className="h-9 w-9 rounded-full object-cover"
           />

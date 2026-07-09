@@ -666,6 +666,10 @@ model Task {
   @@index([projectId, statusId])
   @@index([projectId, order])
   @@index([projectId, deletedAt])
+  // Board query: live tasks per project grouped by column.
+  @@index([projectId, deletedAt, statusId])
+  // Publish queue: completed/review tasks with publishing enabled.
+  @@index([statusId, publish, deletedAt])
 }
 
 model TaskStatusChange {
@@ -794,6 +798,8 @@ model Notification {
   recipient WorkspaceMember @relation("NotificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
 
   @@index([recipientId, read, createdAt])
+  // Inbox unread rollup (GROUP BY linkUrl) + mark-thread-read by linkUrl.
+  @@index([recipientId, read, linkUrl])
 }
 
 model PushSubscription {

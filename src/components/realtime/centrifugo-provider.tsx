@@ -10,7 +10,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
+import { useQueryClient } from "@tanstack/react-query";
 import { Centrifuge, Subscription } from "centrifuge";
 import { workspacePresenceChannel } from "@/lib/channels";
 
@@ -60,14 +61,36 @@ export function CentrifugoProvider({
   workspaceId: string;
   children: ReactNode;
 }) {
-  const router = useRouter();
+  const { getToken } = useAuth();
+  const queryClient = useQueryClient();
   const [connected, setConnected] = useState(false);
   const clientRef = useRef<Centrifuge | null>(null);
   // True after a disconnect so the next "connected" event can resync data the
-  // client missed while the socket was down (server refetch of the open view).
+  // client missed while the socket was down.
   const wasDisconnectedRef = useRef(false);
-  const routerRef = useRef(router);
-  routerRef.current = router;
+  const getTokenRef = useRef(getToken);
+  getTokenRef.current = getToken;
+  const queryClientRef = useRef(queryClient);
+  queryClientRef.current = queryClient;
+
+  // Resync after a gap WITHOUT router.refresh(): a full RSC refresh re-runs
+  // auth() in the layout and, right after the PWA wakes with a stale Clerk
+  // cookie, that used to bounce users to /sign-in. Instead: (1) let clerk-js
+  // refresh its session token first, (2) invalidate React Query caches (board
+  // etc. refetch via server actions), (3) broadcast an event that non-RQ views
+  // (chat, inbox) listen to for their own incremental refetch.
+  const resyncRef = useRef<() => void>(() => {});
+  resyncRef.current = () => {
+    void (async () => {
+      try {
+        await getTokenRef.current();
+      } catch {
+        // Clerk unreachable — proceed; server actions will surface auth state.
+      }
+      queryClientRef.current.invalidateQueries();
+      window.dispatchEvent(new CustomEvent("realtime:resync"));
+    })();
+  };
   // channel -> { sub, handlers } so multiple listeners share one Subscription.
   const subsRef = useRef<
     Map<string, { sub: Subscription; handlers: Set<MessageHandler> }>
@@ -78,6 +101,25 @@ export function CentrifugoProvider({
   // showing as "Offline" to everyone while still using the app.
   const pinnedRef = useRef<Set<string>>(new Set());
   const ensureSubRef = useRef<((channel: string) => unknown) | null>(null);
+
+  // Session keep-alive: when the PWA foregrounds after sitting in the
+  // background (phone pocket, app switcher), ask clerk-js for a fresh token
+  // BEFORE any refresh/navigation fires. This renews the session cookie so
+  // the next server render doesn't see an expired session and redirect to
+  // /sign-in — the main cause of the "app logged me out" reports.
+  useEffect(() => {
+    const touch = () => {
+      if (document.visibilityState === "visible") {
+        getTokenRef.current({ skipCache: true }).catch(() => {});
+      }
+    };
+    document.addEventListener("visibilitychange", touch);
+    window.addEventListener("focus", touch);
+    return () => {
+      document.removeEventListener("visibilitychange", touch);
+      window.removeEventListener("focus", touch);
+    };
+  }, []);
 
   useEffect(() => {
     if (!WS_URL) {
@@ -99,13 +141,12 @@ export function CentrifugoProvider({
       const presenceChannel = workspacePresenceChannel(workspaceId);
       pinnedRef.current.add(presenceChannel);
       ensureSubRef.current?.(presenceChannel);
-      // Back online after an outage: refetch the open view so anything missed
-      // while disconnected (messages, inbox rows, presence) appears without a
-      // manual refresh. Channel history recovery covers short gaps; this is
-      // the belt-and-braces catch-all for long ones.
+      // Back online after an outage: resync anything missed while disconnected
+      // (messages, inbox rows, presence). Channel history recovery covers
+      // short gaps; this is the belt-and-braces catch-all for long ones.
       if (wasDisconnectedRef.current) {
         wasDisconnectedRef.current = false;
-        routerRef.current.refresh();
+        resyncRef.current();
       }
     });
     client.on("disconnected", () => {
@@ -155,7 +196,7 @@ export function CentrifugoProvider({
     // config). If the gap was too large to recover, refetch from the server.
     sub.on("subscribed", (ctx) => {
       if (ctx.wasRecovering && !ctx.recovered) {
-        routerRef.current.refresh();
+        resyncRef.current();
       }
     });
     sub.on("error", (ctx) => {

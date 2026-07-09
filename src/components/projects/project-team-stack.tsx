@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState, useTransition } from "react";
+import Image from "next/image";
 import { Plus, X, Search, UserPlus, Loader2 } from "lucide-react";
 import {
   Popover,
@@ -61,10 +61,11 @@ function MemberAvatar({
 }) {
   if (imageUrl) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
+      <Image
         src={imageUrl}
         alt={name}
+        width={size}
+        height={size}
         className={cn(
           "shrink-0 rounded-full object-cover",
           ring && "border-2 border-background",
@@ -104,28 +105,16 @@ export function ProjectTeamStack({
   candidates: ProjectTeamCandidate[];
   roles: ProjectTeamRole[];
 }) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [pending, startTransition] = useTransition();
 
-  const available = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return candidates.filter((m) =>
-      q
-        ? m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q)
-        : true,
-    );
-  }, [candidates, query]);
-
-  const filteredMembers = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return members;
-    return members.filter(
-      (m) =>
-        m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q),
-    );
-  }, [members, query]);
+  // Optimistic team list: every change applies here instantly and the server
+  // action runs in the background (its revalidatePath refreshes the page data
+  // — no extra router.refresh, which used to double the server work and made
+  // the popover feel hung). On failure the change is rolled back.
+  const [team, setTeam] = useState<ProjectTeamMember[]>(members);
+  useEffect(() => setTeam(members), [members]);
 
   const defaultRoleId = () =>
     roles.find((r) => /member/i.test(r.name))?.id ?? roles[0]?.id ?? null;
@@ -133,22 +122,80 @@ export function ProjectTeamStack({
   const roleName = (id: string | null) =>
     id ? (roles.find((r) => r.id === id)?.name ?? "Member") : "No role";
 
-  const run = (fn: () => Promise<unknown>) =>
-    startTransition(async () => {
-      await fn();
-      router.refresh();
-    });
+  const available = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return candidates
+      .filter((c) => !team.some((m) => m.memberId === c.id))
+      .filter((m) =>
+        q
+          ? m.name.toLowerCase().includes(q) ||
+            m.email.toLowerCase().includes(q)
+          : true,
+      );
+  }, [candidates, team, query]);
 
-  const addMember = (memberId: string) =>
-    run(() => addProjectMember(projectId, memberId, defaultRoleId()));
-  const changeRole = (memberId: string, roleId: string) =>
-    run(() => setProjectMemberRole(projectId, memberId, roleId));
-  const remove = (memberId: string) =>
-    run(() => removeProjectMember(projectId, memberId));
+  const filteredMembers = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return team;
+    return team.filter(
+      (m) =>
+        m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q),
+    );
+  }, [team, query]);
+
+  const addMember = (c: ProjectTeamCandidate) => {
+    const roleId = defaultRoleId();
+    const optimistic: ProjectTeamMember = {
+      memberId: c.id,
+      name: c.name,
+      email: c.email,
+      imageUrl: c.imageUrl,
+      roleId,
+      roleName: roleName(roleId),
+    };
+    setTeam((prev) => [...prev, optimistic]);
+    startTransition(async () => {
+      try {
+        await addProjectMember(projectId, c.id, roleId);
+      } catch {
+        setTeam((prev) => prev.filter((m) => m.memberId !== c.id));
+      }
+    });
+  };
+
+  const changeRole = (memberId: string, roleId: string) => {
+    const before = team.find((m) => m.memberId === memberId)?.roleId ?? null;
+    setTeam((prev) =>
+      prev.map((m) => (m.memberId === memberId ? { ...m, roleId } : m)),
+    );
+    startTransition(async () => {
+      try {
+        await setProjectMemberRole(projectId, memberId, roleId);
+      } catch {
+        setTeam((prev) =>
+          prev.map((m) =>
+            m.memberId === memberId ? { ...m, roleId: before } : m,
+          ),
+        );
+      }
+    });
+  };
+
+  const remove = (memberId: string) => {
+    const before = team;
+    setTeam((prev) => prev.filter((m) => m.memberId !== memberId));
+    startTransition(async () => {
+      try {
+        await removeProjectMember(projectId, memberId);
+      } catch {
+        setTeam(before);
+      }
+    });
+  };
 
   const MAX = 3;
-  const shown = members.slice(0, MAX);
-  const extra = members.length - shown.length;
+  const shown = team.slice(0, MAX);
+  const extra = team.length - shown.length;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -158,7 +205,7 @@ export function ProjectTeamStack({
           aria-label="Project team"
           className="flex items-center -space-x-2 rounded-full p-0.5 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          {members.length === 0 ? (
+          {team.length === 0 ? (
             <span className="grid h-7 w-7 place-items-center rounded-full border border-dashed border-muted-foreground/60 text-muted-foreground">
               <Plus className="h-3.5 w-3.5" />
             </span>
@@ -186,7 +233,7 @@ export function ProjectTeamStack({
               {pending && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
             </div>
             <div className="text-tiny text-muted-foreground">
-              {members.length} member{members.length === 1 ? "" : "s"}
+              {team.length} member{team.length === 1 ? "" : "s"}
             </div>
           </div>
           <div className="relative">
@@ -217,7 +264,6 @@ export function ProjectTeamStack({
                       <button
                         type="button"
                         onClick={() => remove(m.memberId)}
-                        disabled={pending}
                         aria-label={`Remove ${m.name}`}
                         className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-destructive/10 hover:text-destructive disabled:opacity-50"
                       >
@@ -230,7 +276,7 @@ export function ProjectTeamStack({
                       <SearchableSelect
                         value={m.roleId ?? ""}
                         onValueChange={(v) => changeRole(m.memberId, v)}
-                        disabled={pending || roles.length === 0}
+                        disabled={roles.length === 0}
                         searchPlaceholder="Search roles…"
                         className="h-7 w-full border-transparent bg-muted/40 text-xs shadow-none hover:bg-muted"
                         contentClassName="w-48 min-w-48"
@@ -265,9 +311,8 @@ export function ProjectTeamStack({
                 <button
                   key={m.id}
                   type="button"
-                  disabled={pending}
-                  onClick={() => addMember(m.id)}
-                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left hover:bg-muted disabled:opacity-50"
+                  onClick={() => addMember(m)}
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left hover:bg-muted"
                 >
                   <MemberAvatar name={m.name} imageUrl={m.imageUrl} muted />
                   <div className="min-w-0 flex-1 break-words text-sm font-medium">
@@ -281,7 +326,7 @@ export function ProjectTeamStack({
             </>
           )}
 
-          {candidates.length === 0 && members.length === 0 && (
+          {candidates.length === 0 && team.length === 0 && (
             <div className="px-3 py-6 text-center text-xs text-muted-foreground">
               No team members yet. Invite people from Settings › Team.
             </div>

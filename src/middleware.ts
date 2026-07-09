@@ -8,6 +8,7 @@ const isPublicRoute = createRouteMatcher([
   "/portal/(.*)",
   "/api/webhooks(.*)",
   "/api/public/(.*)",
+  "/api/health",
   "/manifest.json",
   "/sw.js",
 ]);

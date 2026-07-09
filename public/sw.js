@@ -1,4 +1,4 @@
-const CACHE_NAME = "falak-crm-b4f53c45";
+const CACHE_NAME = "falak-crm-aa3dadb9";
 
 self.addEventListener("install", () => {
   // Don't skipWaiting automatically — wait for user to accept the update
@@ -23,6 +23,12 @@ self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
   if (url.pathname.startsWith("/api/")) return;
+
+  // Never intercept React Server Component payloads: caching them serves
+  // stale UI after deploys and can desync client-side navigation.
+  if (url.searchParams.has("_rsc") || event.request.headers.get("RSC") === "1") {
+    return;
+  }
 
   event.respondWith(
     fetch(event.request)

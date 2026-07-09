@@ -1,15 +1,17 @@
 "use server";
 
+import { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 import {
   requireWorkspaceWithMember,
   getProjectAccess,
   getAccessibleProjectScope,
 } from "@/lib/workspace";
+import { cached, invalidateInboxCache } from "@/lib/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
 import { canEdit } from "@/lib/permissions";
 import { isArchivedStatus } from "@/lib/utils";
-import { sendNotification } from "@/lib/push";
+import { notifyMany } from "@/lib/push";
 import { createPresignedGet } from "@/lib/storage";
 import {
   broadcast,
@@ -506,17 +508,15 @@ export async function sendMessage(
       }
     }
 
-    for (const rid of new Set(recipients)) {
-      void sendNotification({
-        recipientId: rid,
-        type: notifyType,
-        title,
-        body: preview,
-        url,
-        tag: `msg-${message.id}`,
-        icon: notifyIcon,
-      });
-    }
+    // Batched: one INSERT + one badge query for all recipients (see notifyMany).
+    void notifyMany([...new Set(recipients)], {
+      type: notifyType,
+      title,
+      body: preview,
+      url,
+      tag: `msg-${message.id}`,
+      icon: notifyIcon,
+    });
 
     // Live delivery: thread channels for open views, user channels for inbox.
     const threadChannels: string[] = [];
@@ -525,9 +525,11 @@ export async function sendMessage(
     if (conversationId) threadChannels.push(conversationChannel(conversationId));
     void broadcast(threadChannels, { type: "message.new", message: dto });
 
-    const inboxTargets = conversationId ? participantIds : [...recipients, member.id];
+    const inboxTargets = [...new Set(conversationId ? participantIds : [...recipients, member.id])];
+    // Cached inbox summaries are now stale for everyone in the thread.
+    void invalidateInboxCache(inboxTargets);
     void broadcast(
-      [...new Set(inboxTargets)].map(userChannel),
+      inboxTargets.map(userChannel),
       { type: "inbox", threadId, projectId, taskId, conversationId },
     );
 
@@ -660,17 +662,54 @@ export type InboxThread = {
   archived: boolean;
 };
 
+// One row per thread: its newest message. Fetched with DISTINCT ON instead of
+// a per-thread nested `take: 1` include, which exploded into one lateral
+// subquery per project/conversation on every inbox render.
+type LastMessageRow = {
+  threadId: string;
+  body: string;
+  createdAt: Date;
+  authorName: string | null;
+  authorEmail: string;
+};
+
+async function lastMessagesByThread(
+  column: "projectId" | "conversationId",
+  ids: string[],
+): Promise<Map<string, LastMessageRow>> {
+  if (ids.length === 0) return new Map();
+  const col = Prisma.raw(`"${column}"`);
+  const rows = await db.$queryRaw<LastMessageRow[]>`
+    SELECT DISTINCT ON (m.${col})
+      m.${col} AS "threadId",
+      m."body",
+      m."createdAt",
+      a."name" AS "authorName",
+      a."email" AS "authorEmail"
+    FROM "TaskComment" m
+    JOIN "WorkspaceMember" a ON a."id" = m."authorId"
+    WHERE m.${col} IN (${Prisma.join(ids)})
+    ORDER BY m.${col}, m."createdAt" DESC, m."id" DESC
+  `;
+  return new Map(rows.map((r) => [r.threadId, r]));
+}
+
+// Cached briefly: the inbox is re-requested on every /messages navigation and
+// realtime "inbox" ping; writers invalidate the cache so updates are instant.
+const INBOX_CACHE_TTL_SECONDS = 30;
+
 // Inbox = one "Everything feed" thread per accessible project (task comments +
 // rejections + project chat all roll up here) plus one thread per direct
 // conversation the member is in.
 export async function getInboxThreads(): Promise<InboxThread[]> {
   const { workspace, member } = await requireWorkspaceWithMember();
-  const scope = await getAccessibleProjectScope();
 
-  // Every accessible project appears in the inbox — including ones with an
-  // empty chat — so newly invited members can find and start the conversation.
-  const projectWhere =
-    scope.all
+  return cached(`inbox:${member.id}`, INBOX_CACHE_TTL_SECONDS, async () => {
+    const scope = await getAccessibleProjectScope();
+
+    // Every accessible project appears in the inbox — including ones with an
+    // empty chat — so newly invited members can find and start the conversation.
+    const projectWhere = scope.all
       ? { workspaceId: workspace.id, deletedAt: null }
       : {
           workspaceId: workspace.id,
@@ -678,118 +717,114 @@ export async function getInboxThreads(): Promise<InboxThread[]> {
           id: { in: scope.projectIds ?? [] },
         };
 
-  const [projects, conversations, unreadCounts] = await Promise.all([
-    db.project.findMany({
-      where: projectWhere,
-      select: {
-        id: true,
-        name: true,
-        thumbnailId: true,
-        status: { select: { name: true } },
-        messages: {
-          orderBy: { createdAt: "desc" },
-          take: 1,
-          include: { author: { select: { id: true, name: true, email: true } } },
+    const [projects, conversations, unreadCounts] = await Promise.all([
+      db.project.findMany({
+        where: projectWhere,
+        select: {
+          id: true,
+          name: true,
+          thumbnailId: true,
+          status: { select: { name: true } },
         },
-      },
-    }),
-    db.conversation.findMany({
-      where: {
-        workspaceId: workspace.id,
-        participants: { some: { memberId: member.id } },
-      },
-      include: {
-        participants: {
-          include: {
-            member: {
-              select: { id: true, name: true, email: true, imageUrl: true },
+      }),
+      db.conversation.findMany({
+        where: {
+          workspaceId: workspace.id,
+          participants: { some: { memberId: member.id } },
+        },
+        include: {
+          participants: {
+            include: {
+              member: {
+                select: { id: true, name: true, email: true, imageUrl: true },
+              },
             },
           },
         },
-        messages: {
-          orderBy: { createdAt: "desc" },
-          take: 1,
-          include: { author: { select: { id: true, name: true, email: true } } },
-        },
-      },
-    }),
-    db.notification.groupBy({
-      by: ["linkUrl"],
-      where: { recipientId: member.id, read: false, linkUrl: { not: null } },
-      _count: true,
-    }),
-  ]);
+      }),
+      db.notification.groupBy({
+        by: ["linkUrl"],
+        where: { recipientId: member.id, read: false, linkUrl: { not: null } },
+        _count: true,
+      }),
+    ]);
 
-  const unreadMap = new Map<string, number>();
-  for (const row of unreadCounts) {
-    if (row.linkUrl) unreadMap.set(row.linkUrl, row._count);
-  }
+    const [lastByProject, lastByConversation] = await Promise.all([
+      lastMessagesByThread("projectId", projects.map((p) => p.id)),
+      lastMessagesByThread("conversationId", conversations.map((c) => c.id)),
+    ]);
 
-  const projectThreads: InboxThread[] = projects.map((p) => {
-    const last = p.messages[0];
-    // Everything feed unread = project-feed notifications + any task-level
-    // mention/rejection notifications within this project.
-    let unread = unreadMap.get(`/messages/project-${p.id}`) ?? 0;
-    const taskPrefix = `/projects/${p.id}/`;
-    for (const [url, count] of unreadMap) {
-      if (url.startsWith(taskPrefix)) unread += count;
+    const unreadMap = new Map<string, number>();
+    for (const row of unreadCounts) {
+      if (row.linkUrl) unreadMap.set(row.linkUrl, row._count);
     }
-    return {
-      id: `project-${p.id}`,
-      kind: "project" as const,
-      name: p.name,
-      subtitle: "Project chat",
-      projectId: p.id,
-      conversationId: null,
-      thumbnailId: p.thumbnailId ?? null,
-      peerMemberIds: [],
-      lastMessage: last ? toDisplayBody(last.body) || "📎 Attachment" : "",
-      lastAuthor: last ? (last.author.name ?? last.author.email) : "",
-      lastAt: last ? last.createdAt.toISOString() : "",
-      unread,
-      avatar: generateColor(p.name),
-      initials: p.name.charAt(0).toUpperCase(),
-      imageUrl: null,
-      archived: isArchivedStatus(p.status?.name),
-    };
-  });
 
-  const dmThreads: InboxThread[] = conversations
-    .filter((c) => c.messages.length > 0 || c.isGroup)
-    .map((c) => {
-      const others = c.participants
-        .map((pp) => pp.member)
-        .filter((m) => m.id !== member.id);
-      const name =
-        c.title ??
-        (others.map((m) => m.name ?? m.email).join(", ") || "Direct message");
-      const last = c.messages[0];
+    const projectThreads: InboxThread[] = projects.map((p) => {
+      const last = lastByProject.get(p.id);
+      // Everything feed unread = project-feed notifications + any task-level
+      // mention/rejection notifications within this project.
+      let unread = unreadMap.get(`/messages/project-${p.id}`) ?? 0;
+      const taskPrefix = `/projects/${p.id}/`;
+      for (const [url, count] of unreadMap) {
+        if (url.startsWith(taskPrefix)) unread += count;
+      }
       return {
-        id: `conv-${c.id}`,
-        kind: "direct" as const,
-        name,
-        subtitle: c.isGroup ? `${c.participants.length} members` : "Direct message",
-        projectId: null,
-        conversationId: c.id,
-        thumbnailId: null,
-        peerMemberIds: others.map((m) => m.id),
+        id: `project-${p.id}`,
+        kind: "project" as const,
+        name: p.name,
+        subtitle: "Project chat",
+        projectId: p.id,
+        conversationId: null,
+        thumbnailId: p.thumbnailId ?? null,
+        peerMemberIds: [],
         lastMessage: last ? toDisplayBody(last.body) || "📎 Attachment" : "",
-        lastAuthor: last ? (last.author.name ?? last.author.email) : "",
-        lastAt: last ? last.createdAt.toISOString() : "",
-        unread: unreadMap.get(`/messages/conv-${c.id}`) ?? 0,
-        avatar: generateColor(name),
-        initials: name.charAt(0).toUpperCase(),
-        // 1:1 chats show the other person's photo; groups keep initials.
-        imageUrl: !c.isGroup && others.length === 1 ? (others[0].imageUrl ?? null) : null,
-        archived: false,
+        lastAuthor: last ? (last.authorName ?? last.authorEmail) : "",
+        lastAt: last ? new Date(last.createdAt).toISOString() : "",
+        unread,
+        avatar: generateColor(p.name),
+        initials: p.name.charAt(0).toUpperCase(),
+        imageUrl: null,
+        archived: isArchivedStatus(p.status?.name),
       };
     });
 
-  // Most recent activity first; threads with no messages yet sink to the end.
-  return [...projectThreads, ...dmThreads].sort((a, b) => {
-    const ta = a.lastAt ? new Date(a.lastAt).getTime() : 0;
-    const tb = b.lastAt ? new Date(b.lastAt).getTime() : 0;
-    return tb - ta;
+    const dmThreads: InboxThread[] = conversations
+      .filter((c) => lastByConversation.has(c.id) || c.isGroup)
+      .map((c) => {
+        const others = c.participants
+          .map((pp) => pp.member)
+          .filter((m) => m.id !== member.id);
+        const name =
+          c.title ??
+          (others.map((m) => m.name ?? m.email).join(", ") || "Direct message");
+        const last = lastByConversation.get(c.id);
+        return {
+          id: `conv-${c.id}`,
+          kind: "direct" as const,
+          name,
+          subtitle: c.isGroup ? `${c.participants.length} members` : "Direct message",
+          projectId: null,
+          conversationId: c.id,
+          thumbnailId: null,
+          peerMemberIds: others.map((m) => m.id),
+          lastMessage: last ? toDisplayBody(last.body) || "📎 Attachment" : "",
+          lastAuthor: last ? (last.authorName ?? last.authorEmail) : "",
+          lastAt: last ? new Date(last.createdAt).toISOString() : "",
+          unread: unreadMap.get(`/messages/conv-${c.id}`) ?? 0,
+          avatar: generateColor(name),
+          initials: name.charAt(0).toUpperCase(),
+          // 1:1 chats show the other person's photo; groups keep initials.
+          imageUrl: !c.isGroup && others.length === 1 ? (others[0].imageUrl ?? null) : null,
+          archived: false,
+        };
+      });
+
+    // Most recent activity first; threads with no messages yet sink to the end.
+    return [...projectThreads, ...dmThreads].sort((a, b) => {
+      const ta = a.lastAt ? new Date(a.lastAt).getTime() : 0;
+      const tb = b.lastAt ? new Date(b.lastAt).getTime() : 0;
+      return tb - ta;
+    });
   });
 }
 

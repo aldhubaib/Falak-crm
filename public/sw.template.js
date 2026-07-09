@@ -24,6 +24,12 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (url.pathname.startsWith("/api/")) return;
 
+  // Never intercept React Server Component payloads: caching them serves
+  // stale UI after deploys and can desync client-side navigation.
+  if (url.searchParams.has("_rsc") || event.request.headers.get("RSC") === "1") {
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {

@@ -3,7 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { getBoardData, type BoardData, type BoardTask } from "@/actions/board";
-import type { BoardChecklistPatch, BoardTaskMovePatch } from "@/lib/realtime";
+import type {
+  BoardChecklistPatch,
+  BoardTaskMovePatch,
+  BoardWeeklyDelta,
+} from "@/lib/realtime";
 import { useCentrifugo } from "@/components/realtime/centrifugo-provider";
 import { projectChannel } from "@/lib/channels";
 
@@ -49,6 +53,36 @@ export type RemoteDrags = Record<string, { name: string; ts: number }>;
 // remote highlight clears itself after this long.
 const DRAG_TTL_MS = 15_000;
 
+// Apply a Weekly Plan slot change to the cached board data in memory. Returns
+// the input unchanged when the delta doesn't apply (e.g. unknown template
+// group) — the weekly targets sync up on the next natural refetch.
+export function applyWeeklyDelta(
+  data: BoardData,
+  delta: BoardWeeklyDelta | null | undefined,
+): BoardData {
+  if (!delta) return data;
+  const group = data.weekly.find((g) => g.templateId === delta.templateId);
+  if (!group) return data;
+  let next = group;
+  if (delta.claimedSlotId && group.emptySlotIds.includes(delta.claimedSlotId)) {
+    next = {
+      ...next,
+      emptySlotIds: next.emptySlotIds.filter((id) => id !== delta.claimedSlotId),
+    };
+  }
+  if (delta.createdExtra) {
+    next = { ...next, total: next.total + 1 };
+  }
+  if (delta.releasedSlotId && !group.emptySlotIds.includes(delta.releasedSlotId)) {
+    next = { ...next, emptySlotIds: [...next.emptySlotIds, delta.releasedSlotId] };
+  }
+  if (next === group) return data;
+  return {
+    ...data,
+    weekly: data.weekly.map((g) => (g.templateId === delta.templateId ? next : g)),
+  };
+}
+
 // Apply a realtime task event straight to the React Query cache. Events carry
 // the changed data (snapshot on create, patch on move), so remote boards
 // update in memory with zero refetch — critical when 100 screens are open and
@@ -75,7 +109,7 @@ function applyBoardEvent(
     queryClient.setQueryData<BoardData>(key, (old) => {
       if (!old) return old;
       if (!old.tasks.some((t) => t.id === event.taskId)) return old;
-      return {
+      const withTask = {
         ...old,
         tasks: old.tasks.map((t) =>
           t.id === event.taskId
@@ -96,10 +130,11 @@ function applyBoardEvent(
             : t,
         ),
       };
+      // Any Weekly Plan slot claimed/freed by the move rides on the patch —
+      // applied in memory, so a move no longer triggers a board refetch on
+      // every open screen.
+      return applyWeeklyDelta(withTask, patch.weekly);
     });
-    // A move into/out of Todo may have claimed or freed a Weekly Plan slot —
-    // refetch in the background so the slot placeholders stay truthful.
-    invalidate();
     return;
   }
 

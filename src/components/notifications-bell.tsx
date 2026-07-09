@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { Bell, Check, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -66,10 +66,22 @@ export function NotificationsBell() {
     });
   }, [startTransition]);
 
+  // Polling is the fallback only: while the realtime socket is connected,
+  // pushes on the user channel drive updates and the 30s poll stays off.
+  const cent = useCentrifugo();
+  const realtimeActive = Boolean(cent?.enabled && cent.connected);
   useEffect(() => {
     refresh();
+    if (realtimeActive) return;
     const interval = setInterval(refresh, 30_000);
     return () => clearInterval(interval);
+  }, [refresh, realtimeActive]);
+
+  // Resync after a realtime outage (see CentrifugoProvider).
+  useEffect(() => {
+    const onResync = () => refresh();
+    window.addEventListener("realtime:resync", onResync);
+    return () => window.removeEventListener("realtime:resync", onResync);
   }, [refresh]);
 
   // Mirror the unread count on the OS app icon (installed PWA). The service
@@ -82,11 +94,17 @@ export function NotificationsBell() {
   }, [unreadCount]);
 
   // Instant updates: refresh the moment something lands on our user channel.
-  // A `notification.read` event means notifications were read on another
-  // device — also close the matching push notifications in this device's tray.
-  const cent = useCentrifugo();
+  // Debounced — a message send emits both an "inbox" and a "notification.new"
+  // event within milliseconds; one refetch covers both. A `notification.read`
+  // event means notifications were read on another device — also close the
+  // matching push notifications in this device's tray.
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+  }, []);
   useChannel(cent ? userChannel(cent.memberId) : null, (data) => {
-    refresh();
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(refresh, 400);
     const event = data as {
       type?: string;
       clearAll?: boolean;

@@ -1,7 +1,9 @@
 "use client";
 
 import {
+  createContext,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -10,6 +12,7 @@ import {
   useTransition,
   type ReactNode,
 } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -65,6 +68,7 @@ import { cn } from "@/lib/utils";
 import {
   saveChecklistItemText,
   removeChecklistItemAttachment,
+  getChecklistItemState,
   deleteTask,
   updateTask,
   updateTaskStatus,
@@ -75,7 +79,8 @@ import { CONFIRM_MESSAGES } from "@/components/board/confirm-messages";
 import { useActionHandler } from "@/hooks/use-action";
 import { restoreRecord, permanentDeleteRecord } from "@/actions/delete";
 import { addTaskComment } from "@/actions/comments";
-import type { MessageAttachment } from "@/actions/messages";
+import { sendMessage } from "@/actions/messages";
+import type { MessageAttachment, MessageDTO } from "@/actions/messages";
 import { AttachmentBubble } from "@/components/messages/chat-attachments";
 import { useChannel } from "@/components/realtime/hooks";
 import { taskChannel } from "@/lib/channels";
@@ -114,6 +119,18 @@ export type ChecklistItem = {
   /** Whether this field is read-only at the task's current stage. */
   locked: boolean;
 };
+
+// The History side panel loads in its own chunk only when opened.
+const TaskHistoryPanel = dynamic(() => import("./task-history-panel"), {
+  ssr: false,
+});
+
+// Patch one checklist field's local state (completed flag, attachment info)
+// after a save/upload/remove — replaces the old router.refresh() per change,
+// which re-rendered the entire RSC tree.
+const ChecklistPatchContext = createContext<
+  (id: string, patch: Partial<ChecklistItem>) => void
+>(() => {});
 
 function useChecklistUpload(itemId: string): UploadItem | undefined {
   const subscribe = useCallback(
@@ -248,8 +265,22 @@ export function TaskDetailClient({
       router.push("/settings/trash");
     });
 
-  const reqItems = items.filter((i) => i.phase === "create");
-  const delItems = items.filter((i) => i.phase === "delivery");
+  // Checklist fields live in local state so saves/uploads/removals patch in
+  // place instead of refreshing the whole page. Server props re-seed on real
+  // navigations.
+  const [itemList, setItemList] = useState<ChecklistItem[]>(items);
+  useEffect(() => setItemList(items), [items]);
+  const patchChecklistItem = useCallback(
+    (id: string, patch: Partial<ChecklistItem>) => {
+      setItemList((prev) =>
+        prev.map((i) => (i.id === id ? { ...i, ...patch } : i)),
+      );
+    },
+    [],
+  );
+
+  const reqItems = itemList.filter((i) => i.phase === "create");
+  const delItems = itemList.filter((i) => i.phase === "delivery");
 
   // Requirements are locked once the task leaves Todo; delivery unlocks then.
   // Backlog sits before Todo, so it's pre-work too — delivery stays hidden.
@@ -257,21 +288,44 @@ export function TaskDetailClient({
     !statusName || statusName === "Todo" || statusName === "Backlog";
   const showDelivery = !isTodo;
 
+  // Comments live in local state so sending/receiving one never triggers a
+  // full router.refresh() (which re-renders the whole RSC tree and re-runs
+  // auth in the layout). Server props re-seed the list on real navigations.
+  const [commentList, setCommentList] = useState<CommentEntry[]>(comments);
+  useEffect(() => setCommentList(comments), [comments]);
+
+  const appendComment = useCallback((m: MessageDTO) => {
+    setCommentList((prev) =>
+      prev.some((c) => c.id === m.id)
+        ? prev
+        : [
+            ...prev,
+            {
+              id: m.id,
+              body: m.body,
+              authorName: m.authorName,
+              createdAt: m.createdAt,
+              attachments: m.attachments,
+            },
+          ],
+    );
+  }, []);
+
   const sendComment = (body: string) => {
     startTransition(async () => {
-      await addTaskComment(taskId, body, projectId);
-      router.refresh();
+      const res = await sendMessage({ taskId, projectId, body });
+      if (res.ok) appendComment(res.data);
     });
   };
 
-  // Live comments/rejections: refresh when a new message lands on this task.
+  // Live comments/rejections: append when a new message lands on this task.
   useChannel(taskChannel(taskId), (data) => {
-    const d = data as { type?: string } | null;
-    if (d?.type === "message.new") router.refresh();
+    const d = data as { type?: string; message?: MessageDTO } | null;
+    if (d?.type === "message.new" && d.message) appendComment(d.message);
   });
 
   return (
-    <>
+    <ChecklistPatchContext.Provider value={patchChecklistItem}>
       <AppHeader
         backHref={trashed ? "/settings/trash" : `/projects/${projectId}`}
         title={
@@ -395,7 +449,7 @@ export function TaskDetailClient({
               projectId={projectId}
               taskId={taskId}
               move={move}
-              items={items}
+              items={itemList}
             />
           )}
 
@@ -493,9 +547,9 @@ export function TaskDetailClient({
             title="Comments"
             hint="Discussion about this task."
           >
-            {comments.length > 0 && (
+            {commentList.length > 0 && (
               <div className="mb-3 space-y-3">
-                {comments.map((c) => (
+                {commentList.map((c) => (
                   <CommentItem key={c.id} comment={c} />
                 ))}
               </div>
@@ -523,7 +577,7 @@ export function TaskDetailClient({
           onClose={() => setHistoryOpen(false)}
         />
       )}
-    </>
+    </ChecklistPatchContext.Provider>
   );
 }
 
@@ -634,8 +688,9 @@ function StatusMoveBar({
           .map((i) => i.attachmentId!);
         uploadManager.removeItems(ids);
       }
+      // The comment lands in the thread via the task channel's message.new
+      // event — no page refresh needed.
       await addTaskComment(taskId, body, projectId, "rejection", attachmentIds);
-      router.refresh();
     } catch {
       // Comment failure shouldn't block the move.
     }
@@ -998,6 +1053,18 @@ function formatDurationMs(ms: number): string {
   return `${seconds}s`;
 }
 
+function formatRelativeDate(iso: string) {
+  const ms = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(ms / 60000);
+  if (m < 1) return "just now";
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  if (d < 7) return `${d}d ago`;
+  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
 const MENTION_RE = /@\[([^\]]+)\]\(([^)]+)\)/g;
 
 // Render a comment body, turning @[Name](id) mention tokens into styled chips.
@@ -1047,167 +1114,6 @@ function CommentItem({ comment }: { comment: CommentEntry }) {
             ))}
           </div>
         )}
-      </div>
-    </div>
-  );
-}
-
-function formatRelativeDate(iso: string) {
-  const ms = Date.now() - new Date(iso).getTime();
-  const m = Math.floor(ms / 60000);
-  if (m < 1) return "just now";
-  if (m < 60) return `${m}m ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  const d = Math.floor(h / 24);
-  if (d < 7) return `${d}d ago`;
-  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
-}
-
-function TaskHistoryPanel({
-  statusName,
-  statusColor,
-  stageEnteredAt,
-  history,
-  totalTimeMs,
-  tab,
-  onTabChange,
-  onClose,
-}: {
-  statusName: string | null;
-  statusColor: string;
-  stageEnteredAt: string | null;
-  history: HistoryEntry[];
-  totalTimeMs: number;
-  tab: "all" | "comments" | "status";
-  onTabChange: (tab: "all" | "comments" | "status") => void;
-  onClose: () => void;
-}) {
-  const statusEntries = history.filter((h) => h.action === "status_change" || h.action === "created");
-  const displayEntries = tab === "status" ? statusEntries : history;
-  const statusCount = statusEntries.filter((h) => h.action === "status_change").length;
-
-  const [, tick] = useState(0);
-  useEffect(() => {
-    const iv = setInterval(() => tick((n) => n + 1), 60_000);
-    return () => clearInterval(iv);
-  }, []);
-
-  const currentDuration = stageEnteredAt
-    ? Date.now() - new Date(stageEnteredAt).getTime()
-    : 0;
-
-  return (
-    <div className="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l border-border bg-background shadow-2xl animate-in slide-in-from-right duration-200">
-      {/* Header */}
-      <div className="flex items-center gap-3 border-b border-border/60 px-4 py-3">
-        <History className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm font-semibold">Task History</span>
-        <div className="ml-auto flex items-center gap-1.5">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-[10px] font-mono tabular-nums text-muted-foreground">
-            <Clock className="h-3 w-3" />
-            Total {formatDurationMs(totalTimeMs)}
-          </span>
-        </div>
-        <button
-          type="button"
-          onClick={onClose}
-          className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-muted/40 hover:text-foreground"
-        >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex items-center gap-4 border-b border-border/60 px-4 py-2">
-        {([
-          { key: "all" as const, icon: List, label: "All", count: history.length },
-          { key: "comments" as const, icon: MessageSquare, label: "Comments", count: 0 },
-          { key: "status" as const, icon: ArrowRight, label: "Status", count: statusCount },
-        ]).map((t) => (
-          <button
-            key={t.key}
-            type="button"
-            onClick={() => onTabChange(t.key)}
-            className={cn(
-              "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors",
-              tab === t.key
-                ? "border-primary/40 bg-primary/10 text-primary"
-                : "border-transparent text-muted-foreground hover:text-foreground",
-            )}
-          >
-            <t.icon className="h-3 w-3" />
-            {t.label}
-            <span className="tabular-nums">{t.count}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Timeline */}
-      <div className="flex-1 overflow-y-auto p-4">
-        <div className="space-y-6">
-          {/* Current status */}
-          {statusName && (
-            <div className="flex items-start gap-3">
-              <div
-                className="mt-1 h-3 w-3 shrink-0 rounded-full"
-                style={{ backgroundColor: statusColor }}
-              />
-              <div>
-                <p className="text-sm font-medium">
-                  Currently in {statusName}
-                </p>
-                {stageEnteredAt && (
-                  <span className="mt-1 inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold tabular-nums text-primary">
-                    <Clock className="h-2.5 w-2.5" />
-                    {formatDurationMs(currentDuration)} · ongoing
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* History entries */}
-          {displayEntries.map((entry) => (
-            <div key={entry.id} className="flex items-start gap-3">
-              <div className="mt-1.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted text-[9px] font-semibold text-muted-foreground">
-                {(entry.memberName ?? "?").charAt(0).toUpperCase()}
-              </div>
-              <div className="min-w-0 flex-1">
-                {entry.action === "created" ? (
-                  <p className="text-sm">
-                    <span className="font-medium">{entry.memberName ?? "Someone"}</span>
-                    {" "}created this task
-                  </p>
-                ) : (
-                  <p className="text-sm">
-                    <span className="font-medium">{entry.memberName ?? "Someone"}</span>
-                    {" "}moved from {entry.fromStatusName ?? "—"}{" "}
-                    <ArrowRight className="inline h-3 w-3 text-muted-foreground" />{" "}
-                    {entry.toStatusName ?? "—"}
-                  </p>
-                )}
-                <div className="mt-1 flex flex-wrap items-center gap-2">
-                  <span className="text-[10px] text-muted-foreground">
-                    {formatRelativeDate(entry.createdAt)}
-                  </span>
-                  {entry.durationMs != null && (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-violet-500/30 bg-violet-500/10 px-2 py-0.5 text-[10px] font-semibold tabular-nums text-violet-400">
-                      <Clock className="h-2.5 w-2.5" />
-                      {formatDurationMs(entry.durationMs)}
-                    </span>
-                  )}
-                  {entry.fromStatusName && (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-2 py-0.5 text-[10px] text-muted-foreground">
-                      <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground" />
-                      {entry.fromStatusName}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
@@ -1334,13 +1240,16 @@ function TaskFieldControl({
   projectId: string;
   readOnly: boolean;
 }) {
-  const router = useRouter();
+  const patchItem = useContext(ChecklistPatchContext);
   const [, startTransition] = useTransition();
 
   const saveText = (value: string) => {
+    // Optimistic: the typed value is the new truth; the server only decides
+    // whether the field now counts as complete.
+    patchItem(item.id, { textValue: value });
     startTransition(async () => {
-      await saveChecklistItemText(item.id, value, projectId);
-      router.refresh();
+      const res = await saveChecklistItemText(item.id, value, projectId);
+      patchItem(item.id, { completed: res.completed });
     });
   };
 
@@ -1587,14 +1496,19 @@ function FollowUpFile({
   projectId: string;
   readOnly: boolean;
 }) {
-  const router = useRouter();
+  const patchItem = useContext(ChecklistPatchContext);
   const [, startTransition] = useTransition();
   const upload = useChecklistUpload(item.id);
   const required = !!yesFollowUp(item.type)?.file?.required;
 
+  // When the upload finishes, fetch the field's fresh state (attachment id,
+  // name, presigned preview URL) and patch it in place — no page refresh.
   useEffect(() => {
-    if (upload?.status === "done") router.refresh();
-  }, [upload?.status, router]);
+    if (upload?.status !== "done") return;
+    getChecklistItemState(item.id, projectId)
+      .then((s) => patchItem(item.id, s))
+      .catch(() => {});
+  }, [upload?.status, item.id, projectId, patchItem]);
 
   const pick = (f: File | null) => {
     if (!f) return;
@@ -1607,7 +1521,13 @@ function FollowUpFile({
   const remove = () =>
     startTransition(async () => {
       await removeChecklistItemAttachment(item.id, projectId);
-      router.refresh();
+      patchItem(item.id, {
+        attachmentId: null,
+        attachmentName: null,
+        attachmentUrl: null,
+        attachmentContentType: null,
+        completed: false,
+      });
     });
 
   if (item.attachmentId && item.attachmentUrl) {
@@ -1713,7 +1633,7 @@ function TaskFileField({
   projectId: string;
   readOnly: boolean;
 }) {
-  const router = useRouter();
+  const patchItem = useContext(ChecklistPatchContext);
   const [, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -1732,10 +1652,14 @@ function TaskFileField({
   const accepts = allowedExtsFor(category, item.allowedFormats);
   const accept = accepts.length > 0 ? accepts.join(",") : undefined;
 
-  // When an upload finishes, refresh so the saved attachment renders.
+  // When an upload finishes, fetch the saved attachment's fresh state and
+  // patch this field in place — no full page refresh.
   useEffect(() => {
-    if (upload?.status === "done") router.refresh();
-  }, [upload?.status, router]);
+    if (upload?.status !== "done") return;
+    getChecklistItemState(item.id, projectId)
+      .then((s) => patchItem(item.id, s))
+      .catch(() => {});
+  }, [upload?.status, item.id, projectId, patchItem]);
 
   const handlePick = async (picked: File | null) => {
     if (!picked) return;
@@ -1760,7 +1684,13 @@ function TaskFileField({
   const remove = () => {
     startTransition(async () => {
       await removeChecklistItemAttachment(item.id, projectId);
-      router.refresh();
+      patchItem(item.id, {
+        attachmentId: null,
+        attachmentName: null,
+        attachmentUrl: null,
+        attachmentContentType: null,
+        completed: false,
+      });
     });
   };
 

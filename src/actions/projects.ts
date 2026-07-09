@@ -8,9 +8,9 @@ import { autoLockOrder, fieldConfig, isFieldLocked, isGateComplete, titleLockCon
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
-import { deleteObject, uploadBytes, generateR2Key } from "@/lib/storage";
+import { createPresignedGet, deleteObject, uploadBytes, generateR2Key } from "@/lib/storage";
 import { sendNotification } from "@/lib/push";
-import { publishTaskEvent } from "@/lib/realtime";
+import { publishTaskEvent, type BoardWeeklyDelta } from "@/lib/realtime";
 import type { BoardTask } from "@/actions/board";
 import { invalidateCache, claimThrottle } from "@/lib/cache";
 import { weekStartOf } from "@/lib/week";
@@ -529,6 +529,10 @@ export type MoveTaskResult =
       taskId: string;
       statusId: string;
       assignee: { id: string; name: string; imageUrl: string | null } | null;
+      /** Weekly Plan slot change caused by this move — the mover's board
+       * patches its placeholders in place (remote boards get it via the
+       * broadcast patch). */
+      weekly: BoardWeeklyDelta | null;
     }
   | { ok: false; error: string };
 
@@ -542,9 +546,10 @@ export async function updateTaskStatus(
   const access = await requireProjectWork(projectId);
   const { workspace, member } = access;
 
-  // Independent reads run concurrently to shave latency off the drag response.
-  const [blockers, task, targetStatus, allStatuses] = await Promise.all([
-    getStageGateBlockers(taskId, statusId),
+  // One task fetch serves both the stage-gate check and the move itself —
+  // getStageGateBlockers used to re-load the task with a massive duplicate
+  // include graph in parallel on every single drag.
+  const [task, allStatuses] = await Promise.all([
     db.task.findUnique({
       where: { id: taskId },
       include: {
@@ -552,29 +557,60 @@ export async function updateTaskStatus(
         checklistItems: {
           select: {
             name: true,
+            type: true,
+            role: true,
             phase: true,
             mandatory: true,
             completed: true,
             hidden: true,
+            textValue: true,
+            attachmentId: true,
+            requiredBeforeStageId: true,
             templateItem: {
               select: {
                 name: true,
+                type: true,
+                role: true,
                 phase: true,
                 mandatory: true,
                 hidden: true,
                 templateId: true,
+                requiredBeforeStageId: true,
               },
             },
           },
         },
       },
     }),
-    db.taskStatus.findUnique({ where: { id: statusId } }),
     db.taskStatus.findMany({
       where: { workspaceId: workspace.id },
       orderBy: { order: "asc" },
     }),
   ]);
+
+  // Resolving the target from the workspace's status list also scopes it to
+  // the caller's workspace (the old findUnique-by-id lookup did not).
+  const targetStatus = allStatuses.find((s) => s.id === statusId) ?? null;
+  const stageOrderById = new Map(allStatuses.map((s) => [s.id, s.order]));
+
+  // Stage-gate check: fields with a "Required Before" stage at or before the
+  // target stage must be complete. Rules come from the live template config;
+  // detached fields fall back to their own snapshot.
+  const blockers: { itemName: string; role: string }[] = [];
+  if (task && targetStatus) {
+    for (const ci of task.checklistItems) {
+      const cfg = fieldConfig(ci);
+      if (cfg.hidden) continue;
+      if (isGateComplete(ci, cfg)) continue;
+      const gateStageId = cfg.requiredBeforeStageId;
+      if (!gateStageId) continue;
+      const gateOrder = stageOrderById.get(gateStageId);
+      if (gateOrder == null) continue;
+      if (gateOrder <= targetStatus.order) {
+        blockers.push({ itemName: cfg.name, role: cfg.role });
+      }
+    }
+  }
 
   if (blockers.length > 0) {
     const names = blockers.map((b) => `"${b.itemName}"`).join(", ");
@@ -585,7 +621,7 @@ export async function updateTaskStatus(
   }
 
   const fromOrder = task?.status ? allStatuses.find((s) => s.id === task.status!.id)?.order ?? 0 : 0;
-  const toOrder = allStatuses.find((s) => s.id === statusId)?.order ?? 0;
+  const toOrder = targetStatus?.order ?? 0;
   const isForward = toOrder > fromOrder;
 
   // Stage-level move rights: the role's Forward/Rollback flag on the task's
@@ -680,6 +716,14 @@ export async function updateTaskStatus(
   }
   // Rolling back OUT of Todo frees the task's slot for someone else this week.
   const releaseSlot = !isForward && task?.status?.name === "Todo";
+  // Resolve which slot gets freed BEFORE the transaction clears it, so the
+  // broadcast can tell boards exactly which placeholder to restore.
+  const releasedSlot = releaseSlot
+    ? await db.weeklySlot.findUnique({
+        where: { taskId },
+        select: { id: true, templateId: true },
+      })
+    : null;
 
   const history: Record<string, string> = (task?.assignmentHistory as Record<string, string>) ?? {};
 
@@ -795,6 +839,17 @@ export async function updateTaskStatus(
       ? now.toISOString()
       : null;
 
+  // Weekly Plan slot change, if any — carried on the broadcast patch and the
+  // action result so every board (the mover's included) can patch its slot
+  // placeholders in memory instead of refetching the whole board.
+  const weeklyDelta: BoardWeeklyDelta | null = claimSlotId && taskTemplateId
+    ? { templateId: taskTemplateId, claimedSlotId: claimSlotId }
+    : createExtraSlot && taskTemplateId
+      ? { templateId: taskTemplateId, createdExtra: true }
+      : releasedSlot
+        ? { templateId: releasedSlot.templateId, releasedSlotId: releasedSlot.id }
+        : null;
+
   // Broadcast to other connected board clients immediately after the commit.
   // The patch lets every subscribed board apply the move in memory — no
   // refetch storm when many screens are open.
@@ -814,6 +869,7 @@ export async function updateTaskStatus(
       submittedById: mover?.id ?? null,
       submittedByName: mover ? (mover.name ?? mover.email) : null,
       rejectionCountDelta: isForward ? 0 : 1,
+      weekly: weeklyDelta,
     },
   });
 
@@ -843,7 +899,9 @@ export async function updateTaskStatus(
     }
   }
 
-  revalidatePath(`/projects/${projectId}`);
+  // No revalidatePath for the board here: the mover patches its React Query
+  // cache from this result and every other viewer gets the broadcast patch.
+  // Invalidating the RSC cache per move caused a server re-render storm.
   if (dealId) revalidatePath(`/deals/${dealId}`);
 
   // Return the resolved assignee so the board can patch its cache immediately
@@ -859,6 +917,7 @@ export async function updateTaskStatus(
           imageUrl: newAssignee.imageUrl ?? null,
         }
       : null,
+    weekly: weeklyDelta,
   };
 }
 
@@ -1267,7 +1326,9 @@ export async function saveChecklistItemText(itemId: string, textValue: string, p
 
   await publishChecklistProgress(itemId, projectId);
   revalidatePath(`/projects/${projectId}`);
-  revalidatePath(`/projects`);
+
+  // Callers patch their local state from this — no full page refresh needed.
+  return { completed };
 }
 
 export async function setChecklistItemAttachment(itemId: string, attachmentId: string, projectId: string) {
@@ -1302,6 +1363,49 @@ export async function removeChecklistItemAttachment(itemId: string, projectId: s
 
   await publishChecklistProgress(itemId, projectId);
   revalidatePath(`/projects/${projectId}`);
+}
+
+// Fresh state of one checklist field (attachment metadata + presigned preview
+// URL included). The task page fetches this after an upload completes and
+// patches the field in place — no full RSC refresh per finished upload.
+export async function getChecklistItemState(itemId: string, projectId: string) {
+  const access = await getProjectAccess(projectId);
+  if (!access.hasAccess) throw new Error("Permission denied");
+
+  const item = await db.taskChecklistItem.findUnique({
+    where: { id: itemId },
+    select: {
+      completed: true,
+      textValue: true,
+      attachmentId: true,
+      task: { select: { projectId: true } },
+    },
+  });
+  if (!item || item.task.projectId !== projectId) throw new Error("Not found");
+
+  let attachmentName: string | null = null;
+  let attachmentUrl: string | null = null;
+  let attachmentContentType: string | null = null;
+  if (item.attachmentId) {
+    const a = await db.attachment.findUnique({
+      where: { id: item.attachmentId },
+      select: { name: true, contentType: true, r2Key: true },
+    });
+    if (a) {
+      attachmentName = a.name;
+      attachmentContentType = a.contentType;
+      attachmentUrl = a.r2Key ? await createPresignedGet(a.r2Key) : null;
+    }
+  }
+
+  return {
+    completed: item.completed,
+    textValue: item.textValue,
+    attachmentId: item.attachmentId,
+    attachmentName,
+    attachmentUrl,
+    attachmentContentType,
+  };
 }
 
 export async function updateProjectName(projectId: string, name: string) {
@@ -1511,63 +1615,8 @@ export async function syncTaskTemplates(taskId: string, templateIds: string[], p
   revalidatePath(`/projects/${projectId}/tasks/${taskId}`);
 }
 
-export async function getStageGateBlockers(taskId: string, targetStatusId: string) {
-  const task = await db.task.findUnique({
-    where: { id: taskId },
-    include: {
-      checklistItems: {
-        include: { templateItem: { include: { requiredBeforeStage: true } } },
-      },
-      project: {
-        include: {
-          projectTemplates: {
-            include: {
-              template: {
-                include: { items: { include: { requiredBeforeStage: true } } },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
-
-  if (!task) return [];
-
-  const targetStatus = await db.taskStatus.findUnique({ where: { id: targetStatusId } });
-  if (!targetStatus) return [];
-
-  // Stage orders for resolving "Required Before" gates on detached fields
-  // (linked fields carry the live relation, detached ones only the stage id).
-  const stages = await db.taskStatus.findMany({
-    where: { workspaceId: targetStatus.workspaceId },
-    select: { id: true, order: true },
-  });
-  const stageOrderById = new Map(stages.map((s) => [s.id, s.order]));
-
-  const blockers: { itemName: string; role: string }[] = [];
-
-  for (const ci of task.checklistItems) {
-    // Rules come from the live template config; detached fields fall back to
-    // their own snapshot.
-    const cfg = fieldConfig(ci);
-    if (cfg.hidden) continue;
-
-    if (isGateComplete(ci, cfg)) continue;
-
-    const gateStageId = cfg.requiredBeforeStageId;
-    if (!gateStageId) continue;
-
-    const gateOrder = stageOrderById.get(gateStageId);
-    if (gateOrder == null) continue;
-
-    if (gateOrder <= targetStatus.order) {
-      blockers.push({ itemName: cfg.name, role: cfg.role });
-    }
-  }
-
-  return blockers;
-}
+// Stage-gate blocker evaluation now lives inline in updateTaskStatus (its
+// only caller) so a drag costs one task fetch instead of two overlapping ones.
 
 export async function getTaskHistory(taskId: string) {
   const workspace = await requireWorkspace();

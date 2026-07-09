@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import { requireWorkspaceWithMember } from "@/lib/workspace";
 import { pushClearToMember } from "@/lib/push";
+import { invalidateInboxCache } from "@/lib/cache";
 
 export async function getNotifications(limit = 30) {
   const { member } = await requireWorkspaceWithMember();
@@ -39,6 +40,7 @@ export async function markNotificationRead(id: string) {
   // Sync other devices: close this notification in their OS tray and fix the
   // badge. Skipped when it was already read (nothing to clear).
   if (!row.read) {
+    void invalidateInboxCache([member.id]);
     await pushClearToMember(member.id, { tags: [row.tag ?? row.id] }).catch(
       () => {},
     );
@@ -54,6 +56,7 @@ export async function markAllNotificationsRead() {
   });
 
   if (count > 0) {
+    void invalidateInboxCache([member.id]);
     await pushClearToMember(member.id, { clearAll: true }).catch(() => {});
   }
 }

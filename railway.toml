@@ -1,2 +1,5 @@
 [deploy]
 startCommand = "sh scripts/deploy.sh"
+healthcheckPath = "/api/health"
+# Generous window: startup runs prisma migrate deploy before the server binds.
+healthcheckTimeout = 300

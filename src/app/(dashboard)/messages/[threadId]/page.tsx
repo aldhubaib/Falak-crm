@@ -8,6 +8,7 @@ import {
   workspacePresenceChannel,
 } from "@/lib/channels";
 import { getThreadMessages } from "@/actions/messages";
+import { invalidateInboxCache } from "@/lib/cache";
 import { canEdit } from "@/lib/permissions";
 import { isArchivedStatus } from "@/lib/utils";
 import { ThreadChat, type ThreadTarget } from "./thread-chat";
@@ -132,26 +133,27 @@ export default async function ThreadPage({
   // "everything feed" — its inbox counter also rolls up task-level
   // notifications (mentions, rejections) within the project, so opening it
   // must clear those too or the counter never reaches zero.
+  let cleared = 0;
   if (target.conversationId) {
-    await db.notification.updateMany({
+    ({ count: cleared } = await db.notification.updateMany({
       where: {
         recipientId: member.id,
         read: false,
         linkUrl: `/messages/conv-${target.conversationId}`,
       },
       data: { read: true },
-    });
+    }));
   } else if (target.taskId) {
-    await db.notification.updateMany({
+    ({ count: cleared } = await db.notification.updateMany({
       where: {
         recipientId: member.id,
         read: false,
         linkUrl: `/projects/${target.projectId}/tasks/${target.taskId}`,
       },
       data: { read: true },
-    });
+    }));
   } else {
-    await db.notification.updateMany({
+    ({ count: cleared } = await db.notification.updateMany({
       where: {
         recipientId: member.id,
         read: false,
@@ -161,8 +163,12 @@ export default async function ThreadPage({
         ],
       },
       data: { read: true },
-    });
+    }));
   }
+  // The inbox summary is cached — clearing notifications makes it stale.
+  // Awaited so the sidebar's refetch (fired when navigation completes) can't
+  // race a not-yet-invalidated cache entry.
+  if (cleared > 0) await invalidateInboxCache([member.id]);
 
   return (
     <ThreadChat

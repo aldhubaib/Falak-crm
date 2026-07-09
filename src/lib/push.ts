@@ -1,5 +1,6 @@
 import webpush from "web-push";
 import { db } from "@/lib/db";
+import { invalidateInboxCache } from "@/lib/cache";
 import { publish, userChannel } from "@/lib/centrifugo";
 
 const VAPID_PUBLIC = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!;
@@ -37,6 +38,11 @@ export async function sendNotification(payload: NotifyPayload) {
     },
   });
 
+  // Unread counts feed the recipient's cached inbox summary.
+  void invalidateInboxCache([recipientId]);
+  // Live bell update — lets the client skip polling while realtime is up.
+  void publish(userChannel(recipientId), { type: "notification.new" }).catch(() => {});
+
   const unreadCount = await db.notification.count({
     where: { recipientId, read: false },
   });
@@ -73,10 +79,69 @@ export async function sendNotification(payload: NotifyPayload) {
   return { notification, pushResults: results.length };
 }
 
-export async function notifyMany(recipientIds: string[], payload: Omit<NotifyPayload, "recipientId">) {
+// Batched fan-out: one INSERT for all recipients, one grouped unread count,
+// one subscription fetch — instead of 3 queries per recipient (an "@all"
+// mention used to fire dozens of sequential query triplets).
+export async function notifyMany(
+  recipientIds: string[],
+  payload: Omit<NotifyPayload, "recipientId">,
+) {
   const unique = [...new Set(recipientIds)];
+  if (unique.length === 0) return;
+  const { type, title, body, url, tag, icon } = payload;
+
+  const created = await db.notification.createManyAndReturn({
+    data: unique.map((recipientId) => ({
+      recipientId,
+      type,
+      title,
+      body,
+      linkUrl: url,
+      tag,
+    })),
+    select: { id: true, recipientId: true },
+  });
+
+  void invalidateInboxCache(unique);
+  // Live bell updates — lets clients skip polling while realtime is up.
+  for (const id of unique) {
+    void publish(userChannel(id), { type: "notification.new" }).catch(() => {});
+  }
+
+  const [unreadRows, subscriptions] = await Promise.all([
+    db.notification.groupBy({
+      by: ["recipientId"],
+      where: { recipientId: { in: unique }, read: false },
+      _count: true,
+    }),
+    db.pushSubscription.findMany({ where: { memberId: { in: unique } } }),
+  ]);
+  const unreadByMember = new Map(unreadRows.map((r) => [r.recipientId, r._count]));
+  const notificationByMember = new Map(created.map((r) => [r.recipientId, r.id]));
+
   await Promise.allSettled(
-    unique.map((id) => sendNotification({ ...payload, recipientId: id }))
+    subscriptions.map((sub) =>
+      webpush
+        .sendNotification(
+          {
+            endpoint: sub.endpoint,
+            keys: { p256dh: sub.p256dh, auth: sub.auth },
+          },
+          JSON.stringify({
+            title,
+            body: body || "",
+            url: url || "/dashboard",
+            badge: unreadByMember.get(sub.memberId) ?? 0,
+            tag: tag || notificationByMember.get(sub.memberId),
+            icon,
+          }),
+        )
+        .catch(async (err) => {
+          if (err.statusCode === 410 || err.statusCode === 404) {
+            await db.pushSubscription.delete({ where: { id: sub.id } }).catch(() => {});
+          }
+        }),
+    ),
   );
 }
 

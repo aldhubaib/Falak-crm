@@ -117,8 +117,12 @@ export async function getDeliveryTasks(projectId: string | null) {
       },
       publishItem: true,
     },
-    orderBy: { taskNumber: "asc" },
-  });
+    // Newest 200 deliverables; the queue was unbounded and grew with every
+    // completed task ever made. Fetch newest-first, then restore the
+    // presentation order.
+    orderBy: { taskNumber: "desc" },
+    take: 200,
+  }).then((tasks) => tasks.reverse());
 }
 
 export async function getPublishSchedule(projectId: string | null, month: number, year: number) {

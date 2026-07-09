@@ -55,6 +55,24 @@ export async function invalidateCache(key: string): Promise<void> {
   }
 }
 
+// Drops members' cached inbox summaries (see getInboxThreads) — called
+// whenever something that feeds them changes (new message, notifications read).
+export async function invalidateInboxCache(memberIds: string[]): Promise<void> {
+  await Promise.all(memberIds.map((id) => invalidateCache(`inbox:${id}`)));
+}
+
+// Health probe: true when Redis answers PING, false when it's down, null when
+// no REDIS_URL is configured (single-instance dev — not an error).
+export async function pingCache(): Promise<boolean | null> {
+  const redis = getRedis();
+  if (!redis) return null;
+  try {
+    return (await redis.ping()) === "PONG";
+  } catch {
+    return false;
+  }
+}
+
 // Returns true at most once per TTL window — used to throttle expensive
 // best-effort work (e.g. third-party API backfills).
 export async function claimThrottle(

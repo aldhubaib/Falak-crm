@@ -3,7 +3,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
-import { cached } from "@/lib/cache";
+import { cached, claimThrottle } from "@/lib/cache";
 import {
   DEFAULT_PERMISSIONS,
   MODULES,
@@ -111,13 +111,25 @@ export const requireWorkspace = cache(async () => {
   return workspace;
 });
 
+// How often the Clerk profile → DB sync may run per user. The layout calls
+// syncCurrentMemberProfile on every dashboard render (including every
+// router.refresh), and currentUser() is a Clerk Backend API round-trip —
+// without a throttle it was the single biggest per-request latency tax.
+const PROFILE_SYNC_TTL_SECONDS = 15 * 60;
+
 // Best-effort: keep the current member's cached profile (name + Google photo)
-// in sync with Clerk. Only writes when something actually changed so it's cheap
-// to call on every dashboard load. Swallows all errors — it's non-critical.
+// in sync with Clerk. Throttled to once per PROFILE_SYNC_TTL_SECONDS per user
+// via Redis so the Clerk API stays off the hot path. Swallows all errors —
+// it's non-critical.
 export const syncCurrentMemberProfile = async () => {
   try {
     const { userId } = await auth();
     if (!userId) return;
+    // At most one Clerk round-trip per user per window. Without Redis the
+    // throttle is a no-op (dev), matching the old behavior.
+    if (!(await claimThrottle(`profile-sync:${userId}`, PROFILE_SYNC_TTL_SECONDS))) {
+      return;
+    }
     const user = await currentUser();
     if (!user) return;
 
