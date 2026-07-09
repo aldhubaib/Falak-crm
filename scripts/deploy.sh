@@ -32,6 +32,10 @@ if [ -f .next/standalone/server.js ]; then
   cp -r public .next/standalone/public
   mkdir -p .next/standalone/.next
   cp -r .next/static .next/standalone/.next/static
+  # Docker sets HOSTNAME to the container id and Next's standalone server
+  # uses it as the bind address — the server then listens on the wrong
+  # interface and Railway's healthcheck can never reach it. Bind everywhere.
+  export HOSTNAME=0.0.0.0
   exec node .next/standalone/server.js
 fi
 
