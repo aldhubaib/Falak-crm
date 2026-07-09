@@ -5,6 +5,7 @@ import { DashboardShell } from "@/components/dashboard-shell";
 import { PermissionsProvider } from "@/components/permissions-provider";
 import { CentrifugoProvider } from "@/components/realtime/centrifugo-provider";
 import { ServiceWorkerRegister } from "@/components/sw-register";
+import { OfflineBanner } from "@/components/offline-banner";
 import { getCurrentPermissions } from "@/actions/permissions";
 import {
   requireWorkspaceWithMember,
@@ -44,6 +45,7 @@ export default async function DashboardLayout({
       <CentrifugoProvider memberId={member.id} workspaceId={workspace.id}>
         <DashboardShell>{children}</DashboardShell>
         <ServiceWorkerRegister />
+        <OfflineBanner />
       </CentrifugoProvider>
     </PermissionsProvider>
   );
