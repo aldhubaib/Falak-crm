@@ -9,6 +9,9 @@ const isPublicRoute = createRouteMatcher([
   "/api/webhooks(.*)",
   "/api/public/(.*)",
   "/api/health",
+  // SW pushsubscriptionchange can fire with a stale session cookie; the route
+  // authenticates via the old endpoint instead.
+  "/api/push/resubscribe",
   "/manifest.json",
   "/sw.js",
 ]);

@@ -156,6 +156,54 @@ trigger a full server refresh with a possibly-stale cookie.
 - Watch Postgres connection count — if it approaches the limit, lower
   `DB_POOL_MAX` or add PgBouncer.
 
+## 7. Notifications (multi-device pipeline)
+
+### Flow
+
+```
+Server action ──▶ Notification row (+ push tag)          [awaited]
+      │
+      ├─▶ Centrifugo user channel: notification.new      [fire-and-forget]
+      │        └─▶ Bell refreshes instantly + plays sound (poll only as fallback)
+      │
+      └─▶ Web push to every PushSubscription             [fire-and-forget]
+               └─▶ Service worker: OS tray notification + app badge
+                   (skipped when a visible tab is already on the target page — never on iOS)
+
+Read path (bell click, thread open, task open, mark-all) ──▶ markReadByLink / pushClearToMember
+      ├─▶ rows flipped to read + inbox cache invalidated  [awaited]
+      ├─▶ Centrifugo: notification.read                   [fire-and-forget → devices with app open]
+      └─▶ silent {type:"clear"} push                      [fire-and-forget → devices with app closed, non-iOS]
+```
+
+Reads are marked wherever the user actually *sees* the content: the bell
+popover, the message thread page, and the task detail page (where OS push taps
+land). All of them go through `markReadByLink` (`src/lib/push.ts`), so a read
+on one device clears the tray, badge, and bell everywhere.
+
+### Per-platform behavior
+
+| Behavior | Android (PWA) | Desktop Chrome/Edge | iOS (PWA ≥16.4) |
+|---|---|---|---|
+| Push received, app closed | Tray notification + badge | Tray notification + badge | Tray notification + badge |
+| Push received, viewing that page | Suppressed (in-app UI shows it) | Suppressed | Always shown (Apple requirement) |
+| Read on another device, app open | Tray closes + bell updates ~1 s (Centrifugo) | Same | Same |
+| Read on another device, app closed | Silent clear push closes tray + fixes badge | Same | **No silent pushes** — tray reconciles on next app foreground (`getUnreadPushTags` + `closeNotificationsExceptTags`) |
+| Subscription rotated by browser | SW `pushsubscriptionchange` re-subscribes via `/api/push/resubscribe` | Same | Same |
+
+Known iOS limits: every push must display a notification (Apple revokes the
+subscription otherwise), so silent clear pushes and focus-suppression are
+skipped for `push.apple.com` endpoints; those devices catch up whenever the
+app foregrounds.
+
+### Hygiene & observability
+
+- `PushSubscription.lastSeenAt` refreshes on every `/api/push` sync;
+  subscriptions unseen for 90+ days are pruned opportunistically.
+- Dead endpoints (HTTP 410/404) are deleted on first failed delivery.
+- Any other web-push failure is reported to Sentry as a warning tagged with
+  the status code — a spike means a push service outage or VAPID key problem.
+
 ## Environment variables summary (new since the overhaul)
 
 | Variable | Service | Purpose |

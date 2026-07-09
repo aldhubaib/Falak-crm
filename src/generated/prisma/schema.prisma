@@ -803,12 +803,16 @@ model Notification {
 }
 
 model PushSubscription {
-  id        String   @id @default(cuid())
-  memberId  String
-  endpoint  String   @unique
-  p256dh    String
-  auth      String
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  memberId   String
+  endpoint   String   @unique
+  p256dh     String
+  auth       String
+  // Device hygiene: which browser/OS this is, and when it last synced.
+  // Subscriptions unseen for 90+ days are pruned during sync.
+  userAgent  String?
+  lastSeenAt DateTime @default(now())
+  createdAt  DateTime @default(now())
 
   member WorkspaceMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
 

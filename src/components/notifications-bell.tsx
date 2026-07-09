@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import {
   getNotifications,
   getUnreadCount,
+  getUnreadPushTags,
   markNotificationRead,
   markAllNotificationsRead,
 } from "@/actions/notifications";
@@ -22,6 +23,7 @@ import { userChannel } from "@/lib/channels";
 import {
   closeDisplayedNotifications,
   closeDisplayedNotificationsByTag,
+  closeNotificationsExceptTags,
   syncAppBadge,
 } from "@/lib/app-badge";
 import {
@@ -95,6 +97,22 @@ export function NotificationsBell() {
     const onResync = () => refresh();
     window.addEventListener("realtime:resync", onResync);
     return () => window.removeEventListener("realtime:resync", onResync);
+  }, [refresh]);
+
+  // PWA wake: while the app slept, notifications may have been read on other
+  // devices. iOS never receives silent clear pushes, so foregrounding is its
+  // only chance to reconcile — re-pull the list (which re-syncs the badge via
+  // the unreadCount effect) and close tray notifications read elsewhere.
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState !== "visible") return;
+      refresh();
+      void getUnreadPushTags()
+        .then((tags) => closeNotificationsExceptTags(tags))
+        .catch(() => {});
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
   }, [refresh]);
 
   // Mirror the unread count on the OS app icon (installed PWA). The service

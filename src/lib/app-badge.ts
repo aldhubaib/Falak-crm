@@ -43,6 +43,23 @@ export async function closeDisplayedNotifications(
   }
 }
 
+/** Tray reconciliation: close every displayed notification whose tag is NOT
+ *  in the given unread set — they were read on another device while this one
+ *  was asleep. Used on PWA foreground (the only clear path on iOS). */
+export async function closeNotificationsExceptTags(unreadTags: string[]) {
+  if (!("serviceWorker" in navigator)) return;
+  try {
+    const registration = await navigator.serviceWorker.getRegistration();
+    if (!registration) return;
+    const notifications = await registration.getNotifications();
+    for (const n of notifications) {
+      if (!unreadTags.includes(n.tag)) n.close();
+    }
+  } catch {
+    // Best-effort — tray state just stays as is.
+  }
+}
+
 /** Close the tray notifications shown with any of these push tags. */
 export async function closeDisplayedNotificationsByTag(tags: string[]) {
   if (tags.length === 0 || !("serviceWorker" in navigator)) return;

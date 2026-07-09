@@ -23,6 +23,23 @@ export async function getUnreadCount(): Promise<number> {
   });
 }
 
+/**
+ * Push tags of the member's unread notifications. The PWA calls this when it
+ * returns to the foreground to reconcile its OS tray: any displayed
+ * notification whose tag isn't in this list was read elsewhere (iOS never
+ * receives the silent clear pushes, so this is its only catch-up path).
+ */
+export async function getUnreadPushTags(): Promise<string[]> {
+  const { member } = await requireWorkspaceWithMember();
+
+  const rows = await db.notification.findMany({
+    where: { recipientId: member.id, read: false },
+    select: { id: true, tag: true },
+  });
+  // A null tag means the push carried the notification's own id.
+  return rows.map((r) => r.tag ?? r.id);
+}
+
 export async function markNotificationRead(id: string) {
   const { member } = await requireWorkspaceWithMember();
 
