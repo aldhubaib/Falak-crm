@@ -1,14 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSignIn } from "@clerk/nextjs";
+import { useAuth, useSignIn } from "@clerk/nextjs";
 
 type GalleryPhoto = { id: string; column: "a" | "b"; url: string };
 
 export default function SignInPage() {
   const { signIn } = useSignIn();
+  const { isLoaded, isSignedIn } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Already signed in client-side but landed here anyway (e.g. a server
+  // redirect that couldn't see the session): go straight to the app with a
+  // full navigation so the session cookie is re-synced, instead of letting
+  // the user re-run the OAuth flow and loop.
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      window.location.replace("/dashboard");
+    }
+  }, [isLoaded, isSignedIn]);
 
   const handleGoogle = async () => {
     if (!signIn) return;
