@@ -14,7 +14,7 @@ import {
 import {
   isNotificationSoundEnabled,
   setNotificationSoundEnabled,
-  playNotificationSound,
+  previewNotificationSound,
 } from "@/lib/notification-sound";
 
 export function AccountClient({
@@ -54,7 +54,7 @@ export function AccountClient({
     setSoundOn(next);
     setNotificationSoundEnabled(next);
     // Instant feedback: hear the sound that will play.
-    if (next) void playNotificationSound();
+    if (next) void previewNotificationSound();
   };
 
   const initials =

@@ -14,6 +14,7 @@ import {
   deleteObject,
   createPresignedGet,
 } from "@/lib/storage";
+import { publish, userChannel } from "@/lib/centrifugo";
 import { revalidatePath } from "next/cache";
 
 const SLOT = "notificationSound";
@@ -30,6 +31,22 @@ async function requireSettingsEditor() {
   const { workspace, member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "settings")) throw new Error("Permission denied");
   return { workspace, member };
+}
+
+// Force every open client to drop its cached sound URL so the next
+// notification plays the freshly uploaded file, not a stale cache.
+async function broadcastSoundUpdated(workspaceId: string): Promise<void> {
+  const members = await db.workspaceMember.findMany({
+    where: { workspaceId },
+    select: { id: true },
+  });
+  await Promise.all(
+    members.map((m) =>
+      publish(userChannel(m.id), { type: "notification.sound-updated" }).catch(
+        () => {},
+      ),
+    ),
+  );
 }
 
 // Detect the real audio format from magic bytes — the browser-reported mime
@@ -59,15 +76,24 @@ export async function getNotificationSound(): Promise<NotificationSoundDTO | nul
   };
 }
 
-// Playback read — any signed-in member fetches the sound URL for their bell.
-export async function getNotificationSoundUrl(): Promise<string | null> {
+// Playback read — any signed-in member fetches the sound for their device.
+// `version` (the upload time) keys the client's local cache: same version =
+// same bytes, no re-download needed.
+export async function getNotificationSoundUrl(): Promise<{
+  url: string;
+  version: number;
+} | null> {
   await requireWorkspace();
   const row = await db.brandingAsset.findUnique({ where: { slot: SLOT } });
-  return row ? createPresignedGet(row.r2Key) : null;
+  if (!row) return null;
+  return {
+    url: await createPresignedGet(row.r2Key),
+    version: row.updatedAt.getTime(),
+  };
 }
 
 export async function setNotificationSound(formData: FormData): Promise<void> {
-  await requireSettingsEditor();
+  const { workspace } = await requireSettingsEditor();
 
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) {
@@ -105,16 +131,18 @@ export async function setNotificationSound(formData: FormData): Promise<void> {
   });
   if (existing) await deleteObject(existing.r2Key);
 
+  await broadcastSoundUpdated(workspace.id);
   revalidatePath("/settings/notifications");
 }
 
 export async function removeNotificationSound(): Promise<void> {
-  await requireSettingsEditor();
+  const { workspace } = await requireSettingsEditor();
 
   const row = await db.brandingAsset.findUnique({ where: { slot: SLOT } });
   if (!row) return;
   await deleteObject(row.r2Key);
   await db.brandingAsset.delete({ where: { slot: SLOT } });
 
+  await broadcastSoundUpdated(workspace.id);
   revalidatePath("/settings/notifications");
 }
