@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  BellRing,
   ClipboardList,
   ChevronRight,
   Users,
@@ -78,6 +79,12 @@ export default function SettingsPage() {
           </Group>
 
           <Group title="General">
+            <Tile
+              href="/settings/notifications"
+              icon={BellRing}
+              title="Notifications"
+              desc="Upload the sound played when a notification arrives."
+            />
             <Tile
               href="/settings/trash"
               icon={Trash2}

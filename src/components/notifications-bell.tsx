@@ -24,6 +24,7 @@ import {
   closeDisplayedNotificationsByTag,
   syncAppBadge,
 } from "@/lib/app-badge";
+import { playNotificationSound } from "@/lib/notification-sound";
 
 type Notification = {
   id: string;
@@ -110,6 +111,9 @@ export function NotificationsBell() {
       clearAll?: boolean;
       tags?: string[];
     };
+    if (event?.type === "notification.new") {
+      void playNotificationSound();
+    }
     if (event?.type === "notification.read") {
       if (event.clearAll) void closeDisplayedNotifications();
       else if (event.tags?.length)
