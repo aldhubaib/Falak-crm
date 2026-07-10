@@ -37,7 +37,7 @@ export default async function ProjectDashboardPage({
 
   const tasks = project.tasks;
   const inProgress = statuses.find(
-    (s) => s.name.trim().toLowerCase() === "in progress",
+    (s) => s.name.trim().toLowerCase() === "ai generation",
   );
 
   const stats = computeStats(tasks);
@@ -61,7 +61,7 @@ export default async function ProjectDashboardPage({
           {/* KPI grid */}
           <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
             <KpiCard label="Total tasks" value={stats.total} />
-            <KpiCard label="In progress" value={stats.inProgress} tone="primary" />
+            <KpiCard label="AI generation" value={stats.inProgress} tone="primary" />
             <KpiCard label="In review" value={stats.inReview} tone="warning" />
             <KpiCard
               label="Completion"
@@ -84,7 +84,7 @@ export default async function ProjectDashboardPage({
             </div>
             <p className="mb-4 text-xs text-muted-foreground">
               Work time = duration the task spent in{" "}
-              <span className="text-primary">In Progress</span> under this
+              <span className="text-primary">AI Generation</span> under this
               assignee.
             </p>
             {performance.length === 0 ? (
@@ -152,7 +152,7 @@ type PerfRow = {
 function computeStats(tasks: TaskRow[]) {
   const total = tasks.length;
   const inProgress = tasks.filter(
-    (t) => (t.status?.name ?? "").trim().toLowerCase() === "in progress",
+    (t) => (t.status?.name ?? "").trim().toLowerCase() === "ai generation",
   ).length;
   const inReview = tasks.filter((t) =>
     (t.status?.name ?? "").toLowerCase().includes("review"),
@@ -203,8 +203,8 @@ function computePerformance(
       workedMs += activeMs;
     }
 
-    // Who did the In Progress work: current assignee if active, else the
-    // assignee recorded when the task moved out of In Progress.
+    // Who did the AI Generation work: current assignee if active, else the
+    // assignee recorded when the task moved out of AI Generation.
     const workerId = isActive
       ? t.assigneeId
       : (history[inProgressId] ?? t.assigneeId);

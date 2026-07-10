@@ -645,7 +645,7 @@ export async function updateTaskStatus(
 
   // Block submission for Internal Review if mandatory delivery items are still
   // incomplete. Delivery items only need to be done at this gate — earlier
-  // forward moves (e.g. Todo → In Progress) must not be blocked. Rules come
+  // forward moves (e.g. Todo → AI Generation) must not be blocked. Rules come
   // from the live template config.
   if (task && isForward && targetStatus?.name?.toLowerCase() === "internal review") {
     const incomplete = task.checklistItems

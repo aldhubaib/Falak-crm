@@ -10,8 +10,8 @@ export const CONFIRM_MESSAGES: Record<
     assignToMe?: boolean;
   }
 > = {
-  "In Progress": {
-    title: "Move to In Progress",
+  "AI Generation": {
+    title: "Move to AI Generation",
     description:
       "By confirming, you acknowledge that you understand the requirements and are taking ownership of this task.",
     confirmLabel: "I Understand",

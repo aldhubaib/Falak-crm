@@ -915,9 +915,9 @@ export function ProjectBoardClient({
           }
         };
 
-        // Delivery items are produced during In Progress and only need to be
+        // Delivery items are produced during AI Generation and only need to be
         // complete when submitting for Internal Review — not on earlier forward
-        // moves like Todo → In Progress.
+        // moves like Todo → AI Generation.
         if (
           targetName.toLowerCase() === "internal review" &&
           task.deliveryIncomplete.length > 0
