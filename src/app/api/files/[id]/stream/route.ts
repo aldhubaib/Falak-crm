@@ -1,15 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
-import { createPresignedGet } from "@/lib/storage";
+import {
+  S3Client,
+  GetObjectCommand,
+  HeadObjectCommand,
+} from "@aws-sdk/client-s3";
 
-// Same-origin media endpoint used as <video>/<audio>/<img> src. After the auth
-// check it redirects to a presigned R2 URL so the bytes stream directly from
-// object storage to the browser — proxying them through the app server made
-// playback crawl (double transfer, one Range round-trip per seek) and tied up
-// server bandwidth that other users need.
+const s3 = new S3Client({
+  region: "auto",
+  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+  },
+});
+
+const BUCKET = process.env.R2_BUCKET_NAME || "falak-crm";
+
+export const runtime = "nodejs";
+
+type SdkBody = {
+  transformToWebStream: () => ReadableStream;
+};
+
+// Same-origin media endpoint for <video>/<audio> src. Proxies bytes from R2
+// with proper Range / 206 support so desktop browsers can seek and play.
+// A 302 redirect to a presigned URL works on some mobile PWAs but breaks
+// playback in regular browser tabs — Range follow-ups leave the app origin
+// and the player stalls even when metadata (duration) loads.
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { userId } = await auth();
@@ -20,18 +41,63 @@ export async function GET(
 
   const attachment = await db.attachment.findUnique({
     where: { id },
-    select: { r2Key: true },
+    select: { r2Key: true, contentType: true, sizeBytes: true },
   });
 
   if (!attachment?.r2Key)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const url = await createPresignedGet(attachment.r2Key);
+  const rangeHeader = request.headers.get("range");
+  const contentType = attachment.contentType || "application/octet-stream";
 
-  // Let the browser reuse the redirect for follow-up Range requests (seeking)
-  // without re-hitting this route. Kept well below the presign expiry (1h).
-  return NextResponse.redirect(url, {
-    status: 302,
-    headers: { "Cache-Control": "private, max-age=1800" },
+  if (rangeHeader) {
+    const head = await s3.send(
+      new HeadObjectCommand({ Bucket: BUCKET, Key: attachment.r2Key }),
+    );
+    const totalSize = head.ContentLength ?? attachment.sizeBytes ?? 0;
+    const match = rangeHeader.match(/bytes=(\d+)-(\d*)/);
+    const start = match ? parseInt(match[1], 10) : 0;
+    const end = match && match[2] ? parseInt(match[2], 10) : totalSize - 1;
+
+    const resp = await s3.send(
+      new GetObjectCommand({
+        Bucket: BUCKET,
+        Key: attachment.r2Key,
+        Range: `bytes=${start}-${end}`,
+      }),
+    );
+
+    const body = resp.Body as SdkBody | undefined;
+    if (!body)
+      return NextResponse.json({ error: "Empty body" }, { status: 500 });
+
+    return new NextResponse(body.transformToWebStream(), {
+      status: 206,
+      headers: {
+        "Content-Type": contentType,
+        "Content-Range": `bytes ${start}-${end}/${totalSize}`,
+        "Content-Length": String(end - start + 1),
+        "Accept-Ranges": "bytes",
+        "Cache-Control": "private, no-store",
+      },
+    });
+  }
+
+  const resp = await s3.send(
+    new GetObjectCommand({ Bucket: BUCKET, Key: attachment.r2Key }),
+  );
+
+  const body = resp.Body as SdkBody | undefined;
+  if (!body)
+    return NextResponse.json({ error: "Empty body" }, { status: 500 });
+
+  return new NextResponse(body.transformToWebStream(), {
+    status: 200,
+    headers: {
+      "Content-Type": contentType,
+      "Content-Length": String(resp.ContentLength ?? 0),
+      "Accept-Ranges": "bytes",
+      "Cache-Control": "private, no-store",
+    },
   });
 }
