@@ -1244,7 +1244,9 @@ async function assertChecklistItemWritable(itemId: string) {
       task: {
         select: {
           deletedAt: true,
+          statusId: true,
           status: { select: { order: true } },
+          projectId: true,
           project: { select: { workspaceId: true } },
         },
       },
@@ -1266,6 +1268,17 @@ async function assertChecklistItemWritable(itemId: string) {
 
   if (isFieldLocked(cfg, currentOrder, orderById, todoOrder)) {
     throw new Error(`"${cfg.name}" is locked at this stage`);
+  }
+
+  const access = await getProjectAccess(item.task.projectId);
+  const canModify =
+    access.permissions.projects === "full" ||
+    (item.task.statusId
+      ? access.permissions.taskPermissions?.stages?.[item.task.statusId]
+          ?.modify === true
+      : false);
+  if (!canModify) {
+    throw new Error("You don't have permission to edit fields at this stage");
   }
 }
 

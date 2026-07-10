@@ -222,6 +222,7 @@ export default async function TaskDetailPage({
       taskId={taskId}
       canDelete={!trashed && canDelete}
       canEditTitle={!trashed && canModify && !titleLocked}
+      canEditFields={!trashed && canModify}
       trashed={
         trashed
           ? { deletedAt: task.deletedAt!.toISOString(), deletedByName }

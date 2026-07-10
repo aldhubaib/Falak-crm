@@ -77,6 +77,8 @@ import { ConfirmStatusDialog } from "@/components/board/confirm-status-dialog";
 import { DeclineDialog } from "@/components/board/decline-dialog";
 import { CONFIRM_MESSAGES } from "@/components/board/confirm-messages";
 import { useActionHandler } from "@/hooks/use-action";
+import { useErrorStore } from "@/lib/error-store";
+import { createAppError } from "@/lib/errors";
 import { restoreRecord, permanentDeleteRecord } from "@/actions/delete";
 import { addTaskComment } from "@/actions/comments";
 import { sendMessage } from "@/actions/messages";
@@ -183,6 +185,7 @@ export function TaskDetailClient({
   taskId,
   canDelete,
   canEditTitle,
+  canEditFields,
   trashed,
   title,
   projectName,
@@ -205,6 +208,8 @@ export function TaskDetailClient({
   canDelete: boolean;
   /** Whether the member may edit the title (Modify right at the current stage). */
   canEditTitle: boolean;
+  /** Whether the member may edit checklist fields at the current stage. */
+  canEditFields: boolean;
   /** Set when the task is in the trash — renders read-only with a trash banner. */
   trashed?: { deletedAt: string; deletedByName: string | null } | null;
   title: string;
@@ -283,10 +288,11 @@ export function TaskDetailClient({
   const delItems = itemList.filter((i) => i.phase === "delivery");
 
   // Requirements are locked once the task leaves Todo; delivery unlocks then.
-  // Backlog sits before Todo, so it's pre-work too — delivery stays hidden.
+  // Backlog sits before Todo, so it's pre-work too. Members with Modify at the
+  // current stage can still fill delivery fields while the task sits in Todo.
   const isTodo =
     !statusName || statusName === "Todo" || statusName === "Backlog";
-  const showDelivery = !isTodo;
+  const showDelivery = !isTodo || canEditFields;
 
   // Comments live in local state so sending/receiving one never triggers a
   // full router.refresh() (which re-renders the whole RSC tree and re-runs
@@ -337,31 +343,24 @@ export function TaskDetailClient({
             </span>
           </div>
         }
-        beforeNotifications={
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative rounded-full"
-            aria-label="Task history"
-            onClick={() => setHistoryOpen(true)}
-          >
-            <History className="size-[18px]" />
-          </Button>
-        }
         actions={
-          canDelete ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full"
-                  aria-label="Task options"
-                >
-                  <MoreVertical className="size-[18px]" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full"
+                aria-label="Task options"
+              >
+                <MoreVertical className="size-[18px]" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onSelect={() => setHistoryOpen(true)}>
+                <History className="size-4" />
+                History
+              </DropdownMenuItem>
+              {canDelete && (
                 <DropdownMenuItem
                   className="text-destructive focus:text-destructive"
                   onSelect={() => setConfirmDelete(true)}
@@ -369,9 +368,9 @@ export function TaskDetailClient({
                   <Trash2 className="size-4" />
                   Delete task
                 </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : undefined
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         }
       />
 
@@ -502,7 +501,7 @@ export function TaskDetailClient({
                     item={item}
                     index={i + 1}
                     projectId={projectId}
-                    readOnly={item.locked}
+                    readOnly={item.locked || !canEditFields}
                   />
                 ))}
               </div>
@@ -513,7 +512,7 @@ export function TaskDetailClient({
             )}
           </FormSection>
 
-          {/* Delivery — gated behind leaving Todo */}
+          {/* Delivery — gated behind leaving Todo unless the member can modify */}
           {showDelivery ? (
             delItems.length > 0 && (
               <FormSection
@@ -528,7 +527,7 @@ export function TaskDetailClient({
                       item={item}
                       index={i + 1}
                       projectId={projectId}
-                      readOnly={item.locked}
+                      readOnly={item.locked || !canEditFields}
                     />
                   ))}
                 </div>
@@ -537,7 +536,8 @@ export function TaskDetailClient({
           ) : delItems.length > 0 ? (
             <section className="rounded-2xl border border-dashed border-border/60 p-6 text-center text-xs text-muted-foreground">
               Delivery fields unlock when the task moves past{" "}
-              <span className="text-foreground">Todo</span>.
+              <span className="text-foreground">Todo</span>, or when your role
+              has Modify at this stage.
             </section>
           ) : null}
 
@@ -1241,15 +1241,23 @@ function TaskFieldControl({
   readOnly: boolean;
 }) {
   const patchItem = useContext(ChecklistPatchContext);
+  const { push } = useErrorStore();
   const [, startTransition] = useTransition();
 
   const saveText = (value: string) => {
+    if (readOnly) return;
+    const previous = { textValue: item.textValue, completed: item.completed };
     // Optimistic: the typed value is the new truth; the server only decides
     // whether the field now counts as complete.
     patchItem(item.id, { textValue: value });
     startTransition(async () => {
-      const res = await saveChecklistItemText(item.id, value, projectId);
-      patchItem(item.id, { completed: res.completed });
+      try {
+        const res = await saveChecklistItemText(item.id, value, projectId);
+        patchItem(item.id, { completed: res.completed });
+      } catch (err) {
+        patchItem(item.id, previous);
+        push(createAppError(err));
+      }
     });
   };
 
@@ -1407,9 +1415,14 @@ function TaskYesNoField({
   const followUp = yesFollowUp(item.type);
   const value = parsed.value;
 
-  const chooseYes = () =>
-    onSaveText(value === "yes" ? "" : serializeYesNo("yes", parsed.text));
-  const chooseNo = () => onSaveText(value === "no" ? "" : "no");
+  const chooseYes = () => {
+    if (readOnly || value === "yes") return;
+    onSaveText(serializeYesNo("yes", parsed.text));
+  };
+  const chooseNo = () => {
+    if (readOnly || value === "no") return;
+    onSaveText("no");
+  };
 
   return (
     <div className="space-y-2">
