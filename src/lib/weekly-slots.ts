@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { claimThrottle } from "@/lib/cache";
 import { weekStartOf } from "@/lib/week";
+import { getProjectTimezone } from "@/lib/project-timezone";
 
 // Top the current week's Todo slots up to each Weekly Plan target. Runs lazily
 // on board load (after the caller has verified project access), so the first
@@ -8,7 +9,8 @@ import { weekStartOf } from "@/lib/week";
 // (filled + admin-removed) means removals stay removed and target bumps
 // mid-week add just the difference.
 export async function ensureWeeklySlots(projectId: string): Promise<void> {
-  const weekStart = weekStartOf();
+  const timezone = await getProjectTimezone(projectId);
+  const weekStart = weekStartOf(new Date(), timezone);
 
   const claimed = await claimThrottle(
     `weekslots:${projectId}:${weekStart.toISOString().slice(0, 10)}`,
@@ -153,7 +155,8 @@ export async function syncSlotAssigneesFromTargets(
   projectId: string,
   targets: { templateId: string; responsibleMemberId: string | null }[],
 ): Promise<void> {
-  const weekStart = weekStartOf();
+  const timezone = await getProjectTimezone(projectId);
+  const weekStart = weekStartOf(new Date(), timezone);
   await Promise.all(
     targets.map((t) =>
       db.weeklySlot.updateMany({

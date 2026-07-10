@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { requireProjectWork } from "@/lib/workspace";
 import { weekStartOf } from "@/lib/week";
 import { ensureWeeklySlots } from "@/lib/weekly-slots";
+import { getProjectTimezone } from "@/lib/project-timezone";
 
 export type BoardStatus = {
   id: string;
@@ -68,10 +69,13 @@ export type BoardData = {
 // SSR initial render and the client-side React Query cache.
 export async function getBoardData(projectId: string): Promise<BoardData> {
   const { workspace } = await requireProjectWork(projectId);
+  const timezone = await getProjectTimezone(projectId);
 
   // Materialise this week's Todo slots from the weekly targets before reading
   // them back — the first board visit of a new week creates the fresh slots.
   await ensureWeeklySlots(projectId);
+
+  const weekStart = weekStartOf(new Date(), timezone);
 
   const [tasks, statuses, changes, checklistAgg, slots] = await Promise.all([
     db.task.findMany({
@@ -162,7 +166,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
       GROUP BY ci."taskId"
     `,
     db.weeklySlot.findMany({
-      where: { projectId, weekStart: weekStartOf(), removedAt: null },
+      where: { projectId, weekStart, removedAt: null },
       orderBy: { createdAt: "asc" },
       select: {
         id: true,

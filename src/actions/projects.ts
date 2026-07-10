@@ -14,6 +14,8 @@ import { publishTaskEvent, type BoardWeeklyDelta } from "@/lib/realtime";
 import type { BoardTask } from "@/actions/board";
 import { invalidateCache, claimThrottle } from "@/lib/cache";
 import { weekStartOf } from "@/lib/week";
+import { getProjectTimezone } from "@/lib/project-timezone";
+import { normalizeTimezone, isValidTimezone } from "@/lib/timezone";
 
 export async function getProjects() {
   const { workspace, member } = await requireWorkspaceWithMember();
@@ -59,6 +61,7 @@ export async function getProjectMeta(id: string) {
       thumbnailId: true,
       statusId: true,
       requirePublishing: true,
+      timezone: true,
       workspaceId: true,
       dealId: true,
       companyId: true,
@@ -669,11 +672,14 @@ export async function updateTaskStatus(
   // makes room (it tops the current week up immediately).
   let claimSlotId: string | null = null;
   let createExtraSlot = false;
+  let planningWeekStart: Date | null = null;
   const taskTemplateId =
     task?.checklistItems.find((ci) => ci.templateItem?.templateId)
       ?.templateItem?.templateId ?? null;
   if (task && isForward && targetStatus?.name === "Todo" && taskTemplateId) {
-    const weekStart = weekStartOf();
+    const timezone = await getProjectTimezone(projectId);
+    const weekStart = weekStartOf(new Date(), timezone);
+    planningWeekStart = weekStart;
     const [target, alreadyBound, freeSlot, weekRows] = await Promise.all([
       db.projectWeeklyTarget.findUnique({
         where: {
@@ -815,13 +821,13 @@ export async function updateTaskStatus(
           }),
         ]
       : []),
-    ...(createExtraSlot && taskTemplateId
+    ...(createExtraSlot && taskTemplateId && planningWeekStart
       ? [
           db.weeklySlot.create({
             data: {
               projectId,
               templateId: taskTemplateId,
-              weekStart: weekStartOf(),
+              weekStart: planningWeekStart,
               taskId,
               assigneeId: member.id,
             },
@@ -1028,6 +1034,9 @@ export async function deleteTask(taskId: string, projectId: string, dealId?: str
     throw new Error("You don't have permission to delete this task");
   }
 
+  const timezone = await getProjectTimezone(projectId);
+  const weekStart = weekStartOf(new Date(), timezone);
+
   await db.task.update({
     where: { id: taskId },
     data: { deletedAt: new Date(), deletedBy: access.member.id },
@@ -1036,7 +1045,7 @@ export async function deleteTask(taskId: string, projectId: string, dealId?: str
   // Free the task's Weekly Plan slot for this week — a trashed task won't
   // deliver, so the capacity goes back to the team.
   await db.weeklySlot.updateMany({
-    where: { taskId, weekStart: weekStartOf() },
+    where: { taskId, weekStart },
     data: { taskId: null },
   });
 
@@ -1469,6 +1478,22 @@ export async function updateProjectDescription(projectId: string, description: s
   revalidatePath("/projects");
   revalidatePath(`/projects/${projectId}`);
   revalidatePath(`/projects/${projectId}/settings`);
+}
+
+export async function updateProjectTimezone(projectId: string, timezone: string) {
+  const { workspace } = await requireProjectSettings(projectId);
+  if (!isValidTimezone(timezone)) {
+    throw new Error("Invalid timezone");
+  }
+
+  await db.project.update({
+    where: { id: projectId, workspaceId: workspace.id },
+    data: { timezone: normalizeTimezone(timezone) },
+  });
+
+  revalidatePath(`/projects/${projectId}`);
+  revalidatePath(`/projects/${projectId}/settings`);
+  revalidatePath("/dashboard");
 }
 
 export async function updateProjectThumbnail(projectId: string, thumbnailId: string | null) {

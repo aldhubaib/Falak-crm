@@ -392,6 +392,7 @@ model Project {
   thumbnailId   String?   // File ID for project thumbnail
   description       String?
   requirePublishing Boolean   @default(false)
+  timezone          String    @default("Asia/Kuwait")
   startDate         DateTime?
   deadline      DateTime?
   createdAt     DateTime  @default(now())
@@ -449,7 +450,7 @@ model WeeklySlot {
   id         String    @id @default(cuid())
   projectId  String
   templateId String
-  weekStart  DateTime // Monday 00:00 UTC of the slot's week
+  weekStart  DateTime // Monday 00:00 in the project's timezone (stored as UTC)
   taskId     String?   @unique
   assigneeId String?   // Member responsible for filling this slot
   removedAt  DateTime?

@@ -12,6 +12,7 @@ import {
   resolveNewSlotAssignee,
   syncSlotAssigneesFromTargets,
 } from "@/lib/weekly-slots";
+import { getProjectTimezone } from "@/lib/project-timezone";
 import { getTodoAutoAssignMemberIds } from "@/lib/weekly-assign";
 import { publishTaskEvent } from "@/lib/realtime";
 import { revalidatePath } from "next/cache";
@@ -143,7 +144,7 @@ export async function forceAddWeeklySlot(
     throw new Error("Only an owner can force-add a slot");
   }
 
-  const weekStart = weekStartOf();
+  const weekStart = weekStartOf(new Date(), await getProjectTimezone(projectId));
   const assigneeId = await resolveNewSlotAssignee(projectId, templateId);
   await db.weeklySlot.create({
     data: { projectId, templateId, weekStart, assigneeId },

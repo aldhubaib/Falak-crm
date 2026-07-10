@@ -17,36 +17,22 @@ import {
   type WeeklyTarget,
 } from "@/lib/weekly-plan";
 import { weekStartOf } from "@/lib/week";
+import {
+  formatZonedDateInput,
+  parseZonedDateTime,
+  timezoneLabel,
+} from "@/lib/timezone";
 
 type Template = { id: string; name: string; itemCount: number };
 
-function toDateInput(d: Date): string {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
-function toTimeInput(d: Date): string {
-  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-}
-
-function mergeDateTime(dateStr: string, timeStr: string, fallback: Date): Date {
-  const [h, m] = timeStr.split(":").map(Number);
-  const next = new Date(dateStr + "T00:00:00");
-  if (Number.isNaN(next.getTime())) return fallback;
-  next.setHours(h ?? 0, m ?? 0, 0, 0);
-  return next;
-}
-
 type PlanState = Record<string, WeeklyTarget>;
 
-function defaultPlan(templateId: string): WeeklyTarget {
+function defaultPlan(templateId: string, timezone: string): WeeklyTarget {
   return {
     templateId,
     perWeek: 0,
     repeatEvery: "week",
-    startOn: weekStartOf(),
+    startOn: weekStartOf(new Date(), timezone),
     endsOn: null,
     neverExpires: true,
     responsibleMemberId: null,
@@ -84,6 +70,7 @@ export function PlanningTemplatesSection({
   templateIds,
   initialTargets,
   eligibleMembers,
+  timezone,
   isOwner,
   onTemplateIdsChange,
   onPlansChange,
@@ -94,6 +81,7 @@ export function PlanningTemplatesSection({
   templateIds: string[];
   initialTargets: WeeklyTarget[];
   eligibleMembers: PlanningEligibleMember[];
+  timezone: string;
   isOwner: boolean;
   onTemplateIdsChange: (ids: string[]) => void;
   onPlansChange: (plans: PlanState) => void;
@@ -108,7 +96,7 @@ export function PlanningTemplatesSection({
       : [...templateIds, id];
     onTemplateIdsChange(next);
     if (!templateIds.includes(id) && !plans[id]) {
-      const plan = defaultPlan(id);
+      const plan = defaultPlan(id, timezone);
       if (eligibleMembers.length === 1) {
         plan.responsibleMemberId = eligibleMembers[0]!.id;
       }
@@ -119,7 +107,10 @@ export function PlanningTemplatesSection({
   const patchPlan = (templateId: string, patch: Partial<WeeklyTarget>) => {
     onPlansChange({
       ...plans,
-      [templateId]: { ...(plans[templateId] ?? defaultPlan(templateId)), ...patch },
+      [templateId]: {
+        ...(plans[templateId] ?? defaultPlan(templateId, timezone)),
+        ...patch,
+      },
     });
   };
 
@@ -135,7 +126,7 @@ export function PlanningTemplatesSection({
     <div className="space-y-2">
       {templates.map((t) => {
         const active = templateIds.includes(t.id);
-        const plan = plans[t.id] ?? defaultPlan(t.id);
+        const plan = plans[t.id] ?? defaultPlan(t.id, timezone);
         const val = plan.perWeek;
         const isExpanded = active && (expanded[t.id] ?? true);
 
@@ -205,6 +196,7 @@ export function PlanningTemplatesSection({
               <div className="space-y-3 border-t border-border/50 px-4 py-3">
                 <RecurrenceForm
                   value={plan}
+                  timezone={timezone}
                   onChange={(patch) => patchPlan(t.id, patch)}
                 />
 
@@ -324,13 +316,19 @@ export function PlanningTemplatesSection({
 
 function RecurrenceForm({
   value,
+  timezone,
   onChange,
 }: {
   value: WeeklyTarget;
+  timezone: string;
   onChange: (patch: Partial<WeeklyTarget>) => void;
 }) {
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+    <div className="space-y-2">
+      <p className="text-xxs text-muted-foreground">
+        Schedule times use {timezoneLabel(timezone)}.
+      </p>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
       <div className="space-y-1.5">
         <Label className="text-xxs font-medium text-muted-foreground">
           Repeat Every<span className="text-rose-400"> *</span>
@@ -351,6 +349,7 @@ function RecurrenceForm({
 
       <DateTimeField
         label="Start On"
+        timezone={timezone}
         value={value.startOn}
         onChange={(d) => onChange({ startOn: d })}
       />
@@ -361,6 +360,7 @@ function RecurrenceForm({
         </Label>
         <div className="flex items-center gap-2">
           <DateTimeField
+            timezone={timezone}
             value={value.endsOn ?? undefined}
             onChange={(d) => onChange({ endsOn: d, neverExpires: false })}
             disabled={value.neverExpires}
@@ -381,23 +381,29 @@ function RecurrenceForm({
         </div>
       </div>
     </div>
+    </div>
   );
 }
 
 function DateTimeField({
   label,
   value,
+  timezone,
   onChange,
   disabled,
   className,
 }: {
   label?: string;
   value?: Date;
+  timezone: string;
   onChange: (d: Date) => void;
   disabled?: boolean;
   className?: string;
 }) {
-  const base = value ?? new Date();
+  const formatted = value
+    ? formatZonedDateInput(value, timezone)
+    : formatZonedDateInput(new Date(), timezone);
+
   return (
     <div className={cn("space-y-1.5", className)}>
       {label && (
@@ -414,20 +420,33 @@ function DateTimeField({
         <input
           type="date"
           disabled={disabled}
-          value={value ? toDateInput(value) : ""}
+          value={value ? formatted.date : ""}
           onChange={(e) =>
-            onChange(mergeDateTime(e.target.value, toTimeInput(base), base))
+            onChange(
+              parseZonedDateTime(
+                e.target.value,
+                formatted.time,
+                timezone,
+                value ?? new Date(),
+              ),
+            )
           }
           className="min-w-0 flex-1 border-0 bg-transparent text-xs tabular-nums text-foreground outline-none [color-scheme:dark] disabled:cursor-not-allowed"
         />
         <input
           type="time"
           disabled={disabled}
-          value={value ? toTimeInput(value) : "00:00"}
-          onChange={(e) => {
-            const d = value ?? new Date();
-            onChange(mergeDateTime(toDateInput(d), e.target.value, d));
-          }}
+          value={value ? formatted.time : "00:00"}
+          onChange={(e) =>
+            onChange(
+              parseZonedDateTime(
+                formatted.date,
+                e.target.value,
+                timezone,
+                value ?? new Date(),
+              ),
+            )
+          }
           className="w-[5.5rem] shrink-0 border-0 bg-transparent text-xs tabular-nums text-foreground outline-none [color-scheme:dark] disabled:cursor-not-allowed"
         />
       </div>

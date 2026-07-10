@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { requireWorkspaceWithMember } from "@/lib/workspace";
 import { weekStartOf } from "@/lib/week";
 import { ensureWeeklySlots } from "@/lib/weekly-slots";
+import { getProjectTimezones } from "@/lib/project-timezone";
 
 export type ResponsibilitySlot = {
   slotId: string;
@@ -24,7 +25,6 @@ export type MyResponsibilityData = {
 /** Empty weekly plan slots assigned to the current member this week. */
 export async function getMyResponsibility(): Promise<MyResponsibilityData> {
   const { member } = await requireWorkspaceWithMember();
-  const weekStart = weekStartOf();
 
   const memberships = await db.projectMember.findMany({
     where: { memberId: member.id },
@@ -37,10 +37,21 @@ export async function getMyResponsibility(): Promise<MyResponsibilityData> {
 
   await Promise.all(projectIds.map((id) => ensureWeeklySlots(id)));
 
+  const timezoneByProject = await getProjectTimezones(projectIds);
+  const weekStartClauses = projectIds.map((projectId) => ({
+    projectId,
+    weekStart: weekStartOf(
+      new Date(),
+      timezoneByProject.get(projectId),
+    ),
+  }));
+
   const rows = await db.weeklySlot.findMany({
     where: {
-      projectId: { in: projectIds },
-      weekStart,
+      OR: weekStartClauses.map((c) => ({
+        projectId: c.projectId,
+        weekStart: c.weekStart,
+      })),
       taskId: null,
       removedAt: null,
       assigneeId: member.id,
@@ -58,8 +69,10 @@ export async function getMyResponsibility(): Promise<MyResponsibilityData> {
   const filledCounts = await db.weeklySlot.groupBy({
     by: ["projectId", "templateId"],
     where: {
-      projectId: { in: projectIds },
-      weekStart,
+      OR: weekStartClauses.map((c) => ({
+        projectId: c.projectId,
+        weekStart: c.weekStart,
+      })),
       taskId: { not: null },
       removedAt: null,
     },

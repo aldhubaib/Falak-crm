@@ -338,6 +338,7 @@ exports.Prisma.ProjectScalarFieldEnum = {
   thumbnailId: 'thumbnailId',
   description: 'description',
   requirePublishing: 'requirePublishing',
+  timezone: 'timezone',
   startDate: 'startDate',
   deadline: 'deadline',
   createdAt: 'createdAt',

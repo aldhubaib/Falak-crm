@@ -26534,6 +26534,7 @@ export namespace Prisma {
     thumbnailId: string | null
     description: string | null
     requirePublishing: boolean | null
+    timezone: string | null
     startDate: Date | null
     deadline: Date | null
     createdAt: Date | null
@@ -26556,6 +26557,7 @@ export namespace Prisma {
     thumbnailId: string | null
     description: string | null
     requirePublishing: boolean | null
+    timezone: string | null
     startDate: Date | null
     deadline: Date | null
     createdAt: Date | null
@@ -26578,6 +26580,7 @@ export namespace Prisma {
     thumbnailId: number
     description: number
     requirePublishing: number
+    timezone: number
     startDate: number
     deadline: number
     createdAt: number
@@ -26602,6 +26605,7 @@ export namespace Prisma {
     thumbnailId?: true
     description?: true
     requirePublishing?: true
+    timezone?: true
     startDate?: true
     deadline?: true
     createdAt?: true
@@ -26624,6 +26628,7 @@ export namespace Prisma {
     thumbnailId?: true
     description?: true
     requirePublishing?: true
+    timezone?: true
     startDate?: true
     deadline?: true
     createdAt?: true
@@ -26646,6 +26651,7 @@ export namespace Prisma {
     thumbnailId?: true
     description?: true
     requirePublishing?: true
+    timezone?: true
     startDate?: true
     deadline?: true
     createdAt?: true
@@ -26741,6 +26747,7 @@ export namespace Prisma {
     thumbnailId: string | null
     description: string | null
     requirePublishing: boolean
+    timezone: string
     startDate: Date | null
     deadline: Date | null
     createdAt: Date
@@ -26780,6 +26787,7 @@ export namespace Prisma {
     thumbnailId?: boolean
     description?: boolean
     requirePublishing?: boolean
+    timezone?: boolean
     startDate?: boolean
     deadline?: boolean
     createdAt?: boolean
@@ -26818,6 +26826,7 @@ export namespace Prisma {
     thumbnailId?: boolean
     description?: boolean
     requirePublishing?: boolean
+    timezone?: boolean
     startDate?: boolean
     deadline?: boolean
     createdAt?: boolean
@@ -26844,6 +26853,7 @@ export namespace Prisma {
     thumbnailId?: boolean
     description?: boolean
     requirePublishing?: boolean
+    timezone?: boolean
     startDate?: boolean
     deadline?: boolean
     createdAt?: boolean
@@ -26870,6 +26880,7 @@ export namespace Prisma {
     thumbnailId?: boolean
     description?: boolean
     requirePublishing?: boolean
+    timezone?: boolean
     startDate?: boolean
     deadline?: boolean
     createdAt?: boolean
@@ -26878,7 +26889,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "dealId" | "companyId" | "contactId" | "ownerId" | "ownerName" | "statusId" | "name" | "type" | "thumbnailId" | "description" | "requirePublishing" | "startDate" | "deadline" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["project"]>
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "dealId" | "companyId" | "contactId" | "ownerId" | "ownerName" | "statusId" | "name" | "type" | "thumbnailId" | "description" | "requirePublishing" | "timezone" | "startDate" | "deadline" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["project"]>
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     deal?: boolean | Project$dealArgs<ExtArgs>
@@ -26943,6 +26954,7 @@ export namespace Prisma {
       thumbnailId: string | null
       description: string | null
       requirePublishing: boolean
+      timezone: string
       startDate: Date | null
       deadline: Date | null
       createdAt: Date
@@ -27400,6 +27412,7 @@ export namespace Prisma {
     readonly thumbnailId: FieldRef<"Project", 'String'>
     readonly description: FieldRef<"Project", 'String'>
     readonly requirePublishing: FieldRef<"Project", 'Boolean'>
+    readonly timezone: FieldRef<"Project", 'String'>
     readonly startDate: FieldRef<"Project", 'DateTime'>
     readonly deadline: FieldRef<"Project", 'DateTime'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
@@ -67452,6 +67465,7 @@ export namespace Prisma {
     thumbnailId: 'thumbnailId',
     description: 'description',
     requirePublishing: 'requirePublishing',
+    timezone: 'timezone',
     startDate: 'startDate',
     deadline: 'deadline',
     createdAt: 'createdAt',
@@ -69749,6 +69763,7 @@ export namespace Prisma {
     thumbnailId?: StringNullableFilter<"Project"> | string | null
     description?: StringNullableFilter<"Project"> | string | null
     requirePublishing?: BoolFilter<"Project"> | boolean
+    timezone?: StringFilter<"Project"> | string
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     deadline?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
@@ -69786,6 +69801,7 @@ export namespace Prisma {
     thumbnailId?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     requirePublishing?: SortOrder
+    timezone?: SortOrder
     startDate?: SortOrderInput | SortOrder
     deadline?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -69826,6 +69842,7 @@ export namespace Prisma {
     thumbnailId?: StringNullableFilter<"Project"> | string | null
     description?: StringNullableFilter<"Project"> | string | null
     requirePublishing?: BoolFilter<"Project"> | boolean
+    timezone?: StringFilter<"Project"> | string
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     deadline?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
@@ -69863,6 +69880,7 @@ export namespace Prisma {
     thumbnailId?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     requirePublishing?: SortOrder
+    timezone?: SortOrder
     startDate?: SortOrderInput | SortOrder
     deadline?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -69891,6 +69909,7 @@ export namespace Prisma {
     thumbnailId?: StringNullableWithAggregatesFilter<"Project"> | string | null
     description?: StringNullableWithAggregatesFilter<"Project"> | string | null
     requirePublishing?: BoolWithAggregatesFilter<"Project"> | boolean
+    timezone?: StringWithAggregatesFilter<"Project"> | string
     startDate?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     deadline?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
@@ -74393,6 +74412,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -74430,6 +74450,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -74459,6 +74480,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -74496,6 +74518,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -74529,6 +74552,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -74547,6 +74571,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -74569,6 +74594,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -79242,6 +79268,7 @@ export namespace Prisma {
     thumbnailId?: SortOrder
     description?: SortOrder
     requirePublishing?: SortOrder
+    timezone?: SortOrder
     startDate?: SortOrder
     deadline?: SortOrder
     createdAt?: SortOrder
@@ -79264,6 +79291,7 @@ export namespace Prisma {
     thumbnailId?: SortOrder
     description?: SortOrder
     requirePublishing?: SortOrder
+    timezone?: SortOrder
     startDate?: SortOrder
     deadline?: SortOrder
     createdAt?: SortOrder
@@ -79286,6 +79314,7 @@ export namespace Prisma {
     thumbnailId?: SortOrder
     description?: SortOrder
     requirePublishing?: SortOrder
+    timezone?: SortOrder
     startDate?: SortOrder
     deadline?: SortOrder
     createdAt?: SortOrder
@@ -86948,6 +86977,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -86983,6 +87013,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -87861,6 +87892,7 @@ export namespace Prisma {
     thumbnailId?: StringNullableFilter<"Project"> | string | null
     description?: StringNullableFilter<"Project"> | string | null
     requirePublishing?: BoolFilter<"Project"> | boolean
+    timezone?: StringFilter<"Project"> | string
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     deadline?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
@@ -89896,6 +89928,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -89932,6 +89965,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -89976,6 +90010,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90012,6 +90047,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90211,6 +90247,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -90246,6 +90283,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -92096,6 +92134,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -92131,6 +92170,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -92555,6 +92595,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -92590,6 +92631,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93088,6 +93130,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -93123,6 +93166,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -94366,6 +94410,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -94402,6 +94447,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -94540,6 +94586,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -94576,6 +94623,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -94710,6 +94758,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -94746,6 +94795,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -94951,6 +95001,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -94987,6 +95038,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95194,6 +95246,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -95230,6 +95283,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -95348,6 +95402,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95384,6 +95439,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95498,6 +95554,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -95534,6 +95591,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -95673,6 +95731,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95709,6 +95768,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95802,6 +95862,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -95838,6 +95899,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -95909,6 +95971,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95945,6 +96008,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -96856,6 +96920,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -96892,6 +96957,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -96979,6 +97045,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -97015,6 +97082,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -97844,6 +97912,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -97880,6 +97949,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -98231,6 +98301,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98267,6 +98338,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98861,6 +98933,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -98897,6 +98970,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -99134,6 +99208,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -99170,6 +99245,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -100383,6 +100459,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -100419,6 +100496,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -100734,6 +100812,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -100770,6 +100849,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102681,6 +102761,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -102717,6 +102798,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -102960,6 +103042,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102996,6 +103079,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -103278,6 +103362,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -103875,6 +103960,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -103910,6 +103996,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -103942,6 +104029,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -105165,6 +105253,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -105293,6 +105382,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -105328,6 +105418,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -105360,6 +105451,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -106293,6 +106385,7 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
+    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -106311,6 +106404,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -106346,6 +106440,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -106378,6 +106473,7 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

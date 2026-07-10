@@ -55,6 +55,7 @@ export default async function ProjectSettingsPage({
       }))}
       weeklyTargets={weeklyTargets}
       eligibleMembers={eligibleMembers}
+      timezone={project.timezone}
       isOwner={access.member.type === "OWNER" || access.permissions.projects === "full"}
     />
   );
