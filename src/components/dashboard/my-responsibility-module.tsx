@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Clock, UserCheck } from "lucide-react";
 import { SettingsSection } from "@/components/settings-section";
-import { ProjectAvatar } from "@/components/project-avatar";
+import { PublishAvatar } from "@/components/publish/publish-avatar";
 import {
   Dialog,
   DialogContent,
@@ -60,7 +60,11 @@ function TaskRow({ task }: { task: ResponsibilityTask }) {
             {task.ageLabel}
           </span>
           <span className="inline-flex min-w-0 items-center gap-1.5">
-            <ProjectAvatar name={task.projectName} size={14} />
+            <PublishAvatar
+              name={task.projectName}
+              thumbnailId={task.projectThumbnailId}
+              size={14}
+            />
             <span className="max-w-[160px] truncate">{task.projectName}</span>
           </span>
         </div>
@@ -87,10 +91,14 @@ function PlannedSlotRow({ slot }: { slot: ResponsibilitySlot }) {
         style={{ backgroundColor: slot.templateColor ?? "#f59e0b" }}
       />
       <span className="text-xxs font-medium uppercase tracking-[0.15em] text-muted-foreground">
-        {slot.templateName} #{slot.slotIndex}
+        {slot.templateName}
       </span>
       <span className="ml-auto inline-flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
-        <ProjectAvatar name={slot.projectName} size={14} />
+        <PublishAvatar
+          name={slot.projectName}
+          thumbnailId={slot.projectThumbnailId}
+          size={14}
+        />
         <span className="max-w-[160px] truncate">{slot.projectName}</span>
       </span>
     </Link>
@@ -110,7 +118,7 @@ export function MyResponsibilityModule({ data }: { data: MyResponsibilityData })
       <SettingsSection
         icon={UserCheck}
         title="My responsibility"
-        description={`task${count === 1 ? "" : "s"} assigned to you`}
+        description={`task${tasks.length === 1 ? "" : "s"} assigned to you`}
         className="flex h-full flex-col"
         bodyClassName="flex flex-1 flex-col space-y-0"
         action={
@@ -119,9 +127,9 @@ export function MyResponsibilityModule({ data }: { data: MyResponsibilityData })
           </span>
         }
       >
-        <div className="min-h-[280px] space-y-2">
+        <div className="space-y-2">
           {count === 0 ? (
-            <div className="grid h-full min-h-[280px] place-items-center text-xs text-muted-foreground">
+            <div className="py-10 text-center text-xs text-muted-foreground">
               No tasks or plan slots assigned to you
             </div>
           ) : (

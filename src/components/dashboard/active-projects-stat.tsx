@@ -70,15 +70,26 @@ export function ActiveProjectsStat({
             <span className="text-xs text-muted-foreground">No active projects</span>
           ) : (
             <div className="flex items-center -space-x-2.5">
-              {shown.map((p) => (
-                <PublishAvatar
-                  key={p.id}
-                  name={p.name}
-                  thumbnailId={p.thumbnailId}
-                  size={40}
-                  className="ring-2 ring-card"
-                />
-              ))}
+              {shown.map((p) => {
+                const hue = hueFor(p.id);
+                return (
+                  <PublishAvatar
+                    key={p.id}
+                    name={p.name}
+                    thumbnailId={p.thumbnailId}
+                    size={40}
+                    className="ring-2 ring-card"
+                    fallback={
+                      <div
+                        className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-sm font-semibold text-white ring-2 ring-card"
+                        style={{ background: `hsl(${hue} 70% 55%)` }}
+                      >
+                        {p.name.charAt(0).toUpperCase()}
+                      </div>
+                    }
+                  />
+                );
+              })}
               {overflow > 0 && (
                 <span
                   className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary text-xs font-bold text-primary-foreground ring-2 ring-card"
@@ -119,6 +130,14 @@ export function ActiveProjectsStat({
                       aria-hidden
                       className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-40"
                       style={{ background: "var(--accent)" }}
+                    />
+                    <div
+                      aria-hidden
+                      className="absolute inset-x-0 top-0 h-px opacity-40 transition-opacity group-hover:opacity-100"
+                      style={{
+                        background:
+                          "linear-gradient(90deg, transparent, var(--accent), transparent)",
+                      }}
                     />
                     <div className="relative flex items-center gap-3">
                       <PublishAvatar

@@ -11,6 +11,7 @@ export type ResponsibilityTask = {
   taskId: string;
   projectId: string;
   projectName: string;
+  projectThumbnailId: string | null;
   title: string;
   statusName: string;
   statusColor: string;
@@ -24,6 +25,7 @@ export type ResponsibilitySlot = {
   slotId: string;
   projectId: string;
   projectName: string;
+  projectThumbnailId: string | null;
   templateId: string;
   templateName: string;
   templateColor: string | null;
@@ -86,7 +88,7 @@ export async function getMyResponsibility(): Promise<MyResponsibilityData> {
             projectId: true,
             stageEnteredAt: true,
             createdAt: true,
-            project: { select: { name: true } },
+            project: { select: { name: true, thumbnailId: true } },
             status: { select: { name: true, color: true } },
             checklistItems: {
               take: 1,
@@ -111,6 +113,7 @@ export async function getMyResponsibility(): Promise<MyResponsibilityData> {
       taskId: t.id,
       projectId: t.projectId,
       projectName: t.project.name,
+      projectThumbnailId: t.project.thumbnailId,
       title: t.title,
       statusName: t.status?.name ?? "Backlog",
       statusColor: t.status?.color ?? "#6b7280",
@@ -148,7 +151,7 @@ export async function getMyResponsibility(): Promise<MyResponsibilityData> {
       id: true,
       projectId: true,
       templateId: true,
-      project: { select: { name: true } },
+      project: { select: { name: true, thumbnailId: true } },
       template: { select: { name: true, color: true, icon: true } },
     },
   });
@@ -179,6 +182,7 @@ export async function getMyResponsibility(): Promise<MyResponsibilityData> {
       slotId: r.id,
       projectId: r.projectId,
       projectName: r.project.name,
+      projectThumbnailId: r.project.thumbnailId,
       templateId: r.templateId,
       templateName: r.template.name,
       templateColor: r.template.color,

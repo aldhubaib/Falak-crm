@@ -32,11 +32,14 @@ function ProjectGroup({
   group: WeekScheduleProject;
   maxRows?: number;
 }) {
-  const items = [
-    ...group.tasks.map((t) => ({ kind: "task" as const, data: t })),
-    ...group.slots.map((s) => ({ kind: "slot" as const, data: s })),
-  ];
-  const visible = maxRows === undefined ? items : items.slice(0, maxRows);
+  const visibleTasks =
+    maxRows === undefined ? group.tasks : group.tasks.slice(0, maxRows);
+  const remaining =
+    maxRows === undefined
+      ? group.slots.length
+      : Math.max(0, maxRows - visibleTasks.length);
+  const visibleSlots =
+    maxRows === undefined ? group.slots : group.slots.slice(0, remaining);
 
   return (
     <div className="space-y-2">
@@ -53,17 +56,16 @@ function ProjectGroup({
           {group.doneCount}/{group.totalCount}
         </span>
       </div>
-      {visible.map((entry) =>
-        entry.kind === "task" ? (
-          <TaskRow
-            key={entry.data.taskId}
-            task={entry.data}
-            projectId={group.projectId}
-          />
-        ) : (
-          <SlotRow key={entry.data.slotId} slot={entry.data} />
-        ),
-      )}
+      {visibleTasks.map((task) => (
+        <TaskRow
+          key={task.taskId}
+          task={task}
+          projectId={group.projectId}
+        />
+      ))}
+      {visibleSlots.map((slot) => (
+        <SlotRow key={slot.slotId} slot={slot} />
+      ))}
     </div>
   );
 }
@@ -148,9 +150,9 @@ export function WeeklyScheduleModule({ data }: { data: ThisWeekData }) {
           </span>
         }
       >
-        <div className="min-h-[280px] space-y-4">
+        <div className="space-y-4">
           {totalPlanned === 0 ? (
-            <div className="grid h-full min-h-[280px] place-items-center text-xs text-muted-foreground">
+            <div className="py-10 text-center text-xs text-muted-foreground">
               No weekly plan targets set
             </div>
           ) : (

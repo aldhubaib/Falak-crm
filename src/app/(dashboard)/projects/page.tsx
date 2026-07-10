@@ -8,6 +8,7 @@ import { getMyResponsibility } from "@/actions/responsibility";
 import { requireWorkspaceWithMember } from "@/lib/workspace";
 import { canEdit } from "@/lib/permissions";
 import { AppHeader } from "@/components/app-header";
+import { PageContainer } from "@/components/page-container";
 import { Button } from "@/components/ui/button";
 import { ActiveProjectsStat } from "@/components/dashboard/active-projects-stat";
 import { MyResponsibilityModule } from "@/components/dashboard/my-responsibility-module";
@@ -38,16 +39,16 @@ export default async function ProjectsPage() {
         }
       />
       <main className="min-h-0 flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-6xl space-y-5 p-5">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <PageContainer className="mx-auto max-w-[1600px]">
+          <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
             <ActiveProjectsStat projects={activeProjects} />
           </div>
 
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <MyResponsibilityModule data={responsibility} />
             <WeeklyScheduleModule data={thisWeek} />
           </div>
-        </div>
+        </PageContainer>
       </main>
     </>
   );
