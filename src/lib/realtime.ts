@@ -7,6 +7,13 @@ import {
 
 // Weekly Plan slot bookkeeping carried on a move event, so boards can patch
 // their slot placeholders in memory instead of refetching the whole board.
+export type BoardWeeklyEmptySlot = {
+  id: string;
+  assigneeId: string | null;
+  assigneeName: string | null;
+  assigneeAvatar: string | null;
+};
+
 export type BoardWeeklyDelta = {
   templateId: string;
   /** A previously-empty slot was claimed by the moved task. */
@@ -14,7 +21,15 @@ export type BoardWeeklyDelta = {
   /** A brand-new (bound) slot was created because this week wasn't materialised. */
   createdExtra?: boolean;
   /** The task rolled back out of Todo and freed this slot. */
-  releasedSlotId?: string;
+  releasedSlot?: BoardWeeklyEmptySlot;
+};
+
+export type BoardSlotPatch = {
+  slotId: string;
+  templateId: string;
+  assigneeId: string | null;
+  assigneeName: string | null;
+  assigneeAvatar: string | null;
 };
 
 // Changed card fields for a `task.moved` event, so subscribed boards can patch
@@ -52,13 +67,20 @@ export type BoardChecklistPatch = {
 // (task.updated) carry the data needed to update the board cache directly;
 // clients fall back to a refetch when absent.
 export type RealtimeEvent = {
-  type: "task.moved" | "task.created" | "task.deleted" | "task.updated";
-  taskId: string;
+  type:
+    | "task.moved"
+    | "task.created"
+    | "task.deleted"
+    | "task.updated"
+    | "slot.updated";
+  taskId?: string;
   actorClientId?: string | null;
   patch?: BoardTaskMovePatch;
   checklist?: BoardChecklistPatch;
   /** New owner after a self-assign — boards patch the card's avatar in place. */
   assignee?: { id: string; name: string; avatar: string | null } | null;
+  /** Weekly plan slot reassigned via avatar click on a dashed placeholder. */
+  slot?: BoardSlotPatch;
   // Full BoardTask snapshot (typed loosely to avoid importing action types here).
   snapshot?: Record<string, unknown>;
 };

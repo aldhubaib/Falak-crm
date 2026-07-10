@@ -5,6 +5,7 @@ import { useQuery, useQueryClient, type QueryClient } from "@tanstack/react-quer
 import { getBoardData, type BoardData, type BoardTask } from "@/actions/board";
 import type {
   BoardChecklistPatch,
+  BoardSlotPatch,
   BoardTaskMovePatch,
   BoardWeeklyDelta,
 } from "@/lib/realtime";
@@ -33,6 +34,7 @@ type BoardEvent = {
   checklist?: BoardChecklistPatch;
   snapshot?: BoardTask;
   assignee?: { id: string; name: string; avatar: string | null } | null;
+  slot?: BoardSlotPatch;
 };
 
 // Ephemeral drag broadcast, published client-to-client over the Centrifugo
@@ -64,17 +66,26 @@ export function applyWeeklyDelta(
   const group = data.weekly.find((g) => g.templateId === delta.templateId);
   if (!group) return data;
   let next = group;
-  if (delta.claimedSlotId && group.emptySlotIds.includes(delta.claimedSlotId)) {
-    next = {
-      ...next,
-      emptySlotIds: next.emptySlotIds.filter((id) => id !== delta.claimedSlotId),
-    };
+  if (delta.claimedSlotId) {
+    const had = group.emptySlots.some((s) => s.id === delta.claimedSlotId);
+    if (had) {
+      next = {
+        ...next,
+        emptySlots: next.emptySlots.filter((s) => s.id !== delta.claimedSlotId),
+      };
+    }
   }
   if (delta.createdExtra) {
     next = { ...next, total: next.total + 1 };
   }
-  if (delta.releasedSlotId && !group.emptySlotIds.includes(delta.releasedSlotId)) {
-    next = { ...next, emptySlotIds: [...next.emptySlotIds, delta.releasedSlotId] };
+  if (delta.releasedSlot) {
+    const exists = group.emptySlots.some((s) => s.id === delta.releasedSlot!.id);
+    if (!exists) {
+      next = {
+        ...next,
+        emptySlots: [...next.emptySlots, delta.releasedSlot],
+      };
+    }
   }
   if (next === group) return data;
   return {
@@ -185,6 +196,35 @@ function applyBoardEvent(
     return;
   }
 
+  // Weekly plan slot reassigned (avatar click on dashed placeholder).
+  if (event.type === "slot.updated" && event.slot) {
+    const slot = event.slot;
+    queryClient.setQueryData<BoardData>(key, (old) => {
+      if (!old) return old;
+      return {
+        ...old,
+        weekly: old.weekly.map((g) =>
+          g.templateId === slot.templateId
+            ? {
+                ...g,
+                emptySlots: g.emptySlots.map((s) =>
+                  s.id === slot.slotId
+                    ? {
+                        ...s,
+                        assigneeId: slot.assigneeId,
+                        assigneeName: slot.assigneeName,
+                        assigneeAvatar: slot.assigneeAvatar,
+                      }
+                    : s,
+                ),
+              }
+            : g,
+        ),
+      };
+    });
+    return;
+  }
+
   if (event.type === "task.deleted" && event.taskId) {
     queryClient.setQueryData<BoardData>(key, (old) => {
       if (!old) return old;
@@ -235,7 +275,7 @@ export function useBoardStream(
         return;
       }
 
-      if (event.type.startsWith("task.")) {
+      if (event.type.startsWith("task.") || event.type === "slot.updated") {
         // A move lands the card — clear any lingering drag highlight for it.
         if (event.taskId) {
           setRemoteDrags((prev) => {

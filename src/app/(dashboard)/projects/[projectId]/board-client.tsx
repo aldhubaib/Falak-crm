@@ -42,10 +42,16 @@ import { CONFIRM_MESSAGES } from "@/components/board/confirm-messages";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { assignTaskToMe, updateTaskStatus } from "@/actions/projects";
-import { removeWeeklySlot } from "@/actions/weekly-plan";
+import { assignWeeklySlotToMe, removeWeeklySlot } from "@/actions/weekly-plan";
 import { addTaskComment } from "@/actions/comments";
 import { uploadManager } from "@/lib/upload-manager";
-import type { BoardData, BoardStatus, BoardTask, WeeklyGroup } from "@/actions/board";
+import type {
+  BoardData,
+  BoardStatus,
+  BoardTask,
+  WeeklyEmptySlot,
+  WeeklyGroup,
+} from "@/actions/board";
 import {
   applyWeeklyDelta,
   boardQueryKey,
@@ -177,6 +183,95 @@ function CardBody({
   );
 }
 
+function EmptySlotCard({
+  slot,
+  templateName,
+  slotNumber,
+  templateIcon,
+  templateColor,
+  onSelfAssign,
+  canRemove,
+  onRemove,
+}: {
+  slot: WeeklyEmptySlot;
+  templateName: string;
+  slotNumber: number;
+  templateIcon: string | null;
+  templateColor: string | null;
+  onSelfAssign?: () => void;
+  canRemove?: boolean;
+  onRemove?: () => void;
+}) {
+  const avatar = (
+    <Avatar className="h-5 w-5">
+      <AvatarImage
+        src={slot.assigneeAvatar ?? undefined}
+        alt={slot.assigneeName ?? "Unassigned"}
+      />
+      <AvatarFallback className="bg-muted text-[9px] font-semibold text-muted-foreground">
+        {(slot.assigneeName ?? "?").charAt(0).toUpperCase()}
+      </AvatarFallback>
+    </Avatar>
+  );
+
+  return (
+    <div className="group/slot relative rounded-lg border border-dashed border-border/80 bg-surface p-3 text-left">
+      <p className="text-[13px] font-medium leading-snug text-muted-foreground/70">
+        {templateName}{" "}
+        <span className="text-muted-foreground/40">#{slotNumber}</span>
+      </p>
+
+      <div className="mt-2 flex items-center gap-1.5">
+        <TypeIcon
+          name={templateIcon}
+          className="h-3.5 w-3.5 shrink-0"
+          style={{ color: templateColor ?? "#f59e0b" }}
+        />
+        <div className="ml-auto flex items-center gap-1">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {onSelfAssign ? (
+                <button
+                  type="button"
+                  aria-label="Assign this plan slot to me"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelfAssign();
+                  }}
+                  className="cursor-pointer rounded-full transition-shadow hover:ring-2 hover:ring-primary/60"
+                >
+                  {avatar}
+                </button>
+              ) : (
+                avatar
+              )}
+            </TooltipTrigger>
+            <TooltipContent>
+              {slot.assigneeName ?? "Unassigned"}
+              {onSelfAssign && (
+                <span className="block opacity-70">Click to assign to me</span>
+              )}
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </div>
+
+      {canRemove && onRemove && (
+        <button
+          type="button"
+          aria-label="Remove this slot"
+          title="Remove slot (admin)"
+          onClick={onRemove}
+          className="absolute right-1.5 top-1.5 hidden size-5 place-items-center rounded-full text-muted-foreground/60 transition-colors hover:bg-destructive/15 hover:text-destructive group-hover/slot:grid"
+        >
+          <X className="h-3 w-3" />
+        </button>
+      )}
+    </div>
+  );
+}
+
 const BoardCard = memo(function BoardCard({
   task,
   onOpen,
@@ -245,6 +340,8 @@ const BoardColumn = memo(function BoardColumn({
   canSelfAssign,
   onSelfAssign,
   weekly,
+  canAssignSlot,
+  onSlotSelfAssign,
   canRemoveSlot,
   onRemoveSlot,
 }: {
@@ -261,6 +358,8 @@ const BoardColumn = memo(function BoardColumn({
   onSelfAssign: (task: BoardTask) => void;
   /** Weekly Plan groups — only passed to the Todo column. */
   weekly?: WeeklyGroup[];
+  canAssignSlot?: boolean;
+  onSlotSelfAssign?: (slot: WeeklyEmptySlot) => void;
   canRemoveSlot?: boolean;
   onRemoveSlot?: (slotId: string) => void;
 }) {
@@ -345,37 +444,25 @@ const BoardColumn = memo(function BoardColumn({
           <>
             {col.tasks.map(renderCard)}
             {weeklyGroups.flatMap((g) => {
-              const filled = g.total - g.emptySlotIds.length;
-              return g.emptySlotIds.map((slotId, i) => (
-                <div
-                  key={slotId}
-                  className="group/slot relative grid h-[72px] place-items-center rounded-lg border border-dashed border-border/80"
-                >
-                  <span className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
-                    <TypeIcon
-                      name={g.templateIcon}
-                      className="h-3.5 w-3.5 shrink-0"
-                      style={{ color: g.templateColor ?? "#f59e0b" }}
-                    />
-                    <span className="truncate">
-                      {g.templateName}{" "}
-                      <span className="text-muted-foreground/40">
-                        #{filled + i + 1}
-                      </span>
-                    </span>
-                  </span>
-                  {canRemoveSlot && onRemoveSlot && (
-                    <button
-                      type="button"
-                      aria-label="Remove this slot"
-                      title="Remove slot (admin)"
-                      onClick={() => onRemoveSlot(slotId)}
-                      className="absolute right-1.5 top-1.5 hidden size-5 place-items-center rounded-full text-muted-foreground/60 transition-colors hover:bg-destructive/15 hover:text-destructive group-hover/slot:grid"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  )}
-                </div>
+              const filled = g.total - g.emptySlots.length;
+              return g.emptySlots.map((slot, i) => (
+                <EmptySlotCard
+                  key={slot.id}
+                  slot={slot}
+                  templateName={g.templateName}
+                  slotNumber={filled + i + 1}
+                  templateIcon={g.templateIcon}
+                  templateColor={g.templateColor}
+                  onSelfAssign={
+                    canAssignSlot && onSlotSelfAssign
+                      ? () => onSlotSelfAssign(slot)
+                      : undefined
+                  }
+                  canRemove={canRemoveSlot}
+                  onRemove={
+                    onRemoveSlot ? () => onRemoveSlot(slot.id) : undefined
+                  }
+                />
               ));
             })}
           </>
@@ -447,6 +534,8 @@ export function ProjectBoardClient({
   const [moveError, setMoveError] = useState<string | null>(null);
   // Task whose avatar was clicked — pending the "assign to me" confirmation.
   const [assignTarget, setAssignTarget] = useState<BoardTask | null>(null);
+  const [assignSlotTarget, setAssignSlotTarget] =
+    useState<WeeklyEmptySlot | null>(null);
   const [declineMove, setDeclineMove] = useState<{
     taskId: string;
     toStatusId: string;
@@ -620,6 +709,59 @@ export function ProjectBoardClient({
     setAssignTarget(task);
   }, []);
 
+  const todoStatusId = useMemo(
+    () => statuses.find((s) => s.name === "Todo")?.id,
+    [statuses],
+  );
+
+  const canAssignSlot = useMemo(
+    () =>
+      movePerms.full ||
+      (todoStatusId
+        ? movePerms.stages[todoStatusId]?.modify === true
+        : false),
+    [movePerms, todoStatusId],
+  );
+
+  const slotSelfAssignMutation = useMutation({
+    mutationFn: (slotId: string) => assignWeeklySlotToMe(slotId, projectId),
+    onMutate: async (slotId) => {
+      const key = boardQueryKey(projectId);
+      await queryClient.cancelQueries({ queryKey: key });
+      const prev = queryClient.getQueryData<BoardData>(key);
+      queryClient.setQueryData<BoardData>(key, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          weekly: old.weekly.map((g) => ({
+            ...g,
+            emptySlots: g.emptySlots.map((s) =>
+              s.id === slotId
+                ? {
+                    ...s,
+                    assigneeId: currentMemberId ?? s.assigneeId,
+                    assigneeName: currentMemberName ?? s.assigneeName,
+                    assigneeAvatar: currentMemberAvatar ?? null,
+                  }
+                : s,
+            ),
+          })),
+        };
+      });
+      return { prev };
+    },
+    onError: (_err, _slotId, ctx) => {
+      if (ctx?.prev) queryClient.setQueryData(boardQueryKey(projectId), ctx.prev);
+      setMoveError(
+        "The plan slot couldn't be assigned to you. Please try again.",
+      );
+    },
+  });
+
+  const openSlotSelfAssign = useCallback((slot: WeeklyEmptySlot) => {
+    setAssignSlotTarget(slot);
+  }, []);
+
   // Admin-only: drop one of this week's open Todo slots. Optimistic — the
   // placeholder disappears immediately and comes back if the server refuses.
   const removeSlotMutation = useMutation({
@@ -633,11 +775,11 @@ export function ProjectBoardClient({
         return {
           ...old,
           weekly: old.weekly.map((g) =>
-            g.emptySlotIds.includes(slotId)
+            g.emptySlots.some((s) => s.id === slotId)
               ? {
                   ...g,
                   total: g.total - 1,
-                  emptySlotIds: g.emptySlotIds.filter((id) => id !== slotId),
+                  emptySlots: g.emptySlots.filter((s) => s.id !== slotId),
                 }
               : g,
           ),
@@ -918,6 +1060,8 @@ export function ProjectBoardClient({
               canSelfAssign={canSelfAssign}
               onSelfAssign={openSelfAssign}
               weekly={col.name === "Todo" ? data.weekly : undefined}
+              canAssignSlot={canAssignSlot}
+              onSlotSelfAssign={openSlotSelfAssign}
               canRemoveSlot={movePerms.full}
               onRemoveSlot={removeSlot}
             />
@@ -952,7 +1096,7 @@ export function ProjectBoardClient({
         meAvatar={currentMemberAvatar}
       />
 
-      {/* Avatar click — assign to me */}
+      {/* Avatar click — assign task to me */}
       <ConfirmStatusDialog
         open={assignTarget !== null}
         onClose={() => setAssignTarget(null)}
@@ -966,6 +1110,24 @@ export function ProjectBoardClient({
         assignToMe
         currentAssigneeName={assignTarget?.assigneeName}
         currentAssigneeAvatar={assignTarget?.assigneeAvatar}
+        meName={currentMemberName}
+        meAvatar={currentMemberAvatar}
+      />
+
+      {/* Avatar click — assign weekly plan slot to me */}
+      <ConfirmStatusDialog
+        open={assignSlotTarget !== null}
+        onClose={() => setAssignSlotTarget(null)}
+        onConfirm={() => {
+          if (assignSlotTarget) slotSelfAssignMutation.mutate(assignSlotTarget.id);
+          setAssignSlotTarget(null);
+        }}
+        title="Assign to me"
+        description="By confirming, this weekly plan slot will count toward your responsibility."
+        confirmLabel="Assign to Me"
+        assignToMe
+        currentAssigneeName={assignSlotTarget?.assigneeName}
+        currentAssigneeAvatar={assignSlotTarget?.assigneeAvatar}
         meName={currentMemberName}
         meAvatar={currentMemberAvatar}
       />

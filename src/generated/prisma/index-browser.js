@@ -350,7 +350,12 @@ exports.Prisma.ProjectWeeklyTargetScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
   templateId: 'templateId',
-  perWeek: 'perWeek'
+  perWeek: 'perWeek',
+  repeatEvery: 'repeatEvery',
+  startOn: 'startOn',
+  endsOn: 'endsOn',
+  neverExpires: 'neverExpires',
+  responsibleMemberId: 'responsibleMemberId'
 };
 
 exports.Prisma.WeeklySlotScalarFieldEnum = {
@@ -359,6 +364,7 @@ exports.Prisma.WeeklySlotScalarFieldEnum = {
   templateId: 'templateId',
   weekStart: 'weekStart',
   taskId: 'taskId',
+  assigneeId: 'assigneeId',
   removedAt: 'removedAt',
   createdAt: 'createdAt'
 };

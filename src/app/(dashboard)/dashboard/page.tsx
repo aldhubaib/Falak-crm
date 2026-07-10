@@ -1,10 +1,15 @@
 import Link from "next/link";
 import { FolderKanban, ListTodo, FileText, CalendarDays } from "lucide-react";
 import { getProjects } from "@/actions/projects";
+import { getMyResponsibility } from "@/actions/responsibility";
 import { AppHeader } from "@/components/app-header";
+import { MyResponsibilityModule } from "@/components/dashboard/my-responsibility-module";
 
 export default async function DashboardPage() {
-  const projects = await getProjects();
+  const [projects, responsibility] = await Promise.all([
+    getProjects(),
+    getMyResponsibility(),
+  ]);
 
   const totalTasks = projects.reduce((n, p) => n + p._count.tasks, 0);
   const totalInvoices = projects.reduce((n, p) => n + p._count.invoices, 0);
@@ -38,6 +43,8 @@ export default async function DashboardPage() {
               href="/publish"
             />
           </div>
+
+          <MyResponsibilityModule data={responsibility} />
 
           <section className="space-y-3">
             <h2 className="text-sm font-semibold text-foreground">Recent Projects</h2>

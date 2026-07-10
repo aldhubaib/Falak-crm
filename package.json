@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
+    "dev:turbo": "next dev --turbopack",
+    "dev:clean": "node -e \"try{require('fs').rmSync('.next/dev/cache',{recursive:true,force:true})}catch(e){}\" && next dev",
     "build": "prisma generate && node scripts/generate-sw.mjs && next build",
     "start": "next start",
     "lint": "eslint",

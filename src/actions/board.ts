@@ -38,15 +38,23 @@ export type BoardTask = {
   templateId: string | null;
 };
 
+// One unfilled weekly plan slot shown as a dashed Todo placeholder.
+export type WeeklyEmptySlot = {
+  id: string;
+  assigneeId: string | null;
+  assigneeName: string | null;
+  assigneeAvatar: string | null;
+};
+
 // Weekly Plan capacity for one task type in the current week. `total` counts
-// live slots (admin-removed excluded); `emptySlotIds` are still claimable.
+// live slots (admin-removed excluded); `emptySlots` are still claimable.
 export type WeeklyGroup = {
   templateId: string;
   templateName: string;
   templateColor: string | null;
   templateIcon: string | null;
   total: number;
-  emptySlotIds: string[];
+  emptySlots: WeeklyEmptySlot[];
 };
 
 export type BoardData = {
@@ -160,6 +168,9 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         id: true,
         templateId: true,
         taskId: true,
+        assignee: {
+          select: { id: true, name: true, email: true, imageUrl: true },
+        },
         template: { select: { name: true, color: true, icon: true } },
       },
     }),
@@ -234,12 +245,21 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         templateColor: s.template.color,
         templateIcon: s.template.icon,
         total: 0,
-        emptySlotIds: [],
+        emptySlots: [],
       };
       weekly.push(group);
     }
     group.total += 1;
-    if (!s.taskId) group.emptySlotIds.push(s.id);
+    if (!s.taskId) {
+      group.emptySlots.push({
+        id: s.id,
+        assigneeId: s.assignee?.id ?? null,
+        assigneeName: s.assignee
+          ? (s.assignee.name ?? s.assignee.email)
+          : null,
+        assigneeAvatar: s.assignee?.imageUrl ?? null,
+      });
+    }
   }
 
   return {

@@ -10,9 +10,6 @@ import { weekStartOf } from "@/lib/week";
 export async function ensureWeeklySlots(projectId: string): Promise<void> {
   const weekStart = weekStartOf();
 
-  // Cheap redis guard so concurrent board loads don't double-seed. Redis-less
-  // environments fall through — the top-up math keeps duplicates rare and
-  // harmless (an extra empty slot an admin can remove).
   const claimed = await claimThrottle(
     `weekslots:${projectId}:${weekStart.toISOString().slice(0, 10)}`,
     10,
@@ -35,26 +32,61 @@ export async function ensureWeeklySlots(projectId: string): Promise<void> {
     existing.map((e) => [e.templateId, e._count._all]),
   );
   const data = targets.flatMap((t) => {
-    const missing = t.perWeek - (countByTemplate.get(t.templateId) ?? 0);
-    return missing > 0
-      ? Array.from({ length: missing }, () => ({
-          projectId,
-          templateId: t.templateId,
-          weekStart,
-        }))
-      : [];
+    const existingCount = countByTemplate.get(t.templateId) ?? 0;
+    const missing = t.perWeek - existingCount;
+    if (missing <= 0) return [];
+    return Array.from({ length: missing }, () => ({
+      projectId,
+      templateId: t.templateId,
+      weekStart,
+      assigneeId: t.responsibleMemberId,
+    }));
   });
   if (data.length > 0) {
     await db.weeklySlot.createMany({ data });
   }
 
+  await backfillSlotAssignees(projectId, weekStart, targets);
   await adoptTodoTasksIntoSlots(projectId, weekStart);
 }
 
-// Tasks that are ALREADY sitting in Todo but aren't bound to any slot (they
-// were there before the weekly plan existed, or before this week's slots were
-// seeded) adopt the week's free slots of their type. Without this the counter
-// reads 0/N with dashed placeholders below real cards.
+async function backfillSlotAssignees(
+  projectId: string,
+  weekStart: Date,
+  targets: { templateId: string; responsibleMemberId: string | null }[],
+): Promise<void> {
+  const byTemplate = new Map(
+    targets
+      .filter((t) => t.responsibleMemberId)
+      .map((t) => [t.templateId, t.responsibleMemberId!]),
+  );
+  if (byTemplate.size === 0) return;
+
+  const unassigned = await db.weeklySlot.findMany({
+    where: {
+      projectId,
+      weekStart,
+      taskId: null,
+      assigneeId: null,
+      removedAt: null,
+      templateId: { in: [...byTemplate.keys()] },
+    },
+    select: { id: true, templateId: true },
+  });
+  if (unassigned.length === 0) return;
+
+  await Promise.all(
+    unassigned.map((slot) => {
+      const assigneeId = byTemplate.get(slot.templateId);
+      if (!assigneeId) return Promise.resolve();
+      return db.weeklySlot.update({
+        where: { id: slot.id },
+        data: { assigneeId },
+      });
+    }),
+  );
+}
+
 async function adoptTodoTasksIntoSlots(
   projectId: string,
   weekStart: Date,
@@ -83,8 +115,6 @@ async function adoptTodoTasksIntoSlots(
   });
   if (unbound.length === 0) return;
 
-  // Same type resolution the board and the move gate use: the first checklist
-  // item that traces back to a template.
   const queue = new Map<string, string[]>();
   for (const t of unbound) {
     const templateId =
@@ -99,10 +129,43 @@ async function adoptTodoTasksIntoSlots(
   for (const slot of freeSlots) {
     const taskId = queue.get(slot.templateId)?.shift();
     if (!taskId) continue;
-    // `taskId: null` guard keeps a concurrent claim from being overwritten.
     await db.weeklySlot.updateMany({
       where: { id: slot.id, taskId: null },
       data: { taskId },
     });
   }
+}
+
+/** Resolve assigneeId for a single new slot (force-add or move-created). */
+export async function resolveNewSlotAssignee(
+  projectId: string,
+  templateId: string,
+): Promise<string | null> {
+  const target = await db.projectWeeklyTarget.findUnique({
+    where: { projectId_templateId: { projectId, templateId } },
+    select: { responsibleMemberId: true },
+  });
+  return target?.responsibleMemberId ?? null;
+}
+
+/** Push responsible-member changes onto this week's still-empty slots. */
+export async function syncSlotAssigneesFromTargets(
+  projectId: string,
+  targets: { templateId: string; responsibleMemberId: string | null }[],
+): Promise<void> {
+  const weekStart = weekStartOf();
+  await Promise.all(
+    targets.map((t) =>
+      db.weeklySlot.updateMany({
+        where: {
+          projectId,
+          templateId: t.templateId,
+          weekStart,
+          taskId: null,
+          removedAt: null,
+        },
+        data: { assigneeId: t.responsibleMemberId },
+      }),
+    ),
+  );
 }

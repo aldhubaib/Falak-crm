@@ -4,20 +4,21 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   Activity,
-  CalendarClock,
   Check,
   CheckSquare,
-  ChevronRight,
   ClipboardCheck,
   FileText,
-  Minus,
-  Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { AppHeader } from "@/components/app-header";
 import { ProjectPhotoButton } from "@/components/projects/project-photo-button";
 import { Section } from "@/components/project-settings/section";
+import {
+  PlanningTemplatesSection,
+  plansFromTargets,
+  serializePlans,
+} from "@/components/project-settings/planning-templates-section";
 import { cn } from "@/lib/utils";
 import {
   updateProjectDescription,
@@ -25,7 +26,9 @@ import {
   updateProjectStatus,
   updateProjectTemplates,
 } from "@/actions/projects";
-import { setWeeklyTargets, type WeeklyTarget } from "@/actions/weekly-plan";
+import { setWeeklyTargets } from "@/actions/weekly-plan";
+import type { PlanningEligibleMember } from "@/actions/weekly-plan";
+import type { WeeklyTarget } from "@/lib/weekly-plan";
 
 type ProjectStatusOption = { id: string; name: string; color: string };
 
@@ -53,6 +56,8 @@ export function ProjectSettingsClient({
   projectStatuses,
   templates,
   weeklyTargets: initialWeeklyTargets,
+  eligibleMembers,
+  isOwner,
 }: {
   projectId: string;
   projectName: string;
@@ -64,6 +69,8 @@ export function ProjectSettingsClient({
   projectStatuses: ProjectStatusOption[];
   templates: Template[];
   weeklyTargets: WeeklyTarget[];
+  eligibleMembers: PlanningEligibleMember[];
+  isOwner: boolean;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -74,31 +81,17 @@ export function ProjectSettingsClient({
     initialRequirePublishing,
   );
   const [templateIds, setTemplateIds] = useState(initialTemplateIds);
-  const [weekly, setWeekly] = useState<Record<string, number>>(() =>
-    Object.fromEntries(
-      initialWeeklyTargets.map((t) => [t.templateId, t.perWeek]),
-    ),
-  );
+  const [plans, setPlans] = useState(() => plansFromTargets(initialWeeklyTargets));
 
-  const serializeWeekly = (w: Record<string, number>) =>
-    Object.entries(w)
-      .filter(([, n]) => n > 0)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([id, n]) => `${id}:${n}`)
-      .join(",");
-  const initialWeeklyKey = serializeWeekly(
-    Object.fromEntries(
-      initialWeeklyTargets.map((t) => [t.templateId, t.perWeek]),
-    ),
-  );
-  const weeklyDirty = serializeWeekly(weekly) !== initialWeeklyKey;
+  const initialPlansKey = serializePlans(plansFromTargets(initialWeeklyTargets));
+  const plansDirty = serializePlans(plans) !== initialPlansKey;
 
   const dirty =
     statusId !== currentStatusId ||
     description !== initialDescription ||
     requirePublishing !== initialRequirePublishing ||
     templateIds.join(",") !== initialTemplateIds.join(",") ||
-    weeklyDirty;
+    plansDirty;
 
   const save = () => {
     startTransition(async () => {
@@ -114,30 +107,16 @@ export function ProjectSettingsClient({
       if (templateIds.join(",") !== initialTemplateIds.join(",")) {
         await updateProjectTemplates(projectId, templateIds);
       }
-      if (weeklyDirty) {
+      if (plansDirty) {
         await setWeeklyTargets(
           projectId,
-          Object.entries(weekly)
-            // Only types still attached to the project carry a target.
-            .filter(([id, n]) => n > 0 && templateIds.includes(id))
-            .map(([templateId, perWeek]) => ({ templateId, perWeek })),
+          Object.values(plans).filter(
+            (p) => p.perWeek > 0 && templateIds.includes(p.templateId),
+          ),
         );
       }
       router.refresh();
     });
-  };
-
-  const bumpWeekly = (templateId: string, delta: number) => {
-    setWeekly((prev) => ({
-      ...prev,
-      [templateId]: Math.max(0, Math.min(50, (prev[templateId] ?? 0) + delta)),
-    }));
-  };
-
-  const toggleTemplate = (id: string) => {
-    setTemplateIds((prev) =>
-      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id],
-    );
   };
 
   return (
@@ -162,7 +141,6 @@ export function ProjectSettingsClient({
       />
       <main className="min-h-0 flex-1 overflow-y-auto">
         <div className="mx-auto max-w-3xl space-y-6 p-5 pb-10">
-          {/* Project Status */}
           <Section
             icon={<Activity className="size-4" />}
             title="Project Status"
@@ -194,7 +172,6 @@ export function ProjectSettingsClient({
             </div>
           </Section>
 
-          {/* Description */}
           <Section
             icon={<FileText className="size-4" />}
             title="Project Description"
@@ -212,7 +189,6 @@ export function ProjectSettingsClient({
             </div>
           </Section>
 
-          {/* Require Publishing */}
           <Section
             icon={<ClipboardCheck className="size-4" />}
             title="Require Publishing"
@@ -255,112 +231,22 @@ export function ProjectSettingsClient({
             </div>
           </Section>
 
-          {/* Checklist Templates */}
           <Section
             icon={<CheckSquare className="size-4" />}
             title="Checklist Templates"
-            hint="Select which checklist templates apply to tasks in this project. When a new task is created, all items from linked templates will be added automatically."
+            hint="Turn on the templates that apply to this project. Expand any active template to set how many tasks it should deliver per week."
           >
-            <div className="space-y-2">
-              {templates.length === 0 && (
-                <div className="py-4 text-center text-xs text-muted-foreground">
-                  No templates yet.
-                </div>
-              )}
-              {templates.map((t) => {
-                const active = templateIds.includes(t.id);
-                return (
-                  <button
-                    key={t.id}
-                    type="button"
-                    onClick={() => toggleTemplate(t.id)}
-                    className={cn(
-                      "flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all",
-                      active
-                        ? "border-primary/50 bg-primary/5"
-                        : "border-border/60 bg-surface hover:border-border",
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "grid size-5 shrink-0 place-items-center rounded-md border transition-colors",
-                        active
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border",
-                      )}
-                    >
-                      {active && <Check className="size-3.5" />}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium">{t.name}</span>
-                        <span className="rounded-md bg-muted/40 px-1.5 py-0.5 text-xxs text-muted-foreground">
-                          {t.itemCount} items
-                        </span>
-                      </div>
-                    </div>
-                    <ChevronRight className="size-4 text-muted-foreground" />
-                  </button>
-                );
-              })}
-            </div>
-          </Section>
-
-          {/* Weekly Plan */}
-          <Section
-            icon={<CalendarClock className="size-4" />}
-            title="Weekly Plan"
-            hint="Set how many tasks of each type this project should deliver per week. Each week the Todo column gets that many slots — a task can only move from Backlog to Todo while a free slot remains. Raising the target mid-week adds slots to the current week."
-          >
-            {templateIds.length === 0 ? (
-              <div className="py-4 text-center text-xs text-muted-foreground">
-                Attach a checklist template first — the plan is set per task
-                type.
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {templates
-                  .filter((t) => templateIds.includes(t.id))
-                  .map((t) => {
-                    const count = weekly[t.id] ?? 0;
-                    return (
-                      <div
-                        key={t.id}
-                        className="flex items-center justify-between gap-3 rounded-xl border border-border/60 bg-surface px-4 py-3"
-                      >
-                        <span className="min-w-0 truncate text-sm font-medium">
-                          {t.name}
-                        </span>
-                        <div className="flex shrink-0 items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => bumpWeekly(t.id, -1)}
-                            disabled={count === 0}
-                            aria-label={`Fewer ${t.name} per week`}
-                            className="grid size-7 place-items-center rounded-lg border border-border/60 bg-muted/30 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 disabled:hover:text-muted-foreground"
-                          >
-                            <Minus className="size-3.5" />
-                          </button>
-                          <span className="w-6 text-center text-sm font-semibold tabular-nums">
-                            {count}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => bumpWeekly(t.id, 1)}
-                            aria-label={`More ${t.name} per week`}
-                            className="grid size-7 place-items-center rounded-lg border border-border/60 bg-muted/30 text-muted-foreground transition-colors hover:text-foreground"
-                          >
-                            <Plus className="size-3.5" />
-                          </button>
-                          <span className="text-xs text-muted-foreground">
-                            / week
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            )}
+            <PlanningTemplatesSection
+              projectId={projectId}
+              templates={templates}
+              templateIds={templateIds}
+              initialTargets={initialWeeklyTargets}
+              eligibleMembers={eligibleMembers}
+              isOwner={isOwner}
+              onTemplateIdsChange={setTemplateIds}
+              onPlansChange={setPlans}
+              plans={plans}
+            />
           </Section>
         </div>
       </main>

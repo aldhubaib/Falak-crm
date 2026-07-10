@@ -4,12 +4,11 @@ import { withSentryConfig } from "@sentry/nextjs";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   devIndicators: false,
-  // Self-contained server bundle: `node .next/standalone/server.js` starts
-  // without node_modules resolution at runtime — faster boot, less memory.
-  output: "standalone",
-  // Pin file tracing to this project so standalone lands at
-  // .next/standalone/server.js (not nested under an inferred monorepo root).
-  outputFileTracingRoot: __dirname,
+  // Standalone bundle is for Railway production deploys only — enabling it in
+  // dev makes Next trace extra files and costs RAM on every `npm run dev`.
+  ...(process.env.NODE_ENV === "production"
+    ? { output: "standalone" as const, outputFileTracingRoot: __dirname }
+    : {}),
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "img.clerk.com" },
@@ -32,9 +31,17 @@ const nextConfig: NextConfig = {
 
 // Sentry wrapping is inert without SENTRY_DSN / SENTRY_AUTH_TOKEN — source-map
 // upload only runs when the auth token is present in the build environment.
-export default withSentryConfig(nextConfig, {
-  silent: true,
-  disableLogger: true,
-  widenClientFileUpload: false,
-  telemetry: false,
-});
+// Skip the wrapper entirely when no DSN is set: its loader injects
+// `onRequestError` into instrumentation.ts and conflicts if we define our own.
+const sentryOn = Boolean(
+  process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN,
+);
+
+export default sentryOn
+  ? withSentryConfig(nextConfig, {
+      silent: true,
+      disableLogger: true,
+      widenClientFileUpload: false,
+      telemetry: false,
+    })
+  : nextConfig;

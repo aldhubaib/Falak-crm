@@ -721,33 +721,45 @@ export async function updateTaskStatus(
   const releasedSlot = releaseSlot
     ? await db.weeklySlot.findUnique({
         where: { taskId },
-        select: { id: true, templateId: true },
+        select: {
+          id: true,
+          templateId: true,
+          assignee: {
+            select: { id: true, name: true, email: true, imageUrl: true },
+          },
+        },
       })
     : null;
 
   const history: Record<string, string> = (task?.assignmentHistory as Record<string, string>) ?? {};
 
   let newAssigneeId: string = member.id;
+  const fillsWeeklySlot = !!(claimSlotId || createExtraSlot);
 
   if (isForward) {
     if (task?.statusId && task.assigneeId) {
       history[task.statusId] = task.assigneeId;
     }
 
-    const projectMembers = await db.projectMember.findMany({
-      where: { projectId },
-      include: { role: true },
-      orderBy: { addedAt: "asc" },
-    });
+    if (fillsWeeklySlot) {
+      // Claiming a weekly plan slot assigns the task to whoever filled it.
+      newAssigneeId = member.id;
+    } else {
+      const projectMembers = await db.projectMember.findMany({
+        where: { projectId },
+        include: { role: true },
+        orderBy: { addedAt: "asc" },
+      });
 
-    const autoAssignMember = projectMembers.find((pm) => {
-      const perms = (pm.role?.permissions as Record<string, unknown>) ?? {};
-      const tp = (perms.taskPermissions as { stages: Record<string, { autoAssign?: boolean }> }) ?? { stages: {} };
-      return tp.stages?.[statusId]?.autoAssign === true;
-    });
+      const autoAssignMember = projectMembers.find((pm) => {
+        const perms = (pm.role?.permissions as Record<string, unknown>) ?? {};
+        const tp = (perms.taskPermissions as { stages: Record<string, { autoAssign?: boolean }> }) ?? { stages: {} };
+        return tp.stages?.[statusId]?.autoAssign === true;
+      });
 
-    if (autoAssignMember) {
-      newAssigneeId = autoAssignMember.memberId;
+      if (autoAssignMember) {
+        newAssigneeId = autoAssignMember.memberId;
+      }
     }
   } else {
     const previousAssignee = history[statusId];
@@ -811,6 +823,7 @@ export async function updateTaskStatus(
               templateId: taskTemplateId,
               weekStart: weekStartOf(),
               taskId,
+              assigneeId: member.id,
             },
           }),
         ]
@@ -847,7 +860,17 @@ export async function updateTaskStatus(
     : createExtraSlot && taskTemplateId
       ? { templateId: taskTemplateId, createdExtra: true }
       : releasedSlot
-        ? { templateId: releasedSlot.templateId, releasedSlotId: releasedSlot.id }
+        ? {
+            templateId: releasedSlot.templateId,
+            releasedSlot: {
+              id: releasedSlot.id,
+              assigneeId: releasedSlot.assignee?.id ?? null,
+              assigneeName: releasedSlot.assignee
+                ? (releasedSlot.assignee.name ?? releasedSlot.assignee.email)
+                : null,
+              assigneeAvatar: releasedSlot.assignee?.imageUrl ?? null,
+            },
+          }
         : null;
 
   // Broadcast to other connected board clients immediately after the commit.
@@ -903,6 +926,7 @@ export async function updateTaskStatus(
   // cache from this result and every other viewer gets the broadcast patch.
   // Invalidating the RSC cache per move caused a server re-render storm.
   if (dealId) revalidatePath(`/deals/${dealId}`);
+  if (weeklyDelta) revalidatePath("/dashboard");
 
   // Return the resolved assignee so the board can patch its cache immediately
   // (self-assign on forward moves, previous owner on rollbacks, auto-assign).
