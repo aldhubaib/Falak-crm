@@ -76,11 +76,8 @@ export function findCopyrightAnswer(
   return null;
 }
 
-const COPYRIGHT_FOLLOWUP_NAMES = new Set([
-  "comment",
-  "copyright text",
-  "copyright comment",
-]);
+// Legacy copyright follow-up labels — generic "Comment" fields are NOT waived.
+const COPYRIGHT_FOLLOWUP_NAMES = new Set(["copyright text", "copyright comment"]);
 
 /** Whether a field should participate in stage-gate checks on this task. */
 export function fieldAppliesForGate(
@@ -93,10 +90,27 @@ export function fieldAppliesForGate(
   if (answer !== "no") return true;
   if (cfg.type === "copyright") return true;
 
+  const role = (cfg.role ?? "").toLowerCase();
+  if (role.includes("copyright")) return false;
+
   const name = (cfg.name ?? "").trim().toLowerCase();
   if (COPYRIGHT_FOLLOWUP_NAMES.has(name)) return false;
-  if ((cfg.role ?? "").toLowerCase().includes("copyright")) return false;
+
   return true;
+}
+
+/** Whether a checklist field should render at the task's current stage. */
+export function isFieldVisible(
+  cfg: { visibleFromStageId?: string | null },
+  currentOrder: number | null,
+  orderById: Map<string, number>,
+): boolean {
+  if (!cfg.visibleFromStageId) return true;
+  if (currentOrder == null) return true;
+  const visibleFromOrder = orderById.get(cfg.visibleFromStageId);
+  // Stale stage id (e.g. after a pipeline edit) — keep the field visible.
+  if (visibleFromOrder == null) return true;
+  return currentOrder >= visibleFromOrder;
 }
 
 /**

@@ -7,7 +7,13 @@ import { db } from "@/lib/db";
 import { createPresignedGet } from "@/lib/storage";
 import { getProjectAccess } from "@/lib/workspace";
 import { canDeleteTaskAt } from "@/lib/permissions";
-import { autoLockOrder, fieldConfig, isFieldLocked, titleLockConfig } from "@/lib/checklist-config";
+import {
+  autoLockOrder,
+  fieldConfig,
+  isFieldLocked,
+  isFieldVisible,
+  titleLockConfig,
+} from "@/lib/checklist-config";
 import { normalizeFormats } from "@/lib/formats";
 import { TaskDetailClient, type ChecklistItem } from "./task-detail-client";
 
@@ -108,6 +114,7 @@ export default async function TaskDetailPage({
       allowedFileTypes: cfg.allowedFileTypes,
       allowedFormats: normalizeFormats(parseArray(cfg.allowedFormats)),
       aspectRatio: cfg.aspectRatio,
+      visible: isFieldVisible(cfg, currentOrder, orderById),
       // Everything is read-only while the task sits in the trash.
       locked: trashed || isFieldLocked(cfg, currentOrder, orderById, todoOrder),
     };

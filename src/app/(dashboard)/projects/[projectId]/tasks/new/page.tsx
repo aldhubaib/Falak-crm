@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { isFieldVisible } from "@/lib/checklist-config";
 import { normalizeFormats } from "@/lib/formats";
 import { getProjectTaskTemplates } from "@/actions/projects";
 import { getTaskStatuses } from "@/actions/settings";
@@ -87,7 +88,11 @@ export default async function NewTaskPage({
     titleHelp: pt.template.titleHelp,
     count: countByTemplate[pt.template.id] ?? 0,
     fields: pt.template.items
-      .filter((it) => it.phase !== "delivery")
+      .filter(
+        (it) =>
+          it.phase !== "delivery" &&
+          isFieldVisible(it, defaultOrder ?? null, orderById),
+      )
       .map((it) => ({
         id: it.id,
         name: it.name,

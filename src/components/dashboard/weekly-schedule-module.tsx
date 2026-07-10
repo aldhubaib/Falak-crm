@@ -37,7 +37,6 @@ function ProjectGroup({
     ...group.slots.map((s) => ({ kind: "slot" as const, data: s })),
   ];
   const visible = maxRows === undefined ? items : items.slice(0, maxRows);
-  const typeCounters: Record<string, number> = {};
 
   return (
     <div className="space-y-2">
@@ -62,11 +61,7 @@ function ProjectGroup({
             projectId={group.projectId}
           />
         ) : (
-          <SlotRow
-            key={entry.data.slotId}
-            slot={entry.data}
-            typeCounters={typeCounters}
-          />
+          <SlotRow key={entry.data.slotId} slot={entry.data} />
         ),
       )}
     </div>
@@ -117,16 +112,7 @@ function TaskRow({
   );
 }
 
-function SlotRow({
-  slot,
-  typeCounters,
-}: {
-  slot: WeekScheduleSlot;
-  typeCounters: Record<string, number>;
-}) {
-  const key = slot.templateName;
-  typeCounters[key] = (typeCounters[key] ?? 0) + 1;
-  const n = typeCounters[key];
+function SlotRow({ slot }: { slot: WeekScheduleSlot }) {
   return (
     <div className="flex items-center gap-2 rounded-xl border border-dashed border-border/60 bg-transparent px-3 py-2.5">
       <span
@@ -134,7 +120,7 @@ function SlotRow({
         style={{ backgroundColor: slot.templateColor ?? "#f59e0b" }}
       />
       <span className="text-xxs font-medium uppercase tracking-[0.15em] text-muted-foreground">
-        {slot.templateName} #{n}
+        {slot.templateName} #{slot.slotIndex}
       </span>
     </div>
   );

@@ -7,6 +7,7 @@ import { canEdit, canDeleteTaskAt, canMoveTaskFrom } from "@/lib/permissions";
 import {
   autoLockOrder,
   fieldAppliesForGate,
+  isFieldVisible,
   fieldConfig,
   isFieldLocked,
   isGateComplete,
@@ -326,6 +327,7 @@ export async function createFullTask(data: {
         : undefined;
     for (const item of templates.flatMap((t) => t.items)) {
       if (item.phase === "delivery" || item.type === "file_upload") continue;
+      if (!isFieldVisible(item, startOrder ?? null, stageOrderById)) continue;
       const gateOrder = item.requiredBeforeStageId
         ? stageOrderById.get(item.requiredBeforeStageId)
         : undefined;
@@ -576,6 +578,7 @@ export async function updateTaskStatus(
             hidden: true,
             textValue: true,
             attachmentId: true,
+            visibleFromStageId: true,
             requiredBeforeStageId: true,
             templateItem: {
               select: {
@@ -586,6 +589,7 @@ export async function updateTaskStatus(
                 mandatory: true,
                 hidden: true,
                 templateId: true,
+                visibleFromStageId: true,
                 requiredBeforeStageId: true,
               },
             },
@@ -608,10 +612,12 @@ export async function updateTaskStatus(
   // target stage must be complete. Rules come from the live template config;
   // detached fields fall back to their own snapshot.
   const blockers: { itemName: string; role: string }[] = [];
+  const taskCurrentOrder = task?.status?.order ?? null;
   if (task && targetStatus) {
     for (const ci of task.checklistItems) {
       const cfg = fieldConfig(ci);
       if (cfg.hidden) continue;
+      if (!isFieldVisible(cfg, taskCurrentOrder, stageOrderById)) continue;
       if (!fieldAppliesForGate(ci, task.checklistItems)) continue;
       if (isGateComplete(ci, cfg)) continue;
       const gateStageId = cfg.requiredBeforeStageId;
@@ -662,6 +668,7 @@ export async function updateTaskStatus(
       .filter(
         (ci) =>
           !ci.cfg.hidden &&
+          isFieldVisible(ci.cfg, taskCurrentOrder, stageOrderById) &&
           ci.cfg.phase === "delivery" &&
           ci.cfg.mandatory &&
           !ci.completed,

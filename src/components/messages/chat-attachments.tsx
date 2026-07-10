@@ -6,6 +6,7 @@
 
 import { useState } from "react";
 import { Download, FileAudio } from "lucide-react";
+import { VideoPlayer } from "@/components/media/video-player";
 import type { MessageAttachment } from "@/actions/messages";
 import { formatBytes, fileIconFor } from "./file-utils";
 
@@ -94,25 +95,11 @@ export function AttachmentBubble({
 
   if (ct.startsWith("video/")) {
     return (
-      <div className="group relative overflow-hidden rounded-xl bg-black">
-        <video
-          src={`/api/files/${attachment.id}/stream`}
-          controls
-          preload="metadata"
-          className="max-h-96 w-full max-w-md"
-        />
-        <a
-          href={`/api/files/${attachment.id}/stream`}
-          download={attachment.name}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          className="absolute right-2 top-2 grid size-8 place-items-center rounded-full bg-black/60 text-white opacity-0 backdrop-blur-sm transition-opacity hover:bg-black/80 group-hover:opacity-100"
-          aria-label="Download"
-        >
-          <Download className="h-4 w-4" />
-        </a>
-      </div>
+      <VideoPlayer
+        src={`/api/files/${attachment.id}/stream`}
+        downloadHref={`/api/files/${attachment.id}/download`}
+        videoClassName="max-h-96"
+      />
     );
   }
 
