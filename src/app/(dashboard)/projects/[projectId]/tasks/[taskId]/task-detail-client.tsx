@@ -65,6 +65,7 @@ import { AppHeader } from "@/components/app-header";
 import { PageContainer } from "@/components/page-container";
 
 import { cn } from "@/lib/utils";
+import { fieldAppliesForGate } from "@/lib/checklist-config";
 import {
   saveChecklistItemText,
   removeChecklistItemAttachment,
@@ -284,7 +285,9 @@ export function TaskDetailClient({
     [],
   );
 
-  const reqItems = itemList.filter((i) => i.phase === "create");
+  const reqItems = itemList.filter(
+    (i) => i.phase === "create" && fieldAppliesForGate(i, itemList),
+  );
   const delItems = itemList.filter((i) => i.phase === "delivery");
 
   // Requirements are locked once the task leaves Todo; delivery unlocks then.

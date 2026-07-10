@@ -21,6 +21,84 @@ export function fieldConfig<T extends object, U extends object>(
   return item.templateItem ?? item;
 }
 
+export type YesNoParsed = { value: "yes" | "no" | null; text: string };
+
+/** Parse a yes/no checklist answer from its stored textValue. */
+export function parseYesNoValue(raw: string | null | undefined): YesNoParsed {
+  if (!raw) return { value: null, text: "" };
+  const trimmed = raw.trim();
+  if (trimmed === "yes") return { value: "yes", text: "" };
+  if (trimmed === "no") return { value: "no", text: "" };
+  try {
+    const o = JSON.parse(trimmed) as {
+      v?: string;
+      t?: string;
+      enabled?: boolean;
+      text?: string;
+    };
+    if (o?.v === "yes" || o?.v === "no") {
+      return { value: o.v, text: o.t ?? "" };
+    }
+    if (typeof o?.enabled === "boolean") {
+      return {
+        value: o.enabled ? "yes" : "no",
+        text: o.text ?? "",
+      };
+    }
+  } catch {
+    // Legacy plain text — treat as "yes" with follow-up text.
+  }
+  return { value: "yes", text: trimmed };
+}
+
+type GateFieldItem = {
+  name?: string | null;
+  type?: string | null;
+  role?: string | null;
+  textValue?: string | null;
+  templateItem?: {
+    name?: string | null;
+    type?: string | null;
+    role?: string | null;
+  } | null;
+};
+
+/** Answer on the task's Copyright / Copyright Image field, if present. */
+export function findCopyrightAnswer(
+  items: GateFieldItem[],
+): "yes" | "no" | null {
+  for (const item of items) {
+    const cfg = fieldConfig(item);
+    if (cfg.type === "copyright") {
+      return parseYesNoValue(item.textValue).value;
+    }
+  }
+  return null;
+}
+
+const COPYRIGHT_FOLLOWUP_NAMES = new Set([
+  "comment",
+  "copyright text",
+  "copyright comment",
+]);
+
+/** Whether a field should participate in stage-gate checks on this task. */
+export function fieldAppliesForGate(
+  item: GateFieldItem,
+  allItems: GateFieldItem[],
+  copyrightAnswer?: "yes" | "no" | null,
+): boolean {
+  const cfg = fieldConfig(item);
+  const answer = copyrightAnswer ?? findCopyrightAnswer(allItems);
+  if (answer !== "no") return true;
+  if (cfg.type === "copyright") return true;
+
+  const name = (cfg.name ?? "").trim().toLowerCase();
+  if (COPYRIGHT_FOLLOWUP_NAMES.has(name)) return false;
+  if ((cfg.role ?? "").toLowerCase().includes("copyright")) return false;
+  return true;
+}
+
 /**
  * Whether a checklist field counts as complete for stage-gate purposes.
  * Yes/No kinds (mention, copyright) only block when answered "Yes" without
@@ -37,32 +115,7 @@ export function isGateComplete(
   if (item.completed) return true;
   if (cfg.type !== "mention" && cfg.type !== "copyright") return false;
 
-  const raw = (item.textValue ?? "").trim();
-  let value: "yes" | "no" | null = null;
-  let text = "";
-  if (raw === "yes" || raw === "no") value = raw;
-  else if (raw) {
-    try {
-      const o = JSON.parse(raw) as {
-        v?: string;
-        t?: string;
-        enabled?: boolean;
-        text?: string;
-      };
-      if (o?.v === "yes" || o?.v === "no") {
-        value = o.v;
-        text = o.t ?? "";
-      } else if (typeof o?.enabled === "boolean") {
-        // Legacy {enabled, text} format.
-        value = o.enabled ? "yes" : "no";
-        text = o.text ?? "";
-      }
-    } catch {
-      // Legacy plain text — a "yes" with text.
-      value = "yes";
-      text = raw;
-    }
-  }
+  const { value, text } = parseYesNoValue(item.textValue);
   if (value === "yes") {
     return cfg.type === "copyright" ? !!item.attachmentId : !!text.trim();
   }

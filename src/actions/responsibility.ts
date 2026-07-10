@@ -1,10 +1,24 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { formatAgeLabel } from "@/lib/format-age";
 import { requireWorkspaceWithMember } from "@/lib/workspace";
 import { weekStartOf } from "@/lib/week";
 import { ensureWeeklySlots } from "@/lib/weekly-slots";
 import { getProjectTimezones } from "@/lib/project-timezone";
+
+export type ResponsibilityTask = {
+  taskId: string;
+  projectId: string;
+  projectName: string;
+  title: string;
+  statusName: string;
+  statusColor: string;
+  templateName: string;
+  templateColor: string | null;
+  templateIcon: string | null;
+  ageLabel: string;
+};
 
 export type ResponsibilitySlot = {
   slotId: string;
@@ -19,20 +33,96 @@ export type ResponsibilitySlot = {
 
 export type MyResponsibilityData = {
   count: number;
+  tasks: ResponsibilityTask[];
   slots: ResponsibilitySlot[];
 };
 
-/** Empty weekly plan slots assigned to the current member this week. */
-export async function getMyResponsibility(): Promise<MyResponsibilityData> {
-  const { member } = await requireWorkspaceWithMember();
-
-  const memberships = await db.projectMember.findMany({
-    where: { memberId: member.id },
-    select: { projectId: true },
+async function accessibleProjectIds(member: { id: string; userId: string; type: string }, workspaceId: string) {
+  const isOwner = member.type === "OWNER";
+  const rows = await db.project.findMany({
+    where: {
+      workspaceId,
+      deletedAt: null,
+      ...(isOwner
+        ? {}
+        : {
+            OR: [
+              { ownerId: member.userId },
+              { members: { some: { memberId: member.id } } },
+            ],
+          }),
+    },
+    select: { id: true },
   });
-  const projectIds = memberships.map((m) => m.projectId);
+  return rows.map((r) => r.id);
+}
+
+/** Tasks assigned to the member plus empty weekly plan slots they own. */
+export async function getMyResponsibility(): Promise<MyResponsibilityData> {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  const projectIds = await accessibleProjectIds(member, workspace.id);
+
+  const taskRows =
+    projectIds.length === 0
+      ? []
+      : await db.task.findMany({
+          where: {
+            assigneeId: member.id,
+            deletedAt: null,
+            projectId: { in: projectIds },
+            OR: [
+              { statusId: null },
+              {
+                status: {
+                  name: { notIn: ["Completed", "Published"] },
+                },
+              },
+            ],
+          },
+          orderBy: [{ stageEnteredAt: "desc" }, { updatedAt: "desc" }],
+          select: {
+            id: true,
+            title: true,
+            projectId: true,
+            stageEnteredAt: true,
+            createdAt: true,
+            project: { select: { name: true } },
+            status: { select: { name: true, color: true } },
+            checklistItems: {
+              take: 1,
+              where: { templateItemId: { not: null } },
+              select: {
+                templateItem: {
+                  select: {
+                    template: {
+                      select: { name: true, color: true, icon: true },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+  const tasks: ResponsibilityTask[] = taskRows.map((t) => {
+    const tpl = t.checklistItems[0]?.templateItem?.template;
+    const anchor = t.stageEnteredAt ?? t.createdAt;
+    return {
+      taskId: t.id,
+      projectId: t.projectId,
+      projectName: t.project.name,
+      title: t.title,
+      statusName: t.status?.name ?? "Backlog",
+      statusColor: t.status?.color ?? "#6b7280",
+      templateName: tpl?.name ?? "Task",
+      templateColor: tpl?.color ?? null,
+      templateIcon: tpl?.icon ?? null,
+      ageLabel: formatAgeLabel(anchor),
+    };
+  });
+
   if (projectIds.length === 0) {
-    return { count: 0, slots: [] };
+    return { count: tasks.length, tasks, slots: [] };
   }
 
   await Promise.all(projectIds.map((id) => ensureWeeklySlots(id)));
@@ -40,10 +130,7 @@ export async function getMyResponsibility(): Promise<MyResponsibilityData> {
   const timezoneByProject = await getProjectTimezones(projectIds);
   const weekStartClauses = projectIds.map((projectId) => ({
     projectId,
-    weekStart: weekStartOf(
-      new Date(),
-      timezoneByProject.get(projectId),
-    ),
+    weekStart: weekStartOf(new Date(), timezoneByProject.get(projectId)),
   }));
 
   const rows = await db.weeklySlot.findMany({
@@ -100,5 +187,5 @@ export async function getMyResponsibility(): Promise<MyResponsibilityData> {
     };
   });
 
-  return { count: slots.length, slots };
+  return { count: tasks.length + slots.length, tasks, slots };
 }

@@ -4,7 +4,15 @@ import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { requireWorkspace, requireWorkspaceWithMember, requireProjectAssign, requireProjectSettings, requireProjectWork, getProjectAccess } from "@/lib/workspace";
 import { canEdit, canDeleteTaskAt, canMoveTaskFrom } from "@/lib/permissions";
-import { autoLockOrder, fieldConfig, isFieldLocked, isGateComplete, titleLockConfig } from "@/lib/checklist-config";
+import {
+  autoLockOrder,
+  fieldAppliesForGate,
+  fieldConfig,
+  isFieldLocked,
+  isGateComplete,
+  parseYesNoValue,
+  titleLockConfig,
+} from "@/lib/checklist-config";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
@@ -604,6 +612,7 @@ export async function updateTaskStatus(
     for (const ci of task.checklistItems) {
       const cfg = fieldConfig(ci);
       if (cfg.hidden) continue;
+      if (!fieldAppliesForGate(ci, task.checklistItems)) continue;
       if (isGateComplete(ci, cfg)) continue;
       const gateStageId = cfg.requiredBeforeStageId;
       if (!gateStageId) continue;
@@ -1350,16 +1359,21 @@ export async function saveChecklistItemText(itemId: string, textValue: string, p
   const item = await db.taskChecklistItem.findUnique({
     where: { id: itemId },
     select: {
+      taskId: true,
       type: true,
       attachmentId: true,
       templateItem: { select: { type: true } },
     },
   });
   const kind = item?.templateItem?.type ?? item?.type;
-  const answeredYes = !!textValue.trim() && textValue.trim() !== "no";
+  const parsed = parseYesNoValue(textValue);
+  const answeredYes = parsed.value === "yes";
   const completed =
-    !!textValue.trim() &&
+    parsed.value !== null &&
     !(kind === "copyright" && answeredYes && !item?.attachmentId);
+
+  const clearAttachment =
+    kind === "copyright" && parsed.value === "no" && !!item?.attachmentId;
 
   await db.taskChecklistItem.update({
     where: { id: itemId },
@@ -1367,8 +1381,35 @@ export async function saveChecklistItemText(itemId: string, textValue: string, p
       textValue,
       completed,
       completedAt: completed ? new Date() : null,
+      ...(clearAttachment ? { attachmentId: null } : {}),
     },
   });
+
+  // Copyright "No" waives separate follow-up rows (e.g. a "Comment" field).
+  if (kind === "copyright" && parsed.value === "no" && item?.taskId) {
+    const siblings = await db.taskChecklistItem.findMany({
+      where: { taskId: item.taskId },
+      select: {
+        id: true,
+        name: true,
+        type: true,
+        role: true,
+        textValue: true,
+        templateItem: {
+          select: { name: true, type: true, role: true },
+        },
+      },
+    });
+    const waivedIds = siblings
+      .filter((row) => !fieldAppliesForGate(row, siblings, "no"))
+      .map((row) => row.id);
+    if (waivedIds.length > 0) {
+      await db.taskChecklistItem.updateMany({
+        where: { id: { in: waivedIds } },
+        data: { completed: true, completedAt: new Date() },
+      });
+    }
+  }
 
   await publishChecklistProgress(itemId, projectId);
   revalidatePath(`/projects/${projectId}`);
@@ -1398,12 +1439,25 @@ export async function removeChecklistItemAttachment(itemId: string, projectId: s
   await requireProjectWork(projectId);
   await assertChecklistItemWritable(itemId);
 
+  const item = await db.taskChecklistItem.findUnique({
+    where: { id: itemId },
+    select: {
+      textValue: true,
+      type: true,
+      templateItem: { select: { type: true } },
+    },
+  });
+  const kind = item?.templateItem?.type ?? item?.type;
+  const copyrightNo =
+    kind === "copyright" && parseYesNoValue(item?.textValue).value === "no";
+  const completed = copyrightNo;
+
   await db.taskChecklistItem.update({
     where: { id: itemId },
     data: {
       attachmentId: null,
-      completed: false,
-      completedAt: null,
+      completed,
+      completedAt: completed ? new Date() : null,
     },
   });
 
