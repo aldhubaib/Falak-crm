@@ -51,6 +51,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -363,7 +365,18 @@ export function TaskDetailClient({
                 <MoreVertical className="size-[18px]" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="w-56">
+              {!trashed && move && (
+                <TaskStatusMoveMenu
+                  projectId={projectId}
+                  taskId={taskId}
+                  move={move}
+                  items={itemList}
+                  statusName={statusName}
+                  statusColor={statusColor}
+                />
+              )}
+              {!trashed && move && <DropdownMenuSeparator />}
               <DropdownMenuItem onSelect={() => setHistoryOpen(true)}>
                 <History className="size-4" />
                 History
@@ -450,16 +463,6 @@ export function TaskDetailClient({
               </div>
             </div>
           )}
-          {/* Status bar — move the task Back / Next without going to the board */}
-          {!trashed && move && (
-            <StatusMoveBar
-              projectId={projectId}
-              taskId={taskId}
-              move={move}
-              items={itemList}
-            />
-          )}
-
           {/* Task type / title / priority — mirrors the New Task page */}
           <FormSection
             icon={<LayoutGrid className="size-4" />}
@@ -589,20 +592,23 @@ export function TaskDetailClient({
   );
 }
 
-// Status bar with Back / Next controls — the same move flow as dragging the
-// card on the board: per-stage permissions, delivery gating, stage confirm
-// dialogs on forward moves and the decline dialog (reason + mention) on
-// backward moves.
-function StatusMoveBar({
+// Back / Next status controls in the header ⋮ menu — same move flow as the
+// board drag: per-stage permissions, delivery gating, confirm on forward,
+// decline dialog on backward.
+function TaskStatusMoveMenu({
   projectId,
   taskId,
   move,
   items,
+  statusName,
+  statusColor,
 }: {
   projectId: string;
   taskId: string;
   move: TaskMoveData;
   items: ChecklistItem[];
+  statusName: string | null;
+  statusColor: string;
 }) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -631,8 +637,6 @@ function StatusMoveBar({
 
   const showNext = next != null && canForward;
   const showBack = prev != null && canBack;
-
-  if (!current || (!showNext && !showBack)) return null;
 
   const doMove = async (targetId: string): Promise<boolean> => {
     setMoving(true);
@@ -713,27 +717,28 @@ function StatusMoveBar({
 
   return (
     <>
-      <section className="rounded-2xl border border-border/60 bg-card/60 p-5 backdrop-blur-sm">
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-            Status:
-          </span>
-          <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background px-3 py-1 text-sm font-medium text-foreground">
-            <span
-              className="h-2 w-2 rounded-full"
-              style={{ backgroundColor: current.color }}
-            />
-            {current.name}
-          </span>
-        </div>
-        <div className="mt-4 flex items-center justify-between">
-          {showBack ? (
-            <Button
-              variant="outline"
-              className="rounded-full"
+      <DropdownMenuLabel className="flex items-center gap-2 py-2 font-normal">
+        <span className="text-xxs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+          Status:
+        </span>
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background px-2.5 py-0.5 text-xs font-medium text-foreground">
+          <span
+            className="h-2 w-2 shrink-0 rounded-full"
+            style={{ backgroundColor: current?.color ?? statusColor }}
+          />
+          {current?.name ?? statusName ?? "Unknown"}
+        </span>
+      </DropdownMenuLabel>
+      {(showBack || showNext) && (
+        <>
+          <DropdownMenuSeparator />
+          {showBack && (
+            <DropdownMenuItem
               disabled={moving}
-              onClick={() => setDeclineOpen(true)}
-              title={prev ? `Back to ${prev.name}` : undefined}
+              onSelect={(e) => {
+                e.preventDefault();
+                setDeclineOpen(true);
+              }}
             >
               {moving ? (
                 <Loader2 className="size-4 animate-spin" />
@@ -741,30 +746,32 @@ function StatusMoveBar({
                 <ArrowLeft className="size-4" />
               )}
               Back
-            </Button>
-          ) : (
-            <span />
+              <span className="ml-auto text-xs text-muted-foreground">
+                {prev?.name}
+              </span>
+            </DropdownMenuItem>
           )}
-          {showNext ? (
-            <Button
-              variant="outline"
-              className="rounded-full"
+          {showNext && (
+            <DropdownMenuItem
               disabled={moving}
-              onClick={handleNext}
-              title={next ? `Move to ${next.name}` : undefined}
+              onSelect={(e) => {
+                e.preventDefault();
+                handleNext();
+              }}
             >
-              Next
               {moving ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : (
                 <ArrowRight className="size-4" />
               )}
-            </Button>
-          ) : (
-            <span />
+              Next
+              <span className="ml-auto text-xs text-muted-foreground">
+                {next?.name}
+              </span>
+            </DropdownMenuItem>
           )}
-        </div>
-      </section>
+        </>
+      )}
 
       {/* Forward move confirmation */}
       <ConfirmStatusDialog
@@ -787,7 +794,7 @@ function StatusMoveBar({
       {/* Backward move decline */}
       <DeclineDialog
         open={declineOpen}
-        fromLabel={current.name}
+        fromLabel={current?.name ?? statusName ?? ""}
         toLabel={prev?.name ?? ""}
         mentionName={move.submittedBy.name}
         mentionAvatar={move.submittedBy.avatar}
