@@ -21,6 +21,12 @@ export default async function RolesPage() {
             .filter((s) => s.name !== "Published")
             .map((s) => ({ id: s.id, name: s.name, order: s.order }))}
           memberCounts={countByRole(roles, members)}
+          members={members.map((m) => ({
+            id: m.id,
+            name: m.name ?? m.email,
+            avatar: m.imageUrl ?? null,
+            roleId: m.role?.id ?? null,
+          }))}
         />
       </main>
     </>

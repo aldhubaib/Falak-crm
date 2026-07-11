@@ -12,9 +12,11 @@ import {
   fieldConfig,
   isFieldLocked,
   isGateComplete,
+  isReviewStageName,
   parseYesNoValue,
   titleLockConfig,
 } from "@/lib/checklist-config";
+import { pickReturnWorker } from "@/lib/assignment";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
 import { safeAction, type ActionResult } from "@/lib/action";
@@ -24,6 +26,7 @@ import { publishTaskEvent, type BoardWeeklyDelta } from "@/lib/realtime";
 import type { BoardTask } from "@/actions/board";
 import { invalidateCache, claimThrottle } from "@/lib/cache";
 import { weekStartOf } from "@/lib/week";
+import { materialiseWeekSlots, nextWeekStartOf } from "@/lib/weekly-slots";
 import {
   cycleEndOf,
   REPEAT_EVERY_VALUES,
@@ -719,8 +722,13 @@ export async function updateTaskStatus(
   // slots, and only a slot of the task's OWN type. No plan for the type (or
   // no type at all) blocks the move — Todo only holds planned work. Claiming
   // a slot also stamps the task's due date from the plan cycle's deadline.
+  // When this week's plan for the type is FULL the task overflows into next
+  // week's cycle instead of being blocked: it books an extra bound slot with
+  // next week's weekStart, and next week's plan placeholders materialise so
+  // the board can show the whole next plan under "Next week".
   let claimSlotId: string | null = null;
   let createExtraSlot = false;
+  let overflowToNextWeek = false;
   let planningWeekStart: Date | null = null;
   let slotDueDate: Date | null = null;
   // Stored type first; checklist inference is the fallback for legacy tasks
@@ -777,6 +785,12 @@ export async function updateTaskStatus(
           error: `There are no planned items for ${typeName}, so the task can't move to Todo. Add a weekly plan for it in Project Settings → Planning.`,
         };
       }
+      const repeat = (
+        REPEAT_EVERY_VALUES.includes(target.repeatEvery as RepeatEvery)
+          ? target.repeatEvery
+          : "week"
+      ) as RepeatEvery;
+      const currentCycleEnd = cycleEndOf(target.startOn, repeat);
       if (freeSlot) {
         claimSlotId = freeSlot.id;
       } else if (weekRows < target.perWeek) {
@@ -784,21 +798,22 @@ export async function updateTaskStatus(
         // the week rolled over) — the move itself creates the missing slot.
         createExtraSlot = true;
       } else {
-        return {
-          ok: false,
-          error: `This week's plan for ${typeName} is already full, so the task can't move to Todo right now. New slots open next week — or ask an admin to make room.`,
-        };
+        // Plan full — overflow into next week's cycle. The task gets an extra
+        // bound slot on top of next week's plan (it doesn't eat next week's
+        // capacity), and next week's placeholders materialise so every board
+        // shows the upcoming plan.
+        createExtraSlot = true;
+        overflowToNextWeek = true;
+        planningWeekStart = nextWeekStartOf(weekStart);
+        await materialiseWeekSlots(projectId, planningWeekStart);
       }
       // The slot's deadline: last day of the plan cycle we're claiming into
-      // (same date the board shows as "due <date>" on the placeholder).
-      const repeat = (
-        REPEAT_EVERY_VALUES.includes(target.repeatEvery as RepeatEvery)
-          ? target.repeatEvery
-          : "week"
-      ) as RepeatEvery;
-      slotDueDate = new Date(
-        cycleEndOf(target.startOn, repeat).getTime() - 60_000,
-      );
+      // (same date the board shows as "due <date>" on the placeholder). An
+      // overflow task adopts the NEXT cycle's deadline.
+      const dueCycleEnd = overflowToNextWeek
+        ? cycleEndOf(target.startOn, repeat, currentCycleEnd)
+        : currentCycleEnd;
+      slotDueDate = new Date(dueCycleEnd.getTime() - 60_000);
     }
   }
   // Rolling back OUT of Todo frees the task's slot for someone else this week.
@@ -811,12 +826,38 @@ export async function updateTaskStatus(
         select: {
           id: true,
           templateId: true,
+          weekStart: true,
           assignee: {
             select: { id: true, name: true, email: true, imageUrl: true },
           },
         },
       })
     : null;
+  // An overflow slot (booked beyond its week's plan capacity) is deleted on
+  // rollback rather than freed — freeing it would leave a phantom extra
+  // placeholder on top of the plan.
+  let deleteReleasedSlot = false;
+  if (releasedSlot) {
+    const [slotWeekRows, releasedTarget] = await Promise.all([
+      db.weeklySlot.count({
+        where: {
+          projectId,
+          templateId: releasedSlot.templateId,
+          weekStart: releasedSlot.weekStart,
+        },
+      }),
+      db.projectWeeklyTarget.findUnique({
+        where: {
+          projectId_templateId: {
+            projectId,
+            templateId: releasedSlot.templateId,
+          },
+        },
+        select: { perWeek: true },
+      }),
+    ]);
+    deleteReleasedSlot = slotWeekRows > (releasedTarget?.perWeek ?? 0);
+  }
 
   const history: Record<string, string> = (task?.assignmentHistory as Record<string, string>) ?? {};
 
@@ -834,7 +875,7 @@ export async function updateTaskStatus(
     } else {
       const projectMembers = await db.projectMember.findMany({
         where: { projectId },
-        include: { role: true },
+        include: { role: true, member: { select: { type: true } } },
         orderBy: { addedAt: "asc" },
       });
 
@@ -846,6 +887,22 @@ export async function updateTaskStatus(
 
       if (autoAssignMember) {
         newAssigneeId = autoAssignMember.memberId;
+      } else if (isReviewStageName(task?.status?.name)) {
+        // Reviewers borrow, workers own: approving a task forward out of a
+        // review stage hands it back to the last worker recorded in the
+        // assignment history — not the reviewer who clicked the button.
+        const worker = pickReturnWorker({
+          history,
+          statuses: allStatuses,
+          fromStatusId: task?.statusId ?? null,
+          targetStatusId: statusId,
+          projectMembers: projectMembers.map((pm) => ({
+            memberId: pm.memberId,
+            memberType: pm.member.type,
+            rolePermissions: pm.role?.permissions ?? null,
+          })),
+        });
+        if (worker) newAssigneeId = worker;
       }
     }
   } else {
@@ -919,10 +976,12 @@ export async function updateTaskStatus(
       : []),
     ...(releaseSlot
       ? [
-          db.weeklySlot.updateMany({
-            where: { taskId },
-            data: { taskId: null },
-          }),
+          deleteReleasedSlot
+            ? db.weeklySlot.deleteMany({ where: { taskId } })
+            : db.weeklySlot.updateMany({
+                where: { taskId },
+                data: { taskId: null },
+              }),
         ]
       : []),
   ]);
@@ -944,11 +1003,15 @@ export async function updateTaskStatus(
   // Weekly Plan slot change, if any — carried on the broadcast patch and the
   // action result so every board (the mover's included) can patch its slot
   // placeholders in memory instead of refetching the whole board.
-  const weeklyDelta: BoardWeeklyDelta | null = claimSlotId && taskTemplateId
+  const weeklyDelta: BoardWeeklyDelta | null = overflowToNextWeek && taskTemplateId
+    ? { templateId: taskTemplateId, overflow: true }
+    : claimSlotId && taskTemplateId
     ? { templateId: taskTemplateId, claimedSlotId: claimSlotId }
     : createExtraSlot && taskTemplateId
       ? { templateId: taskTemplateId, createdExtra: true }
-      : releasedSlot
+      : releasedSlot && deleteReleasedSlot
+        ? { templateId: releasedSlot.templateId, overflow: true }
+        : releasedSlot
         ? {
             templateId: releasedSlot.templateId,
             releasedSlot: {
@@ -1044,6 +1107,87 @@ export async function updateTaskStatus(
         }
       : null,
     weekly: weeklyDelta,
+  };
+}
+
+// Read-only preview of who would own the task after a forward move — the
+// confirm dialog shows the hand-off before the user commits. Mirrors the
+// assignee decision in updateTaskStatus (slot claim → auto-assign → return
+// worker → mover) without touching anything.
+export async function previewForwardOwnership(
+  taskId: string,
+  targetStatusId: string,
+  projectId: string,
+): Promise<{ id: string; name: string; avatar: string | null; isMe: boolean } | null> {
+  const access = await requireProjectWork(projectId);
+  const { member } = access;
+
+  const [task, allStatuses] = await Promise.all([
+    db.task.findFirst({
+      where: { id: taskId, projectId },
+      select: {
+        statusId: true,
+        status: { select: { name: true, order: true } },
+        assignmentHistory: true,
+        assigneeId: true,
+      },
+    }),
+    db.taskStatus.findMany({
+      where: { workspaceId: access.workspace.id },
+      select: { id: true, name: true, order: true },
+    }),
+  ]);
+  const target = allStatuses.find((s) => s.id === targetStatusId);
+  if (!task || !target) return null;
+  const isForward = target.order > (task.status?.order ?? -1);
+  if (!isForward) return null;
+
+  let ownerId: string = member.id;
+  if (target.name !== "Todo") {
+    // Todo moves claim a weekly slot → always the mover. Everything else
+    // follows the same priority chain as the real move.
+    const projectMembers = await db.projectMember.findMany({
+      where: { projectId },
+      include: { role: true, member: { select: { type: true } } },
+      orderBy: { addedAt: "asc" },
+    });
+    const autoAssignMember = projectMembers.find((pm) => {
+      const perms = (pm.role?.permissions as Record<string, unknown>) ?? {};
+      const tp = (perms.taskPermissions as { stages: Record<string, { autoAssign?: boolean }> }) ?? { stages: {} };
+      return tp.stages?.[targetStatusId]?.autoAssign === true;
+    });
+    if (autoAssignMember) {
+      ownerId = autoAssignMember.memberId;
+    } else if (isReviewStageName(task.status?.name)) {
+      const history: Record<string, string> =
+        (task.assignmentHistory as Record<string, string>) ?? {};
+      // The real move records the current stage's owner before deciding.
+      if (task.statusId && task.assigneeId) history[task.statusId] = task.assigneeId;
+      const worker = pickReturnWorker({
+        history,
+        statuses: allStatuses,
+        fromStatusId: task.statusId,
+        targetStatusId,
+        projectMembers: projectMembers.map((pm) => ({
+          memberId: pm.memberId,
+          memberType: pm.member.type,
+          rolePermissions: pm.role?.permissions ?? null,
+        })),
+      });
+      if (worker) ownerId = worker;
+    }
+  }
+
+  const owner = await db.workspaceMember.findUnique({
+    where: { id: ownerId },
+    select: { id: true, name: true, email: true, imageUrl: true },
+  });
+  if (!owner) return null;
+  return {
+    id: owner.id,
+    name: owner.name ?? owner.email,
+    avatar: owner.imageUrl ?? null,
+    isMe: owner.id === member.id,
   };
 }
 

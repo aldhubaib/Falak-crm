@@ -347,6 +347,7 @@ export default async function TaskDetailPage({
         submittedBy,
         assignee: task.assignee
           ? {
+              id: task.assignee.id,
               name: task.assignee.name ?? task.assignee.email,
               avatar: task.assignee.imageUrl ?? null,
             }

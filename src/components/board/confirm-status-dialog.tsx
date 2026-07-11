@@ -24,6 +24,9 @@ export function ConfirmStatusDialog({
   currentAssigneeAvatar,
   meName,
   meAvatar,
+  nextOwnerName,
+  nextOwnerAvatar,
+  nextOwnerIsMe,
 }: {
   open: boolean;
   onClose: () => void;
@@ -37,8 +40,19 @@ export function ConfirmStatusDialog({
   currentAssigneeAvatar?: string | null;
   meName?: string | null;
   meAvatar?: string | null;
+  /** Predicted owner after the move when it ISN'T the current assignee —
+   * e.g. approving out of a review stage hands the task back to the worker.
+   * Overrides the "me" side of the hand-off chips. */
+  nextOwnerName?: string | null;
+  nextOwnerAvatar?: string | null;
+  nextOwnerIsMe?: boolean;
 }) {
   const me = meName || "You";
+  // Right-hand chip: the predicted next owner when known, otherwise me.
+  const targetName = nextOwnerName ?? me;
+  const targetAvatar = nextOwnerName != null ? (nextOwnerAvatar ?? null) : meAvatar;
+  const targetIsMe = nextOwnerName == null || nextOwnerIsMe === true;
+  const showHandoff = assignToMe || nextOwnerName != null;
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -52,10 +66,10 @@ export function ConfirmStatusDialog({
           <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary/15 text-primary sm:h-10 sm:w-10">
             <UserCheck className="h-4 w-4 sm:h-5 sm:w-5" />
           </div>
-          {assignToMe ? (
+          {showHandoff ? (
             <div className="min-w-0 flex-1 space-y-2">
               <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Taking ownership
+                {targetIsMe ? "Taking ownership" : "Hands back to the worker"}
               </div>
               <div className="flex min-w-0 flex-wrap items-center gap-2 text-sm sm:flex-nowrap">
                 {currentAssigneeName ? (
@@ -81,12 +95,12 @@ export function ConfirmStatusDialog({
                 <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" />
                 <span className="inline-flex min-w-0 max-w-full items-center gap-1.5 rounded-full bg-primary/15 py-0.5 pl-0.5 pr-2.5 font-medium text-primary">
                   <Avatar className="h-5 w-5">
-                    {meAvatar && <AvatarImage src={meAvatar} alt={me} />}
+                    {targetAvatar && <AvatarImage src={targetAvatar} alt={targetName} />}
                     <AvatarFallback className="bg-primary text-[10px] font-bold text-primary-foreground">
-                      {me.slice(0, 1).toUpperCase()}
+                      {targetName.slice(0, 1).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="truncate">{me}</span>
+                  <span className="truncate">{targetName}</span>
                 </span>
               </div>
               <p className="text-xs text-muted-foreground">{description}</p>

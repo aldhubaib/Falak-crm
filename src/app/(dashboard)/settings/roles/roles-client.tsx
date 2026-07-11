@@ -17,7 +17,8 @@ import { PageContainer } from "@/components/page-container";
 import { SurfaceCard } from "@/components/surface-card";
 import { EmptyState } from "@/components/empty-state";
 import { AddItemInput } from "@/components/add-item-input";
-import { RoleCard } from "@/components/roles/role-card";
+import { RoleEditor } from "@/components/roles/role-editor";
+import { RolesOverview, type RoleMemberChip } from "@/components/roles/roles-overview";
 import type { RoleDTO, TaskStageDTO } from "@/components/roles/role-editor";
 import { createRole, deleteRole, startTestRole } from "@/actions/team";
 import { cn } from "@/lib/utils";
@@ -26,10 +27,12 @@ export function RolesClient({
   roles,
   stages,
   memberCounts,
+  members,
 }: {
   roles: RoleDTO[];
   stages: TaskStageDTO[];
   memberCounts: Record<string, number>;
+  members: RoleMemberChip[];
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -120,20 +123,28 @@ export function RolesClient({
         {error && <div className="mt-2 text-hint text-destructive">{error}</div>}
       </SurfaceCard>
 
-      {roles.map((r) => (
-        <RoleCard
-          key={r.id}
-          role={r}
+      {/* One screen: the matrix IS the role list — click a role to edit it
+          right below its row. Warnings about risky configs sit on top. */}
+      {roles.length === 0 ? (
+        <EmptyState message="No roles yet." />
+      ) : (
+        <RolesOverview
+          roles={roles}
           stages={stages}
-          count={countFor(r.id)}
-          expanded={expanded === r.id}
-          onToggle={() => setExpanded(expanded === r.id ? null : r.id)}
-          onClose={() => setExpanded(null)}
-          onDelete={() => openDelete(r)}
-          onTest={() => testRole(r)}
+          members={members}
+          expandedId={expanded}
+          onToggle={(id) => setExpanded(expanded === id ? null : id)}
+          onDelete={openDelete}
+          onTest={testRole}
+          renderEditor={(role) => (
+            <RoleEditor
+              role={role}
+              stages={stages}
+              onClose={() => setExpanded(null)}
+            />
+          )}
         />
-      ))}
-      {roles.length === 0 && <EmptyState message="No roles yet." />}
+      )}
 
       <Dialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
         <DialogContent>

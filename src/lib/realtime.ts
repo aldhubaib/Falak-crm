@@ -22,6 +22,11 @@ export type BoardWeeklyDelta = {
   createdExtra?: boolean;
   /** The task rolled back out of Todo and freed this slot. */
   releasedSlot?: BoardWeeklyEmptySlot;
+  /**
+   * The move overflowed into (or rolled back out of) next week's plan cycle.
+   * Too much changed for an in-memory patch — clients refetch the board.
+   */
+  overflow?: boolean;
 };
 
 export type BoardSlotPatch = {

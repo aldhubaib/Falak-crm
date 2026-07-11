@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { requireProjectWork } from "@/lib/workspace";
 import { weekStartOf } from "@/lib/week";
-import { ensureWeeklySlots } from "@/lib/weekly-slots";
+import { ensureWeeklySlots, nextWeekStartOf } from "@/lib/weekly-slots";
 import { getProjectTimezone } from "@/lib/project-timezone";
 import {
   cycleEndOf,
@@ -55,16 +55,19 @@ export type WeeklyEmptySlot = {
   assigneeAvatar: string | null;
 };
 
-// Weekly Plan capacity for one task type in the current week. `total` counts
+// Weekly Plan capacity for one task type in one plan week. `total` counts
 // live slots (admin-removed excluded); `emptySlots` are still claimable.
+// `weekOffset` 0 is the current week ("Due" section); 1 is next week's plan,
+// which only materialises once a task overflows into it.
 export type WeeklyGroup = {
   templateId: string;
   templateName: string;
   templateColor: string | null;
   templateIcon: string | null;
+  weekOffset: 0 | 1;
   total: number;
   emptySlots: WeeklyEmptySlot[];
-  /** Deadline of the current plan cycle, e.g. "Jul 13" (project timezone). */
+  /** Deadline of the group's plan cycle, e.g. "Jul 13" (project timezone). */
   dueLabel: string | null;
 };
 
@@ -72,6 +75,9 @@ export type BoardData = {
   tasks: BoardTask[];
   statuses: BoardStatus[];
   weekly: WeeklyGroup[];
+  /** Todo tasks booked into NEXT week's plan cycle (overflow) — the Todo
+   *  column renders them under its "Next week" section. */
+  nextWeekTaskIds: string[];
 };
 
 // Lightweight board payload — selects ONLY the fields a card renders, so a
@@ -86,6 +92,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
   await ensureWeeklySlots(projectId);
 
   const weekStart = weekStartOf(new Date(), timezone);
+  const nextWeek = nextWeekStartOf(weekStart);
 
   const [tasks, statuses, changes, checklistAgg, slots, targets, templates] = await Promise.all([
     db.task.findMany({
@@ -177,12 +184,15 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
       GROUP BY ci."taskId"
     `,
     db.weeklySlot.findMany({
-      where: { projectId, weekStart, removedAt: null },
+      // Current week's plan plus next week's, which only has rows once a
+      // task has overflowed into it.
+      where: { projectId, weekStart: { in: [weekStart, nextWeek] }, removedAt: null },
       orderBy: { createdAt: "asc" },
       select: {
         id: true,
         templateId: true,
         taskId: true,
+        weekStart: true,
         assignee: {
           select: { id: true, name: true, email: true, imageUrl: true },
         },
@@ -268,10 +278,10 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
     };
   });
 
-  // Deadline of the current plan cycle per task type — shown as "due <date>"
-  // on the dashed slot placeholders. The cycle is anchored at the target's
-  // Start On and advances by its Repeat Every (week, month, …).
-  const dueLabelByTemplate = new Map<string, string>();
+  // Deadline of the current and next plan cycle per task type — shown as
+  // "due <date>" on the dashed slot placeholders. The cycle is anchored at
+  // the target's Start On and advances by its Repeat Every (week, month, …).
+  const dueLabelByTemplate = new Map<string, [string, string]>();
   const dueFmt = new Intl.DateTimeFormat("en-US", {
     timeZone: timezone,
     month: "short",
@@ -284,25 +294,33 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         : "week"
     ) as RepeatEvery;
     const cycleEnd = cycleEndOf(t.startOn, repeat);
-    // Show the last day of the cycle, not the first day of the next one.
-    dueLabelByTemplate.set(
-      t.templateId,
+    const nextCycleEnd = cycleEndOf(t.startOn, repeat, cycleEnd);
+    // Show the last day of each cycle, not the first day of the next one.
+    dueLabelByTemplate.set(t.templateId, [
       dueFmt.format(new Date(cycleEnd.getTime() - 60_000)),
-    );
+      dueFmt.format(new Date(nextCycleEnd.getTime() - 60_000)),
+    ]);
   }
 
   const weekly: WeeklyGroup[] = [];
+  const nextWeekTaskIds: string[] = [];
   for (const s of slots) {
-    let group = weekly.find((g) => g.templateId === s.templateId);
+    const weekOffset: 0 | 1 =
+      s.weekStart.getTime() === nextWeek.getTime() ? 1 : 0;
+    if (weekOffset === 1 && s.taskId) nextWeekTaskIds.push(s.taskId);
+    let group = weekly.find(
+      (g) => g.templateId === s.templateId && g.weekOffset === weekOffset,
+    );
     if (!group) {
       group = {
         templateId: s.templateId,
         templateName: s.template.name,
         templateColor: s.template.color,
         templateIcon: s.template.icon,
+        weekOffset,
         total: 0,
         emptySlots: [],
-        dueLabel: dueLabelByTemplate.get(s.templateId) ?? null,
+        dueLabel: dueLabelByTemplate.get(s.templateId)?.[weekOffset] ?? null,
       };
       weekly.push(group);
     }
@@ -323,5 +341,6 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
     tasks: mappedTasks,
     statuses: statuses.filter((s) => s.name !== "Published"),
     weekly,
+    nextWeekTaskIds,
   };
 }

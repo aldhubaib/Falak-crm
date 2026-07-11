@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Check, ChevronDown, X } from "lucide-react";
+import { Check, ChevronDown, ShieldAlert, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -271,6 +271,17 @@ export function RoleEditor({
         <div className="text-tiny font-medium uppercase tracking-[0.14em] text-muted-foreground">
           Task Stage Permissions
         </div>
+        {getModule("projects") === "full" && (
+          <div className="flex items-start gap-2.5 rounded-lg border border-warning/40 bg-warning/5 px-3 py-2.5 text-sm text-muted-foreground">
+            <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
+            <div>
+              This role has <span className="font-medium text-foreground">Full Projects access</span>,
+              which bypasses everything below — it can create, edit, move and
+              delete tasks in every stage no matter which boxes are checked.
+              Set Projects to &quot;View&quot; if stage permissions should apply.
+            </div>
+          </div>
+        )}
         <div className="overflow-x-auto rounded-lg border border-border/60">
           <table className="w-full min-w-[520px] text-sm">
             <thead>

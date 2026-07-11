@@ -3,37 +3,37 @@ import { claimThrottle } from "@/lib/cache";
 import { weekStartOf } from "@/lib/week";
 import { getProjectTimezone } from "@/lib/project-timezone";
 
-// Top the current week's Todo slots up to each Weekly Plan target. Runs lazily
-// on board load (after the caller has verified project access), so the first
-// visit of a new week materialises that week's slots. Counting ALL rows
+/** Start of the week after the given week start. */
+export function nextWeekStartOf(weekStart: Date): Date {
+  const next = new Date(weekStart);
+  next.setUTCDate(next.getUTCDate() + 7);
+  return next;
+}
+
+// Top one week's Todo slots up to each Weekly Plan target. Counting ALL rows
 // (filled + admin-removed) means removals stay removed and target bumps
-// mid-week add just the difference.
-export async function ensureWeeklySlots(projectId: string): Promise<void> {
-  const timezone = await getProjectTimezone(projectId);
-  const weekStart = weekStartOf(new Date(), timezone);
-
-  const claimed = await claimThrottle(
-    `weekslots:${projectId}:${weekStart.toISOString().slice(0, 10)}`,
-    10,
-  );
-  if (!claimed) return;
-
-  const [targets, existing] = await Promise.all([
-    db.projectWeeklyTarget.findMany({
+// mid-week add just the difference. Idempotent.
+export async function materialiseWeekSlots(
+  projectId: string,
+  weekStart: Date,
+  targets?: { templateId: string; perWeek: number; responsibleMemberId: string | null }[],
+): Promise<void> {
+  const resolvedTargets =
+    targets ??
+    (await db.projectWeeklyTarget.findMany({
       where: { projectId, perWeek: { gt: 0 } },
-    }),
-    db.weeklySlot.groupBy({
-      by: ["templateId"],
-      where: { projectId, weekStart },
-      _count: { _all: true },
-    }),
-  ]);
-  if (targets.length === 0) return;
+    }));
+  if (resolvedTargets.length === 0) return;
 
+  const existing = await db.weeklySlot.groupBy({
+    by: ["templateId"],
+    where: { projectId, weekStart },
+    _count: { _all: true },
+  });
   const countByTemplate = new Map(
     existing.map((e) => [e.templateId, e._count._all]),
   );
-  const data = targets.flatMap((t) => {
+  const data = resolvedTargets.flatMap((t) => {
     const existingCount = countByTemplate.get(t.templateId) ?? 0;
     const missing = t.perWeek - existingCount;
     if (missing <= 0) return [];
@@ -46,6 +46,40 @@ export async function ensureWeeklySlots(projectId: string): Promise<void> {
   });
   if (data.length > 0) {
     await db.weeklySlot.createMany({ data });
+  }
+}
+
+// Top the current week's Todo slots up to each Weekly Plan target. Runs lazily
+// on board load (after the caller has verified project access), so the first
+// visit of a new week materialises that week's slots. When overflow tasks have
+// already booked into next week, next week's plan is topped up too so its
+// placeholders track target changes.
+export async function ensureWeeklySlots(projectId: string): Promise<void> {
+  const timezone = await getProjectTimezone(projectId);
+  const weekStart = weekStartOf(new Date(), timezone);
+
+  const claimed = await claimThrottle(
+    `weekslots:${projectId}:${weekStart.toISOString().slice(0, 10)}`,
+    10,
+  );
+  if (!claimed) return;
+
+  const targets = await db.projectWeeklyTarget.findMany({
+    where: { projectId, perWeek: { gt: 0 } },
+  });
+  if (targets.length === 0) return;
+
+  await materialiseWeekSlots(projectId, weekStart, targets);
+
+  // Overflow moves materialise next week's plan; keep it in sync with the
+  // targets while it's visible on the board.
+  const nextWeek = nextWeekStartOf(weekStart);
+  const hasNextWeekRows = await db.weeklySlot.findFirst({
+    where: { projectId, weekStart: nextWeek },
+    select: { id: true },
+  });
+  if (hasNextWeekRows) {
+    await materialiseWeekSlots(projectId, nextWeek, targets);
   }
 
   await backfillSlotAssignees(projectId, weekStart, targets);

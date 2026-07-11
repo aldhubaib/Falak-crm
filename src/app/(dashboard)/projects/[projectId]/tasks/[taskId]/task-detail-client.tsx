@@ -86,6 +86,7 @@ import {
   updateTask,
   updateTaskStatus,
   assignTaskToMe,
+  previewForwardOwnership,
 } from "@/actions/projects";
 import { ConfirmStatusDialog } from "@/components/board/confirm-status-dialog";
 import { DeclineDialog } from "@/components/board/decline-dialog";
@@ -232,7 +233,7 @@ export type TaskMoveData = {
   };
   submittedBy: { id: string | null; name: string | null; avatar?: string | null };
   /** Current assignee — shown in the confirm dialog's ownership chips. */
-  assignee?: { name: string; avatar: string | null } | null;
+  assignee?: { id?: string; name: string; avatar: string | null } | null;
   /** Current viewer — the "→ me" side of the ownership chips. */
   me?: { name: string; avatar: string | null } | null;
 };
@@ -749,6 +750,14 @@ function TaskStatusMoveMenu({
   const [confirmNext, setConfirmNext] = useState(false);
   const [declineOpen, setDeclineOpen] = useState(false);
   const [moveError, setMoveError] = useState<string | null>(null);
+  // Predicted owner after the forward move (e.g. review approval hands the
+  // task back to the worker) — fetched when the confirm dialog opens.
+  const [ownershipPreview, setOwnershipPreview] = useState<{
+    id: string;
+    name: string;
+    avatar: string | null;
+    isMe: boolean;
+  } | null>(null);
 
   const ordered = useMemo(
     () => [...move.statuses].sort((a, b) => a.order - b.order),
@@ -758,6 +767,28 @@ function TaskStatusMoveMenu({
   const current = idx >= 0 ? ordered[idx] : null;
   const prev = idx > 0 ? ordered[idx - 1] : null;
   const next = idx >= 0 && idx < ordered.length - 1 ? ordered[idx + 1] : null;
+
+  const nextId = next?.id ?? null;
+  useEffect(() => {
+    if (!confirmNext || !nextId) {
+      setOwnershipPreview(null);
+      return;
+    }
+    let cancelled = false;
+    previewForwardOwnership(taskId, nextId, projectId)
+      .then((p) => {
+        if (!cancelled) setOwnershipPreview(p);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [confirmNext, nextId, taskId, projectId]);
+  // Only surface the hand-off chip when ownership actually changes.
+  const previewedOwner =
+    ownershipPreview && ownershipPreview.id !== move.assignee?.id
+      ? ownershipPreview
+      : null;
 
   // Per-stage move rights on the CURRENT stage (mirrors the server check).
   const stagePerm = move.statusId ? move.perms.stages[move.statusId] : undefined;
@@ -919,6 +950,9 @@ function TaskStatusMoveMenu({
         currentAssigneeAvatar={move.assignee?.avatar}
         meName={move.me?.name}
         meAvatar={move.me?.avatar}
+        nextOwnerName={previewedOwner?.name}
+        nextOwnerAvatar={previewedOwner?.avatar}
+        nextOwnerIsMe={previewedOwner?.isMe}
       />
 
       {/* Backward move decline */}

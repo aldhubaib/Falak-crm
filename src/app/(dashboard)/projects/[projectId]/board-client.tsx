@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useCallback, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -42,7 +42,7 @@ import { CONFIRM_MESSAGES } from "@/components/board/confirm-messages";
 import { isDeliveryGateStage } from "@/lib/checklist-config";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { assignTaskToMe, updateTaskStatus } from "@/actions/projects";
+import { assignTaskToMe, previewForwardOwnership, updateTaskStatus } from "@/actions/projects";
 import { assignWeeklySlotToMe, removeWeeklySlot } from "@/actions/weekly-plan";
 import { addTaskComment } from "@/actions/comments";
 import { uploadManager } from "@/lib/upload-manager";
@@ -383,6 +383,7 @@ const BoardColumn = memo(function BoardColumn({
   canSelfAssign,
   onSelfAssign,
   weekly,
+  nextWeekTaskIds,
   draggingTemplateId,
   canAssignSlot,
   onSlotSelfAssign,
@@ -402,6 +403,9 @@ const BoardColumn = memo(function BoardColumn({
   onSelfAssign: (task: BoardTask) => void;
   /** Weekly Plan groups — only passed to the Todo column. */
   weekly?: WeeklyGroup[];
+  /** Todo tasks booked into next week's plan (overflow) — rendered under the
+   *  "Next week" section. */
+  nextWeekTaskIds?: string[];
   /** Type of the task currently being dragged — matching slots light up. */
   draggingTemplateId?: string | null;
   canAssignSlot?: boolean;
@@ -424,8 +428,40 @@ const BoardColumn = memo(function BoardColumn({
 
   // Weekly Plan rendering (Todo only): tasks render as usual, and each open
   // slot for the week shows as a dashed placeholder labelled with its task
-  // type and slot number (e.g. "AI VIDEO 9:16 #2").
+  // type and slot number (e.g. "AI VIDEO 9:16 #2"). Once a task has
+  // overflowed into next week's plan, the column splits into a "Due"
+  // section (this week) and a "Next week" section showing the next plan.
   const weeklyGroups = weekly && weekly.length > 0 ? weekly : null;
+  const nextWeekIdSet = useMemo(
+    () => new Set(nextWeekTaskIds ?? []),
+    [nextWeekTaskIds],
+  );
+
+  const renderSlots = (groups: WeeklyGroup[]) =>
+    groups.flatMap((g) => {
+      const filled = g.total - g.emptySlots.length;
+      return g.emptySlots.map((slot, i) => (
+        <EmptySlotCard
+          key={slot.id}
+          slot={slot}
+          templateName={g.templateName}
+          slotNumber={filled + i + 1}
+          templateIcon={g.templateIcon}
+          templateColor={g.templateColor}
+          dueLabel={g.dueLabel}
+          dragTarget={
+            draggingTemplateId != null && draggingTemplateId === g.templateId
+          }
+          onSelfAssign={
+            canAssignSlot && onSlotSelfAssign
+              ? () => onSlotSelfAssign(slot)
+              : undefined
+          }
+          canRemove={canRemoveSlot}
+          onRemove={onRemoveSlot ? () => onRemoveSlot(slot.id) : undefined}
+        />
+      ));
+    });
 
   return (
     <div className="flex min-w-0 flex-col md:w-[312px] md:min-w-[312px] md:shrink-0">
@@ -487,36 +523,41 @@ const BoardColumn = memo(function BoardColumn({
         )}
       >
         {weeklyGroups ? (
-          <>
-            {col.tasks.map(renderCard)}
-            {weeklyGroups.flatMap((g) => {
-              const filled = g.total - g.emptySlots.length;
-              return g.emptySlots.map((slot, i) => (
-                <EmptySlotCard
-                  key={slot.id}
-                  slot={slot}
-                  templateName={g.templateName}
-                  slotNumber={filled + i + 1}
-                  templateIcon={g.templateIcon}
-                  templateColor={g.templateColor}
-                  dueLabel={g.dueLabel}
-                  dragTarget={
-                    draggingTemplateId != null &&
-                    draggingTemplateId === g.templateId
-                  }
-                  onSelfAssign={
-                    canAssignSlot && onSlotSelfAssign
-                      ? () => onSlotSelfAssign(slot)
-                      : undefined
-                  }
-                  canRemove={canRemoveSlot}
-                  onRemove={
-                    onRemoveSlot ? () => onRemoveSlot(slot.id) : undefined
-                  }
-                />
-              ));
-            })}
-          </>
+          (() => {
+            const currentGroups = weeklyGroups.filter((g) => g.weekOffset === 0);
+            const nextGroups = weeklyGroups.filter((g) => g.weekOffset === 1);
+            const currentTasks = col.tasks.filter((t) => !nextWeekIdSet.has(t.id));
+            const nextTasks = col.tasks.filter((t) => nextWeekIdSet.has(t.id));
+            const hasNextSection = nextGroups.length > 0 || nextTasks.length > 0;
+            return (
+              <>
+                <p className="px-1 pt-1 text-sm font-bold text-foreground">
+                  Due
+                </p>
+                <div className="space-y-2 rounded-2xl border border-border/60 bg-surface/40 p-2.5">
+                  {currentTasks.map(renderCard)}
+                  {renderSlots(currentGroups)}
+                  {currentTasks.length === 0 &&
+                    currentGroups.every((g) => g.emptySlots.length === 0) && (
+                      <div className="grid h-16 place-items-center text-xs text-muted-foreground">
+                        Nothing due this week
+                      </div>
+                    )}
+                </div>
+                {hasNextSection && (
+                  <>
+                    <p className="px-1 pt-3 text-sm font-bold text-foreground">
+                      Next week
+                    </p>
+                    <div className="space-y-2 rounded-2xl border border-border/60 bg-surface/40 p-2.5">
+                      {nextTasks.map(renderCard)}
+                      {renderSlots(nextGroups)}
+                    </div>
+                  </>
+                )}
+              </>
+            );
+          })()
         ) : col.tasks.length === 0 ? (
           <div className="grid h-24 place-items-center text-xs text-muted-foreground">
             No tasks
@@ -703,6 +744,11 @@ export function ProjectBoardClient({
         };
         return applyWeeklyDelta(withTask, result.weekly);
       });
+      // The move overflowed into next week's plan (or removed an overflow
+      // slot) — next week's groups changed wholesale, so refetch.
+      if (result.weekly?.overflow) {
+        void queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
+      }
     },
   });
 
@@ -1073,6 +1119,35 @@ export function ProjectBoardClient({
     ? (tasks.find((t) => t.id === confirmMove.taskId) ?? null)
     : null;
 
+  // Predicted owner after the confirmed move — e.g. approving out of a review
+  // stage hands the task back to the worker, and the dialog should say so.
+  const [ownershipPreview, setOwnershipPreview] = useState<{
+    id: string;
+    name: string;
+    avatar: string | null;
+    isMe: boolean;
+  } | null>(null);
+  useEffect(() => {
+    if (!confirmMove) {
+      setOwnershipPreview(null);
+      return;
+    }
+    let cancelled = false;
+    previewForwardOwnership(confirmMove.taskId, confirmMove.toStatusId, projectId)
+      .then((p) => {
+        if (!cancelled) setOwnershipPreview(p);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [confirmMove, projectId]);
+  // Only surface the chip when ownership actually changes hands.
+  const previewedOwner =
+    ownershipPreview && ownershipPreview.id !== confirmTask?.assigneeId
+      ? ownershipPreview
+      : null;
+
   return (
     <TooltipProvider delayDuration={150}>
       <DndContext
@@ -1111,6 +1186,9 @@ export function ProjectBoardClient({
               canSelfAssign={canSelfAssign}
               onSelfAssign={openSelfAssign}
               weekly={col.name === "Todo" ? data.weekly : undefined}
+              nextWeekTaskIds={
+                col.name === "Todo" ? data.nextWeekTaskIds : undefined
+              }
               draggingTemplateId={activeTask?.templateId ?? null}
               canAssignSlot={canAssignSlot}
               onSlotSelfAssign={openSlotSelfAssign}
@@ -1146,6 +1224,9 @@ export function ProjectBoardClient({
         currentAssigneeAvatar={confirmTask?.assigneeAvatar}
         meName={currentMemberName}
         meAvatar={currentMemberAvatar}
+        nextOwnerName={previewedOwner?.name}
+        nextOwnerAvatar={previewedOwner?.avatar}
+        nextOwnerIsMe={previewedOwner?.isMe}
       />
 
       {/* Avatar click — assign task to me */}

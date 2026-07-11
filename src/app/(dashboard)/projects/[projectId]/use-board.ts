@@ -57,13 +57,18 @@ const DRAG_TTL_MS = 15_000;
 
 // Apply a Weekly Plan slot change to the cached board data in memory. Returns
 // the input unchanged when the delta doesn't apply (e.g. unknown template
-// group) — the weekly targets sync up on the next natural refetch.
+// group) — the weekly targets sync up on the next natural refetch. Overflow
+// deltas are NOT handled here: they change too much (next week's groups
+// materialise), so callers refetch instead.
 export function applyWeeklyDelta(
   data: BoardData,
   delta: BoardWeeklyDelta | null | undefined,
 ): BoardData {
-  if (!delta) return data;
-  const group = data.weekly.find((g) => g.templateId === delta.templateId);
+  if (!delta || delta.overflow) return data;
+  // In-memory claims/releases only ever touch the current week's plan.
+  const group = data.weekly.find(
+    (g) => g.templateId === delta.templateId && g.weekOffset === 0,
+  );
   if (!group) return data;
   let next = group;
   if (delta.claimedSlotId) {
@@ -90,7 +95,7 @@ export function applyWeeklyDelta(
   if (next === group) return data;
   return {
     ...data,
-    weekly: data.weekly.map((g) => (g.templateId === delta.templateId ? next : g)),
+    weekly: data.weekly.map((g) => (g === group ? next : g)),
   };
 }
 
@@ -117,6 +122,12 @@ function applyBoardEvent(
 
   if (event.type === "task.moved" && event.patch && event.taskId) {
     const patch = event.patch;
+    // An overflow move materialised next week's plan (or removed an overflow
+    // slot on rollback) — too much changed for an in-memory patch.
+    if (patch.weekly?.overflow) {
+      invalidate();
+      return;
+    }
     queryClient.setQueryData<BoardData>(key, (old) => {
       if (!old) return old;
       if (!old.tasks.some((t) => t.id === event.taskId)) return old;
