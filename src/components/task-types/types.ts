@@ -21,8 +21,6 @@ export type TTField = {
   hidden: boolean;
   /** Effort measurement: null = no effort, or "words" | "audio_min" | "video_min" | "fixed". */
   effortUnit: string | null;
-  /** Expected quantity per planned video-minute — predicts effort before content exists. */
-  qtyPerVideoMinute: number | null;
 };
 
 /** A named, editable group of fields on a task type. The phase drives the
@@ -76,5 +74,4 @@ export type FieldPatch = {
   neverLock?: boolean;
   publishCard?: string;
   effortUnit?: string | null;
-  qtyPerVideoMinute?: number | null;
 };

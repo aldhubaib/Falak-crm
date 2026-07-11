@@ -44,8 +44,6 @@ function buildAddFormData(sectionId: string, patch: FieldPatch): FormData {
   fd.set("neverLock", patch.neverLock ? "true" : "false");
   fd.set("publishCard", patch.publishCard ?? "hidden");
   if (patch.effortUnit) fd.set("effortUnit", patch.effortUnit);
-  if (patch.qtyPerVideoMinute != null)
-    fd.set("qtyPerVideoMinute", String(patch.qtyPerVideoMinute));
   return fd;
 }
 
@@ -70,7 +68,6 @@ function toUpdateData(patch: FieldPatch) {
     neverLock: patch.neverLock ?? false,
     publishCard: patch.publishCard ?? "hidden",
     effortUnit: patch.effortUnit ?? null,
-    qtyPerVideoMinute: patch.qtyPerVideoMinute ?? null,
   };
 }
 

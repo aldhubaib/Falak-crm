@@ -75,7 +75,7 @@ export async function getWeeklyEffortMatrix(
         id: true,
         items: {
           where: { hidden: false, effortUnit: { not: null } },
-          select: { id: true, effortUnit: true, qtyPerVideoMinute: true },
+          select: { id: true, effortUnit: true },
         },
       },
     }),

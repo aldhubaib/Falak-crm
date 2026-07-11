@@ -470,7 +470,6 @@ exports.Prisma.ChecklistTemplateItemScalarFieldEnum = {
   publishCard: 'publishCard',
   hidden: 'hidden',
   effortUnit: 'effortUnit',
-  qtyPerVideoMinute: 'qtyPerVideoMinute',
   order: 'order'
 };
 
@@ -500,7 +499,6 @@ exports.Prisma.TaskChecklistItemScalarFieldEnum = {
   publishCard: 'publishCard',
   hidden: 'hidden',
   effortUnit: 'effortUnit',
-  qtyPerVideoMinute: 'qtyPerVideoMinute',
   completed: 'completed',
   attachmentId: 'attachmentId',
   textValue: 'textValue',

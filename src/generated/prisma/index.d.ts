@@ -40422,12 +40422,10 @@ export namespace Prisma {
   }
 
   export type ChecklistTemplateItemAvgAggregateOutputType = {
-    qtyPerVideoMinute: number | null
     order: number | null
   }
 
   export type ChecklistTemplateItemSumAggregateOutputType = {
-    qtyPerVideoMinute: number | null
     order: number | null
   }
 
@@ -40451,7 +40449,6 @@ export namespace Prisma {
     publishCard: string | null
     hidden: boolean | null
     effortUnit: string | null
-    qtyPerVideoMinute: number | null
     order: number | null
   }
 
@@ -40475,7 +40472,6 @@ export namespace Prisma {
     publishCard: string | null
     hidden: boolean | null
     effortUnit: string | null
-    qtyPerVideoMinute: number | null
     order: number | null
   }
 
@@ -40499,19 +40495,16 @@ export namespace Prisma {
     publishCard: number
     hidden: number
     effortUnit: number
-    qtyPerVideoMinute: number
     order: number
     _all: number
   }
 
 
   export type ChecklistTemplateItemAvgAggregateInputType = {
-    qtyPerVideoMinute?: true
     order?: true
   }
 
   export type ChecklistTemplateItemSumAggregateInputType = {
-    qtyPerVideoMinute?: true
     order?: true
   }
 
@@ -40535,7 +40528,6 @@ export namespace Prisma {
     publishCard?: true
     hidden?: true
     effortUnit?: true
-    qtyPerVideoMinute?: true
     order?: true
   }
 
@@ -40559,7 +40551,6 @@ export namespace Prisma {
     publishCard?: true
     hidden?: true
     effortUnit?: true
-    qtyPerVideoMinute?: true
     order?: true
   }
 
@@ -40583,7 +40574,6 @@ export namespace Prisma {
     publishCard?: true
     hidden?: true
     effortUnit?: true
-    qtyPerVideoMinute?: true
     order?: true
     _all?: true
   }
@@ -40694,7 +40684,6 @@ export namespace Prisma {
     publishCard: string
     hidden: boolean
     effortUnit: string | null
-    qtyPerVideoMinute: number | null
     order: number
     _count: ChecklistTemplateItemCountAggregateOutputType | null
     _avg: ChecklistTemplateItemAvgAggregateOutputType | null
@@ -40737,7 +40726,6 @@ export namespace Prisma {
     publishCard?: boolean
     hidden?: boolean
     effortUnit?: boolean
-    qtyPerVideoMinute?: boolean
     order?: boolean
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
     section?: boolean | ChecklistTemplateItem$sectionArgs<ExtArgs>
@@ -40769,7 +40757,6 @@ export namespace Prisma {
     publishCard?: boolean
     hidden?: boolean
     effortUnit?: boolean
-    qtyPerVideoMinute?: boolean
     order?: boolean
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
     section?: boolean | ChecklistTemplateItem$sectionArgs<ExtArgs>
@@ -40798,7 +40785,6 @@ export namespace Prisma {
     publishCard?: boolean
     hidden?: boolean
     effortUnit?: boolean
-    qtyPerVideoMinute?: boolean
     order?: boolean
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
     section?: boolean | ChecklistTemplateItem$sectionArgs<ExtArgs>
@@ -40827,11 +40813,10 @@ export namespace Prisma {
     publishCard?: boolean
     hidden?: boolean
     effortUnit?: boolean
-    qtyPerVideoMinute?: boolean
     order?: boolean
   }
 
-  export type ChecklistTemplateItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "templateId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "sectionId" | "visibleFromStageId" | "requiredBeforeStageId" | "lockedFromStageId" | "neverLock" | "publishCard" | "hidden" | "effortUnit" | "qtyPerVideoMinute" | "order", ExtArgs["result"]["checklistTemplateItem"]>
+  export type ChecklistTemplateItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "templateId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "sectionId" | "visibleFromStageId" | "requiredBeforeStageId" | "lockedFromStageId" | "neverLock" | "publishCard" | "hidden" | "effortUnit" | "order", ExtArgs["result"]["checklistTemplateItem"]>
   export type ChecklistTemplateItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
     section?: boolean | ChecklistTemplateItem$sectionArgs<ExtArgs>
@@ -40888,7 +40873,6 @@ export namespace Prisma {
       publishCard: string
       hidden: boolean
       effortUnit: string | null
-      qtyPerVideoMinute: number | null
       order: number
     }, ExtArgs["result"]["checklistTemplateItem"]>
     composites: {}
@@ -41339,7 +41323,6 @@ export namespace Prisma {
     readonly publishCard: FieldRef<"ChecklistTemplateItem", 'String'>
     readonly hidden: FieldRef<"ChecklistTemplateItem", 'Boolean'>
     readonly effortUnit: FieldRef<"ChecklistTemplateItem", 'String'>
-    readonly qtyPerVideoMinute: FieldRef<"ChecklistTemplateItem", 'Float'>
     readonly order: FieldRef<"ChecklistTemplateItem", 'Int'>
   }
     
@@ -42942,7 +42925,6 @@ export namespace Prisma {
   }
 
   export type TaskChecklistItemAvgAggregateOutputType = {
-    qtyPerVideoMinute: number | null
     effortQuantity: number | null
     effortRate: number | null
     effortMinutes: number | null
@@ -42950,7 +42932,6 @@ export namespace Prisma {
   }
 
   export type TaskChecklistItemSumAggregateOutputType = {
-    qtyPerVideoMinute: number | null
     effortQuantity: number | null
     effortRate: number | null
     effortMinutes: number | null
@@ -42977,7 +42958,6 @@ export namespace Prisma {
     publishCard: string | null
     hidden: boolean | null
     effortUnit: string | null
-    qtyPerVideoMinute: number | null
     completed: boolean | null
     attachmentId: string | null
     textValue: string | null
@@ -43010,7 +42990,6 @@ export namespace Prisma {
     publishCard: string | null
     hidden: boolean | null
     effortUnit: string | null
-    qtyPerVideoMinute: number | null
     completed: boolean | null
     attachmentId: string | null
     textValue: string | null
@@ -43043,7 +43022,6 @@ export namespace Prisma {
     publishCard: number
     hidden: number
     effortUnit: number
-    qtyPerVideoMinute: number
     completed: number
     attachmentId: number
     textValue: number
@@ -43059,7 +43037,6 @@ export namespace Prisma {
 
 
   export type TaskChecklistItemAvgAggregateInputType = {
-    qtyPerVideoMinute?: true
     effortQuantity?: true
     effortRate?: true
     effortMinutes?: true
@@ -43067,7 +43044,6 @@ export namespace Prisma {
   }
 
   export type TaskChecklistItemSumAggregateInputType = {
-    qtyPerVideoMinute?: true
     effortQuantity?: true
     effortRate?: true
     effortMinutes?: true
@@ -43094,7 +43070,6 @@ export namespace Prisma {
     publishCard?: true
     hidden?: true
     effortUnit?: true
-    qtyPerVideoMinute?: true
     completed?: true
     attachmentId?: true
     textValue?: true
@@ -43127,7 +43102,6 @@ export namespace Prisma {
     publishCard?: true
     hidden?: true
     effortUnit?: true
-    qtyPerVideoMinute?: true
     completed?: true
     attachmentId?: true
     textValue?: true
@@ -43160,7 +43134,6 @@ export namespace Prisma {
     publishCard?: true
     hidden?: true
     effortUnit?: true
-    qtyPerVideoMinute?: true
     completed?: true
     attachmentId?: true
     textValue?: true
@@ -43280,7 +43253,6 @@ export namespace Prisma {
     publishCard: string
     hidden: boolean
     effortUnit: string | null
-    qtyPerVideoMinute: number | null
     completed: boolean
     attachmentId: string | null
     textValue: string | null
@@ -43332,7 +43304,6 @@ export namespace Prisma {
     publishCard?: boolean
     hidden?: boolean
     effortUnit?: boolean
-    qtyPerVideoMinute?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
@@ -43367,7 +43338,6 @@ export namespace Prisma {
     publishCard?: boolean
     hidden?: boolean
     effortUnit?: boolean
-    qtyPerVideoMinute?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
@@ -43402,7 +43372,6 @@ export namespace Prisma {
     publishCard?: boolean
     hidden?: boolean
     effortUnit?: boolean
-    qtyPerVideoMinute?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
@@ -43437,7 +43406,6 @@ export namespace Prisma {
     publishCard?: boolean
     hidden?: boolean
     effortUnit?: boolean
-    qtyPerVideoMinute?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
@@ -43450,7 +43418,7 @@ export namespace Prisma {
     order?: boolean
   }
 
-  export type TaskChecklistItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "templateItemId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "visibleFromStageId" | "requiredBeforeStageId" | "lockedFromStageId" | "neverLock" | "publishCard" | "hidden" | "effortUnit" | "qtyPerVideoMinute" | "completed" | "attachmentId" | "textValue" | "completedAt" | "completedBy" | "effortQuantity" | "effortRate" | "effortMinutes" | "effortLockedAt" | "order", ExtArgs["result"]["taskChecklistItem"]>
+  export type TaskChecklistItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "templateItemId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "visibleFromStageId" | "requiredBeforeStageId" | "lockedFromStageId" | "neverLock" | "publishCard" | "hidden" | "effortUnit" | "completed" | "attachmentId" | "textValue" | "completedAt" | "completedBy" | "effortQuantity" | "effortRate" | "effortMinutes" | "effortLockedAt" | "order", ExtArgs["result"]["taskChecklistItem"]>
   export type TaskChecklistItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     task?: boolean | TaskDefaultArgs<ExtArgs>
     templateItem?: boolean | TaskChecklistItem$templateItemArgs<ExtArgs>
@@ -43490,7 +43458,6 @@ export namespace Prisma {
       publishCard: string
       hidden: boolean
       effortUnit: string | null
-      qtyPerVideoMinute: number | null
       completed: boolean
       attachmentId: string | null
       textValue: string | null
@@ -43945,7 +43912,6 @@ export namespace Prisma {
     readonly publishCard: FieldRef<"TaskChecklistItem", 'String'>
     readonly hidden: FieldRef<"TaskChecklistItem", 'Boolean'>
     readonly effortUnit: FieldRef<"TaskChecklistItem", 'String'>
-    readonly qtyPerVideoMinute: FieldRef<"TaskChecklistItem", 'Float'>
     readonly completed: FieldRef<"TaskChecklistItem", 'Boolean'>
     readonly attachmentId: FieldRef<"TaskChecklistItem", 'String'>
     readonly textValue: FieldRef<"TaskChecklistItem", 'String'>
@@ -73044,7 +73010,6 @@ export namespace Prisma {
     publishCard: 'publishCard',
     hidden: 'hidden',
     effortUnit: 'effortUnit',
-    qtyPerVideoMinute: 'qtyPerVideoMinute',
     order: 'order'
   };
 
@@ -73080,7 +73045,6 @@ export namespace Prisma {
     publishCard: 'publishCard',
     hidden: 'hidden',
     effortUnit: 'effortUnit',
-    qtyPerVideoMinute: 'qtyPerVideoMinute',
     completed: 'completed',
     attachmentId: 'attachmentId',
     textValue: 'textValue',
@@ -76171,7 +76135,6 @@ export namespace Prisma {
     publishCard?: StringFilter<"ChecklistTemplateItem"> | string
     hidden?: BoolFilter<"ChecklistTemplateItem"> | boolean
     effortUnit?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
-    qtyPerVideoMinute?: FloatNullableFilter<"ChecklistTemplateItem"> | number | null
     order?: IntFilter<"ChecklistTemplateItem"> | number
     template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
     section?: XOR<ChecklistSectionNullableScalarRelationFilter, ChecklistSectionWhereInput> | null
@@ -76202,7 +76165,6 @@ export namespace Prisma {
     publishCard?: SortOrder
     hidden?: SortOrder
     effortUnit?: SortOrderInput | SortOrder
-    qtyPerVideoMinute?: SortOrderInput | SortOrder
     order?: SortOrder
     template?: ChecklistTemplateOrderByWithRelationInput
     section?: ChecklistSectionOrderByWithRelationInput
@@ -76236,7 +76198,6 @@ export namespace Prisma {
     publishCard?: StringFilter<"ChecklistTemplateItem"> | string
     hidden?: BoolFilter<"ChecklistTemplateItem"> | boolean
     effortUnit?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
-    qtyPerVideoMinute?: FloatNullableFilter<"ChecklistTemplateItem"> | number | null
     order?: IntFilter<"ChecklistTemplateItem"> | number
     template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
     section?: XOR<ChecklistSectionNullableScalarRelationFilter, ChecklistSectionWhereInput> | null
@@ -76267,7 +76228,6 @@ export namespace Prisma {
     publishCard?: SortOrder
     hidden?: SortOrder
     effortUnit?: SortOrderInput | SortOrder
-    qtyPerVideoMinute?: SortOrderInput | SortOrder
     order?: SortOrder
     _count?: ChecklistTemplateItemCountOrderByAggregateInput
     _avg?: ChecklistTemplateItemAvgOrderByAggregateInput
@@ -76299,7 +76259,6 @@ export namespace Prisma {
     publishCard?: StringWithAggregatesFilter<"ChecklistTemplateItem"> | string
     hidden?: BoolWithAggregatesFilter<"ChecklistTemplateItem"> | boolean
     effortUnit?: StringNullableWithAggregatesFilter<"ChecklistTemplateItem"> | string | null
-    qtyPerVideoMinute?: FloatNullableWithAggregatesFilter<"ChecklistTemplateItem"> | number | null
     order?: IntWithAggregatesFilter<"ChecklistTemplateItem"> | number
   }
 
@@ -76375,7 +76334,6 @@ export namespace Prisma {
     publishCard?: StringFilter<"TaskChecklistItem"> | string
     hidden?: BoolFilter<"TaskChecklistItem"> | boolean
     effortUnit?: StringNullableFilter<"TaskChecklistItem"> | string | null
-    qtyPerVideoMinute?: FloatNullableFilter<"TaskChecklistItem"> | number | null
     completed?: BoolFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableFilter<"TaskChecklistItem"> | string | null
@@ -76410,7 +76368,6 @@ export namespace Prisma {
     publishCard?: SortOrder
     hidden?: SortOrder
     effortUnit?: SortOrderInput | SortOrder
-    qtyPerVideoMinute?: SortOrderInput | SortOrder
     completed?: SortOrder
     attachmentId?: SortOrderInput | SortOrder
     textValue?: SortOrderInput | SortOrder
@@ -76449,7 +76406,6 @@ export namespace Prisma {
     publishCard?: StringFilter<"TaskChecklistItem"> | string
     hidden?: BoolFilter<"TaskChecklistItem"> | boolean
     effortUnit?: StringNullableFilter<"TaskChecklistItem"> | string | null
-    qtyPerVideoMinute?: FloatNullableFilter<"TaskChecklistItem"> | number | null
     completed?: BoolFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableFilter<"TaskChecklistItem"> | string | null
@@ -76484,7 +76440,6 @@ export namespace Prisma {
     publishCard?: SortOrder
     hidden?: SortOrder
     effortUnit?: SortOrderInput | SortOrder
-    qtyPerVideoMinute?: SortOrderInput | SortOrder
     completed?: SortOrder
     attachmentId?: SortOrderInput | SortOrder
     textValue?: SortOrderInput | SortOrder
@@ -76525,7 +76480,6 @@ export namespace Prisma {
     publishCard?: StringWithAggregatesFilter<"TaskChecklistItem"> | string
     hidden?: BoolWithAggregatesFilter<"TaskChecklistItem"> | boolean
     effortUnit?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
-    qtyPerVideoMinute?: FloatNullableWithAggregatesFilter<"TaskChecklistItem"> | number | null
     completed?: BoolWithAggregatesFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
@@ -81172,7 +81126,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     section?: ChecklistSectionCreateNestedOneWithoutItemsInput
@@ -81203,7 +81156,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
     titleRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput
@@ -81224,7 +81176,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     section?: ChecklistSectionUpdateOneWithoutItemsNestedInput
@@ -81255,7 +81206,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
     titleRates?: TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput
@@ -81281,7 +81231,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
   }
 
@@ -81300,7 +81249,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -81324,7 +81272,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -81386,7 +81333,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -81421,7 +81367,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -81452,7 +81397,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81487,7 +81431,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81520,7 +81463,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -81551,7 +81493,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81584,7 +81525,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85971,17 +85911,6 @@ export namespace Prisma {
     order?: SortOrder
   }
 
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type ChecklistSectionNullableScalarRelationFilter = {
     is?: ChecklistSectionWhereInput | null
     isNot?: ChecklistSectionWhereInput | null
@@ -86017,12 +85946,10 @@ export namespace Prisma {
     publishCard?: SortOrder
     hidden?: SortOrder
     effortUnit?: SortOrder
-    qtyPerVideoMinute?: SortOrder
     order?: SortOrder
   }
 
   export type ChecklistTemplateItemAvgOrderByAggregateInput = {
-    qtyPerVideoMinute?: SortOrder
     order?: SortOrder
   }
 
@@ -86046,7 +85973,6 @@ export namespace Prisma {
     publishCard?: SortOrder
     hidden?: SortOrder
     effortUnit?: SortOrder
-    qtyPerVideoMinute?: SortOrder
     order?: SortOrder
   }
 
@@ -86070,29 +85996,11 @@ export namespace Prisma {
     publishCard?: SortOrder
     hidden?: SortOrder
     effortUnit?: SortOrder
-    qtyPerVideoMinute?: SortOrder
     order?: SortOrder
   }
 
   export type ChecklistTemplateItemSumOrderByAggregateInput = {
-    qtyPerVideoMinute?: SortOrder
     order?: SortOrder
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type ProjectTemplateProjectIdTemplateIdCompoundUniqueInput = {
@@ -86116,6 +86024,17 @@ export namespace Prisma {
     id?: SortOrder
     projectId?: SortOrder
     templateId?: SortOrder
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type TaskScalarRelationFilter = {
@@ -86153,7 +86072,6 @@ export namespace Prisma {
     publishCard?: SortOrder
     hidden?: SortOrder
     effortUnit?: SortOrder
-    qtyPerVideoMinute?: SortOrder
     completed?: SortOrder
     attachmentId?: SortOrder
     textValue?: SortOrder
@@ -86167,7 +86085,6 @@ export namespace Prisma {
   }
 
   export type TaskChecklistItemAvgOrderByAggregateInput = {
-    qtyPerVideoMinute?: SortOrder
     effortQuantity?: SortOrder
     effortRate?: SortOrder
     effortMinutes?: SortOrder
@@ -86194,7 +86111,6 @@ export namespace Prisma {
     publishCard?: SortOrder
     hidden?: SortOrder
     effortUnit?: SortOrder
-    qtyPerVideoMinute?: SortOrder
     completed?: SortOrder
     attachmentId?: SortOrder
     textValue?: SortOrder
@@ -86227,7 +86143,6 @@ export namespace Prisma {
     publishCard?: SortOrder
     hidden?: SortOrder
     effortUnit?: SortOrder
-    qtyPerVideoMinute?: SortOrder
     completed?: SortOrder
     attachmentId?: SortOrder
     textValue?: SortOrder
@@ -86241,11 +86156,26 @@ export namespace Prisma {
   }
 
   export type TaskChecklistItemSumOrderByAggregateInput = {
-    qtyPerVideoMinute?: SortOrder
     effortQuantity?: SortOrder
     effortRate?: SortOrder
     effortMinutes?: SortOrder
     order?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type TaskStatusWorkspaceIdOrderCompoundUniqueInput = {
@@ -91654,14 +91584,6 @@ export namespace Prisma {
     connect?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
   }
 
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput = {
     create?: XOR<ChecklistTemplateCreateWithoutItemsInput, ChecklistTemplateUncheckedCreateWithoutItemsInput>
     connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutItemsInput
@@ -91804,6 +91726,14 @@ export namespace Prisma {
     create?: XOR<ChecklistTemplateItemCreateWithoutTaskItemsInput, ChecklistTemplateItemUncheckedCreateWithoutTaskItemsInput>
     connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutTaskItemsInput
     connect?: ChecklistTemplateItemWhereUniqueInput
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type TaskUpdateOneRequiredWithoutChecklistItemsNestedInput = {
@@ -97454,7 +97384,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     section?: ChecklistSectionCreateNestedOneWithoutItemsInput
@@ -97484,7 +97413,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
   }
@@ -97549,7 +97477,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     section?: ChecklistSectionUpdateOneWithoutItemsNestedInput
@@ -97579,7 +97506,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
@@ -104059,7 +103985,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     section?: ChecklistSectionCreateNestedOneWithoutItemsInput
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
@@ -104088,7 +104013,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
     titleRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput
@@ -104451,7 +104375,6 @@ export namespace Prisma {
     publishCard?: StringFilter<"ChecklistTemplateItem"> | string
     hidden?: BoolFilter<"ChecklistTemplateItem"> | boolean
     effortUnit?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
-    qtyPerVideoMinute?: FloatNullableFilter<"ChecklistTemplateItem"> | number | null
     order?: IntFilter<"ChecklistTemplateItem"> | number
   }
 
@@ -104609,7 +104532,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
@@ -104638,7 +104560,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
     titleRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput
@@ -104910,7 +104831,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -104943,7 +104863,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -105226,7 +105145,6 @@ export namespace Prisma {
     publishCard?: StringFilter<"TaskChecklistItem"> | string
     hidden?: BoolFilter<"TaskChecklistItem"> | boolean
     effortUnit?: StringNullableFilter<"TaskChecklistItem"> | string | null
-    qtyPerVideoMinute?: FloatNullableFilter<"TaskChecklistItem"> | number | null
     completed?: BoolFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableFilter<"TaskChecklistItem"> | string | null
@@ -105589,7 +105507,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     section?: ChecklistSectionCreateNestedOneWithoutItemsInput
@@ -105619,7 +105536,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     titleRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput
   }
@@ -105732,7 +105648,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     section?: ChecklistSectionUpdateOneWithoutItemsNestedInput
@@ -105762,7 +105677,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     titleRates?: TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
@@ -105935,7 +105849,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     section?: ChecklistSectionCreateNestedOneWithoutItemsInput
@@ -105964,7 +105877,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
     titleRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput
@@ -105995,7 +105907,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     section?: ChecklistSectionCreateNestedOneWithoutItemsInput
@@ -106024,7 +105935,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
     titleRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput
@@ -106055,7 +105965,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
     section?: ChecklistSectionCreateNestedOneWithoutItemsInput
@@ -106084,7 +105993,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
     titleRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput
@@ -106612,7 +106520,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -106645,7 +106552,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -116094,7 +116000,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
   }
 
@@ -116175,7 +116080,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     section?: ChecklistSectionUpdateOneWithoutItemsNestedInput
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
@@ -116204,7 +116108,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
     titleRates?: TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput
@@ -116229,7 +116132,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -116450,7 +116352,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
   }
 
@@ -116469,7 +116370,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
@@ -116498,7 +116398,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
     titleRates?: TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput
@@ -116523,7 +116422,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -116546,7 +116444,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -116583,7 +116480,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -116616,7 +116512,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -116648,7 +116543,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -116726,7 +116620,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
   }
 
@@ -116749,7 +116642,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
   }
 
@@ -116772,7 +116664,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     order?: number
   }
 
@@ -116906,7 +116797,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     section?: ChecklistSectionUpdateOneWithoutItemsNestedInput
@@ -116935,7 +116825,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
     titleRates?: TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput
@@ -116960,7 +116849,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -116979,7 +116867,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     section?: ChecklistSectionUpdateOneWithoutItemsNestedInput
@@ -117008,7 +116895,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
     titleRates?: TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput
@@ -117033,7 +116919,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -117052,7 +116937,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
     section?: ChecklistSectionUpdateOneWithoutItemsNestedInput
@@ -117081,7 +116965,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
     titleRates?: TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput
@@ -117106,7 +116989,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -117204,7 +117086,6 @@ export namespace Prisma {
     publishCard?: string
     hidden?: boolean
     effortUnit?: string | null
-    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
@@ -117259,7 +117140,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -117292,7 +117172,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
@@ -117324,7 +117203,6 @@ export namespace Prisma {
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
     effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
-    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null

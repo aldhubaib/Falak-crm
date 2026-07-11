@@ -644,9 +644,6 @@ model ChecklistTemplateItem {
   hidden                Boolean  @default(false) // disabled: kept (with task data) but not shown or enforced anywhere
   // Effort measurement: null = no effort, or "words" | "audio_min" | "video_min" | "fixed"
   effortUnit            String?
-  // Expected quantity per planned video-minute — used to predict effort before
-  // content exists (e.g. ~206 words per video minute). Fixed fields ignore it.
-  qtyPerVideoMinute     Float?
   order                 Int      @default(0)
 
   template              ChecklistTemplate  @relation(fields: [templateId], references: [id], onDelete: Cascade)
@@ -691,7 +688,6 @@ model TaskChecklistItem {
   publishCard           String    @default("hidden") // placement on the publish card: "hidden" | "expanded" | "always"
   hidden                Boolean   @default(false) // disabled: kept (with task data) but not shown or enforced anywhere
   effortUnit            String?   // snapshot: null | "words" | "audio_min" | "video_min" | "fixed"
-  qtyPerVideoMinute     Float?    // snapshot of prediction ratio
   completed             Boolean   @default(false)
   attachmentId          String?
   textValue             String?

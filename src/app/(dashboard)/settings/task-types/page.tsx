@@ -41,7 +41,6 @@ type RawItem = {
   publishCard: string;
   hidden: boolean;
   effortUnit: string | null;
-  qtyPerVideoMinute: number | null;
 };
 
 function toField(i: RawItem): TTField {
@@ -63,7 +62,6 @@ function toField(i: RawItem): TTField {
     publishCard: i.publishCard,
     hidden: i.hidden,
     effortUnit: i.effortUnit,
-    qtyPerVideoMinute: i.qtyPerVideoMinute,
   };
 }
 

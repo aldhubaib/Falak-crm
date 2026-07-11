@@ -36,8 +36,6 @@ type Draft = {
   neverLock: boolean;
   publishCard: string;
   effortUnit: string;
-  // Raw input text so partial numbers ("1.") survive while typing.
-  qtyPerVideoMinuteText: string;
 };
 
 function toDraft(f: Partial<TTField>): Draft {
@@ -58,8 +56,6 @@ function toDraft(f: Partial<TTField>): Draft {
     neverLock: !!f.neverLock,
     publishCard: f.publishCard ?? "hidden",
     effortUnit: f.effortUnit ?? "",
-    qtyPerVideoMinuteText:
-      f.qtyPerVideoMinute != null ? String(f.qtyPerVideoMinute) : "",
   };
 }
 
@@ -155,7 +151,6 @@ export function FieldEditor({
                 draft.effortUnit !== nextMeasured
               ) {
                 patch.effortUnit = nextMeasured ?? "fixed";
-                if (nextMeasured !== "words") patch.qtyPerVideoMinuteText = "";
               }
               setField(patch);
             }}
@@ -260,7 +255,6 @@ export function FieldEditor({
                       draft.effortUnit !== nextMeasured
                     ) {
                       patch.effortUnit = nextMeasured ?? "fixed";
-                      patch.qtyPerVideoMinuteText = "";
                     }
                     setField(patch);
                   }}
@@ -353,10 +347,7 @@ export function FieldEditor({
             value={draft.effortUnit || "none"}
             onValueChange={(v) => {
               const unit = v === "none" ? "" : v;
-              setField({
-                effortUnit: unit,
-                ...(unit === "words" ? {} : { qtyPerVideoMinuteText: "" }),
-              });
+              setField({ effortUnit: unit });
             }}
             searchPlaceholder="Search…"
             className="h-10"
@@ -382,23 +373,6 @@ export function FieldEditor({
             ]}
           />
         </LabeledField>
-        {draft.effortUnit === "words" && (
-          <LabeledField label="Expected Words per Video Minute">
-            <Input
-              type="number"
-              min={0}
-              step="any"
-              value={draft.qtyPerVideoMinuteText}
-              onChange={(e) => setField({ qtyPerVideoMinuteText: e.target.value })}
-              placeholder="e.g. 206"
-              className="h-10"
-            />
-            <div className="mt-1 text-xxs text-muted-foreground">
-              Only for predictions before the text is written: a 2-min planned
-              video expects 2 × this many words.
-            </div>
-          </LabeledField>
-        )}
         {(draft.effortUnit === "audio_min" || draft.effortUnit === "video_min") && (
           <div className="pt-5 text-xxs text-muted-foreground sm:col-span-1 lg:col-span-2">
             {draft.kind === "multi_file"
@@ -488,13 +462,6 @@ export function FieldEditor({
                 neverLock: draft.neverLock,
                 publishCard: draft.publishCard,
                 effortUnit: draft.effortUnit || null,
-                // Only words need a prediction ratio; audio/video predict 1:1
-                // from the planned video length, fixed is always quantity 1.
-                qtyPerVideoMinute:
-                  draft.effortUnit === "words" &&
-                  Number.parseFloat(draft.qtyPerVideoMinuteText) > 0
-                    ? Number.parseFloat(draft.qtyPerVideoMinuteText)
-                    : null,
               })
             }
             disabled={!draft.label.trim() || !dirty}

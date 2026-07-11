@@ -420,8 +420,6 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
   const options = (formData.get("options") as string)?.trim() || null;
   const publishCard = (formData.get("publishCard") as string) || "hidden";
   const effortUnit = (formData.get("effortUnit") as string)?.trim() || null;
-  const qtyRaw = Number.parseFloat((formData.get("qtyPerVideoMinute") as string) ?? "");
-  const qtyPerVideoMinute = Number.isFinite(qtyRaw) && qtyRaw > 0 ? qtyRaw : null;
 
   const last = await db.checklistTemplateItem.findFirst({
     where: { templateId },
@@ -447,7 +445,6 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
       neverLock,
       publishCard,
       effortUnit,
-      qtyPerVideoMinute,
       order: (last?.order ?? 0) + 1,
     },
   });
@@ -480,7 +477,6 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
         neverLock: item.neverLock,
         publishCard: item.publishCard,
         effortUnit: item.effortUnit,
-        qtyPerVideoMinute: item.qtyPerVideoMinute,
         order: item.order,
       })),
     });
@@ -549,7 +545,7 @@ export async function deleteChecklistTemplateItem(id: string) {
 
 export async function updateChecklistTemplateItem(
   id: string,
-  data: { name?: string; type?: string; role?: string; options?: string | null; allowedFileTypes?: string | null; allowedFormats?: string | null; aspectRatio?: string | null; mandatory?: boolean; phase?: string; visibleFromStageId?: string | null; requiredBeforeStageId?: string | null; lockedFromStageId?: string | null; neverLock?: boolean; publishCard?: string; effortUnit?: string | null; qtyPerVideoMinute?: number | null }
+  data: { name?: string; type?: string; role?: string; options?: string | null; allowedFileTypes?: string | null; allowedFormats?: string | null; aspectRatio?: string | null; mandatory?: boolean; phase?: string; visibleFromStageId?: string | null; requiredBeforeStageId?: string | null; lockedFromStageId?: string | null; neverLock?: boolean; publishCard?: string; effortUnit?: string | null }
 ) {
   const { member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");
@@ -591,7 +587,6 @@ export async function updateChecklistTemplateItem(
   if (data.neverLock !== undefined) syncFields.neverLock = data.neverLock;
   if (data.publishCard !== undefined) syncFields.publishCard = data.publishCard;
   if (data.effortUnit !== undefined) syncFields.effortUnit = data.effortUnit;
-  if (data.qtyPerVideoMinute !== undefined) syncFields.qtyPerVideoMinute = data.qtyPerVideoMinute;
 
   if (Object.keys(syncFields).length > 0) {
     await db.taskChecklistItem.updateMany({

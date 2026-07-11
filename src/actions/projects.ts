@@ -425,7 +425,6 @@ export async function createFullTask(data: {
               neverLock: item.neverLock,
               publishCard: item.publishCard,
               effortUnit: item.effortUnit,
-              qtyPerVideoMinute: item.qtyPerVideoMinute,
               order: item.order,
               textValue: hasAnswer ? answer : null,
               completed,
@@ -559,7 +558,6 @@ export async function createTask(projectId: string, formData: FormData, dealId?:
         role: item.role,
         publishCard: item.publishCard,
         effortUnit: item.effortUnit,
-        qtyPerVideoMinute: item.qtyPerVideoMinute,
         order: item.order,
       })),
     });
@@ -1294,7 +1292,6 @@ export async function getTask(taskId: string) {
             neverLock: item.neverLock,
             publishCard: item.publishCard,
             effortUnit: item.effortUnit,
-            qtyPerVideoMinute: item.qtyPerVideoMinute,
             order: item.order,
           })),
           // Concurrent loads of the same task race here; the unique index on
@@ -2037,7 +2034,6 @@ export async function syncTaskTemplates(taskId: string, templateIds: string[], p
         neverLock: item.neverLock,
         publishCard: item.publishCard,
         effortUnit: item.effortUnit,
-        qtyPerVideoMinute: item.qtyPerVideoMinute,
         order: nextOrder++,
       })),
       // Racing with getTask materialisation is a no-op, not a crash.

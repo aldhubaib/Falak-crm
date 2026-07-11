@@ -448,7 +448,6 @@ export async function computeTaskEffort(taskId: string): Promise<TaskEffort | nu
 export type PredictableTemplateItem = {
   id: string;
   effortUnit: string | null;
-  qtyPerVideoMinute: number | null;
 };
 
 // Pure prediction from pre-loaded template items and one member's rates.
@@ -467,10 +466,8 @@ export function predictEffortMinutesFromItems(
     let quantity: number | null;
     if (item.effortUnit === "fixed") {
       quantity = 1;
-    } else if (item.qtyPerVideoMinute != null) {
-      quantity = item.qtyPerVideoMinute * plannedMinutes;
     } else if (item.effortUnit === "words") {
-      // Words can't be predicted without an expected words-per-minute ratio.
+      // Word counts don't exist until the text is written — unpredictable.
       quantity = null;
     } else {
       quantity = plannedMinutes; // audio/video default to 1:1 with video length
