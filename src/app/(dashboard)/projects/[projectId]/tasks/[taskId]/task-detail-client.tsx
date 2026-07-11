@@ -44,6 +44,7 @@ import {
   Pencil,
   Type as TypeIcon,
   Calculator,
+  Eye,
 } from "lucide-react";
 import { VideoPlayer, formatMediaTime } from "@/components/media/video-player";
 import { EffortDialog } from "@/components/effort/effort-dialog";
@@ -84,6 +85,7 @@ import {
   deleteTask,
   updateTask,
   updateTaskStatus,
+  assignTaskToMe,
 } from "@/actions/projects";
 import { ConfirmStatusDialog } from "@/components/board/confirm-status-dialog";
 import { DeclineDialog } from "@/components/board/decline-dialog";
@@ -235,6 +237,16 @@ export type TaskMoveData = {
   me?: { name: string; avatar: string | null } | null;
 };
 
+// Assignee-only editing: who owns the task, whether the current viewer is
+// read-only because of it, and whether they may claim it from the banner.
+export type TaskOwnership = {
+  assignee: { id: string; name: string; avatar: string | null } | null;
+  /** True when the viewer is a non-assignee locked out of the work product. */
+  readOnly: boolean;
+  /** Forward right on the current stage — allows the banner's self-assign. */
+  canTakeOwnership: boolean;
+};
+
 export function TaskDetailClient({
   projectId,
   taskId,
@@ -242,6 +254,7 @@ export function TaskDetailClient({
   canEditTitle,
   canEditFields,
   isOwner,
+  ownership,
   trashed,
   title,
   projectName,
@@ -269,6 +282,8 @@ export function TaskDetailClient({
   canEditFields: boolean;
   /** Workspace owner — unlocks the Effort breakdown (audit) dialog. */
   isOwner?: boolean;
+  /** Assignee-only editing state (read-only banner + take ownership). */
+  ownership?: TaskOwnership | null;
   /** Set when the task is in the trash — renders read-only with a trash banner. */
   trashed?: { deletedAt: string; deletedByName: string | null } | null;
   title: string;
@@ -315,6 +330,17 @@ export function TaskDetailClient({
       await deleteTask(taskId, projectId);
       evictFromBoardCache();
       router.push(`/projects/${projectId}`);
+    });
+
+  // Claim the task from the read-only banner — on success the server render
+  // flips canEditFields and the banner disappears.
+  const { run: runTakeOwnership, loading: takingOwnership } = useActionHandler();
+  const handleTakeOwnership = () =>
+    runTakeOwnership("Take Ownership", async () => {
+      await assignTaskToMe(taskId, projectId);
+      void queryClient.invalidateQueries({ queryKey: boardQueryKey(projectId) });
+      router.refresh();
+      return true;
     });
 
   const { run: runTrashAction, loading: trashActionLoading } = useActionHandler();
@@ -528,6 +554,60 @@ export function TaskDetailClient({
                 >
                   <Trash2 className="h-4 w-4" /> Delete forever
                 </Button>
+              </div>
+            </div>
+          )}
+          {/* Assignee-only editing: non-assignees view read-only and can claim
+              the task here when they hold the Forward right on this stage. */}
+          {!trashed && ownership?.readOnly && (
+            <div className="flex flex-wrap items-center gap-3 rounded-md border border-border/60 bg-surface px-4 py-3">
+              <Eye className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <div className="min-w-0 flex-1 text-sm text-muted-foreground">
+                Only the assignee can edit — you are viewing in read-only.
+              </div>
+              <div className="flex shrink-0 items-center gap-2.5">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                  Assignee
+                </span>
+                <button
+                  type="button"
+                  disabled={!ownership.canTakeOwnership || takingOwnership}
+                  onClick={handleTakeOwnership}
+                  title={
+                    ownership.canTakeOwnership
+                      ? "Take ownership — assign this task to yourself and edit"
+                      : "You need permission to move tasks forward from this stage to take ownership"
+                  }
+                  className={cn(
+                    "flex items-center gap-2 rounded-full border border-border/60 bg-background/60 py-1 pl-1 pr-3 text-xs font-medium",
+                    ownership.canTakeOwnership
+                      ? "transition-colors hover:border-primary/60 hover:bg-primary/10"
+                      : "cursor-default opacity-80",
+                  )}
+                >
+                  {takingOwnership ? (
+                    <Loader2 className="size-6 animate-spin p-1 text-muted-foreground" />
+                  ) : ownership.assignee?.avatar ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={ownership.assignee.avatar}
+                      alt={ownership.assignee.name}
+                      className="size-6 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="grid size-6 place-items-center rounded-full bg-primary/20 text-[10px] font-semibold text-primary">
+                      {(ownership.assignee?.name ?? "?")
+                        .split(/\s+/)
+                        .filter(Boolean)
+                        .slice(0, 2)
+                        .map((w) => w[0]!.toUpperCase())
+                        .join("") || "?"}
+                    </span>
+                  )}
+                  <span className="max-w-40 truncate">
+                    {ownership.assignee?.name ?? "Unassigned"}
+                  </span>
+                </button>
               </div>
             </div>
           )}

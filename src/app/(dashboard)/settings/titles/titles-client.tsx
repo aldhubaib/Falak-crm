@@ -507,9 +507,10 @@ function TitleEditor({
           <DialogHeader>
             <DialogTitle>Recalculate effort for &quot;{title.name}&quot;?</DialogTitle>
             <DialogDescription>
-              This rewrites saved effort snapshots on completed tasks only, using
-              the rates shown above. Tasks still in progress are not stored and
-              are not changed.
+              This recalculates and saves effort on every completed task where
+              someone with this title did the work — including old tasks that
+              never had effort saved. Tasks still in progress are not stored
+              and are not changed.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

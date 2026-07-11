@@ -8,7 +8,6 @@ import {
   ChevronUp,
   Clock,
   Loader2,
-  RefreshCw,
 } from "lucide-react";
 import {
   Dialog,
@@ -17,9 +16,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { getTaskEffort, recalculateTaskEffort } from "@/actions/effort";
+import { getTaskEffort } from "@/actions/effort";
 import type { EffortFlag, EffortPerson, EffortRow, TaskEffort } from "@/lib/effort";
 
 const FLAG_LABELS: Record<EffortFlag, string> = {
@@ -214,7 +212,6 @@ export function EffortDialog({
   const [effort, setEffort] = useState<TaskEffort | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [recalculating, setRecalculating] = useState(false);
   const requestId = useRef(0);
 
   const loadEffort = useCallback(() => {
@@ -242,59 +239,22 @@ export function EffortDialog({
     void loadEffort();
   }, [open, loadEffort]);
 
-  async function handleRecalculate() {
-    setRecalculating(true);
-    setError(null);
-    try {
-      const data = await recalculateTaskEffort(taskId);
-      setEffort(data);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Recalculate failed");
-    } finally {
-      setRecalculating(false);
-    }
-  }
-
   const stageRows = effort?.rows.filter((r) => r.kind === "stage") ?? [];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
-          <div className="flex items-start justify-between gap-3 pr-8">
-            <div className="space-y-1.5">
-              <DialogTitle className="flex items-center gap-2">
-                <Calculator className="size-4" />
-                Effort breakdown
-              </DialogTitle>
-              <DialogDescription>
-                Effort = uploaded content length × the doer&apos;s title rate.
-                While the task is in progress, numbers update live when you
-                change rates. After the task is completed, effort locks — use
-                Recalculate to apply new rates.
-              </DialogDescription>
-            </div>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="shrink-0"
-              disabled={!effort?.taskCompleted || recalculating || loading}
-              onClick={() => void handleRecalculate()}
-              title={
-                effort?.taskCompleted
-                  ? "Recompute rates from current title settings and save"
-                  : "Complete the task to recalculate and save effort"
-              }
-            >
-              {recalculating ? (
-                <Loader2 className="size-3.5 animate-spin" />
-              ) : (
-                <RefreshCw className="size-3.5" />
-              )}
-              Recalculate
-            </Button>
-          </div>
+          <DialogTitle className="flex items-center gap-2">
+            <Calculator className="size-4" />
+            Effort breakdown
+          </DialogTitle>
+          <DialogDescription>
+            Effort = uploaded content length × the doer&apos;s title rate.
+            While the task is in progress, numbers update live when you change
+            rates. After the task is completed, effort locks — apply new rates
+            from Settings → Titles → Recalculate.
+          </DialogDescription>
         </DialogHeader>
 
         {loading && (

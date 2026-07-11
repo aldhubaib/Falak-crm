@@ -332,7 +332,12 @@ export async function recalculateTaskEffortLocks(taskId: string): Promise<void> 
   await lockManyChecklistItemEffort(effortItemIds);
 }
 
-/** Re-lock only effort that was already saved on completed tasks. */
+/**
+ * Recompute and save effort for every completed field this title's members
+ * did on completed tasks — including old tasks completed before effort
+ * tracking existed (they get their first snapshot here). In-progress tasks
+ * are never stored.
+ */
 export async function recalculateTitleEffortLocks(
   titleId: string,
   workspaceId: string,
@@ -348,7 +353,6 @@ export async function recalculateTitleEffortLocks(
     where: {
       completed: true,
       completedBy: { in: memberIds },
-      effortLockedAt: { not: null },
       hidden: false,
       task: {
         completedAt: { not: null },

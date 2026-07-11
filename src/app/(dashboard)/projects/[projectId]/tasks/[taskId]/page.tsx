@@ -6,7 +6,7 @@ import { getTaskHistory, getTaskComments } from "@/actions/comments";
 import { db } from "@/lib/db";
 import { createPresignedGet } from "@/lib/storage";
 import { getProjectAccess } from "@/lib/workspace";
-import { canDeleteTaskAt } from "@/lib/permissions";
+import { canDeleteTaskAt, canMoveTaskFrom } from "@/lib/permissions";
 import {
   autoLockOrder,
   fieldConfig,
@@ -241,6 +241,18 @@ export default async function TaskDetailPage({
         true
       : false);
 
+  // Assignee-only editing: work product belongs to the task's owner. A
+  // non-assignee views read-only and can claim the task from the banner if
+  // they hold the Forward right on the current stage. Workspace owners and
+  // unassigned tasks (first edit auto-claims) are exempt.
+  const isWorkspaceOwner = access.member.type === "OWNER";
+  const isAssignee = task.assigneeId === access.member.id;
+  const assigneeGateOpen =
+    isWorkspaceOwner || isAssignee || task.assigneeId == null;
+  const canTakeOwnership =
+    !isAssignee &&
+    canMoveTaskFrom(access.permissions, task.statusId, "forward");
+
   // Stage lock for the built-in Title, configured on the task's type in
   // Settings → Task Types (Auto = locks once the task leaves Todo).
   const taskTemplate =
@@ -300,9 +312,20 @@ export default async function TaskDetailPage({
       projectId={projectId}
       taskId={taskId}
       canDelete={!trashed && canDelete}
-      canEditTitle={!trashed && canModify && !titleLocked}
-      canEditFields={!trashed && canModify}
-      isOwner={access.member.type === "OWNER"}
+      canEditTitle={!trashed && canModify && !titleLocked && assigneeGateOpen}
+      canEditFields={!trashed && canModify && assigneeGateOpen}
+      isOwner={isWorkspaceOwner}
+      ownership={{
+        assignee: task.assignee
+          ? {
+              id: task.assignee.id,
+              name: task.assignee.name ?? task.assignee.email,
+              avatar: task.assignee.imageUrl ?? null,
+            }
+          : null,
+        readOnly: !trashed && !assigneeGateOpen,
+        canTakeOwnership,
+      }}
       trashed={
         trashed
           ? { deletedAt: task.deletedAt!.toISOString(), deletedByName }

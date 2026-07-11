@@ -231,7 +231,8 @@ async function main() {
     effort = (await computeTaskEffort(task.id))!;
     check("recalc applies new rate (2.46 × 5 = 12.3)", approx(row("Voice Over").minutes, 12.3));
 
-    // ── 4. Title-level recalc touches ONLY already-locked completed work ────
+    // ── 4. Title-level recalc covers completed tasks (locked or not) but
+    //      never in-progress ones ─────────────────────────────────────────────
     console.log("\n[4] Title recalculate scope");
     const task2 = await db.task.create({
       data: { projectId: project.id, title: "QA In-Progress Task", statusId: todo.id, assigneeId: doer.id },
@@ -249,7 +250,7 @@ async function main() {
       data: { minutesPerUnit: 7 },
     });
     const res = await recalculateTitleEffortLocks(title.id, ws.id);
-    check("title recalc touched exactly the 3 locked fields", res.fieldCount === 3, res);
+    check("title recalc touched exactly the 3 completed-task fields", res.fieldCount === 3, res);
     check("title recalc touched exactly 1 task", res.taskCount === 1, res);
 
     const task2Locks = await db.taskChecklistItem.count({

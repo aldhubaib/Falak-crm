@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  BarChart3,
   BellRing,
   ClipboardList,
   ChevronRight,
@@ -18,8 +19,12 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { AppHeader } from "@/components/app-header";
 import { PageContainer } from "@/components/page-container";
+import { requireWorkspaceWithMember } from "@/lib/workspace";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const { member } = await requireWorkspaceWithMember();
+  const isOwner = member.type === "OWNER";
+
   return (
     <>
       <AppHeader title="Settings" />
@@ -63,6 +68,17 @@ export default function SettingsPage() {
               desc="Effort rates per title for capacity planning (Junior A, Senior…)."
             />
           </Group>
+
+          {isOwner && (
+            <Group title="Reports">
+              <Tile
+                href="/settings/reports/workload"
+                icon={BarChart3}
+                title="Workload Report"
+                desc="See who worked on what between two dates, grouped by person."
+              />
+            </Group>
+          )}
 
           <Group title="Finance">
             <Tile

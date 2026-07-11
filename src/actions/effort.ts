@@ -3,7 +3,7 @@
 import { requireWorkspaceWithMember } from "@/lib/workspace";
 import { db } from "@/lib/db";
 import { computeTaskEffort, type TaskEffort } from "@/lib/effort";
-import { recalculateTaskEffortLocks } from "@/lib/effort-lock";
+import { computeWorkloadReport, type WorkloadReport } from "@/lib/workload-report";
 
 // Full effort breakdown for a task — the audit ledger behind every number.
 // Owner-only: this is the workspace owner's calibration/verification view.
@@ -50,24 +50,24 @@ export async function setTaskPlannedMinutes(
   return effort;
 }
 
-// Recompute effort locks from current content and title rates, then persist.
-// Only allowed on completed tasks — this is the owner's explicit rate refresh.
-export async function recalculateTaskEffort(taskId: string): Promise<TaskEffort> {
+// Everyone's effort between two dates, grouped by person. Owner-only, same as
+// every other effort surface. Dates arrive as "YYYY-MM-DD" and span whole days.
+export async function getWorkloadReport(
+  fromDate: string,
+  toDate: string,
+): Promise<WorkloadReport> {
   const { workspace, member } = await requireWorkspaceWithMember();
   if (member.type !== "OWNER") throw new Error("Permission denied");
 
-  const task = await db.task.findFirst({
-    where: { id: taskId, project: { workspaceId: workspace.id } },
-    select: { id: true, completedAt: true },
-  });
-  if (!task) throw new Error("Task not found");
-  if (!task.completedAt) {
-    throw new Error("Complete the task before recalculating effort");
+  const from = new Date(`${fromDate}T00:00:00.000`);
+  const to = new Date(`${toDate}T23:59:59.999`);
+  if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) {
+    throw new Error("Invalid date range");
+  }
+  if (to < from) throw new Error("The end date is before the start date");
+  if (to.getTime() - from.getTime() > 366 * 86_400_000) {
+    throw new Error("Pick a range of one year or less");
   }
 
-  await recalculateTaskEffortLocks(taskId);
-
-  const effort = await computeTaskEffort(taskId);
-  if (!effort) throw new Error("Task not found");
-  return effort;
+  return computeWorkloadReport(workspace.id, from, to);
 }

@@ -1058,16 +1058,13 @@ export async function assignTaskToMe(taskId: string, projectId: string) {
   if (!task) throw new Error("Task not found");
   if (task.deletedAt) throw new Error("Task is in the trash");
 
-  // Self-assign requires the "Modify" right for the task's CURRENT stage —
-  // same rule as editing task fields (full project access always qualifies).
-  const canModify =
-    access.permissions.projects === "full" ||
-    (task.statusId
-      ? access.permissions.taskPermissions?.stages?.[task.statusId]?.modify ===
-        true
-      : false);
-  if (!canModify) {
-    throw new Error("You don't have permission to assign tasks at this stage");
+  // Taking ownership requires the Forward right on the task's CURRENT stage —
+  // only someone who could carry the task onward may claim its work (full
+  // project access always qualifies).
+  if (!canMoveTaskFrom(access.permissions, task.statusId, "forward")) {
+    throw new Error(
+      "You can't take ownership here — it needs permission to move tasks forward from this stage",
+    );
   }
 
   const history: Record<string, string> = (task.assignmentHistory as Record<string, string>) ?? {};
@@ -1398,10 +1395,13 @@ async function assertChecklistItemWritable(itemId: string) {
       templateItem: true,
       task: {
         select: {
+          id: true,
           deletedAt: true,
           statusId: true,
           status: { select: { order: true } },
           projectId: true,
+          assigneeId: true,
+          assignmentHistory: true,
           project: { select: { workspaceId: true } },
         },
       },
@@ -1434,6 +1434,37 @@ async function assertChecklistItemWritable(itemId: string) {
       : false);
   if (!canModify) {
     throw new Error("You don't have permission to edit fields at this stage");
+  }
+
+  // Work product belongs to the task's assignee: fields and uploads are theirs
+  // alone, so effort credit always matches the visible owner. Others must take
+  // ownership first (assignee chip / avatar). Workspace owners bypass.
+  if (access.member.type !== "OWNER") {
+    if (item.task.assigneeId == null) {
+      // Unassigned work: the first editor claims the task, no friction.
+      const history: Record<string, string> =
+        (item.task.assignmentHistory as Record<string, string>) ?? {};
+      if (item.task.statusId) history[item.task.statusId] = access.member.id;
+      await db.task.update({
+        where: { id: item.task.id },
+        data: { assigneeId: access.member.id, assignmentHistory: history },
+      });
+      const me = await db.workspaceMember.findUnique({
+        where: { id: access.member.id },
+        select: { id: true, name: true, email: true, imageUrl: true },
+      });
+      if (me) {
+        publishTaskEvent(item.task.projectId, {
+          type: "task.updated",
+          taskId: item.task.id,
+          assignee: { id: me.id, name: me.name ?? me.email, avatar: me.imageUrl ?? null },
+        });
+      }
+    } else if (item.task.assigneeId !== access.member.id) {
+      throw new Error(
+        "Only the assignee can edit this task — take ownership first",
+      );
+    }
   }
 }
 
