@@ -223,109 +223,62 @@ export function TeamClient({
 
       <div className="space-y-field-gap">
         {members.map((m) => (
-          <SurfaceCard
-            key={m.id}
-            className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3"
-          >
-            <Avatar className="h-9 w-9 shrink-0">
-              {m.imageUrl && <AvatarImage src={m.imageUrl} alt={m.name ?? ""} />}
-              <AvatarFallback className="bg-primary/15 text-xs font-medium text-primary">
-                {(m.name || m.email || "U").slice(0, 2).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0">
-              {editingId === m.id ? (
-                <div className="flex items-center gap-1">
-                  <Input
-                    autoFocus
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") saveRename();
-                      if (e.key === "Escape") setEditingId(null);
-                    }}
-                    className="h-8 min-w-0 text-sm"
-                    placeholder="Full name"
-                  />
-                  <IconButton aria-label="Save name" onClick={saveRename}>
-                    <Check className="h-4 w-4" />
-                  </IconButton>
-                  <IconButton
-                    aria-label="Cancel"
-                    onClick={() => setEditingId(null)}
-                  >
-                    <X className="h-4 w-4" />
-                  </IconButton>
-                </div>
-              ) : (
-                <div className="group flex items-center gap-2">
-                  <div className="truncate font-medium">
-                    {m.name || m.email || "Unknown"}
+          <SurfaceCard key={m.id} className="space-y-3">
+            {/* Row 1 — identity: full name and email get the whole width. */}
+            <div className="flex items-center gap-3">
+              <Avatar className="h-11 w-11 shrink-0">
+                {m.imageUrl && <AvatarImage src={m.imageUrl} alt={m.name ?? ""} />}
+                <AvatarFallback className="bg-primary/15 text-sm font-medium text-primary">
+                  {(m.name || m.email || "U").slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                {editingId === m.id ? (
+                  <div className="flex items-center gap-1">
+                    <Input
+                      autoFocus
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") saveRename();
+                        if (e.key === "Escape") setEditingId(null);
+                      }}
+                      className="h-8 min-w-0 text-sm"
+                      placeholder="Full name"
+                    />
+                    <IconButton aria-label="Save name" onClick={saveRename}>
+                      <Check className="h-4 w-4" />
+                    </IconButton>
+                    <IconButton
+                      aria-label="Cancel"
+                      onClick={() => setEditingId(null)}
+                    >
+                      <X className="h-4 w-4" />
+                    </IconButton>
                   </div>
-                  {m.type === "OWNER" && (
-                    <span className="shrink-0 rounded-full bg-primary/15 px-2 py-0.5 text-xxs font-medium uppercase tracking-wide text-primary">
-                      Owner
-                    </span>
-                  )}
-                  <button
-                    type="button"
-                    aria-label="Edit name"
-                    onClick={() => startRename(m)}
-                    className="shrink-0 text-muted-foreground/50 transition-colors hover:text-foreground"
-                  >
-                    <Pencil className="h-3.5 w-3.5" />
-                  </button>
+                ) : (
+                  <div className="group flex items-center gap-2">
+                    <div className="truncate text-[15px] font-semibold">
+                      {m.name || m.email || "Unknown"}
+                    </div>
+                    {m.type === "OWNER" && (
+                      <span className="shrink-0 rounded-full bg-primary/15 px-2 py-0.5 text-xxs font-medium uppercase tracking-wide text-primary">
+                        Owner
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      aria-label="Edit name"
+                      onClick={() => startRename(m)}
+                      className="shrink-0 text-muted-foreground/50 transition-colors hover:text-foreground"
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                )}
+                <div className="truncate text-xs text-muted-foreground">
+                  {m.email}
                 </div>
-              )}
-              <div className="truncate text-xs text-muted-foreground">
-                {m.email}
-              </div>
-            </div>
-            <div className="col-span-3 flex flex-wrap items-center gap-2 sm:col-span-1 sm:justify-end">
-              <SearchableSelect
-                value={m.role?.id ?? "none"}
-                onValueChange={(v) => handleAssignRole(m.id, v)}
-                disabled={m.type === "OWNER"}
-                searchPlaceholder="Search roles…"
-                className="h-8 w-full text-xs sm:w-32"
-                contentClassName="w-48 min-w-48"
-                renderValue={() => m.role?.name ?? "No role"}
-                options={[
-                  { value: "none", label: "No role" },
-                  ...roles.map((r) => ({ value: r.id, label: r.name })),
-                ]}
-              />
-              <SearchableSelect
-                value={m.capacityTitle?.id ?? "none"}
-                onValueChange={(v) => handleAssignTitle(m.id, v)}
-                searchPlaceholder="Search titles…"
-                className="h-8 w-full text-xs sm:w-36"
-                contentClassName="w-52 min-w-52"
-                renderValue={() => m.capacityTitle?.name ?? "No title"}
-                options={[
-                  { value: "none", label: "No title" },
-                  ...titles.map((t) => ({ value: t.id, label: t.name })),
-                ]}
-              />
-              <div
-                className="flex items-center gap-1"
-                title="Weekly working-hours capacity"
-              >
-                <Input
-                  type="number"
-                  min={0}
-                  max={168}
-                  step="any"
-                  defaultValue={m.weeklyHours}
-                  onBlur={(e) =>
-                    handleWeeklyHours(m.id, m.weeklyHours, e.target.value)
-                  }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") (e.target as HTMLInputElement).blur();
-                  }}
-                  className="h-8 w-16 text-right text-xs"
-                />
-                <span className="text-xs text-muted-foreground">h/wk</span>
               </div>
               {m.type !== "OWNER" && (
                 <IconButton
@@ -335,6 +288,67 @@ export function TeamClient({
                   <Trash2 className="h-4 w-4" />
                 </IconButton>
               )}
+            </div>
+
+            {/* Row 2 — role, title, and weekly capacity, each labeled. */}
+            <div className="grid gap-3 border-t border-border/40 pt-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+              <div className="min-w-0">
+                <div className="mb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                  Role
+                </div>
+                <SearchableSelect
+                  value={m.role?.id ?? "none"}
+                  onValueChange={(v) => handleAssignRole(m.id, v)}
+                  disabled={m.type === "OWNER"}
+                  searchPlaceholder="Search roles…"
+                  className="h-9 w-full text-xs"
+                  contentClassName="w-48 min-w-48"
+                  renderValue={() => m.role?.name ?? "No role"}
+                  options={[
+                    { value: "none", label: "No role" },
+                    ...roles.map((r) => ({ value: r.id, label: r.name })),
+                  ]}
+                />
+              </div>
+              <div className="min-w-0">
+                <div className="mb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                  Title
+                </div>
+                <SearchableSelect
+                  value={m.capacityTitle?.id ?? "none"}
+                  onValueChange={(v) => handleAssignTitle(m.id, v)}
+                  searchPlaceholder="Search titles…"
+                  className="h-9 w-full text-xs"
+                  contentClassName="w-52 min-w-52"
+                  renderValue={() => m.capacityTitle?.name ?? "No title"}
+                  options={[
+                    { value: "none", label: "No title" },
+                    ...titles.map((t) => ({ value: t.id, label: t.name })),
+                  ]}
+                />
+              </div>
+              <div title="Weekly working-hours capacity">
+                <div className="mb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                  Capacity
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Input
+                    type="number"
+                    min={0}
+                    max={168}
+                    step="any"
+                    defaultValue={m.weeklyHours}
+                    onBlur={(e) =>
+                      handleWeeklyHours(m.id, m.weeklyHours, e.target.value)
+                    }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                    }}
+                    className="h-9 w-20 text-right text-xs"
+                  />
+                  <span className="text-xs text-muted-foreground">h/wk</span>
+                </div>
+              </div>
             </div>
           </SurfaceCard>
         ))}

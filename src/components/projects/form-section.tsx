@@ -14,7 +14,7 @@ export function FormSection({
 }) {
   return (
     <section className="rounded-2xl border border-border/60 bg-card/60 p-5 backdrop-blur-sm">
-      <div className="mb-4 flex items-start gap-3">
+      <div className="mb-4 flex items-center gap-3">
         <div className="grid size-8 shrink-0 place-items-center rounded-lg bg-surface text-muted-foreground">
           {icon}
         </div>
