@@ -78,6 +78,8 @@ export type BoardData = {
   /** Todo tasks booked into NEXT week's plan cycle (overflow) — the Todo
    *  column renders them under its "Next week" section. */
   nextWeekTaskIds: string[];
+  /** First day of next week, e.g. "Jul 17" — shown in the section header. */
+  nextWeekLabel: string;
 };
 
 // Lightweight board payload — selects ONLY the fields a card renders, so a
@@ -342,5 +344,6 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
     statuses: statuses.filter((s) => s.name !== "Published"),
     weekly,
     nextWeekTaskIds,
+    nextWeekLabel: dueFmt.format(nextWeek),
   };
 }

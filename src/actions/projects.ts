@@ -798,14 +798,28 @@ export async function updateTaskStatus(
         // the week rolled over) — the move itself creates the missing slot.
         createExtraSlot = true;
       } else {
-        // Plan full — overflow into next week's cycle. The task gets an extra
-        // bound slot on top of next week's plan (it doesn't eat next week's
-        // capacity), and next week's placeholders materialise so every board
-        // shows the upcoming plan.
-        createExtraSlot = true;
+        // Plan full — overflow into next week's cycle. Next week's plan
+        // materialises so the board shows it, and the task claims one of its
+        // free slots. Only when next week is full too does the task ride on
+        // top as an extra bound slot.
         overflowToNextWeek = true;
         planningWeekStart = nextWeekStartOf(weekStart);
         await materialiseWeekSlots(projectId, planningWeekStart);
+        const nextWeekFreeSlot = await db.weeklySlot.findFirst({
+          where: {
+            projectId,
+            templateId: taskTemplateId,
+            weekStart: planningWeekStart,
+            taskId: null,
+            removedAt: null,
+          },
+          orderBy: { createdAt: "asc" },
+        });
+        if (nextWeekFreeSlot) {
+          claimSlotId = nextWeekFreeSlot.id;
+        } else {
+          createExtraSlot = true;
+        }
       }
       // The slot's deadline: last day of the plan cycle we're claiming into
       // (same date the board shows as "due <date>" on the placeholder). An

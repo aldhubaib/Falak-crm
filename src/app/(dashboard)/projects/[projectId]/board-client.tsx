@@ -384,6 +384,7 @@ const BoardColumn = memo(function BoardColumn({
   onSelfAssign,
   weekly,
   nextWeekTaskIds,
+  nextWeekLabel,
   draggingTemplateId,
   canAssignSlot,
   onSlotSelfAssign,
@@ -406,6 +407,8 @@ const BoardColumn = memo(function BoardColumn({
   /** Todo tasks booked into next week's plan (overflow) — rendered under the
    *  "Next week" section. */
   nextWeekTaskIds?: string[];
+  /** First day of next week, e.g. "Jul 17" — shown in the section header. */
+  nextWeekLabel?: string;
   /** Type of the task currently being dragged — matching slots light up. */
   draggingTemplateId?: string | null;
   canAssignSlot?: boolean;
@@ -448,7 +451,9 @@ const BoardColumn = memo(function BoardColumn({
           slotNumber={filled + i + 1}
           templateIcon={g.templateIcon}
           templateColor={g.templateColor}
-          dueLabel={g.dueLabel}
+          // Next week's placeholders don't repeat the date — the section
+          // header already says when that plan starts.
+          dueLabel={g.weekOffset === 1 ? null : g.dueLabel}
           dragTarget={
             draggingTemplateId != null && draggingTemplateId === g.templateId
           }
@@ -548,6 +553,11 @@ const BoardColumn = memo(function BoardColumn({
                   <>
                     <p className="px-1 pt-3 text-sm font-bold text-foreground">
                       Next week
+                      {nextWeekLabel && (
+                        <span className="ml-1.5 font-medium text-muted-foreground">
+                          ({nextWeekLabel})
+                        </span>
+                      )}
                     </p>
                     <div className="space-y-2 rounded-2xl border border-border/60 bg-surface/40 p-2.5">
                       {nextTasks.map(renderCard)}
@@ -1188,6 +1198,9 @@ export function ProjectBoardClient({
               weekly={col.name === "Todo" ? data.weekly : undefined}
               nextWeekTaskIds={
                 col.name === "Todo" ? data.nextWeekTaskIds : undefined
+              }
+              nextWeekLabel={
+                col.name === "Todo" ? data.nextWeekLabel : undefined
               }
               draggingTemplateId={activeTask?.templateId ?? null}
               canAssignSlot={canAssignSlot}
