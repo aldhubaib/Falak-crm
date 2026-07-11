@@ -22,6 +22,8 @@ import {
   Download,
   Trash2,
   Loader2,
+  Play,
+  Pause,
   MoreVertical,
   AlertTriangle,
   Paperclip,
@@ -41,8 +43,10 @@ import {
   Package,
   Pencil,
   Type as TypeIcon,
+  Calculator,
 } from "lucide-react";
-import { VideoPlayer } from "@/components/media/video-player";
+import { VideoPlayer, formatMediaTime } from "@/components/media/video-player";
+import { EffortDialog } from "@/components/effort/effort-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -67,11 +71,16 @@ import { AppHeader } from "@/components/app-header";
 import { PageContainer } from "@/components/page-container";
 
 import { cn } from "@/lib/utils";
-import { fieldAppliesForGate } from "@/lib/checklist-config";
+import {
+  fieldAppliesForGate,
+  isDeliveryGateStage,
+} from "@/lib/checklist-config";
 import {
   saveChecklistItemText,
   removeChecklistItemAttachment,
+  removeChecklistItemFile,
   getChecklistItemState,
+  backfillAttachmentDuration,
   deleteTask,
   updateTask,
   updateTaskStatus,
@@ -110,12 +119,22 @@ export type ChecklistItem = {
   name: string;
   type: string;
   phase: string;
+  /** Owning checklist section (resolved server-side, synthetic for legacy). */
+  sectionId: string;
   completed: boolean;
   textValue: string | null;
   attachmentId: string | null;
   attachmentName: string | null;
   attachmentUrl: string | null;
   attachmentContentType: string | null;
+  /** Files of a multi-file field (empty for other kinds). */
+  attachments: {
+    id: string;
+    name: string;
+    contentType: string | null;
+    url: string | null;
+    durationSec: number | null;
+  }[];
   mandatory: boolean;
   options: string[];
   allowedFileTypes: string | null;
@@ -125,6 +144,14 @@ export type ChecklistItem = {
   locked: boolean;
   /** Whether this field should render at the task's current stage. */
   visible: boolean;
+};
+
+// Editable field group from Settings → Task Types. phase "create" = shown
+// like the old Requirements section; "delivery" = gated like Delivery.
+export type TaskSection = {
+  id: string;
+  name: string;
+  phase: string;
 };
 
 // The History side panel loads in its own chunk only when opened.
@@ -149,6 +176,29 @@ function useChecklistUpload(itemId: string): UploadItem | undefined {
     [itemId],
   );
   return useSyncExternalStore(subscribe, getSnapshot, () => undefined);
+}
+
+const EMPTY_UPLOADS: UploadItem[] = [];
+
+// All upload entries for one checklist item — multi-file fields can have
+// several files in flight at once. The snapshot array from the manager is
+// stable between notifications, so the filtered list is memoized on it.
+function useChecklistUploads(itemId: string): UploadItem[] {
+  const subscribe = useCallback(
+    (cb: () => void) => uploadManager.subscribe(cb),
+    [],
+  );
+  const getSnapshot = useCallback(() => uploadManager.getItems(), []);
+  const all = useSyncExternalStore(subscribe, getSnapshot, () => EMPTY_UPLOADS);
+  return useMemo(
+    () =>
+      all.filter(
+        (i) =>
+          i.target.kind === "checklist_item" &&
+          i.target.checklistItemId === itemId,
+      ),
+    [all, itemId],
+  );
 }
 
 export type HistoryEntry = {
@@ -191,6 +241,7 @@ export function TaskDetailClient({
   canDelete,
   canEditTitle,
   canEditFields,
+  isOwner,
   trashed,
   title,
   projectName,
@@ -202,6 +253,7 @@ export function TaskDetailClient({
   stageEnteredAt,
   createdAt,
   items,
+  sections,
   comments,
   history,
   totalTimeMs,
@@ -215,6 +267,8 @@ export function TaskDetailClient({
   canEditTitle: boolean;
   /** Whether the member may edit checklist fields at the current stage. */
   canEditFields: boolean;
+  /** Workspace owner — unlocks the Effort breakdown (audit) dialog. */
+  isOwner?: boolean;
   /** Set when the task is in the trash — renders read-only with a trash banner. */
   trashed?: { deletedAt: string; deletedByName: string | null } | null;
   title: string;
@@ -227,6 +281,8 @@ export function TaskDetailClient({
   stageEnteredAt: string | null;
   createdAt: string;
   items: ChecklistItem[];
+  /** Ordered field sections of the task's type. */
+  sections: TaskSection[];
   comments: CommentEntry[];
   history: HistoryEntry[];
   totalTimeMs: number;
@@ -239,6 +295,7 @@ export function TaskDetailClient({
 
   const [historyOpen, setHistoryOpen] = useState(false);
   const [historyTab, setHistoryTab] = useState<"all" | "comments" | "status">("all");
+  const [effortOpen, setEffortOpen] = useState(false);
 
   const queryClient = useQueryClient();
   // Drop the task from the board's React Query cache right away — the board
@@ -289,20 +346,17 @@ export function TaskDetailClient({
     [],
   );
 
-  const reqItems = itemList.filter(
-    (i) =>
-      i.phase === "create" &&
-      i.visible &&
-      fieldAppliesForGate(i, itemList),
-  );
-  const delItems = itemList.filter((i) => i.phase === "delivery" && i.visible);
-
-  // Requirements are locked once the task leaves Todo; delivery unlocks then.
-  // Backlog sits before Todo, so it's pre-work too. Members with Modify at the
-  // current stage can still fill delivery fields while the task sits in Todo.
-  const isTodo =
-    !statusName || statusName === "Todo" || statusName === "Backlog";
-  const showDelivery = !isTodo || canEditFields;
+  // Group fields under their (editable) sections in section order. A section
+  // is just a heading: it renders only when at least one of its fields is
+  // visible at the current stage (each field's own "Visible From" rule).
+  const sectionGroups = sections.map((s) => ({
+    section: s,
+    items: itemList.filter(
+      (i) =>
+        i.sectionId === s.id && i.visible && fieldAppliesForGate(i, itemList),
+    ),
+  }));
+  const visibleGroups = sectionGroups.filter((g) => g.items.length > 0);
 
   // Comments live in local state so sending/receiving one never triggers a
   // full router.refresh() (which re-renders the whole RSC tree and re-runs
@@ -381,6 +435,12 @@ export function TaskDetailClient({
                 <History className="size-4" />
                 History
               </DropdownMenuItem>
+              {isOwner && (
+                <DropdownMenuItem onSelect={() => setEffortOpen(true)}>
+                  <Calculator className="size-4" />
+                  Effort
+                </DropdownMenuItem>
+              )}
               {canDelete && (
                 <DropdownMenuItem
                   className="text-destructive focus:text-destructive"
@@ -394,6 +454,14 @@ export function TaskDetailClient({
           </DropdownMenu>
         }
       />
+
+      {isOwner && (
+        <EffortDialog
+          taskId={taskId}
+          open={effortOpen}
+          onOpenChange={setEffortOpen}
+        />
+      )}
 
       <Dialog open={confirmDelete} onOpenChange={(o) => !deleting && setConfirmDelete(o)}>
         <DialogContent className="sm:max-w-sm">
@@ -498,15 +566,23 @@ export function TaskDetailClient({
             <PriorityDisplay value={priority} />
           </FormSection>
 
-          {/* Requirements */}
-          <FormSection
-            icon={<HelpCircle className="size-4" />}
-            title="Requirements"
-            hint="Information provided when the task was created."
-          >
-            {reqItems.length > 0 ? (
+          {/* Checklist sections in template order. Each renders only when it
+              has at least one visible field; empty sections simply don't
+              show. One placeholder renders when nothing is visible at all. */}
+          {visibleGroups.map((g) => (
+            <FormSection
+              key={g.section.id}
+              icon={
+                g.section.phase === "create" ? (
+                  <HelpCircle className="size-4" />
+                ) : (
+                  <Package className="size-4" />
+                )
+              }
+              title={g.section.name}
+            >
               <div className="space-y-6">
-                {reqItems.map((item, i) => (
+                {g.items.map((item, i) => (
                   <TaskField
                     key={item.id}
                     item={item}
@@ -516,41 +592,18 @@ export function TaskDetailClient({
                   />
                 ))}
               </div>
-            ) : (
+            </FormSection>
+          ))}
+          {visibleGroups.length === 0 && (
+            <FormSection
+              icon={<HelpCircle className="size-4" />}
+              title={sections[0]?.name ?? "Fields"}
+            >
               <div className="rounded-md border border-dashed border-border/60 p-6 text-center text-xs text-muted-foreground">
-                No requirement fields on this task.
+                No fields on this task at this stage.
               </div>
-            )}
-          </FormSection>
-
-          {/* Delivery — gated behind leaving Todo unless the member can modify */}
-          {showDelivery ? (
-            delItems.length > 0 && (
-              <FormSection
-                icon={<Package className="size-4" />}
-                title="Delivery"
-                hint="The finished work delivered for this task."
-              >
-                <div className="space-y-6">
-                  {delItems.map((item, i) => (
-                    <TaskField
-                      key={item.id}
-                      item={item}
-                      index={i + 1}
-                      projectId={projectId}
-                      readOnly={item.locked || !canEditFields}
-                    />
-                  ))}
-                </div>
-              </FormSection>
-            )
-          ) : delItems.length > 0 ? (
-            <section className="rounded-2xl border border-dashed border-border/60 p-6 text-center text-xs text-muted-foreground">
-              Delivery fields unlock when the task moves past{" "}
-              <span className="text-foreground">Todo</span>, or when your role
-              has Modify at this stage.
-            </section>
-          ) : null}
+            </FormSection>
+          )}
 
           {/* Comments */}
           <FormSection
@@ -663,10 +716,7 @@ function TaskStatusMoveMenu({
 
   const handleNext = () => {
     if (!next || moving) return;
-    if (
-      next.name.toLowerCase() === "internal review" &&
-      deliveryIncomplete.length > 0
-    ) {
+    if (isDeliveryGateStage(next.name) && deliveryIncomplete.length > 0) {
       const names = deliveryIncomplete.map((n) => `"${n}"`).join(", ");
       setMoveError(
         `This task's delivery items aren't complete yet, so it can't be submitted for review. Still missing: ${names}. If you believe this is a mistake, please contact the task creator.`,
@@ -1276,6 +1326,12 @@ function TaskFieldControl({
     });
   };
 
+  if (item.type === "multi_file") {
+    return (
+      <TaskMultiFileField item={item} projectId={projectId} readOnly={readOnly} />
+    );
+  }
+
   if (isFileField(item.type)) {
     return <TaskFileField item={item} projectId={projectId} readOnly={readOnly} />;
   }
@@ -1667,6 +1723,7 @@ function TaskFileField({
   const [dragOver, setDragOver] = useState(false);
 
   const upload = useChecklistUpload(item.id);
+  const durationBackfilled = useRef(false);
   const category = item.allowedFileTypes;
   const formats = normalizeFormats(item.allowedFormats);
   const Icon = categoryIcon(category);
@@ -1739,9 +1796,32 @@ function TaskFileField({
             <VideoPlayer
               src={`/api/files/${item.attachmentId}/stream`}
               downloadHref={`/api/files/${item.attachmentId}/download`}
+              onDurationKnown={(sec) =>
+                backfillMediaDurationOnce(
+                  item.attachmentId!,
+                  projectId,
+                  null,
+                  sec,
+                  durationBackfilled,
+                )
+              }
             />
           ) : ct.startsWith("audio/") ? (
-            <audio controls preload="metadata" src={`/api/files/${item.attachmentId}/stream`} className="w-full max-w-md" />
+            <audio
+              controls
+              preload="metadata"
+              src={`/api/files/${item.attachmentId}/stream`}
+              className="w-full max-w-md"
+              onLoadedMetadata={(e) =>
+                backfillMediaDurationOnce(
+                  item.attachmentId!,
+                  projectId,
+                  null,
+                  e.currentTarget.duration,
+                  durationBackfilled,
+                )
+              }
+            />
           ) : (
             <div className="flex flex-col items-center gap-2 text-muted-foreground">
               <Icon className="h-8 w-8" />
@@ -1863,6 +1943,407 @@ function TaskFileField({
         onChange={(e) => handlePick(e.target.files?.[0] ?? null)}
       />
     </>
+  );
+}
+
+// Persist media length when the browser reads it but the DB row is missing it.
+function backfillMediaDurationOnce(
+  attachmentId: string,
+  projectId: string,
+  knownDurationSec: number | null | undefined,
+  sec: number,
+  backfilledRef: React.MutableRefObject<boolean>,
+) {
+  if (backfilledRef.current) return;
+  if (knownDurationSec != null && knownDurationSec > 0) return;
+  if (!(sec > 0) || !Number.isFinite(sec)) return;
+  backfilledRef.current = true;
+  void backfillAttachmentDuration(attachmentId, sec, projectId).catch(() => {});
+}
+
+// One row in a multi-file list — play opens a video popup; audio plays inline.
+function MultiFileListRow({
+  file,
+  projectId,
+  fallbackIcon: FallbackIcon,
+  readOnly,
+  removing,
+  onRemove,
+}: {
+  file: ChecklistItem["attachments"][number];
+  projectId: string;
+  fallbackIcon: React.ComponentType<{ className?: string }>;
+  readOnly: boolean;
+  removing: boolean;
+  onRemove: () => void;
+}) {
+  const ct = file.contentType ?? "";
+  const isVideo = ct.startsWith("video/");
+  const isAudio = ct.startsWith("audio/");
+  const isMedia = isVideo || isAudio;
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const [videoOpen, setVideoOpen] = useState(false);
+  const [durationSec, setDurationSec] = useState(file.durationSec);
+  const durationBackfilled = useRef(false);
+
+  const streamSrc = `/api/files/${file.id}/stream`;
+  const durationLabel =
+    durationSec != null && durationSec > 0 ? formatMediaTime(durationSec) : null;
+
+  const pauseOtherMedia = useCallback(() => {
+    document.querySelectorAll("[data-multi-file-media]").forEach((el) => {
+      if (el instanceof HTMLMediaElement) el.pause();
+    });
+  }, []);
+
+  const toggleAudio = useCallback(async () => {
+    const el = audioRef.current;
+    if (!el) return;
+    try {
+      if (el.paused) {
+        pauseOtherMedia();
+        await el.play();
+      } else {
+        el.pause();
+      }
+    } catch {
+      setPlaying(false);
+    }
+  }, [pauseOtherMedia]);
+
+  const openVideo = useCallback(() => {
+    pauseOtherMedia();
+    setVideoOpen(true);
+  }, [pauseOtherMedia]);
+
+  const onMetadata = useCallback(
+    (sec: number) => {
+      if (durationSec == null || durationSec <= 0) {
+        setDurationSec(sec);
+      }
+      backfillMediaDurationOnce(
+        file.id,
+        projectId,
+        file.durationSec,
+        sec,
+        durationBackfilled,
+      );
+    },
+    [durationSec, file.durationSec, file.id, projectId],
+  );
+
+  return (
+    <>
+      <div className="flex items-center gap-3 rounded-xl border border-green-500/50 bg-green-500/5 px-3 py-2">
+        {isMedia ? (
+          <>
+            <button
+              type="button"
+              onClick={isVideo ? openVideo : toggleAudio}
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary/15 text-primary hover:bg-primary/25"
+              aria-label={
+                isVideo
+                  ? `Play ${file.name} in popup`
+                  : playing
+                    ? `Pause ${file.name}`
+                    : `Play ${file.name}`
+              }
+            >
+              {isVideo || !playing ? (
+                <Play className="h-4 w-4 fill-current" />
+              ) : (
+                <Pause className="h-4 w-4 fill-current" />
+              )}
+            </button>
+            {isAudio && (
+              <audio
+                ref={audioRef}
+                data-multi-file-media
+                preload="metadata"
+                src={streamSrc}
+                className="hidden"
+                onLoadedMetadata={(e) => onMetadata(e.currentTarget.duration)}
+                onPlay={() => setPlaying(true)}
+                onPause={() => setPlaying(false)}
+                onEnded={() => setPlaying(false)}
+              />
+            )}
+          </>
+        ) : ct.startsWith("image/") && file.url ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={file.url}
+          alt={file.name}
+          className="h-10 w-10 shrink-0 rounded object-cover"
+        />
+      ) : (
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded bg-muted/30 text-muted-foreground">
+          <FallbackIcon className="h-4 w-4" />
+        </span>
+      )}
+
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm text-foreground">
+          {file.name}
+          {durationLabel && (
+            <span className="text-muted-foreground"> · {durationLabel}</span>
+          )}
+        </div>
+      </div>
+
+      <a
+        href={`/api/files/${file.id}/download`}
+        rel="noreferrer"
+        className="grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+        aria-label={`Download ${file.name}`}
+      >
+        <Download className="h-4 w-4" />
+      </a>
+      {!readOnly && (
+        <button
+          type="button"
+          disabled={removing}
+          onClick={onRemove}
+          aria-label={`Remove ${file.name}`}
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-destructive/15 hover:text-destructive disabled:opacity-50"
+        >
+          {removing ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Trash2 className="h-4 w-4" />
+          )}
+        </button>
+      )}
+      </div>
+
+      {isVideo && (
+        <Dialog open={videoOpen} onOpenChange={setVideoOpen}>
+          <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
+            <DialogHeader>
+              <DialogTitle className="truncate pr-8">{file.name}</DialogTitle>
+              {durationLabel && (
+                <DialogDescription>{durationLabel}</DialogDescription>
+              )}
+            </DialogHeader>
+            <VideoPlayer
+              key={file.id}
+              src={streamSrc}
+              downloadHref={`/api/files/${file.id}/download`}
+              className="max-w-none"
+              videoClassName="max-h-[60vh] w-full"
+              autoPlay
+              onDurationKnown={onMetadata}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
+    </>
+  );
+}
+
+// Multi-file field: any number of uploads live on one checklist item. Files
+// are listed with per-file download/remove, and the drop zone stays available
+// to add more. The field counts as complete while at least one file remains.
+function TaskMultiFileField({
+  item,
+  projectId,
+  readOnly,
+}: {
+  item: ChecklistItem;
+  projectId: string;
+  readOnly: boolean;
+}) {
+  const patchItem = useContext(ChecklistPatchContext);
+  const { push } = useErrorStore();
+  const [, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+  const [removingId, setRemovingId] = useState<string | null>(null);
+
+  const uploads = useChecklistUploads(item.id);
+  const activeUploads = uploads.filter(
+    (u) =>
+      u.status === "queued" ||
+      u.status === "uploading" ||
+      u.status === "completing",
+  );
+
+  const category = item.allowedFileTypes;
+  const formats = normalizeFormats(item.allowedFormats);
+  const Icon = categoryIcon(category);
+  const accepts = allowedExtsFor(category, item.allowedFormats);
+  const accept = accepts.length > 0 ? accepts.join(",") : undefined;
+
+  // Each finished upload bumps this count → refetch the saved file list once
+  // per completion and patch the field in place (no full page refresh).
+  const doneCount = uploads.filter((u) => u.status === "done").length;
+  useEffect(() => {
+    if (doneCount === 0) return;
+    getChecklistItemState(item.id, projectId)
+      .then((s) => patchItem(item.id, s))
+      .catch(() => {});
+  }, [doneCount, item.id, projectId, patchItem]);
+
+  const handlePick = async (picked: File[]) => {
+    if (picked.length === 0) return;
+    const errors: string[] = [];
+    for (const file of picked) {
+      const err = await validateFileFull(
+        file,
+        category,
+        formats,
+        item.aspectRatio,
+      );
+      if (err) {
+        errors.push(`${file.name}: ${err}`);
+        continue;
+      }
+      uploadManager.enqueueChecklist(file, {
+        checklistItemId: item.id,
+        projectId,
+        label: item.name,
+      });
+    }
+    setError(errors.length > 0 ? errors.join(" · ") : null);
+  };
+
+  const removeFile = (attachmentId: string) => {
+    setRemovingId(attachmentId);
+    startTransition(async () => {
+      try {
+        const res = await removeChecklistItemFile(item.id, attachmentId, projectId);
+        patchItem(item.id, {
+          attachments: item.attachments.filter((a) => a.id !== attachmentId),
+          completed: res.completed,
+        });
+      } catch (err) {
+        push(createAppError(err));
+      } finally {
+        setRemovingId(null);
+      }
+    });
+  };
+
+  const hasFiles = item.attachments.length > 0;
+
+  return (
+    <div className="space-y-2">
+      {hasFiles && (
+        <div className="space-y-1.5">
+          {item.attachments.map((file) => (
+            <MultiFileListRow
+              key={file.id}
+              file={file}
+              projectId={projectId}
+              fallbackIcon={Icon}
+              readOnly={readOnly}
+              removing={removingId === file.id}
+              onRemove={() => removeFile(file.id)}
+            />
+          ))}
+        </div>
+      )}
+
+      {activeUploads.map((upload) => (
+        <div
+          key={upload.id}
+          className="flex items-center gap-3 rounded-xl border border-border/60 bg-surface/40 px-3 py-2"
+        >
+          <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" />
+          <div className="min-w-0 flex-1">
+            <div className="truncate text-sm text-foreground">
+              {upload.file.name}
+            </div>
+            <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-muted">
+              <div
+                className="h-full rounded-full bg-primary transition-all"
+                style={{ width: `${upload.progress}%` }}
+              />
+            </div>
+          </div>
+          <span className="shrink-0 text-xs text-muted-foreground">
+            {upload.progress}%
+          </span>
+        </div>
+      ))}
+
+      {readOnly ? (
+        !hasFiles &&
+        activeUploads.length === 0 && (
+          <div className="rounded-xl border border-dashed border-border/60 bg-surface/40 px-3 py-4 text-center text-xs text-muted-foreground">
+            No files uploaded.
+          </div>
+        )
+      ) : (
+        <>
+          <button
+            type="button"
+            onClick={() => document.getElementById(`file-${item.id}`)?.click()}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setDragOver(true);
+            }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={(e) => {
+              e.preventDefault();
+              setDragOver(false);
+              handlePick(Array.from(e.dataTransfer.files ?? []));
+            }}
+            className={cn(
+              "flex w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed text-center transition-colors",
+              hasFiles || activeUploads.length > 0 ? "py-4" : "py-10 gap-3",
+              error
+                ? "border-destructive/60 bg-destructive/5"
+                : dragOver
+                  ? "border-primary bg-primary/5"
+                  : "border-border/70 bg-surface/40 hover:border-border hover:bg-surface",
+            )}
+          >
+            <Icon
+              className={cn(
+                "text-muted-foreground",
+                hasFiles || activeUploads.length > 0 ? "h-5 w-5" : "h-8 w-8",
+              )}
+            />
+            <span className="text-xs text-muted-foreground">
+              {hasFiles || activeUploads.length > 0
+                ? "Add more files"
+                : `Drop ${category ?? ""} files or click to attach (multiple allowed)`.replace(/\s+/g, " ")}
+            </span>
+            {(formats.length > 0 || item.aspectRatio) && (
+              <div className="flex flex-wrap items-center justify-center gap-1.5">
+                {formats.map((f) => (
+                  <span
+                    key={f}
+                    className="rounded-md bg-muted/40 px-2 py-0.5 text-tiny text-muted-foreground"
+                  >
+                    {f}
+                  </span>
+                ))}
+                {item.aspectRatio && (
+                  <span className="rounded-md bg-muted/40 px-2 py-0.5 text-tiny text-muted-foreground">
+                    {item.aspectRatio}
+                  </span>
+                )}
+              </div>
+            )}
+          </button>
+          {error && <div className="text-xs text-destructive">{error}</div>}
+          <input
+            id={`file-${item.id}`}
+            type="file"
+            multiple
+            accept={accept}
+            className="hidden"
+            onChange={(e) => {
+              handlePick(Array.from(e.target.files ?? []));
+              e.target.value = "";
+            }}
+          />
+        </>
+      )}
+    </div>
   );
 }
 

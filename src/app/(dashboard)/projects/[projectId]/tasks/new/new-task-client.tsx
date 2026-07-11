@@ -103,6 +103,11 @@ export function NewTaskClient({
         }
       } else if (a.kind === "file" && a.file) {
         fileFields.push({ fieldId: field.id, name: field.name, file: a.file });
+      } else if (a.kind === "files") {
+        // Multi-file field: every file uploads to the same checklist item.
+        for (const file of a.files) {
+          fileFields.push({ fieldId: field.id, name: field.name, file });
+        }
       }
     }
 

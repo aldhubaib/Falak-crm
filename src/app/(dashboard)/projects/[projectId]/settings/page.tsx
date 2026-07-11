@@ -1,6 +1,10 @@
 import { notFound, redirect } from "next/navigation";
 import { getProjectMeta } from "@/actions/projects";
-import { getWeeklyTargets, getPlanningEligibleMembers } from "@/actions/weekly-plan";
+import {
+  getWeeklyTargets,
+  getPlanningEligibleMembers,
+  getWeeklyEffortMatrix,
+} from "@/actions/weekly-plan";
 import { getProjectStatuses, getChecklistTemplates } from "@/actions/settings";
 import { getProjectAccess } from "@/lib/workspace";
 import { hasCap } from "@/lib/permissions";
@@ -23,13 +27,14 @@ export default async function ProjectSettingsPage({
     redirect(`/projects/${projectId}`);
   }
 
-  const [project, projectStatuses, templates, weeklyTargets, eligibleMembers] =
+  const [project, projectStatuses, templates, weeklyTargets, eligibleMembers, effortMatrix] =
     await Promise.all([
       getProjectMeta(projectId),
       getProjectStatuses(),
       getChecklistTemplates(),
       getWeeklyTargets(projectId),
       getPlanningEligibleMembers(projectId),
+      getWeeklyEffortMatrix(projectId),
     ]);
 
   if (!project) notFound();
@@ -55,6 +60,7 @@ export default async function ProjectSettingsPage({
       }))}
       weeklyTargets={weeklyTargets}
       eligibleMembers={eligibleMembers}
+      effortMatrix={effortMatrix}
       timezone={project.timezone}
       isOwner={access.member.type === "OWNER" || access.permissions.projects === "full"}
     />

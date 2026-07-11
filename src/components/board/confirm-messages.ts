@@ -10,17 +10,22 @@ export const CONFIRM_MESSAGES: Record<
     assignToMe?: boolean;
   }
 > = {
-  "AI Generation": {
-    title: "Move to AI Generation",
+  "Raw Footage": {
+    title: "Move to Raw Footage",
     description:
       "By confirming, you acknowledge that you understand the requirements and are taking ownership of this task.",
     confirmLabel: "I Understand",
     assignToMe: true,
   },
-  "Internal Review": {
-    title: "Submit for Internal Review",
+  "Raw Footage Review": {
+    title: "Submit for Raw Footage Review",
     description:
-      "I confirm that all requirements have been completed, checked, and are ready for internal review.",
+      "I confirm that the raw footage is complete and ready to be reviewed.",
+  },
+  "Final Video Check": {
+    title: "Submit for Final Video Check",
+    description:
+      "I confirm that all requirements have been completed, checked, and are ready for the final video check.",
   },
   Review: {
     title: "Send to Review",

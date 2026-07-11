@@ -166,6 +166,7 @@ export async function getChecklistTemplates() {
         orderBy: { order: "asc" },
         include: { visibleFromStage: true, requiredBeforeStage: true },
       },
+      sections: { orderBy: { order: "asc" } },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -184,23 +185,190 @@ export async function createChecklistTemplate(formData: FormData) {
       workspaceId: workspace.id,
       name: name.trim(),
       description,
+      // Every template starts with the two classic sections; both can be
+      // renamed or removed and more can be added later.
+      sections: {
+        create: [
+          { name: "Requirements", phase: "create", order: 0 },
+          { name: "Delivery", phase: "delivery", order: 1 },
+        ],
+      },
     },
   });
 
   revalidatePath("/settings/checklists");
+  revalidatePath("/settings/task-types");
+}
+// Sections group a task type's fields ("Requirements", "Delivery", or any
+// custom group). Each carries a phase that drives the existing behavior:
+// "create" fields belong to the new-task form and lock after Todo; "delivery"
+// fields are filled during work. Items always mirror their section's phase.
+
+export async function createChecklistSection(
+  templateId: string,
+  name: string,
+  phase: "create" | "delivery",
+) {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  if (!name.trim()) throw new Error("Section name is required");
+
+  const template = await db.checklistTemplate.findFirst({
+    where: { id: templateId, workspaceId: workspace.id },
+    select: { id: true },
+  });
+  if (!template) throw new Error("Task type not found");
+
+  const last = await db.checklistSection.findFirst({
+    where: { templateId },
+    orderBy: { order: "desc" },
+  });
+  await db.checklistSection.create({
+    data: {
+      templateId,
+      name: name.trim(),
+      phase,
+      order: (last?.order ?? -1) + 1,
+    },
+  });
+
+  revalidatePath("/settings/task-types");
+}
+
+export async function updateChecklistSection(
+  id: string,
+  data: { name?: string; phase?: "create" | "delivery" },
+) {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  if (data.name !== undefined && !data.name.trim())
+    throw new Error("Section name is required");
+
+  const updated = await db.checklistSection.updateMany({
+    where: { id, template: { workspaceId: workspace.id } },
+    data: {
+      ...(data.name !== undefined ? { name: data.name.trim() } : {}),
+      ...(data.phase !== undefined ? { phase: data.phase } : {}),
+    },
+  });
+  if (updated.count === 0) throw new Error("Section not found");
+
+  // Changing a section's behavior re-phases every field in it — template
+  // items and their copies on existing tasks alike.
+  if (data.phase !== undefined) {
+    const items = await db.checklistTemplateItem.findMany({
+      where: { sectionId: id },
+      select: { id: true },
+    });
+    if (items.length > 0) {
+      const ids = items.map((i) => i.id);
+      await db.$transaction([
+        db.checklistTemplateItem.updateMany({
+          where: { id: { in: ids } },
+          data: { phase: data.phase },
+        }),
+        db.taskChecklistItem.updateMany({
+          where: { templateItemId: { in: ids } },
+          data: { phase: data.phase },
+        }),
+      ]);
+    }
+  }
+
+  revalidatePath("/settings/task-types");
+}
+
+export async function reorderChecklistSections(
+  templateId: string,
+  orderedIds: string[],
+) {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
+  const sections = await db.checklistSection.findMany({
+    where: { templateId, template: { workspaceId: workspace.id } },
+    select: { id: true },
+  });
+  const known = new Set(sections.map((s) => s.id));
+  if (
+    orderedIds.length !== sections.length ||
+    orderedIds.some((id) => !known.has(id))
+  ) {
+    throw new Error("Section list is out of date — refresh and try again");
+  }
+
+  // Renumber every field globally in the new section order (keeping each
+  // section's internal order) so downstream sorts that use the flat item
+  // order (publish card, effort breakdown, task page) follow the sections.
+  const items = await db.checklistTemplateItem.findMany({
+    where: { templateId },
+    select: { id: true, sectionId: true, order: true },
+    orderBy: { order: "asc" },
+  });
+  const rank = new Map(orderedIds.map((id, i) => [id, i]));
+  const sorted = [...items].sort(
+    (a, b) =>
+      (rank.get(a.sectionId ?? "") ?? -1) -
+        (rank.get(b.sectionId ?? "") ?? -1) || a.order - b.order,
+  );
+
+  await db.$transaction([
+    ...orderedIds.map((id, i) =>
+      db.checklistSection.update({ where: { id }, data: { order: i } }),
+    ),
+    ...sorted.flatMap((it, i) => [
+      db.checklistTemplateItem.update({
+        where: { id: it.id },
+        data: { order: i },
+      }),
+      db.taskChecklistItem.updateMany({
+        where: { templateItemId: it.id },
+        data: { order: i },
+      }),
+    ]),
+  ]);
+
+  revalidatePath("/settings/task-types");
+}
+
+export async function deleteChecklistSection(id: string) {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
+  const itemCount = await db.checklistTemplateItem.count({
+    where: { sectionId: id },
+  });
+  if (itemCount > 0) {
+    throw new Error(
+      "This section still has fields. Move or delete them first.",
+    );
+  }
+  await db.checklistSection.deleteMany({
+    where: { id, template: { workspaceId: workspace.id } },
+  });
+
+  revalidatePath("/settings/task-types");
 }
 
 export async function updateChecklistTemplate(id: string, data: { name?: string; icon?: string | null; color?: string | null; publishToCalendar?: boolean; titleLockedFromStageId?: string | null; titleNeverLock?: boolean; titleLabel?: string | null; titleHelp?: string | null }) {
-  const { member } = await requireWorkspaceWithMember();
+  const { workspace, member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");
-  await db.checklistTemplate.update({ where: { id }, data });
+  await db.checklistTemplate.update({
+    where: { id, workspaceId: workspace.id },
+    data,
+  });
 
   // The type-level Publish toggle is retroactive, matching the rest of this
   // settings page ("changes here affect every project immediately"): existing
   // tasks created from this type follow the new value.
   if (data.publishToCalendar !== undefined) {
     await db.task.updateMany({
-      where: { checklistItems: { some: { templateItem: { templateId: id } } } },
+      where: {
+        OR: [
+          { templateId: id },
+          { checklistItems: { some: { templateItem: { templateId: id } } } },
+        ],
+      },
       data: { publish: data.publishToCalendar },
     });
     revalidatePath("/publish");
@@ -211,8 +379,13 @@ export async function updateChecklistTemplate(id: string, data: { name?: string;
 }
 
 export async function deleteChecklistTemplate(id: string) {
-  await db.checklistTemplate.delete({ where: { id } });
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+  await db.checklistTemplate.delete({
+    where: { id, workspaceId: workspace.id },
+  });
   revalidatePath("/settings/checklists");
+  revalidatePath("/settings/task-types");
 }
 
 export async function addChecklistTemplateItem(templateId: string, formData: FormData) {
@@ -232,9 +405,23 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
   const lockedFromStageId = (formData.get("lockedFromStageId") as string) || null;
   const neverLock = formData.get("neverLock") === "true";
   const mandatory = formData.get("mandatory") === "true";
-  const phase = (formData.get("phase") as string) || "create";
+  // New fields land in a section; the phase (behavior) comes from it. A bare
+  // phase value is kept as fallback for legacy callers.
+  const sectionId = (formData.get("sectionId") as string) || null;
+  let phase = (formData.get("phase") as string) || "create";
+  if (sectionId) {
+    const section = await db.checklistSection.findFirst({
+      where: { id: sectionId, templateId },
+      select: { phase: true },
+    });
+    if (!section) throw new Error("Section not found");
+    phase = section.phase;
+  }
   const options = (formData.get("options") as string)?.trim() || null;
   const publishCard = (formData.get("publishCard") as string) || "hidden";
+  const effortUnit = (formData.get("effortUnit") as string)?.trim() || null;
+  const qtyRaw = Number.parseFloat((formData.get("qtyPerVideoMinute") as string) ?? "");
+  const qtyPerVideoMinute = Number.isFinite(qtyRaw) && qtyRaw > 0 ? qtyRaw : null;
 
   const last = await db.checklistTemplateItem.findFirst({
     where: { templateId },
@@ -253,11 +440,14 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
       aspectRatio,
       mandatory,
       phase,
+      sectionId,
       visibleFromStageId,
       requiredBeforeStageId,
       lockedFromStageId,
       neverLock,
       publishCard,
+      effortUnit,
+      qtyPerVideoMinute,
       order: (last?.order ?? 0) + 1,
     },
   });
@@ -289,15 +479,17 @@ export async function addChecklistTemplateItem(templateId: string, formData: For
         lockedFromStageId: item.lockedFromStageId,
         neverLock: item.neverLock,
         publishCard: item.publishCard,
+        effortUnit: item.effortUnit,
+        qtyPerVideoMinute: item.qtyPerVideoMinute,
         order: item.order,
       })),
     });
   }
 
   revalidatePath("/settings/checklists");
+  revalidatePath("/settings/task-types");
+  revalidatePath("/publish");
 }
-
-// How many tasks hold real data (an answer, upload, or completion) in this
 // field. Drives the delete guard: fields with data can't be deleted.
 export async function getChecklistTemplateItemUsage(id: string) {
   await requireWorkspaceWithMember();
@@ -357,7 +549,7 @@ export async function deleteChecklistTemplateItem(id: string) {
 
 export async function updateChecklistTemplateItem(
   id: string,
-  data: { name?: string; type?: string; role?: string; options?: string | null; allowedFileTypes?: string | null; allowedFormats?: string | null; aspectRatio?: string | null; mandatory?: boolean; phase?: string; visibleFromStageId?: string | null; requiredBeforeStageId?: string | null; lockedFromStageId?: string | null; neverLock?: boolean; publishCard?: string }
+  data: { name?: string; type?: string; role?: string; options?: string | null; allowedFileTypes?: string | null; allowedFormats?: string | null; aspectRatio?: string | null; mandatory?: boolean; phase?: string; visibleFromStageId?: string | null; requiredBeforeStageId?: string | null; lockedFromStageId?: string | null; neverLock?: boolean; publishCard?: string; effortUnit?: string | null; qtyPerVideoMinute?: number | null }
 ) {
   const { member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");
@@ -398,6 +590,8 @@ export async function updateChecklistTemplateItem(
   if (lockedFromStageId !== undefined) syncFields.lockedFromStageId = lockedFromStageId;
   if (data.neverLock !== undefined) syncFields.neverLock = data.neverLock;
   if (data.publishCard !== undefined) syncFields.publishCard = data.publishCard;
+  if (data.effortUnit !== undefined) syncFields.effortUnit = data.effortUnit;
+  if (data.qtyPerVideoMinute !== undefined) syncFields.qtyPerVideoMinute = data.qtyPerVideoMinute;
 
   if (Object.keys(syncFields).length > 0) {
     await db.taskChecklistItem.updateMany({
@@ -411,28 +605,39 @@ export async function updateChecklistTemplateItem(
   revalidatePath("/settings/task-types");
 }
 
-// Reorder + move items across sections (phase) in one transaction.
+// Reorder + move items across sections in one transaction. The phase is
+// resolved from the target section so behavior always follows placement.
 export async function reorderChecklistItems(
-  _templateId: string,
-  items: { id: string; phase: string; order: number }[],
+  templateId: string,
+  items: { id: string; sectionId: string; order: number }[],
 ) {
   const { member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
+  const sections = await db.checklistSection.findMany({
+    where: { templateId },
+    select: { id: true, phase: true },
+  });
+  const phaseBySection = new Map(sections.map((s) => [s.id, s.phase]));
 
   // Task checklist rows carry their own copy of order/phase (snapshotted at
   // creation), so the new arrangement must be synced to existing tasks too —
   // otherwise only future tasks pick it up.
   await db.$transaction(
-    items.flatMap((it) => [
-      db.checklistTemplateItem.update({
-        where: { id: it.id },
-        data: { phase: it.phase, order: it.order },
-      }),
-      db.taskChecklistItem.updateMany({
-        where: { templateItemId: it.id },
-        data: { phase: it.phase, order: it.order },
-      }),
-    ]),
+    items.flatMap((it) => {
+      const phase = phaseBySection.get(it.sectionId);
+      if (!phase) throw new Error("Section not found");
+      return [
+        db.checklistTemplateItem.update({
+          where: { id: it.id },
+          data: { phase, sectionId: it.sectionId, order: it.order },
+        }),
+        db.taskChecklistItem.updateMany({
+          where: { templateItemId: it.id },
+          data: { phase, order: it.order },
+        }),
+      ];
+    }),
   );
 
   revalidatePath("/settings/task-types");

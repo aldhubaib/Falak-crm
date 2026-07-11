@@ -11,7 +11,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { updateChecklistTemplate } from "@/actions/settings";
 import { cn } from "@/lib/utils";
-import { TypeIcon, TYPE_COLORS, TYPE_ICONS } from "@/components/task-types/task-type-visuals";
+import { TypeIcon, TYPE_COLORS, TYPE_ICONS, DEFAULT_TYPE_COLOR } from "@/components/task-types/task-type-visuals";
 import type { StatusOpt, TaskTypeVM } from "./types";
 import { TypeEditor } from "./type-editor";
 
@@ -30,8 +30,8 @@ export function TypeCard({
 }) {
   const router = useRouter();
   const [, startTransition] = useTransition();
-  const count = type.requirementFields.length + type.deliveryFields.length;
-  const color = type.color ?? "#22d3ee";
+  const count = type.sections.reduce((sum, s) => sum + s.fields.length, 0);
+  const color = type.color ?? DEFAULT_TYPE_COLOR;
 
   const setVisual = (data: { icon?: string; color?: string }) =>
     startTransition(async () => {

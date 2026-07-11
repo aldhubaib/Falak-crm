@@ -162,6 +162,8 @@ exports.Prisma.WorkspaceMemberScalarFieldEnum = {
   imageUrl: 'imageUrl',
   type: 'type',
   roleId: 'roleId',
+  titleId: 'titleId',
+  weeklyHours: 'weeklyHours',
   joinedAt: 'joinedAt'
 };
 
@@ -171,6 +173,27 @@ exports.Prisma.RoleScalarFieldEnum = {
   name: 'name',
   permissions: 'permissions',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.TitleScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  name: 'name',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.TitleFieldRateScalarFieldEnum = {
+  id: 'id',
+  titleId: 'titleId',
+  templateItemId: 'templateItemId',
+  minutesPerUnit: 'minutesPerUnit'
+};
+
+exports.Prisma.TitleStageRateScalarFieldEnum = {
+  id: 'id',
+  titleId: 'titleId',
+  statusId: 'statusId',
+  minutesPerPass: 'minutesPerPass'
 };
 
 exports.Prisma.ProjectCollaboratorScalarFieldEnum = {
@@ -418,6 +441,15 @@ exports.Prisma.ChecklistTemplateScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ChecklistSectionScalarFieldEnum = {
+  id: 'id',
+  templateId: 'templateId',
+  name: 'name',
+  phase: 'phase',
+  order: 'order',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.ChecklistTemplateItemScalarFieldEnum = {
   id: 'id',
   templateId: 'templateId',
@@ -430,12 +462,15 @@ exports.Prisma.ChecklistTemplateItemScalarFieldEnum = {
   aspectRatio: 'aspectRatio',
   mandatory: 'mandatory',
   phase: 'phase',
+  sectionId: 'sectionId',
   visibleFromStageId: 'visibleFromStageId',
   requiredBeforeStageId: 'requiredBeforeStageId',
   lockedFromStageId: 'lockedFromStageId',
   neverLock: 'neverLock',
   publishCard: 'publishCard',
   hidden: 'hidden',
+  effortUnit: 'effortUnit',
+  qtyPerVideoMinute: 'qtyPerVideoMinute',
   order: 'order'
 };
 
@@ -464,11 +499,17 @@ exports.Prisma.TaskChecklistItemScalarFieldEnum = {
   neverLock: 'neverLock',
   publishCard: 'publishCard',
   hidden: 'hidden',
+  effortUnit: 'effortUnit',
+  qtyPerVideoMinute: 'qtyPerVideoMinute',
   completed: 'completed',
   attachmentId: 'attachmentId',
   textValue: 'textValue',
   completedAt: 'completedAt',
   completedBy: 'completedBy',
+  effortQuantity: 'effortQuantity',
+  effortRate: 'effortRate',
+  effortMinutes: 'effortMinutes',
+  effortLockedAt: 'effortLockedAt',
   order: 'order'
 };
 
@@ -488,6 +529,7 @@ exports.Prisma.TaskScalarFieldEnum = {
   serviceId: 'serviceId',
   statusId: 'statusId',
   assigneeId: 'assigneeId',
+  templateId: 'templateId',
   title: 'title',
   description: 'description',
   billable: 'billable',
@@ -495,6 +537,7 @@ exports.Prisma.TaskScalarFieldEnum = {
   publish: 'publish',
   priority: 'priority',
   estimateMin: 'estimateMin',
+  plannedMinutes: 'plannedMinutes',
   dueDate: 'dueDate',
   completedAt: 'completedAt',
   assignmentHistory: 'assignmentHistory',
@@ -734,6 +777,7 @@ exports.Prisma.AttachmentScalarFieldEnum = {
   name: 'name',
   sizeBytes: 'sizeBytes',
   contentType: 'contentType',
+  durationSec: 'durationSec',
   r2Key: 'r2Key',
   status: 'status',
   uploadId: 'uploadId',
@@ -878,6 +922,9 @@ exports.Prisma.ModelName = {
   ExchangeRate: 'ExchangeRate',
   WorkspaceMember: 'WorkspaceMember',
   Role: 'Role',
+  Title: 'Title',
+  TitleFieldRate: 'TitleFieldRate',
+  TitleStageRate: 'TitleStageRate',
   ProjectCollaborator: 'ProjectCollaborator',
   Company: 'Company',
   Contact: 'Contact',
@@ -896,6 +943,7 @@ exports.Prisma.ModelName = {
   ProjectFolder: 'ProjectFolder',
   ProjectAsset: 'ProjectAsset',
   ChecklistTemplate: 'ChecklistTemplate',
+  ChecklistSection: 'ChecklistSection',
   ChecklistTemplateItem: 'ChecklistTemplateItem',
   ProjectTemplate: 'ProjectTemplate',
   TaskChecklistItem: 'TaskChecklistItem',

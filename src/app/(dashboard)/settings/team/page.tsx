@@ -3,13 +3,13 @@ import { AppHeader } from "@/components/app-header";
 import { TeamClient } from "./team-client";
 
 export default async function TeamPage() {
-  const { members, roles } = await getTeamMembers();
+  const { members, roles, titles } = await getTeamMembers();
 
   return (
     <>
       <AppHeader title="Team" backHref="/settings" />
       <main className="min-h-0 flex-1 overflow-y-auto">
-        <TeamClient members={members} roles={roles} />
+        <TeamClient members={members} roles={roles} titles={titles} />
       </main>
     </>
   );

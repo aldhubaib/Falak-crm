@@ -7,6 +7,7 @@ import { canEdit, canDeleteTaskAt, canMoveTaskFrom } from "@/lib/permissions";
 import {
   autoLockOrder,
   fieldAppliesForGate,
+  isDeliveryGateStage,
   isFieldVisible,
   fieldConfig,
   isFieldLocked,
@@ -23,8 +24,20 @@ import { publishTaskEvent, type BoardWeeklyDelta } from "@/lib/realtime";
 import type { BoardTask } from "@/actions/board";
 import { invalidateCache, claimThrottle } from "@/lib/cache";
 import { weekStartOf } from "@/lib/week";
+import {
+  cycleEndOf,
+  REPEAT_EVERY_VALUES,
+  type RepeatEvery,
+} from "@/lib/weekly-plan";
 import { getProjectTimezone } from "@/lib/project-timezone";
 import { normalizeTimezone, isValidTimezone } from "@/lib/timezone";
+import {
+  lockChecklistItemEffort,
+  lockManyChecklistItemEffort,
+  clearChecklistItemEffortLock,
+  lockTaskEffortLocks,
+  clearTaskEffortLocks,
+} from "@/lib/effort-lock";
 
 export async function getProjects() {
   const { workspace, member } = await requireWorkspaceWithMember();
@@ -96,6 +109,10 @@ export async function getProjectTaskTemplates(id: string) {
               titleLabel: true,
               titleHelp: true,
               items: { where: { hidden: false }, orderBy: { order: "asc" } },
+              sections: {
+                orderBy: { order: "asc" },
+                select: { id: true, name: true, phase: true, order: true },
+              },
             },
           },
         },
@@ -273,6 +290,8 @@ export async function createFullTask(data: {
   priority: number | null;
   templateIds: string[];
   answers?: Record<string, string>;
+  /** Planned video length in minutes — drives effort predictions (null = 2-min baseline). */
+  plannedMinutes?: number | null;
 }): Promise<
   ActionResult<{
     id: string;
@@ -326,7 +345,7 @@ export async function createFullTask(data: {
             .sort((a, b) => a.order - b.order)[0]?.order
         : undefined;
     for (const item of templates.flatMap((t) => t.items)) {
-      if (item.phase === "delivery" || item.type === "file_upload") continue;
+      if (item.phase === "delivery" || item.type === "file_upload" || item.type === "multi_file") continue;
       if (!isFieldVisible(item, startOrder ?? null, stageOrderById)) continue;
       const gateOrder = item.requiredBeforeStageId
         ? stageOrderById.get(item.requiredBeforeStageId)
@@ -349,6 +368,13 @@ export async function createFullTask(data: {
         title: data.title,
         statusId: data.statusId,
         priority: data.priority,
+        // Task type stored directly — templates with zero fields leave no
+        // checklist items to infer it from.
+        templateId: templates[0]?.id ?? null,
+        plannedMinutes:
+          data.plannedMinutes != null && data.plannedMinutes > 0
+            ? data.plannedMinutes
+            : null,
         assigneeId: member.id,
         order: (lastTask?.order ?? 0) + 1,
         stageEnteredAt: new Date(),
@@ -398,10 +424,13 @@ export async function createFullTask(data: {
               lockedFromStageId: item.lockedFromStageId,
               neverLock: item.neverLock,
               publishCard: item.publishCard,
+              effortUnit: item.effortUnit,
+              qtyPerVideoMinute: item.qtyPerVideoMinute,
               order: item.order,
               textValue: hasAnswer ? answer : null,
               completed,
               completedAt: completed ? new Date() : null,
+              completedBy: completed ? member.id : null,
             };
           }),
         });
@@ -449,6 +478,9 @@ export async function createFullTask(data: {
       submittedByName: creatorName,
       rejectionCount: 0,
       templateId: templates[0]?.id ?? null,
+      templateName: templates[0]?.name ?? null,
+      templateIcon: templates[0]?.icon ?? null,
+      templateColor: templates[0]?.color ?? null,
     };
 
     revalidatePath(`/projects/${data.projectId}`);
@@ -507,6 +539,7 @@ export async function createTask(projectId: string, formData: FormData, dealId?:
       price,
       statusId: statusId || null,
       assigneeId: assigneeId || null,
+      templateId: projectTemplates[0]?.template.id ?? null,
       publish:
         projectTemplates.length > 0
           ? projectTemplates.some((pt) => pt.template.publishToCalendar)
@@ -525,6 +558,8 @@ export async function createTask(projectId: string, formData: FormData, dealId?:
         type: item.type,
         role: item.role,
         publishCard: item.publishCard,
+        effortUnit: item.effortUnit,
+        qtyPerVideoMinute: item.qtyPerVideoMinute,
         order: item.order,
       })),
     });
@@ -658,11 +693,11 @@ export async function updateTaskStatus(
     };
   }
 
-  // Block submission for Internal Review if mandatory delivery items are still
-  // incomplete. Delivery items only need to be done at this gate — earlier
-  // forward moves (e.g. Todo → AI Generation) must not be blocked. Rules come
-  // from the live template config.
-  if (task && isForward && targetStatus?.name?.toLowerCase() === "internal review") {
+  // Block submission for Final Video Check if mandatory delivery items are
+  // still incomplete. Delivery items only need to be done at this gate —
+  // earlier forward moves (e.g. Todo → Raw Footage) must not be blocked.
+  // Rules come from the live template config.
+  if (task && isForward && isDeliveryGateStage(targetStatus?.name)) {
     const incomplete = task.checklistItems
       .map((ci) => ({ cfg: fieldConfig(ci), completed: ci.completed }))
       .filter(
@@ -683,41 +718,67 @@ export async function updateTaskStatus(
   }
 
   // Weekly Plan gate: moving forward INTO Todo consumes one of this week's
-  // slots for the task's type. With no free slot left the move is blocked for
-  // everyone — raising the weekly target in project settings is how an admin
-  // makes room (it tops the current week up immediately).
+  // slots, and only a slot of the task's OWN type. No plan for the type (or
+  // no type at all) blocks the move — Todo only holds planned work. Claiming
+  // a slot also stamps the task's due date from the plan cycle's deadline.
   let claimSlotId: string | null = null;
   let createExtraSlot = false;
   let planningWeekStart: Date | null = null;
+  let slotDueDate: Date | null = null;
+  // Stored type first; checklist inference is the fallback for legacy tasks
+  // created before Task.templateId existed.
   const taskTemplateId =
+    task?.templateId ??
     task?.checklistItems.find((ci) => ci.templateItem?.templateId)
-      ?.templateItem?.templateId ?? null;
-  if (task && isForward && targetStatus?.name === "Todo" && taskTemplateId) {
-    const timezone = await getProjectTimezone(projectId);
-    const weekStart = weekStartOf(new Date(), timezone);
-    planningWeekStart = weekStart;
-    const [target, alreadyBound, freeSlot, weekRows] = await Promise.all([
-      db.projectWeeklyTarget.findUnique({
-        where: {
-          projectId_templateId: { projectId, templateId: taskTemplateId },
-        },
-      }),
-      db.weeklySlot.findUnique({ where: { taskId } }),
-      db.weeklySlot.findFirst({
-        where: {
-          projectId,
-          templateId: taskTemplateId,
-          weekStart,
-          taskId: null,
-          removedAt: null,
-        },
-        orderBy: { createdAt: "asc" },
-      }),
-      db.weeklySlot.count({
-        where: { projectId, templateId: taskTemplateId, weekStart },
-      }),
-    ]);
-    if (target && target.perWeek > 0 && !alreadyBound) {
+      ?.templateItem?.templateId ??
+    null;
+  if (task && isForward && targetStatus?.name === "Todo") {
+    const alreadyBound = await db.weeklySlot.findUnique({
+      where: { taskId },
+      select: { id: true },
+    });
+    if (!alreadyBound) {
+      if (!taskTemplateId) {
+        return {
+          ok: false,
+          error:
+            "There are no planned items this task can fill — it has no task type. Todo only takes tasks from the weekly plan.",
+        };
+      }
+      const timezone = await getProjectTimezone(projectId);
+      const weekStart = weekStartOf(new Date(), timezone);
+      planningWeekStart = weekStart;
+      const [target, freeSlot, weekRows, tpl] = await Promise.all([
+        db.projectWeeklyTarget.findUnique({
+          where: {
+            projectId_templateId: { projectId, templateId: taskTemplateId },
+          },
+        }),
+        db.weeklySlot.findFirst({
+          where: {
+            projectId,
+            templateId: taskTemplateId,
+            weekStart,
+            taskId: null,
+            removedAt: null,
+          },
+          orderBy: { createdAt: "asc" },
+        }),
+        db.weeklySlot.count({
+          where: { projectId, templateId: taskTemplateId, weekStart },
+        }),
+        db.checklistTemplate.findUnique({
+          where: { id: taskTemplateId },
+          select: { name: true },
+        }),
+      ]);
+      const typeName = tpl ? `"${tpl.name}"` : "this task type";
+      if (!target || target.perWeek <= 0) {
+        return {
+          ok: false,
+          error: `There are no planned items for ${typeName}, so the task can't move to Todo. Add a weekly plan for it in Project Settings → Planning.`,
+        };
+      }
       if (freeSlot) {
         claimSlotId = freeSlot.id;
       } else if (weekRows < target.perWeek) {
@@ -725,15 +786,21 @@ export async function updateTaskStatus(
         // the week rolled over) — the move itself creates the missing slot.
         createExtraSlot = true;
       } else {
-        const tpl = await db.checklistTemplate.findUnique({
-          where: { id: taskTemplateId },
-          select: { name: true },
-        });
         return {
           ok: false,
-          error: `This week's plan for ${tpl ? `"${tpl.name}"` : "this task type"} is already full, so the task can't move to Todo right now. New slots open next week — or ask an admin to make room.`,
+          error: `This week's plan for ${typeName} is already full, so the task can't move to Todo right now. New slots open next week — or ask an admin to make room.`,
         };
       }
+      // The slot's deadline: last day of the plan cycle we're claiming into
+      // (same date the board shows as "due <date>" on the placeholder).
+      const repeat = (
+        REPEAT_EVERY_VALUES.includes(target.repeatEvery as RepeatEvery)
+          ? target.repeatEvery
+          : "week"
+      ) as RepeatEvery;
+      slotDueDate = new Date(
+        cycleEndOf(target.startOn, repeat).getTime() - 60_000,
+      );
     }
   }
   // Rolling back OUT of Todo frees the task's slot for someone else this week.
@@ -813,6 +880,8 @@ export async function updateTaskStatus(
         stageEnteredAt: now,
         rejectionCount: !isForward ? { increment: 1 } : undefined,
         completedAt: targetStatus?.name === "Completed" || targetStatus?.name === "Published" ? now : null,
+        // Claiming a plan slot adopts the plan cycle's deadline.
+        ...(slotDueDate ? { dueDate: slotDueDate } : {}),
       },
     }),
     db.taskStatusChange.create({
@@ -949,6 +1018,19 @@ export async function updateTaskStatus(
   // Invalidating the RSC cache per move caused a server re-render storm.
   if (dealId) revalidatePath(`/deals/${dealId}`);
   if (weeklyDelta) revalidatePath("/dashboard");
+
+  const becameCompleted =
+    (targetStatus?.name === "Completed" || targetStatus?.name === "Published") &&
+    !task?.completedAt;
+  const leftCompleted =
+    task?.completedAt != null &&
+    targetStatus?.name !== "Completed" &&
+    targetStatus?.name !== "Published";
+  if (becameCompleted) {
+    await lockTaskEffortLocks(taskId);
+  } else if (leftCompleted) {
+    await clearTaskEffortLocks(taskId);
+  }
 
   // Return the resolved assignee so the board can patch its cache immediately
   // (self-assign on forward moves, previous owner on rollbacks, auto-assign).
@@ -1136,34 +1218,94 @@ export async function createProject(formData: FormData): Promise<ActionResult<{ 
 // them check task.deletedAt.
 export async function getTask(taskId: string) {
   const workspace = await requireWorkspace();
-  const task = await db.task.findFirst({
-    where: { id: taskId, project: { workspaceId: workspace.id } },
-    include: {
-      status: true,
-      service: true,
-      assignee: true,
-      project: { select: { id: true, name: true, dealId: true } },
-      checklistItems: {
-        orderBy: { order: "asc" },
-        include: {
-          templateItem: {
-            include: {
-              template: {
-                select: {
-                  id: true,
-                  name: true,
-                  icon: true,
-                  color: true,
-                  titleLockedFromStageId: true,
-                  titleNeverLock: true,
+  const fetchTask = () =>
+    db.task.findFirst({
+      where: { id: taskId, project: { workspaceId: workspace.id } },
+      include: {
+        status: true,
+        service: true,
+        assignee: true,
+        project: { select: { id: true, name: true, dealId: true } },
+        checklistItems: {
+          orderBy: { order: "asc" },
+          include: {
+            templateItem: {
+              include: {
+                template: {
+                  select: {
+                    id: true,
+                    name: true,
+                    icon: true,
+                    color: true,
+                    titleLockedFromStageId: true,
+                    titleNeverLock: true,
+                  },
                 },
               },
             },
           },
         },
       },
-    },
-  });
+    });
+  let task = await fetchTask();
+
+  // Fields added to a task type AFTER this task was created have no per-task
+  // row yet, so they'd never render. Materialise the missing rows here so new
+  // template fields appear on existing tasks (visibility rules still apply).
+  if (task && !task.deletedAt) {
+    // Stored type included: a task created while its template had zero fields
+    // has no checklist links to infer the template from, yet fields added to
+    // the template later must still materialise here.
+    const templateIds = [
+      ...new Set(
+        [
+          task.templateId,
+          ...task.checklistItems.map((it) => it.templateItem?.templateId),
+        ].filter((id): id is string => !!id),
+      ),
+    ];
+    if (templateIds.length > 0) {
+      const templateItems = await db.checklistTemplateItem.findMany({
+        where: { templateId: { in: templateIds }, hidden: false },
+      });
+      const linked = new Set(
+        task.checklistItems
+          .map((it) => it.templateItemId)
+          .filter((id): id is string => !!id),
+      );
+      const missing = templateItems.filter((item) => !linked.has(item.id));
+      if (missing.length > 0) {
+        await db.taskChecklistItem.createMany({
+          data: missing.map((item) => ({
+            taskId: task!.id,
+            templateItemId: item.id,
+            name: item.name,
+            type: item.type,
+            role: item.role,
+            options: item.options,
+            allowedFileTypes: item.allowedFileTypes,
+            allowedFormats: item.allowedFormats,
+            aspectRatio: item.aspectRatio,
+            mandatory: item.mandatory,
+            phase: item.phase,
+            visibleFromStageId: item.visibleFromStageId,
+            requiredBeforeStageId: item.requiredBeforeStageId,
+            lockedFromStageId: item.lockedFromStageId,
+            neverLock: item.neverLock,
+            publishCard: item.publishCard,
+            effortUnit: item.effortUnit,
+            qtyPerVideoMinute: item.qtyPerVideoMinute,
+            order: item.order,
+          })),
+          // Concurrent loads of the same task race here; the unique index on
+          // (taskId, templateItemId) makes the second writer a no-op.
+          skipDuplicates: true,
+        });
+        task = await fetchTask();
+      }
+    }
+  }
+
   if (task) {
     // Fully dynamic config: fields linked to a template follow the template's
     // CURRENT hidden flag and order (the per-task snapshot can be stale on
@@ -1298,6 +1440,19 @@ async function assertChecklistItemWritable(itemId: string) {
   }
 }
 
+async function syncChecklistItemEffortLock(itemId: string, completed: boolean) {
+  const item = await db.taskChecklistItem.findUnique({
+    where: { id: itemId },
+    select: { task: { select: { completedAt: true } } },
+  });
+  const taskComplete = item?.task.completedAt != null;
+  if (taskComplete && completed) {
+    await lockChecklistItemEffort(itemId);
+  } else {
+    await clearChecklistItemEffortLock(itemId);
+  }
+}
+
 export async function toggleChecklistItem(itemId: string, completed: boolean, projectId: string) {
   await requireProjectWork(projectId);
   await assertChecklistItemWritable(itemId);
@@ -1309,6 +1464,8 @@ export async function toggleChecklistItem(itemId: string, completed: boolean, pr
       completedAt: completed ? new Date() : null,
     },
   });
+
+  await syncChecklistItemEffortLock(itemId, completed);
 
   revalidatePath(`/projects/${projectId}`);
 }
@@ -1358,7 +1515,7 @@ async function publishChecklistProgress(itemId: string, projectId: string) {
 }
 
 export async function saveChecklistItemText(itemId: string, textValue: string, projectId: string) {
-  await requireProjectWork(projectId);
+  const { member } = await requireProjectWork(projectId);
   await assertChecklistItemWritable(itemId);
 
   // Copyright answered "Yes" is only complete once its file is attached —
@@ -1388,6 +1545,7 @@ export async function saveChecklistItemText(itemId: string, textValue: string, p
       textValue,
       completed,
       completedAt: completed ? new Date() : null,
+      completedBy: completed ? member.id : null,
       ...(clearAttachment ? { attachmentId: null } : {}),
     },
   });
@@ -1415,8 +1573,18 @@ export async function saveChecklistItemText(itemId: string, textValue: string, p
         where: { id: { in: waivedIds } },
         data: { completed: true, completedAt: new Date() },
       });
+      // All waived rows belong to this task — one completedAt check, one batch.
+      const task = await db.task.findUnique({
+        where: { id: item.taskId },
+        select: { completedAt: true },
+      });
+      if (task?.completedAt) {
+        await lockManyChecklistItemEffort(waivedIds);
+      }
     }
   }
+
+  await syncChecklistItemEffortLock(itemId, completed);
 
   await publishChecklistProgress(itemId, projectId);
   revalidatePath(`/projects/${projectId}`);
@@ -1426,20 +1594,96 @@ export async function saveChecklistItemText(itemId: string, textValue: string, p
 }
 
 export async function setChecklistItemAttachment(itemId: string, attachmentId: string, projectId: string) {
-  await requireProjectWork(projectId);
+  const { member } = await requireProjectWork(projectId);
   await assertChecklistItemWritable(itemId);
+
+  // Multi-file fields don't use the single attachmentId pointer — their files
+  // are the Attachment rows bound to the item (entityType "checklist_item").
+  // The upload just marks the field complete.
+  const item = await db.taskChecklistItem.findUnique({
+    where: { id: itemId },
+    select: { type: true, templateItem: { select: { type: true } } },
+  });
+  const kind = item?.templateItem?.type ?? item?.type;
 
   await db.taskChecklistItem.update({
     where: { id: itemId },
     data: {
-      attachmentId,
+      ...(kind === "multi_file" ? {} : { attachmentId }),
       completed: true,
       completedAt: new Date(),
+      completedBy: member.id,
     },
   });
 
+  await syncChecklistItemEffortLock(itemId, true);
+
   await publishChecklistProgress(itemId, projectId);
   revalidatePath(`/projects/${projectId}`);
+}
+
+// One uploaded file of a multi-file field. The list is derived from the
+// Attachment rows created by the upload pipeline for this checklist item.
+export type ChecklistItemFile = {
+  id: string;
+  name: string;
+  contentType: string | null;
+  url: string | null;
+  durationSec: number | null;
+};
+
+async function listChecklistItemFiles(itemId: string): Promise<ChecklistItemFile[]> {
+  const rows = await db.attachment.findMany({
+    where: { entityType: "checklist_item", entityId: itemId, status: "uploaded" },
+    orderBy: { createdAt: "asc" },
+    select: { id: true, name: true, contentType: true, r2Key: true, durationSec: true },
+  });
+  return Promise.all(
+    rows.map(async (a) => ({
+      id: a.id,
+      name: a.name,
+      contentType: a.contentType,
+      url: a.r2Key ? await createPresignedGet(a.r2Key) : null,
+      durationSec: a.durationSec,
+    })),
+  );
+}
+
+// Remove ONE file from a multi-file field. Deletes the stored object and the
+// attachment row; the field stays complete while at least one file remains.
+export async function removeChecklistItemFile(
+  itemId: string,
+  attachmentId: string,
+  projectId: string,
+) {
+  await requireProjectWork(projectId);
+  await assertChecklistItemWritable(itemId);
+
+  const attachment = await db.attachment.findFirst({
+    where: { id: attachmentId, entityType: "checklist_item", entityId: itemId },
+    select: { id: true, r2Key: true },
+  });
+  if (!attachment) throw new Error("File not found");
+
+  if (attachment.r2Key) await deleteObject(attachment.r2Key).catch(() => {});
+  await db.attachment.delete({ where: { id: attachment.id } });
+
+  const remaining = await db.attachment.count({
+    where: { entityType: "checklist_item", entityId: itemId, status: "uploaded" },
+  });
+  if (remaining === 0) {
+    await db.taskChecklistItem.update({
+      where: { id: itemId },
+      data: { completed: false, completedAt: null, completedBy: null },
+    });
+    await clearChecklistItemEffortLock(itemId);
+  } else {
+    await syncChecklistItemEffortLock(itemId, true);
+  }
+
+  await publishChecklistProgress(itemId, projectId);
+  revalidatePath(`/projects/${projectId}`);
+  return { completed: remaining > 0 };
 }
 
 export async function removeChecklistItemAttachment(itemId: string, projectId: string) {
@@ -1465,11 +1709,62 @@ export async function removeChecklistItemAttachment(itemId: string, projectId: s
       attachmentId: null,
       completed,
       completedAt: completed ? new Date() : null,
+      ...(completed ? {} : { completedBy: null }),
     },
   });
 
+  await syncChecklistItemEffortLock(itemId, completed);
+
   await publishChecklistProgress(itemId, projectId);
   revalidatePath(`/projects/${projectId}`);
+}
+
+// Older uploads may lack durationSec — the browser can read it from metadata
+// after the fact; persist it so effort can use the real audio/video length.
+export async function backfillAttachmentDuration(
+  attachmentId: string,
+  durationSec: number,
+  projectId: string,
+): Promise<{ updated: boolean }> {
+  const access = await getProjectAccess(projectId);
+  if (!access.hasAccess) throw new Error("Permission denied");
+  if (!(durationSec > 0) || !Number.isFinite(durationSec)) {
+    return { updated: false };
+  }
+
+  const attachment = await db.attachment.findUnique({
+    where: { id: attachmentId },
+    select: { id: true, durationSec: true, entityType: true, entityId: true },
+  });
+  if (!attachment) throw new Error("Attachment not found");
+  if (attachment.durationSec != null && attachment.durationSec > 0) {
+    return { updated: false };
+  }
+
+  const item = await db.taskChecklistItem.findFirst({
+    where: {
+      task: { projectId },
+      OR: [
+        { attachmentId: attachment.id },
+        ...(attachment.entityType === "checklist_item"
+          ? [{ id: attachment.entityId }]
+          : []),
+      ],
+    },
+    select: { id: true, completed: true, task: { select: { completedAt: true } } },
+  });
+  if (!item) throw new Error("Not found");
+
+  await db.attachment.update({
+    where: { id: attachmentId },
+    data: { durationSec },
+  });
+
+  if (item.completed && item.task.completedAt) {
+    await lockChecklistItemEffort(item.id);
+  }
+
+  return { updated: true };
 }
 
 // Fresh state of one checklist field (attachment metadata + presigned preview
@@ -1485,10 +1780,14 @@ export async function getChecklistItemState(itemId: string, projectId: string) {
       completed: true,
       textValue: true,
       attachmentId: true,
+      type: true,
+      templateItem: { select: { type: true } },
       task: { select: { projectId: true } },
     },
   });
   if (!item || item.task.projectId !== projectId) throw new Error("Not found");
+
+  const kind = item.templateItem?.type ?? item.type;
 
   let attachmentName: string | null = null;
   let attachmentUrl: string | null = null;
@@ -1512,6 +1811,8 @@ export async function getChecklistItemState(itemId: string, projectId: string) {
     attachmentName,
     attachmentUrl,
     attachmentContentType,
+    attachments:
+      kind === "multi_file" ? await listChecklistItemFiles(itemId) : [],
   };
 }
 
@@ -1666,6 +1967,12 @@ export async function syncTaskTemplates(taskId: string, templateIds: string[], p
     select: { id: true, templateItemId: true, attachmentId: true },
   });
 
+  // Keep the task's stored type in sync with its template set.
+  await db.task.update({
+    where: { id: taskId },
+    data: { templateId: templateIds[0] ?? null },
+  });
+
   const templates = await db.checklistTemplate.findMany({
     where: { id: { in: templateIds } },
     include: { items: { where: { hidden: false }, orderBy: { order: "asc" } } },
@@ -1729,8 +2036,12 @@ export async function syncTaskTemplates(taskId: string, templateIds: string[], p
         lockedFromStageId: item.lockedFromStageId,
         neverLock: item.neverLock,
         publishCard: item.publishCard,
+        effortUnit: item.effortUnit,
+        qtyPerVideoMinute: item.qtyPerVideoMinute,
         order: nextOrder++,
       })),
+      // Racing with getTask materialisation is a no-op, not a crash.
+      skipDuplicates: true,
     });
   }
 

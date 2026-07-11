@@ -17,7 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { TypeIcon } from "@/components/task-types/task-type-visuals";
+import { TypeIcon, DEFAULT_TYPE_COLOR } from "@/components/task-types/task-type-visuals";
 import type {
   ThisWeekData,
   WeekScheduleProject,
@@ -77,7 +77,7 @@ function TaskRow({
   task: WeekScheduleTask;
   projectId: string;
 }) {
-  const color = task.templateColor ?? "#f59e0b";
+  const color = task.templateColor ?? DEFAULT_TYPE_COLOR;
   return (
     <Link
       href={`/projects/${projectId}/tasks/${task.taskId}`}
@@ -119,7 +119,7 @@ function SlotRow({ slot }: { slot: WeekScheduleSlot }) {
     <div className="flex items-center gap-2 rounded-xl border border-dashed border-border/60 bg-transparent px-3 py-2.5">
       <span
         className="inline-block h-1.5 w-1.5 shrink-0 rounded-full"
-        style={{ backgroundColor: slot.templateColor ?? "#f59e0b" }}
+        style={{ backgroundColor: slot.templateColor ?? DEFAULT_TYPE_COLOR }}
       />
       <span className="text-xxs font-medium uppercase tracking-[0.15em] text-muted-foreground">
         {slot.templateName} #{slot.slotIndex}

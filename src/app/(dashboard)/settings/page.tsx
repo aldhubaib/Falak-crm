@@ -5,6 +5,7 @@ import {
   ChevronRight,
   Users,
   ShieldCheck,
+  Gauge,
   Trash2,
   GitBranch,
   Layers,
@@ -54,6 +55,12 @@ export default function SettingsPage() {
               icon={ShieldCheck}
               title="Roles"
               desc="Define roles and permissions across the system."
+            />
+            <Tile
+              href="/settings/titles"
+              icon={Gauge}
+              title="Titles"
+              desc="Effort rates per title for capacity planning (Junior A, Senior…)."
             />
           </Group>
 

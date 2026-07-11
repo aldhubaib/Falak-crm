@@ -81,6 +81,30 @@ export default async function TaskDetailPage({
     ),
   );
 
+  // Multi-file fields keep their files as Attachment rows bound to the
+  // checklist item (no single attachmentId pointer).
+  const multiItemIds = task.checklistItems
+    .filter((it) => fieldConfig(it).type === "multi_file")
+    .map((it) => it.id);
+  const multiRows = multiItemIds.length
+    ? await db.attachment.findMany({
+        where: {
+          entityType: "checklist_item",
+          entityId: { in: multiItemIds },
+          status: "uploaded",
+        },
+        orderBy: { createdAt: "asc" },
+        select: { id: true, entityId: true, name: true, contentType: true, r2Key: true, durationSec: true },
+      })
+    : [];
+  const filesByItem = new Map<string, ChecklistItem["attachments"]>();
+  for (const a of multiRows) {
+    const url = a.r2Key ? await createPresignedGet(a.r2Key) : null;
+    const list = filesByItem.get(a.entityId) ?? [];
+    list.push({ id: a.id, name: a.name, contentType: a.contentType, url, durationSec: a.durationSec });
+    filesByItem.set(a.entityId, list);
+  }
+
   // Resolve stage ordering so each field's lock rule can be evaluated against
   // the task's current stage.
   const statuses = await getTaskStatuses();
@@ -89,6 +113,40 @@ export default async function TaskDetailPage({
   const currentOrder = task.status?.order ?? null;
 
   const trashed = task.deletedAt !== null;
+
+  // Checklist sections of the task's template(s): the task page groups fields
+  // under these editable headings instead of the old fixed Requirements /
+  // Delivery pair. Legacy or custom fields without a section fall back to the
+  // first section matching their phase, or to a synthetic classic group.
+  const templateIds = [
+    ...new Set(
+      [
+        task.templateId,
+        ...task.checklistItems.map((it) => it.templateItem?.templateId),
+      ].filter((id): id is string => !!id),
+    ),
+  ];
+  const sectionRows = templateIds.length
+    ? await db.checklistSection.findMany({
+        where: { templateId: { in: templateIds } },
+        orderBy: { order: "asc" },
+        select: { id: true, name: true, phase: true },
+      })
+    : [];
+  const sectionIds = new Set(sectionRows.map((s) => s.id));
+  const usedSynthetic = new Set<string>();
+  const resolveSectionId = (
+    rawSectionId: string | null | undefined,
+    phase: string,
+  ): string => {
+    if (rawSectionId && sectionIds.has(rawSectionId)) return rawSectionId;
+    const wanted = phase === "delivery" ? "delivery" : "create";
+    const match = sectionRows.find((s) => s.phase === wanted);
+    if (match) return match.id;
+    const synthetic = wanted === "delivery" ? "legacy_delivery" : "legacy_create";
+    usedSynthetic.add(synthetic);
+    return synthetic;
+  };
 
   const items: ChecklistItem[] = task.checklistItems.map((it) => {
     const att = it.attachmentId ? attachmentMap.get(it.attachmentId) : null;
@@ -103,12 +161,14 @@ export default async function TaskDetailPage({
       name: cfg.name,
       type: cfg.type,
       phase: cfg.phase,
+      sectionId: resolveSectionId(it.templateItem?.sectionId, cfg.phase),
       completed: it.completed,
       textValue: it.textValue,
       attachmentId: it.attachmentId,
       attachmentName: att?.name ?? null,
       attachmentUrl: att?.url ?? null,
       attachmentContentType: att?.contentType ?? null,
+      attachments: filesByItem.get(it.id) ?? [],
       mandatory: cfg.mandatory,
       options: parseArray(cfg.options),
       allowedFileTypes: cfg.allowedFileTypes,
@@ -119,6 +179,18 @@ export default async function TaskDetailPage({
       locked: trashed || isFieldLocked(cfg, currentOrder, orderById, todoOrder),
     };
   });
+
+  // Final ordered section list for the page, including synthetic fallbacks
+  // for tasks whose fields predate sections (or have no template).
+  const sections = [
+    ...(usedSynthetic.has("legacy_create")
+      ? [{ id: "legacy_create", name: "Requirements", phase: "create" }]
+      : []),
+    ...sectionRows,
+    ...(usedSynthetic.has("legacy_delivery")
+      ? [{ id: "legacy_delivery", name: "Delivery", phase: "delivery" }]
+      : []),
+  ];
 
   const typeName =
     task.service?.name ??
@@ -230,6 +302,7 @@ export default async function TaskDetailPage({
       canDelete={!trashed && canDelete}
       canEditTitle={!trashed && canModify && !titleLocked}
       canEditFields={!trashed && canModify}
+      isOwner={access.member.type === "OWNER"}
       trashed={
         trashed
           ? { deletedAt: task.deletedAt!.toISOString(), deletedByName }
@@ -266,6 +339,7 @@ export default async function TaskDetailPage({
       stageEnteredAt={task.stageEnteredAt?.toISOString() ?? null}
       createdAt={task.createdAt.toISOString()}
       items={items}
+      sections={sections}
       comments={comments.map((c) => ({
         id: c.id,
         body: c.body,

@@ -110,6 +110,7 @@ async function adoptTodoTasksIntoSlots(
     orderBy: { createdAt: "asc" },
     select: {
       id: true,
+      templateId: true,
       checklistItems: {
         select: { templateItem: { select: { templateId: true } } },
       },
@@ -119,9 +120,13 @@ async function adoptTodoTasksIntoSlots(
 
   const queue = new Map<string, string[]>();
   for (const t of unbound) {
+    // Stored type first; checklist inference covers legacy tasks created
+    // before Task.templateId existed.
     const templateId =
+      t.templateId ??
       t.checklistItems.find((ci) => ci.templateItem?.templateId)?.templateItem
-        ?.templateId ?? null;
+        ?.templateId ??
+      null;
     if (!templateId) continue;
     const ids = queue.get(templateId) ?? [];
     ids.push(t.id);

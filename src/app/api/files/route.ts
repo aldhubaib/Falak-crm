@@ -25,8 +25,13 @@ export async function POST(request: NextRequest) {
     contentType?: string;
     entityType: string;
     entityId: string;
+    durationSec?: number | null;
   };
   const contentType = body.contentType || "application/octet-stream";
+  const durationSec =
+    typeof body.durationSec === "number" && body.durationSec > 0
+      ? body.durationSec
+      : null;
 
   const missing: string[] = [];
   if (!name) missing.push("name");
@@ -70,6 +75,7 @@ export async function POST(request: NextRequest) {
       name,
       sizeBytes,
       contentType,
+      durationSec,
       r2Key,
       status: "uploading",
       uploadId,

@@ -678,19 +678,37 @@ async function lastMessagesByThread(
   ids: string[],
 ): Promise<Map<string, LastMessageRow>> {
   if (ids.length === 0) return new Map();
-  const col = Prisma.raw(`"${column}"`);
-  const rows = await db.$queryRaw<LastMessageRow[]>`
-    SELECT DISTINCT ON (m.${col})
-      m.${col} AS "threadId",
-      m."body",
-      m."createdAt",
-      a."name" AS "authorName",
-      a."email" AS "authorEmail"
-    FROM "TaskComment" m
-    JOIN "WorkspaceMember" a ON a."id" = m."authorId"
-    WHERE m.${col} IN (${Prisma.join(ids)})
-    ORDER BY m.${col}, m."createdAt" DESC, m."id" DESC
-  `;
+
+  // Column names can't be parameterized in $queryRaw — Prisma turns
+  // Prisma.raw() fragments into $1 placeholders, which PostgreSQL rejects
+  // in identifier positions. Use a fixed query per column instead.
+  const rows =
+    column === "projectId"
+      ? await db.$queryRaw<LastMessageRow[]>`
+          SELECT DISTINCT ON (m."projectId")
+            m."projectId" AS "threadId",
+            m."body",
+            m."createdAt",
+            a."name" AS "authorName",
+            a."email" AS "authorEmail"
+          FROM "TaskComment" m
+          JOIN "WorkspaceMember" a ON a."id" = m."authorId"
+          WHERE m."projectId" IN (${Prisma.join(ids)})
+          ORDER BY m."projectId", m."createdAt" DESC, m."id" DESC
+        `
+      : await db.$queryRaw<LastMessageRow[]>`
+          SELECT DISTINCT ON (m."conversationId")
+            m."conversationId" AS "threadId",
+            m."body",
+            m."createdAt",
+            a."name" AS "authorName",
+            a."email" AS "authorEmail"
+          FROM "TaskComment" m
+          JOIN "WorkspaceMember" a ON a."id" = m."authorId"
+          WHERE m."conversationId" IN (${Prisma.join(ids)})
+          ORDER BY m."conversationId", m."createdAt" DESC, m."id" DESC
+        `;
+
   return new Map(rows.map((r) => [r.threadId, r]));
 }
 

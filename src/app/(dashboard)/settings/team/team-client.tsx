@@ -20,6 +20,7 @@ import { SurfaceCard } from "@/components/surface-card";
 import { EmptyState } from "@/components/empty-state";
 import { IconButton } from "@/components/icon-button";
 import { inviteMember, assignRole, removeMember, renameMember } from "@/actions/team";
+import { assignMemberTitle, setMemberWeeklyHours } from "@/actions/titles";
 import { cn } from "@/lib/utils";
 
 type Member = {
@@ -31,6 +32,8 @@ type Member = {
   type: string;
   joinedAt: Date;
   role: { id: string; name: string } | null;
+  capacityTitle: { id: string; name: string } | null;
+  weeklyHours: number;
 };
 
 type Role = {
@@ -38,12 +41,19 @@ type Role = {
   name: string;
 };
 
+type Title = {
+  id: string;
+  name: string;
+};
+
 export function TeamClient({
   members,
   roles,
+  titles,
 }: {
   members: Member[];
   roles: Role[];
+  titles: Title[];
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -96,6 +106,24 @@ export function TeamClient({
   const handleAssignRole = (memberId: string, roleId: string) => {
     startTransition(async () => {
       await assignRole(memberId, roleId === "none" ? null : roleId);
+      router.refresh();
+    });
+  };
+
+  const handleAssignTitle = (memberId: string, titleId: string) => {
+    startTransition(async () => {
+      await assignMemberTitle(memberId, titleId === "none" ? null : titleId);
+      router.refresh();
+    });
+  };
+
+  const handleWeeklyHours = (memberId: string, current: number, raw: string) => {
+    const parsed = Number.parseFloat(raw);
+    if (!Number.isFinite(parsed) || parsed < 0 || parsed > 168 || parsed === current) {
+      return;
+    }
+    startTransition(async () => {
+      await setMemberWeeklyHours(memberId, parsed);
       router.refresh();
     });
   };
@@ -253,7 +281,7 @@ export function TeamClient({
                 {m.email}
               </div>
             </div>
-            <div className="col-span-3 flex items-center gap-2 sm:col-span-1">
+            <div className="col-span-3 flex flex-wrap items-center gap-2 sm:col-span-1 sm:justify-end">
               <SearchableSelect
                 value={m.role?.id ?? "none"}
                 onValueChange={(v) => handleAssignRole(m.id, v)}
@@ -267,6 +295,38 @@ export function TeamClient({
                   ...roles.map((r) => ({ value: r.id, label: r.name })),
                 ]}
               />
+              <SearchableSelect
+                value={m.capacityTitle?.id ?? "none"}
+                onValueChange={(v) => handleAssignTitle(m.id, v)}
+                searchPlaceholder="Search titles…"
+                className="h-8 w-full text-xs sm:w-36"
+                contentClassName="w-52 min-w-52"
+                renderValue={() => m.capacityTitle?.name ?? "No title"}
+                options={[
+                  { value: "none", label: "No title" },
+                  ...titles.map((t) => ({ value: t.id, label: t.name })),
+                ]}
+              />
+              <div
+                className="flex items-center gap-1"
+                title="Weekly working-hours capacity"
+              >
+                <Input
+                  type="number"
+                  min={0}
+                  max={168}
+                  step="any"
+                  defaultValue={m.weeklyHours}
+                  onBlur={(e) =>
+                    handleWeeklyHours(m.id, m.weeklyHours, e.target.value)
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                  }}
+                  className="h-8 w-16 text-right text-xs"
+                />
+                <span className="text-xs text-muted-foreground">h/wk</span>
+              </div>
               {m.type !== "OWNER" && (
                 <IconButton
                   aria-label="Remove member"

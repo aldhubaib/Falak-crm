@@ -3,19 +3,19 @@
 import { useState } from "react";
 import { GripVertical, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { KIND_LABELS, type Section } from "./constants";
+import { KIND_LABELS } from "./constants";
 import type { TTField } from "./types";
 
 export function FieldRow({
   index,
   field,
-  section,
+  sectionId,
   onEdit,
   onDropAt,
 }: {
   index: number;
   field: TTField;
-  section: Section;
+  sectionId: string;
   onEdit: () => void;
   onDropAt: (toIndex: number, e: React.DragEvent) => void;
 }) {
@@ -35,7 +35,7 @@ export function FieldRow({
         e.dataTransfer.effectAllowed = "move";
         e.dataTransfer.setData(
           "application/x-field",
-          JSON.stringify({ id: field.id, section }),
+          JSON.stringify({ id: field.id, sectionId }),
         );
       }}
       onDragOver={(e) => {

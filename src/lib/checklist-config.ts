@@ -136,6 +136,25 @@ export function isGateComplete(
   return true;
 }
 
+/**
+ * The stage whose ENTRY requires every mandatory delivery field to be
+ * complete (matched by name). "Internal Review" is the legacy name kept for
+ * workspaces that haven't renamed the stage.
+ */
+export function isDeliveryGateStage(name: string | null | undefined): boolean {
+  const n = (name ?? "").trim().toLowerCase();
+  return n === "final video check" || n === "internal review";
+}
+
+/**
+ * Stages that count as review work (matched by name): each pass out of one
+ * is charged at the reviewer's per-stage rate. "Check" covers stages like
+ * "Final Video Check".
+ */
+export function isReviewStageName(name: string | null | undefined): boolean {
+  return /review|check/i.test(name ?? "");
+}
+
 export type LockConfig = {
   phase: string;
   lockedFromStageId: string | null;

@@ -8,7 +8,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { cn } from "@/lib/utils";
 import { normalizeFormats } from "@/lib/formats";
-import { ASPECTS, FILE_CATEGORIES, FORMATS, KIND_LABELS, KINDS } from "./constants";
+import {
+  ASPECTS,
+  FILE_CATEGORIES,
+  FORMATS,
+  KIND_LABELS,
+  KINDS,
+  MEASURED_UNIT_OPTION_LABELS,
+  isFileKind,
+  measuredUnitFor,
+} from "./constants";
 import type { FieldPatch, StatusOpt, TTField } from "./types";
 
 type Draft = {
@@ -26,6 +35,9 @@ type Draft = {
   lockedFromStageId: string | null;
   neverLock: boolean;
   publishCard: string;
+  effortUnit: string;
+  // Raw input text so partial numbers ("1.") survive while typing.
+  qtyPerVideoMinuteText: string;
 };
 
 function toDraft(f: Partial<TTField>): Draft {
@@ -45,6 +57,9 @@ function toDraft(f: Partial<TTField>): Draft {
     lockedFromStageId: f.lockedFromStageId ?? null,
     neverLock: !!f.neverLock,
     publishCard: f.publishCard ?? "hidden",
+    effortUnit: f.effortUnit ?? "",
+    qtyPerVideoMinuteText:
+      f.qtyPerVideoMinute != null ? String(f.qtyPerVideoMinute) : "",
   };
 }
 
@@ -84,7 +99,8 @@ export function FieldEditor({
   const initial = useMemo(() => toDraft(field), [field]);
   const [draft, setDraft] = useState<Draft>(initial);
 
-  const isFile = draft.kind === "file_upload";
+  const isFile = isFileKind(draft.kind);
+  const measuredUnit = measuredUnitFor(draft.kind, draft.allowedFileTypes);
   const category = draft.allowedFileTypes ?? "";
   const formats = isFile && category in FORMATS ? FORMATS[category] : [];
   const supportsAspect = isFile && (category === "image" || category === "video");
@@ -121,12 +137,26 @@ export function FieldEditor({
             value={draft.kind}
             onValueChange={(v) => {
               const patch: Partial<Draft> = { kind: v };
-              if (v !== "file_upload") {
+              if (!isFileKind(v)) {
                 patch.allowedFormats = [];
                 patch.allowedFileTypes = null;
                 patch.aspectRatio = null;
               }
               if (v !== "select") patch.optionsText = "";
+              // Effort follows the field type: a measured unit that no longer
+              // matches falls back to what the new type supports.
+              const nextMeasured = measuredUnitFor(
+                v,
+                isFileKind(v) ? draft.allowedFileTypes : null,
+              );
+              if (
+                draft.effortUnit &&
+                draft.effortUnit !== "fixed" &&
+                draft.effortUnit !== nextMeasured
+              ) {
+                patch.effortUnit = nextMeasured ?? "fixed";
+                if (nextMeasured !== "words") patch.qtyPerVideoMinuteText = "";
+              }
               setField(patch);
             }}
             searchPlaceholder="Search types…"
@@ -147,6 +177,12 @@ export function FieldEditor({
               ...statuses.map((s) => ({ value: s.id, label: s.name })),
             ]}
           />
+          {field.phase === "delivery" && (
+            <p className="mt-1 text-xxs leading-relaxed text-muted-foreground">
+              Applies to open tasks only. Delivery-section fields (like this one)
+              are filled during work — they don&apos;t appear on the new-task form.
+            </p>
+          )}
         </LabeledField>
         <LabeledField label="Required Before">
           <SearchableSelect
@@ -208,13 +244,26 @@ export function FieldEditor({
                 <button
                   key={c.value || "any"}
                   type="button"
-                  onClick={() =>
-                    setField({
+                  onClick={() => {
+                    const patch: Partial<Draft> = {
                       allowedFileTypes: c.value || null,
                       allowedFormats: [],
                       aspectRatio: null,
-                    })
-                  }
+                    };
+                    const nextMeasured = measuredUnitFor(
+                      draft.kind,
+                      c.value || null,
+                    );
+                    if (
+                      draft.effortUnit &&
+                      draft.effortUnit !== "fixed" &&
+                      draft.effortUnit !== nextMeasured
+                    ) {
+                      patch.effortUnit = nextMeasured ?? "fixed";
+                      patch.qtyPerVideoMinuteText = "";
+                    }
+                    setField(patch);
+                  }}
                   className={cn(
                     "rounded-md px-2.5 py-1 text-xs",
                     active
@@ -298,6 +347,74 @@ export function FieldEditor({
         </LabeledField>
       )}
 
+      <div className="grid items-start gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <LabeledField label="Effort">
+          <SearchableSelect
+            value={draft.effortUnit || "none"}
+            onValueChange={(v) => {
+              const unit = v === "none" ? "" : v;
+              setField({
+                effortUnit: unit,
+                ...(unit === "words" ? {} : { qtyPerVideoMinuteText: "" }),
+              });
+            }}
+            searchPlaceholder="Search…"
+            className="h-10"
+            options={[
+              { value: "none", label: "Not counted" },
+              // The measured option follows the field itself: text → words,
+              // audio file → audio length, video file → video length.
+              ...(measuredUnit
+                ? [
+                    {
+                      value: measuredUnit,
+                      label: MEASURED_UNIT_OPTION_LABELS[measuredUnit],
+                    },
+                  ]
+                : []),
+              {
+                value: "fixed",
+                label:
+                  draft.kind === "multi_file"
+                    ? "Fixed cost (per file)"
+                    : "Fixed cost (per item)",
+              },
+            ]}
+          />
+        </LabeledField>
+        {draft.effortUnit === "words" && (
+          <LabeledField label="Expected Words per Video Minute">
+            <Input
+              type="number"
+              min={0}
+              step="any"
+              value={draft.qtyPerVideoMinuteText}
+              onChange={(e) => setField({ qtyPerVideoMinuteText: e.target.value })}
+              placeholder="e.g. 206"
+              className="h-10"
+            />
+            <div className="mt-1 text-xxs text-muted-foreground">
+              Only for predictions before the text is written: a 2-min planned
+              video expects 2 × this many words.
+            </div>
+          </LabeledField>
+        )}
+        {(draft.effortUnit === "audio_min" || draft.effortUnit === "video_min") && (
+          <div className="pt-5 text-xxs text-muted-foreground sm:col-span-1 lg:col-span-2">
+            {draft.kind === "multi_file"
+              ? "Effort = combined upload length × the doer's title rate (min per video min). Before upload, a 2-minute video is assumed."
+              : "Effort = uploaded file length × the doer's title rate (min per video min). Before upload, a 2-minute video is assumed."}
+          </div>
+        )}
+        {draft.effortUnit === "fixed" && (
+          <div className="pt-5 text-xxs text-muted-foreground sm:col-span-1 lg:col-span-2">
+            {draft.kind === "multi_file"
+              ? "Charged once per uploaded file — the minutes per file are set per title in Settings → Titles."
+              : "Same effort every time, regardless of content — the minutes are set per title in Settings → Titles."}
+          </div>
+        )}
+      </div>
+
       <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
           <label className="flex items-center gap-2 text-sm">
@@ -370,6 +487,14 @@ export function FieldEditor({
                 lockedFromStageId: draft.lockedFromStageId,
                 neverLock: draft.neverLock,
                 publishCard: draft.publishCard,
+                effortUnit: draft.effortUnit || null,
+                // Only words need a prediction ratio; audio/video predict 1:1
+                // from the planned video length, fixed is always quantity 1.
+                qtyPerVideoMinute:
+                  draft.effortUnit === "words" &&
+                  Number.parseFloat(draft.qtyPerVideoMinuteText) > 0
+                    ? Number.parseFloat(draft.qtyPerVideoMinuteText)
+                    : null,
               })
             }
             disabled={!draft.label.trim() || !dirty}

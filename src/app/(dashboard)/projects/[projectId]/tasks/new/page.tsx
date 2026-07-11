@@ -19,6 +19,7 @@ export default async function NewTaskPage({
       where: { projectId, deletedAt: null },
       select: {
         id: true,
+        templateId: true,
         checklistItems: {
           select: { templateItem: { select: { templateId: true } } },
         },
@@ -29,10 +30,11 @@ export default async function NewTaskPage({
   if (!project) notFound();
 
   // Count how many existing tasks use each template (a task is counted once per
-  // distinct template referenced by its checklist items).
+  // distinct template — the stored type plus any referenced by checklist items).
   const countByTemplate: Record<string, number> = {};
   for (const task of tasks) {
     const templateIds = new Set<string>();
+    if (task.templateId) templateIds.add(task.templateId);
     for (const item of task.checklistItems) {
       const tid = item.templateItem?.templateId;
       if (tid) templateIds.add(tid);
@@ -81,7 +83,12 @@ export default async function NewTaskPage({
     }
   };
 
-  const taskTypes = project.projectTemplates.map((pt) => ({
+  const taskTypes = project.projectTemplates.map((pt) => {
+    // Fields fill in section order (Settings → Task Types), then field order.
+    const sectionOrder = new Map(
+      pt.template.sections.map((s) => [s.id, s.order]),
+    );
+    return {
     id: pt.template.id,
     name: pt.template.name,
     titleLabel: pt.template.titleLabel,
@@ -92,6 +99,12 @@ export default async function NewTaskPage({
         (it) =>
           it.phase !== "delivery" &&
           isFieldVisible(it, defaultOrder ?? null, orderById),
+      )
+      .sort(
+        (a, b) =>
+          (sectionOrder.get(a.sectionId ?? "") ?? 0) -
+            (sectionOrder.get(b.sectionId ?? "") ?? 0) ||
+          a.order - b.order,
       )
       .map((it) => ({
         id: it.id,
@@ -105,7 +118,8 @@ export default async function NewTaskPage({
         allowedFormats: normalizeFormats(parseArray(it.allowedFormats)),
         aspectRatio: it.aspectRatio,
       })),
-  }));
+    };
+  });
 
   return (
     <NewTaskClient

@@ -9,8 +9,10 @@ import { cn } from "@/lib/utils";
 import {
   forceAddWeeklySlot,
   type PlanningEligibleMember,
+  type WeeklyEffortMatrix,
 } from "@/actions/weekly-plan";
 import {
+  cycleEndOf,
   REPEAT_OPTIONS,
   repeatUnitLabel,
   type RepeatEvery,
@@ -64,12 +66,33 @@ export function serializePlans(plans: PlanState): string {
     .join("|");
 }
 
+// Deadline of the current plan cycle, e.g. "due Jul 13" (project timezone).
+function cycleDueLabel(plan: WeeklyTarget, timezone: string): string {
+  const cycleEnd = cycleEndOf(plan.startOn, plan.repeatEvery);
+  // Show the last day of the cycle, not the first day of the next one.
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    month: "short",
+    day: "numeric",
+  }).format(new Date(cycleEnd.getTime() - 60_000));
+}
+
+// "5/wk ≈ 21h 30m" — hours the target costs the responsible member.
+function formatEffortHours(minutes: number): string {
+  const h = Math.floor(minutes / 60);
+  const m = Math.round(minutes % 60);
+  if (h === 0) return `${m}m`;
+  if (m === 0) return `${h}h`;
+  return `${h}h ${m}m`;
+}
+
 export function PlanningTemplatesSection({
   projectId,
   templates,
   templateIds,
   initialTargets,
   eligibleMembers,
+  effortMatrix,
   timezone,
   isOwner,
   onTemplateIdsChange,
@@ -81,6 +104,7 @@ export function PlanningTemplatesSection({
   templateIds: string[];
   initialTargets: WeeklyTarget[];
   eligibleMembers: PlanningEligibleMember[];
+  effortMatrix?: WeeklyEffortMatrix;
   timezone: string;
   isOwner: boolean;
   onTemplateIdsChange: (ids: string[]) => void;
@@ -130,6 +154,19 @@ export function PlanningTemplatesSection({
         const val = plan.perWeek;
         const isExpanded = active && (expanded[t.id] ?? true);
 
+        // Predicted hours this target costs the responsible member per cycle.
+        const perTaskMin =
+          plan.responsibleMemberId != null
+            ? (effortMatrix?.perTaskMinutes[t.id]?.[plan.responsibleMemberId] ??
+              null)
+            : null;
+        const cycleMinutes =
+          perTaskMin != null && val > 0 ? perTaskMin * val : null;
+        const memberHours =
+          plan.responsibleMemberId != null
+            ? (effortMatrix?.memberWeeklyHours[plan.responsibleMemberId] ?? null)
+            : null;
+
         return (
           <div
             key={t.id}
@@ -170,6 +207,23 @@ export function PlanningTemplatesSection({
                 {active && val > 0 && (
                   <span className="rounded-md border border-border/60 bg-muted/30 px-1.5 py-0.5 text-xxs tabular-nums text-foreground">
                     {val}/wk
+                  </span>
+                )}
+                {active && val > 0 && (
+                  <span
+                    className="rounded-md bg-muted/40 px-1.5 py-0.5 text-xxs text-muted-foreground"
+                    title="Deadline of the current plan cycle"
+                  >
+                    due {cycleDueLabel(plan, timezone)}
+                  </span>
+                )}
+                {active && cycleMinutes != null && (
+                  <span
+                    className="rounded-md border border-primary/30 bg-primary/10 px-1.5 py-0.5 text-xxs tabular-nums text-primary"
+                    title="Predicted effort for the responsible member (2-min video baseline × their title rates)"
+                  >
+                    ≈ {formatEffortHours(cycleMinutes)}
+                    {memberHours != null && ` of ${memberHours}h`}
                   </span>
                 )}
               </button>

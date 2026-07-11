@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Download,
   Maximize2,
@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-function formatMediaTime(seconds: number): string {
+export function formatMediaTime(seconds: number): string {
   if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);
@@ -27,11 +27,15 @@ export function VideoPlayer({
   downloadHref,
   className,
   videoClassName,
+  autoPlay = false,
+  onDurationKnown,
 }: {
   src: string;
   downloadHref?: string;
   className?: string;
   videoClassName?: string;
+  autoPlay?: boolean;
+  onDurationKnown?: (durationSec: number) => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [failed, setFailed] = useState(false);
@@ -75,6 +79,13 @@ export function VideoPlayer({
     const ios = video as HTMLVideoElement & { webkitEnterFullscreen?: () => void };
     ios.webkitEnterFullscreen?.();
   }, []);
+
+  useEffect(() => {
+    if (!autoPlay) return;
+    const video = videoRef.current;
+    if (!video) return;
+    void video.play().catch(() => setFailed(true));
+  }, [autoPlay, src]);
 
   if (failed) {
     return (
@@ -122,7 +133,11 @@ export function VideoPlayer({
           )}
           onClick={togglePlay}
           onError={() => setFailed(true)}
-          onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+          onLoadedMetadata={(e) => {
+            const d = e.currentTarget.duration;
+            setDuration(d);
+            if (Number.isFinite(d) && d > 0) onDurationKnown?.(d);
+          }}
           onTimeUpdate={(e) => setCurrent(e.currentTarget.currentTime)}
           onPlay={() => setPaused(false)}
           onPause={() => setPaused(true)}

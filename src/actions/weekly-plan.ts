@@ -14,6 +14,7 @@ import {
 } from "@/lib/weekly-slots";
 import { getProjectTimezone } from "@/lib/project-timezone";
 import { getTodoAutoAssignMemberIds } from "@/lib/weekly-assign";
+import { predictEffortMinutesFromItems } from "@/lib/effort";
 import { publishTaskEvent } from "@/lib/realtime";
 import { revalidatePath } from "next/cache";
 
@@ -48,6 +49,86 @@ export async function getPlanningEligibleMembers(
     email: m.email,
     imageUrl: m.imageUrl,
   }));
+}
+
+// Predicted per-task effort (2-min baseline) for every template × eligible
+// member, plus each member's weekly-hours capacity. The planning UI multiplies
+// by the per-week count to show "≈ Xh of member's Yh/wk" next to targets.
+// null = not computable (no title, uncalibrated rates, or no effort fields).
+export type WeeklyEffortMatrix = {
+  perTaskMinutes: Record<string, Record<string, number | null>>;
+  memberWeeklyHours: Record<string, number>;
+};
+
+export async function getWeeklyEffortMatrix(
+  projectId: string,
+): Promise<WeeklyEffortMatrix> {
+  const { workspace } = await requireProjectWork(projectId);
+  const memberIds = await getTodoAutoAssignMemberIds(projectId, workspace.id);
+
+  // Three queries total (templates+items, members+rates), computed in memory —
+  // never one query per template × member.
+  const [templates, members] = await Promise.all([
+    db.checklistTemplate.findMany({
+      where: { workspaceId: workspace.id },
+      select: {
+        id: true,
+        items: {
+          where: { hidden: false, effortUnit: { not: null } },
+          select: { id: true, effortUnit: true, qtyPerVideoMinute: true },
+        },
+      },
+    }),
+    memberIds.length > 0
+      ? db.workspaceMember.findMany({
+          where: { id: { in: memberIds } },
+          select: {
+            id: true,
+            weeklyHours: true,
+            capacityTitle: {
+              select: {
+                fieldRates: {
+                  select: { templateItemId: true, minutesPerUnit: true },
+                },
+              },
+            },
+          },
+        })
+      : Promise.resolve([]),
+  ]);
+
+  const ratesByMember = new Map(
+    members.map((m) => [
+      m.id,
+      m.capacityTitle
+        ? new Map(
+            m.capacityTitle.fieldRates.map((r) => [
+              r.templateItemId,
+              r.minutesPerUnit,
+            ]),
+          )
+        : null,
+    ]),
+  );
+
+  const perTaskMinutes: Record<string, Record<string, number | null>> = {};
+  for (const t of templates) {
+    const row: Record<string, number | null> = {};
+    for (const m of members) {
+      row[m.id] = predictEffortMinutesFromItems(
+        t.items,
+        ratesByMember.get(m.id) ?? null,
+      );
+    }
+    perTaskMinutes[t.id] = row;
+  }
+
+  return {
+    perTaskMinutes,
+    memberWeeklyHours: Object.fromEntries(
+      members.map((m) => [m.id, m.weeklyHours]),
+    ),
+  };
 }
 
 export async function getWeeklyTargets(

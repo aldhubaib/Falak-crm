@@ -5,6 +5,7 @@ import type {
   StatusOpt,
   TaskTypeVM,
   TTField,
+  TTSection,
 } from "@/components/task-types/types";
 
 function parseArray(value: string | null): string[] {
@@ -27,6 +28,7 @@ type RawItem = {
   type: string;
   mandatory: boolean;
   phase: string;
+  sectionId: string | null;
   order: number;
   options: string | null;
   allowedFormats: string | null;
@@ -38,6 +40,8 @@ type RawItem = {
   neverLock: boolean;
   publishCard: string;
   hidden: boolean;
+  effortUnit: string | null;
+  qtyPerVideoMinute: number | null;
 };
 
 function toField(i: RawItem): TTField {
@@ -58,6 +62,8 @@ function toField(i: RawItem): TTField {
     neverLock: i.neverLock,
     publishCard: i.publishCard,
     hidden: i.hidden,
+    effortUnit: i.effortUnit,
+    qtyPerVideoMinute: i.qtyPerVideoMinute,
   };
 }
 
@@ -68,7 +74,29 @@ export default async function TaskTypesPage() {
   ]);
 
   const vm: TaskTypeVM[] = templates.map((t) => {
-    const fields = (t.items as RawItem[]).map(toField);
+    const rawItems = t.items as RawItem[];
+
+    const sections: TTSection[] = t.sections.map((s) => ({
+      id: s.id,
+      name: s.name,
+      phase: s.phase === "delivery" ? "delivery" : "create",
+      order: s.order,
+      fields: [] as TTField[],
+    }));
+    const sectionById = new Map(sections.map((s) => [s.id, s]));
+
+    // Items land in their section; legacy items without one fall back to the
+    // first section matching their phase.
+    for (const raw of rawItems) {
+      const field = toField(raw);
+      const target =
+        (raw.sectionId ? sectionById.get(raw.sectionId) : undefined) ??
+        sections.find((s) => s.phase === field.phase) ??
+        sections[0];
+      target?.fields.push(field);
+    }
+    for (const s of sections) s.fields.sort((a, b) => a.order - b.order);
+
     return {
       id: t.id,
       name: t.name,
@@ -79,12 +107,7 @@ export default async function TaskTypesPage() {
       titleNeverLock: t.titleNeverLock,
       titleLabel: t.titleLabel,
       titleHelp: t.titleHelp,
-      requirementFields: fields
-        .filter((f) => f.phase === "create")
-        .sort((a, b) => a.order - b.order),
-      deliveryFields: fields
-        .filter((f) => f.phase === "delivery")
-        .sort((a, b) => a.order - b.order),
+      sections,
     };
   });
 

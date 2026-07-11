@@ -1,7 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { Check, Eye, Loader2, Lock, Plus, X } from "lucide-react";
+import { useState, useTransition } from "react";
+import {
+  Check,
+  ChevronDown,
+  ChevronUp,
+  Eye,
+  Loader2,
+  Lock,
+  Pencil,
+  Plus,
+  Trash2,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,17 +24,24 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { SearchableSelect } from "@/components/ui/searchable-select";
-import { getChecklistTemplateItemUsage } from "@/actions/settings";
+import {
+  deleteChecklistSection,
+  getChecklistTemplateItemUsage,
+  updateChecklistSection,
+} from "@/actions/settings";
 import { cn } from "@/lib/utils";
-import type { Section } from "./constants";
-import type { FieldPatch, StatusOpt, TitleLockPatch, TTField } from "./types";
+import type {
+  FieldPatch,
+  StatusOpt,
+  TitleLockPatch,
+  TTField,
+  TTSection,
+} from "./types";
 import { FieldRow } from "./field-row";
 import { FieldEditor } from "./field-editor";
 
 export function FieldsSection({
   section,
-  title,
-  fields,
   statuses,
   titleLock,
   onTitleLockSave,
@@ -32,32 +50,45 @@ export function FieldsSection({
   onDelete,
   onToggleHidden,
   onMove,
+  onMoveUp,
+  onMoveDown,
+  onSectionChanged,
 }: {
-  section: Section;
-  title: string;
-  fields: TTField[];
+  section: TTSection;
   statuses: StatusOpt[];
   /** Built-in Title lock rule — renders a pinned, non-deletable Title row. */
   titleLock?: TitleLockPatch;
   onTitleLockSave?: (patch: TitleLockPatch) => void;
-  onAdd: (section: Section, patch: FieldPatch) => void;
-  onUpdate: (fieldId: string, patch: FieldPatch) => void;
+  onAdd: (sectionId: string, patch: FieldPatch) => Promise<void>;
+  onUpdate: (fieldId: string, patch: FieldPatch) => Promise<void>;
   onDelete: (fieldId: string) => void;
   onToggleHidden: (fieldId: string, hidden: boolean) => void;
   onMove: (
     fieldId: string,
-    from: Section,
-    to: Section,
+    fromSectionId: string,
+    toSectionId: string,
     toIndex: number,
   ) => void;
+  /** Move this section up/down in the section order; undefined at the edges. */
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  /** Refresh after a section rename / behavior change / delete. */
+  onSectionChanged: () => void;
 }) {
+  const fields = section.fields;
   const [editingId, setEditingId] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [over, setOver] = useState(false);
+  const [, startTransition] = useTransition();
   // Delete guard: deleting checks usage first — fields with answers on tasks
   // can only be hidden (data preserved), empty ones need an explicit confirm.
   const [deleteTarget, setDeleteTarget] = useState<TTField | null>(null);
   const [usage, setUsage] = useState<number | null>(null);
+  // Section header renaming and section delete confirm.
+  const [editingSection, setEditingSection] = useState(false);
+  const [sectionName, setSectionName] = useState(section.name);
+  const [confirmSectionDelete, setConfirmSectionDelete] = useState(false);
+  const [sectionError, setSectionError] = useState<string | null>(null);
 
   const requestDelete = (f: TTField) => {
     setDeleteTarget(f);
@@ -67,15 +98,45 @@ export function FieldsSection({
       .catch(() => setUsage(0));
   };
 
+  const saveSection = () => {
+    const name = sectionName.trim();
+    setEditingSection(false);
+    if (!name) {
+      setSectionName(section.name);
+      return;
+    }
+    if (name === section.name) return;
+    startTransition(async () => {
+      try {
+        await updateChecklistSection(section.id, { name });
+        onSectionChanged();
+      } catch (err) {
+        setSectionError(err instanceof Error ? err.message : "Save failed");
+      }
+    });
+  };
+
+  const removeSection = () => {
+    setConfirmSectionDelete(false);
+    startTransition(async () => {
+      try {
+        await deleteChecklistSection(section.id);
+        onSectionChanged();
+      } catch (err) {
+        setSectionError(err instanceof Error ? err.message : "Delete failed");
+      }
+    });
+  };
+
   const handleDropAt = (toIndex: number, e: React.DragEvent) => {
     const raw = e.dataTransfer.getData("application/x-field");
     if (!raw) return;
     try {
-      const { id, section: from } = JSON.parse(raw) as {
+      const { id, sectionId: from } = JSON.parse(raw) as {
         id: string;
-        section: Section;
+        sectionId: string;
       };
-      onMove(id, from, section, toIndex);
+      onMove(id, from, section.id, toIndex);
     } catch {
       /* ignore */
     }
@@ -83,11 +144,85 @@ export function FieldsSection({
 
   return (
     <section className="space-y-3">
-      <div className="flex items-center justify-between">
-        <div className="text-tiny font-medium uppercase tracking-[0.14em] text-muted-foreground">
-          {title}
-        </div>
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-3">
+        {editingSection ? (
+          <div className="flex flex-1 flex-wrap items-center gap-2">
+            <Input
+              autoFocus
+              value={sectionName}
+              onChange={(e) => setSectionName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") saveSection();
+                if (e.key === "Escape") {
+                  setSectionName(section.name);
+                  setEditingSection(false);
+                }
+              }}
+              placeholder="Section name"
+              className="h-8 max-w-48 text-xs"
+            />
+            <Button size="sm" className="h-8" onClick={saveSection}>
+              <Check className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8"
+              onClick={() => {
+                setSectionName(section.name);
+                setEditingSection(false);
+              }}
+            >
+              <X className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        ) : (
+          <div className="group/section flex min-w-0 items-center gap-2">
+            <div className="truncate text-tiny font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              {section.name}
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setSectionName(section.name);
+                setEditingSection(true);
+              }}
+              aria-label={`Rename section ${section.name}`}
+              className="grid h-6 w-6 shrink-0 place-items-center rounded-md text-muted-foreground opacity-0 transition-opacity hover:bg-muted/40 hover:text-foreground group-hover/section:opacity-100 focus:opacity-100"
+            >
+              <Pencil className="h-3 w-3" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirmSectionDelete(true)}
+              aria-label={`Delete section ${section.name}`}
+              className="grid h-6 w-6 shrink-0 place-items-center rounded-md text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/15 hover:text-destructive group-hover/section:opacity-100 focus:opacity-100"
+            >
+              <Trash2 className="h-3 w-3" />
+            </button>
+            {onMoveUp && (
+              <button
+                type="button"
+                onClick={onMoveUp}
+                aria-label={`Move section ${section.name} up`}
+                className="grid h-6 w-6 shrink-0 place-items-center rounded-md text-muted-foreground opacity-0 transition-opacity hover:bg-muted/40 hover:text-foreground group-hover/section:opacity-100 focus:opacity-100"
+              >
+                <ChevronUp className="h-3.5 w-3.5" />
+              </button>
+            )}
+            {onMoveDown && (
+              <button
+                type="button"
+                onClick={onMoveDown}
+                aria-label={`Move section ${section.name} down`}
+                className="grid h-6 w-6 shrink-0 place-items-center rounded-md text-muted-foreground opacity-0 transition-opacity hover:bg-muted/40 hover:text-foreground group-hover/section:opacity-100 focus:opacity-100"
+              >
+                <ChevronDown className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+        )}
+        <div className="flex shrink-0 items-center gap-3">
           <div className="text-tiny text-muted-foreground">
             {fields.length} fields
           </div>
@@ -103,6 +238,9 @@ export function FieldsSection({
           )}
         </div>
       </div>
+      {sectionError && (
+        <div className="text-xs text-destructive">{sectionError}</div>
+      )}
 
       <div
         onDragOver={(e) => {
@@ -140,12 +278,20 @@ export function FieldsSection({
             <FieldEditor
               // Delivery fields default to showing on the publish card — they
               // are the deliverables the publisher needs.
-              field={{ kind: "text", publishCard: section === "delivery" ? "expanded" : "hidden" }}
+              field={{
+                kind: "text",
+                phase: section.phase,
+                publishCard: section.phase === "delivery" ? "expanded" : "hidden",
+              }}
               statuses={statuses}
               onCancel={() => setAdding(false)}
-              onSave={(patch) => {
-                onAdd(section, patch);
-                setAdding(false);
+              onSave={async (patch) => {
+                try {
+                  await onAdd(section.id, patch);
+                  setAdding(false);
+                } catch {
+                  /* error surfaced by TypeEditor */
+                }
               }}
             />
           </div>
@@ -166,9 +312,13 @@ export function FieldsSection({
                   field={f}
                   statuses={statuses}
                   onCancel={() => setEditingId(null)}
-                  onSave={(patch) => {
-                    onUpdate(f.id, patch);
-                    setEditingId(null);
+                  onSave={async (patch) => {
+                    try {
+                      await onUpdate(f.id, patch);
+                      setEditingId(null);
+                    } catch {
+                      /* error surfaced by TypeEditor */
+                    }
                   }}
                   onDelete={() => {
                     requestDelete(f);
@@ -182,7 +332,7 @@ export function FieldsSection({
                 <FieldRow
                   index={i}
                   field={f}
-                  section={section}
+                  sectionId={section.id}
                   onEdit={() => setEditingId(f.id)}
                   onDropAt={handleDropAt}
                 />
@@ -258,6 +408,36 @@ export function FieldsSection({
                   Delete field
                 </Button>
               ))}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={confirmSectionDelete}
+        onOpenChange={(open) => !open && setConfirmSectionDelete(false)}
+      >
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>
+              {fields.length > 0
+                ? `"${section.name}" can't be deleted`
+                : `Delete section "${section.name}"?`}
+            </DialogTitle>
+            <DialogDescription>
+              {fields.length > 0
+                ? "This section still has fields. Drag them to another section or delete them first."
+                : "The empty section will be removed from this task type."}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button variant="ghost" onClick={() => setConfirmSectionDelete(false)}>
+              Cancel
+            </Button>
+            {fields.length === 0 && (
+              <Button variant="destructive" onClick={removeSection}>
+                Delete section
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

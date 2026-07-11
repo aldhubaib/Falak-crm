@@ -39,6 +39,21 @@ export type WorkspaceMember = $Result.DefaultSelection<Prisma.$WorkspaceMemberPa
  */
 export type Role = $Result.DefaultSelection<Prisma.$RolePayload>
 /**
+ * Model Title
+ * 
+ */
+export type Title = $Result.DefaultSelection<Prisma.$TitlePayload>
+/**
+ * Model TitleFieldRate
+ * 
+ */
+export type TitleFieldRate = $Result.DefaultSelection<Prisma.$TitleFieldRatePayload>
+/**
+ * Model TitleStageRate
+ * 
+ */
+export type TitleStageRate = $Result.DefaultSelection<Prisma.$TitleStageRatePayload>
+/**
  * Model ProjectCollaborator
  * 
  */
@@ -128,6 +143,11 @@ export type ProjectAsset = $Result.DefaultSelection<Prisma.$ProjectAssetPayload>
  * 
  */
 export type ChecklistTemplate = $Result.DefaultSelection<Prisma.$ChecklistTemplatePayload>
+/**
+ * Model ChecklistSection
+ * 
+ */
+export type ChecklistSection = $Result.DefaultSelection<Prisma.$ChecklistSectionPayload>
 /**
  * Model ChecklistTemplateItem
  * 
@@ -568,6 +588,36 @@ export class PrismaClient<
   get role(): Prisma.RoleDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.title`: Exposes CRUD operations for the **Title** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Titles
+    * const titles = await prisma.title.findMany()
+    * ```
+    */
+  get title(): Prisma.TitleDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.titleFieldRate`: Exposes CRUD operations for the **TitleFieldRate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TitleFieldRates
+    * const titleFieldRates = await prisma.titleFieldRate.findMany()
+    * ```
+    */
+  get titleFieldRate(): Prisma.TitleFieldRateDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.titleStageRate`: Exposes CRUD operations for the **TitleStageRate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TitleStageRates
+    * const titleStageRates = await prisma.titleStageRate.findMany()
+    * ```
+    */
+  get titleStageRate(): Prisma.TitleStageRateDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.projectCollaborator`: Exposes CRUD operations for the **ProjectCollaborator** model.
     * Example usage:
     * ```ts
@@ -746,6 +796,16 @@ export class PrismaClient<
     * ```
     */
   get checklistTemplate(): Prisma.ChecklistTemplateDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.checklistSection`: Exposes CRUD operations for the **ChecklistSection** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ChecklistSections
+    * const checklistSections = await prisma.checklistSection.findMany()
+    * ```
+    */
+  get checklistSection(): Prisma.ChecklistSectionDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.checklistTemplateItem`: Exposes CRUD operations for the **ChecklistTemplateItem** model.
@@ -1455,6 +1515,9 @@ export namespace Prisma {
     ExchangeRate: 'ExchangeRate',
     WorkspaceMember: 'WorkspaceMember',
     Role: 'Role',
+    Title: 'Title',
+    TitleFieldRate: 'TitleFieldRate',
+    TitleStageRate: 'TitleStageRate',
     ProjectCollaborator: 'ProjectCollaborator',
     Company: 'Company',
     Contact: 'Contact',
@@ -1473,6 +1536,7 @@ export namespace Prisma {
     ProjectFolder: 'ProjectFolder',
     ProjectAsset: 'ProjectAsset',
     ChecklistTemplate: 'ChecklistTemplate',
+    ChecklistSection: 'ChecklistSection',
     ChecklistTemplateItem: 'ChecklistTemplateItem',
     ProjectTemplate: 'ProjectTemplate',
     TaskChecklistItem: 'TaskChecklistItem',
@@ -1515,7 +1579,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectWeeklyTarget" | "weeklySlot" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "message" | "messageReaction" | "messageMention" | "conversation" | "conversationParticipant" | "notification" | "pushSubscription" | "invoice" | "payment" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "brandingAsset" | "publishItem"
+      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "title" | "titleFieldRate" | "titleStageRate" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectWeeklyTarget" | "weeklySlot" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistSection" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "message" | "messageReaction" | "messageMention" | "conversation" | "conversationParticipant" | "notification" | "pushSubscription" | "invoice" | "payment" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "brandingAsset" | "publishItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1886,6 +1950,228 @@ export namespace Prisma {
           count: {
             args: Prisma.RoleCountArgs<ExtArgs>
             result: $Utils.Optional<RoleCountAggregateOutputType> | number
+          }
+        }
+      }
+      Title: {
+        payload: Prisma.$TitlePayload<ExtArgs>
+        fields: Prisma.TitleFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TitleFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitlePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TitleFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitlePayload>
+          }
+          findFirst: {
+            args: Prisma.TitleFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitlePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TitleFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitlePayload>
+          }
+          findMany: {
+            args: Prisma.TitleFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitlePayload>[]
+          }
+          create: {
+            args: Prisma.TitleCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitlePayload>
+          }
+          createMany: {
+            args: Prisma.TitleCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TitleCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitlePayload>[]
+          }
+          delete: {
+            args: Prisma.TitleDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitlePayload>
+          }
+          update: {
+            args: Prisma.TitleUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitlePayload>
+          }
+          deleteMany: {
+            args: Prisma.TitleDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TitleUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TitleUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitlePayload>[]
+          }
+          upsert: {
+            args: Prisma.TitleUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitlePayload>
+          }
+          aggregate: {
+            args: Prisma.TitleAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTitle>
+          }
+          groupBy: {
+            args: Prisma.TitleGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TitleGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TitleCountArgs<ExtArgs>
+            result: $Utils.Optional<TitleCountAggregateOutputType> | number
+          }
+        }
+      }
+      TitleFieldRate: {
+        payload: Prisma.$TitleFieldRatePayload<ExtArgs>
+        fields: Prisma.TitleFieldRateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TitleFieldRateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleFieldRatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TitleFieldRateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleFieldRatePayload>
+          }
+          findFirst: {
+            args: Prisma.TitleFieldRateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleFieldRatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TitleFieldRateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleFieldRatePayload>
+          }
+          findMany: {
+            args: Prisma.TitleFieldRateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleFieldRatePayload>[]
+          }
+          create: {
+            args: Prisma.TitleFieldRateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleFieldRatePayload>
+          }
+          createMany: {
+            args: Prisma.TitleFieldRateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TitleFieldRateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleFieldRatePayload>[]
+          }
+          delete: {
+            args: Prisma.TitleFieldRateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleFieldRatePayload>
+          }
+          update: {
+            args: Prisma.TitleFieldRateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleFieldRatePayload>
+          }
+          deleteMany: {
+            args: Prisma.TitleFieldRateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TitleFieldRateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TitleFieldRateUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleFieldRatePayload>[]
+          }
+          upsert: {
+            args: Prisma.TitleFieldRateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleFieldRatePayload>
+          }
+          aggregate: {
+            args: Prisma.TitleFieldRateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTitleFieldRate>
+          }
+          groupBy: {
+            args: Prisma.TitleFieldRateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TitleFieldRateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TitleFieldRateCountArgs<ExtArgs>
+            result: $Utils.Optional<TitleFieldRateCountAggregateOutputType> | number
+          }
+        }
+      }
+      TitleStageRate: {
+        payload: Prisma.$TitleStageRatePayload<ExtArgs>
+        fields: Prisma.TitleStageRateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TitleStageRateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleStageRatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TitleStageRateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleStageRatePayload>
+          }
+          findFirst: {
+            args: Prisma.TitleStageRateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleStageRatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TitleStageRateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleStageRatePayload>
+          }
+          findMany: {
+            args: Prisma.TitleStageRateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleStageRatePayload>[]
+          }
+          create: {
+            args: Prisma.TitleStageRateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleStageRatePayload>
+          }
+          createMany: {
+            args: Prisma.TitleStageRateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TitleStageRateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleStageRatePayload>[]
+          }
+          delete: {
+            args: Prisma.TitleStageRateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleStageRatePayload>
+          }
+          update: {
+            args: Prisma.TitleStageRateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleStageRatePayload>
+          }
+          deleteMany: {
+            args: Prisma.TitleStageRateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TitleStageRateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TitleStageRateUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleStageRatePayload>[]
+          }
+          upsert: {
+            args: Prisma.TitleStageRateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TitleStageRatePayload>
+          }
+          aggregate: {
+            args: Prisma.TitleStageRateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTitleStageRate>
+          }
+          groupBy: {
+            args: Prisma.TitleStageRateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TitleStageRateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TitleStageRateCountArgs<ExtArgs>
+            result: $Utils.Optional<TitleStageRateCountAggregateOutputType> | number
           }
         }
       }
@@ -3218,6 +3504,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ChecklistTemplateCountArgs<ExtArgs>
             result: $Utils.Optional<ChecklistTemplateCountAggregateOutputType> | number
+          }
+        }
+      }
+      ChecklistSection: {
+        payload: Prisma.$ChecklistSectionPayload<ExtArgs>
+        fields: Prisma.ChecklistSectionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ChecklistSectionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChecklistSectionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChecklistSectionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChecklistSectionPayload>
+          }
+          findFirst: {
+            args: Prisma.ChecklistSectionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChecklistSectionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChecklistSectionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChecklistSectionPayload>
+          }
+          findMany: {
+            args: Prisma.ChecklistSectionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChecklistSectionPayload>[]
+          }
+          create: {
+            args: Prisma.ChecklistSectionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChecklistSectionPayload>
+          }
+          createMany: {
+            args: Prisma.ChecklistSectionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChecklistSectionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChecklistSectionPayload>[]
+          }
+          delete: {
+            args: Prisma.ChecklistSectionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChecklistSectionPayload>
+          }
+          update: {
+            args: Prisma.ChecklistSectionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChecklistSectionPayload>
+          }
+          deleteMany: {
+            args: Prisma.ChecklistSectionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChecklistSectionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ChecklistSectionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChecklistSectionPayload>[]
+          }
+          upsert: {
+            args: Prisma.ChecklistSectionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChecklistSectionPayload>
+          }
+          aggregate: {
+            args: Prisma.ChecklistSectionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChecklistSection>
+          }
+          groupBy: {
+            args: Prisma.ChecklistSectionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChecklistSectionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChecklistSectionCountArgs<ExtArgs>
+            result: $Utils.Optional<ChecklistSectionCountAggregateOutputType> | number
           }
         }
       }
@@ -5332,6 +5692,9 @@ export namespace Prisma {
     exchangeRate?: ExchangeRateOmit
     workspaceMember?: WorkspaceMemberOmit
     role?: RoleOmit
+    title?: TitleOmit
+    titleFieldRate?: TitleFieldRateOmit
+    titleStageRate?: TitleStageRateOmit
     projectCollaborator?: ProjectCollaboratorOmit
     company?: CompanyOmit
     contact?: ContactOmit
@@ -5350,6 +5713,7 @@ export namespace Prisma {
     projectFolder?: ProjectFolderOmit
     projectAsset?: ProjectAssetOmit
     checklistTemplate?: ChecklistTemplateOmit
+    checklistSection?: ChecklistSectionOmit
     checklistTemplateItem?: ChecklistTemplateItemOmit
     projectTemplate?: ProjectTemplateOmit
     taskChecklistItem?: TaskChecklistItemOmit
@@ -5474,6 +5838,7 @@ export namespace Prisma {
     customFields: number
     whatsappTemplates: number
     roles: number
+    titles: number
     currencies: number
     exchangeRates: number
     attachments: number
@@ -5500,6 +5865,7 @@ export namespace Prisma {
     customFields?: boolean | WorkspaceCountOutputTypeCountCustomFieldsArgs
     whatsappTemplates?: boolean | WorkspaceCountOutputTypeCountWhatsappTemplatesArgs
     roles?: boolean | WorkspaceCountOutputTypeCountRolesArgs
+    titles?: boolean | WorkspaceCountOutputTypeCountTitlesArgs
     currencies?: boolean | WorkspaceCountOutputTypeCountCurrenciesArgs
     exchangeRates?: boolean | WorkspaceCountOutputTypeCountExchangeRatesArgs
     attachments?: boolean | WorkspaceCountOutputTypeCountAttachmentsArgs
@@ -5636,6 +6002,13 @@ export namespace Prisma {
    */
   export type WorkspaceCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RoleWhereInput
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeCountTitlesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TitleWhereInput
   }
 
   /**
@@ -5848,6 +6221,55 @@ export namespace Prisma {
    */
   export type RoleCountOutputTypeCountProjectMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectMemberWhereInput
+  }
+
+
+  /**
+   * Count Type TitleCountOutputType
+   */
+
+  export type TitleCountOutputType = {
+    members: number
+    fieldRates: number
+    stageRates: number
+  }
+
+  export type TitleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    members?: boolean | TitleCountOutputTypeCountMembersArgs
+    fieldRates?: boolean | TitleCountOutputTypeCountFieldRatesArgs
+    stageRates?: boolean | TitleCountOutputTypeCountStageRatesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TitleCountOutputType without action
+   */
+  export type TitleCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleCountOutputType
+     */
+    select?: TitleCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TitleCountOutputType without action
+   */
+  export type TitleCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceMemberWhereInput
+  }
+
+  /**
+   * TitleCountOutputType without action
+   */
+  export type TitleCountOutputTypeCountFieldRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TitleFieldRateWhereInput
+  }
+
+  /**
+   * TitleCountOutputType without action
+   */
+  export type TitleCountOutputTypeCountStageRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TitleStageRateWhereInput
   }
 
 
@@ -6316,15 +6738,19 @@ export namespace Prisma {
 
   export type ChecklistTemplateCountOutputType = {
     items: number
+    sections: number
     projects: number
     weeklyTargets: number
+    tasks: number
     weeklySlots: number
   }
 
   export type ChecklistTemplateCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | ChecklistTemplateCountOutputTypeCountItemsArgs
+    sections?: boolean | ChecklistTemplateCountOutputTypeCountSectionsArgs
     projects?: boolean | ChecklistTemplateCountOutputTypeCountProjectsArgs
     weeklyTargets?: boolean | ChecklistTemplateCountOutputTypeCountWeeklyTargetsArgs
+    tasks?: boolean | ChecklistTemplateCountOutputTypeCountTasksArgs
     weeklySlots?: boolean | ChecklistTemplateCountOutputTypeCountWeeklySlotsArgs
   }
 
@@ -6349,6 +6775,13 @@ export namespace Prisma {
   /**
    * ChecklistTemplateCountOutputType without action
    */
+  export type ChecklistTemplateCountOutputTypeCountSectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChecklistSectionWhereInput
+  }
+
+  /**
+   * ChecklistTemplateCountOutputType without action
+   */
   export type ChecklistTemplateCountOutputTypeCountProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectTemplateWhereInput
   }
@@ -6363,8 +6796,46 @@ export namespace Prisma {
   /**
    * ChecklistTemplateCountOutputType without action
    */
+  export type ChecklistTemplateCountOutputTypeCountTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskWhereInput
+  }
+
+  /**
+   * ChecklistTemplateCountOutputType without action
+   */
   export type ChecklistTemplateCountOutputTypeCountWeeklySlotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WeeklySlotWhereInput
+  }
+
+
+  /**
+   * Count Type ChecklistSectionCountOutputType
+   */
+
+  export type ChecklistSectionCountOutputType = {
+    items: number
+  }
+
+  export type ChecklistSectionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    items?: boolean | ChecklistSectionCountOutputTypeCountItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ChecklistSectionCountOutputType without action
+   */
+  export type ChecklistSectionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSectionCountOutputType
+     */
+    select?: ChecklistSectionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ChecklistSectionCountOutputType without action
+   */
+  export type ChecklistSectionCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChecklistTemplateItemWhereInput
   }
 
 
@@ -6374,10 +6845,12 @@ export namespace Prisma {
 
   export type ChecklistTemplateItemCountOutputType = {
     taskItems: number
+    titleRates: number
   }
 
   export type ChecklistTemplateItemCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     taskItems?: boolean | ChecklistTemplateItemCountOutputTypeCountTaskItemsArgs
+    titleRates?: boolean | ChecklistTemplateItemCountOutputTypeCountTitleRatesArgs
   }
 
   // Custom InputTypes
@@ -6398,6 +6871,13 @@ export namespace Prisma {
     where?: TaskChecklistItemWhereInput
   }
 
+  /**
+   * ChecklistTemplateItemCountOutputType without action
+   */
+  export type ChecklistTemplateItemCountOutputTypeCountTitleRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TitleFieldRateWhereInput
+  }
+
 
   /**
    * Count Type TaskStatusCountOutputType
@@ -6409,6 +6889,7 @@ export namespace Prisma {
     requiredBeforeItems: number
     lockedFromItems: number
     titleLockTemplates: number
+    titleStageRates: number
   }
 
   export type TaskStatusCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6417,6 +6898,7 @@ export namespace Prisma {
     requiredBeforeItems?: boolean | TaskStatusCountOutputTypeCountRequiredBeforeItemsArgs
     lockedFromItems?: boolean | TaskStatusCountOutputTypeCountLockedFromItemsArgs
     titleLockTemplates?: boolean | TaskStatusCountOutputTypeCountTitleLockTemplatesArgs
+    titleStageRates?: boolean | TaskStatusCountOutputTypeCountTitleStageRatesArgs
   }
 
   // Custom InputTypes
@@ -6463,6 +6945,13 @@ export namespace Prisma {
    */
   export type TaskStatusCountOutputTypeCountTitleLockTemplatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ChecklistTemplateWhereInput
+  }
+
+  /**
+   * TaskStatusCountOutputType without action
+   */
+  export type TaskStatusCountOutputTypeCountTitleStageRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TitleStageRateWhereInput
   }
 
 
@@ -6887,6 +7376,7 @@ export namespace Prisma {
     whatsappConfig?: boolean | Workspace$whatsappConfigArgs<ExtArgs>
     whatsappTemplates?: boolean | Workspace$whatsappTemplatesArgs<ExtArgs>
     roles?: boolean | Workspace$rolesArgs<ExtArgs>
+    titles?: boolean | Workspace$titlesArgs<ExtArgs>
     currencies?: boolean | Workspace$currenciesArgs<ExtArgs>
     exchangeRates?: boolean | Workspace$exchangeRatesArgs<ExtArgs>
     attachments?: boolean | Workspace$attachmentsArgs<ExtArgs>
@@ -6952,6 +7442,7 @@ export namespace Prisma {
     whatsappConfig?: boolean | Workspace$whatsappConfigArgs<ExtArgs>
     whatsappTemplates?: boolean | Workspace$whatsappTemplatesArgs<ExtArgs>
     roles?: boolean | Workspace$rolesArgs<ExtArgs>
+    titles?: boolean | Workspace$titlesArgs<ExtArgs>
     currencies?: boolean | Workspace$currenciesArgs<ExtArgs>
     exchangeRates?: boolean | Workspace$exchangeRatesArgs<ExtArgs>
     attachments?: boolean | Workspace$attachmentsArgs<ExtArgs>
@@ -6984,6 +7475,7 @@ export namespace Prisma {
       whatsappConfig: Prisma.$WhatsAppConfigPayload<ExtArgs> | null
       whatsappTemplates: Prisma.$WhatsAppTemplatePayload<ExtArgs>[]
       roles: Prisma.$RolePayload<ExtArgs>[]
+      titles: Prisma.$TitlePayload<ExtArgs>[]
       currencies: Prisma.$CurrencyPayload<ExtArgs>[]
       exchangeRates: Prisma.$ExchangeRatePayload<ExtArgs>[]
       attachments: Prisma.$AttachmentPayload<ExtArgs>[]
@@ -7413,6 +7905,7 @@ export namespace Prisma {
     whatsappConfig<T extends Workspace$whatsappConfigArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$whatsappConfigArgs<ExtArgs>>): Prisma__WhatsAppConfigClient<$Result.GetResult<Prisma.$WhatsAppConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     whatsappTemplates<T extends Workspace$whatsappTemplatesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$whatsappTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WhatsAppTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roles<T extends Workspace$rolesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    titles<T extends Workspace$titlesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$titlesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     currencies<T extends Workspace$currenciesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$currenciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     exchangeRates<T extends Workspace$exchangeRatesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$exchangeRatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     attachments<T extends Workspace$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -8274,6 +8767,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
+  }
+
+  /**
+   * Workspace.titles
+   */
+  export type Workspace$titlesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Title
+     */
+    select?: TitleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Title
+     */
+    omit?: TitleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleInclude<ExtArgs> | null
+    where?: TitleWhereInput
+    orderBy?: TitleOrderByWithRelationInput | TitleOrderByWithRelationInput[]
+    cursor?: TitleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TitleScalarFieldEnum | TitleScalarFieldEnum[]
   }
 
   /**
@@ -10670,8 +11187,18 @@ export namespace Prisma {
 
   export type AggregateWorkspaceMember = {
     _count: WorkspaceMemberCountAggregateOutputType | null
+    _avg: WorkspaceMemberAvgAggregateOutputType | null
+    _sum: WorkspaceMemberSumAggregateOutputType | null
     _min: WorkspaceMemberMinAggregateOutputType | null
     _max: WorkspaceMemberMaxAggregateOutputType | null
+  }
+
+  export type WorkspaceMemberAvgAggregateOutputType = {
+    weeklyHours: number | null
+  }
+
+  export type WorkspaceMemberSumAggregateOutputType = {
+    weeklyHours: number | null
   }
 
   export type WorkspaceMemberMinAggregateOutputType = {
@@ -10683,6 +11210,8 @@ export namespace Prisma {
     imageUrl: string | null
     type: $Enums.MemberType | null
     roleId: string | null
+    titleId: string | null
+    weeklyHours: number | null
     joinedAt: Date | null
   }
 
@@ -10695,6 +11224,8 @@ export namespace Prisma {
     imageUrl: string | null
     type: $Enums.MemberType | null
     roleId: string | null
+    titleId: string | null
+    weeklyHours: number | null
     joinedAt: Date | null
   }
 
@@ -10707,10 +11238,20 @@ export namespace Prisma {
     imageUrl: number
     type: number
     roleId: number
+    titleId: number
+    weeklyHours: number
     joinedAt: number
     _all: number
   }
 
+
+  export type WorkspaceMemberAvgAggregateInputType = {
+    weeklyHours?: true
+  }
+
+  export type WorkspaceMemberSumAggregateInputType = {
+    weeklyHours?: true
+  }
 
   export type WorkspaceMemberMinAggregateInputType = {
     id?: true
@@ -10721,6 +11262,8 @@ export namespace Prisma {
     imageUrl?: true
     type?: true
     roleId?: true
+    titleId?: true
+    weeklyHours?: true
     joinedAt?: true
   }
 
@@ -10733,6 +11276,8 @@ export namespace Prisma {
     imageUrl?: true
     type?: true
     roleId?: true
+    titleId?: true
+    weeklyHours?: true
     joinedAt?: true
   }
 
@@ -10745,6 +11290,8 @@ export namespace Prisma {
     imageUrl?: true
     type?: true
     roleId?: true
+    titleId?: true
+    weeklyHours?: true
     joinedAt?: true
     _all?: true
   }
@@ -10787,6 +11334,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: WorkspaceMemberAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WorkspaceMemberSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: WorkspaceMemberMinAggregateInputType
@@ -10817,6 +11376,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: WorkspaceMemberCountAggregateInputType | true
+    _avg?: WorkspaceMemberAvgAggregateInputType
+    _sum?: WorkspaceMemberSumAggregateInputType
     _min?: WorkspaceMemberMinAggregateInputType
     _max?: WorkspaceMemberMaxAggregateInputType
   }
@@ -10830,8 +11391,12 @@ export namespace Prisma {
     imageUrl: string | null
     type: $Enums.MemberType
     roleId: string | null
+    titleId: string | null
+    weeklyHours: number
     joinedAt: Date
     _count: WorkspaceMemberCountAggregateOutputType | null
+    _avg: WorkspaceMemberAvgAggregateOutputType | null
+    _sum: WorkspaceMemberSumAggregateOutputType | null
     _min: WorkspaceMemberMinAggregateOutputType | null
     _max: WorkspaceMemberMaxAggregateOutputType | null
   }
@@ -10859,9 +11424,12 @@ export namespace Prisma {
     imageUrl?: boolean
     type?: boolean
     roleId?: boolean
+    titleId?: boolean
+    weeklyHours?: boolean
     joinedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     role?: boolean | WorkspaceMember$roleArgs<ExtArgs>
+    capacityTitle?: boolean | WorkspaceMember$capacityTitleArgs<ExtArgs>
     assignedTasks?: boolean | WorkspaceMember$assignedTasksArgs<ExtArgs>
     messages?: boolean | WorkspaceMember$messagesArgs<ExtArgs>
     mentionedIn?: boolean | WorkspaceMember$mentionedInArgs<ExtArgs>
@@ -10886,9 +11454,12 @@ export namespace Prisma {
     imageUrl?: boolean
     type?: boolean
     roleId?: boolean
+    titleId?: boolean
+    weeklyHours?: boolean
     joinedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     role?: boolean | WorkspaceMember$roleArgs<ExtArgs>
+    capacityTitle?: boolean | WorkspaceMember$capacityTitleArgs<ExtArgs>
   }, ExtArgs["result"]["workspaceMember"]>
 
   export type WorkspaceMemberSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10900,9 +11471,12 @@ export namespace Prisma {
     imageUrl?: boolean
     type?: boolean
     roleId?: boolean
+    titleId?: boolean
+    weeklyHours?: boolean
     joinedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     role?: boolean | WorkspaceMember$roleArgs<ExtArgs>
+    capacityTitle?: boolean | WorkspaceMember$capacityTitleArgs<ExtArgs>
   }, ExtArgs["result"]["workspaceMember"]>
 
   export type WorkspaceMemberSelectScalar = {
@@ -10914,13 +11488,16 @@ export namespace Prisma {
     imageUrl?: boolean
     type?: boolean
     roleId?: boolean
+    titleId?: boolean
+    weeklyHours?: boolean
     joinedAt?: boolean
   }
 
-  export type WorkspaceMemberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "userId" | "email" | "name" | "imageUrl" | "type" | "roleId" | "joinedAt", ExtArgs["result"]["workspaceMember"]>
+  export type WorkspaceMemberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "userId" | "email" | "name" | "imageUrl" | "type" | "roleId" | "titleId" | "weeklyHours" | "joinedAt", ExtArgs["result"]["workspaceMember"]>
   export type WorkspaceMemberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     role?: boolean | WorkspaceMember$roleArgs<ExtArgs>
+    capacityTitle?: boolean | WorkspaceMember$capacityTitleArgs<ExtArgs>
     assignedTasks?: boolean | WorkspaceMember$assignedTasksArgs<ExtArgs>
     messages?: boolean | WorkspaceMember$messagesArgs<ExtArgs>
     mentionedIn?: boolean | WorkspaceMember$mentionedInArgs<ExtArgs>
@@ -10938,10 +11515,12 @@ export namespace Prisma {
   export type WorkspaceMemberIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     role?: boolean | WorkspaceMember$roleArgs<ExtArgs>
+    capacityTitle?: boolean | WorkspaceMember$capacityTitleArgs<ExtArgs>
   }
   export type WorkspaceMemberIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     role?: boolean | WorkspaceMember$roleArgs<ExtArgs>
+    capacityTitle?: boolean | WorkspaceMember$capacityTitleArgs<ExtArgs>
   }
 
   export type $WorkspaceMemberPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10949,6 +11528,7 @@ export namespace Prisma {
     objects: {
       workspace: Prisma.$WorkspacePayload<ExtArgs>
       role: Prisma.$RolePayload<ExtArgs> | null
+      capacityTitle: Prisma.$TitlePayload<ExtArgs> | null
       assignedTasks: Prisma.$TaskPayload<ExtArgs>[]
       messages: Prisma.$MessagePayload<ExtArgs>[]
       mentionedIn: Prisma.$MessageMentionPayload<ExtArgs>[]
@@ -10971,6 +11551,8 @@ export namespace Prisma {
       imageUrl: string | null
       type: $Enums.MemberType
       roleId: string | null
+      titleId: string | null
+      weeklyHours: number
       joinedAt: Date
     }, ExtArgs["result"]["workspaceMember"]>
     composites: {}
@@ -11368,6 +11950,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     role<T extends WorkspaceMember$roleArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$roleArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    capacityTitle<T extends WorkspaceMember$capacityTitleArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$capacityTitleArgs<ExtArgs>>): Prisma__TitleClient<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     assignedTasks<T extends WorkspaceMember$assignedTasksArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$assignedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     messages<T extends WorkspaceMember$messagesArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     mentionedIn<T extends WorkspaceMember$mentionedInArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceMember$mentionedInArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageMentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -11417,6 +12000,8 @@ export namespace Prisma {
     readonly imageUrl: FieldRef<"WorkspaceMember", 'String'>
     readonly type: FieldRef<"WorkspaceMember", 'MemberType'>
     readonly roleId: FieldRef<"WorkspaceMember", 'String'>
+    readonly titleId: FieldRef<"WorkspaceMember", 'String'>
+    readonly weeklyHours: FieldRef<"WorkspaceMember", 'Float'>
     readonly joinedAt: FieldRef<"WorkspaceMember", 'DateTime'>
   }
     
@@ -11835,6 +12420,25 @@ export namespace Prisma {
      */
     include?: RoleInclude<ExtArgs> | null
     where?: RoleWhereInput
+  }
+
+  /**
+   * WorkspaceMember.capacityTitle
+   */
+  export type WorkspaceMember$capacityTitleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Title
+     */
+    select?: TitleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Title
+     */
+    omit?: TitleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleInclude<ExtArgs> | null
+    where?: TitleWhereInput
   }
 
   /**
@@ -13258,6 +13862,3326 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: RoleInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Title
+   */
+
+  export type AggregateTitle = {
+    _count: TitleCountAggregateOutputType | null
+    _min: TitleMinAggregateOutputType | null
+    _max: TitleMaxAggregateOutputType | null
+  }
+
+  export type TitleMinAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    name: string | null
+    createdAt: Date | null
+  }
+
+  export type TitleMaxAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    name: string | null
+    createdAt: Date | null
+  }
+
+  export type TitleCountAggregateOutputType = {
+    id: number
+    workspaceId: number
+    name: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TitleMinAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    name?: true
+    createdAt?: true
+  }
+
+  export type TitleMaxAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    name?: true
+    createdAt?: true
+  }
+
+  export type TitleCountAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    name?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TitleAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Title to aggregate.
+     */
+    where?: TitleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Titles to fetch.
+     */
+    orderBy?: TitleOrderByWithRelationInput | TitleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TitleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Titles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Titles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Titles
+    **/
+    _count?: true | TitleCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TitleMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TitleMaxAggregateInputType
+  }
+
+  export type GetTitleAggregateType<T extends TitleAggregateArgs> = {
+        [P in keyof T & keyof AggregateTitle]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTitle[P]>
+      : GetScalarType<T[P], AggregateTitle[P]>
+  }
+
+
+
+
+  export type TitleGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TitleWhereInput
+    orderBy?: TitleOrderByWithAggregationInput | TitleOrderByWithAggregationInput[]
+    by: TitleScalarFieldEnum[] | TitleScalarFieldEnum
+    having?: TitleScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TitleCountAggregateInputType | true
+    _min?: TitleMinAggregateInputType
+    _max?: TitleMaxAggregateInputType
+  }
+
+  export type TitleGroupByOutputType = {
+    id: string
+    workspaceId: string
+    name: string
+    createdAt: Date
+    _count: TitleCountAggregateOutputType | null
+    _min: TitleMinAggregateOutputType | null
+    _max: TitleMaxAggregateOutputType | null
+  }
+
+  type GetTitleGroupByPayload<T extends TitleGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TitleGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TitleGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TitleGroupByOutputType[P]>
+            : GetScalarType<T[P], TitleGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TitleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    name?: boolean
+    createdAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    members?: boolean | Title$membersArgs<ExtArgs>
+    fieldRates?: boolean | Title$fieldRatesArgs<ExtArgs>
+    stageRates?: boolean | Title$stageRatesArgs<ExtArgs>
+    _count?: boolean | TitleCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["title"]>
+
+  export type TitleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    name?: boolean
+    createdAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["title"]>
+
+  export type TitleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    name?: boolean
+    createdAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["title"]>
+
+  export type TitleSelectScalar = {
+    id?: boolean
+    workspaceId?: boolean
+    name?: boolean
+    createdAt?: boolean
+  }
+
+  export type TitleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "name" | "createdAt", ExtArgs["result"]["title"]>
+  export type TitleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    members?: boolean | Title$membersArgs<ExtArgs>
+    fieldRates?: boolean | Title$fieldRatesArgs<ExtArgs>
+    stageRates?: boolean | Title$stageRatesArgs<ExtArgs>
+    _count?: boolean | TitleCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type TitleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+  export type TitleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+
+  export type $TitlePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Title"
+    objects: {
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
+      members: Prisma.$WorkspaceMemberPayload<ExtArgs>[]
+      fieldRates: Prisma.$TitleFieldRatePayload<ExtArgs>[]
+      stageRates: Prisma.$TitleStageRatePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      workspaceId: string
+      name: string
+      createdAt: Date
+    }, ExtArgs["result"]["title"]>
+    composites: {}
+  }
+
+  type TitleGetPayload<S extends boolean | null | undefined | TitleDefaultArgs> = $Result.GetResult<Prisma.$TitlePayload, S>
+
+  type TitleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TitleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TitleCountAggregateInputType | true
+    }
+
+  export interface TitleDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Title'], meta: { name: 'Title' } }
+    /**
+     * Find zero or one Title that matches the filter.
+     * @param {TitleFindUniqueArgs} args - Arguments to find a Title
+     * @example
+     * // Get one Title
+     * const title = await prisma.title.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TitleFindUniqueArgs>(args: SelectSubset<T, TitleFindUniqueArgs<ExtArgs>>): Prisma__TitleClient<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Title that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TitleFindUniqueOrThrowArgs} args - Arguments to find a Title
+     * @example
+     * // Get one Title
+     * const title = await prisma.title.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TitleFindUniqueOrThrowArgs>(args: SelectSubset<T, TitleFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TitleClient<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Title that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleFindFirstArgs} args - Arguments to find a Title
+     * @example
+     * // Get one Title
+     * const title = await prisma.title.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TitleFindFirstArgs>(args?: SelectSubset<T, TitleFindFirstArgs<ExtArgs>>): Prisma__TitleClient<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Title that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleFindFirstOrThrowArgs} args - Arguments to find a Title
+     * @example
+     * // Get one Title
+     * const title = await prisma.title.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TitleFindFirstOrThrowArgs>(args?: SelectSubset<T, TitleFindFirstOrThrowArgs<ExtArgs>>): Prisma__TitleClient<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Titles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Titles
+     * const titles = await prisma.title.findMany()
+     * 
+     * // Get first 10 Titles
+     * const titles = await prisma.title.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const titleWithIdOnly = await prisma.title.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TitleFindManyArgs>(args?: SelectSubset<T, TitleFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Title.
+     * @param {TitleCreateArgs} args - Arguments to create a Title.
+     * @example
+     * // Create one Title
+     * const Title = await prisma.title.create({
+     *   data: {
+     *     // ... data to create a Title
+     *   }
+     * })
+     * 
+     */
+    create<T extends TitleCreateArgs>(args: SelectSubset<T, TitleCreateArgs<ExtArgs>>): Prisma__TitleClient<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Titles.
+     * @param {TitleCreateManyArgs} args - Arguments to create many Titles.
+     * @example
+     * // Create many Titles
+     * const title = await prisma.title.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TitleCreateManyArgs>(args?: SelectSubset<T, TitleCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Titles and returns the data saved in the database.
+     * @param {TitleCreateManyAndReturnArgs} args - Arguments to create many Titles.
+     * @example
+     * // Create many Titles
+     * const title = await prisma.title.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Titles and only return the `id`
+     * const titleWithIdOnly = await prisma.title.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TitleCreateManyAndReturnArgs>(args?: SelectSubset<T, TitleCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Title.
+     * @param {TitleDeleteArgs} args - Arguments to delete one Title.
+     * @example
+     * // Delete one Title
+     * const Title = await prisma.title.delete({
+     *   where: {
+     *     // ... filter to delete one Title
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TitleDeleteArgs>(args: SelectSubset<T, TitleDeleteArgs<ExtArgs>>): Prisma__TitleClient<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Title.
+     * @param {TitleUpdateArgs} args - Arguments to update one Title.
+     * @example
+     * // Update one Title
+     * const title = await prisma.title.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TitleUpdateArgs>(args: SelectSubset<T, TitleUpdateArgs<ExtArgs>>): Prisma__TitleClient<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Titles.
+     * @param {TitleDeleteManyArgs} args - Arguments to filter Titles to delete.
+     * @example
+     * // Delete a few Titles
+     * const { count } = await prisma.title.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TitleDeleteManyArgs>(args?: SelectSubset<T, TitleDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Titles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Titles
+     * const title = await prisma.title.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TitleUpdateManyArgs>(args: SelectSubset<T, TitleUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Titles and returns the data updated in the database.
+     * @param {TitleUpdateManyAndReturnArgs} args - Arguments to update many Titles.
+     * @example
+     * // Update many Titles
+     * const title = await prisma.title.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Titles and only return the `id`
+     * const titleWithIdOnly = await prisma.title.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TitleUpdateManyAndReturnArgs>(args: SelectSubset<T, TitleUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Title.
+     * @param {TitleUpsertArgs} args - Arguments to update or create a Title.
+     * @example
+     * // Update or create a Title
+     * const title = await prisma.title.upsert({
+     *   create: {
+     *     // ... data to create a Title
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Title we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TitleUpsertArgs>(args: SelectSubset<T, TitleUpsertArgs<ExtArgs>>): Prisma__TitleClient<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Titles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleCountArgs} args - Arguments to filter Titles to count.
+     * @example
+     * // Count the number of Titles
+     * const count = await prisma.title.count({
+     *   where: {
+     *     // ... the filter for the Titles we want to count
+     *   }
+     * })
+    **/
+    count<T extends TitleCountArgs>(
+      args?: Subset<T, TitleCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TitleCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Title.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TitleAggregateArgs>(args: Subset<T, TitleAggregateArgs>): Prisma.PrismaPromise<GetTitleAggregateType<T>>
+
+    /**
+     * Group by Title.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TitleGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TitleGroupByArgs['orderBy'] }
+        : { orderBy?: TitleGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TitleGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTitleGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Title model
+   */
+  readonly fields: TitleFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Title.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TitleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    members<T extends Title$membersArgs<ExtArgs> = {}>(args?: Subset<T, Title$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    fieldRates<T extends Title$fieldRatesArgs<ExtArgs> = {}>(args?: Subset<T, Title$fieldRatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitleFieldRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    stageRates<T extends Title$stageRatesArgs<ExtArgs> = {}>(args?: Subset<T, Title$stageRatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitleStageRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Title model
+   */
+  interface TitleFieldRefs {
+    readonly id: FieldRef<"Title", 'String'>
+    readonly workspaceId: FieldRef<"Title", 'String'>
+    readonly name: FieldRef<"Title", 'String'>
+    readonly createdAt: FieldRef<"Title", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Title findUnique
+   */
+  export type TitleFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Title
+     */
+    select?: TitleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Title
+     */
+    omit?: TitleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleInclude<ExtArgs> | null
+    /**
+     * Filter, which Title to fetch.
+     */
+    where: TitleWhereUniqueInput
+  }
+
+  /**
+   * Title findUniqueOrThrow
+   */
+  export type TitleFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Title
+     */
+    select?: TitleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Title
+     */
+    omit?: TitleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleInclude<ExtArgs> | null
+    /**
+     * Filter, which Title to fetch.
+     */
+    where: TitleWhereUniqueInput
+  }
+
+  /**
+   * Title findFirst
+   */
+  export type TitleFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Title
+     */
+    select?: TitleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Title
+     */
+    omit?: TitleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleInclude<ExtArgs> | null
+    /**
+     * Filter, which Title to fetch.
+     */
+    where?: TitleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Titles to fetch.
+     */
+    orderBy?: TitleOrderByWithRelationInput | TitleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Titles.
+     */
+    cursor?: TitleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Titles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Titles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Titles.
+     */
+    distinct?: TitleScalarFieldEnum | TitleScalarFieldEnum[]
+  }
+
+  /**
+   * Title findFirstOrThrow
+   */
+  export type TitleFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Title
+     */
+    select?: TitleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Title
+     */
+    omit?: TitleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleInclude<ExtArgs> | null
+    /**
+     * Filter, which Title to fetch.
+     */
+    where?: TitleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Titles to fetch.
+     */
+    orderBy?: TitleOrderByWithRelationInput | TitleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Titles.
+     */
+    cursor?: TitleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Titles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Titles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Titles.
+     */
+    distinct?: TitleScalarFieldEnum | TitleScalarFieldEnum[]
+  }
+
+  /**
+   * Title findMany
+   */
+  export type TitleFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Title
+     */
+    select?: TitleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Title
+     */
+    omit?: TitleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleInclude<ExtArgs> | null
+    /**
+     * Filter, which Titles to fetch.
+     */
+    where?: TitleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Titles to fetch.
+     */
+    orderBy?: TitleOrderByWithRelationInput | TitleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Titles.
+     */
+    cursor?: TitleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Titles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Titles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Titles.
+     */
+    distinct?: TitleScalarFieldEnum | TitleScalarFieldEnum[]
+  }
+
+  /**
+   * Title create
+   */
+  export type TitleCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Title
+     */
+    select?: TitleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Title
+     */
+    omit?: TitleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Title.
+     */
+    data: XOR<TitleCreateInput, TitleUncheckedCreateInput>
+  }
+
+  /**
+   * Title createMany
+   */
+  export type TitleCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Titles.
+     */
+    data: TitleCreateManyInput | TitleCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Title createManyAndReturn
+   */
+  export type TitleCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Title
+     */
+    select?: TitleSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Title
+     */
+    omit?: TitleOmit<ExtArgs> | null
+    /**
+     * The data used to create many Titles.
+     */
+    data: TitleCreateManyInput | TitleCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Title update
+   */
+  export type TitleUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Title
+     */
+    select?: TitleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Title
+     */
+    omit?: TitleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Title.
+     */
+    data: XOR<TitleUpdateInput, TitleUncheckedUpdateInput>
+    /**
+     * Choose, which Title to update.
+     */
+    where: TitleWhereUniqueInput
+  }
+
+  /**
+   * Title updateMany
+   */
+  export type TitleUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Titles.
+     */
+    data: XOR<TitleUpdateManyMutationInput, TitleUncheckedUpdateManyInput>
+    /**
+     * Filter which Titles to update
+     */
+    where?: TitleWhereInput
+    /**
+     * Limit how many Titles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Title updateManyAndReturn
+   */
+  export type TitleUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Title
+     */
+    select?: TitleSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Title
+     */
+    omit?: TitleOmit<ExtArgs> | null
+    /**
+     * The data used to update Titles.
+     */
+    data: XOR<TitleUpdateManyMutationInput, TitleUncheckedUpdateManyInput>
+    /**
+     * Filter which Titles to update
+     */
+    where?: TitleWhereInput
+    /**
+     * Limit how many Titles to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Title upsert
+   */
+  export type TitleUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Title
+     */
+    select?: TitleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Title
+     */
+    omit?: TitleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Title to update in case it exists.
+     */
+    where: TitleWhereUniqueInput
+    /**
+     * In case the Title found by the `where` argument doesn't exist, create a new Title with this data.
+     */
+    create: XOR<TitleCreateInput, TitleUncheckedCreateInput>
+    /**
+     * In case the Title was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TitleUpdateInput, TitleUncheckedUpdateInput>
+  }
+
+  /**
+   * Title delete
+   */
+  export type TitleDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Title
+     */
+    select?: TitleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Title
+     */
+    omit?: TitleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleInclude<ExtArgs> | null
+    /**
+     * Filter which Title to delete.
+     */
+    where: TitleWhereUniqueInput
+  }
+
+  /**
+   * Title deleteMany
+   */
+  export type TitleDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Titles to delete
+     */
+    where?: TitleWhereInput
+    /**
+     * Limit how many Titles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Title.members
+   */
+  export type Title$membersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceMember
+     */
+    omit?: WorkspaceMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberInclude<ExtArgs> | null
+    where?: WorkspaceMemberWhereInput
+    orderBy?: WorkspaceMemberOrderByWithRelationInput | WorkspaceMemberOrderByWithRelationInput[]
+    cursor?: WorkspaceMemberWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WorkspaceMemberScalarFieldEnum | WorkspaceMemberScalarFieldEnum[]
+  }
+
+  /**
+   * Title.fieldRates
+   */
+  export type Title$fieldRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleFieldRate
+     */
+    select?: TitleFieldRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleFieldRate
+     */
+    omit?: TitleFieldRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleFieldRateInclude<ExtArgs> | null
+    where?: TitleFieldRateWhereInput
+    orderBy?: TitleFieldRateOrderByWithRelationInput | TitleFieldRateOrderByWithRelationInput[]
+    cursor?: TitleFieldRateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TitleFieldRateScalarFieldEnum | TitleFieldRateScalarFieldEnum[]
+  }
+
+  /**
+   * Title.stageRates
+   */
+  export type Title$stageRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleStageRate
+     */
+    select?: TitleStageRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleStageRate
+     */
+    omit?: TitleStageRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleStageRateInclude<ExtArgs> | null
+    where?: TitleStageRateWhereInput
+    orderBy?: TitleStageRateOrderByWithRelationInput | TitleStageRateOrderByWithRelationInput[]
+    cursor?: TitleStageRateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TitleStageRateScalarFieldEnum | TitleStageRateScalarFieldEnum[]
+  }
+
+  /**
+   * Title without action
+   */
+  export type TitleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Title
+     */
+    select?: TitleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Title
+     */
+    omit?: TitleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TitleFieldRate
+   */
+
+  export type AggregateTitleFieldRate = {
+    _count: TitleFieldRateCountAggregateOutputType | null
+    _avg: TitleFieldRateAvgAggregateOutputType | null
+    _sum: TitleFieldRateSumAggregateOutputType | null
+    _min: TitleFieldRateMinAggregateOutputType | null
+    _max: TitleFieldRateMaxAggregateOutputType | null
+  }
+
+  export type TitleFieldRateAvgAggregateOutputType = {
+    minutesPerUnit: number | null
+  }
+
+  export type TitleFieldRateSumAggregateOutputType = {
+    minutesPerUnit: number | null
+  }
+
+  export type TitleFieldRateMinAggregateOutputType = {
+    id: string | null
+    titleId: string | null
+    templateItemId: string | null
+    minutesPerUnit: number | null
+  }
+
+  export type TitleFieldRateMaxAggregateOutputType = {
+    id: string | null
+    titleId: string | null
+    templateItemId: string | null
+    minutesPerUnit: number | null
+  }
+
+  export type TitleFieldRateCountAggregateOutputType = {
+    id: number
+    titleId: number
+    templateItemId: number
+    minutesPerUnit: number
+    _all: number
+  }
+
+
+  export type TitleFieldRateAvgAggregateInputType = {
+    minutesPerUnit?: true
+  }
+
+  export type TitleFieldRateSumAggregateInputType = {
+    minutesPerUnit?: true
+  }
+
+  export type TitleFieldRateMinAggregateInputType = {
+    id?: true
+    titleId?: true
+    templateItemId?: true
+    minutesPerUnit?: true
+  }
+
+  export type TitleFieldRateMaxAggregateInputType = {
+    id?: true
+    titleId?: true
+    templateItemId?: true
+    minutesPerUnit?: true
+  }
+
+  export type TitleFieldRateCountAggregateInputType = {
+    id?: true
+    titleId?: true
+    templateItemId?: true
+    minutesPerUnit?: true
+    _all?: true
+  }
+
+  export type TitleFieldRateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TitleFieldRate to aggregate.
+     */
+    where?: TitleFieldRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TitleFieldRates to fetch.
+     */
+    orderBy?: TitleFieldRateOrderByWithRelationInput | TitleFieldRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TitleFieldRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TitleFieldRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TitleFieldRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TitleFieldRates
+    **/
+    _count?: true | TitleFieldRateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TitleFieldRateAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TitleFieldRateSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TitleFieldRateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TitleFieldRateMaxAggregateInputType
+  }
+
+  export type GetTitleFieldRateAggregateType<T extends TitleFieldRateAggregateArgs> = {
+        [P in keyof T & keyof AggregateTitleFieldRate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTitleFieldRate[P]>
+      : GetScalarType<T[P], AggregateTitleFieldRate[P]>
+  }
+
+
+
+
+  export type TitleFieldRateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TitleFieldRateWhereInput
+    orderBy?: TitleFieldRateOrderByWithAggregationInput | TitleFieldRateOrderByWithAggregationInput[]
+    by: TitleFieldRateScalarFieldEnum[] | TitleFieldRateScalarFieldEnum
+    having?: TitleFieldRateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TitleFieldRateCountAggregateInputType | true
+    _avg?: TitleFieldRateAvgAggregateInputType
+    _sum?: TitleFieldRateSumAggregateInputType
+    _min?: TitleFieldRateMinAggregateInputType
+    _max?: TitleFieldRateMaxAggregateInputType
+  }
+
+  export type TitleFieldRateGroupByOutputType = {
+    id: string
+    titleId: string
+    templateItemId: string
+    minutesPerUnit: number
+    _count: TitleFieldRateCountAggregateOutputType | null
+    _avg: TitleFieldRateAvgAggregateOutputType | null
+    _sum: TitleFieldRateSumAggregateOutputType | null
+    _min: TitleFieldRateMinAggregateOutputType | null
+    _max: TitleFieldRateMaxAggregateOutputType | null
+  }
+
+  type GetTitleFieldRateGroupByPayload<T extends TitleFieldRateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TitleFieldRateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TitleFieldRateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TitleFieldRateGroupByOutputType[P]>
+            : GetScalarType<T[P], TitleFieldRateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TitleFieldRateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    titleId?: boolean
+    templateItemId?: boolean
+    minutesPerUnit?: boolean
+    title?: boolean | TitleDefaultArgs<ExtArgs>
+    templateItem?: boolean | ChecklistTemplateItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["titleFieldRate"]>
+
+  export type TitleFieldRateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    titleId?: boolean
+    templateItemId?: boolean
+    minutesPerUnit?: boolean
+    title?: boolean | TitleDefaultArgs<ExtArgs>
+    templateItem?: boolean | ChecklistTemplateItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["titleFieldRate"]>
+
+  export type TitleFieldRateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    titleId?: boolean
+    templateItemId?: boolean
+    minutesPerUnit?: boolean
+    title?: boolean | TitleDefaultArgs<ExtArgs>
+    templateItem?: boolean | ChecklistTemplateItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["titleFieldRate"]>
+
+  export type TitleFieldRateSelectScalar = {
+    id?: boolean
+    titleId?: boolean
+    templateItemId?: boolean
+    minutesPerUnit?: boolean
+  }
+
+  export type TitleFieldRateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "titleId" | "templateItemId" | "minutesPerUnit", ExtArgs["result"]["titleFieldRate"]>
+  export type TitleFieldRateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    title?: boolean | TitleDefaultArgs<ExtArgs>
+    templateItem?: boolean | ChecklistTemplateItemDefaultArgs<ExtArgs>
+  }
+  export type TitleFieldRateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    title?: boolean | TitleDefaultArgs<ExtArgs>
+    templateItem?: boolean | ChecklistTemplateItemDefaultArgs<ExtArgs>
+  }
+  export type TitleFieldRateIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    title?: boolean | TitleDefaultArgs<ExtArgs>
+    templateItem?: boolean | ChecklistTemplateItemDefaultArgs<ExtArgs>
+  }
+
+  export type $TitleFieldRatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TitleFieldRate"
+    objects: {
+      title: Prisma.$TitlePayload<ExtArgs>
+      templateItem: Prisma.$ChecklistTemplateItemPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      titleId: string
+      templateItemId: string
+      minutesPerUnit: number
+    }, ExtArgs["result"]["titleFieldRate"]>
+    composites: {}
+  }
+
+  type TitleFieldRateGetPayload<S extends boolean | null | undefined | TitleFieldRateDefaultArgs> = $Result.GetResult<Prisma.$TitleFieldRatePayload, S>
+
+  type TitleFieldRateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TitleFieldRateFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TitleFieldRateCountAggregateInputType | true
+    }
+
+  export interface TitleFieldRateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TitleFieldRate'], meta: { name: 'TitleFieldRate' } }
+    /**
+     * Find zero or one TitleFieldRate that matches the filter.
+     * @param {TitleFieldRateFindUniqueArgs} args - Arguments to find a TitleFieldRate
+     * @example
+     * // Get one TitleFieldRate
+     * const titleFieldRate = await prisma.titleFieldRate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TitleFieldRateFindUniqueArgs>(args: SelectSubset<T, TitleFieldRateFindUniqueArgs<ExtArgs>>): Prisma__TitleFieldRateClient<$Result.GetResult<Prisma.$TitleFieldRatePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TitleFieldRate that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TitleFieldRateFindUniqueOrThrowArgs} args - Arguments to find a TitleFieldRate
+     * @example
+     * // Get one TitleFieldRate
+     * const titleFieldRate = await prisma.titleFieldRate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TitleFieldRateFindUniqueOrThrowArgs>(args: SelectSubset<T, TitleFieldRateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TitleFieldRateClient<$Result.GetResult<Prisma.$TitleFieldRatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TitleFieldRate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleFieldRateFindFirstArgs} args - Arguments to find a TitleFieldRate
+     * @example
+     * // Get one TitleFieldRate
+     * const titleFieldRate = await prisma.titleFieldRate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TitleFieldRateFindFirstArgs>(args?: SelectSubset<T, TitleFieldRateFindFirstArgs<ExtArgs>>): Prisma__TitleFieldRateClient<$Result.GetResult<Prisma.$TitleFieldRatePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TitleFieldRate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleFieldRateFindFirstOrThrowArgs} args - Arguments to find a TitleFieldRate
+     * @example
+     * // Get one TitleFieldRate
+     * const titleFieldRate = await prisma.titleFieldRate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TitleFieldRateFindFirstOrThrowArgs>(args?: SelectSubset<T, TitleFieldRateFindFirstOrThrowArgs<ExtArgs>>): Prisma__TitleFieldRateClient<$Result.GetResult<Prisma.$TitleFieldRatePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TitleFieldRates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleFieldRateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TitleFieldRates
+     * const titleFieldRates = await prisma.titleFieldRate.findMany()
+     * 
+     * // Get first 10 TitleFieldRates
+     * const titleFieldRates = await prisma.titleFieldRate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const titleFieldRateWithIdOnly = await prisma.titleFieldRate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TitleFieldRateFindManyArgs>(args?: SelectSubset<T, TitleFieldRateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitleFieldRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TitleFieldRate.
+     * @param {TitleFieldRateCreateArgs} args - Arguments to create a TitleFieldRate.
+     * @example
+     * // Create one TitleFieldRate
+     * const TitleFieldRate = await prisma.titleFieldRate.create({
+     *   data: {
+     *     // ... data to create a TitleFieldRate
+     *   }
+     * })
+     * 
+     */
+    create<T extends TitleFieldRateCreateArgs>(args: SelectSubset<T, TitleFieldRateCreateArgs<ExtArgs>>): Prisma__TitleFieldRateClient<$Result.GetResult<Prisma.$TitleFieldRatePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TitleFieldRates.
+     * @param {TitleFieldRateCreateManyArgs} args - Arguments to create many TitleFieldRates.
+     * @example
+     * // Create many TitleFieldRates
+     * const titleFieldRate = await prisma.titleFieldRate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TitleFieldRateCreateManyArgs>(args?: SelectSubset<T, TitleFieldRateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TitleFieldRates and returns the data saved in the database.
+     * @param {TitleFieldRateCreateManyAndReturnArgs} args - Arguments to create many TitleFieldRates.
+     * @example
+     * // Create many TitleFieldRates
+     * const titleFieldRate = await prisma.titleFieldRate.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TitleFieldRates and only return the `id`
+     * const titleFieldRateWithIdOnly = await prisma.titleFieldRate.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TitleFieldRateCreateManyAndReturnArgs>(args?: SelectSubset<T, TitleFieldRateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitleFieldRatePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TitleFieldRate.
+     * @param {TitleFieldRateDeleteArgs} args - Arguments to delete one TitleFieldRate.
+     * @example
+     * // Delete one TitleFieldRate
+     * const TitleFieldRate = await prisma.titleFieldRate.delete({
+     *   where: {
+     *     // ... filter to delete one TitleFieldRate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TitleFieldRateDeleteArgs>(args: SelectSubset<T, TitleFieldRateDeleteArgs<ExtArgs>>): Prisma__TitleFieldRateClient<$Result.GetResult<Prisma.$TitleFieldRatePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TitleFieldRate.
+     * @param {TitleFieldRateUpdateArgs} args - Arguments to update one TitleFieldRate.
+     * @example
+     * // Update one TitleFieldRate
+     * const titleFieldRate = await prisma.titleFieldRate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TitleFieldRateUpdateArgs>(args: SelectSubset<T, TitleFieldRateUpdateArgs<ExtArgs>>): Prisma__TitleFieldRateClient<$Result.GetResult<Prisma.$TitleFieldRatePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TitleFieldRates.
+     * @param {TitleFieldRateDeleteManyArgs} args - Arguments to filter TitleFieldRates to delete.
+     * @example
+     * // Delete a few TitleFieldRates
+     * const { count } = await prisma.titleFieldRate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TitleFieldRateDeleteManyArgs>(args?: SelectSubset<T, TitleFieldRateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TitleFieldRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleFieldRateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TitleFieldRates
+     * const titleFieldRate = await prisma.titleFieldRate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TitleFieldRateUpdateManyArgs>(args: SelectSubset<T, TitleFieldRateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TitleFieldRates and returns the data updated in the database.
+     * @param {TitleFieldRateUpdateManyAndReturnArgs} args - Arguments to update many TitleFieldRates.
+     * @example
+     * // Update many TitleFieldRates
+     * const titleFieldRate = await prisma.titleFieldRate.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TitleFieldRates and only return the `id`
+     * const titleFieldRateWithIdOnly = await prisma.titleFieldRate.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TitleFieldRateUpdateManyAndReturnArgs>(args: SelectSubset<T, TitleFieldRateUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitleFieldRatePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TitleFieldRate.
+     * @param {TitleFieldRateUpsertArgs} args - Arguments to update or create a TitleFieldRate.
+     * @example
+     * // Update or create a TitleFieldRate
+     * const titleFieldRate = await prisma.titleFieldRate.upsert({
+     *   create: {
+     *     // ... data to create a TitleFieldRate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TitleFieldRate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TitleFieldRateUpsertArgs>(args: SelectSubset<T, TitleFieldRateUpsertArgs<ExtArgs>>): Prisma__TitleFieldRateClient<$Result.GetResult<Prisma.$TitleFieldRatePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TitleFieldRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleFieldRateCountArgs} args - Arguments to filter TitleFieldRates to count.
+     * @example
+     * // Count the number of TitleFieldRates
+     * const count = await prisma.titleFieldRate.count({
+     *   where: {
+     *     // ... the filter for the TitleFieldRates we want to count
+     *   }
+     * })
+    **/
+    count<T extends TitleFieldRateCountArgs>(
+      args?: Subset<T, TitleFieldRateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TitleFieldRateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TitleFieldRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleFieldRateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TitleFieldRateAggregateArgs>(args: Subset<T, TitleFieldRateAggregateArgs>): Prisma.PrismaPromise<GetTitleFieldRateAggregateType<T>>
+
+    /**
+     * Group by TitleFieldRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleFieldRateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TitleFieldRateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TitleFieldRateGroupByArgs['orderBy'] }
+        : { orderBy?: TitleFieldRateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TitleFieldRateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTitleFieldRateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TitleFieldRate model
+   */
+  readonly fields: TitleFieldRateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TitleFieldRate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TitleFieldRateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    title<T extends TitleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TitleDefaultArgs<ExtArgs>>): Prisma__TitleClient<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    templateItem<T extends ChecklistTemplateItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateItemDefaultArgs<ExtArgs>>): Prisma__ChecklistTemplateItemClient<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TitleFieldRate model
+   */
+  interface TitleFieldRateFieldRefs {
+    readonly id: FieldRef<"TitleFieldRate", 'String'>
+    readonly titleId: FieldRef<"TitleFieldRate", 'String'>
+    readonly templateItemId: FieldRef<"TitleFieldRate", 'String'>
+    readonly minutesPerUnit: FieldRef<"TitleFieldRate", 'Float'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TitleFieldRate findUnique
+   */
+  export type TitleFieldRateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleFieldRate
+     */
+    select?: TitleFieldRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleFieldRate
+     */
+    omit?: TitleFieldRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleFieldRateInclude<ExtArgs> | null
+    /**
+     * Filter, which TitleFieldRate to fetch.
+     */
+    where: TitleFieldRateWhereUniqueInput
+  }
+
+  /**
+   * TitleFieldRate findUniqueOrThrow
+   */
+  export type TitleFieldRateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleFieldRate
+     */
+    select?: TitleFieldRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleFieldRate
+     */
+    omit?: TitleFieldRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleFieldRateInclude<ExtArgs> | null
+    /**
+     * Filter, which TitleFieldRate to fetch.
+     */
+    where: TitleFieldRateWhereUniqueInput
+  }
+
+  /**
+   * TitleFieldRate findFirst
+   */
+  export type TitleFieldRateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleFieldRate
+     */
+    select?: TitleFieldRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleFieldRate
+     */
+    omit?: TitleFieldRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleFieldRateInclude<ExtArgs> | null
+    /**
+     * Filter, which TitleFieldRate to fetch.
+     */
+    where?: TitleFieldRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TitleFieldRates to fetch.
+     */
+    orderBy?: TitleFieldRateOrderByWithRelationInput | TitleFieldRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TitleFieldRates.
+     */
+    cursor?: TitleFieldRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TitleFieldRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TitleFieldRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TitleFieldRates.
+     */
+    distinct?: TitleFieldRateScalarFieldEnum | TitleFieldRateScalarFieldEnum[]
+  }
+
+  /**
+   * TitleFieldRate findFirstOrThrow
+   */
+  export type TitleFieldRateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleFieldRate
+     */
+    select?: TitleFieldRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleFieldRate
+     */
+    omit?: TitleFieldRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleFieldRateInclude<ExtArgs> | null
+    /**
+     * Filter, which TitleFieldRate to fetch.
+     */
+    where?: TitleFieldRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TitleFieldRates to fetch.
+     */
+    orderBy?: TitleFieldRateOrderByWithRelationInput | TitleFieldRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TitleFieldRates.
+     */
+    cursor?: TitleFieldRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TitleFieldRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TitleFieldRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TitleFieldRates.
+     */
+    distinct?: TitleFieldRateScalarFieldEnum | TitleFieldRateScalarFieldEnum[]
+  }
+
+  /**
+   * TitleFieldRate findMany
+   */
+  export type TitleFieldRateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleFieldRate
+     */
+    select?: TitleFieldRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleFieldRate
+     */
+    omit?: TitleFieldRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleFieldRateInclude<ExtArgs> | null
+    /**
+     * Filter, which TitleFieldRates to fetch.
+     */
+    where?: TitleFieldRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TitleFieldRates to fetch.
+     */
+    orderBy?: TitleFieldRateOrderByWithRelationInput | TitleFieldRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TitleFieldRates.
+     */
+    cursor?: TitleFieldRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TitleFieldRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TitleFieldRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TitleFieldRates.
+     */
+    distinct?: TitleFieldRateScalarFieldEnum | TitleFieldRateScalarFieldEnum[]
+  }
+
+  /**
+   * TitleFieldRate create
+   */
+  export type TitleFieldRateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleFieldRate
+     */
+    select?: TitleFieldRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleFieldRate
+     */
+    omit?: TitleFieldRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleFieldRateInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TitleFieldRate.
+     */
+    data: XOR<TitleFieldRateCreateInput, TitleFieldRateUncheckedCreateInput>
+  }
+
+  /**
+   * TitleFieldRate createMany
+   */
+  export type TitleFieldRateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TitleFieldRates.
+     */
+    data: TitleFieldRateCreateManyInput | TitleFieldRateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TitleFieldRate createManyAndReturn
+   */
+  export type TitleFieldRateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleFieldRate
+     */
+    select?: TitleFieldRateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleFieldRate
+     */
+    omit?: TitleFieldRateOmit<ExtArgs> | null
+    /**
+     * The data used to create many TitleFieldRates.
+     */
+    data: TitleFieldRateCreateManyInput | TitleFieldRateCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleFieldRateIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TitleFieldRate update
+   */
+  export type TitleFieldRateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleFieldRate
+     */
+    select?: TitleFieldRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleFieldRate
+     */
+    omit?: TitleFieldRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleFieldRateInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TitleFieldRate.
+     */
+    data: XOR<TitleFieldRateUpdateInput, TitleFieldRateUncheckedUpdateInput>
+    /**
+     * Choose, which TitleFieldRate to update.
+     */
+    where: TitleFieldRateWhereUniqueInput
+  }
+
+  /**
+   * TitleFieldRate updateMany
+   */
+  export type TitleFieldRateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TitleFieldRates.
+     */
+    data: XOR<TitleFieldRateUpdateManyMutationInput, TitleFieldRateUncheckedUpdateManyInput>
+    /**
+     * Filter which TitleFieldRates to update
+     */
+    where?: TitleFieldRateWhereInput
+    /**
+     * Limit how many TitleFieldRates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TitleFieldRate updateManyAndReturn
+   */
+  export type TitleFieldRateUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleFieldRate
+     */
+    select?: TitleFieldRateSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleFieldRate
+     */
+    omit?: TitleFieldRateOmit<ExtArgs> | null
+    /**
+     * The data used to update TitleFieldRates.
+     */
+    data: XOR<TitleFieldRateUpdateManyMutationInput, TitleFieldRateUncheckedUpdateManyInput>
+    /**
+     * Filter which TitleFieldRates to update
+     */
+    where?: TitleFieldRateWhereInput
+    /**
+     * Limit how many TitleFieldRates to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleFieldRateIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TitleFieldRate upsert
+   */
+  export type TitleFieldRateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleFieldRate
+     */
+    select?: TitleFieldRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleFieldRate
+     */
+    omit?: TitleFieldRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleFieldRateInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TitleFieldRate to update in case it exists.
+     */
+    where: TitleFieldRateWhereUniqueInput
+    /**
+     * In case the TitleFieldRate found by the `where` argument doesn't exist, create a new TitleFieldRate with this data.
+     */
+    create: XOR<TitleFieldRateCreateInput, TitleFieldRateUncheckedCreateInput>
+    /**
+     * In case the TitleFieldRate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TitleFieldRateUpdateInput, TitleFieldRateUncheckedUpdateInput>
+  }
+
+  /**
+   * TitleFieldRate delete
+   */
+  export type TitleFieldRateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleFieldRate
+     */
+    select?: TitleFieldRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleFieldRate
+     */
+    omit?: TitleFieldRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleFieldRateInclude<ExtArgs> | null
+    /**
+     * Filter which TitleFieldRate to delete.
+     */
+    where: TitleFieldRateWhereUniqueInput
+  }
+
+  /**
+   * TitleFieldRate deleteMany
+   */
+  export type TitleFieldRateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TitleFieldRates to delete
+     */
+    where?: TitleFieldRateWhereInput
+    /**
+     * Limit how many TitleFieldRates to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TitleFieldRate without action
+   */
+  export type TitleFieldRateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleFieldRate
+     */
+    select?: TitleFieldRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleFieldRate
+     */
+    omit?: TitleFieldRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleFieldRateInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TitleStageRate
+   */
+
+  export type AggregateTitleStageRate = {
+    _count: TitleStageRateCountAggregateOutputType | null
+    _avg: TitleStageRateAvgAggregateOutputType | null
+    _sum: TitleStageRateSumAggregateOutputType | null
+    _min: TitleStageRateMinAggregateOutputType | null
+    _max: TitleStageRateMaxAggregateOutputType | null
+  }
+
+  export type TitleStageRateAvgAggregateOutputType = {
+    minutesPerPass: number | null
+  }
+
+  export type TitleStageRateSumAggregateOutputType = {
+    minutesPerPass: number | null
+  }
+
+  export type TitleStageRateMinAggregateOutputType = {
+    id: string | null
+    titleId: string | null
+    statusId: string | null
+    minutesPerPass: number | null
+  }
+
+  export type TitleStageRateMaxAggregateOutputType = {
+    id: string | null
+    titleId: string | null
+    statusId: string | null
+    minutesPerPass: number | null
+  }
+
+  export type TitleStageRateCountAggregateOutputType = {
+    id: number
+    titleId: number
+    statusId: number
+    minutesPerPass: number
+    _all: number
+  }
+
+
+  export type TitleStageRateAvgAggregateInputType = {
+    minutesPerPass?: true
+  }
+
+  export type TitleStageRateSumAggregateInputType = {
+    minutesPerPass?: true
+  }
+
+  export type TitleStageRateMinAggregateInputType = {
+    id?: true
+    titleId?: true
+    statusId?: true
+    minutesPerPass?: true
+  }
+
+  export type TitleStageRateMaxAggregateInputType = {
+    id?: true
+    titleId?: true
+    statusId?: true
+    minutesPerPass?: true
+  }
+
+  export type TitleStageRateCountAggregateInputType = {
+    id?: true
+    titleId?: true
+    statusId?: true
+    minutesPerPass?: true
+    _all?: true
+  }
+
+  export type TitleStageRateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TitleStageRate to aggregate.
+     */
+    where?: TitleStageRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TitleStageRates to fetch.
+     */
+    orderBy?: TitleStageRateOrderByWithRelationInput | TitleStageRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TitleStageRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TitleStageRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TitleStageRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TitleStageRates
+    **/
+    _count?: true | TitleStageRateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TitleStageRateAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TitleStageRateSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TitleStageRateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TitleStageRateMaxAggregateInputType
+  }
+
+  export type GetTitleStageRateAggregateType<T extends TitleStageRateAggregateArgs> = {
+        [P in keyof T & keyof AggregateTitleStageRate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTitleStageRate[P]>
+      : GetScalarType<T[P], AggregateTitleStageRate[P]>
+  }
+
+
+
+
+  export type TitleStageRateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TitleStageRateWhereInput
+    orderBy?: TitleStageRateOrderByWithAggregationInput | TitleStageRateOrderByWithAggregationInput[]
+    by: TitleStageRateScalarFieldEnum[] | TitleStageRateScalarFieldEnum
+    having?: TitleStageRateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TitleStageRateCountAggregateInputType | true
+    _avg?: TitleStageRateAvgAggregateInputType
+    _sum?: TitleStageRateSumAggregateInputType
+    _min?: TitleStageRateMinAggregateInputType
+    _max?: TitleStageRateMaxAggregateInputType
+  }
+
+  export type TitleStageRateGroupByOutputType = {
+    id: string
+    titleId: string
+    statusId: string
+    minutesPerPass: number
+    _count: TitleStageRateCountAggregateOutputType | null
+    _avg: TitleStageRateAvgAggregateOutputType | null
+    _sum: TitleStageRateSumAggregateOutputType | null
+    _min: TitleStageRateMinAggregateOutputType | null
+    _max: TitleStageRateMaxAggregateOutputType | null
+  }
+
+  type GetTitleStageRateGroupByPayload<T extends TitleStageRateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TitleStageRateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TitleStageRateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TitleStageRateGroupByOutputType[P]>
+            : GetScalarType<T[P], TitleStageRateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TitleStageRateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    titleId?: boolean
+    statusId?: boolean
+    minutesPerPass?: boolean
+    title?: boolean | TitleDefaultArgs<ExtArgs>
+    status?: boolean | TaskStatusDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["titleStageRate"]>
+
+  export type TitleStageRateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    titleId?: boolean
+    statusId?: boolean
+    minutesPerPass?: boolean
+    title?: boolean | TitleDefaultArgs<ExtArgs>
+    status?: boolean | TaskStatusDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["titleStageRate"]>
+
+  export type TitleStageRateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    titleId?: boolean
+    statusId?: boolean
+    minutesPerPass?: boolean
+    title?: boolean | TitleDefaultArgs<ExtArgs>
+    status?: boolean | TaskStatusDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["titleStageRate"]>
+
+  export type TitleStageRateSelectScalar = {
+    id?: boolean
+    titleId?: boolean
+    statusId?: boolean
+    minutesPerPass?: boolean
+  }
+
+  export type TitleStageRateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "titleId" | "statusId" | "minutesPerPass", ExtArgs["result"]["titleStageRate"]>
+  export type TitleStageRateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    title?: boolean | TitleDefaultArgs<ExtArgs>
+    status?: boolean | TaskStatusDefaultArgs<ExtArgs>
+  }
+  export type TitleStageRateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    title?: boolean | TitleDefaultArgs<ExtArgs>
+    status?: boolean | TaskStatusDefaultArgs<ExtArgs>
+  }
+  export type TitleStageRateIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    title?: boolean | TitleDefaultArgs<ExtArgs>
+    status?: boolean | TaskStatusDefaultArgs<ExtArgs>
+  }
+
+  export type $TitleStageRatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TitleStageRate"
+    objects: {
+      title: Prisma.$TitlePayload<ExtArgs>
+      status: Prisma.$TaskStatusPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      titleId: string
+      statusId: string
+      minutesPerPass: number
+    }, ExtArgs["result"]["titleStageRate"]>
+    composites: {}
+  }
+
+  type TitleStageRateGetPayload<S extends boolean | null | undefined | TitleStageRateDefaultArgs> = $Result.GetResult<Prisma.$TitleStageRatePayload, S>
+
+  type TitleStageRateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TitleStageRateFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TitleStageRateCountAggregateInputType | true
+    }
+
+  export interface TitleStageRateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TitleStageRate'], meta: { name: 'TitleStageRate' } }
+    /**
+     * Find zero or one TitleStageRate that matches the filter.
+     * @param {TitleStageRateFindUniqueArgs} args - Arguments to find a TitleStageRate
+     * @example
+     * // Get one TitleStageRate
+     * const titleStageRate = await prisma.titleStageRate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TitleStageRateFindUniqueArgs>(args: SelectSubset<T, TitleStageRateFindUniqueArgs<ExtArgs>>): Prisma__TitleStageRateClient<$Result.GetResult<Prisma.$TitleStageRatePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TitleStageRate that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TitleStageRateFindUniqueOrThrowArgs} args - Arguments to find a TitleStageRate
+     * @example
+     * // Get one TitleStageRate
+     * const titleStageRate = await prisma.titleStageRate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TitleStageRateFindUniqueOrThrowArgs>(args: SelectSubset<T, TitleStageRateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TitleStageRateClient<$Result.GetResult<Prisma.$TitleStageRatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TitleStageRate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleStageRateFindFirstArgs} args - Arguments to find a TitleStageRate
+     * @example
+     * // Get one TitleStageRate
+     * const titleStageRate = await prisma.titleStageRate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TitleStageRateFindFirstArgs>(args?: SelectSubset<T, TitleStageRateFindFirstArgs<ExtArgs>>): Prisma__TitleStageRateClient<$Result.GetResult<Prisma.$TitleStageRatePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TitleStageRate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleStageRateFindFirstOrThrowArgs} args - Arguments to find a TitleStageRate
+     * @example
+     * // Get one TitleStageRate
+     * const titleStageRate = await prisma.titleStageRate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TitleStageRateFindFirstOrThrowArgs>(args?: SelectSubset<T, TitleStageRateFindFirstOrThrowArgs<ExtArgs>>): Prisma__TitleStageRateClient<$Result.GetResult<Prisma.$TitleStageRatePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TitleStageRates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleStageRateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TitleStageRates
+     * const titleStageRates = await prisma.titleStageRate.findMany()
+     * 
+     * // Get first 10 TitleStageRates
+     * const titleStageRates = await prisma.titleStageRate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const titleStageRateWithIdOnly = await prisma.titleStageRate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TitleStageRateFindManyArgs>(args?: SelectSubset<T, TitleStageRateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitleStageRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TitleStageRate.
+     * @param {TitleStageRateCreateArgs} args - Arguments to create a TitleStageRate.
+     * @example
+     * // Create one TitleStageRate
+     * const TitleStageRate = await prisma.titleStageRate.create({
+     *   data: {
+     *     // ... data to create a TitleStageRate
+     *   }
+     * })
+     * 
+     */
+    create<T extends TitleStageRateCreateArgs>(args: SelectSubset<T, TitleStageRateCreateArgs<ExtArgs>>): Prisma__TitleStageRateClient<$Result.GetResult<Prisma.$TitleStageRatePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TitleStageRates.
+     * @param {TitleStageRateCreateManyArgs} args - Arguments to create many TitleStageRates.
+     * @example
+     * // Create many TitleStageRates
+     * const titleStageRate = await prisma.titleStageRate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TitleStageRateCreateManyArgs>(args?: SelectSubset<T, TitleStageRateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TitleStageRates and returns the data saved in the database.
+     * @param {TitleStageRateCreateManyAndReturnArgs} args - Arguments to create many TitleStageRates.
+     * @example
+     * // Create many TitleStageRates
+     * const titleStageRate = await prisma.titleStageRate.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TitleStageRates and only return the `id`
+     * const titleStageRateWithIdOnly = await prisma.titleStageRate.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TitleStageRateCreateManyAndReturnArgs>(args?: SelectSubset<T, TitleStageRateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitleStageRatePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TitleStageRate.
+     * @param {TitleStageRateDeleteArgs} args - Arguments to delete one TitleStageRate.
+     * @example
+     * // Delete one TitleStageRate
+     * const TitleStageRate = await prisma.titleStageRate.delete({
+     *   where: {
+     *     // ... filter to delete one TitleStageRate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TitleStageRateDeleteArgs>(args: SelectSubset<T, TitleStageRateDeleteArgs<ExtArgs>>): Prisma__TitleStageRateClient<$Result.GetResult<Prisma.$TitleStageRatePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TitleStageRate.
+     * @param {TitleStageRateUpdateArgs} args - Arguments to update one TitleStageRate.
+     * @example
+     * // Update one TitleStageRate
+     * const titleStageRate = await prisma.titleStageRate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TitleStageRateUpdateArgs>(args: SelectSubset<T, TitleStageRateUpdateArgs<ExtArgs>>): Prisma__TitleStageRateClient<$Result.GetResult<Prisma.$TitleStageRatePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TitleStageRates.
+     * @param {TitleStageRateDeleteManyArgs} args - Arguments to filter TitleStageRates to delete.
+     * @example
+     * // Delete a few TitleStageRates
+     * const { count } = await prisma.titleStageRate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TitleStageRateDeleteManyArgs>(args?: SelectSubset<T, TitleStageRateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TitleStageRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleStageRateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TitleStageRates
+     * const titleStageRate = await prisma.titleStageRate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TitleStageRateUpdateManyArgs>(args: SelectSubset<T, TitleStageRateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TitleStageRates and returns the data updated in the database.
+     * @param {TitleStageRateUpdateManyAndReturnArgs} args - Arguments to update many TitleStageRates.
+     * @example
+     * // Update many TitleStageRates
+     * const titleStageRate = await prisma.titleStageRate.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TitleStageRates and only return the `id`
+     * const titleStageRateWithIdOnly = await prisma.titleStageRate.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TitleStageRateUpdateManyAndReturnArgs>(args: SelectSubset<T, TitleStageRateUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitleStageRatePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TitleStageRate.
+     * @param {TitleStageRateUpsertArgs} args - Arguments to update or create a TitleStageRate.
+     * @example
+     * // Update or create a TitleStageRate
+     * const titleStageRate = await prisma.titleStageRate.upsert({
+     *   create: {
+     *     // ... data to create a TitleStageRate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TitleStageRate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TitleStageRateUpsertArgs>(args: SelectSubset<T, TitleStageRateUpsertArgs<ExtArgs>>): Prisma__TitleStageRateClient<$Result.GetResult<Prisma.$TitleStageRatePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TitleStageRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleStageRateCountArgs} args - Arguments to filter TitleStageRates to count.
+     * @example
+     * // Count the number of TitleStageRates
+     * const count = await prisma.titleStageRate.count({
+     *   where: {
+     *     // ... the filter for the TitleStageRates we want to count
+     *   }
+     * })
+    **/
+    count<T extends TitleStageRateCountArgs>(
+      args?: Subset<T, TitleStageRateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TitleStageRateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TitleStageRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleStageRateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TitleStageRateAggregateArgs>(args: Subset<T, TitleStageRateAggregateArgs>): Prisma.PrismaPromise<GetTitleStageRateAggregateType<T>>
+
+    /**
+     * Group by TitleStageRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TitleStageRateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TitleStageRateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TitleStageRateGroupByArgs['orderBy'] }
+        : { orderBy?: TitleStageRateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TitleStageRateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTitleStageRateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TitleStageRate model
+   */
+  readonly fields: TitleStageRateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TitleStageRate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TitleStageRateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    title<T extends TitleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TitleDefaultArgs<ExtArgs>>): Prisma__TitleClient<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    status<T extends TaskStatusDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatusDefaultArgs<ExtArgs>>): Prisma__TaskStatusClient<$Result.GetResult<Prisma.$TaskStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TitleStageRate model
+   */
+  interface TitleStageRateFieldRefs {
+    readonly id: FieldRef<"TitleStageRate", 'String'>
+    readonly titleId: FieldRef<"TitleStageRate", 'String'>
+    readonly statusId: FieldRef<"TitleStageRate", 'String'>
+    readonly minutesPerPass: FieldRef<"TitleStageRate", 'Float'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TitleStageRate findUnique
+   */
+  export type TitleStageRateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleStageRate
+     */
+    select?: TitleStageRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleStageRate
+     */
+    omit?: TitleStageRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleStageRateInclude<ExtArgs> | null
+    /**
+     * Filter, which TitleStageRate to fetch.
+     */
+    where: TitleStageRateWhereUniqueInput
+  }
+
+  /**
+   * TitleStageRate findUniqueOrThrow
+   */
+  export type TitleStageRateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleStageRate
+     */
+    select?: TitleStageRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleStageRate
+     */
+    omit?: TitleStageRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleStageRateInclude<ExtArgs> | null
+    /**
+     * Filter, which TitleStageRate to fetch.
+     */
+    where: TitleStageRateWhereUniqueInput
+  }
+
+  /**
+   * TitleStageRate findFirst
+   */
+  export type TitleStageRateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleStageRate
+     */
+    select?: TitleStageRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleStageRate
+     */
+    omit?: TitleStageRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleStageRateInclude<ExtArgs> | null
+    /**
+     * Filter, which TitleStageRate to fetch.
+     */
+    where?: TitleStageRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TitleStageRates to fetch.
+     */
+    orderBy?: TitleStageRateOrderByWithRelationInput | TitleStageRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TitleStageRates.
+     */
+    cursor?: TitleStageRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TitleStageRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TitleStageRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TitleStageRates.
+     */
+    distinct?: TitleStageRateScalarFieldEnum | TitleStageRateScalarFieldEnum[]
+  }
+
+  /**
+   * TitleStageRate findFirstOrThrow
+   */
+  export type TitleStageRateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleStageRate
+     */
+    select?: TitleStageRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleStageRate
+     */
+    omit?: TitleStageRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleStageRateInclude<ExtArgs> | null
+    /**
+     * Filter, which TitleStageRate to fetch.
+     */
+    where?: TitleStageRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TitleStageRates to fetch.
+     */
+    orderBy?: TitleStageRateOrderByWithRelationInput | TitleStageRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TitleStageRates.
+     */
+    cursor?: TitleStageRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TitleStageRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TitleStageRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TitleStageRates.
+     */
+    distinct?: TitleStageRateScalarFieldEnum | TitleStageRateScalarFieldEnum[]
+  }
+
+  /**
+   * TitleStageRate findMany
+   */
+  export type TitleStageRateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleStageRate
+     */
+    select?: TitleStageRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleStageRate
+     */
+    omit?: TitleStageRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleStageRateInclude<ExtArgs> | null
+    /**
+     * Filter, which TitleStageRates to fetch.
+     */
+    where?: TitleStageRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TitleStageRates to fetch.
+     */
+    orderBy?: TitleStageRateOrderByWithRelationInput | TitleStageRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TitleStageRates.
+     */
+    cursor?: TitleStageRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TitleStageRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TitleStageRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TitleStageRates.
+     */
+    distinct?: TitleStageRateScalarFieldEnum | TitleStageRateScalarFieldEnum[]
+  }
+
+  /**
+   * TitleStageRate create
+   */
+  export type TitleStageRateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleStageRate
+     */
+    select?: TitleStageRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleStageRate
+     */
+    omit?: TitleStageRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleStageRateInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TitleStageRate.
+     */
+    data: XOR<TitleStageRateCreateInput, TitleStageRateUncheckedCreateInput>
+  }
+
+  /**
+   * TitleStageRate createMany
+   */
+  export type TitleStageRateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TitleStageRates.
+     */
+    data: TitleStageRateCreateManyInput | TitleStageRateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TitleStageRate createManyAndReturn
+   */
+  export type TitleStageRateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleStageRate
+     */
+    select?: TitleStageRateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleStageRate
+     */
+    omit?: TitleStageRateOmit<ExtArgs> | null
+    /**
+     * The data used to create many TitleStageRates.
+     */
+    data: TitleStageRateCreateManyInput | TitleStageRateCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleStageRateIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TitleStageRate update
+   */
+  export type TitleStageRateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleStageRate
+     */
+    select?: TitleStageRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleStageRate
+     */
+    omit?: TitleStageRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleStageRateInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TitleStageRate.
+     */
+    data: XOR<TitleStageRateUpdateInput, TitleStageRateUncheckedUpdateInput>
+    /**
+     * Choose, which TitleStageRate to update.
+     */
+    where: TitleStageRateWhereUniqueInput
+  }
+
+  /**
+   * TitleStageRate updateMany
+   */
+  export type TitleStageRateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TitleStageRates.
+     */
+    data: XOR<TitleStageRateUpdateManyMutationInput, TitleStageRateUncheckedUpdateManyInput>
+    /**
+     * Filter which TitleStageRates to update
+     */
+    where?: TitleStageRateWhereInput
+    /**
+     * Limit how many TitleStageRates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TitleStageRate updateManyAndReturn
+   */
+  export type TitleStageRateUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleStageRate
+     */
+    select?: TitleStageRateSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleStageRate
+     */
+    omit?: TitleStageRateOmit<ExtArgs> | null
+    /**
+     * The data used to update TitleStageRates.
+     */
+    data: XOR<TitleStageRateUpdateManyMutationInput, TitleStageRateUncheckedUpdateManyInput>
+    /**
+     * Filter which TitleStageRates to update
+     */
+    where?: TitleStageRateWhereInput
+    /**
+     * Limit how many TitleStageRates to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleStageRateIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TitleStageRate upsert
+   */
+  export type TitleStageRateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleStageRate
+     */
+    select?: TitleStageRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleStageRate
+     */
+    omit?: TitleStageRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleStageRateInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TitleStageRate to update in case it exists.
+     */
+    where: TitleStageRateWhereUniqueInput
+    /**
+     * In case the TitleStageRate found by the `where` argument doesn't exist, create a new TitleStageRate with this data.
+     */
+    create: XOR<TitleStageRateCreateInput, TitleStageRateUncheckedCreateInput>
+    /**
+     * In case the TitleStageRate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TitleStageRateUpdateInput, TitleStageRateUncheckedUpdateInput>
+  }
+
+  /**
+   * TitleStageRate delete
+   */
+  export type TitleStageRateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleStageRate
+     */
+    select?: TitleStageRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleStageRate
+     */
+    omit?: TitleStageRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleStageRateInclude<ExtArgs> | null
+    /**
+     * Filter which TitleStageRate to delete.
+     */
+    where: TitleStageRateWhereUniqueInput
+  }
+
+  /**
+   * TitleStageRate deleteMany
+   */
+  export type TitleStageRateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TitleStageRates to delete
+     */
+    where?: TitleStageRateWhereInput
+    /**
+     * Limit how many TitleStageRates to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TitleStageRate without action
+   */
+  export type TitleStageRateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleStageRate
+     */
+    select?: TitleStageRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleStageRate
+     */
+    omit?: TitleStageRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleStageRateInclude<ExtArgs> | null
   }
 
 
@@ -34212,8 +38136,10 @@ export namespace Prisma {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     titleLockedFromStage?: boolean | ChecklistTemplate$titleLockedFromStageArgs<ExtArgs>
     items?: boolean | ChecklistTemplate$itemsArgs<ExtArgs>
+    sections?: boolean | ChecklistTemplate$sectionsArgs<ExtArgs>
     projects?: boolean | ChecklistTemplate$projectsArgs<ExtArgs>
     weeklyTargets?: boolean | ChecklistTemplate$weeklyTargetsArgs<ExtArgs>
+    tasks?: boolean | ChecklistTemplate$tasksArgs<ExtArgs>
     weeklySlots?: boolean | ChecklistTemplate$weeklySlotsArgs<ExtArgs>
     _count?: boolean | ChecklistTemplateCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["checklistTemplate"]>
@@ -34275,8 +38201,10 @@ export namespace Prisma {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     titleLockedFromStage?: boolean | ChecklistTemplate$titleLockedFromStageArgs<ExtArgs>
     items?: boolean | ChecklistTemplate$itemsArgs<ExtArgs>
+    sections?: boolean | ChecklistTemplate$sectionsArgs<ExtArgs>
     projects?: boolean | ChecklistTemplate$projectsArgs<ExtArgs>
     weeklyTargets?: boolean | ChecklistTemplate$weeklyTargetsArgs<ExtArgs>
+    tasks?: boolean | ChecklistTemplate$tasksArgs<ExtArgs>
     weeklySlots?: boolean | ChecklistTemplate$weeklySlotsArgs<ExtArgs>
     _count?: boolean | ChecklistTemplateCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -34295,8 +38223,10 @@ export namespace Prisma {
       workspace: Prisma.$WorkspacePayload<ExtArgs>
       titleLockedFromStage: Prisma.$TaskStatusPayload<ExtArgs> | null
       items: Prisma.$ChecklistTemplateItemPayload<ExtArgs>[]
+      sections: Prisma.$ChecklistSectionPayload<ExtArgs>[]
       projects: Prisma.$ProjectTemplatePayload<ExtArgs>[]
       weeklyTargets: Prisma.$ProjectWeeklyTargetPayload<ExtArgs>[]
+      tasks: Prisma.$TaskPayload<ExtArgs>[]
       weeklySlots: Prisma.$WeeklySlotPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -34710,8 +38640,10 @@ export namespace Prisma {
     workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     titleLockedFromStage<T extends ChecklistTemplate$titleLockedFromStageArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$titleLockedFromStageArgs<ExtArgs>>): Prisma__TaskStatusClient<$Result.GetResult<Prisma.$TaskStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     items<T extends ChecklistTemplate$itemsArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    sections<T extends ChecklistTemplate$sectionsArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$sectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistSectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     projects<T extends ChecklistTemplate$projectsArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     weeklyTargets<T extends ChecklistTemplate$weeklyTargetsArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$weeklyTargetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectWeeklyTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tasks<T extends ChecklistTemplate$tasksArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     weeklySlots<T extends ChecklistTemplate$weeklySlotsArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplate$weeklySlotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WeeklySlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -35199,6 +39131,30 @@ export namespace Prisma {
   }
 
   /**
+   * ChecklistTemplate.sections
+   */
+  export type ChecklistTemplate$sectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSection
+     */
+    select?: ChecklistSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistSection
+     */
+    omit?: ChecklistSectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistSectionInclude<ExtArgs> | null
+    where?: ChecklistSectionWhereInput
+    orderBy?: ChecklistSectionOrderByWithRelationInput | ChecklistSectionOrderByWithRelationInput[]
+    cursor?: ChecklistSectionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChecklistSectionScalarFieldEnum | ChecklistSectionScalarFieldEnum[]
+  }
+
+  /**
    * ChecklistTemplate.projects
    */
   export type ChecklistTemplate$projectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -35247,6 +39203,30 @@ export namespace Prisma {
   }
 
   /**
+   * ChecklistTemplate.tasks
+   */
+  export type ChecklistTemplate$tasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    where?: TaskWhereInput
+    orderBy?: TaskOrderByWithRelationInput | TaskOrderByWithRelationInput[]
+    cursor?: TaskWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
+  }
+
+  /**
    * ChecklistTemplate.weeklySlots
    */
   export type ChecklistTemplate$weeklySlotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -35290,6 +39270,1146 @@ export namespace Prisma {
 
 
   /**
+   * Model ChecklistSection
+   */
+
+  export type AggregateChecklistSection = {
+    _count: ChecklistSectionCountAggregateOutputType | null
+    _avg: ChecklistSectionAvgAggregateOutputType | null
+    _sum: ChecklistSectionSumAggregateOutputType | null
+    _min: ChecklistSectionMinAggregateOutputType | null
+    _max: ChecklistSectionMaxAggregateOutputType | null
+  }
+
+  export type ChecklistSectionAvgAggregateOutputType = {
+    order: number | null
+  }
+
+  export type ChecklistSectionSumAggregateOutputType = {
+    order: number | null
+  }
+
+  export type ChecklistSectionMinAggregateOutputType = {
+    id: string | null
+    templateId: string | null
+    name: string | null
+    phase: string | null
+    order: number | null
+    createdAt: Date | null
+  }
+
+  export type ChecklistSectionMaxAggregateOutputType = {
+    id: string | null
+    templateId: string | null
+    name: string | null
+    phase: string | null
+    order: number | null
+    createdAt: Date | null
+  }
+
+  export type ChecklistSectionCountAggregateOutputType = {
+    id: number
+    templateId: number
+    name: number
+    phase: number
+    order: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ChecklistSectionAvgAggregateInputType = {
+    order?: true
+  }
+
+  export type ChecklistSectionSumAggregateInputType = {
+    order?: true
+  }
+
+  export type ChecklistSectionMinAggregateInputType = {
+    id?: true
+    templateId?: true
+    name?: true
+    phase?: true
+    order?: true
+    createdAt?: true
+  }
+
+  export type ChecklistSectionMaxAggregateInputType = {
+    id?: true
+    templateId?: true
+    name?: true
+    phase?: true
+    order?: true
+    createdAt?: true
+  }
+
+  export type ChecklistSectionCountAggregateInputType = {
+    id?: true
+    templateId?: true
+    name?: true
+    phase?: true
+    order?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ChecklistSectionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChecklistSection to aggregate.
+     */
+    where?: ChecklistSectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChecklistSections to fetch.
+     */
+    orderBy?: ChecklistSectionOrderByWithRelationInput | ChecklistSectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChecklistSectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChecklistSections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChecklistSections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ChecklistSections
+    **/
+    _count?: true | ChecklistSectionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ChecklistSectionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ChecklistSectionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChecklistSectionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChecklistSectionMaxAggregateInputType
+  }
+
+  export type GetChecklistSectionAggregateType<T extends ChecklistSectionAggregateArgs> = {
+        [P in keyof T & keyof AggregateChecklistSection]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChecklistSection[P]>
+      : GetScalarType<T[P], AggregateChecklistSection[P]>
+  }
+
+
+
+
+  export type ChecklistSectionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChecklistSectionWhereInput
+    orderBy?: ChecklistSectionOrderByWithAggregationInput | ChecklistSectionOrderByWithAggregationInput[]
+    by: ChecklistSectionScalarFieldEnum[] | ChecklistSectionScalarFieldEnum
+    having?: ChecklistSectionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChecklistSectionCountAggregateInputType | true
+    _avg?: ChecklistSectionAvgAggregateInputType
+    _sum?: ChecklistSectionSumAggregateInputType
+    _min?: ChecklistSectionMinAggregateInputType
+    _max?: ChecklistSectionMaxAggregateInputType
+  }
+
+  export type ChecklistSectionGroupByOutputType = {
+    id: string
+    templateId: string
+    name: string
+    phase: string
+    order: number
+    createdAt: Date
+    _count: ChecklistSectionCountAggregateOutputType | null
+    _avg: ChecklistSectionAvgAggregateOutputType | null
+    _sum: ChecklistSectionSumAggregateOutputType | null
+    _min: ChecklistSectionMinAggregateOutputType | null
+    _max: ChecklistSectionMaxAggregateOutputType | null
+  }
+
+  type GetChecklistSectionGroupByPayload<T extends ChecklistSectionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChecklistSectionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChecklistSectionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChecklistSectionGroupByOutputType[P]>
+            : GetScalarType<T[P], ChecklistSectionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChecklistSectionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    templateId?: boolean
+    name?: boolean
+    phase?: boolean
+    order?: boolean
+    createdAt?: boolean
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+    items?: boolean | ChecklistSection$itemsArgs<ExtArgs>
+    _count?: boolean | ChecklistSectionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["checklistSection"]>
+
+  export type ChecklistSectionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    templateId?: boolean
+    name?: boolean
+    phase?: boolean
+    order?: boolean
+    createdAt?: boolean
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["checklistSection"]>
+
+  export type ChecklistSectionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    templateId?: boolean
+    name?: boolean
+    phase?: boolean
+    order?: boolean
+    createdAt?: boolean
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["checklistSection"]>
+
+  export type ChecklistSectionSelectScalar = {
+    id?: boolean
+    templateId?: boolean
+    name?: boolean
+    phase?: boolean
+    order?: boolean
+    createdAt?: boolean
+  }
+
+  export type ChecklistSectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "templateId" | "name" | "phase" | "order" | "createdAt", ExtArgs["result"]["checklistSection"]>
+  export type ChecklistSectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+    items?: boolean | ChecklistSection$itemsArgs<ExtArgs>
+    _count?: boolean | ChecklistSectionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ChecklistSectionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+  }
+  export type ChecklistSectionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+  }
+
+  export type $ChecklistSectionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChecklistSection"
+    objects: {
+      template: Prisma.$ChecklistTemplatePayload<ExtArgs>
+      items: Prisma.$ChecklistTemplateItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      templateId: string
+      name: string
+      phase: string
+      order: number
+      createdAt: Date
+    }, ExtArgs["result"]["checklistSection"]>
+    composites: {}
+  }
+
+  type ChecklistSectionGetPayload<S extends boolean | null | undefined | ChecklistSectionDefaultArgs> = $Result.GetResult<Prisma.$ChecklistSectionPayload, S>
+
+  type ChecklistSectionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ChecklistSectionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ChecklistSectionCountAggregateInputType | true
+    }
+
+  export interface ChecklistSectionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChecklistSection'], meta: { name: 'ChecklistSection' } }
+    /**
+     * Find zero or one ChecklistSection that matches the filter.
+     * @param {ChecklistSectionFindUniqueArgs} args - Arguments to find a ChecklistSection
+     * @example
+     * // Get one ChecklistSection
+     * const checklistSection = await prisma.checklistSection.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ChecklistSectionFindUniqueArgs>(args: SelectSubset<T, ChecklistSectionFindUniqueArgs<ExtArgs>>): Prisma__ChecklistSectionClient<$Result.GetResult<Prisma.$ChecklistSectionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ChecklistSection that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ChecklistSectionFindUniqueOrThrowArgs} args - Arguments to find a ChecklistSection
+     * @example
+     * // Get one ChecklistSection
+     * const checklistSection = await prisma.checklistSection.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ChecklistSectionFindUniqueOrThrowArgs>(args: SelectSubset<T, ChecklistSectionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChecklistSectionClient<$Result.GetResult<Prisma.$ChecklistSectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChecklistSection that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChecklistSectionFindFirstArgs} args - Arguments to find a ChecklistSection
+     * @example
+     * // Get one ChecklistSection
+     * const checklistSection = await prisma.checklistSection.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ChecklistSectionFindFirstArgs>(args?: SelectSubset<T, ChecklistSectionFindFirstArgs<ExtArgs>>): Prisma__ChecklistSectionClient<$Result.GetResult<Prisma.$ChecklistSectionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChecklistSection that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChecklistSectionFindFirstOrThrowArgs} args - Arguments to find a ChecklistSection
+     * @example
+     * // Get one ChecklistSection
+     * const checklistSection = await prisma.checklistSection.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ChecklistSectionFindFirstOrThrowArgs>(args?: SelectSubset<T, ChecklistSectionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChecklistSectionClient<$Result.GetResult<Prisma.$ChecklistSectionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ChecklistSections that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChecklistSectionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ChecklistSections
+     * const checklistSections = await prisma.checklistSection.findMany()
+     * 
+     * // Get first 10 ChecklistSections
+     * const checklistSections = await prisma.checklistSection.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const checklistSectionWithIdOnly = await prisma.checklistSection.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ChecklistSectionFindManyArgs>(args?: SelectSubset<T, ChecklistSectionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistSectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ChecklistSection.
+     * @param {ChecklistSectionCreateArgs} args - Arguments to create a ChecklistSection.
+     * @example
+     * // Create one ChecklistSection
+     * const ChecklistSection = await prisma.checklistSection.create({
+     *   data: {
+     *     // ... data to create a ChecklistSection
+     *   }
+     * })
+     * 
+     */
+    create<T extends ChecklistSectionCreateArgs>(args: SelectSubset<T, ChecklistSectionCreateArgs<ExtArgs>>): Prisma__ChecklistSectionClient<$Result.GetResult<Prisma.$ChecklistSectionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ChecklistSections.
+     * @param {ChecklistSectionCreateManyArgs} args - Arguments to create many ChecklistSections.
+     * @example
+     * // Create many ChecklistSections
+     * const checklistSection = await prisma.checklistSection.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ChecklistSectionCreateManyArgs>(args?: SelectSubset<T, ChecklistSectionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ChecklistSections and returns the data saved in the database.
+     * @param {ChecklistSectionCreateManyAndReturnArgs} args - Arguments to create many ChecklistSections.
+     * @example
+     * // Create many ChecklistSections
+     * const checklistSection = await prisma.checklistSection.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ChecklistSections and only return the `id`
+     * const checklistSectionWithIdOnly = await prisma.checklistSection.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ChecklistSectionCreateManyAndReturnArgs>(args?: SelectSubset<T, ChecklistSectionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistSectionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ChecklistSection.
+     * @param {ChecklistSectionDeleteArgs} args - Arguments to delete one ChecklistSection.
+     * @example
+     * // Delete one ChecklistSection
+     * const ChecklistSection = await prisma.checklistSection.delete({
+     *   where: {
+     *     // ... filter to delete one ChecklistSection
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ChecklistSectionDeleteArgs>(args: SelectSubset<T, ChecklistSectionDeleteArgs<ExtArgs>>): Prisma__ChecklistSectionClient<$Result.GetResult<Prisma.$ChecklistSectionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ChecklistSection.
+     * @param {ChecklistSectionUpdateArgs} args - Arguments to update one ChecklistSection.
+     * @example
+     * // Update one ChecklistSection
+     * const checklistSection = await prisma.checklistSection.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ChecklistSectionUpdateArgs>(args: SelectSubset<T, ChecklistSectionUpdateArgs<ExtArgs>>): Prisma__ChecklistSectionClient<$Result.GetResult<Prisma.$ChecklistSectionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ChecklistSections.
+     * @param {ChecklistSectionDeleteManyArgs} args - Arguments to filter ChecklistSections to delete.
+     * @example
+     * // Delete a few ChecklistSections
+     * const { count } = await prisma.checklistSection.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ChecklistSectionDeleteManyArgs>(args?: SelectSubset<T, ChecklistSectionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChecklistSections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChecklistSectionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ChecklistSections
+     * const checklistSection = await prisma.checklistSection.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ChecklistSectionUpdateManyArgs>(args: SelectSubset<T, ChecklistSectionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChecklistSections and returns the data updated in the database.
+     * @param {ChecklistSectionUpdateManyAndReturnArgs} args - Arguments to update many ChecklistSections.
+     * @example
+     * // Update many ChecklistSections
+     * const checklistSection = await prisma.checklistSection.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ChecklistSections and only return the `id`
+     * const checklistSectionWithIdOnly = await prisma.checklistSection.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ChecklistSectionUpdateManyAndReturnArgs>(args: SelectSubset<T, ChecklistSectionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistSectionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ChecklistSection.
+     * @param {ChecklistSectionUpsertArgs} args - Arguments to update or create a ChecklistSection.
+     * @example
+     * // Update or create a ChecklistSection
+     * const checklistSection = await prisma.checklistSection.upsert({
+     *   create: {
+     *     // ... data to create a ChecklistSection
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ChecklistSection we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ChecklistSectionUpsertArgs>(args: SelectSubset<T, ChecklistSectionUpsertArgs<ExtArgs>>): Prisma__ChecklistSectionClient<$Result.GetResult<Prisma.$ChecklistSectionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ChecklistSections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChecklistSectionCountArgs} args - Arguments to filter ChecklistSections to count.
+     * @example
+     * // Count the number of ChecklistSections
+     * const count = await prisma.checklistSection.count({
+     *   where: {
+     *     // ... the filter for the ChecklistSections we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChecklistSectionCountArgs>(
+      args?: Subset<T, ChecklistSectionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChecklistSectionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ChecklistSection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChecklistSectionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChecklistSectionAggregateArgs>(args: Subset<T, ChecklistSectionAggregateArgs>): Prisma.PrismaPromise<GetChecklistSectionAggregateType<T>>
+
+    /**
+     * Group by ChecklistSection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChecklistSectionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChecklistSectionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChecklistSectionGroupByArgs['orderBy'] }
+        : { orderBy?: ChecklistSectionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChecklistSectionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChecklistSectionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ChecklistSection model
+   */
+  readonly fields: ChecklistSectionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ChecklistSection.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ChecklistSectionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    template<T extends ChecklistTemplateDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateDefaultArgs<ExtArgs>>): Prisma__ChecklistTemplateClient<$Result.GetResult<Prisma.$ChecklistTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    items<T extends ChecklistSection$itemsArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistSection$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ChecklistSection model
+   */
+  interface ChecklistSectionFieldRefs {
+    readonly id: FieldRef<"ChecklistSection", 'String'>
+    readonly templateId: FieldRef<"ChecklistSection", 'String'>
+    readonly name: FieldRef<"ChecklistSection", 'String'>
+    readonly phase: FieldRef<"ChecklistSection", 'String'>
+    readonly order: FieldRef<"ChecklistSection", 'Int'>
+    readonly createdAt: FieldRef<"ChecklistSection", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ChecklistSection findUnique
+   */
+  export type ChecklistSectionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSection
+     */
+    select?: ChecklistSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistSection
+     */
+    omit?: ChecklistSectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistSectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ChecklistSection to fetch.
+     */
+    where: ChecklistSectionWhereUniqueInput
+  }
+
+  /**
+   * ChecklistSection findUniqueOrThrow
+   */
+  export type ChecklistSectionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSection
+     */
+    select?: ChecklistSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistSection
+     */
+    omit?: ChecklistSectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistSectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ChecklistSection to fetch.
+     */
+    where: ChecklistSectionWhereUniqueInput
+  }
+
+  /**
+   * ChecklistSection findFirst
+   */
+  export type ChecklistSectionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSection
+     */
+    select?: ChecklistSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistSection
+     */
+    omit?: ChecklistSectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistSectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ChecklistSection to fetch.
+     */
+    where?: ChecklistSectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChecklistSections to fetch.
+     */
+    orderBy?: ChecklistSectionOrderByWithRelationInput | ChecklistSectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChecklistSections.
+     */
+    cursor?: ChecklistSectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChecklistSections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChecklistSections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChecklistSections.
+     */
+    distinct?: ChecklistSectionScalarFieldEnum | ChecklistSectionScalarFieldEnum[]
+  }
+
+  /**
+   * ChecklistSection findFirstOrThrow
+   */
+  export type ChecklistSectionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSection
+     */
+    select?: ChecklistSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistSection
+     */
+    omit?: ChecklistSectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistSectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ChecklistSection to fetch.
+     */
+    where?: ChecklistSectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChecklistSections to fetch.
+     */
+    orderBy?: ChecklistSectionOrderByWithRelationInput | ChecklistSectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChecklistSections.
+     */
+    cursor?: ChecklistSectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChecklistSections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChecklistSections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChecklistSections.
+     */
+    distinct?: ChecklistSectionScalarFieldEnum | ChecklistSectionScalarFieldEnum[]
+  }
+
+  /**
+   * ChecklistSection findMany
+   */
+  export type ChecklistSectionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSection
+     */
+    select?: ChecklistSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistSection
+     */
+    omit?: ChecklistSectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistSectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ChecklistSections to fetch.
+     */
+    where?: ChecklistSectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChecklistSections to fetch.
+     */
+    orderBy?: ChecklistSectionOrderByWithRelationInput | ChecklistSectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ChecklistSections.
+     */
+    cursor?: ChecklistSectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChecklistSections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChecklistSections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChecklistSections.
+     */
+    distinct?: ChecklistSectionScalarFieldEnum | ChecklistSectionScalarFieldEnum[]
+  }
+
+  /**
+   * ChecklistSection create
+   */
+  export type ChecklistSectionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSection
+     */
+    select?: ChecklistSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistSection
+     */
+    omit?: ChecklistSectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistSectionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ChecklistSection.
+     */
+    data: XOR<ChecklistSectionCreateInput, ChecklistSectionUncheckedCreateInput>
+  }
+
+  /**
+   * ChecklistSection createMany
+   */
+  export type ChecklistSectionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ChecklistSections.
+     */
+    data: ChecklistSectionCreateManyInput | ChecklistSectionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ChecklistSection createManyAndReturn
+   */
+  export type ChecklistSectionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSection
+     */
+    select?: ChecklistSectionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistSection
+     */
+    omit?: ChecklistSectionOmit<ExtArgs> | null
+    /**
+     * The data used to create many ChecklistSections.
+     */
+    data: ChecklistSectionCreateManyInput | ChecklistSectionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistSectionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChecklistSection update
+   */
+  export type ChecklistSectionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSection
+     */
+    select?: ChecklistSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistSection
+     */
+    omit?: ChecklistSectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistSectionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ChecklistSection.
+     */
+    data: XOR<ChecklistSectionUpdateInput, ChecklistSectionUncheckedUpdateInput>
+    /**
+     * Choose, which ChecklistSection to update.
+     */
+    where: ChecklistSectionWhereUniqueInput
+  }
+
+  /**
+   * ChecklistSection updateMany
+   */
+  export type ChecklistSectionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ChecklistSections.
+     */
+    data: XOR<ChecklistSectionUpdateManyMutationInput, ChecklistSectionUncheckedUpdateManyInput>
+    /**
+     * Filter which ChecklistSections to update
+     */
+    where?: ChecklistSectionWhereInput
+    /**
+     * Limit how many ChecklistSections to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChecklistSection updateManyAndReturn
+   */
+  export type ChecklistSectionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSection
+     */
+    select?: ChecklistSectionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistSection
+     */
+    omit?: ChecklistSectionOmit<ExtArgs> | null
+    /**
+     * The data used to update ChecklistSections.
+     */
+    data: XOR<ChecklistSectionUpdateManyMutationInput, ChecklistSectionUncheckedUpdateManyInput>
+    /**
+     * Filter which ChecklistSections to update
+     */
+    where?: ChecklistSectionWhereInput
+    /**
+     * Limit how many ChecklistSections to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistSectionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChecklistSection upsert
+   */
+  export type ChecklistSectionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSection
+     */
+    select?: ChecklistSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistSection
+     */
+    omit?: ChecklistSectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistSectionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ChecklistSection to update in case it exists.
+     */
+    where: ChecklistSectionWhereUniqueInput
+    /**
+     * In case the ChecklistSection found by the `where` argument doesn't exist, create a new ChecklistSection with this data.
+     */
+    create: XOR<ChecklistSectionCreateInput, ChecklistSectionUncheckedCreateInput>
+    /**
+     * In case the ChecklistSection was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChecklistSectionUpdateInput, ChecklistSectionUncheckedUpdateInput>
+  }
+
+  /**
+   * ChecklistSection delete
+   */
+  export type ChecklistSectionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSection
+     */
+    select?: ChecklistSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistSection
+     */
+    omit?: ChecklistSectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistSectionInclude<ExtArgs> | null
+    /**
+     * Filter which ChecklistSection to delete.
+     */
+    where: ChecklistSectionWhereUniqueInput
+  }
+
+  /**
+   * ChecklistSection deleteMany
+   */
+  export type ChecklistSectionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChecklistSections to delete
+     */
+    where?: ChecklistSectionWhereInput
+    /**
+     * Limit how many ChecklistSections to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChecklistSection.items
+   */
+  export type ChecklistSection$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistTemplateItem
+     */
+    select?: ChecklistTemplateItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistTemplateItem
+     */
+    omit?: ChecklistTemplateItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistTemplateItemInclude<ExtArgs> | null
+    where?: ChecklistTemplateItemWhereInput
+    orderBy?: ChecklistTemplateItemOrderByWithRelationInput | ChecklistTemplateItemOrderByWithRelationInput[]
+    cursor?: ChecklistTemplateItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChecklistTemplateItemScalarFieldEnum | ChecklistTemplateItemScalarFieldEnum[]
+  }
+
+  /**
+   * ChecklistSection without action
+   */
+  export type ChecklistSectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSection
+     */
+    select?: ChecklistSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistSection
+     */
+    omit?: ChecklistSectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistSectionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model ChecklistTemplateItem
    */
 
@@ -35302,10 +40422,12 @@ export namespace Prisma {
   }
 
   export type ChecklistTemplateItemAvgAggregateOutputType = {
+    qtyPerVideoMinute: number | null
     order: number | null
   }
 
   export type ChecklistTemplateItemSumAggregateOutputType = {
+    qtyPerVideoMinute: number | null
     order: number | null
   }
 
@@ -35321,12 +40443,15 @@ export namespace Prisma {
     aspectRatio: string | null
     mandatory: boolean | null
     phase: string | null
+    sectionId: string | null
     visibleFromStageId: string | null
     requiredBeforeStageId: string | null
     lockedFromStageId: string | null
     neverLock: boolean | null
     publishCard: string | null
     hidden: boolean | null
+    effortUnit: string | null
+    qtyPerVideoMinute: number | null
     order: number | null
   }
 
@@ -35342,12 +40467,15 @@ export namespace Prisma {
     aspectRatio: string | null
     mandatory: boolean | null
     phase: string | null
+    sectionId: string | null
     visibleFromStageId: string | null
     requiredBeforeStageId: string | null
     lockedFromStageId: string | null
     neverLock: boolean | null
     publishCard: string | null
     hidden: boolean | null
+    effortUnit: string | null
+    qtyPerVideoMinute: number | null
     order: number | null
   }
 
@@ -35363,22 +40491,27 @@ export namespace Prisma {
     aspectRatio: number
     mandatory: number
     phase: number
+    sectionId: number
     visibleFromStageId: number
     requiredBeforeStageId: number
     lockedFromStageId: number
     neverLock: number
     publishCard: number
     hidden: number
+    effortUnit: number
+    qtyPerVideoMinute: number
     order: number
     _all: number
   }
 
 
   export type ChecklistTemplateItemAvgAggregateInputType = {
+    qtyPerVideoMinute?: true
     order?: true
   }
 
   export type ChecklistTemplateItemSumAggregateInputType = {
+    qtyPerVideoMinute?: true
     order?: true
   }
 
@@ -35394,12 +40527,15 @@ export namespace Prisma {
     aspectRatio?: true
     mandatory?: true
     phase?: true
+    sectionId?: true
     visibleFromStageId?: true
     requiredBeforeStageId?: true
     lockedFromStageId?: true
     neverLock?: true
     publishCard?: true
     hidden?: true
+    effortUnit?: true
+    qtyPerVideoMinute?: true
     order?: true
   }
 
@@ -35415,12 +40551,15 @@ export namespace Prisma {
     aspectRatio?: true
     mandatory?: true
     phase?: true
+    sectionId?: true
     visibleFromStageId?: true
     requiredBeforeStageId?: true
     lockedFromStageId?: true
     neverLock?: true
     publishCard?: true
     hidden?: true
+    effortUnit?: true
+    qtyPerVideoMinute?: true
     order?: true
   }
 
@@ -35436,12 +40575,15 @@ export namespace Prisma {
     aspectRatio?: true
     mandatory?: true
     phase?: true
+    sectionId?: true
     visibleFromStageId?: true
     requiredBeforeStageId?: true
     lockedFromStageId?: true
     neverLock?: true
     publishCard?: true
     hidden?: true
+    effortUnit?: true
+    qtyPerVideoMinute?: true
     order?: true
     _all?: true
   }
@@ -35544,12 +40686,15 @@ export namespace Prisma {
     aspectRatio: string | null
     mandatory: boolean
     phase: string
+    sectionId: string | null
     visibleFromStageId: string | null
     requiredBeforeStageId: string | null
     lockedFromStageId: string | null
     neverLock: boolean
     publishCard: string
     hidden: boolean
+    effortUnit: string | null
+    qtyPerVideoMinute: number | null
     order: number
     _count: ChecklistTemplateItemCountAggregateOutputType | null
     _avg: ChecklistTemplateItemAvgAggregateOutputType | null
@@ -35584,18 +40729,23 @@ export namespace Prisma {
     aspectRatio?: boolean
     mandatory?: boolean
     phase?: boolean
+    sectionId?: boolean
     visibleFromStageId?: boolean
     requiredBeforeStageId?: boolean
     lockedFromStageId?: boolean
     neverLock?: boolean
     publishCard?: boolean
     hidden?: boolean
+    effortUnit?: boolean
+    qtyPerVideoMinute?: boolean
     order?: boolean
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+    section?: boolean | ChecklistTemplateItem$sectionArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
     requiredBeforeStage?: boolean | ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs>
     lockedFromStage?: boolean | ChecklistTemplateItem$lockedFromStageArgs<ExtArgs>
     taskItems?: boolean | ChecklistTemplateItem$taskItemsArgs<ExtArgs>
+    titleRates?: boolean | ChecklistTemplateItem$titleRatesArgs<ExtArgs>
     _count?: boolean | ChecklistTemplateItemCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["checklistTemplateItem"]>
 
@@ -35611,14 +40761,18 @@ export namespace Prisma {
     aspectRatio?: boolean
     mandatory?: boolean
     phase?: boolean
+    sectionId?: boolean
     visibleFromStageId?: boolean
     requiredBeforeStageId?: boolean
     lockedFromStageId?: boolean
     neverLock?: boolean
     publishCard?: boolean
     hidden?: boolean
+    effortUnit?: boolean
+    qtyPerVideoMinute?: boolean
     order?: boolean
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+    section?: boolean | ChecklistTemplateItem$sectionArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
     requiredBeforeStage?: boolean | ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs>
     lockedFromStage?: boolean | ChecklistTemplateItem$lockedFromStageArgs<ExtArgs>
@@ -35636,14 +40790,18 @@ export namespace Prisma {
     aspectRatio?: boolean
     mandatory?: boolean
     phase?: boolean
+    sectionId?: boolean
     visibleFromStageId?: boolean
     requiredBeforeStageId?: boolean
     lockedFromStageId?: boolean
     neverLock?: boolean
     publishCard?: boolean
     hidden?: boolean
+    effortUnit?: boolean
+    qtyPerVideoMinute?: boolean
     order?: boolean
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+    section?: boolean | ChecklistTemplateItem$sectionArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
     requiredBeforeStage?: boolean | ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs>
     lockedFromStage?: boolean | ChecklistTemplateItem$lockedFromStageArgs<ExtArgs>
@@ -35661,32 +40819,39 @@ export namespace Prisma {
     aspectRatio?: boolean
     mandatory?: boolean
     phase?: boolean
+    sectionId?: boolean
     visibleFromStageId?: boolean
     requiredBeforeStageId?: boolean
     lockedFromStageId?: boolean
     neverLock?: boolean
     publishCard?: boolean
     hidden?: boolean
+    effortUnit?: boolean
+    qtyPerVideoMinute?: boolean
     order?: boolean
   }
 
-  export type ChecklistTemplateItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "templateId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "visibleFromStageId" | "requiredBeforeStageId" | "lockedFromStageId" | "neverLock" | "publishCard" | "hidden" | "order", ExtArgs["result"]["checklistTemplateItem"]>
+  export type ChecklistTemplateItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "templateId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "sectionId" | "visibleFromStageId" | "requiredBeforeStageId" | "lockedFromStageId" | "neverLock" | "publishCard" | "hidden" | "effortUnit" | "qtyPerVideoMinute" | "order", ExtArgs["result"]["checklistTemplateItem"]>
   export type ChecklistTemplateItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+    section?: boolean | ChecklistTemplateItem$sectionArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
     requiredBeforeStage?: boolean | ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs>
     lockedFromStage?: boolean | ChecklistTemplateItem$lockedFromStageArgs<ExtArgs>
     taskItems?: boolean | ChecklistTemplateItem$taskItemsArgs<ExtArgs>
+    titleRates?: boolean | ChecklistTemplateItem$titleRatesArgs<ExtArgs>
     _count?: boolean | ChecklistTemplateItemCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ChecklistTemplateItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+    section?: boolean | ChecklistTemplateItem$sectionArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
     requiredBeforeStage?: boolean | ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs>
     lockedFromStage?: boolean | ChecklistTemplateItem$lockedFromStageArgs<ExtArgs>
   }
   export type ChecklistTemplateItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
+    section?: boolean | ChecklistTemplateItem$sectionArgs<ExtArgs>
     visibleFromStage?: boolean | ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>
     requiredBeforeStage?: boolean | ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs>
     lockedFromStage?: boolean | ChecklistTemplateItem$lockedFromStageArgs<ExtArgs>
@@ -35696,10 +40861,12 @@ export namespace Prisma {
     name: "ChecklistTemplateItem"
     objects: {
       template: Prisma.$ChecklistTemplatePayload<ExtArgs>
+      section: Prisma.$ChecklistSectionPayload<ExtArgs> | null
       visibleFromStage: Prisma.$TaskStatusPayload<ExtArgs> | null
       requiredBeforeStage: Prisma.$TaskStatusPayload<ExtArgs> | null
       lockedFromStage: Prisma.$TaskStatusPayload<ExtArgs> | null
       taskItems: Prisma.$TaskChecklistItemPayload<ExtArgs>[]
+      titleRates: Prisma.$TitleFieldRatePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -35713,12 +40880,15 @@ export namespace Prisma {
       aspectRatio: string | null
       mandatory: boolean
       phase: string
+      sectionId: string | null
       visibleFromStageId: string | null
       requiredBeforeStageId: string | null
       lockedFromStageId: string | null
       neverLock: boolean
       publishCard: string
       hidden: boolean
+      effortUnit: string | null
+      qtyPerVideoMinute: number | null
       order: number
     }, ExtArgs["result"]["checklistTemplateItem"]>
     composites: {}
@@ -36115,10 +41285,12 @@ export namespace Prisma {
   export interface Prisma__ChecklistTemplateItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     template<T extends ChecklistTemplateDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateDefaultArgs<ExtArgs>>): Prisma__ChecklistTemplateClient<$Result.GetResult<Prisma.$ChecklistTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    section<T extends ChecklistTemplateItem$sectionArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateItem$sectionArgs<ExtArgs>>): Prisma__ChecklistSectionClient<$Result.GetResult<Prisma.$ChecklistSectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     visibleFromStage<T extends ChecklistTemplateItem$visibleFromStageArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateItem$visibleFromStageArgs<ExtArgs>>): Prisma__TaskStatusClient<$Result.GetResult<Prisma.$TaskStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     requiredBeforeStage<T extends ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateItem$requiredBeforeStageArgs<ExtArgs>>): Prisma__TaskStatusClient<$Result.GetResult<Prisma.$TaskStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     lockedFromStage<T extends ChecklistTemplateItem$lockedFromStageArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateItem$lockedFromStageArgs<ExtArgs>>): Prisma__TaskStatusClient<$Result.GetResult<Prisma.$TaskStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     taskItems<T extends ChecklistTemplateItem$taskItemsArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateItem$taskItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskChecklistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    titleRates<T extends ChecklistTemplateItem$titleRatesArgs<ExtArgs> = {}>(args?: Subset<T, ChecklistTemplateItem$titleRatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitleFieldRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -36159,12 +41331,15 @@ export namespace Prisma {
     readonly aspectRatio: FieldRef<"ChecklistTemplateItem", 'String'>
     readonly mandatory: FieldRef<"ChecklistTemplateItem", 'Boolean'>
     readonly phase: FieldRef<"ChecklistTemplateItem", 'String'>
+    readonly sectionId: FieldRef<"ChecklistTemplateItem", 'String'>
     readonly visibleFromStageId: FieldRef<"ChecklistTemplateItem", 'String'>
     readonly requiredBeforeStageId: FieldRef<"ChecklistTemplateItem", 'String'>
     readonly lockedFromStageId: FieldRef<"ChecklistTemplateItem", 'String'>
     readonly neverLock: FieldRef<"ChecklistTemplateItem", 'Boolean'>
     readonly publishCard: FieldRef<"ChecklistTemplateItem", 'String'>
     readonly hidden: FieldRef<"ChecklistTemplateItem", 'Boolean'>
+    readonly effortUnit: FieldRef<"ChecklistTemplateItem", 'String'>
+    readonly qtyPerVideoMinute: FieldRef<"ChecklistTemplateItem", 'Float'>
     readonly order: FieldRef<"ChecklistTemplateItem", 'Int'>
   }
     
@@ -36567,6 +41742,25 @@ export namespace Prisma {
   }
 
   /**
+   * ChecklistTemplateItem.section
+   */
+  export type ChecklistTemplateItem$sectionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistSection
+     */
+    select?: ChecklistSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistSection
+     */
+    omit?: ChecklistSectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistSectionInclude<ExtArgs> | null
+    where?: ChecklistSectionWhereInput
+  }
+
+  /**
    * ChecklistTemplateItem.visibleFromStage
    */
   export type ChecklistTemplateItem$visibleFromStageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -36645,6 +41839,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TaskChecklistItemScalarFieldEnum | TaskChecklistItemScalarFieldEnum[]
+  }
+
+  /**
+   * ChecklistTemplateItem.titleRates
+   */
+  export type ChecklistTemplateItem$titleRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleFieldRate
+     */
+    select?: TitleFieldRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleFieldRate
+     */
+    omit?: TitleFieldRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleFieldRateInclude<ExtArgs> | null
+    where?: TitleFieldRateWhereInput
+    orderBy?: TitleFieldRateOrderByWithRelationInput | TitleFieldRateOrderByWithRelationInput[]
+    cursor?: TitleFieldRateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TitleFieldRateScalarFieldEnum | TitleFieldRateScalarFieldEnum[]
   }
 
   /**
@@ -37724,10 +42942,18 @@ export namespace Prisma {
   }
 
   export type TaskChecklistItemAvgAggregateOutputType = {
+    qtyPerVideoMinute: number | null
+    effortQuantity: number | null
+    effortRate: number | null
+    effortMinutes: number | null
     order: number | null
   }
 
   export type TaskChecklistItemSumAggregateOutputType = {
+    qtyPerVideoMinute: number | null
+    effortQuantity: number | null
+    effortRate: number | null
+    effortMinutes: number | null
     order: number | null
   }
 
@@ -37750,11 +42976,17 @@ export namespace Prisma {
     neverLock: boolean | null
     publishCard: string | null
     hidden: boolean | null
+    effortUnit: string | null
+    qtyPerVideoMinute: number | null
     completed: boolean | null
     attachmentId: string | null
     textValue: string | null
     completedAt: Date | null
     completedBy: string | null
+    effortQuantity: number | null
+    effortRate: number | null
+    effortMinutes: number | null
+    effortLockedAt: Date | null
     order: number | null
   }
 
@@ -37777,11 +43009,17 @@ export namespace Prisma {
     neverLock: boolean | null
     publishCard: string | null
     hidden: boolean | null
+    effortUnit: string | null
+    qtyPerVideoMinute: number | null
     completed: boolean | null
     attachmentId: string | null
     textValue: string | null
     completedAt: Date | null
     completedBy: string | null
+    effortQuantity: number | null
+    effortRate: number | null
+    effortMinutes: number | null
+    effortLockedAt: Date | null
     order: number | null
   }
 
@@ -37804,21 +43042,35 @@ export namespace Prisma {
     neverLock: number
     publishCard: number
     hidden: number
+    effortUnit: number
+    qtyPerVideoMinute: number
     completed: number
     attachmentId: number
     textValue: number
     completedAt: number
     completedBy: number
+    effortQuantity: number
+    effortRate: number
+    effortMinutes: number
+    effortLockedAt: number
     order: number
     _all: number
   }
 
 
   export type TaskChecklistItemAvgAggregateInputType = {
+    qtyPerVideoMinute?: true
+    effortQuantity?: true
+    effortRate?: true
+    effortMinutes?: true
     order?: true
   }
 
   export type TaskChecklistItemSumAggregateInputType = {
+    qtyPerVideoMinute?: true
+    effortQuantity?: true
+    effortRate?: true
+    effortMinutes?: true
     order?: true
   }
 
@@ -37841,11 +43093,17 @@ export namespace Prisma {
     neverLock?: true
     publishCard?: true
     hidden?: true
+    effortUnit?: true
+    qtyPerVideoMinute?: true
     completed?: true
     attachmentId?: true
     textValue?: true
     completedAt?: true
     completedBy?: true
+    effortQuantity?: true
+    effortRate?: true
+    effortMinutes?: true
+    effortLockedAt?: true
     order?: true
   }
 
@@ -37868,11 +43126,17 @@ export namespace Prisma {
     neverLock?: true
     publishCard?: true
     hidden?: true
+    effortUnit?: true
+    qtyPerVideoMinute?: true
     completed?: true
     attachmentId?: true
     textValue?: true
     completedAt?: true
     completedBy?: true
+    effortQuantity?: true
+    effortRate?: true
+    effortMinutes?: true
+    effortLockedAt?: true
     order?: true
   }
 
@@ -37895,11 +43159,17 @@ export namespace Prisma {
     neverLock?: true
     publishCard?: true
     hidden?: true
+    effortUnit?: true
+    qtyPerVideoMinute?: true
     completed?: true
     attachmentId?: true
     textValue?: true
     completedAt?: true
     completedBy?: true
+    effortQuantity?: true
+    effortRate?: true
+    effortMinutes?: true
+    effortLockedAt?: true
     order?: true
     _all?: true
   }
@@ -38009,11 +43279,17 @@ export namespace Prisma {
     neverLock: boolean
     publishCard: string
     hidden: boolean
+    effortUnit: string | null
+    qtyPerVideoMinute: number | null
     completed: boolean
     attachmentId: string | null
     textValue: string | null
     completedAt: Date | null
     completedBy: string | null
+    effortQuantity: number | null
+    effortRate: number | null
+    effortMinutes: number | null
+    effortLockedAt: Date | null
     order: number
     _count: TaskChecklistItemCountAggregateOutputType | null
     _avg: TaskChecklistItemAvgAggregateOutputType | null
@@ -38055,11 +43331,17 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: boolean
     hidden?: boolean
+    effortUnit?: boolean
+    qtyPerVideoMinute?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
     completedAt?: boolean
     completedBy?: boolean
+    effortQuantity?: boolean
+    effortRate?: boolean
+    effortMinutes?: boolean
+    effortLockedAt?: boolean
     order?: boolean
     task?: boolean | TaskDefaultArgs<ExtArgs>
     templateItem?: boolean | TaskChecklistItem$templateItemArgs<ExtArgs>
@@ -38084,11 +43366,17 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: boolean
     hidden?: boolean
+    effortUnit?: boolean
+    qtyPerVideoMinute?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
     completedAt?: boolean
     completedBy?: boolean
+    effortQuantity?: boolean
+    effortRate?: boolean
+    effortMinutes?: boolean
+    effortLockedAt?: boolean
     order?: boolean
     task?: boolean | TaskDefaultArgs<ExtArgs>
     templateItem?: boolean | TaskChecklistItem$templateItemArgs<ExtArgs>
@@ -38113,11 +43401,17 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: boolean
     hidden?: boolean
+    effortUnit?: boolean
+    qtyPerVideoMinute?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
     completedAt?: boolean
     completedBy?: boolean
+    effortQuantity?: boolean
+    effortRate?: boolean
+    effortMinutes?: boolean
+    effortLockedAt?: boolean
     order?: boolean
     task?: boolean | TaskDefaultArgs<ExtArgs>
     templateItem?: boolean | TaskChecklistItem$templateItemArgs<ExtArgs>
@@ -38142,15 +43436,21 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: boolean
     hidden?: boolean
+    effortUnit?: boolean
+    qtyPerVideoMinute?: boolean
     completed?: boolean
     attachmentId?: boolean
     textValue?: boolean
     completedAt?: boolean
     completedBy?: boolean
+    effortQuantity?: boolean
+    effortRate?: boolean
+    effortMinutes?: boolean
+    effortLockedAt?: boolean
     order?: boolean
   }
 
-  export type TaskChecklistItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "templateItemId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "visibleFromStageId" | "requiredBeforeStageId" | "lockedFromStageId" | "neverLock" | "publishCard" | "hidden" | "completed" | "attachmentId" | "textValue" | "completedAt" | "completedBy" | "order", ExtArgs["result"]["taskChecklistItem"]>
+  export type TaskChecklistItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "templateItemId" | "name" | "type" | "role" | "options" | "allowedFileTypes" | "allowedFormats" | "aspectRatio" | "mandatory" | "phase" | "visibleFromStageId" | "requiredBeforeStageId" | "lockedFromStageId" | "neverLock" | "publishCard" | "hidden" | "effortUnit" | "qtyPerVideoMinute" | "completed" | "attachmentId" | "textValue" | "completedAt" | "completedBy" | "effortQuantity" | "effortRate" | "effortMinutes" | "effortLockedAt" | "order", ExtArgs["result"]["taskChecklistItem"]>
   export type TaskChecklistItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     task?: boolean | TaskDefaultArgs<ExtArgs>
     templateItem?: boolean | TaskChecklistItem$templateItemArgs<ExtArgs>
@@ -38189,11 +43489,17 @@ export namespace Prisma {
       neverLock: boolean
       publishCard: string
       hidden: boolean
+      effortUnit: string | null
+      qtyPerVideoMinute: number | null
       completed: boolean
       attachmentId: string | null
       textValue: string | null
       completedAt: Date | null
       completedBy: string | null
+      effortQuantity: number | null
+      effortRate: number | null
+      effortMinutes: number | null
+      effortLockedAt: Date | null
       order: number
     }, ExtArgs["result"]["taskChecklistItem"]>
     composites: {}
@@ -38638,11 +43944,17 @@ export namespace Prisma {
     readonly neverLock: FieldRef<"TaskChecklistItem", 'Boolean'>
     readonly publishCard: FieldRef<"TaskChecklistItem", 'String'>
     readonly hidden: FieldRef<"TaskChecklistItem", 'Boolean'>
+    readonly effortUnit: FieldRef<"TaskChecklistItem", 'String'>
+    readonly qtyPerVideoMinute: FieldRef<"TaskChecklistItem", 'Float'>
     readonly completed: FieldRef<"TaskChecklistItem", 'Boolean'>
     readonly attachmentId: FieldRef<"TaskChecklistItem", 'String'>
     readonly textValue: FieldRef<"TaskChecklistItem", 'String'>
     readonly completedAt: FieldRef<"TaskChecklistItem", 'DateTime'>
     readonly completedBy: FieldRef<"TaskChecklistItem", 'String'>
+    readonly effortQuantity: FieldRef<"TaskChecklistItem", 'Float'>
+    readonly effortRate: FieldRef<"TaskChecklistItem", 'Float'>
+    readonly effortMinutes: FieldRef<"TaskChecklistItem", 'Float'>
+    readonly effortLockedAt: FieldRef<"TaskChecklistItem", 'DateTime'>
     readonly order: FieldRef<"TaskChecklistItem", 'Int'>
   }
     
@@ -39294,6 +44606,7 @@ export namespace Prisma {
     requiredBeforeItems?: boolean | TaskStatus$requiredBeforeItemsArgs<ExtArgs>
     lockedFromItems?: boolean | TaskStatus$lockedFromItemsArgs<ExtArgs>
     titleLockTemplates?: boolean | TaskStatus$titleLockTemplatesArgs<ExtArgs>
+    titleStageRates?: boolean | TaskStatus$titleStageRatesArgs<ExtArgs>
     _count?: boolean | TaskStatusCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["taskStatus"]>
 
@@ -39334,6 +44647,7 @@ export namespace Prisma {
     requiredBeforeItems?: boolean | TaskStatus$requiredBeforeItemsArgs<ExtArgs>
     lockedFromItems?: boolean | TaskStatus$lockedFromItemsArgs<ExtArgs>
     titleLockTemplates?: boolean | TaskStatus$titleLockTemplatesArgs<ExtArgs>
+    titleStageRates?: boolean | TaskStatus$titleStageRatesArgs<ExtArgs>
     _count?: boolean | TaskStatusCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TaskStatusIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -39352,6 +44666,7 @@ export namespace Prisma {
       requiredBeforeItems: Prisma.$ChecklistTemplateItemPayload<ExtArgs>[]
       lockedFromItems: Prisma.$ChecklistTemplateItemPayload<ExtArgs>[]
       titleLockTemplates: Prisma.$ChecklistTemplatePayload<ExtArgs>[]
+      titleStageRates: Prisma.$TitleStageRatePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -39760,6 +45075,7 @@ export namespace Prisma {
     requiredBeforeItems<T extends TaskStatus$requiredBeforeItemsArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$requiredBeforeItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     lockedFromItems<T extends TaskStatus$lockedFromItemsArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$lockedFromItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplateItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     titleLockTemplates<T extends TaskStatus$titleLockTemplatesArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$titleLockTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChecklistTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    titleStageRates<T extends TaskStatus$titleStageRatesArgs<ExtArgs> = {}>(args?: Subset<T, TaskStatus$titleStageRatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitleStageRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -40316,6 +45632,30 @@ export namespace Prisma {
   }
 
   /**
+   * TaskStatus.titleStageRates
+   */
+  export type TaskStatus$titleStageRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TitleStageRate
+     */
+    select?: TitleStageRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TitleStageRate
+     */
+    omit?: TitleStageRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TitleStageRateInclude<ExtArgs> | null
+    where?: TitleStageRateWhereInput
+    orderBy?: TitleStageRateOrderByWithRelationInput | TitleStageRateOrderByWithRelationInput[]
+    cursor?: TitleStageRateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TitleStageRateScalarFieldEnum | TitleStageRateScalarFieldEnum[]
+  }
+
+  /**
    * TaskStatus without action
    */
   export type TaskStatusDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -40351,6 +45691,7 @@ export namespace Prisma {
     price: Decimal | null
     priority: number | null
     estimateMin: number | null
+    plannedMinutes: number | null
     rejectionCount: number | null
     order: number | null
   }
@@ -40360,6 +45701,7 @@ export namespace Prisma {
     price: Decimal | null
     priority: number | null
     estimateMin: number | null
+    plannedMinutes: number | null
     rejectionCount: number | null
     order: number | null
   }
@@ -40371,6 +45713,7 @@ export namespace Prisma {
     serviceId: string | null
     statusId: string | null
     assigneeId: string | null
+    templateId: string | null
     title: string | null
     description: string | null
     billable: boolean | null
@@ -40378,6 +45721,7 @@ export namespace Prisma {
     publish: boolean | null
     priority: number | null
     estimateMin: number | null
+    plannedMinutes: number | null
     dueDate: Date | null
     completedAt: Date | null
     stageEnteredAt: Date | null
@@ -40396,6 +45740,7 @@ export namespace Prisma {
     serviceId: string | null
     statusId: string | null
     assigneeId: string | null
+    templateId: string | null
     title: string | null
     description: string | null
     billable: boolean | null
@@ -40403,6 +45748,7 @@ export namespace Prisma {
     publish: boolean | null
     priority: number | null
     estimateMin: number | null
+    plannedMinutes: number | null
     dueDate: Date | null
     completedAt: Date | null
     stageEnteredAt: Date | null
@@ -40421,6 +45767,7 @@ export namespace Prisma {
     serviceId: number
     statusId: number
     assigneeId: number
+    templateId: number
     title: number
     description: number
     billable: number
@@ -40428,6 +45775,7 @@ export namespace Prisma {
     publish: number
     priority: number
     estimateMin: number
+    plannedMinutes: number
     dueDate: number
     completedAt: number
     assignmentHistory: number
@@ -40448,6 +45796,7 @@ export namespace Prisma {
     price?: true
     priority?: true
     estimateMin?: true
+    plannedMinutes?: true
     rejectionCount?: true
     order?: true
   }
@@ -40457,6 +45806,7 @@ export namespace Prisma {
     price?: true
     priority?: true
     estimateMin?: true
+    plannedMinutes?: true
     rejectionCount?: true
     order?: true
   }
@@ -40468,6 +45818,7 @@ export namespace Prisma {
     serviceId?: true
     statusId?: true
     assigneeId?: true
+    templateId?: true
     title?: true
     description?: true
     billable?: true
@@ -40475,6 +45826,7 @@ export namespace Prisma {
     publish?: true
     priority?: true
     estimateMin?: true
+    plannedMinutes?: true
     dueDate?: true
     completedAt?: true
     stageEnteredAt?: true
@@ -40493,6 +45845,7 @@ export namespace Prisma {
     serviceId?: true
     statusId?: true
     assigneeId?: true
+    templateId?: true
     title?: true
     description?: true
     billable?: true
@@ -40500,6 +45853,7 @@ export namespace Prisma {
     publish?: true
     priority?: true
     estimateMin?: true
+    plannedMinutes?: true
     dueDate?: true
     completedAt?: true
     stageEnteredAt?: true
@@ -40518,6 +45872,7 @@ export namespace Prisma {
     serviceId?: true
     statusId?: true
     assigneeId?: true
+    templateId?: true
     title?: true
     description?: true
     billable?: true
@@ -40525,6 +45880,7 @@ export namespace Prisma {
     publish?: true
     priority?: true
     estimateMin?: true
+    plannedMinutes?: true
     dueDate?: true
     completedAt?: true
     assignmentHistory?: true
@@ -40632,6 +45988,7 @@ export namespace Prisma {
     serviceId: string | null
     statusId: string | null
     assigneeId: string | null
+    templateId: string | null
     title: string
     description: string | null
     billable: boolean
@@ -40639,6 +45996,7 @@ export namespace Prisma {
     publish: boolean
     priority: number | null
     estimateMin: number | null
+    plannedMinutes: number | null
     dueDate: Date | null
     completedAt: Date | null
     assignmentHistory: JsonValue | null
@@ -40678,6 +46036,7 @@ export namespace Prisma {
     serviceId?: boolean
     statusId?: boolean
     assigneeId?: boolean
+    templateId?: boolean
     title?: boolean
     description?: boolean
     billable?: boolean
@@ -40685,6 +46044,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: boolean
     estimateMin?: boolean
+    plannedMinutes?: boolean
     dueDate?: boolean
     completedAt?: boolean
     assignmentHistory?: boolean
@@ -40699,6 +46059,7 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
     status?: boolean | Task$statusArgs<ExtArgs>
+    template?: boolean | Task$templateArgs<ExtArgs>
     assignee?: boolean | Task$assigneeArgs<ExtArgs>
     checklistItems?: boolean | Task$checklistItemsArgs<ExtArgs>
     comments?: boolean | Task$commentsArgs<ExtArgs>
@@ -40715,6 +46076,7 @@ export namespace Prisma {
     serviceId?: boolean
     statusId?: boolean
     assigneeId?: boolean
+    templateId?: boolean
     title?: boolean
     description?: boolean
     billable?: boolean
@@ -40722,6 +46084,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: boolean
     estimateMin?: boolean
+    plannedMinutes?: boolean
     dueDate?: boolean
     completedAt?: boolean
     assignmentHistory?: boolean
@@ -40736,6 +46099,7 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
     status?: boolean | Task$statusArgs<ExtArgs>
+    template?: boolean | Task$templateArgs<ExtArgs>
     assignee?: boolean | Task$assigneeArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
@@ -40746,6 +46110,7 @@ export namespace Prisma {
     serviceId?: boolean
     statusId?: boolean
     assigneeId?: boolean
+    templateId?: boolean
     title?: boolean
     description?: boolean
     billable?: boolean
@@ -40753,6 +46118,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: boolean
     estimateMin?: boolean
+    plannedMinutes?: boolean
     dueDate?: boolean
     completedAt?: boolean
     assignmentHistory?: boolean
@@ -40767,6 +46133,7 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
     status?: boolean | Task$statusArgs<ExtArgs>
+    template?: boolean | Task$templateArgs<ExtArgs>
     assignee?: boolean | Task$assigneeArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
@@ -40777,6 +46144,7 @@ export namespace Prisma {
     serviceId?: boolean
     statusId?: boolean
     assigneeId?: boolean
+    templateId?: boolean
     title?: boolean
     description?: boolean
     billable?: boolean
@@ -40784,6 +46152,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: boolean
     estimateMin?: boolean
+    plannedMinutes?: boolean
     dueDate?: boolean
     completedAt?: boolean
     assignmentHistory?: boolean
@@ -40797,11 +46166,12 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "taskNumber" | "serviceId" | "statusId" | "assigneeId" | "title" | "description" | "billable" | "price" | "publish" | "priority" | "estimateMin" | "dueDate" | "completedAt" | "assignmentHistory" | "stageTimings" | "stageEnteredAt" | "rejectionCount" | "order" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["task"]>
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "taskNumber" | "serviceId" | "statusId" | "assigneeId" | "templateId" | "title" | "description" | "billable" | "price" | "publish" | "priority" | "estimateMin" | "plannedMinutes" | "dueDate" | "completedAt" | "assignmentHistory" | "stageTimings" | "stageEnteredAt" | "rejectionCount" | "order" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
     status?: boolean | Task$statusArgs<ExtArgs>
+    template?: boolean | Task$templateArgs<ExtArgs>
     assignee?: boolean | Task$assigneeArgs<ExtArgs>
     checklistItems?: boolean | Task$checklistItemsArgs<ExtArgs>
     comments?: boolean | Task$commentsArgs<ExtArgs>
@@ -40814,12 +46184,14 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
     status?: boolean | Task$statusArgs<ExtArgs>
+    template?: boolean | Task$templateArgs<ExtArgs>
     assignee?: boolean | Task$assigneeArgs<ExtArgs>
   }
   export type TaskIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     service?: boolean | Task$serviceArgs<ExtArgs>
     status?: boolean | Task$statusArgs<ExtArgs>
+    template?: boolean | Task$templateArgs<ExtArgs>
     assignee?: boolean | Task$assigneeArgs<ExtArgs>
   }
 
@@ -40829,6 +46201,7 @@ export namespace Prisma {
       project: Prisma.$ProjectPayload<ExtArgs>
       service: Prisma.$ServicePayload<ExtArgs> | null
       status: Prisma.$TaskStatusPayload<ExtArgs> | null
+      template: Prisma.$ChecklistTemplatePayload<ExtArgs> | null
       assignee: Prisma.$WorkspaceMemberPayload<ExtArgs> | null
       checklistItems: Prisma.$TaskChecklistItemPayload<ExtArgs>[]
       comments: Prisma.$MessagePayload<ExtArgs>[]
@@ -40843,6 +46216,7 @@ export namespace Prisma {
       serviceId: string | null
       statusId: string | null
       assigneeId: string | null
+      templateId: string | null
       title: string
       description: string | null
       billable: boolean
@@ -40850,6 +46224,7 @@ export namespace Prisma {
       publish: boolean
       priority: number | null
       estimateMin: number | null
+      plannedMinutes: number | null
       dueDate: Date | null
       completedAt: Date | null
       assignmentHistory: Prisma.JsonValue | null
@@ -41258,6 +46633,7 @@ export namespace Prisma {
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     service<T extends Task$serviceArgs<ExtArgs> = {}>(args?: Subset<T, Task$serviceArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     status<T extends Task$statusArgs<ExtArgs> = {}>(args?: Subset<T, Task$statusArgs<ExtArgs>>): Prisma__TaskStatusClient<$Result.GetResult<Prisma.$TaskStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    template<T extends Task$templateArgs<ExtArgs> = {}>(args?: Subset<T, Task$templateArgs<ExtArgs>>): Prisma__ChecklistTemplateClient<$Result.GetResult<Prisma.$ChecklistTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     assignee<T extends Task$assigneeArgs<ExtArgs> = {}>(args?: Subset<T, Task$assigneeArgs<ExtArgs>>): Prisma__WorkspaceMemberClient<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     checklistItems<T extends Task$checklistItemsArgs<ExtArgs> = {}>(args?: Subset<T, Task$checklistItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskChecklistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends Task$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Task$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -41299,6 +46675,7 @@ export namespace Prisma {
     readonly serviceId: FieldRef<"Task", 'String'>
     readonly statusId: FieldRef<"Task", 'String'>
     readonly assigneeId: FieldRef<"Task", 'String'>
+    readonly templateId: FieldRef<"Task", 'String'>
     readonly title: FieldRef<"Task", 'String'>
     readonly description: FieldRef<"Task", 'String'>
     readonly billable: FieldRef<"Task", 'Boolean'>
@@ -41306,6 +46683,7 @@ export namespace Prisma {
     readonly publish: FieldRef<"Task", 'Boolean'>
     readonly priority: FieldRef<"Task", 'Int'>
     readonly estimateMin: FieldRef<"Task", 'Int'>
+    readonly plannedMinutes: FieldRef<"Task", 'Float'>
     readonly dueDate: FieldRef<"Task", 'DateTime'>
     readonly completedAt: FieldRef<"Task", 'DateTime'>
     readonly assignmentHistory: FieldRef<"Task", 'Json'>
@@ -41753,6 +47131,25 @@ export namespace Prisma {
      */
     include?: TaskStatusInclude<ExtArgs> | null
     where?: TaskStatusWhereInput
+  }
+
+  /**
+   * Task.template
+   */
+  export type Task$templateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChecklistTemplate
+     */
+    select?: ChecklistTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChecklistTemplate
+     */
+    omit?: ChecklistTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChecklistTemplateInclude<ExtArgs> | null
+    where?: ChecklistTemplateWhereInput
   }
 
   /**
@@ -62666,11 +68063,13 @@ export namespace Prisma {
 
   export type AttachmentAvgAggregateOutputType = {
     sizeBytes: number | null
+    durationSec: number | null
     totalParts: number | null
   }
 
   export type AttachmentSumAggregateOutputType = {
     sizeBytes: number | null
+    durationSec: number | null
     totalParts: number | null
   }
 
@@ -62682,6 +68081,7 @@ export namespace Prisma {
     name: string | null
     sizeBytes: number | null
     contentType: string | null
+    durationSec: number | null
     r2Key: string | null
     status: string | null
     uploadId: string | null
@@ -62698,6 +68098,7 @@ export namespace Prisma {
     name: string | null
     sizeBytes: number | null
     contentType: string | null
+    durationSec: number | null
     r2Key: string | null
     status: string | null
     uploadId: string | null
@@ -62714,6 +68115,7 @@ export namespace Prisma {
     name: number
     sizeBytes: number
     contentType: number
+    durationSec: number
     r2Key: number
     status: number
     uploadId: number
@@ -62727,11 +68129,13 @@ export namespace Prisma {
 
   export type AttachmentAvgAggregateInputType = {
     sizeBytes?: true
+    durationSec?: true
     totalParts?: true
   }
 
   export type AttachmentSumAggregateInputType = {
     sizeBytes?: true
+    durationSec?: true
     totalParts?: true
   }
 
@@ -62743,6 +68147,7 @@ export namespace Prisma {
     name?: true
     sizeBytes?: true
     contentType?: true
+    durationSec?: true
     r2Key?: true
     status?: true
     uploadId?: true
@@ -62759,6 +68164,7 @@ export namespace Prisma {
     name?: true
     sizeBytes?: true
     contentType?: true
+    durationSec?: true
     r2Key?: true
     status?: true
     uploadId?: true
@@ -62775,6 +68181,7 @@ export namespace Prisma {
     name?: true
     sizeBytes?: true
     contentType?: true
+    durationSec?: true
     r2Key?: true
     status?: true
     uploadId?: true
@@ -62879,6 +68286,7 @@ export namespace Prisma {
     name: string
     sizeBytes: number | null
     contentType: string | null
+    durationSec: number | null
     r2Key: string | null
     status: string
     uploadId: string | null
@@ -62915,6 +68323,7 @@ export namespace Prisma {
     name?: boolean
     sizeBytes?: boolean
     contentType?: boolean
+    durationSec?: boolean
     r2Key?: boolean
     status?: boolean
     uploadId?: boolean
@@ -62933,6 +68342,7 @@ export namespace Prisma {
     name?: boolean
     sizeBytes?: boolean
     contentType?: boolean
+    durationSec?: boolean
     r2Key?: boolean
     status?: boolean
     uploadId?: boolean
@@ -62951,6 +68361,7 @@ export namespace Prisma {
     name?: boolean
     sizeBytes?: boolean
     contentType?: boolean
+    durationSec?: boolean
     r2Key?: boolean
     status?: boolean
     uploadId?: boolean
@@ -62969,6 +68380,7 @@ export namespace Prisma {
     name?: boolean
     sizeBytes?: boolean
     contentType?: boolean
+    durationSec?: boolean
     r2Key?: boolean
     status?: boolean
     uploadId?: boolean
@@ -62978,7 +68390,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type AttachmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "entityType" | "entityId" | "name" | "sizeBytes" | "contentType" | "r2Key" | "status" | "uploadId" | "totalParts" | "uploadedParts" | "createdAt" | "updatedAt", ExtArgs["result"]["attachment"]>
+  export type AttachmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "entityType" | "entityId" | "name" | "sizeBytes" | "contentType" | "durationSec" | "r2Key" | "status" | "uploadId" | "totalParts" | "uploadedParts" | "createdAt" | "updatedAt", ExtArgs["result"]["attachment"]>
   export type AttachmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }
@@ -63002,6 +68414,7 @@ export namespace Prisma {
       name: string
       sizeBytes: number | null
       contentType: string | null
+      durationSec: number | null
       r2Key: string | null
       status: string
       uploadId: string | null
@@ -63440,6 +68853,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Attachment", 'String'>
     readonly sizeBytes: FieldRef<"Attachment", 'Int'>
     readonly contentType: FieldRef<"Attachment", 'String'>
+    readonly durationSec: FieldRef<"Attachment", 'Float'>
     readonly r2Key: FieldRef<"Attachment", 'String'>
     readonly status: FieldRef<"Attachment", 'String'>
     readonly uploadId: FieldRef<"Attachment", 'String'>
@@ -67250,6 +72664,8 @@ export namespace Prisma {
     imageUrl: 'imageUrl',
     type: 'type',
     roleId: 'roleId',
+    titleId: 'titleId',
+    weeklyHours: 'weeklyHours',
     joinedAt: 'joinedAt'
   };
 
@@ -67265,6 +72681,36 @@ export namespace Prisma {
   };
 
   export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
+
+
+  export const TitleScalarFieldEnum: {
+    id: 'id',
+    workspaceId: 'workspaceId',
+    name: 'name',
+    createdAt: 'createdAt'
+  };
+
+  export type TitleScalarFieldEnum = (typeof TitleScalarFieldEnum)[keyof typeof TitleScalarFieldEnum]
+
+
+  export const TitleFieldRateScalarFieldEnum: {
+    id: 'id',
+    titleId: 'titleId',
+    templateItemId: 'templateItemId',
+    minutesPerUnit: 'minutesPerUnit'
+  };
+
+  export type TitleFieldRateScalarFieldEnum = (typeof TitleFieldRateScalarFieldEnum)[keyof typeof TitleFieldRateScalarFieldEnum]
+
+
+  export const TitleStageRateScalarFieldEnum: {
+    id: 'id',
+    titleId: 'titleId',
+    statusId: 'statusId',
+    minutesPerPass: 'minutesPerPass'
+  };
+
+  export type TitleStageRateScalarFieldEnum = (typeof TitleStageRateScalarFieldEnum)[keyof typeof TitleStageRateScalarFieldEnum]
 
 
   export const ProjectCollaboratorScalarFieldEnum: {
@@ -67566,6 +73012,18 @@ export namespace Prisma {
   export type ChecklistTemplateScalarFieldEnum = (typeof ChecklistTemplateScalarFieldEnum)[keyof typeof ChecklistTemplateScalarFieldEnum]
 
 
+  export const ChecklistSectionScalarFieldEnum: {
+    id: 'id',
+    templateId: 'templateId',
+    name: 'name',
+    phase: 'phase',
+    order: 'order',
+    createdAt: 'createdAt'
+  };
+
+  export type ChecklistSectionScalarFieldEnum = (typeof ChecklistSectionScalarFieldEnum)[keyof typeof ChecklistSectionScalarFieldEnum]
+
+
   export const ChecklistTemplateItemScalarFieldEnum: {
     id: 'id',
     templateId: 'templateId',
@@ -67578,12 +73036,15 @@ export namespace Prisma {
     aspectRatio: 'aspectRatio',
     mandatory: 'mandatory',
     phase: 'phase',
+    sectionId: 'sectionId',
     visibleFromStageId: 'visibleFromStageId',
     requiredBeforeStageId: 'requiredBeforeStageId',
     lockedFromStageId: 'lockedFromStageId',
     neverLock: 'neverLock',
     publishCard: 'publishCard',
     hidden: 'hidden',
+    effortUnit: 'effortUnit',
+    qtyPerVideoMinute: 'qtyPerVideoMinute',
     order: 'order'
   };
 
@@ -67618,11 +73079,17 @@ export namespace Prisma {
     neverLock: 'neverLock',
     publishCard: 'publishCard',
     hidden: 'hidden',
+    effortUnit: 'effortUnit',
+    qtyPerVideoMinute: 'qtyPerVideoMinute',
     completed: 'completed',
     attachmentId: 'attachmentId',
     textValue: 'textValue',
     completedAt: 'completedAt',
     completedBy: 'completedBy',
+    effortQuantity: 'effortQuantity',
+    effortRate: 'effortRate',
+    effortMinutes: 'effortMinutes',
+    effortLockedAt: 'effortLockedAt',
     order: 'order'
   };
 
@@ -67648,6 +73115,7 @@ export namespace Prisma {
     serviceId: 'serviceId',
     statusId: 'statusId',
     assigneeId: 'assigneeId',
+    templateId: 'templateId',
     title: 'title',
     description: 'description',
     billable: 'billable',
@@ -67655,6 +73123,7 @@ export namespace Prisma {
     publish: 'publish',
     priority: 'priority',
     estimateMin: 'estimateMin',
+    plannedMinutes: 'plannedMinutes',
     dueDate: 'dueDate',
     completedAt: 'completedAt',
     assignmentHistory: 'assignmentHistory',
@@ -67951,6 +73420,7 @@ export namespace Prisma {
     name: 'name',
     sizeBytes: 'sizeBytes',
     contentType: 'contentType',
+    durationSec: 'durationSec',
     r2Key: 'r2Key',
     status: 'status',
     uploadId: 'uploadId',
@@ -68125,6 +73595,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -68262,20 +73746,6 @@ export namespace Prisma {
    */
   export type ListEnumCustomFieldTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomFieldType[]'>
     
-
-
-  /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
   /**
    * Deep Input Types
    */
@@ -68312,6 +73782,7 @@ export namespace Prisma {
     whatsappConfig?: XOR<WhatsAppConfigNullableScalarRelationFilter, WhatsAppConfigWhereInput> | null
     whatsappTemplates?: WhatsAppTemplateListRelationFilter
     roles?: RoleListRelationFilter
+    titles?: TitleListRelationFilter
     currencies?: CurrencyListRelationFilter
     exchangeRates?: ExchangeRateListRelationFilter
     attachments?: AttachmentListRelationFilter
@@ -68348,6 +73819,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigOrderByWithRelationInput
     whatsappTemplates?: WhatsAppTemplateOrderByRelationAggregateInput
     roles?: RoleOrderByRelationAggregateInput
+    titles?: TitleOrderByRelationAggregateInput
     currencies?: CurrencyOrderByRelationAggregateInput
     exchangeRates?: ExchangeRateOrderByRelationAggregateInput
     attachments?: AttachmentOrderByRelationAggregateInput
@@ -68387,6 +73859,7 @@ export namespace Prisma {
     whatsappConfig?: XOR<WhatsAppConfigNullableScalarRelationFilter, WhatsAppConfigWhereInput> | null
     whatsappTemplates?: WhatsAppTemplateListRelationFilter
     roles?: RoleListRelationFilter
+    titles?: TitleListRelationFilter
     currencies?: CurrencyListRelationFilter
     exchangeRates?: ExchangeRateListRelationFilter
     attachments?: AttachmentListRelationFilter
@@ -68577,9 +74050,12 @@ export namespace Prisma {
     imageUrl?: StringNullableFilter<"WorkspaceMember"> | string | null
     type?: EnumMemberTypeFilter<"WorkspaceMember"> | $Enums.MemberType
     roleId?: StringNullableFilter<"WorkspaceMember"> | string | null
+    titleId?: StringNullableFilter<"WorkspaceMember"> | string | null
+    weeklyHours?: FloatFilter<"WorkspaceMember"> | number
     joinedAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     role?: XOR<RoleNullableScalarRelationFilter, RoleWhereInput> | null
+    capacityTitle?: XOR<TitleNullableScalarRelationFilter, TitleWhereInput> | null
     assignedTasks?: TaskListRelationFilter
     messages?: MessageListRelationFilter
     mentionedIn?: MessageMentionListRelationFilter
@@ -68603,9 +74079,12 @@ export namespace Prisma {
     imageUrl?: SortOrderInput | SortOrder
     type?: SortOrder
     roleId?: SortOrderInput | SortOrder
+    titleId?: SortOrderInput | SortOrder
+    weeklyHours?: SortOrder
     joinedAt?: SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
     role?: RoleOrderByWithRelationInput
+    capacityTitle?: TitleOrderByWithRelationInput
     assignedTasks?: TaskOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
     mentionedIn?: MessageMentionOrderByRelationAggregateInput
@@ -68633,9 +74112,12 @@ export namespace Prisma {
     imageUrl?: StringNullableFilter<"WorkspaceMember"> | string | null
     type?: EnumMemberTypeFilter<"WorkspaceMember"> | $Enums.MemberType
     roleId?: StringNullableFilter<"WorkspaceMember"> | string | null
+    titleId?: StringNullableFilter<"WorkspaceMember"> | string | null
+    weeklyHours?: FloatFilter<"WorkspaceMember"> | number
     joinedAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     role?: XOR<RoleNullableScalarRelationFilter, RoleWhereInput> | null
+    capacityTitle?: XOR<TitleNullableScalarRelationFilter, TitleWhereInput> | null
     assignedTasks?: TaskListRelationFilter
     messages?: MessageListRelationFilter
     mentionedIn?: MessageMentionListRelationFilter
@@ -68659,10 +74141,14 @@ export namespace Prisma {
     imageUrl?: SortOrderInput | SortOrder
     type?: SortOrder
     roleId?: SortOrderInput | SortOrder
+    titleId?: SortOrderInput | SortOrder
+    weeklyHours?: SortOrder
     joinedAt?: SortOrder
     _count?: WorkspaceMemberCountOrderByAggregateInput
+    _avg?: WorkspaceMemberAvgOrderByAggregateInput
     _max?: WorkspaceMemberMaxOrderByAggregateInput
     _min?: WorkspaceMemberMinOrderByAggregateInput
+    _sum?: WorkspaceMemberSumOrderByAggregateInput
   }
 
   export type WorkspaceMemberScalarWhereWithAggregatesInput = {
@@ -68677,6 +74163,8 @@ export namespace Prisma {
     imageUrl?: StringNullableWithAggregatesFilter<"WorkspaceMember"> | string | null
     type?: EnumMemberTypeWithAggregatesFilter<"WorkspaceMember"> | $Enums.MemberType
     roleId?: StringNullableWithAggregatesFilter<"WorkspaceMember"> | string | null
+    titleId?: StringNullableWithAggregatesFilter<"WorkspaceMember"> | string | null
+    weeklyHours?: FloatWithAggregatesFilter<"WorkspaceMember"> | number
     joinedAt?: DateTimeWithAggregatesFilter<"WorkspaceMember"> | Date | string
   }
 
@@ -68740,6 +74228,178 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Role"> | string
     permissions?: JsonWithAggregatesFilter<"Role">
     createdAt?: DateTimeWithAggregatesFilter<"Role"> | Date | string
+  }
+
+  export type TitleWhereInput = {
+    AND?: TitleWhereInput | TitleWhereInput[]
+    OR?: TitleWhereInput[]
+    NOT?: TitleWhereInput | TitleWhereInput[]
+    id?: StringFilter<"Title"> | string
+    workspaceId?: StringFilter<"Title"> | string
+    name?: StringFilter<"Title"> | string
+    createdAt?: DateTimeFilter<"Title"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    members?: WorkspaceMemberListRelationFilter
+    fieldRates?: TitleFieldRateListRelationFilter
+    stageRates?: TitleStageRateListRelationFilter
+  }
+
+  export type TitleOrderByWithRelationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    workspace?: WorkspaceOrderByWithRelationInput
+    members?: WorkspaceMemberOrderByRelationAggregateInput
+    fieldRates?: TitleFieldRateOrderByRelationAggregateInput
+    stageRates?: TitleStageRateOrderByRelationAggregateInput
+  }
+
+  export type TitleWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    workspaceId_name?: TitleWorkspaceIdNameCompoundUniqueInput
+    AND?: TitleWhereInput | TitleWhereInput[]
+    OR?: TitleWhereInput[]
+    NOT?: TitleWhereInput | TitleWhereInput[]
+    workspaceId?: StringFilter<"Title"> | string
+    name?: StringFilter<"Title"> | string
+    createdAt?: DateTimeFilter<"Title"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    members?: WorkspaceMemberListRelationFilter
+    fieldRates?: TitleFieldRateListRelationFilter
+    stageRates?: TitleStageRateListRelationFilter
+  }, "id" | "workspaceId_name">
+
+  export type TitleOrderByWithAggregationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    _count?: TitleCountOrderByAggregateInput
+    _max?: TitleMaxOrderByAggregateInput
+    _min?: TitleMinOrderByAggregateInput
+  }
+
+  export type TitleScalarWhereWithAggregatesInput = {
+    AND?: TitleScalarWhereWithAggregatesInput | TitleScalarWhereWithAggregatesInput[]
+    OR?: TitleScalarWhereWithAggregatesInput[]
+    NOT?: TitleScalarWhereWithAggregatesInput | TitleScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Title"> | string
+    workspaceId?: StringWithAggregatesFilter<"Title"> | string
+    name?: StringWithAggregatesFilter<"Title"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Title"> | Date | string
+  }
+
+  export type TitleFieldRateWhereInput = {
+    AND?: TitleFieldRateWhereInput | TitleFieldRateWhereInput[]
+    OR?: TitleFieldRateWhereInput[]
+    NOT?: TitleFieldRateWhereInput | TitleFieldRateWhereInput[]
+    id?: StringFilter<"TitleFieldRate"> | string
+    titleId?: StringFilter<"TitleFieldRate"> | string
+    templateItemId?: StringFilter<"TitleFieldRate"> | string
+    minutesPerUnit?: FloatFilter<"TitleFieldRate"> | number
+    title?: XOR<TitleScalarRelationFilter, TitleWhereInput>
+    templateItem?: XOR<ChecklistTemplateItemScalarRelationFilter, ChecklistTemplateItemWhereInput>
+  }
+
+  export type TitleFieldRateOrderByWithRelationInput = {
+    id?: SortOrder
+    titleId?: SortOrder
+    templateItemId?: SortOrder
+    minutesPerUnit?: SortOrder
+    title?: TitleOrderByWithRelationInput
+    templateItem?: ChecklistTemplateItemOrderByWithRelationInput
+  }
+
+  export type TitleFieldRateWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    titleId_templateItemId?: TitleFieldRateTitleIdTemplateItemIdCompoundUniqueInput
+    AND?: TitleFieldRateWhereInput | TitleFieldRateWhereInput[]
+    OR?: TitleFieldRateWhereInput[]
+    NOT?: TitleFieldRateWhereInput | TitleFieldRateWhereInput[]
+    titleId?: StringFilter<"TitleFieldRate"> | string
+    templateItemId?: StringFilter<"TitleFieldRate"> | string
+    minutesPerUnit?: FloatFilter<"TitleFieldRate"> | number
+    title?: XOR<TitleScalarRelationFilter, TitleWhereInput>
+    templateItem?: XOR<ChecklistTemplateItemScalarRelationFilter, ChecklistTemplateItemWhereInput>
+  }, "id" | "titleId_templateItemId">
+
+  export type TitleFieldRateOrderByWithAggregationInput = {
+    id?: SortOrder
+    titleId?: SortOrder
+    templateItemId?: SortOrder
+    minutesPerUnit?: SortOrder
+    _count?: TitleFieldRateCountOrderByAggregateInput
+    _avg?: TitleFieldRateAvgOrderByAggregateInput
+    _max?: TitleFieldRateMaxOrderByAggregateInput
+    _min?: TitleFieldRateMinOrderByAggregateInput
+    _sum?: TitleFieldRateSumOrderByAggregateInput
+  }
+
+  export type TitleFieldRateScalarWhereWithAggregatesInput = {
+    AND?: TitleFieldRateScalarWhereWithAggregatesInput | TitleFieldRateScalarWhereWithAggregatesInput[]
+    OR?: TitleFieldRateScalarWhereWithAggregatesInput[]
+    NOT?: TitleFieldRateScalarWhereWithAggregatesInput | TitleFieldRateScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TitleFieldRate"> | string
+    titleId?: StringWithAggregatesFilter<"TitleFieldRate"> | string
+    templateItemId?: StringWithAggregatesFilter<"TitleFieldRate"> | string
+    minutesPerUnit?: FloatWithAggregatesFilter<"TitleFieldRate"> | number
+  }
+
+  export type TitleStageRateWhereInput = {
+    AND?: TitleStageRateWhereInput | TitleStageRateWhereInput[]
+    OR?: TitleStageRateWhereInput[]
+    NOT?: TitleStageRateWhereInput | TitleStageRateWhereInput[]
+    id?: StringFilter<"TitleStageRate"> | string
+    titleId?: StringFilter<"TitleStageRate"> | string
+    statusId?: StringFilter<"TitleStageRate"> | string
+    minutesPerPass?: FloatFilter<"TitleStageRate"> | number
+    title?: XOR<TitleScalarRelationFilter, TitleWhereInput>
+    status?: XOR<TaskStatusScalarRelationFilter, TaskStatusWhereInput>
+  }
+
+  export type TitleStageRateOrderByWithRelationInput = {
+    id?: SortOrder
+    titleId?: SortOrder
+    statusId?: SortOrder
+    minutesPerPass?: SortOrder
+    title?: TitleOrderByWithRelationInput
+    status?: TaskStatusOrderByWithRelationInput
+  }
+
+  export type TitleStageRateWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    titleId_statusId?: TitleStageRateTitleIdStatusIdCompoundUniqueInput
+    AND?: TitleStageRateWhereInput | TitleStageRateWhereInput[]
+    OR?: TitleStageRateWhereInput[]
+    NOT?: TitleStageRateWhereInput | TitleStageRateWhereInput[]
+    titleId?: StringFilter<"TitleStageRate"> | string
+    statusId?: StringFilter<"TitleStageRate"> | string
+    minutesPerPass?: FloatFilter<"TitleStageRate"> | number
+    title?: XOR<TitleScalarRelationFilter, TitleWhereInput>
+    status?: XOR<TaskStatusScalarRelationFilter, TaskStatusWhereInput>
+  }, "id" | "titleId_statusId">
+
+  export type TitleStageRateOrderByWithAggregationInput = {
+    id?: SortOrder
+    titleId?: SortOrder
+    statusId?: SortOrder
+    minutesPerPass?: SortOrder
+    _count?: TitleStageRateCountOrderByAggregateInput
+    _avg?: TitleStageRateAvgOrderByAggregateInput
+    _max?: TitleStageRateMaxOrderByAggregateInput
+    _min?: TitleStageRateMinOrderByAggregateInput
+    _sum?: TitleStageRateSumOrderByAggregateInput
+  }
+
+  export type TitleStageRateScalarWhereWithAggregatesInput = {
+    AND?: TitleStageRateScalarWhereWithAggregatesInput | TitleStageRateScalarWhereWithAggregatesInput[]
+    OR?: TitleStageRateScalarWhereWithAggregatesInput[]
+    NOT?: TitleStageRateScalarWhereWithAggregatesInput | TitleStageRateScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TitleStageRate"> | string
+    titleId?: StringWithAggregatesFilter<"TitleStageRate"> | string
+    statusId?: StringWithAggregatesFilter<"TitleStageRate"> | string
+    minutesPerPass?: FloatWithAggregatesFilter<"TitleStageRate"> | number
   }
 
   export type ProjectCollaboratorWhereInput = {
@@ -70327,8 +75987,10 @@ export namespace Prisma {
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     titleLockedFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     items?: ChecklistTemplateItemListRelationFilter
+    sections?: ChecklistSectionListRelationFilter
     projects?: ProjectTemplateListRelationFilter
     weeklyTargets?: ProjectWeeklyTargetListRelationFilter
+    tasks?: TaskListRelationFilter
     weeklySlots?: WeeklySlotListRelationFilter
   }
 
@@ -70349,8 +76011,10 @@ export namespace Prisma {
     workspace?: WorkspaceOrderByWithRelationInput
     titleLockedFromStage?: TaskStatusOrderByWithRelationInput
     items?: ChecklistTemplateItemOrderByRelationAggregateInput
+    sections?: ChecklistSectionOrderByRelationAggregateInput
     projects?: ProjectTemplateOrderByRelationAggregateInput
     weeklyTargets?: ProjectWeeklyTargetOrderByRelationAggregateInput
+    tasks?: TaskOrderByRelationAggregateInput
     weeklySlots?: WeeklySlotOrderByRelationAggregateInput
   }
 
@@ -70374,8 +76038,10 @@ export namespace Prisma {
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     titleLockedFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     items?: ChecklistTemplateItemListRelationFilter
+    sections?: ChecklistSectionListRelationFilter
     projects?: ProjectTemplateListRelationFilter
     weeklyTargets?: ProjectWeeklyTargetListRelationFilter
+    tasks?: TaskListRelationFilter
     weeklySlots?: WeeklySlotListRelationFilter
   }, "id">
 
@@ -70417,6 +76083,71 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"ChecklistTemplate"> | Date | string
   }
 
+  export type ChecklistSectionWhereInput = {
+    AND?: ChecklistSectionWhereInput | ChecklistSectionWhereInput[]
+    OR?: ChecklistSectionWhereInput[]
+    NOT?: ChecklistSectionWhereInput | ChecklistSectionWhereInput[]
+    id?: StringFilter<"ChecklistSection"> | string
+    templateId?: StringFilter<"ChecklistSection"> | string
+    name?: StringFilter<"ChecklistSection"> | string
+    phase?: StringFilter<"ChecklistSection"> | string
+    order?: IntFilter<"ChecklistSection"> | number
+    createdAt?: DateTimeFilter<"ChecklistSection"> | Date | string
+    template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
+    items?: ChecklistTemplateItemListRelationFilter
+  }
+
+  export type ChecklistSectionOrderByWithRelationInput = {
+    id?: SortOrder
+    templateId?: SortOrder
+    name?: SortOrder
+    phase?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    template?: ChecklistTemplateOrderByWithRelationInput
+    items?: ChecklistTemplateItemOrderByRelationAggregateInput
+  }
+
+  export type ChecklistSectionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ChecklistSectionWhereInput | ChecklistSectionWhereInput[]
+    OR?: ChecklistSectionWhereInput[]
+    NOT?: ChecklistSectionWhereInput | ChecklistSectionWhereInput[]
+    templateId?: StringFilter<"ChecklistSection"> | string
+    name?: StringFilter<"ChecklistSection"> | string
+    phase?: StringFilter<"ChecklistSection"> | string
+    order?: IntFilter<"ChecklistSection"> | number
+    createdAt?: DateTimeFilter<"ChecklistSection"> | Date | string
+    template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
+    items?: ChecklistTemplateItemListRelationFilter
+  }, "id">
+
+  export type ChecklistSectionOrderByWithAggregationInput = {
+    id?: SortOrder
+    templateId?: SortOrder
+    name?: SortOrder
+    phase?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    _count?: ChecklistSectionCountOrderByAggregateInput
+    _avg?: ChecklistSectionAvgOrderByAggregateInput
+    _max?: ChecklistSectionMaxOrderByAggregateInput
+    _min?: ChecklistSectionMinOrderByAggregateInput
+    _sum?: ChecklistSectionSumOrderByAggregateInput
+  }
+
+  export type ChecklistSectionScalarWhereWithAggregatesInput = {
+    AND?: ChecklistSectionScalarWhereWithAggregatesInput | ChecklistSectionScalarWhereWithAggregatesInput[]
+    OR?: ChecklistSectionScalarWhereWithAggregatesInput[]
+    NOT?: ChecklistSectionScalarWhereWithAggregatesInput | ChecklistSectionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ChecklistSection"> | string
+    templateId?: StringWithAggregatesFilter<"ChecklistSection"> | string
+    name?: StringWithAggregatesFilter<"ChecklistSection"> | string
+    phase?: StringWithAggregatesFilter<"ChecklistSection"> | string
+    order?: IntWithAggregatesFilter<"ChecklistSection"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"ChecklistSection"> | Date | string
+  }
+
   export type ChecklistTemplateItemWhereInput = {
     AND?: ChecklistTemplateItemWhereInput | ChecklistTemplateItemWhereInput[]
     OR?: ChecklistTemplateItemWhereInput[]
@@ -70432,18 +76163,23 @@ export namespace Prisma {
     aspectRatio?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     mandatory?: BoolFilter<"ChecklistTemplateItem"> | boolean
     phase?: StringFilter<"ChecklistTemplateItem"> | string
+    sectionId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     visibleFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     requiredBeforeStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     lockedFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     neverLock?: BoolFilter<"ChecklistTemplateItem"> | boolean
     publishCard?: StringFilter<"ChecklistTemplateItem"> | string
     hidden?: BoolFilter<"ChecklistTemplateItem"> | boolean
+    effortUnit?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
+    qtyPerVideoMinute?: FloatNullableFilter<"ChecklistTemplateItem"> | number | null
     order?: IntFilter<"ChecklistTemplateItem"> | number
     template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
+    section?: XOR<ChecklistSectionNullableScalarRelationFilter, ChecklistSectionWhereInput> | null
     visibleFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     requiredBeforeStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     lockedFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     taskItems?: TaskChecklistItemListRelationFilter
+    titleRates?: TitleFieldRateListRelationFilter
   }
 
   export type ChecklistTemplateItemOrderByWithRelationInput = {
@@ -70458,18 +76194,23 @@ export namespace Prisma {
     aspectRatio?: SortOrderInput | SortOrder
     mandatory?: SortOrder
     phase?: SortOrder
+    sectionId?: SortOrderInput | SortOrder
     visibleFromStageId?: SortOrderInput | SortOrder
     requiredBeforeStageId?: SortOrderInput | SortOrder
     lockedFromStageId?: SortOrderInput | SortOrder
     neverLock?: SortOrder
     publishCard?: SortOrder
     hidden?: SortOrder
+    effortUnit?: SortOrderInput | SortOrder
+    qtyPerVideoMinute?: SortOrderInput | SortOrder
     order?: SortOrder
     template?: ChecklistTemplateOrderByWithRelationInput
+    section?: ChecklistSectionOrderByWithRelationInput
     visibleFromStage?: TaskStatusOrderByWithRelationInput
     requiredBeforeStage?: TaskStatusOrderByWithRelationInput
     lockedFromStage?: TaskStatusOrderByWithRelationInput
     taskItems?: TaskChecklistItemOrderByRelationAggregateInput
+    titleRates?: TitleFieldRateOrderByRelationAggregateInput
   }
 
   export type ChecklistTemplateItemWhereUniqueInput = Prisma.AtLeast<{
@@ -70487,18 +76228,23 @@ export namespace Prisma {
     aspectRatio?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     mandatory?: BoolFilter<"ChecklistTemplateItem"> | boolean
     phase?: StringFilter<"ChecklistTemplateItem"> | string
+    sectionId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     visibleFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     requiredBeforeStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     lockedFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     neverLock?: BoolFilter<"ChecklistTemplateItem"> | boolean
     publishCard?: StringFilter<"ChecklistTemplateItem"> | string
     hidden?: BoolFilter<"ChecklistTemplateItem"> | boolean
+    effortUnit?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
+    qtyPerVideoMinute?: FloatNullableFilter<"ChecklistTemplateItem"> | number | null
     order?: IntFilter<"ChecklistTemplateItem"> | number
     template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
+    section?: XOR<ChecklistSectionNullableScalarRelationFilter, ChecklistSectionWhereInput> | null
     visibleFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     requiredBeforeStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     lockedFromStage?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
     taskItems?: TaskChecklistItemListRelationFilter
+    titleRates?: TitleFieldRateListRelationFilter
   }, "id">
 
   export type ChecklistTemplateItemOrderByWithAggregationInput = {
@@ -70513,12 +76259,15 @@ export namespace Prisma {
     aspectRatio?: SortOrderInput | SortOrder
     mandatory?: SortOrder
     phase?: SortOrder
+    sectionId?: SortOrderInput | SortOrder
     visibleFromStageId?: SortOrderInput | SortOrder
     requiredBeforeStageId?: SortOrderInput | SortOrder
     lockedFromStageId?: SortOrderInput | SortOrder
     neverLock?: SortOrder
     publishCard?: SortOrder
     hidden?: SortOrder
+    effortUnit?: SortOrderInput | SortOrder
+    qtyPerVideoMinute?: SortOrderInput | SortOrder
     order?: SortOrder
     _count?: ChecklistTemplateItemCountOrderByAggregateInput
     _avg?: ChecklistTemplateItemAvgOrderByAggregateInput
@@ -70542,12 +76291,15 @@ export namespace Prisma {
     aspectRatio?: StringNullableWithAggregatesFilter<"ChecklistTemplateItem"> | string | null
     mandatory?: BoolWithAggregatesFilter<"ChecklistTemplateItem"> | boolean
     phase?: StringWithAggregatesFilter<"ChecklistTemplateItem"> | string
+    sectionId?: StringNullableWithAggregatesFilter<"ChecklistTemplateItem"> | string | null
     visibleFromStageId?: StringNullableWithAggregatesFilter<"ChecklistTemplateItem"> | string | null
     requiredBeforeStageId?: StringNullableWithAggregatesFilter<"ChecklistTemplateItem"> | string | null
     lockedFromStageId?: StringNullableWithAggregatesFilter<"ChecklistTemplateItem"> | string | null
     neverLock?: BoolWithAggregatesFilter<"ChecklistTemplateItem"> | boolean
     publishCard?: StringWithAggregatesFilter<"ChecklistTemplateItem"> | string
     hidden?: BoolWithAggregatesFilter<"ChecklistTemplateItem"> | boolean
+    effortUnit?: StringNullableWithAggregatesFilter<"ChecklistTemplateItem"> | string | null
+    qtyPerVideoMinute?: FloatNullableWithAggregatesFilter<"ChecklistTemplateItem"> | number | null
     order?: IntWithAggregatesFilter<"ChecklistTemplateItem"> | number
   }
 
@@ -70622,11 +76374,17 @@ export namespace Prisma {
     neverLock?: BoolFilter<"TaskChecklistItem"> | boolean
     publishCard?: StringFilter<"TaskChecklistItem"> | string
     hidden?: BoolFilter<"TaskChecklistItem"> | boolean
+    effortUnit?: StringNullableFilter<"TaskChecklistItem"> | string | null
+    qtyPerVideoMinute?: FloatNullableFilter<"TaskChecklistItem"> | number | null
     completed?: BoolFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableFilter<"TaskChecklistItem"> | string | null
     completedAt?: DateTimeNullableFilter<"TaskChecklistItem"> | Date | string | null
     completedBy?: StringNullableFilter<"TaskChecklistItem"> | string | null
+    effortQuantity?: FloatNullableFilter<"TaskChecklistItem"> | number | null
+    effortRate?: FloatNullableFilter<"TaskChecklistItem"> | number | null
+    effortMinutes?: FloatNullableFilter<"TaskChecklistItem"> | number | null
+    effortLockedAt?: DateTimeNullableFilter<"TaskChecklistItem"> | Date | string | null
     order?: IntFilter<"TaskChecklistItem"> | number
     task?: XOR<TaskScalarRelationFilter, TaskWhereInput>
     templateItem?: XOR<ChecklistTemplateItemNullableScalarRelationFilter, ChecklistTemplateItemWhereInput> | null
@@ -70651,11 +76409,17 @@ export namespace Prisma {
     neverLock?: SortOrder
     publishCard?: SortOrder
     hidden?: SortOrder
+    effortUnit?: SortOrderInput | SortOrder
+    qtyPerVideoMinute?: SortOrderInput | SortOrder
     completed?: SortOrder
     attachmentId?: SortOrderInput | SortOrder
     textValue?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
     completedBy?: SortOrderInput | SortOrder
+    effortQuantity?: SortOrderInput | SortOrder
+    effortRate?: SortOrderInput | SortOrder
+    effortMinutes?: SortOrderInput | SortOrder
+    effortLockedAt?: SortOrderInput | SortOrder
     order?: SortOrder
     task?: TaskOrderByWithRelationInput
     templateItem?: ChecklistTemplateItemOrderByWithRelationInput
@@ -70663,6 +76427,7 @@ export namespace Prisma {
 
   export type TaskChecklistItemWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    taskId_templateItemId?: TaskChecklistItemTaskIdTemplateItemIdCompoundUniqueInput
     AND?: TaskChecklistItemWhereInput | TaskChecklistItemWhereInput[]
     OR?: TaskChecklistItemWhereInput[]
     NOT?: TaskChecklistItemWhereInput | TaskChecklistItemWhereInput[]
@@ -70683,15 +76448,21 @@ export namespace Prisma {
     neverLock?: BoolFilter<"TaskChecklistItem"> | boolean
     publishCard?: StringFilter<"TaskChecklistItem"> | string
     hidden?: BoolFilter<"TaskChecklistItem"> | boolean
+    effortUnit?: StringNullableFilter<"TaskChecklistItem"> | string | null
+    qtyPerVideoMinute?: FloatNullableFilter<"TaskChecklistItem"> | number | null
     completed?: BoolFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableFilter<"TaskChecklistItem"> | string | null
     completedAt?: DateTimeNullableFilter<"TaskChecklistItem"> | Date | string | null
     completedBy?: StringNullableFilter<"TaskChecklistItem"> | string | null
+    effortQuantity?: FloatNullableFilter<"TaskChecklistItem"> | number | null
+    effortRate?: FloatNullableFilter<"TaskChecklistItem"> | number | null
+    effortMinutes?: FloatNullableFilter<"TaskChecklistItem"> | number | null
+    effortLockedAt?: DateTimeNullableFilter<"TaskChecklistItem"> | Date | string | null
     order?: IntFilter<"TaskChecklistItem"> | number
     task?: XOR<TaskScalarRelationFilter, TaskWhereInput>
     templateItem?: XOR<ChecklistTemplateItemNullableScalarRelationFilter, ChecklistTemplateItemWhereInput> | null
-  }, "id">
+  }, "id" | "taskId_templateItemId">
 
   export type TaskChecklistItemOrderByWithAggregationInput = {
     id?: SortOrder
@@ -70712,11 +76483,17 @@ export namespace Prisma {
     neverLock?: SortOrder
     publishCard?: SortOrder
     hidden?: SortOrder
+    effortUnit?: SortOrderInput | SortOrder
+    qtyPerVideoMinute?: SortOrderInput | SortOrder
     completed?: SortOrder
     attachmentId?: SortOrderInput | SortOrder
     textValue?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
     completedBy?: SortOrderInput | SortOrder
+    effortQuantity?: SortOrderInput | SortOrder
+    effortRate?: SortOrderInput | SortOrder
+    effortMinutes?: SortOrderInput | SortOrder
+    effortLockedAt?: SortOrderInput | SortOrder
     order?: SortOrder
     _count?: TaskChecklistItemCountOrderByAggregateInput
     _avg?: TaskChecklistItemAvgOrderByAggregateInput
@@ -70747,11 +76524,17 @@ export namespace Prisma {
     neverLock?: BoolWithAggregatesFilter<"TaskChecklistItem"> | boolean
     publishCard?: StringWithAggregatesFilter<"TaskChecklistItem"> | string
     hidden?: BoolWithAggregatesFilter<"TaskChecklistItem"> | boolean
+    effortUnit?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
+    qtyPerVideoMinute?: FloatNullableWithAggregatesFilter<"TaskChecklistItem"> | number | null
     completed?: BoolWithAggregatesFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
     completedAt?: DateTimeNullableWithAggregatesFilter<"TaskChecklistItem"> | Date | string | null
     completedBy?: StringNullableWithAggregatesFilter<"TaskChecklistItem"> | string | null
+    effortQuantity?: FloatNullableWithAggregatesFilter<"TaskChecklistItem"> | number | null
+    effortRate?: FloatNullableWithAggregatesFilter<"TaskChecklistItem"> | number | null
+    effortMinutes?: FloatNullableWithAggregatesFilter<"TaskChecklistItem"> | number | null
+    effortLockedAt?: DateTimeNullableWithAggregatesFilter<"TaskChecklistItem"> | Date | string | null
     order?: IntWithAggregatesFilter<"TaskChecklistItem"> | number
   }
 
@@ -70771,6 +76554,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemListRelationFilter
     lockedFromItems?: ChecklistTemplateItemListRelationFilter
     titleLockTemplates?: ChecklistTemplateListRelationFilter
+    titleStageRates?: TitleStageRateListRelationFilter
   }
 
   export type TaskStatusOrderByWithRelationInput = {
@@ -70786,6 +76570,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemOrderByRelationAggregateInput
     lockedFromItems?: ChecklistTemplateItemOrderByRelationAggregateInput
     titleLockTemplates?: ChecklistTemplateOrderByRelationAggregateInput
+    titleStageRates?: TitleStageRateOrderByRelationAggregateInput
   }
 
   export type TaskStatusWhereUniqueInput = Prisma.AtLeast<{
@@ -70805,6 +76590,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemListRelationFilter
     lockedFromItems?: ChecklistTemplateItemListRelationFilter
     titleLockTemplates?: ChecklistTemplateListRelationFilter
+    titleStageRates?: TitleStageRateListRelationFilter
   }, "id" | "workspaceId_order">
 
   export type TaskStatusOrderByWithAggregationInput = {
@@ -70843,6 +76629,7 @@ export namespace Prisma {
     serviceId?: StringNullableFilter<"Task"> | string | null
     statusId?: StringNullableFilter<"Task"> | string | null
     assigneeId?: StringNullableFilter<"Task"> | string | null
+    templateId?: StringNullableFilter<"Task"> | string | null
     title?: StringFilter<"Task"> | string
     description?: StringNullableFilter<"Task"> | string | null
     billable?: BoolFilter<"Task"> | boolean
@@ -70850,6 +76637,7 @@ export namespace Prisma {
     publish?: BoolFilter<"Task"> | boolean
     priority?: IntNullableFilter<"Task"> | number | null
     estimateMin?: IntNullableFilter<"Task"> | number | null
+    plannedMinutes?: FloatNullableFilter<"Task"> | number | null
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     assignmentHistory?: JsonNullableFilter<"Task">
@@ -70864,6 +76652,7 @@ export namespace Prisma {
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     service?: XOR<ServiceNullableScalarRelationFilter, ServiceWhereInput> | null
     status?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
+    template?: XOR<ChecklistTemplateNullableScalarRelationFilter, ChecklistTemplateWhereInput> | null
     assignee?: XOR<WorkspaceMemberNullableScalarRelationFilter, WorkspaceMemberWhereInput> | null
     checklistItems?: TaskChecklistItemListRelationFilter
     comments?: MessageListRelationFilter
@@ -70879,6 +76668,7 @@ export namespace Prisma {
     serviceId?: SortOrderInput | SortOrder
     statusId?: SortOrderInput | SortOrder
     assigneeId?: SortOrderInput | SortOrder
+    templateId?: SortOrderInput | SortOrder
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     billable?: SortOrder
@@ -70886,6 +76676,7 @@ export namespace Prisma {
     publish?: SortOrder
     priority?: SortOrderInput | SortOrder
     estimateMin?: SortOrderInput | SortOrder
+    plannedMinutes?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
     assignmentHistory?: SortOrderInput | SortOrder
@@ -70900,6 +76691,7 @@ export namespace Prisma {
     project?: ProjectOrderByWithRelationInput
     service?: ServiceOrderByWithRelationInput
     status?: TaskStatusOrderByWithRelationInput
+    template?: ChecklistTemplateOrderByWithRelationInput
     assignee?: WorkspaceMemberOrderByWithRelationInput
     checklistItems?: TaskChecklistItemOrderByRelationAggregateInput
     comments?: MessageOrderByRelationAggregateInput
@@ -70918,6 +76710,7 @@ export namespace Prisma {
     serviceId?: StringNullableFilter<"Task"> | string | null
     statusId?: StringNullableFilter<"Task"> | string | null
     assigneeId?: StringNullableFilter<"Task"> | string | null
+    templateId?: StringNullableFilter<"Task"> | string | null
     title?: StringFilter<"Task"> | string
     description?: StringNullableFilter<"Task"> | string | null
     billable?: BoolFilter<"Task"> | boolean
@@ -70925,6 +76718,7 @@ export namespace Prisma {
     publish?: BoolFilter<"Task"> | boolean
     priority?: IntNullableFilter<"Task"> | number | null
     estimateMin?: IntNullableFilter<"Task"> | number | null
+    plannedMinutes?: FloatNullableFilter<"Task"> | number | null
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     assignmentHistory?: JsonNullableFilter<"Task">
@@ -70939,6 +76733,7 @@ export namespace Prisma {
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     service?: XOR<ServiceNullableScalarRelationFilter, ServiceWhereInput> | null
     status?: XOR<TaskStatusNullableScalarRelationFilter, TaskStatusWhereInput> | null
+    template?: XOR<ChecklistTemplateNullableScalarRelationFilter, ChecklistTemplateWhereInput> | null
     assignee?: XOR<WorkspaceMemberNullableScalarRelationFilter, WorkspaceMemberWhereInput> | null
     checklistItems?: TaskChecklistItemListRelationFilter
     comments?: MessageListRelationFilter
@@ -70954,6 +76749,7 @@ export namespace Prisma {
     serviceId?: SortOrderInput | SortOrder
     statusId?: SortOrderInput | SortOrder
     assigneeId?: SortOrderInput | SortOrder
+    templateId?: SortOrderInput | SortOrder
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     billable?: SortOrder
@@ -70961,6 +76757,7 @@ export namespace Prisma {
     publish?: SortOrder
     priority?: SortOrderInput | SortOrder
     estimateMin?: SortOrderInput | SortOrder
+    plannedMinutes?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
     assignmentHistory?: SortOrderInput | SortOrder
@@ -70989,6 +76786,7 @@ export namespace Prisma {
     serviceId?: StringNullableWithAggregatesFilter<"Task"> | string | null
     statusId?: StringNullableWithAggregatesFilter<"Task"> | string | null
     assigneeId?: StringNullableWithAggregatesFilter<"Task"> | string | null
+    templateId?: StringNullableWithAggregatesFilter<"Task"> | string | null
     title?: StringWithAggregatesFilter<"Task"> | string
     description?: StringNullableWithAggregatesFilter<"Task"> | string | null
     billable?: BoolWithAggregatesFilter<"Task"> | boolean
@@ -70996,6 +76794,7 @@ export namespace Prisma {
     publish?: BoolWithAggregatesFilter<"Task"> | boolean
     priority?: IntNullableWithAggregatesFilter<"Task"> | number | null
     estimateMin?: IntNullableWithAggregatesFilter<"Task"> | number | null
+    plannedMinutes?: FloatNullableWithAggregatesFilter<"Task"> | number | null
     dueDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     assignmentHistory?: JsonNullableWithAggregatesFilter<"Task">
@@ -72453,6 +78252,7 @@ export namespace Prisma {
     name?: StringFilter<"Attachment"> | string
     sizeBytes?: IntNullableFilter<"Attachment"> | number | null
     contentType?: StringNullableFilter<"Attachment"> | string | null
+    durationSec?: FloatNullableFilter<"Attachment"> | number | null
     r2Key?: StringNullableFilter<"Attachment"> | string | null
     status?: StringFilter<"Attachment"> | string
     uploadId?: StringNullableFilter<"Attachment"> | string | null
@@ -72471,6 +78271,7 @@ export namespace Prisma {
     name?: SortOrder
     sizeBytes?: SortOrderInput | SortOrder
     contentType?: SortOrderInput | SortOrder
+    durationSec?: SortOrderInput | SortOrder
     r2Key?: SortOrderInput | SortOrder
     status?: SortOrder
     uploadId?: SortOrderInput | SortOrder
@@ -72492,6 +78293,7 @@ export namespace Prisma {
     name?: StringFilter<"Attachment"> | string
     sizeBytes?: IntNullableFilter<"Attachment"> | number | null
     contentType?: StringNullableFilter<"Attachment"> | string | null
+    durationSec?: FloatNullableFilter<"Attachment"> | number | null
     r2Key?: StringNullableFilter<"Attachment"> | string | null
     status?: StringFilter<"Attachment"> | string
     uploadId?: StringNullableFilter<"Attachment"> | string | null
@@ -72510,6 +78312,7 @@ export namespace Prisma {
     name?: SortOrder
     sizeBytes?: SortOrderInput | SortOrder
     contentType?: SortOrderInput | SortOrder
+    durationSec?: SortOrderInput | SortOrder
     r2Key?: SortOrderInput | SortOrder
     status?: SortOrder
     uploadId?: SortOrderInput | SortOrder
@@ -72535,6 +78338,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Attachment"> | string
     sizeBytes?: IntNullableWithAggregatesFilter<"Attachment"> | number | null
     contentType?: StringNullableWithAggregatesFilter<"Attachment"> | string | null
+    durationSec?: FloatNullableWithAggregatesFilter<"Attachment"> | number | null
     r2Key?: StringNullableWithAggregatesFilter<"Attachment"> | string | null
     status?: StringWithAggregatesFilter<"Attachment"> | string
     uploadId?: StringNullableWithAggregatesFilter<"Attachment"> | string | null
@@ -72804,6 +78608,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -72840,6 +78645,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -72876,6 +78682,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -72912,6 +78719,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -73108,9 +78916,11 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
@@ -73134,6 +78944,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -73156,9 +78968,11 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
@@ -73182,6 +78996,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -73206,6 +79022,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
   }
 
@@ -73216,6 +79034,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -73228,6 +79047,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -73292,6 +79113,160 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     permissions?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TitleCreateInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutTitlesInput
+    members?: WorkspaceMemberCreateNestedManyWithoutCapacityTitleInput
+    fieldRates?: TitleFieldRateCreateNestedManyWithoutTitleInput
+    stageRates?: TitleStageRateCreateNestedManyWithoutTitleInput
+  }
+
+  export type TitleUncheckedCreateInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    createdAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutCapacityTitleInput
+    fieldRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTitleInput
+    stageRates?: TitleStageRateUncheckedCreateNestedManyWithoutTitleInput
+  }
+
+  export type TitleUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutTitlesNestedInput
+    members?: WorkspaceMemberUpdateManyWithoutCapacityTitleNestedInput
+    fieldRates?: TitleFieldRateUpdateManyWithoutTitleNestedInput
+    stageRates?: TitleStageRateUpdateManyWithoutTitleNestedInput
+  }
+
+  export type TitleUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutCapacityTitleNestedInput
+    fieldRates?: TitleFieldRateUncheckedUpdateManyWithoutTitleNestedInput
+    stageRates?: TitleStageRateUncheckedUpdateManyWithoutTitleNestedInput
+  }
+
+  export type TitleCreateManyInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    createdAt?: Date | string
+  }
+
+  export type TitleUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TitleUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TitleFieldRateCreateInput = {
+    id?: string
+    minutesPerUnit: number
+    title: TitleCreateNestedOneWithoutFieldRatesInput
+    templateItem: ChecklistTemplateItemCreateNestedOneWithoutTitleRatesInput
+  }
+
+  export type TitleFieldRateUncheckedCreateInput = {
+    id?: string
+    titleId: string
+    templateItemId: string
+    minutesPerUnit: number
+  }
+
+  export type TitleFieldRateUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    minutesPerUnit?: FloatFieldUpdateOperationsInput | number
+    title?: TitleUpdateOneRequiredWithoutFieldRatesNestedInput
+    templateItem?: ChecklistTemplateItemUpdateOneRequiredWithoutTitleRatesNestedInput
+  }
+
+  export type TitleFieldRateUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    titleId?: StringFieldUpdateOperationsInput | string
+    templateItemId?: StringFieldUpdateOperationsInput | string
+    minutesPerUnit?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type TitleFieldRateCreateManyInput = {
+    id?: string
+    titleId: string
+    templateItemId: string
+    minutesPerUnit: number
+  }
+
+  export type TitleFieldRateUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    minutesPerUnit?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type TitleFieldRateUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    titleId?: StringFieldUpdateOperationsInput | string
+    templateItemId?: StringFieldUpdateOperationsInput | string
+    minutesPerUnit?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type TitleStageRateCreateInput = {
+    id?: string
+    minutesPerPass: number
+    title: TitleCreateNestedOneWithoutStageRatesInput
+    status: TaskStatusCreateNestedOneWithoutTitleStageRatesInput
+  }
+
+  export type TitleStageRateUncheckedCreateInput = {
+    id?: string
+    titleId: string
+    statusId: string
+    minutesPerPass: number
+  }
+
+  export type TitleStageRateUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    minutesPerPass?: FloatFieldUpdateOperationsInput | number
+    title?: TitleUpdateOneRequiredWithoutStageRatesNestedInput
+    status?: TaskStatusUpdateOneRequiredWithoutTitleStageRatesNestedInput
+  }
+
+  export type TitleStageRateUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    titleId?: StringFieldUpdateOperationsInput | string
+    statusId?: StringFieldUpdateOperationsInput | string
+    minutesPerPass?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type TitleStageRateCreateManyInput = {
+    id?: string
+    titleId: string
+    statusId: string
+    minutesPerPass: number
+  }
+
+  export type TitleStageRateUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    minutesPerPass?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type TitleStageRateUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    titleId?: StringFieldUpdateOperationsInput | string
+    statusId?: StringFieldUpdateOperationsInput | string
+    minutesPerPass?: FloatFieldUpdateOperationsInput | number
   }
 
   export type ProjectCollaboratorCreateInput = {
@@ -74997,8 +80972,10 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
     titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
     items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
+    sections?: ChecklistSectionCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
     weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput
+    tasks?: TaskCreateNestedManyWithoutTemplateInput
     weeklySlots?: WeeklySlotCreateNestedManyWithoutTemplateInput
   }
 
@@ -75017,8 +80994,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
+    sections?: ChecklistSectionUncheckedCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
     weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutTemplateInput
     weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput
   }
 
@@ -75037,8 +81016,10 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
     titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
     items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
+    sections?: ChecklistSectionUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
     weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUpdateManyWithoutTemplateNestedInput
     weeklySlots?: WeeklySlotUpdateManyWithoutTemplateNestedInput
   }
 
@@ -75057,8 +81038,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
+    sections?: ChecklistSectionUncheckedUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
     weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutTemplateNestedInput
     weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
@@ -75108,6 +81091,72 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ChecklistSectionCreateInput = {
+    id?: string
+    name: string
+    phase?: string
+    order?: number
+    createdAt?: Date | string
+    template: ChecklistTemplateCreateNestedOneWithoutSectionsInput
+    items?: ChecklistTemplateItemCreateNestedManyWithoutSectionInput
+  }
+
+  export type ChecklistSectionUncheckedCreateInput = {
+    id?: string
+    templateId: string
+    name: string
+    phase?: string
+    order?: number
+    createdAt?: Date | string
+    items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutSectionInput
+  }
+
+  export type ChecklistSectionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phase?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    template?: ChecklistTemplateUpdateOneRequiredWithoutSectionsNestedInput
+    items?: ChecklistTemplateItemUpdateManyWithoutSectionNestedInput
+  }
+
+  export type ChecklistSectionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phase?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: ChecklistTemplateItemUncheckedUpdateManyWithoutSectionNestedInput
+  }
+
+  export type ChecklistSectionCreateManyInput = {
+    id?: string
+    templateId: string
+    name: string
+    phase?: string
+    order?: number
+    createdAt?: Date | string
+  }
+
+  export type ChecklistSectionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phase?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChecklistSectionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phase?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ChecklistTemplateItemCreateInput = {
     id?: string
     name: string
@@ -75122,12 +81171,16 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
+    section?: ChecklistSectionCreateNestedOneWithoutItemsInput
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
     requiredBeforeStage?: TaskStatusCreateNestedOneWithoutRequiredBeforeItemsInput
     lockedFromStage?: TaskStatusCreateNestedOneWithoutLockedFromItemsInput
     taskItems?: TaskChecklistItemCreateNestedManyWithoutTemplateItemInput
+    titleRates?: TitleFieldRateCreateNestedManyWithoutTemplateItemInput
   }
 
   export type ChecklistTemplateItemUncheckedCreateInput = {
@@ -75142,14 +81195,18 @@ export namespace Prisma {
     aspectRatio?: string | null
     mandatory?: boolean
     phase?: string
+    sectionId?: string | null
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
+    titleRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput
   }
 
   export type ChecklistTemplateItemUpdateInput = {
@@ -75166,12 +81223,16 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
+    section?: ChecklistSectionUpdateOneWithoutItemsNestedInput
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
     requiredBeforeStage?: TaskStatusUpdateOneWithoutRequiredBeforeItemsNestedInput
     lockedFromStage?: TaskStatusUpdateOneWithoutLockedFromItemsNestedInput
     taskItems?: TaskChecklistItemUpdateManyWithoutTemplateItemNestedInput
+    titleRates?: TitleFieldRateUpdateManyWithoutTemplateItemNestedInput
   }
 
   export type ChecklistTemplateItemUncheckedUpdateInput = {
@@ -75186,14 +81247,18 @@ export namespace Prisma {
     aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
+    titleRates?: TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
 
   export type ChecklistTemplateItemCreateManyInput = {
@@ -75208,12 +81273,15 @@ export namespace Prisma {
     aspectRatio?: string | null
     mandatory?: boolean
     phase?: string
+    sectionId?: string | null
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
   }
 
@@ -75231,6 +81299,8 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -75246,12 +81316,15 @@ export namespace Prisma {
     aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -75312,11 +81385,17 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
     completedAt?: Date | string | null
     completedBy?: string | null
+    effortQuantity?: number | null
+    effortRate?: number | null
+    effortMinutes?: number | null
+    effortLockedAt?: Date | string | null
     order?: number
     task: TaskCreateNestedOneWithoutChecklistItemsInput
     templateItem?: ChecklistTemplateItemCreateNestedOneWithoutTaskItemsInput
@@ -75341,11 +81420,17 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
     completedAt?: Date | string | null
     completedBy?: string | null
+    effortQuantity?: number | null
+    effortRate?: number | null
+    effortMinutes?: number | null
+    effortLockedAt?: Date | string | null
     order?: number
   }
 
@@ -75366,11 +81451,17 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    effortQuantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortLockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     order?: IntFieldUpdateOperationsInput | number
     task?: TaskUpdateOneRequiredWithoutChecklistItemsNestedInput
     templateItem?: ChecklistTemplateItemUpdateOneWithoutTaskItemsNestedInput
@@ -75395,11 +81486,17 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    effortQuantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortLockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -75422,11 +81519,17 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
     completedAt?: Date | string | null
     completedBy?: string | null
+    effortQuantity?: number | null
+    effortRate?: number | null
+    effortMinutes?: number | null
+    effortLockedAt?: Date | string | null
     order?: number
   }
 
@@ -75447,11 +81550,17 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    effortQuantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortLockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -75474,11 +81583,17 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    effortQuantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortLockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -75494,6 +81609,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
     titleLockTemplates?: ChecklistTemplateCreateNestedManyWithoutTitleLockedFromStageInput
+    titleStageRates?: TitleStageRateCreateNestedManyWithoutStatusInput
   }
 
   export type TaskStatusUncheckedCreateInput = {
@@ -75508,6 +81624,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
     titleLockTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutTitleLockedFromStageInput
+    titleStageRates?: TitleStageRateUncheckedCreateNestedManyWithoutStatusInput
   }
 
   export type TaskStatusUpdateInput = {
@@ -75522,6 +81639,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
     titleLockTemplates?: ChecklistTemplateUpdateManyWithoutTitleLockedFromStageNestedInput
+    titleStageRates?: TitleStageRateUpdateManyWithoutStatusNestedInput
   }
 
   export type TaskStatusUncheckedUpdateInput = {
@@ -75536,6 +81654,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
     titleLockTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageNestedInput
+    titleStageRates?: TitleStageRateUncheckedUpdateManyWithoutStatusNestedInput
   }
 
   export type TaskStatusCreateManyInput = {
@@ -75574,6 +81693,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -75588,6 +81708,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
+    template?: ChecklistTemplateCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
@@ -75603,6 +81724,7 @@ export namespace Prisma {
     serviceId?: string | null
     statusId?: string | null
     assigneeId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -75610,6 +81732,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -75638,6 +81761,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -75652,6 +81776,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
+    template?: ChecklistTemplateUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
@@ -75667,6 +81792,7 @@ export namespace Prisma {
     serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -75674,6 +81800,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -75699,6 +81826,7 @@ export namespace Prisma {
     serviceId?: string | null
     statusId?: string | null
     assigneeId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -75706,6 +81834,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -75729,6 +81858,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -75749,6 +81879,7 @@ export namespace Prisma {
     serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -75756,6 +81887,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -77297,6 +83429,7 @@ export namespace Prisma {
     name: string
     sizeBytes?: number | null
     contentType?: string | null
+    durationSec?: number | null
     r2Key?: string | null
     status?: string
     uploadId?: string | null
@@ -77315,6 +83448,7 @@ export namespace Prisma {
     name: string
     sizeBytes?: number | null
     contentType?: string | null
+    durationSec?: number | null
     r2Key?: string | null
     status?: string
     uploadId?: string | null
@@ -77331,6 +83465,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
     contentType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSec?: NullableFloatFieldUpdateOperationsInput | number | null
     r2Key?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     uploadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77349,6 +83484,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
     contentType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSec?: NullableFloatFieldUpdateOperationsInput | number | null
     r2Key?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     uploadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77366,6 +83502,7 @@ export namespace Prisma {
     name: string
     sizeBytes?: number | null
     contentType?: string | null
+    durationSec?: number | null
     r2Key?: string | null
     status?: string
     uploadId?: string | null
@@ -77382,6 +83519,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
     contentType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSec?: NullableFloatFieldUpdateOperationsInput | number | null
     r2Key?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     uploadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77399,6 +83537,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
     contentType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSec?: NullableFloatFieldUpdateOperationsInput | number | null
     r2Key?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     uploadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77815,6 +83954,12 @@ export namespace Prisma {
     none?: RoleWhereInput
   }
 
+  export type TitleListRelationFilter = {
+    every?: TitleWhereInput
+    some?: TitleWhereInput
+    none?: TitleWhereInput
+  }
+
   export type CurrencyListRelationFilter = {
     every?: CurrencyWhereInput
     some?: CurrencyWhereInput
@@ -77921,6 +84066,10 @@ export namespace Prisma {
   }
 
   export type RoleOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TitleOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -78159,9 +84308,25 @@ export namespace Prisma {
     not?: NestedEnumMemberTypeFilter<$PrismaModel> | $Enums.MemberType
   }
 
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type RoleNullableScalarRelationFilter = {
     is?: RoleWhereInput | null
     isNot?: RoleWhereInput | null
+  }
+
+  export type TitleNullableScalarRelationFilter = {
+    is?: TitleWhereInput | null
+    isNot?: TitleWhereInput | null
   }
 
   export type TaskListRelationFilter = {
@@ -78288,7 +84453,13 @@ export namespace Prisma {
     imageUrl?: SortOrder
     type?: SortOrder
     roleId?: SortOrder
+    titleId?: SortOrder
+    weeklyHours?: SortOrder
     joinedAt?: SortOrder
+  }
+
+  export type WorkspaceMemberAvgOrderByAggregateInput = {
+    weeklyHours?: SortOrder
   }
 
   export type WorkspaceMemberMaxOrderByAggregateInput = {
@@ -78300,6 +84471,8 @@ export namespace Prisma {
     imageUrl?: SortOrder
     type?: SortOrder
     roleId?: SortOrder
+    titleId?: SortOrder
+    weeklyHours?: SortOrder
     joinedAt?: SortOrder
   }
 
@@ -78312,7 +84485,13 @@ export namespace Prisma {
     imageUrl?: SortOrder
     type?: SortOrder
     roleId?: SortOrder
+    titleId?: SortOrder
+    weeklyHours?: SortOrder
     joinedAt?: SortOrder
+  }
+
+  export type WorkspaceMemberSumOrderByAggregateInput = {
+    weeklyHours?: SortOrder
   }
 
   export type EnumMemberTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -78323,6 +84502,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMemberTypeFilter<$PrismaModel>
     _max?: NestedEnumMemberTypeFilter<$PrismaModel>
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -78399,6 +84594,135 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedJsonFilter<$PrismaModel>
     _max?: NestedJsonFilter<$PrismaModel>
+  }
+
+  export type TitleFieldRateListRelationFilter = {
+    every?: TitleFieldRateWhereInput
+    some?: TitleFieldRateWhereInput
+    none?: TitleFieldRateWhereInput
+  }
+
+  export type TitleStageRateListRelationFilter = {
+    every?: TitleStageRateWhereInput
+    some?: TitleStageRateWhereInput
+    none?: TitleStageRateWhereInput
+  }
+
+  export type TitleFieldRateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TitleStageRateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TitleWorkspaceIdNameCompoundUniqueInput = {
+    workspaceId: string
+    name: string
+  }
+
+  export type TitleCountOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TitleMaxOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TitleMinOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TitleScalarRelationFilter = {
+    is?: TitleWhereInput
+    isNot?: TitleWhereInput
+  }
+
+  export type ChecklistTemplateItemScalarRelationFilter = {
+    is?: ChecklistTemplateItemWhereInput
+    isNot?: ChecklistTemplateItemWhereInput
+  }
+
+  export type TitleFieldRateTitleIdTemplateItemIdCompoundUniqueInput = {
+    titleId: string
+    templateItemId: string
+  }
+
+  export type TitleFieldRateCountOrderByAggregateInput = {
+    id?: SortOrder
+    titleId?: SortOrder
+    templateItemId?: SortOrder
+    minutesPerUnit?: SortOrder
+  }
+
+  export type TitleFieldRateAvgOrderByAggregateInput = {
+    minutesPerUnit?: SortOrder
+  }
+
+  export type TitleFieldRateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    titleId?: SortOrder
+    templateItemId?: SortOrder
+    minutesPerUnit?: SortOrder
+  }
+
+  export type TitleFieldRateMinOrderByAggregateInput = {
+    id?: SortOrder
+    titleId?: SortOrder
+    templateItemId?: SortOrder
+    minutesPerUnit?: SortOrder
+  }
+
+  export type TitleFieldRateSumOrderByAggregateInput = {
+    minutesPerUnit?: SortOrder
+  }
+
+  export type TaskStatusScalarRelationFilter = {
+    is?: TaskStatusWhereInput
+    isNot?: TaskStatusWhereInput
+  }
+
+  export type TitleStageRateTitleIdStatusIdCompoundUniqueInput = {
+    titleId: string
+    statusId: string
+  }
+
+  export type TitleStageRateCountOrderByAggregateInput = {
+    id?: SortOrder
+    titleId?: SortOrder
+    statusId?: SortOrder
+    minutesPerPass?: SortOrder
+  }
+
+  export type TitleStageRateAvgOrderByAggregateInput = {
+    minutesPerPass?: SortOrder
+  }
+
+  export type TitleStageRateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    titleId?: SortOrder
+    statusId?: SortOrder
+    minutesPerPass?: SortOrder
+  }
+
+  export type TitleStageRateMinOrderByAggregateInput = {
+    id?: SortOrder
+    titleId?: SortOrder
+    statusId?: SortOrder
+    minutesPerPass?: SortOrder
+  }
+
+  export type TitleStageRateSumOrderByAggregateInput = {
+    minutesPerPass?: SortOrder
   }
 
   export type EnumCollaboratorStatusFilter<$PrismaModel = never> = {
@@ -79550,7 +85874,17 @@ export namespace Prisma {
     none?: ChecklistTemplateItemWhereInput
   }
 
+  export type ChecklistSectionListRelationFilter = {
+    every?: ChecklistSectionWhereInput
+    some?: ChecklistSectionWhereInput
+    none?: ChecklistSectionWhereInput
+  }
+
   export type ChecklistTemplateItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ChecklistSectionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -79602,6 +85936,57 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type ChecklistSectionCountOrderByAggregateInput = {
+    id?: SortOrder
+    templateId?: SortOrder
+    name?: SortOrder
+    phase?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ChecklistSectionAvgOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type ChecklistSectionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    templateId?: SortOrder
+    name?: SortOrder
+    phase?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ChecklistSectionMinOrderByAggregateInput = {
+    id?: SortOrder
+    templateId?: SortOrder
+    name?: SortOrder
+    phase?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ChecklistSectionSumOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type ChecklistSectionNullableScalarRelationFilter = {
+    is?: ChecklistSectionWhereInput | null
+    isNot?: ChecklistSectionWhereInput | null
+  }
+
   export type TaskChecklistItemListRelationFilter = {
     every?: TaskChecklistItemWhereInput
     some?: TaskChecklistItemWhereInput
@@ -79624,16 +86009,20 @@ export namespace Prisma {
     aspectRatio?: SortOrder
     mandatory?: SortOrder
     phase?: SortOrder
+    sectionId?: SortOrder
     visibleFromStageId?: SortOrder
     requiredBeforeStageId?: SortOrder
     lockedFromStageId?: SortOrder
     neverLock?: SortOrder
     publishCard?: SortOrder
     hidden?: SortOrder
+    effortUnit?: SortOrder
+    qtyPerVideoMinute?: SortOrder
     order?: SortOrder
   }
 
   export type ChecklistTemplateItemAvgOrderByAggregateInput = {
+    qtyPerVideoMinute?: SortOrder
     order?: SortOrder
   }
 
@@ -79649,12 +86038,15 @@ export namespace Prisma {
     aspectRatio?: SortOrder
     mandatory?: SortOrder
     phase?: SortOrder
+    sectionId?: SortOrder
     visibleFromStageId?: SortOrder
     requiredBeforeStageId?: SortOrder
     lockedFromStageId?: SortOrder
     neverLock?: SortOrder
     publishCard?: SortOrder
     hidden?: SortOrder
+    effortUnit?: SortOrder
+    qtyPerVideoMinute?: SortOrder
     order?: SortOrder
   }
 
@@ -79670,17 +86062,37 @@ export namespace Prisma {
     aspectRatio?: SortOrder
     mandatory?: SortOrder
     phase?: SortOrder
+    sectionId?: SortOrder
     visibleFromStageId?: SortOrder
     requiredBeforeStageId?: SortOrder
     lockedFromStageId?: SortOrder
     neverLock?: SortOrder
     publishCard?: SortOrder
     hidden?: SortOrder
+    effortUnit?: SortOrder
+    qtyPerVideoMinute?: SortOrder
     order?: SortOrder
   }
 
   export type ChecklistTemplateItemSumOrderByAggregateInput = {
+    qtyPerVideoMinute?: SortOrder
     order?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type ProjectTemplateProjectIdTemplateIdCompoundUniqueInput = {
@@ -79716,6 +86128,11 @@ export namespace Prisma {
     isNot?: ChecklistTemplateItemWhereInput | null
   }
 
+  export type TaskChecklistItemTaskIdTemplateItemIdCompoundUniqueInput = {
+    taskId: string
+    templateItemId: string
+  }
+
   export type TaskChecklistItemCountOrderByAggregateInput = {
     id?: SortOrder
     taskId?: SortOrder
@@ -79735,15 +86152,25 @@ export namespace Prisma {
     neverLock?: SortOrder
     publishCard?: SortOrder
     hidden?: SortOrder
+    effortUnit?: SortOrder
+    qtyPerVideoMinute?: SortOrder
     completed?: SortOrder
     attachmentId?: SortOrder
     textValue?: SortOrder
     completedAt?: SortOrder
     completedBy?: SortOrder
+    effortQuantity?: SortOrder
+    effortRate?: SortOrder
+    effortMinutes?: SortOrder
+    effortLockedAt?: SortOrder
     order?: SortOrder
   }
 
   export type TaskChecklistItemAvgOrderByAggregateInput = {
+    qtyPerVideoMinute?: SortOrder
+    effortQuantity?: SortOrder
+    effortRate?: SortOrder
+    effortMinutes?: SortOrder
     order?: SortOrder
   }
 
@@ -79766,11 +86193,17 @@ export namespace Prisma {
     neverLock?: SortOrder
     publishCard?: SortOrder
     hidden?: SortOrder
+    effortUnit?: SortOrder
+    qtyPerVideoMinute?: SortOrder
     completed?: SortOrder
     attachmentId?: SortOrder
     textValue?: SortOrder
     completedAt?: SortOrder
     completedBy?: SortOrder
+    effortQuantity?: SortOrder
+    effortRate?: SortOrder
+    effortMinutes?: SortOrder
+    effortLockedAt?: SortOrder
     order?: SortOrder
   }
 
@@ -79793,15 +86226,25 @@ export namespace Prisma {
     neverLock?: SortOrder
     publishCard?: SortOrder
     hidden?: SortOrder
+    effortUnit?: SortOrder
+    qtyPerVideoMinute?: SortOrder
     completed?: SortOrder
     attachmentId?: SortOrder
     textValue?: SortOrder
     completedAt?: SortOrder
     completedBy?: SortOrder
+    effortQuantity?: SortOrder
+    effortRate?: SortOrder
+    effortMinutes?: SortOrder
+    effortLockedAt?: SortOrder
     order?: SortOrder
   }
 
   export type TaskChecklistItemSumOrderByAggregateInput = {
+    qtyPerVideoMinute?: SortOrder
+    effortQuantity?: SortOrder
+    effortRate?: SortOrder
+    effortMinutes?: SortOrder
     order?: SortOrder
   }
 
@@ -79861,6 +86304,11 @@ export namespace Prisma {
     isNot?: ServiceWhereInput | null
   }
 
+  export type ChecklistTemplateNullableScalarRelationFilter = {
+    is?: ChecklistTemplateWhereInput | null
+    isNot?: ChecklistTemplateWhereInput | null
+  }
+
   export type PublishItemNullableScalarRelationFilter = {
     is?: PublishItemWhereInput | null
     isNot?: PublishItemWhereInput | null
@@ -79878,6 +86326,7 @@ export namespace Prisma {
     serviceId?: SortOrder
     statusId?: SortOrder
     assigneeId?: SortOrder
+    templateId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     billable?: SortOrder
@@ -79885,6 +86334,7 @@ export namespace Prisma {
     publish?: SortOrder
     priority?: SortOrder
     estimateMin?: SortOrder
+    plannedMinutes?: SortOrder
     dueDate?: SortOrder
     completedAt?: SortOrder
     assignmentHistory?: SortOrder
@@ -79903,6 +86353,7 @@ export namespace Prisma {
     price?: SortOrder
     priority?: SortOrder
     estimateMin?: SortOrder
+    plannedMinutes?: SortOrder
     rejectionCount?: SortOrder
     order?: SortOrder
   }
@@ -79914,6 +86365,7 @@ export namespace Prisma {
     serviceId?: SortOrder
     statusId?: SortOrder
     assigneeId?: SortOrder
+    templateId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     billable?: SortOrder
@@ -79921,6 +86373,7 @@ export namespace Prisma {
     publish?: SortOrder
     priority?: SortOrder
     estimateMin?: SortOrder
+    plannedMinutes?: SortOrder
     dueDate?: SortOrder
     completedAt?: SortOrder
     stageEnteredAt?: SortOrder
@@ -79939,6 +86392,7 @@ export namespace Prisma {
     serviceId?: SortOrder
     statusId?: SortOrder
     assigneeId?: SortOrder
+    templateId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     billable?: SortOrder
@@ -79946,6 +86400,7 @@ export namespace Prisma {
     publish?: SortOrder
     priority?: SortOrder
     estimateMin?: SortOrder
+    plannedMinutes?: SortOrder
     dueDate?: SortOrder
     completedAt?: SortOrder
     stageEnteredAt?: SortOrder
@@ -79962,6 +86417,7 @@ export namespace Prisma {
     price?: SortOrder
     priority?: SortOrder
     estimateMin?: SortOrder
+    plannedMinutes?: SortOrder
     rejectionCount?: SortOrder
     order?: SortOrder
   }
@@ -80867,6 +87323,7 @@ export namespace Prisma {
     name?: SortOrder
     sizeBytes?: SortOrder
     contentType?: SortOrder
+    durationSec?: SortOrder
     r2Key?: SortOrder
     status?: SortOrder
     uploadId?: SortOrder
@@ -80878,6 +87335,7 @@ export namespace Prisma {
 
   export type AttachmentAvgOrderByAggregateInput = {
     sizeBytes?: SortOrder
+    durationSec?: SortOrder
     totalParts?: SortOrder
   }
 
@@ -80889,6 +87347,7 @@ export namespace Prisma {
     name?: SortOrder
     sizeBytes?: SortOrder
     contentType?: SortOrder
+    durationSec?: SortOrder
     r2Key?: SortOrder
     status?: SortOrder
     uploadId?: SortOrder
@@ -80905,6 +87364,7 @@ export namespace Prisma {
     name?: SortOrder
     sizeBytes?: SortOrder
     contentType?: SortOrder
+    durationSec?: SortOrder
     r2Key?: SortOrder
     status?: SortOrder
     uploadId?: SortOrder
@@ -80915,6 +87375,7 @@ export namespace Prisma {
 
   export type AttachmentSumOrderByAggregateInput = {
     sizeBytes?: SortOrder
+    durationSec?: SortOrder
     totalParts?: SortOrder
   }
 
@@ -81171,6 +87632,13 @@ export namespace Prisma {
     connect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
   }
 
+  export type TitleCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<TitleCreateWithoutWorkspaceInput, TitleUncheckedCreateWithoutWorkspaceInput> | TitleCreateWithoutWorkspaceInput[] | TitleUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: TitleCreateOrConnectWithoutWorkspaceInput | TitleCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: TitleCreateManyWorkspaceInputEnvelope
+    connect?: TitleWhereUniqueInput | TitleWhereUniqueInput[]
+  }
+
   export type CurrencyCreateNestedManyWithoutWorkspaceInput = {
     create?: XOR<CurrencyCreateWithoutWorkspaceInput, CurrencyUncheckedCreateWithoutWorkspaceInput> | CurrencyCreateWithoutWorkspaceInput[] | CurrencyUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: CurrencyCreateOrConnectWithoutWorkspaceInput | CurrencyCreateOrConnectWithoutWorkspaceInput[]
@@ -81336,6 +87804,13 @@ export namespace Prisma {
     connectOrCreate?: RoleCreateOrConnectWithoutWorkspaceInput | RoleCreateOrConnectWithoutWorkspaceInput[]
     createMany?: RoleCreateManyWorkspaceInputEnvelope
     connect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
+  }
+
+  export type TitleUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<TitleCreateWithoutWorkspaceInput, TitleUncheckedCreateWithoutWorkspaceInput> | TitleCreateWithoutWorkspaceInput[] | TitleUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: TitleCreateOrConnectWithoutWorkspaceInput | TitleCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: TitleCreateManyWorkspaceInputEnvelope
+    connect?: TitleWhereUniqueInput | TitleWhereUniqueInput[]
   }
 
   export type CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput = {
@@ -81646,6 +88121,20 @@ export namespace Prisma {
     update?: RoleUpdateWithWhereUniqueWithoutWorkspaceInput | RoleUpdateWithWhereUniqueWithoutWorkspaceInput[]
     updateMany?: RoleUpdateManyWithWhereWithoutWorkspaceInput | RoleUpdateManyWithWhereWithoutWorkspaceInput[]
     deleteMany?: RoleScalarWhereInput | RoleScalarWhereInput[]
+  }
+
+  export type TitleUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<TitleCreateWithoutWorkspaceInput, TitleUncheckedCreateWithoutWorkspaceInput> | TitleCreateWithoutWorkspaceInput[] | TitleUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: TitleCreateOrConnectWithoutWorkspaceInput | TitleCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: TitleUpsertWithWhereUniqueWithoutWorkspaceInput | TitleUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: TitleCreateManyWorkspaceInputEnvelope
+    set?: TitleWhereUniqueInput | TitleWhereUniqueInput[]
+    disconnect?: TitleWhereUniqueInput | TitleWhereUniqueInput[]
+    delete?: TitleWhereUniqueInput | TitleWhereUniqueInput[]
+    connect?: TitleWhereUniqueInput | TitleWhereUniqueInput[]
+    update?: TitleUpdateWithWhereUniqueWithoutWorkspaceInput | TitleUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: TitleUpdateManyWithWhereWithoutWorkspaceInput | TitleUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: TitleScalarWhereInput | TitleScalarWhereInput[]
   }
 
   export type CurrencyUpdateManyWithoutWorkspaceNestedInput = {
@@ -81980,6 +88469,20 @@ export namespace Prisma {
     deleteMany?: RoleScalarWhereInput | RoleScalarWhereInput[]
   }
 
+  export type TitleUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<TitleCreateWithoutWorkspaceInput, TitleUncheckedCreateWithoutWorkspaceInput> | TitleCreateWithoutWorkspaceInput[] | TitleUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: TitleCreateOrConnectWithoutWorkspaceInput | TitleCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: TitleUpsertWithWhereUniqueWithoutWorkspaceInput | TitleUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: TitleCreateManyWorkspaceInputEnvelope
+    set?: TitleWhereUniqueInput | TitleWhereUniqueInput[]
+    disconnect?: TitleWhereUniqueInput | TitleWhereUniqueInput[]
+    delete?: TitleWhereUniqueInput | TitleWhereUniqueInput[]
+    connect?: TitleWhereUniqueInput | TitleWhereUniqueInput[]
+    update?: TitleUpdateWithWhereUniqueWithoutWorkspaceInput | TitleUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: TitleUpdateManyWithWhereWithoutWorkspaceInput | TitleUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: TitleScalarWhereInput | TitleScalarWhereInput[]
+  }
+
   export type CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput = {
     create?: XOR<CurrencyCreateWithoutWorkspaceInput, CurrencyUncheckedCreateWithoutWorkspaceInput> | CurrencyCreateWithoutWorkspaceInput[] | CurrencyUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: CurrencyCreateOrConnectWithoutWorkspaceInput | CurrencyCreateOrConnectWithoutWorkspaceInput[]
@@ -82106,6 +88609,12 @@ export namespace Prisma {
     create?: XOR<RoleCreateWithoutMembersInput, RoleUncheckedCreateWithoutMembersInput>
     connectOrCreate?: RoleCreateOrConnectWithoutMembersInput
     connect?: RoleWhereUniqueInput
+  }
+
+  export type TitleCreateNestedOneWithoutMembersInput = {
+    create?: XOR<TitleCreateWithoutMembersInput, TitleUncheckedCreateWithoutMembersInput>
+    connectOrCreate?: TitleCreateOrConnectWithoutMembersInput
+    connect?: TitleWhereUniqueInput
   }
 
   export type TaskCreateNestedManyWithoutAssigneeInput = {
@@ -82280,6 +88789,14 @@ export namespace Prisma {
     set?: $Enums.MemberType
   }
 
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type WorkspaceUpdateOneRequiredWithoutMembersNestedInput = {
     create?: XOR<WorkspaceCreateWithoutMembersInput, WorkspaceUncheckedCreateWithoutMembersInput>
     connectOrCreate?: WorkspaceCreateOrConnectWithoutMembersInput
@@ -82296,6 +88813,16 @@ export namespace Prisma {
     delete?: RoleWhereInput | boolean
     connect?: RoleWhereUniqueInput
     update?: XOR<XOR<RoleUpdateToOneWithWhereWithoutMembersInput, RoleUpdateWithoutMembersInput>, RoleUncheckedUpdateWithoutMembersInput>
+  }
+
+  export type TitleUpdateOneWithoutMembersNestedInput = {
+    create?: XOR<TitleCreateWithoutMembersInput, TitleUncheckedCreateWithoutMembersInput>
+    connectOrCreate?: TitleCreateOrConnectWithoutMembersInput
+    upsert?: TitleUpsertWithoutMembersInput
+    disconnect?: TitleWhereInput | boolean
+    delete?: TitleWhereInput | boolean
+    connect?: TitleWhereUniqueInput
+    update?: XOR<XOR<TitleUpdateToOneWithWhereWithoutMembersInput, TitleUpdateWithoutMembersInput>, TitleUncheckedUpdateWithoutMembersInput>
   }
 
   export type TaskUpdateManyWithoutAssigneeNestedInput = {
@@ -82730,6 +89257,202 @@ export namespace Prisma {
     update?: ProjectMemberUpdateWithWhereUniqueWithoutRoleInput | ProjectMemberUpdateWithWhereUniqueWithoutRoleInput[]
     updateMany?: ProjectMemberUpdateManyWithWhereWithoutRoleInput | ProjectMemberUpdateManyWithWhereWithoutRoleInput[]
     deleteMany?: ProjectMemberScalarWhereInput | ProjectMemberScalarWhereInput[]
+  }
+
+  export type WorkspaceCreateNestedOneWithoutTitlesInput = {
+    create?: XOR<WorkspaceCreateWithoutTitlesInput, WorkspaceUncheckedCreateWithoutTitlesInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutTitlesInput
+    connect?: WorkspaceWhereUniqueInput
+  }
+
+  export type WorkspaceMemberCreateNestedManyWithoutCapacityTitleInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutCapacityTitleInput, WorkspaceMemberUncheckedCreateWithoutCapacityTitleInput> | WorkspaceMemberCreateWithoutCapacityTitleInput[] | WorkspaceMemberUncheckedCreateWithoutCapacityTitleInput[]
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutCapacityTitleInput | WorkspaceMemberCreateOrConnectWithoutCapacityTitleInput[]
+    createMany?: WorkspaceMemberCreateManyCapacityTitleInputEnvelope
+    connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+  }
+
+  export type TitleFieldRateCreateNestedManyWithoutTitleInput = {
+    create?: XOR<TitleFieldRateCreateWithoutTitleInput, TitleFieldRateUncheckedCreateWithoutTitleInput> | TitleFieldRateCreateWithoutTitleInput[] | TitleFieldRateUncheckedCreateWithoutTitleInput[]
+    connectOrCreate?: TitleFieldRateCreateOrConnectWithoutTitleInput | TitleFieldRateCreateOrConnectWithoutTitleInput[]
+    createMany?: TitleFieldRateCreateManyTitleInputEnvelope
+    connect?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+  }
+
+  export type TitleStageRateCreateNestedManyWithoutTitleInput = {
+    create?: XOR<TitleStageRateCreateWithoutTitleInput, TitleStageRateUncheckedCreateWithoutTitleInput> | TitleStageRateCreateWithoutTitleInput[] | TitleStageRateUncheckedCreateWithoutTitleInput[]
+    connectOrCreate?: TitleStageRateCreateOrConnectWithoutTitleInput | TitleStageRateCreateOrConnectWithoutTitleInput[]
+    createMany?: TitleStageRateCreateManyTitleInputEnvelope
+    connect?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+  }
+
+  export type WorkspaceMemberUncheckedCreateNestedManyWithoutCapacityTitleInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutCapacityTitleInput, WorkspaceMemberUncheckedCreateWithoutCapacityTitleInput> | WorkspaceMemberCreateWithoutCapacityTitleInput[] | WorkspaceMemberUncheckedCreateWithoutCapacityTitleInput[]
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutCapacityTitleInput | WorkspaceMemberCreateOrConnectWithoutCapacityTitleInput[]
+    createMany?: WorkspaceMemberCreateManyCapacityTitleInputEnvelope
+    connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+  }
+
+  export type TitleFieldRateUncheckedCreateNestedManyWithoutTitleInput = {
+    create?: XOR<TitleFieldRateCreateWithoutTitleInput, TitleFieldRateUncheckedCreateWithoutTitleInput> | TitleFieldRateCreateWithoutTitleInput[] | TitleFieldRateUncheckedCreateWithoutTitleInput[]
+    connectOrCreate?: TitleFieldRateCreateOrConnectWithoutTitleInput | TitleFieldRateCreateOrConnectWithoutTitleInput[]
+    createMany?: TitleFieldRateCreateManyTitleInputEnvelope
+    connect?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+  }
+
+  export type TitleStageRateUncheckedCreateNestedManyWithoutTitleInput = {
+    create?: XOR<TitleStageRateCreateWithoutTitleInput, TitleStageRateUncheckedCreateWithoutTitleInput> | TitleStageRateCreateWithoutTitleInput[] | TitleStageRateUncheckedCreateWithoutTitleInput[]
+    connectOrCreate?: TitleStageRateCreateOrConnectWithoutTitleInput | TitleStageRateCreateOrConnectWithoutTitleInput[]
+    createMany?: TitleStageRateCreateManyTitleInputEnvelope
+    connect?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutTitlesNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutTitlesInput, WorkspaceUncheckedCreateWithoutTitlesInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutTitlesInput
+    upsert?: WorkspaceUpsertWithoutTitlesInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutTitlesInput, WorkspaceUpdateWithoutTitlesInput>, WorkspaceUncheckedUpdateWithoutTitlesInput>
+  }
+
+  export type WorkspaceMemberUpdateManyWithoutCapacityTitleNestedInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutCapacityTitleInput, WorkspaceMemberUncheckedCreateWithoutCapacityTitleInput> | WorkspaceMemberCreateWithoutCapacityTitleInput[] | WorkspaceMemberUncheckedCreateWithoutCapacityTitleInput[]
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutCapacityTitleInput | WorkspaceMemberCreateOrConnectWithoutCapacityTitleInput[]
+    upsert?: WorkspaceMemberUpsertWithWhereUniqueWithoutCapacityTitleInput | WorkspaceMemberUpsertWithWhereUniqueWithoutCapacityTitleInput[]
+    createMany?: WorkspaceMemberCreateManyCapacityTitleInputEnvelope
+    set?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    disconnect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    delete?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    update?: WorkspaceMemberUpdateWithWhereUniqueWithoutCapacityTitleInput | WorkspaceMemberUpdateWithWhereUniqueWithoutCapacityTitleInput[]
+    updateMany?: WorkspaceMemberUpdateManyWithWhereWithoutCapacityTitleInput | WorkspaceMemberUpdateManyWithWhereWithoutCapacityTitleInput[]
+    deleteMany?: WorkspaceMemberScalarWhereInput | WorkspaceMemberScalarWhereInput[]
+  }
+
+  export type TitleFieldRateUpdateManyWithoutTitleNestedInput = {
+    create?: XOR<TitleFieldRateCreateWithoutTitleInput, TitleFieldRateUncheckedCreateWithoutTitleInput> | TitleFieldRateCreateWithoutTitleInput[] | TitleFieldRateUncheckedCreateWithoutTitleInput[]
+    connectOrCreate?: TitleFieldRateCreateOrConnectWithoutTitleInput | TitleFieldRateCreateOrConnectWithoutTitleInput[]
+    upsert?: TitleFieldRateUpsertWithWhereUniqueWithoutTitleInput | TitleFieldRateUpsertWithWhereUniqueWithoutTitleInput[]
+    createMany?: TitleFieldRateCreateManyTitleInputEnvelope
+    set?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    disconnect?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    delete?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    connect?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    update?: TitleFieldRateUpdateWithWhereUniqueWithoutTitleInput | TitleFieldRateUpdateWithWhereUniqueWithoutTitleInput[]
+    updateMany?: TitleFieldRateUpdateManyWithWhereWithoutTitleInput | TitleFieldRateUpdateManyWithWhereWithoutTitleInput[]
+    deleteMany?: TitleFieldRateScalarWhereInput | TitleFieldRateScalarWhereInput[]
+  }
+
+  export type TitleStageRateUpdateManyWithoutTitleNestedInput = {
+    create?: XOR<TitleStageRateCreateWithoutTitleInput, TitleStageRateUncheckedCreateWithoutTitleInput> | TitleStageRateCreateWithoutTitleInput[] | TitleStageRateUncheckedCreateWithoutTitleInput[]
+    connectOrCreate?: TitleStageRateCreateOrConnectWithoutTitleInput | TitleStageRateCreateOrConnectWithoutTitleInput[]
+    upsert?: TitleStageRateUpsertWithWhereUniqueWithoutTitleInput | TitleStageRateUpsertWithWhereUniqueWithoutTitleInput[]
+    createMany?: TitleStageRateCreateManyTitleInputEnvelope
+    set?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    disconnect?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    delete?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    connect?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    update?: TitleStageRateUpdateWithWhereUniqueWithoutTitleInput | TitleStageRateUpdateWithWhereUniqueWithoutTitleInput[]
+    updateMany?: TitleStageRateUpdateManyWithWhereWithoutTitleInput | TitleStageRateUpdateManyWithWhereWithoutTitleInput[]
+    deleteMany?: TitleStageRateScalarWhereInput | TitleStageRateScalarWhereInput[]
+  }
+
+  export type WorkspaceMemberUncheckedUpdateManyWithoutCapacityTitleNestedInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutCapacityTitleInput, WorkspaceMemberUncheckedCreateWithoutCapacityTitleInput> | WorkspaceMemberCreateWithoutCapacityTitleInput[] | WorkspaceMemberUncheckedCreateWithoutCapacityTitleInput[]
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutCapacityTitleInput | WorkspaceMemberCreateOrConnectWithoutCapacityTitleInput[]
+    upsert?: WorkspaceMemberUpsertWithWhereUniqueWithoutCapacityTitleInput | WorkspaceMemberUpsertWithWhereUniqueWithoutCapacityTitleInput[]
+    createMany?: WorkspaceMemberCreateManyCapacityTitleInputEnvelope
+    set?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    disconnect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    delete?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    update?: WorkspaceMemberUpdateWithWhereUniqueWithoutCapacityTitleInput | WorkspaceMemberUpdateWithWhereUniqueWithoutCapacityTitleInput[]
+    updateMany?: WorkspaceMemberUpdateManyWithWhereWithoutCapacityTitleInput | WorkspaceMemberUpdateManyWithWhereWithoutCapacityTitleInput[]
+    deleteMany?: WorkspaceMemberScalarWhereInput | WorkspaceMemberScalarWhereInput[]
+  }
+
+  export type TitleFieldRateUncheckedUpdateManyWithoutTitleNestedInput = {
+    create?: XOR<TitleFieldRateCreateWithoutTitleInput, TitleFieldRateUncheckedCreateWithoutTitleInput> | TitleFieldRateCreateWithoutTitleInput[] | TitleFieldRateUncheckedCreateWithoutTitleInput[]
+    connectOrCreate?: TitleFieldRateCreateOrConnectWithoutTitleInput | TitleFieldRateCreateOrConnectWithoutTitleInput[]
+    upsert?: TitleFieldRateUpsertWithWhereUniqueWithoutTitleInput | TitleFieldRateUpsertWithWhereUniqueWithoutTitleInput[]
+    createMany?: TitleFieldRateCreateManyTitleInputEnvelope
+    set?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    disconnect?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    delete?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    connect?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    update?: TitleFieldRateUpdateWithWhereUniqueWithoutTitleInput | TitleFieldRateUpdateWithWhereUniqueWithoutTitleInput[]
+    updateMany?: TitleFieldRateUpdateManyWithWhereWithoutTitleInput | TitleFieldRateUpdateManyWithWhereWithoutTitleInput[]
+    deleteMany?: TitleFieldRateScalarWhereInput | TitleFieldRateScalarWhereInput[]
+  }
+
+  export type TitleStageRateUncheckedUpdateManyWithoutTitleNestedInput = {
+    create?: XOR<TitleStageRateCreateWithoutTitleInput, TitleStageRateUncheckedCreateWithoutTitleInput> | TitleStageRateCreateWithoutTitleInput[] | TitleStageRateUncheckedCreateWithoutTitleInput[]
+    connectOrCreate?: TitleStageRateCreateOrConnectWithoutTitleInput | TitleStageRateCreateOrConnectWithoutTitleInput[]
+    upsert?: TitleStageRateUpsertWithWhereUniqueWithoutTitleInput | TitleStageRateUpsertWithWhereUniqueWithoutTitleInput[]
+    createMany?: TitleStageRateCreateManyTitleInputEnvelope
+    set?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    disconnect?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    delete?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    connect?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    update?: TitleStageRateUpdateWithWhereUniqueWithoutTitleInput | TitleStageRateUpdateWithWhereUniqueWithoutTitleInput[]
+    updateMany?: TitleStageRateUpdateManyWithWhereWithoutTitleInput | TitleStageRateUpdateManyWithWhereWithoutTitleInput[]
+    deleteMany?: TitleStageRateScalarWhereInput | TitleStageRateScalarWhereInput[]
+  }
+
+  export type TitleCreateNestedOneWithoutFieldRatesInput = {
+    create?: XOR<TitleCreateWithoutFieldRatesInput, TitleUncheckedCreateWithoutFieldRatesInput>
+    connectOrCreate?: TitleCreateOrConnectWithoutFieldRatesInput
+    connect?: TitleWhereUniqueInput
+  }
+
+  export type ChecklistTemplateItemCreateNestedOneWithoutTitleRatesInput = {
+    create?: XOR<ChecklistTemplateItemCreateWithoutTitleRatesInput, ChecklistTemplateItemUncheckedCreateWithoutTitleRatesInput>
+    connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutTitleRatesInput
+    connect?: ChecklistTemplateItemWhereUniqueInput
+  }
+
+  export type TitleUpdateOneRequiredWithoutFieldRatesNestedInput = {
+    create?: XOR<TitleCreateWithoutFieldRatesInput, TitleUncheckedCreateWithoutFieldRatesInput>
+    connectOrCreate?: TitleCreateOrConnectWithoutFieldRatesInput
+    upsert?: TitleUpsertWithoutFieldRatesInput
+    connect?: TitleWhereUniqueInput
+    update?: XOR<XOR<TitleUpdateToOneWithWhereWithoutFieldRatesInput, TitleUpdateWithoutFieldRatesInput>, TitleUncheckedUpdateWithoutFieldRatesInput>
+  }
+
+  export type ChecklistTemplateItemUpdateOneRequiredWithoutTitleRatesNestedInput = {
+    create?: XOR<ChecklistTemplateItemCreateWithoutTitleRatesInput, ChecklistTemplateItemUncheckedCreateWithoutTitleRatesInput>
+    connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutTitleRatesInput
+    upsert?: ChecklistTemplateItemUpsertWithoutTitleRatesInput
+    connect?: ChecklistTemplateItemWhereUniqueInput
+    update?: XOR<XOR<ChecklistTemplateItemUpdateToOneWithWhereWithoutTitleRatesInput, ChecklistTemplateItemUpdateWithoutTitleRatesInput>, ChecklistTemplateItemUncheckedUpdateWithoutTitleRatesInput>
+  }
+
+  export type TitleCreateNestedOneWithoutStageRatesInput = {
+    create?: XOR<TitleCreateWithoutStageRatesInput, TitleUncheckedCreateWithoutStageRatesInput>
+    connectOrCreate?: TitleCreateOrConnectWithoutStageRatesInput
+    connect?: TitleWhereUniqueInput
+  }
+
+  export type TaskStatusCreateNestedOneWithoutTitleStageRatesInput = {
+    create?: XOR<TaskStatusCreateWithoutTitleStageRatesInput, TaskStatusUncheckedCreateWithoutTitleStageRatesInput>
+    connectOrCreate?: TaskStatusCreateOrConnectWithoutTitleStageRatesInput
+    connect?: TaskStatusWhereUniqueInput
+  }
+
+  export type TitleUpdateOneRequiredWithoutStageRatesNestedInput = {
+    create?: XOR<TitleCreateWithoutStageRatesInput, TitleUncheckedCreateWithoutStageRatesInput>
+    connectOrCreate?: TitleCreateOrConnectWithoutStageRatesInput
+    upsert?: TitleUpsertWithoutStageRatesInput
+    connect?: TitleWhereUniqueInput
+    update?: XOR<XOR<TitleUpdateToOneWithWhereWithoutStageRatesInput, TitleUpdateWithoutStageRatesInput>, TitleUncheckedUpdateWithoutStageRatesInput>
+  }
+
+  export type TaskStatusUpdateOneRequiredWithoutTitleStageRatesNestedInput = {
+    create?: XOR<TaskStatusCreateWithoutTitleStageRatesInput, TaskStatusUncheckedCreateWithoutTitleStageRatesInput>
+    connectOrCreate?: TaskStatusCreateOrConnectWithoutTitleStageRatesInput
+    upsert?: TaskStatusUpsertWithoutTitleStageRatesInput
+    connect?: TaskStatusWhereUniqueInput
+    update?: XOR<XOR<TaskStatusUpdateToOneWithWhereWithoutTitleStageRatesInput, TaskStatusUpdateWithoutTitleStageRatesInput>, TaskStatusUncheckedUpdateWithoutTitleStageRatesInput>
   }
 
   export type ProjectCreateNestedOneWithoutCollaboratorsInput = {
@@ -84554,6 +91277,13 @@ export namespace Prisma {
     connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
   }
 
+  export type ChecklistSectionCreateNestedManyWithoutTemplateInput = {
+    create?: XOR<ChecklistSectionCreateWithoutTemplateInput, ChecklistSectionUncheckedCreateWithoutTemplateInput> | ChecklistSectionCreateWithoutTemplateInput[] | ChecklistSectionUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: ChecklistSectionCreateOrConnectWithoutTemplateInput | ChecklistSectionCreateOrConnectWithoutTemplateInput[]
+    createMany?: ChecklistSectionCreateManyTemplateInputEnvelope
+    connect?: ChecklistSectionWhereUniqueInput | ChecklistSectionWhereUniqueInput[]
+  }
+
   export type ProjectTemplateCreateNestedManyWithoutTemplateInput = {
     create?: XOR<ProjectTemplateCreateWithoutTemplateInput, ProjectTemplateUncheckedCreateWithoutTemplateInput> | ProjectTemplateCreateWithoutTemplateInput[] | ProjectTemplateUncheckedCreateWithoutTemplateInput[]
     connectOrCreate?: ProjectTemplateCreateOrConnectWithoutTemplateInput | ProjectTemplateCreateOrConnectWithoutTemplateInput[]
@@ -84566,6 +91296,13 @@ export namespace Prisma {
     connectOrCreate?: ProjectWeeklyTargetCreateOrConnectWithoutTemplateInput | ProjectWeeklyTargetCreateOrConnectWithoutTemplateInput[]
     createMany?: ProjectWeeklyTargetCreateManyTemplateInputEnvelope
     connect?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+  }
+
+  export type TaskCreateNestedManyWithoutTemplateInput = {
+    create?: XOR<TaskCreateWithoutTemplateInput, TaskUncheckedCreateWithoutTemplateInput> | TaskCreateWithoutTemplateInput[] | TaskUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutTemplateInput | TaskCreateOrConnectWithoutTemplateInput[]
+    createMany?: TaskCreateManyTemplateInputEnvelope
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
   }
 
   export type WeeklySlotCreateNestedManyWithoutTemplateInput = {
@@ -84582,6 +91319,13 @@ export namespace Prisma {
     connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
   }
 
+  export type ChecklistSectionUncheckedCreateNestedManyWithoutTemplateInput = {
+    create?: XOR<ChecklistSectionCreateWithoutTemplateInput, ChecklistSectionUncheckedCreateWithoutTemplateInput> | ChecklistSectionCreateWithoutTemplateInput[] | ChecklistSectionUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: ChecklistSectionCreateOrConnectWithoutTemplateInput | ChecklistSectionCreateOrConnectWithoutTemplateInput[]
+    createMany?: ChecklistSectionCreateManyTemplateInputEnvelope
+    connect?: ChecklistSectionWhereUniqueInput | ChecklistSectionWhereUniqueInput[]
+  }
+
   export type ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput = {
     create?: XOR<ProjectTemplateCreateWithoutTemplateInput, ProjectTemplateUncheckedCreateWithoutTemplateInput> | ProjectTemplateCreateWithoutTemplateInput[] | ProjectTemplateUncheckedCreateWithoutTemplateInput[]
     connectOrCreate?: ProjectTemplateCreateOrConnectWithoutTemplateInput | ProjectTemplateCreateOrConnectWithoutTemplateInput[]
@@ -84594,6 +91338,13 @@ export namespace Prisma {
     connectOrCreate?: ProjectWeeklyTargetCreateOrConnectWithoutTemplateInput | ProjectWeeklyTargetCreateOrConnectWithoutTemplateInput[]
     createMany?: ProjectWeeklyTargetCreateManyTemplateInputEnvelope
     connect?: ProjectWeeklyTargetWhereUniqueInput | ProjectWeeklyTargetWhereUniqueInput[]
+  }
+
+  export type TaskUncheckedCreateNestedManyWithoutTemplateInput = {
+    create?: XOR<TaskCreateWithoutTemplateInput, TaskUncheckedCreateWithoutTemplateInput> | TaskCreateWithoutTemplateInput[] | TaskUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutTemplateInput | TaskCreateOrConnectWithoutTemplateInput[]
+    createMany?: TaskCreateManyTemplateInputEnvelope
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
   }
 
   export type WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput = {
@@ -84635,6 +91386,20 @@ export namespace Prisma {
     deleteMany?: ChecklistTemplateItemScalarWhereInput | ChecklistTemplateItemScalarWhereInput[]
   }
 
+  export type ChecklistSectionUpdateManyWithoutTemplateNestedInput = {
+    create?: XOR<ChecklistSectionCreateWithoutTemplateInput, ChecklistSectionUncheckedCreateWithoutTemplateInput> | ChecklistSectionCreateWithoutTemplateInput[] | ChecklistSectionUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: ChecklistSectionCreateOrConnectWithoutTemplateInput | ChecklistSectionCreateOrConnectWithoutTemplateInput[]
+    upsert?: ChecklistSectionUpsertWithWhereUniqueWithoutTemplateInput | ChecklistSectionUpsertWithWhereUniqueWithoutTemplateInput[]
+    createMany?: ChecklistSectionCreateManyTemplateInputEnvelope
+    set?: ChecklistSectionWhereUniqueInput | ChecklistSectionWhereUniqueInput[]
+    disconnect?: ChecklistSectionWhereUniqueInput | ChecklistSectionWhereUniqueInput[]
+    delete?: ChecklistSectionWhereUniqueInput | ChecklistSectionWhereUniqueInput[]
+    connect?: ChecklistSectionWhereUniqueInput | ChecklistSectionWhereUniqueInput[]
+    update?: ChecklistSectionUpdateWithWhereUniqueWithoutTemplateInput | ChecklistSectionUpdateWithWhereUniqueWithoutTemplateInput[]
+    updateMany?: ChecklistSectionUpdateManyWithWhereWithoutTemplateInput | ChecklistSectionUpdateManyWithWhereWithoutTemplateInput[]
+    deleteMany?: ChecklistSectionScalarWhereInput | ChecklistSectionScalarWhereInput[]
+  }
+
   export type ProjectTemplateUpdateManyWithoutTemplateNestedInput = {
     create?: XOR<ProjectTemplateCreateWithoutTemplateInput, ProjectTemplateUncheckedCreateWithoutTemplateInput> | ProjectTemplateCreateWithoutTemplateInput[] | ProjectTemplateUncheckedCreateWithoutTemplateInput[]
     connectOrCreate?: ProjectTemplateCreateOrConnectWithoutTemplateInput | ProjectTemplateCreateOrConnectWithoutTemplateInput[]
@@ -84661,6 +91426,20 @@ export namespace Prisma {
     update?: ProjectWeeklyTargetUpdateWithWhereUniqueWithoutTemplateInput | ProjectWeeklyTargetUpdateWithWhereUniqueWithoutTemplateInput[]
     updateMany?: ProjectWeeklyTargetUpdateManyWithWhereWithoutTemplateInput | ProjectWeeklyTargetUpdateManyWithWhereWithoutTemplateInput[]
     deleteMany?: ProjectWeeklyTargetScalarWhereInput | ProjectWeeklyTargetScalarWhereInput[]
+  }
+
+  export type TaskUpdateManyWithoutTemplateNestedInput = {
+    create?: XOR<TaskCreateWithoutTemplateInput, TaskUncheckedCreateWithoutTemplateInput> | TaskCreateWithoutTemplateInput[] | TaskUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutTemplateInput | TaskCreateOrConnectWithoutTemplateInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutTemplateInput | TaskUpsertWithWhereUniqueWithoutTemplateInput[]
+    createMany?: TaskCreateManyTemplateInputEnvelope
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutTemplateInput | TaskUpdateWithWhereUniqueWithoutTemplateInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutTemplateInput | TaskUpdateManyWithWhereWithoutTemplateInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
   export type WeeklySlotUpdateManyWithoutTemplateNestedInput = {
@@ -84691,6 +91470,20 @@ export namespace Prisma {
     deleteMany?: ChecklistTemplateItemScalarWhereInput | ChecklistTemplateItemScalarWhereInput[]
   }
 
+  export type ChecklistSectionUncheckedUpdateManyWithoutTemplateNestedInput = {
+    create?: XOR<ChecklistSectionCreateWithoutTemplateInput, ChecklistSectionUncheckedCreateWithoutTemplateInput> | ChecklistSectionCreateWithoutTemplateInput[] | ChecklistSectionUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: ChecklistSectionCreateOrConnectWithoutTemplateInput | ChecklistSectionCreateOrConnectWithoutTemplateInput[]
+    upsert?: ChecklistSectionUpsertWithWhereUniqueWithoutTemplateInput | ChecklistSectionUpsertWithWhereUniqueWithoutTemplateInput[]
+    createMany?: ChecklistSectionCreateManyTemplateInputEnvelope
+    set?: ChecklistSectionWhereUniqueInput | ChecklistSectionWhereUniqueInput[]
+    disconnect?: ChecklistSectionWhereUniqueInput | ChecklistSectionWhereUniqueInput[]
+    delete?: ChecklistSectionWhereUniqueInput | ChecklistSectionWhereUniqueInput[]
+    connect?: ChecklistSectionWhereUniqueInput | ChecklistSectionWhereUniqueInput[]
+    update?: ChecklistSectionUpdateWithWhereUniqueWithoutTemplateInput | ChecklistSectionUpdateWithWhereUniqueWithoutTemplateInput[]
+    updateMany?: ChecklistSectionUpdateManyWithWhereWithoutTemplateInput | ChecklistSectionUpdateManyWithWhereWithoutTemplateInput[]
+    deleteMany?: ChecklistSectionScalarWhereInput | ChecklistSectionScalarWhereInput[]
+  }
+
   export type ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput = {
     create?: XOR<ProjectTemplateCreateWithoutTemplateInput, ProjectTemplateUncheckedCreateWithoutTemplateInput> | ProjectTemplateCreateWithoutTemplateInput[] | ProjectTemplateUncheckedCreateWithoutTemplateInput[]
     connectOrCreate?: ProjectTemplateCreateOrConnectWithoutTemplateInput | ProjectTemplateCreateOrConnectWithoutTemplateInput[]
@@ -84719,6 +91512,20 @@ export namespace Prisma {
     deleteMany?: ProjectWeeklyTargetScalarWhereInput | ProjectWeeklyTargetScalarWhereInput[]
   }
 
+  export type TaskUncheckedUpdateManyWithoutTemplateNestedInput = {
+    create?: XOR<TaskCreateWithoutTemplateInput, TaskUncheckedCreateWithoutTemplateInput> | TaskCreateWithoutTemplateInput[] | TaskUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutTemplateInput | TaskCreateOrConnectWithoutTemplateInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutTemplateInput | TaskUpsertWithWhereUniqueWithoutTemplateInput[]
+    createMany?: TaskCreateManyTemplateInputEnvelope
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutTemplateInput | TaskUpdateWithWhereUniqueWithoutTemplateInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutTemplateInput | TaskUpdateManyWithWhereWithoutTemplateInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
   export type WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput = {
     create?: XOR<WeeklySlotCreateWithoutTemplateInput, WeeklySlotUncheckedCreateWithoutTemplateInput> | WeeklySlotCreateWithoutTemplateInput[] | WeeklySlotUncheckedCreateWithoutTemplateInput[]
     connectOrCreate?: WeeklySlotCreateOrConnectWithoutTemplateInput | WeeklySlotCreateOrConnectWithoutTemplateInput[]
@@ -84733,10 +91540,72 @@ export namespace Prisma {
     deleteMany?: WeeklySlotScalarWhereInput | WeeklySlotScalarWhereInput[]
   }
 
+  export type ChecklistTemplateCreateNestedOneWithoutSectionsInput = {
+    create?: XOR<ChecklistTemplateCreateWithoutSectionsInput, ChecklistTemplateUncheckedCreateWithoutSectionsInput>
+    connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutSectionsInput
+    connect?: ChecklistTemplateWhereUniqueInput
+  }
+
+  export type ChecklistTemplateItemCreateNestedManyWithoutSectionInput = {
+    create?: XOR<ChecklistTemplateItemCreateWithoutSectionInput, ChecklistTemplateItemUncheckedCreateWithoutSectionInput> | ChecklistTemplateItemCreateWithoutSectionInput[] | ChecklistTemplateItemUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutSectionInput | ChecklistTemplateItemCreateOrConnectWithoutSectionInput[]
+    createMany?: ChecklistTemplateItemCreateManySectionInputEnvelope
+    connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+  }
+
+  export type ChecklistTemplateItemUncheckedCreateNestedManyWithoutSectionInput = {
+    create?: XOR<ChecklistTemplateItemCreateWithoutSectionInput, ChecklistTemplateItemUncheckedCreateWithoutSectionInput> | ChecklistTemplateItemCreateWithoutSectionInput[] | ChecklistTemplateItemUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutSectionInput | ChecklistTemplateItemCreateOrConnectWithoutSectionInput[]
+    createMany?: ChecklistTemplateItemCreateManySectionInputEnvelope
+    connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+  }
+
+  export type ChecklistTemplateUpdateOneRequiredWithoutSectionsNestedInput = {
+    create?: XOR<ChecklistTemplateCreateWithoutSectionsInput, ChecklistTemplateUncheckedCreateWithoutSectionsInput>
+    connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutSectionsInput
+    upsert?: ChecklistTemplateUpsertWithoutSectionsInput
+    connect?: ChecklistTemplateWhereUniqueInput
+    update?: XOR<XOR<ChecklistTemplateUpdateToOneWithWhereWithoutSectionsInput, ChecklistTemplateUpdateWithoutSectionsInput>, ChecklistTemplateUncheckedUpdateWithoutSectionsInput>
+  }
+
+  export type ChecklistTemplateItemUpdateManyWithoutSectionNestedInput = {
+    create?: XOR<ChecklistTemplateItemCreateWithoutSectionInput, ChecklistTemplateItemUncheckedCreateWithoutSectionInput> | ChecklistTemplateItemCreateWithoutSectionInput[] | ChecklistTemplateItemUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutSectionInput | ChecklistTemplateItemCreateOrConnectWithoutSectionInput[]
+    upsert?: ChecklistTemplateItemUpsertWithWhereUniqueWithoutSectionInput | ChecklistTemplateItemUpsertWithWhereUniqueWithoutSectionInput[]
+    createMany?: ChecklistTemplateItemCreateManySectionInputEnvelope
+    set?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    disconnect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    delete?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    update?: ChecklistTemplateItemUpdateWithWhereUniqueWithoutSectionInput | ChecklistTemplateItemUpdateWithWhereUniqueWithoutSectionInput[]
+    updateMany?: ChecklistTemplateItemUpdateManyWithWhereWithoutSectionInput | ChecklistTemplateItemUpdateManyWithWhereWithoutSectionInput[]
+    deleteMany?: ChecklistTemplateItemScalarWhereInput | ChecklistTemplateItemScalarWhereInput[]
+  }
+
+  export type ChecklistTemplateItemUncheckedUpdateManyWithoutSectionNestedInput = {
+    create?: XOR<ChecklistTemplateItemCreateWithoutSectionInput, ChecklistTemplateItemUncheckedCreateWithoutSectionInput> | ChecklistTemplateItemCreateWithoutSectionInput[] | ChecklistTemplateItemUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: ChecklistTemplateItemCreateOrConnectWithoutSectionInput | ChecklistTemplateItemCreateOrConnectWithoutSectionInput[]
+    upsert?: ChecklistTemplateItemUpsertWithWhereUniqueWithoutSectionInput | ChecklistTemplateItemUpsertWithWhereUniqueWithoutSectionInput[]
+    createMany?: ChecklistTemplateItemCreateManySectionInputEnvelope
+    set?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    disconnect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    delete?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    connect?: ChecklistTemplateItemWhereUniqueInput | ChecklistTemplateItemWhereUniqueInput[]
+    update?: ChecklistTemplateItemUpdateWithWhereUniqueWithoutSectionInput | ChecklistTemplateItemUpdateWithWhereUniqueWithoutSectionInput[]
+    updateMany?: ChecklistTemplateItemUpdateManyWithWhereWithoutSectionInput | ChecklistTemplateItemUpdateManyWithWhereWithoutSectionInput[]
+    deleteMany?: ChecklistTemplateItemScalarWhereInput | ChecklistTemplateItemScalarWhereInput[]
+  }
+
   export type ChecklistTemplateCreateNestedOneWithoutItemsInput = {
     create?: XOR<ChecklistTemplateCreateWithoutItemsInput, ChecklistTemplateUncheckedCreateWithoutItemsInput>
     connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutItemsInput
     connect?: ChecklistTemplateWhereUniqueInput
+  }
+
+  export type ChecklistSectionCreateNestedOneWithoutItemsInput = {
+    create?: XOR<ChecklistSectionCreateWithoutItemsInput, ChecklistSectionUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: ChecklistSectionCreateOrConnectWithoutItemsInput
+    connect?: ChecklistSectionWhereUniqueInput
   }
 
   export type TaskStatusCreateNestedOneWithoutVisibleFromItemsInput = {
@@ -84764,11 +91633,33 @@ export namespace Prisma {
     connect?: TaskChecklistItemWhereUniqueInput | TaskChecklistItemWhereUniqueInput[]
   }
 
+  export type TitleFieldRateCreateNestedManyWithoutTemplateItemInput = {
+    create?: XOR<TitleFieldRateCreateWithoutTemplateItemInput, TitleFieldRateUncheckedCreateWithoutTemplateItemInput> | TitleFieldRateCreateWithoutTemplateItemInput[] | TitleFieldRateUncheckedCreateWithoutTemplateItemInput[]
+    connectOrCreate?: TitleFieldRateCreateOrConnectWithoutTemplateItemInput | TitleFieldRateCreateOrConnectWithoutTemplateItemInput[]
+    createMany?: TitleFieldRateCreateManyTemplateItemInputEnvelope
+    connect?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+  }
+
   export type TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput = {
     create?: XOR<TaskChecklistItemCreateWithoutTemplateItemInput, TaskChecklistItemUncheckedCreateWithoutTemplateItemInput> | TaskChecklistItemCreateWithoutTemplateItemInput[] | TaskChecklistItemUncheckedCreateWithoutTemplateItemInput[]
     connectOrCreate?: TaskChecklistItemCreateOrConnectWithoutTemplateItemInput | TaskChecklistItemCreateOrConnectWithoutTemplateItemInput[]
     createMany?: TaskChecklistItemCreateManyTemplateItemInputEnvelope
     connect?: TaskChecklistItemWhereUniqueInput | TaskChecklistItemWhereUniqueInput[]
+  }
+
+  export type TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput = {
+    create?: XOR<TitleFieldRateCreateWithoutTemplateItemInput, TitleFieldRateUncheckedCreateWithoutTemplateItemInput> | TitleFieldRateCreateWithoutTemplateItemInput[] | TitleFieldRateUncheckedCreateWithoutTemplateItemInput[]
+    connectOrCreate?: TitleFieldRateCreateOrConnectWithoutTemplateItemInput | TitleFieldRateCreateOrConnectWithoutTemplateItemInput[]
+    createMany?: TitleFieldRateCreateManyTemplateItemInputEnvelope
+    connect?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput = {
@@ -84777,6 +91668,16 @@ export namespace Prisma {
     upsert?: ChecklistTemplateUpsertWithoutItemsInput
     connect?: ChecklistTemplateWhereUniqueInput
     update?: XOR<XOR<ChecklistTemplateUpdateToOneWithWhereWithoutItemsInput, ChecklistTemplateUpdateWithoutItemsInput>, ChecklistTemplateUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type ChecklistSectionUpdateOneWithoutItemsNestedInput = {
+    create?: XOR<ChecklistSectionCreateWithoutItemsInput, ChecklistSectionUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: ChecklistSectionCreateOrConnectWithoutItemsInput
+    upsert?: ChecklistSectionUpsertWithoutItemsInput
+    disconnect?: ChecklistSectionWhereInput | boolean
+    delete?: ChecklistSectionWhereInput | boolean
+    connect?: ChecklistSectionWhereUniqueInput
+    update?: XOR<XOR<ChecklistSectionUpdateToOneWithWhereWithoutItemsInput, ChecklistSectionUpdateWithoutItemsInput>, ChecklistSectionUncheckedUpdateWithoutItemsInput>
   }
 
   export type TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput = {
@@ -84823,6 +91724,20 @@ export namespace Prisma {
     deleteMany?: TaskChecklistItemScalarWhereInput | TaskChecklistItemScalarWhereInput[]
   }
 
+  export type TitleFieldRateUpdateManyWithoutTemplateItemNestedInput = {
+    create?: XOR<TitleFieldRateCreateWithoutTemplateItemInput, TitleFieldRateUncheckedCreateWithoutTemplateItemInput> | TitleFieldRateCreateWithoutTemplateItemInput[] | TitleFieldRateUncheckedCreateWithoutTemplateItemInput[]
+    connectOrCreate?: TitleFieldRateCreateOrConnectWithoutTemplateItemInput | TitleFieldRateCreateOrConnectWithoutTemplateItemInput[]
+    upsert?: TitleFieldRateUpsertWithWhereUniqueWithoutTemplateItemInput | TitleFieldRateUpsertWithWhereUniqueWithoutTemplateItemInput[]
+    createMany?: TitleFieldRateCreateManyTemplateItemInputEnvelope
+    set?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    disconnect?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    delete?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    connect?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    update?: TitleFieldRateUpdateWithWhereUniqueWithoutTemplateItemInput | TitleFieldRateUpdateWithWhereUniqueWithoutTemplateItemInput[]
+    updateMany?: TitleFieldRateUpdateManyWithWhereWithoutTemplateItemInput | TitleFieldRateUpdateManyWithWhereWithoutTemplateItemInput[]
+    deleteMany?: TitleFieldRateScalarWhereInput | TitleFieldRateScalarWhereInput[]
+  }
+
   export type TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput = {
     create?: XOR<TaskChecklistItemCreateWithoutTemplateItemInput, TaskChecklistItemUncheckedCreateWithoutTemplateItemInput> | TaskChecklistItemCreateWithoutTemplateItemInput[] | TaskChecklistItemUncheckedCreateWithoutTemplateItemInput[]
     connectOrCreate?: TaskChecklistItemCreateOrConnectWithoutTemplateItemInput | TaskChecklistItemCreateOrConnectWithoutTemplateItemInput[]
@@ -84835,6 +91750,20 @@ export namespace Prisma {
     update?: TaskChecklistItemUpdateWithWhereUniqueWithoutTemplateItemInput | TaskChecklistItemUpdateWithWhereUniqueWithoutTemplateItemInput[]
     updateMany?: TaskChecklistItemUpdateManyWithWhereWithoutTemplateItemInput | TaskChecklistItemUpdateManyWithWhereWithoutTemplateItemInput[]
     deleteMany?: TaskChecklistItemScalarWhereInput | TaskChecklistItemScalarWhereInput[]
+  }
+
+  export type TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput = {
+    create?: XOR<TitleFieldRateCreateWithoutTemplateItemInput, TitleFieldRateUncheckedCreateWithoutTemplateItemInput> | TitleFieldRateCreateWithoutTemplateItemInput[] | TitleFieldRateUncheckedCreateWithoutTemplateItemInput[]
+    connectOrCreate?: TitleFieldRateCreateOrConnectWithoutTemplateItemInput | TitleFieldRateCreateOrConnectWithoutTemplateItemInput[]
+    upsert?: TitleFieldRateUpsertWithWhereUniqueWithoutTemplateItemInput | TitleFieldRateUpsertWithWhereUniqueWithoutTemplateItemInput[]
+    createMany?: TitleFieldRateCreateManyTemplateItemInputEnvelope
+    set?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    disconnect?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    delete?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    connect?: TitleFieldRateWhereUniqueInput | TitleFieldRateWhereUniqueInput[]
+    update?: TitleFieldRateUpdateWithWhereUniqueWithoutTemplateItemInput | TitleFieldRateUpdateWithWhereUniqueWithoutTemplateItemInput[]
+    updateMany?: TitleFieldRateUpdateManyWithWhereWithoutTemplateItemInput | TitleFieldRateUpdateManyWithWhereWithoutTemplateItemInput[]
+    deleteMany?: TitleFieldRateScalarWhereInput | TitleFieldRateScalarWhereInput[]
   }
 
   export type ProjectCreateNestedOneWithoutProjectTemplatesInput = {
@@ -84936,6 +91865,13 @@ export namespace Prisma {
     connect?: ChecklistTemplateWhereUniqueInput | ChecklistTemplateWhereUniqueInput[]
   }
 
+  export type TitleStageRateCreateNestedManyWithoutStatusInput = {
+    create?: XOR<TitleStageRateCreateWithoutStatusInput, TitleStageRateUncheckedCreateWithoutStatusInput> | TitleStageRateCreateWithoutStatusInput[] | TitleStageRateUncheckedCreateWithoutStatusInput[]
+    connectOrCreate?: TitleStageRateCreateOrConnectWithoutStatusInput | TitleStageRateCreateOrConnectWithoutStatusInput[]
+    createMany?: TitleStageRateCreateManyStatusInputEnvelope
+    connect?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+  }
+
   export type TaskUncheckedCreateNestedManyWithoutStatusInput = {
     create?: XOR<TaskCreateWithoutStatusInput, TaskUncheckedCreateWithoutStatusInput> | TaskCreateWithoutStatusInput[] | TaskUncheckedCreateWithoutStatusInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutStatusInput | TaskCreateOrConnectWithoutStatusInput[]
@@ -84969,6 +91905,13 @@ export namespace Prisma {
     connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutTitleLockedFromStageInput | ChecklistTemplateCreateOrConnectWithoutTitleLockedFromStageInput[]
     createMany?: ChecklistTemplateCreateManyTitleLockedFromStageInputEnvelope
     connect?: ChecklistTemplateWhereUniqueInput | ChecklistTemplateWhereUniqueInput[]
+  }
+
+  export type TitleStageRateUncheckedCreateNestedManyWithoutStatusInput = {
+    create?: XOR<TitleStageRateCreateWithoutStatusInput, TitleStageRateUncheckedCreateWithoutStatusInput> | TitleStageRateCreateWithoutStatusInput[] | TitleStageRateUncheckedCreateWithoutStatusInput[]
+    connectOrCreate?: TitleStageRateCreateOrConnectWithoutStatusInput | TitleStageRateCreateOrConnectWithoutStatusInput[]
+    createMany?: TitleStageRateCreateManyStatusInputEnvelope
+    connect?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
   }
 
   export type WorkspaceUpdateOneRequiredWithoutTaskStatusesNestedInput = {
@@ -85049,6 +91992,20 @@ export namespace Prisma {
     deleteMany?: ChecklistTemplateScalarWhereInput | ChecklistTemplateScalarWhereInput[]
   }
 
+  export type TitleStageRateUpdateManyWithoutStatusNestedInput = {
+    create?: XOR<TitleStageRateCreateWithoutStatusInput, TitleStageRateUncheckedCreateWithoutStatusInput> | TitleStageRateCreateWithoutStatusInput[] | TitleStageRateUncheckedCreateWithoutStatusInput[]
+    connectOrCreate?: TitleStageRateCreateOrConnectWithoutStatusInput | TitleStageRateCreateOrConnectWithoutStatusInput[]
+    upsert?: TitleStageRateUpsertWithWhereUniqueWithoutStatusInput | TitleStageRateUpsertWithWhereUniqueWithoutStatusInput[]
+    createMany?: TitleStageRateCreateManyStatusInputEnvelope
+    set?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    disconnect?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    delete?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    connect?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    update?: TitleStageRateUpdateWithWhereUniqueWithoutStatusInput | TitleStageRateUpdateWithWhereUniqueWithoutStatusInput[]
+    updateMany?: TitleStageRateUpdateManyWithWhereWithoutStatusInput | TitleStageRateUpdateManyWithWhereWithoutStatusInput[]
+    deleteMany?: TitleStageRateScalarWhereInput | TitleStageRateScalarWhereInput[]
+  }
+
   export type TaskUncheckedUpdateManyWithoutStatusNestedInput = {
     create?: XOR<TaskCreateWithoutStatusInput, TaskUncheckedCreateWithoutStatusInput> | TaskCreateWithoutStatusInput[] | TaskUncheckedCreateWithoutStatusInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutStatusInput | TaskCreateOrConnectWithoutStatusInput[]
@@ -85119,6 +92076,20 @@ export namespace Prisma {
     deleteMany?: ChecklistTemplateScalarWhereInput | ChecklistTemplateScalarWhereInput[]
   }
 
+  export type TitleStageRateUncheckedUpdateManyWithoutStatusNestedInput = {
+    create?: XOR<TitleStageRateCreateWithoutStatusInput, TitleStageRateUncheckedCreateWithoutStatusInput> | TitleStageRateCreateWithoutStatusInput[] | TitleStageRateUncheckedCreateWithoutStatusInput[]
+    connectOrCreate?: TitleStageRateCreateOrConnectWithoutStatusInput | TitleStageRateCreateOrConnectWithoutStatusInput[]
+    upsert?: TitleStageRateUpsertWithWhereUniqueWithoutStatusInput | TitleStageRateUpsertWithWhereUniqueWithoutStatusInput[]
+    createMany?: TitleStageRateCreateManyStatusInputEnvelope
+    set?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    disconnect?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    delete?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    connect?: TitleStageRateWhereUniqueInput | TitleStageRateWhereUniqueInput[]
+    update?: TitleStageRateUpdateWithWhereUniqueWithoutStatusInput | TitleStageRateUpdateWithWhereUniqueWithoutStatusInput[]
+    updateMany?: TitleStageRateUpdateManyWithWhereWithoutStatusInput | TitleStageRateUpdateManyWithWhereWithoutStatusInput[]
+    deleteMany?: TitleStageRateScalarWhereInput | TitleStageRateScalarWhereInput[]
+  }
+
   export type ProjectCreateNestedOneWithoutTasksInput = {
     create?: XOR<ProjectCreateWithoutTasksInput, ProjectUncheckedCreateWithoutTasksInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutTasksInput
@@ -85135,6 +92106,12 @@ export namespace Prisma {
     create?: XOR<TaskStatusCreateWithoutTasksInput, TaskStatusUncheckedCreateWithoutTasksInput>
     connectOrCreate?: TaskStatusCreateOrConnectWithoutTasksInput
     connect?: TaskStatusWhereUniqueInput
+  }
+
+  export type ChecklistTemplateCreateNestedOneWithoutTasksInput = {
+    create?: XOR<ChecklistTemplateCreateWithoutTasksInput, ChecklistTemplateUncheckedCreateWithoutTasksInput>
+    connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutTasksInput
+    connect?: ChecklistTemplateWhereUniqueInput
   }
 
   export type WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput = {
@@ -85243,6 +92220,16 @@ export namespace Prisma {
     delete?: TaskStatusWhereInput | boolean
     connect?: TaskStatusWhereUniqueInput
     update?: XOR<XOR<TaskStatusUpdateToOneWithWhereWithoutTasksInput, TaskStatusUpdateWithoutTasksInput>, TaskStatusUncheckedUpdateWithoutTasksInput>
+  }
+
+  export type ChecklistTemplateUpdateOneWithoutTasksNestedInput = {
+    create?: XOR<ChecklistTemplateCreateWithoutTasksInput, ChecklistTemplateUncheckedCreateWithoutTasksInput>
+    connectOrCreate?: ChecklistTemplateCreateOrConnectWithoutTasksInput
+    upsert?: ChecklistTemplateUpsertWithoutTasksInput
+    disconnect?: ChecklistTemplateWhereInput | boolean
+    delete?: ChecklistTemplateWhereInput | boolean
+    connect?: ChecklistTemplateWhereUniqueInput
+    update?: XOR<XOR<ChecklistTemplateUpdateToOneWithWhereWithoutTasksInput, ChecklistTemplateUpdateWithoutTasksInput>, ChecklistTemplateUncheckedUpdateWithoutTasksInput>
   }
 
   export type WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput = {
@@ -86297,6 +93284,17 @@ export namespace Prisma {
     not?: NestedEnumMemberTypeFilter<$PrismaModel> | $Enums.MemberType
   }
 
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedEnumMemberTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.MemberType | EnumMemberTypeFieldRefInput<$PrismaModel>
     in?: $Enums.MemberType[] | ListEnumMemberTypeFieldRefInput<$PrismaModel>
@@ -86305,6 +93303,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMemberTypeFilter<$PrismaModel>
     _max?: NestedEnumMemberTypeFilter<$PrismaModel>
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -86435,17 +93449,6 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
   export type NestedEnumStageTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.StageType | EnumStageTypeFieldRefInput<$PrismaModel>
     in?: $Enums.StageType[] | ListEnumStageTypeFieldRefInput<$PrismaModel>
@@ -86483,6 +93486,33 @@ export namespace Prisma {
     _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -86497,17 +93527,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumInvoiceStatusFilter<$PrismaModel = never> = {
@@ -86602,8 +93621,10 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     role?: RoleCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
@@ -86626,6 +93647,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -87222,6 +94245,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
     titleLockTemplates?: ChecklistTemplateCreateNestedManyWithoutTitleLockedFromStageInput
+    titleStageRates?: TitleStageRateCreateNestedManyWithoutStatusInput
   }
 
   export type TaskStatusUncheckedCreateWithoutWorkspaceInput = {
@@ -87235,6 +94259,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
     titleLockTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutTitleLockedFromStageInput
+    titleStageRates?: TitleStageRateUncheckedCreateNestedManyWithoutStatusInput
   }
 
   export type TaskStatusCreateOrConnectWithoutWorkspaceInput = {
@@ -87364,6 +94389,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TitleCreateWithoutWorkspaceInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutCapacityTitleInput
+    fieldRates?: TitleFieldRateCreateNestedManyWithoutTitleInput
+    stageRates?: TitleStageRateCreateNestedManyWithoutTitleInput
+  }
+
+  export type TitleUncheckedCreateWithoutWorkspaceInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutCapacityTitleInput
+    fieldRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTitleInput
+    stageRates?: TitleStageRateUncheckedCreateNestedManyWithoutTitleInput
+  }
+
+  export type TitleCreateOrConnectWithoutWorkspaceInput = {
+    where: TitleWhereUniqueInput
+    create: XOR<TitleCreateWithoutWorkspaceInput, TitleUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type TitleCreateManyWorkspaceInputEnvelope = {
+    data: TitleCreateManyWorkspaceInput | TitleCreateManyWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CurrencyCreateWithoutWorkspaceInput = {
     id?: string
     code: string
@@ -87429,6 +94482,7 @@ export namespace Prisma {
     name: string
     sizeBytes?: number | null
     contentType?: string | null
+    durationSec?: number | null
     r2Key?: string | null
     status?: string
     uploadId?: string | null
@@ -87445,6 +94499,7 @@ export namespace Prisma {
     name: string
     sizeBytes?: number | null
     contentType?: string | null
+    durationSec?: number | null
     r2Key?: string | null
     status?: string
     uploadId?: string | null
@@ -87478,8 +94533,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
     items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
+    sections?: ChecklistSectionCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
     weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput
+    tasks?: TaskCreateNestedManyWithoutTemplateInput
     weeklySlots?: WeeklySlotCreateNestedManyWithoutTemplateInput
   }
 
@@ -87497,8 +94554,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
+    sections?: ChecklistSectionUncheckedCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
     weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutTemplateInput
     weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput
   }
 
@@ -87606,6 +94665,8 @@ export namespace Prisma {
     imageUrl?: StringNullableFilter<"WorkspaceMember"> | string | null
     type?: EnumMemberTypeFilter<"WorkspaceMember"> | $Enums.MemberType
     roleId?: StringNullableFilter<"WorkspaceMember"> | string | null
+    titleId?: StringNullableFilter<"WorkspaceMember"> | string | null
+    weeklyHours?: FloatFilter<"WorkspaceMember"> | number
     joinedAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
   }
 
@@ -88189,6 +95250,32 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Role"> | Date | string
   }
 
+  export type TitleUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: TitleWhereUniqueInput
+    update: XOR<TitleUpdateWithoutWorkspaceInput, TitleUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<TitleCreateWithoutWorkspaceInput, TitleUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type TitleUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: TitleWhereUniqueInput
+    data: XOR<TitleUpdateWithoutWorkspaceInput, TitleUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type TitleUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: TitleScalarWhereInput
+    data: XOR<TitleUpdateManyMutationInput, TitleUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type TitleScalarWhereInput = {
+    AND?: TitleScalarWhereInput | TitleScalarWhereInput[]
+    OR?: TitleScalarWhereInput[]
+    NOT?: TitleScalarWhereInput | TitleScalarWhereInput[]
+    id?: StringFilter<"Title"> | string
+    workspaceId?: StringFilter<"Title"> | string
+    name?: StringFilter<"Title"> | string
+    createdAt?: DateTimeFilter<"Title"> | Date | string
+  }
+
   export type CurrencyUpsertWithWhereUniqueWithoutWorkspaceInput = {
     where: CurrencyWhereUniqueInput
     update: XOR<CurrencyUpdateWithoutWorkspaceInput, CurrencyUncheckedUpdateWithoutWorkspaceInput>
@@ -88275,6 +95362,7 @@ export namespace Prisma {
     name?: StringFilter<"Attachment"> | string
     sizeBytes?: IntNullableFilter<"Attachment"> | number | null
     contentType?: StringNullableFilter<"Attachment"> | string | null
+    durationSec?: FloatNullableFilter<"Attachment"> | number | null
     r2Key?: StringNullableFilter<"Attachment"> | string | null
     status?: StringFilter<"Attachment"> | string
     uploadId?: StringNullableFilter<"Attachment"> | string | null
@@ -88408,6 +95496,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
@@ -88443,6 +95532,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -88494,6 +95584,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
@@ -88529,6 +95620,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -88564,6 +95656,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
@@ -88599,6 +95692,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -88650,6 +95744,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
@@ -88685,6 +95780,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -88719,6 +95815,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -88754,6 +95851,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -88790,6 +95888,29 @@ export namespace Prisma {
     create: XOR<RoleCreateWithoutMembersInput, RoleUncheckedCreateWithoutMembersInput>
   }
 
+  export type TitleCreateWithoutMembersInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutTitlesInput
+    fieldRates?: TitleFieldRateCreateNestedManyWithoutTitleInput
+    stageRates?: TitleStageRateCreateNestedManyWithoutTitleInput
+  }
+
+  export type TitleUncheckedCreateWithoutMembersInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    createdAt?: Date | string
+    fieldRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTitleInput
+    stageRates?: TitleStageRateUncheckedCreateNestedManyWithoutTitleInput
+  }
+
+  export type TitleCreateOrConnectWithoutMembersInput = {
+    where: TitleWhereUniqueInput
+    create: XOR<TitleCreateWithoutMembersInput, TitleUncheckedCreateWithoutMembersInput>
+  }
+
   export type TaskCreateWithoutAssigneeInput = {
     id?: string
     taskNumber?: number
@@ -88800,6 +95921,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -88814,6 +95936,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
+    template?: ChecklistTemplateCreateNestedOneWithoutTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
@@ -88827,6 +95950,7 @@ export namespace Prisma {
     taskNumber?: number
     serviceId?: string | null
     statusId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -88834,6 +95958,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -89224,6 +96349,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -89259,6 +96385,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -89296,6 +96423,35 @@ export namespace Prisma {
     projectMembers?: ProjectMemberUncheckedUpdateManyWithoutRoleNestedInput
   }
 
+  export type TitleUpsertWithoutMembersInput = {
+    update: XOR<TitleUpdateWithoutMembersInput, TitleUncheckedUpdateWithoutMembersInput>
+    create: XOR<TitleCreateWithoutMembersInput, TitleUncheckedCreateWithoutMembersInput>
+    where?: TitleWhereInput
+  }
+
+  export type TitleUpdateToOneWithWhereWithoutMembersInput = {
+    where?: TitleWhereInput
+    data: XOR<TitleUpdateWithoutMembersInput, TitleUncheckedUpdateWithoutMembersInput>
+  }
+
+  export type TitleUpdateWithoutMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutTitlesNestedInput
+    fieldRates?: TitleFieldRateUpdateManyWithoutTitleNestedInput
+    stageRates?: TitleStageRateUpdateManyWithoutTitleNestedInput
+  }
+
+  export type TitleUncheckedUpdateWithoutMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fieldRates?: TitleFieldRateUncheckedUpdateManyWithoutTitleNestedInput
+    stageRates?: TitleStageRateUncheckedUpdateManyWithoutTitleNestedInput
+  }
+
   export type TaskUpsertWithWhereUniqueWithoutAssigneeInput = {
     where: TaskWhereUniqueInput
     update: XOR<TaskUpdateWithoutAssigneeInput, TaskUncheckedUpdateWithoutAssigneeInput>
@@ -89322,6 +96478,7 @@ export namespace Prisma {
     serviceId?: StringNullableFilter<"Task"> | string | null
     statusId?: StringNullableFilter<"Task"> | string | null
     assigneeId?: StringNullableFilter<"Task"> | string | null
+    templateId?: StringNullableFilter<"Task"> | string | null
     title?: StringFilter<"Task"> | string
     description?: StringNullableFilter<"Task"> | string | null
     billable?: BoolFilter<"Task"> | boolean
@@ -89329,6 +96486,7 @@ export namespace Prisma {
     publish?: BoolFilter<"Task"> | boolean
     priority?: IntNullableFilter<"Task"> | number | null
     estimateMin?: IntNullableFilter<"Task"> | number | null
+    plannedMinutes?: FloatNullableFilter<"Task"> | number | null
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     assignmentHistory?: JsonNullableFilter<"Task">
@@ -89677,6 +96835,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -89712,6 +96871,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -89732,8 +96892,10 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
@@ -89756,6 +96918,8 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -89843,6 +97007,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -89878,6 +97043,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -89916,6 +97082,630 @@ export namespace Prisma {
   export type ProjectMemberUpdateManyWithWhereWithoutRoleInput = {
     where: ProjectMemberScalarWhereInput
     data: XOR<ProjectMemberUpdateManyMutationInput, ProjectMemberUncheckedUpdateManyWithoutRoleInput>
+  }
+
+  export type WorkspaceCreateWithoutTitlesInput = {
+    id?: string
+    name: string
+    slug: string
+    baseCurrency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    invoiceLogoSlot?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
+    referrals?: ReferralCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceCreateNestedManyWithoutWorkspaceInput
+    deals?: DealCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
+    checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
+    publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutTitlesInput = {
+    id?: string
+    name: string
+    slug: string
+    baseCurrency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    invoiceLogoSlot?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
+    checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
+    publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutTitlesInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutTitlesInput, WorkspaceUncheckedCreateWithoutTitlesInput>
+  }
+
+  export type WorkspaceMemberCreateWithoutCapacityTitleInput = {
+    id?: string
+    userId: string
+    email: string
+    name?: string | null
+    imageUrl?: string | null
+    type?: $Enums.MemberType
+    weeklyHours?: number
+    joinedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutMembersInput
+    role?: RoleCreateNestedOneWithoutMembersInput
+    assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
+    messages?: MessageCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
+    reactions?: MessageReactionCreateNestedManyWithoutMemberInput
+    notifications?: NotificationCreateNestedManyWithoutRecipientInput
+    pushSubscriptions?: PushSubscriptionCreateNestedManyWithoutMemberInput
+    scheduledItems?: PublishItemCreateNestedManyWithoutSchedulerInput
+    projectMemberships?: ProjectMemberCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantCreateNestedManyWithoutMemberInput
+    responsibleWeeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutResponsibleMemberInput
+    assignedWeeklySlots?: WeeklySlotCreateNestedManyWithoutAssigneeInput
+  }
+
+  export type WorkspaceMemberUncheckedCreateWithoutCapacityTitleInput = {
+    id?: string
+    workspaceId: string
+    userId: string
+    email: string
+    name?: string | null
+    imageUrl?: string | null
+    type?: $Enums.MemberType
+    roleId?: string | null
+    weeklyHours?: number
+    joinedAt?: Date | string
+    assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
+    mentionedIn?: MessageMentionUncheckedCreateNestedManyWithoutMemberInput
+    reactions?: MessageReactionUncheckedCreateNestedManyWithoutMemberInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutRecipientInput
+    pushSubscriptions?: PushSubscriptionUncheckedCreateNestedManyWithoutMemberInput
+    scheduledItems?: PublishItemUncheckedCreateNestedManyWithoutSchedulerInput
+    projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutMemberInput
+    conversations?: ConversationParticipantUncheckedCreateNestedManyWithoutMemberInput
+    responsibleWeeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutResponsibleMemberInput
+    assignedWeeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutAssigneeInput
+  }
+
+  export type WorkspaceMemberCreateOrConnectWithoutCapacityTitleInput = {
+    where: WorkspaceMemberWhereUniqueInput
+    create: XOR<WorkspaceMemberCreateWithoutCapacityTitleInput, WorkspaceMemberUncheckedCreateWithoutCapacityTitleInput>
+  }
+
+  export type WorkspaceMemberCreateManyCapacityTitleInputEnvelope = {
+    data: WorkspaceMemberCreateManyCapacityTitleInput | WorkspaceMemberCreateManyCapacityTitleInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TitleFieldRateCreateWithoutTitleInput = {
+    id?: string
+    minutesPerUnit: number
+    templateItem: ChecklistTemplateItemCreateNestedOneWithoutTitleRatesInput
+  }
+
+  export type TitleFieldRateUncheckedCreateWithoutTitleInput = {
+    id?: string
+    templateItemId: string
+    minutesPerUnit: number
+  }
+
+  export type TitleFieldRateCreateOrConnectWithoutTitleInput = {
+    where: TitleFieldRateWhereUniqueInput
+    create: XOR<TitleFieldRateCreateWithoutTitleInput, TitleFieldRateUncheckedCreateWithoutTitleInput>
+  }
+
+  export type TitleFieldRateCreateManyTitleInputEnvelope = {
+    data: TitleFieldRateCreateManyTitleInput | TitleFieldRateCreateManyTitleInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TitleStageRateCreateWithoutTitleInput = {
+    id?: string
+    minutesPerPass: number
+    status: TaskStatusCreateNestedOneWithoutTitleStageRatesInput
+  }
+
+  export type TitleStageRateUncheckedCreateWithoutTitleInput = {
+    id?: string
+    statusId: string
+    minutesPerPass: number
+  }
+
+  export type TitleStageRateCreateOrConnectWithoutTitleInput = {
+    where: TitleStageRateWhereUniqueInput
+    create: XOR<TitleStageRateCreateWithoutTitleInput, TitleStageRateUncheckedCreateWithoutTitleInput>
+  }
+
+  export type TitleStageRateCreateManyTitleInputEnvelope = {
+    data: TitleStageRateCreateManyTitleInput | TitleStageRateCreateManyTitleInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WorkspaceUpsertWithoutTitlesInput = {
+    update: XOR<WorkspaceUpdateWithoutTitlesInput, WorkspaceUncheckedUpdateWithoutTitlesInput>
+    create: XOR<WorkspaceCreateWithoutTitlesInput, WorkspaceUncheckedCreateWithoutTitlesInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutTitlesInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutTitlesInput, WorkspaceUncheckedUpdateWithoutTitlesInput>
+  }
+
+  export type WorkspaceUpdateWithoutTitlesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
+    referrals?: ReferralUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
+    checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
+    publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutTitlesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
+    checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
+    publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceMemberUpsertWithWhereUniqueWithoutCapacityTitleInput = {
+    where: WorkspaceMemberWhereUniqueInput
+    update: XOR<WorkspaceMemberUpdateWithoutCapacityTitleInput, WorkspaceMemberUncheckedUpdateWithoutCapacityTitleInput>
+    create: XOR<WorkspaceMemberCreateWithoutCapacityTitleInput, WorkspaceMemberUncheckedCreateWithoutCapacityTitleInput>
+  }
+
+  export type WorkspaceMemberUpdateWithWhereUniqueWithoutCapacityTitleInput = {
+    where: WorkspaceMemberWhereUniqueInput
+    data: XOR<WorkspaceMemberUpdateWithoutCapacityTitleInput, WorkspaceMemberUncheckedUpdateWithoutCapacityTitleInput>
+  }
+
+  export type WorkspaceMemberUpdateManyWithWhereWithoutCapacityTitleInput = {
+    where: WorkspaceMemberScalarWhereInput
+    data: XOR<WorkspaceMemberUpdateManyMutationInput, WorkspaceMemberUncheckedUpdateManyWithoutCapacityTitleInput>
+  }
+
+  export type TitleFieldRateUpsertWithWhereUniqueWithoutTitleInput = {
+    where: TitleFieldRateWhereUniqueInput
+    update: XOR<TitleFieldRateUpdateWithoutTitleInput, TitleFieldRateUncheckedUpdateWithoutTitleInput>
+    create: XOR<TitleFieldRateCreateWithoutTitleInput, TitleFieldRateUncheckedCreateWithoutTitleInput>
+  }
+
+  export type TitleFieldRateUpdateWithWhereUniqueWithoutTitleInput = {
+    where: TitleFieldRateWhereUniqueInput
+    data: XOR<TitleFieldRateUpdateWithoutTitleInput, TitleFieldRateUncheckedUpdateWithoutTitleInput>
+  }
+
+  export type TitleFieldRateUpdateManyWithWhereWithoutTitleInput = {
+    where: TitleFieldRateScalarWhereInput
+    data: XOR<TitleFieldRateUpdateManyMutationInput, TitleFieldRateUncheckedUpdateManyWithoutTitleInput>
+  }
+
+  export type TitleFieldRateScalarWhereInput = {
+    AND?: TitleFieldRateScalarWhereInput | TitleFieldRateScalarWhereInput[]
+    OR?: TitleFieldRateScalarWhereInput[]
+    NOT?: TitleFieldRateScalarWhereInput | TitleFieldRateScalarWhereInput[]
+    id?: StringFilter<"TitleFieldRate"> | string
+    titleId?: StringFilter<"TitleFieldRate"> | string
+    templateItemId?: StringFilter<"TitleFieldRate"> | string
+    minutesPerUnit?: FloatFilter<"TitleFieldRate"> | number
+  }
+
+  export type TitleStageRateUpsertWithWhereUniqueWithoutTitleInput = {
+    where: TitleStageRateWhereUniqueInput
+    update: XOR<TitleStageRateUpdateWithoutTitleInput, TitleStageRateUncheckedUpdateWithoutTitleInput>
+    create: XOR<TitleStageRateCreateWithoutTitleInput, TitleStageRateUncheckedCreateWithoutTitleInput>
+  }
+
+  export type TitleStageRateUpdateWithWhereUniqueWithoutTitleInput = {
+    where: TitleStageRateWhereUniqueInput
+    data: XOR<TitleStageRateUpdateWithoutTitleInput, TitleStageRateUncheckedUpdateWithoutTitleInput>
+  }
+
+  export type TitleStageRateUpdateManyWithWhereWithoutTitleInput = {
+    where: TitleStageRateScalarWhereInput
+    data: XOR<TitleStageRateUpdateManyMutationInput, TitleStageRateUncheckedUpdateManyWithoutTitleInput>
+  }
+
+  export type TitleStageRateScalarWhereInput = {
+    AND?: TitleStageRateScalarWhereInput | TitleStageRateScalarWhereInput[]
+    OR?: TitleStageRateScalarWhereInput[]
+    NOT?: TitleStageRateScalarWhereInput | TitleStageRateScalarWhereInput[]
+    id?: StringFilter<"TitleStageRate"> | string
+    titleId?: StringFilter<"TitleStageRate"> | string
+    statusId?: StringFilter<"TitleStageRate"> | string
+    minutesPerPass?: FloatFilter<"TitleStageRate"> | number
+  }
+
+  export type TitleCreateWithoutFieldRatesInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutTitlesInput
+    members?: WorkspaceMemberCreateNestedManyWithoutCapacityTitleInput
+    stageRates?: TitleStageRateCreateNestedManyWithoutTitleInput
+  }
+
+  export type TitleUncheckedCreateWithoutFieldRatesInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    createdAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutCapacityTitleInput
+    stageRates?: TitleStageRateUncheckedCreateNestedManyWithoutTitleInput
+  }
+
+  export type TitleCreateOrConnectWithoutFieldRatesInput = {
+    where: TitleWhereUniqueInput
+    create: XOR<TitleCreateWithoutFieldRatesInput, TitleUncheckedCreateWithoutFieldRatesInput>
+  }
+
+  export type ChecklistTemplateItemCreateWithoutTitleRatesInput = {
+    id?: string
+    name: string
+    type?: string
+    role?: string
+    options?: string | null
+    allowedFileTypes?: string | null
+    allowedFormats?: string | null
+    aspectRatio?: string | null
+    mandatory?: boolean
+    phase?: string
+    neverLock?: boolean
+    publishCard?: string
+    hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
+    order?: number
+    template: ChecklistTemplateCreateNestedOneWithoutItemsInput
+    section?: ChecklistSectionCreateNestedOneWithoutItemsInput
+    visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
+    requiredBeforeStage?: TaskStatusCreateNestedOneWithoutRequiredBeforeItemsInput
+    lockedFromStage?: TaskStatusCreateNestedOneWithoutLockedFromItemsInput
+    taskItems?: TaskChecklistItemCreateNestedManyWithoutTemplateItemInput
+  }
+
+  export type ChecklistTemplateItemUncheckedCreateWithoutTitleRatesInput = {
+    id?: string
+    templateId: string
+    name: string
+    type?: string
+    role?: string
+    options?: string | null
+    allowedFileTypes?: string | null
+    allowedFormats?: string | null
+    aspectRatio?: string | null
+    mandatory?: boolean
+    phase?: string
+    sectionId?: string | null
+    visibleFromStageId?: string | null
+    requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
+    neverLock?: boolean
+    publishCard?: string
+    hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
+    order?: number
+    taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
+  }
+
+  export type ChecklistTemplateItemCreateOrConnectWithoutTitleRatesInput = {
+    where: ChecklistTemplateItemWhereUniqueInput
+    create: XOR<ChecklistTemplateItemCreateWithoutTitleRatesInput, ChecklistTemplateItemUncheckedCreateWithoutTitleRatesInput>
+  }
+
+  export type TitleUpsertWithoutFieldRatesInput = {
+    update: XOR<TitleUpdateWithoutFieldRatesInput, TitleUncheckedUpdateWithoutFieldRatesInput>
+    create: XOR<TitleCreateWithoutFieldRatesInput, TitleUncheckedCreateWithoutFieldRatesInput>
+    where?: TitleWhereInput
+  }
+
+  export type TitleUpdateToOneWithWhereWithoutFieldRatesInput = {
+    where?: TitleWhereInput
+    data: XOR<TitleUpdateWithoutFieldRatesInput, TitleUncheckedUpdateWithoutFieldRatesInput>
+  }
+
+  export type TitleUpdateWithoutFieldRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutTitlesNestedInput
+    members?: WorkspaceMemberUpdateManyWithoutCapacityTitleNestedInput
+    stageRates?: TitleStageRateUpdateManyWithoutTitleNestedInput
+  }
+
+  export type TitleUncheckedUpdateWithoutFieldRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutCapacityTitleNestedInput
+    stageRates?: TitleStageRateUncheckedUpdateManyWithoutTitleNestedInput
+  }
+
+  export type ChecklistTemplateItemUpsertWithoutTitleRatesInput = {
+    update: XOR<ChecklistTemplateItemUpdateWithoutTitleRatesInput, ChecklistTemplateItemUncheckedUpdateWithoutTitleRatesInput>
+    create: XOR<ChecklistTemplateItemCreateWithoutTitleRatesInput, ChecklistTemplateItemUncheckedCreateWithoutTitleRatesInput>
+    where?: ChecklistTemplateItemWhereInput
+  }
+
+  export type ChecklistTemplateItemUpdateToOneWithWhereWithoutTitleRatesInput = {
+    where?: ChecklistTemplateItemWhereInput
+    data: XOR<ChecklistTemplateItemUpdateWithoutTitleRatesInput, ChecklistTemplateItemUncheckedUpdateWithoutTitleRatesInput>
+  }
+
+  export type ChecklistTemplateItemUpdateWithoutTitleRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    options?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFileTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFormats?: NullableStringFieldUpdateOperationsInput | string | null
+    aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
+    mandatory?: BoolFieldUpdateOperationsInput | boolean
+    phase?: StringFieldUpdateOperationsInput | string
+    neverLock?: BoolFieldUpdateOperationsInput | boolean
+    publishCard?: StringFieldUpdateOperationsInput | string
+    hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
+    order?: IntFieldUpdateOperationsInput | number
+    template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
+    section?: ChecklistSectionUpdateOneWithoutItemsNestedInput
+    visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
+    requiredBeforeStage?: TaskStatusUpdateOneWithoutRequiredBeforeItemsNestedInput
+    lockedFromStage?: TaskStatusUpdateOneWithoutLockedFromItemsNestedInput
+    taskItems?: TaskChecklistItemUpdateManyWithoutTemplateItemNestedInput
+  }
+
+  export type ChecklistTemplateItemUncheckedUpdateWithoutTitleRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    options?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFileTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFormats?: NullableStringFieldUpdateOperationsInput | string | null
+    aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
+    mandatory?: BoolFieldUpdateOperationsInput | boolean
+    phase?: StringFieldUpdateOperationsInput | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
+    visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    neverLock?: BoolFieldUpdateOperationsInput | boolean
+    publishCard?: StringFieldUpdateOperationsInput | string
+    hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
+    order?: IntFieldUpdateOperationsInput | number
+    taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
+  }
+
+  export type TitleCreateWithoutStageRatesInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutTitlesInput
+    members?: WorkspaceMemberCreateNestedManyWithoutCapacityTitleInput
+    fieldRates?: TitleFieldRateCreateNestedManyWithoutTitleInput
+  }
+
+  export type TitleUncheckedCreateWithoutStageRatesInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    createdAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutCapacityTitleInput
+    fieldRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTitleInput
+  }
+
+  export type TitleCreateOrConnectWithoutStageRatesInput = {
+    where: TitleWhereUniqueInput
+    create: XOR<TitleCreateWithoutStageRatesInput, TitleUncheckedCreateWithoutStageRatesInput>
+  }
+
+  export type TaskStatusCreateWithoutTitleStageRatesInput = {
+    id?: string
+    name: string
+    order: number
+    color?: string
+    createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutTaskStatusesInput
+    tasks?: TaskCreateNestedManyWithoutStatusInput
+    visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
+    requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
+    lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
+    titleLockTemplates?: ChecklistTemplateCreateNestedManyWithoutTitleLockedFromStageInput
+  }
+
+  export type TaskStatusUncheckedCreateWithoutTitleStageRatesInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    order: number
+    color?: string
+    createdAt?: Date | string
+    tasks?: TaskUncheckedCreateNestedManyWithoutStatusInput
+    visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
+    requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
+    lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
+    titleLockTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutTitleLockedFromStageInput
+  }
+
+  export type TaskStatusCreateOrConnectWithoutTitleStageRatesInput = {
+    where: TaskStatusWhereUniqueInput
+    create: XOR<TaskStatusCreateWithoutTitleStageRatesInput, TaskStatusUncheckedCreateWithoutTitleStageRatesInput>
+  }
+
+  export type TitleUpsertWithoutStageRatesInput = {
+    update: XOR<TitleUpdateWithoutStageRatesInput, TitleUncheckedUpdateWithoutStageRatesInput>
+    create: XOR<TitleCreateWithoutStageRatesInput, TitleUncheckedCreateWithoutStageRatesInput>
+    where?: TitleWhereInput
+  }
+
+  export type TitleUpdateToOneWithWhereWithoutStageRatesInput = {
+    where?: TitleWhereInput
+    data: XOR<TitleUpdateWithoutStageRatesInput, TitleUncheckedUpdateWithoutStageRatesInput>
+  }
+
+  export type TitleUpdateWithoutStageRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutTitlesNestedInput
+    members?: WorkspaceMemberUpdateManyWithoutCapacityTitleNestedInput
+    fieldRates?: TitleFieldRateUpdateManyWithoutTitleNestedInput
+  }
+
+  export type TitleUncheckedUpdateWithoutStageRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutCapacityTitleNestedInput
+    fieldRates?: TitleFieldRateUncheckedUpdateManyWithoutTitleNestedInput
+  }
+
+  export type TaskStatusUpsertWithoutTitleStageRatesInput = {
+    update: XOR<TaskStatusUpdateWithoutTitleStageRatesInput, TaskStatusUncheckedUpdateWithoutTitleStageRatesInput>
+    create: XOR<TaskStatusCreateWithoutTitleStageRatesInput, TaskStatusUncheckedCreateWithoutTitleStageRatesInput>
+    where?: TaskStatusWhereInput
+  }
+
+  export type TaskStatusUpdateToOneWithWhereWithoutTitleStageRatesInput = {
+    where?: TaskStatusWhereInput
+    data: XOR<TaskStatusUpdateWithoutTitleStageRatesInput, TaskStatusUncheckedUpdateWithoutTitleStageRatesInput>
+  }
+
+  export type TaskStatusUpdateWithoutTitleStageRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutTaskStatusesNestedInput
+    tasks?: TaskUpdateManyWithoutStatusNestedInput
+    visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
+    requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
+    lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
+    titleLockTemplates?: ChecklistTemplateUpdateManyWithoutTitleLockedFromStageNestedInput
+  }
+
+  export type TaskStatusUncheckedUpdateWithoutTitleStageRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tasks?: TaskUncheckedUpdateManyWithoutStatusNestedInput
+    visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
+    requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
+    lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
+    titleLockTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageNestedInput
   }
 
   export type ProjectCreateWithoutCollaboratorsInput = {
@@ -90093,6 +97883,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -90128,6 +97919,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -90351,6 +98143,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -90386,6 +98179,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -90481,6 +98275,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -90516,6 +98311,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -90771,6 +98567,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -90806,6 +98603,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -91155,6 +98953,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -91190,6 +98989,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -91239,6 +99039,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -91252,6 +99053,7 @@ export namespace Prisma {
     deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
+    template?: ChecklistTemplateCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
@@ -91266,6 +99068,7 @@ export namespace Prisma {
     taskNumber?: number
     statusId?: string | null
     assigneeId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -91273,6 +99076,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -91339,6 +99143,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -91374,6 +99179,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -91453,6 +99259,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -91488,6 +99295,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -91639,6 +99447,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -91674,6 +99483,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -91892,6 +99702,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -91927,6 +99738,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -92333,6 +100145,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -92368,6 +100181,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -93072,6 +100886,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -93107,6 +100922,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -93234,6 +101050,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -93269,6 +101086,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -93320,6 +101138,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -93355,6 +101174,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -93523,6 +101343,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -93536,6 +101357,7 @@ export namespace Prisma {
     deletedBy?: string | null
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
+    template?: ChecklistTemplateCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
@@ -93550,6 +101372,7 @@ export namespace Prisma {
     serviceId?: string | null
     statusId?: string | null
     assigneeId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -93557,6 +101380,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -93967,6 +101791,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -94002,6 +101827,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -94486,7 +102312,9 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
     titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
     items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
+    sections?: ChecklistSectionCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
+    tasks?: TaskCreateNestedManyWithoutTemplateInput
     weeklySlots?: WeeklySlotCreateNestedManyWithoutTemplateInput
   }
 
@@ -94505,7 +102333,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
+    sections?: ChecklistSectionUncheckedCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutTemplateInput
     weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput
   }
 
@@ -94521,9 +102351,11 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
@@ -94546,6 +102378,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -94668,7 +102502,9 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
     titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
     items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
+    sections?: ChecklistSectionUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUpdateManyWithoutTemplateNestedInput
     weeklySlots?: WeeklySlotUpdateManyWithoutTemplateNestedInput
   }
 
@@ -94687,7 +102523,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
+    sections?: ChecklistSectionUncheckedUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutTemplateNestedInput
     weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
@@ -94709,9 +102547,11 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
@@ -94734,6 +102574,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -94834,8 +102676,10 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
     titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
     items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
+    sections?: ChecklistSectionCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
     weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput
+    tasks?: TaskCreateNestedManyWithoutTemplateInput
   }
 
   export type ChecklistTemplateUncheckedCreateWithoutWeeklySlotsInput = {
@@ -94853,8 +102697,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
+    sections?: ChecklistSectionUncheckedCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
     weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutTemplateInput
   }
 
   export type ChecklistTemplateCreateOrConnectWithoutWeeklySlotsInput = {
@@ -94872,6 +102718,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -94886,6 +102733,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
+    template?: ChecklistTemplateCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
@@ -94900,6 +102748,7 @@ export namespace Prisma {
     serviceId?: string | null
     statusId?: string | null
     assigneeId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -94907,6 +102756,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -94936,9 +102786,11 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
@@ -94961,6 +102813,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -95083,8 +102937,10 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
     titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
     items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
+    sections?: ChecklistSectionUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
     weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUpdateManyWithoutTemplateNestedInput
   }
 
   export type ChecklistTemplateUncheckedUpdateWithoutWeeklySlotsInput = {
@@ -95102,8 +102958,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
+    sections?: ChecklistSectionUncheckedUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
     weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
   export type TaskUpsertWithoutWeeklySlotInput = {
@@ -95127,6 +102985,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -95141,6 +103000,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
+    template?: ChecklistTemplateUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
@@ -95155,6 +103015,7 @@ export namespace Prisma {
     serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -95162,6 +103023,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -95197,9 +103059,11 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
@@ -95222,6 +103086,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -95314,9 +103180,11 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
@@ -95339,6 +103207,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -95476,9 +103346,11 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
@@ -95501,6 +103373,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -96088,6 +103962,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -96123,6 +103998,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -96146,6 +104022,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
+    titleStageRates?: TitleStageRateCreateNestedManyWithoutStatusInput
   }
 
   export type TaskStatusUncheckedCreateWithoutTitleLockTemplatesInput = {
@@ -96159,6 +104036,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
+    titleStageRates?: TitleStageRateUncheckedCreateNestedManyWithoutStatusInput
   }
 
   export type TaskStatusCreateOrConnectWithoutTitleLockTemplatesInput = {
@@ -96180,11 +104058,15 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
+    section?: ChecklistSectionCreateNestedOneWithoutItemsInput
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
     requiredBeforeStage?: TaskStatusCreateNestedOneWithoutRequiredBeforeItemsInput
     lockedFromStage?: TaskStatusCreateNestedOneWithoutLockedFromItemsInput
     taskItems?: TaskChecklistItemCreateNestedManyWithoutTemplateItemInput
+    titleRates?: TitleFieldRateCreateNestedManyWithoutTemplateItemInput
   }
 
   export type ChecklistTemplateItemUncheckedCreateWithoutTemplateInput = {
@@ -96198,14 +104080,18 @@ export namespace Prisma {
     aspectRatio?: string | null
     mandatory?: boolean
     phase?: string
+    sectionId?: string | null
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
+    titleRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput
   }
 
   export type ChecklistTemplateItemCreateOrConnectWithoutTemplateInput = {
@@ -96215,6 +104101,34 @@ export namespace Prisma {
 
   export type ChecklistTemplateItemCreateManyTemplateInputEnvelope = {
     data: ChecklistTemplateItemCreateManyTemplateInput | ChecklistTemplateItemCreateManyTemplateInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ChecklistSectionCreateWithoutTemplateInput = {
+    id?: string
+    name: string
+    phase?: string
+    order?: number
+    createdAt?: Date | string
+    items?: ChecklistTemplateItemCreateNestedManyWithoutSectionInput
+  }
+
+  export type ChecklistSectionUncheckedCreateWithoutTemplateInput = {
+    id?: string
+    name: string
+    phase?: string
+    order?: number
+    createdAt?: Date | string
+    items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutSectionInput
+  }
+
+  export type ChecklistSectionCreateOrConnectWithoutTemplateInput = {
+    where: ChecklistSectionWhereUniqueInput
+    create: XOR<ChecklistSectionCreateWithoutTemplateInput, ChecklistSectionUncheckedCreateWithoutTemplateInput>
+  }
+
+  export type ChecklistSectionCreateManyTemplateInputEnvelope = {
+    data: ChecklistSectionCreateManyTemplateInput | ChecklistSectionCreateManyTemplateInput[]
     skipDuplicates?: boolean
   }
 
@@ -96267,6 +104181,82 @@ export namespace Prisma {
 
   export type ProjectWeeklyTargetCreateManyTemplateInputEnvelope = {
     data: ProjectWeeklyTargetCreateManyTemplateInput | ProjectWeeklyTargetCreateManyTemplateInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TaskCreateWithoutTemplateInput = {
+    id?: string
+    taskNumber?: number
+    title: string
+    description?: string | null
+    billable?: boolean
+    price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
+    priority?: number | null
+    estimateMin?: number | null
+    plannedMinutes?: number | null
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
+    rejectionCount?: number
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    project: ProjectCreateNestedOneWithoutTasksInput
+    service?: ServiceCreateNestedOneWithoutTasksInput
+    status?: TaskStatusCreateNestedOneWithoutTasksInput
+    assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
+    checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
+    comments?: MessageCreateNestedManyWithoutTaskInput
+    publishItem?: PublishItemCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeCreateNestedManyWithoutTaskInput
+  }
+
+  export type TaskUncheckedCreateWithoutTemplateInput = {
+    id?: string
+    projectId: string
+    taskNumber?: number
+    serviceId?: string | null
+    statusId?: string | null
+    assigneeId?: string | null
+    title: string
+    description?: string | null
+    billable?: boolean
+    price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
+    priority?: number | null
+    estimateMin?: number | null
+    plannedMinutes?: number | null
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
+    rejectionCount?: number
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    checklistItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTaskInput
+    comments?: MessageUncheckedCreateNestedManyWithoutTaskInput
+    publishItem?: PublishItemUncheckedCreateNestedOneWithoutTaskInput
+    weeklySlot?: WeeklySlotUncheckedCreateNestedOneWithoutTaskInput
+    statusChanges?: TaskStatusChangeUncheckedCreateNestedManyWithoutTaskInput
+  }
+
+  export type TaskCreateOrConnectWithoutTemplateInput = {
+    where: TaskWhereUniqueInput
+    create: XOR<TaskCreateWithoutTemplateInput, TaskUncheckedCreateWithoutTemplateInput>
+  }
+
+  export type TaskCreateManyTemplateInputEnvelope = {
+    data: TaskCreateManyTemplateInput | TaskCreateManyTemplateInput[]
     skipDuplicates?: boolean
   }
 
@@ -96339,6 +104329,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -96374,6 +104365,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -96403,6 +104395,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
+    titleStageRates?: TitleStageRateUpdateManyWithoutStatusNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutTitleLockTemplatesInput = {
@@ -96416,6 +104409,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
+    titleStageRates?: TitleStageRateUncheckedUpdateManyWithoutStatusNestedInput
   }
 
   export type ChecklistTemplateItemUpsertWithWhereUniqueWithoutTemplateInput = {
@@ -96449,13 +104443,44 @@ export namespace Prisma {
     aspectRatio?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     mandatory?: BoolFilter<"ChecklistTemplateItem"> | boolean
     phase?: StringFilter<"ChecklistTemplateItem"> | string
+    sectionId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     visibleFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     requiredBeforeStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     lockedFromStageId?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
     neverLock?: BoolFilter<"ChecklistTemplateItem"> | boolean
     publishCard?: StringFilter<"ChecklistTemplateItem"> | string
     hidden?: BoolFilter<"ChecklistTemplateItem"> | boolean
+    effortUnit?: StringNullableFilter<"ChecklistTemplateItem"> | string | null
+    qtyPerVideoMinute?: FloatNullableFilter<"ChecklistTemplateItem"> | number | null
     order?: IntFilter<"ChecklistTemplateItem"> | number
+  }
+
+  export type ChecklistSectionUpsertWithWhereUniqueWithoutTemplateInput = {
+    where: ChecklistSectionWhereUniqueInput
+    update: XOR<ChecklistSectionUpdateWithoutTemplateInput, ChecklistSectionUncheckedUpdateWithoutTemplateInput>
+    create: XOR<ChecklistSectionCreateWithoutTemplateInput, ChecklistSectionUncheckedCreateWithoutTemplateInput>
+  }
+
+  export type ChecklistSectionUpdateWithWhereUniqueWithoutTemplateInput = {
+    where: ChecklistSectionWhereUniqueInput
+    data: XOR<ChecklistSectionUpdateWithoutTemplateInput, ChecklistSectionUncheckedUpdateWithoutTemplateInput>
+  }
+
+  export type ChecklistSectionUpdateManyWithWhereWithoutTemplateInput = {
+    where: ChecklistSectionScalarWhereInput
+    data: XOR<ChecklistSectionUpdateManyMutationInput, ChecklistSectionUncheckedUpdateManyWithoutTemplateInput>
+  }
+
+  export type ChecklistSectionScalarWhereInput = {
+    AND?: ChecklistSectionScalarWhereInput | ChecklistSectionScalarWhereInput[]
+    OR?: ChecklistSectionScalarWhereInput[]
+    NOT?: ChecklistSectionScalarWhereInput | ChecklistSectionScalarWhereInput[]
+    id?: StringFilter<"ChecklistSection"> | string
+    templateId?: StringFilter<"ChecklistSection"> | string
+    name?: StringFilter<"ChecklistSection"> | string
+    phase?: StringFilter<"ChecklistSection"> | string
+    order?: IntFilter<"ChecklistSection"> | number
+    createdAt?: DateTimeFilter<"ChecklistSection"> | Date | string
   }
 
   export type ProjectTemplateUpsertWithWhereUniqueWithoutTemplateInput = {
@@ -96490,6 +104515,22 @@ export namespace Prisma {
     data: XOR<ProjectWeeklyTargetUpdateManyMutationInput, ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateInput>
   }
 
+  export type TaskUpsertWithWhereUniqueWithoutTemplateInput = {
+    where: TaskWhereUniqueInput
+    update: XOR<TaskUpdateWithoutTemplateInput, TaskUncheckedUpdateWithoutTemplateInput>
+    create: XOR<TaskCreateWithoutTemplateInput, TaskUncheckedCreateWithoutTemplateInput>
+  }
+
+  export type TaskUpdateWithWhereUniqueWithoutTemplateInput = {
+    where: TaskWhereUniqueInput
+    data: XOR<TaskUpdateWithoutTemplateInput, TaskUncheckedUpdateWithoutTemplateInput>
+  }
+
+  export type TaskUpdateManyWithWhereWithoutTemplateInput = {
+    where: TaskScalarWhereInput
+    data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutTemplateInput>
+  }
+
   export type WeeklySlotUpsertWithWhereUniqueWithoutTemplateInput = {
     where: WeeklySlotWhereUniqueInput
     update: XOR<WeeklySlotUpdateWithoutTemplateInput, WeeklySlotUncheckedUpdateWithoutTemplateInput>
@@ -96506,6 +104547,182 @@ export namespace Prisma {
     data: XOR<WeeklySlotUpdateManyMutationInput, WeeklySlotUncheckedUpdateManyWithoutTemplateInput>
   }
 
+  export type ChecklistTemplateCreateWithoutSectionsInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    color?: string | null
+    description?: string | null
+    publishToCalendar?: boolean
+    titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
+    titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
+    items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
+    projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput
+    tasks?: TaskCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutTemplateInput
+  }
+
+  export type ChecklistTemplateUncheckedCreateWithoutSectionsInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    icon?: string | null
+    color?: string | null
+    description?: string | null
+    publishToCalendar?: boolean
+    titleLockedFromStageId?: string | null
+    titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
+    projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput
+  }
+
+  export type ChecklistTemplateCreateOrConnectWithoutSectionsInput = {
+    where: ChecklistTemplateWhereUniqueInput
+    create: XOR<ChecklistTemplateCreateWithoutSectionsInput, ChecklistTemplateUncheckedCreateWithoutSectionsInput>
+  }
+
+  export type ChecklistTemplateItemCreateWithoutSectionInput = {
+    id?: string
+    name: string
+    type?: string
+    role?: string
+    options?: string | null
+    allowedFileTypes?: string | null
+    allowedFormats?: string | null
+    aspectRatio?: string | null
+    mandatory?: boolean
+    phase?: string
+    neverLock?: boolean
+    publishCard?: string
+    hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
+    order?: number
+    template: ChecklistTemplateCreateNestedOneWithoutItemsInput
+    visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
+    requiredBeforeStage?: TaskStatusCreateNestedOneWithoutRequiredBeforeItemsInput
+    lockedFromStage?: TaskStatusCreateNestedOneWithoutLockedFromItemsInput
+    taskItems?: TaskChecklistItemCreateNestedManyWithoutTemplateItemInput
+    titleRates?: TitleFieldRateCreateNestedManyWithoutTemplateItemInput
+  }
+
+  export type ChecklistTemplateItemUncheckedCreateWithoutSectionInput = {
+    id?: string
+    templateId: string
+    name: string
+    type?: string
+    role?: string
+    options?: string | null
+    allowedFileTypes?: string | null
+    allowedFormats?: string | null
+    aspectRatio?: string | null
+    mandatory?: boolean
+    phase?: string
+    visibleFromStageId?: string | null
+    requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
+    neverLock?: boolean
+    publishCard?: string
+    hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
+    order?: number
+    taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
+    titleRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput
+  }
+
+  export type ChecklistTemplateItemCreateOrConnectWithoutSectionInput = {
+    where: ChecklistTemplateItemWhereUniqueInput
+    create: XOR<ChecklistTemplateItemCreateWithoutSectionInput, ChecklistTemplateItemUncheckedCreateWithoutSectionInput>
+  }
+
+  export type ChecklistTemplateItemCreateManySectionInputEnvelope = {
+    data: ChecklistTemplateItemCreateManySectionInput | ChecklistTemplateItemCreateManySectionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ChecklistTemplateUpsertWithoutSectionsInput = {
+    update: XOR<ChecklistTemplateUpdateWithoutSectionsInput, ChecklistTemplateUncheckedUpdateWithoutSectionsInput>
+    create: XOR<ChecklistTemplateCreateWithoutSectionsInput, ChecklistTemplateUncheckedCreateWithoutSectionsInput>
+    where?: ChecklistTemplateWhereInput
+  }
+
+  export type ChecklistTemplateUpdateToOneWithWhereWithoutSectionsInput = {
+    where?: ChecklistTemplateWhereInput
+    data: XOR<ChecklistTemplateUpdateWithoutSectionsInput, ChecklistTemplateUncheckedUpdateWithoutSectionsInput>
+  }
+
+  export type ChecklistTemplateUpdateWithoutSectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
+    titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
+    items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
+    projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutTemplateNestedInput
+  }
+
+  export type ChecklistTemplateUncheckedUpdateWithoutSectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
+    projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput
+  }
+
+  export type ChecklistTemplateItemUpsertWithWhereUniqueWithoutSectionInput = {
+    where: ChecklistTemplateItemWhereUniqueInput
+    update: XOR<ChecklistTemplateItemUpdateWithoutSectionInput, ChecklistTemplateItemUncheckedUpdateWithoutSectionInput>
+    create: XOR<ChecklistTemplateItemCreateWithoutSectionInput, ChecklistTemplateItemUncheckedCreateWithoutSectionInput>
+  }
+
+  export type ChecklistTemplateItemUpdateWithWhereUniqueWithoutSectionInput = {
+    where: ChecklistTemplateItemWhereUniqueInput
+    data: XOR<ChecklistTemplateItemUpdateWithoutSectionInput, ChecklistTemplateItemUncheckedUpdateWithoutSectionInput>
+  }
+
+  export type ChecklistTemplateItemUpdateManyWithWhereWithoutSectionInput = {
+    where: ChecklistTemplateItemScalarWhereInput
+    data: XOR<ChecklistTemplateItemUpdateManyMutationInput, ChecklistTemplateItemUncheckedUpdateManyWithoutSectionInput>
+  }
+
   export type ChecklistTemplateCreateWithoutItemsInput = {
     id?: string
     name: string
@@ -96520,8 +104737,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
     titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
+    sections?: ChecklistSectionCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
     weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput
+    tasks?: TaskCreateNestedManyWithoutTemplateInput
     weeklySlots?: WeeklySlotCreateNestedManyWithoutTemplateInput
   }
 
@@ -96539,14 +104758,39 @@ export namespace Prisma {
     titleHelp?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    sections?: ChecklistSectionUncheckedCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
     weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutTemplateInput
     weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput
   }
 
   export type ChecklistTemplateCreateOrConnectWithoutItemsInput = {
     where: ChecklistTemplateWhereUniqueInput
     create: XOR<ChecklistTemplateCreateWithoutItemsInput, ChecklistTemplateUncheckedCreateWithoutItemsInput>
+  }
+
+  export type ChecklistSectionCreateWithoutItemsInput = {
+    id?: string
+    name: string
+    phase?: string
+    order?: number
+    createdAt?: Date | string
+    template: ChecklistTemplateCreateNestedOneWithoutSectionsInput
+  }
+
+  export type ChecklistSectionUncheckedCreateWithoutItemsInput = {
+    id?: string
+    templateId: string
+    name: string
+    phase?: string
+    order?: number
+    createdAt?: Date | string
+  }
+
+  export type ChecklistSectionCreateOrConnectWithoutItemsInput = {
+    where: ChecklistSectionWhereUniqueInput
+    create: XOR<ChecklistSectionCreateWithoutItemsInput, ChecklistSectionUncheckedCreateWithoutItemsInput>
   }
 
   export type TaskStatusCreateWithoutVisibleFromItemsInput = {
@@ -96560,6 +104804,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
     titleLockTemplates?: ChecklistTemplateCreateNestedManyWithoutTitleLockedFromStageInput
+    titleStageRates?: TitleStageRateCreateNestedManyWithoutStatusInput
   }
 
   export type TaskStatusUncheckedCreateWithoutVisibleFromItemsInput = {
@@ -96573,6 +104818,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
     titleLockTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutTitleLockedFromStageInput
+    titleStageRates?: TitleStageRateUncheckedCreateNestedManyWithoutStatusInput
   }
 
   export type TaskStatusCreateOrConnectWithoutVisibleFromItemsInput = {
@@ -96591,6 +104837,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
     lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
     titleLockTemplates?: ChecklistTemplateCreateNestedManyWithoutTitleLockedFromStageInput
+    titleStageRates?: TitleStageRateCreateNestedManyWithoutStatusInput
   }
 
   export type TaskStatusUncheckedCreateWithoutRequiredBeforeItemsInput = {
@@ -96604,6 +104851,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
     lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
     titleLockTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutTitleLockedFromStageInput
+    titleStageRates?: TitleStageRateUncheckedCreateNestedManyWithoutStatusInput
   }
 
   export type TaskStatusCreateOrConnectWithoutRequiredBeforeItemsInput = {
@@ -96622,6 +104870,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
     titleLockTemplates?: ChecklistTemplateCreateNestedManyWithoutTitleLockedFromStageInput
+    titleStageRates?: TitleStageRateCreateNestedManyWithoutStatusInput
   }
 
   export type TaskStatusUncheckedCreateWithoutLockedFromItemsInput = {
@@ -96635,6 +104884,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutVisibleFromStageInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
     titleLockTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutTitleLockedFromStageInput
+    titleStageRates?: TitleStageRateUncheckedCreateNestedManyWithoutStatusInput
   }
 
   export type TaskStatusCreateOrConnectWithoutLockedFromItemsInput = {
@@ -96659,11 +104909,17 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
     completedAt?: Date | string | null
     completedBy?: string | null
+    effortQuantity?: number | null
+    effortRate?: number | null
+    effortMinutes?: number | null
+    effortLockedAt?: Date | string | null
     order?: number
     task: TaskCreateNestedOneWithoutChecklistItemsInput
   }
@@ -96686,11 +104942,17 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
     completedAt?: Date | string | null
     completedBy?: string | null
+    effortQuantity?: number | null
+    effortRate?: number | null
+    effortMinutes?: number | null
+    effortLockedAt?: Date | string | null
     order?: number
   }
 
@@ -96701,6 +104963,28 @@ export namespace Prisma {
 
   export type TaskChecklistItemCreateManyTemplateItemInputEnvelope = {
     data: TaskChecklistItemCreateManyTemplateItemInput | TaskChecklistItemCreateManyTemplateItemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TitleFieldRateCreateWithoutTemplateItemInput = {
+    id?: string
+    minutesPerUnit: number
+    title: TitleCreateNestedOneWithoutFieldRatesInput
+  }
+
+  export type TitleFieldRateUncheckedCreateWithoutTemplateItemInput = {
+    id?: string
+    titleId: string
+    minutesPerUnit: number
+  }
+
+  export type TitleFieldRateCreateOrConnectWithoutTemplateItemInput = {
+    where: TitleFieldRateWhereUniqueInput
+    create: XOR<TitleFieldRateCreateWithoutTemplateItemInput, TitleFieldRateUncheckedCreateWithoutTemplateItemInput>
+  }
+
+  export type TitleFieldRateCreateManyTemplateItemInputEnvelope = {
+    data: TitleFieldRateCreateManyTemplateItemInput | TitleFieldRateCreateManyTemplateItemInput[]
     skipDuplicates?: boolean
   }
 
@@ -96729,8 +105013,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
     titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
+    sections?: ChecklistSectionUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
     weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUpdateManyWithoutTemplateNestedInput
     weeklySlots?: WeeklySlotUpdateManyWithoutTemplateNestedInput
   }
 
@@ -96748,9 +105034,40 @@ export namespace Prisma {
     titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sections?: ChecklistSectionUncheckedUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
     weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutTemplateNestedInput
     weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput
+  }
+
+  export type ChecklistSectionUpsertWithoutItemsInput = {
+    update: XOR<ChecklistSectionUpdateWithoutItemsInput, ChecklistSectionUncheckedUpdateWithoutItemsInput>
+    create: XOR<ChecklistSectionCreateWithoutItemsInput, ChecklistSectionUncheckedCreateWithoutItemsInput>
+    where?: ChecklistSectionWhereInput
+  }
+
+  export type ChecklistSectionUpdateToOneWithWhereWithoutItemsInput = {
+    where?: ChecklistSectionWhereInput
+    data: XOR<ChecklistSectionUpdateWithoutItemsInput, ChecklistSectionUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type ChecklistSectionUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phase?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    template?: ChecklistTemplateUpdateOneRequiredWithoutSectionsNestedInput
+  }
+
+  export type ChecklistSectionUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phase?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskStatusUpsertWithoutVisibleFromItemsInput = {
@@ -96775,6 +105092,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
     titleLockTemplates?: ChecklistTemplateUpdateManyWithoutTitleLockedFromStageNestedInput
+    titleStageRates?: TitleStageRateUpdateManyWithoutStatusNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutVisibleFromItemsInput = {
@@ -96788,6 +105106,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
     titleLockTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageNestedInput
+    titleStageRates?: TitleStageRateUncheckedUpdateManyWithoutStatusNestedInput
   }
 
   export type TaskStatusUpsertWithoutRequiredBeforeItemsInput = {
@@ -96812,6 +105131,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
     titleLockTemplates?: ChecklistTemplateUpdateManyWithoutTitleLockedFromStageNestedInput
+    titleStageRates?: TitleStageRateUpdateManyWithoutStatusNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutRequiredBeforeItemsInput = {
@@ -96825,6 +105145,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
     titleLockTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageNestedInput
+    titleStageRates?: TitleStageRateUncheckedUpdateManyWithoutStatusNestedInput
   }
 
   export type TaskStatusUpsertWithoutLockedFromItemsInput = {
@@ -96849,6 +105170,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
     titleLockTemplates?: ChecklistTemplateUpdateManyWithoutTitleLockedFromStageNestedInput
+    titleStageRates?: TitleStageRateUpdateManyWithoutStatusNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutLockedFromItemsInput = {
@@ -96862,6 +105184,7 @@ export namespace Prisma {
     visibleFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageNestedInput
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
     titleLockTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageNestedInput
+    titleStageRates?: TitleStageRateUncheckedUpdateManyWithoutStatusNestedInput
   }
 
   export type TaskChecklistItemUpsertWithWhereUniqueWithoutTemplateItemInput = {
@@ -96902,12 +105225,34 @@ export namespace Prisma {
     neverLock?: BoolFilter<"TaskChecklistItem"> | boolean
     publishCard?: StringFilter<"TaskChecklistItem"> | string
     hidden?: BoolFilter<"TaskChecklistItem"> | boolean
+    effortUnit?: StringNullableFilter<"TaskChecklistItem"> | string | null
+    qtyPerVideoMinute?: FloatNullableFilter<"TaskChecklistItem"> | number | null
     completed?: BoolFilter<"TaskChecklistItem"> | boolean
     attachmentId?: StringNullableFilter<"TaskChecklistItem"> | string | null
     textValue?: StringNullableFilter<"TaskChecklistItem"> | string | null
     completedAt?: DateTimeNullableFilter<"TaskChecklistItem"> | Date | string | null
     completedBy?: StringNullableFilter<"TaskChecklistItem"> | string | null
+    effortQuantity?: FloatNullableFilter<"TaskChecklistItem"> | number | null
+    effortRate?: FloatNullableFilter<"TaskChecklistItem"> | number | null
+    effortMinutes?: FloatNullableFilter<"TaskChecklistItem"> | number | null
+    effortLockedAt?: DateTimeNullableFilter<"TaskChecklistItem"> | Date | string | null
     order?: IntFilter<"TaskChecklistItem"> | number
+  }
+
+  export type TitleFieldRateUpsertWithWhereUniqueWithoutTemplateItemInput = {
+    where: TitleFieldRateWhereUniqueInput
+    update: XOR<TitleFieldRateUpdateWithoutTemplateItemInput, TitleFieldRateUncheckedUpdateWithoutTemplateItemInput>
+    create: XOR<TitleFieldRateCreateWithoutTemplateItemInput, TitleFieldRateUncheckedCreateWithoutTemplateItemInput>
+  }
+
+  export type TitleFieldRateUpdateWithWhereUniqueWithoutTemplateItemInput = {
+    where: TitleFieldRateWhereUniqueInput
+    data: XOR<TitleFieldRateUpdateWithoutTemplateItemInput, TitleFieldRateUncheckedUpdateWithoutTemplateItemInput>
+  }
+
+  export type TitleFieldRateUpdateManyWithWhereWithoutTemplateItemInput = {
+    where: TitleFieldRateScalarWhereInput
+    data: XOR<TitleFieldRateUpdateManyMutationInput, TitleFieldRateUncheckedUpdateManyWithoutTemplateItemInput>
   }
 
   export type ProjectCreateWithoutProjectTemplatesInput = {
@@ -96996,7 +105341,9 @@ export namespace Prisma {
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
     titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
     items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
+    sections?: ChecklistSectionCreateNestedManyWithoutTemplateInput
     weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput
+    tasks?: TaskCreateNestedManyWithoutTemplateInput
     weeklySlots?: WeeklySlotCreateNestedManyWithoutTemplateInput
   }
 
@@ -97015,7 +105362,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
+    sections?: ChecklistSectionUncheckedCreateNestedManyWithoutTemplateInput
     weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutTemplateInput
     weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput
   }
 
@@ -97127,7 +105476,9 @@ export namespace Prisma {
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
     titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
     items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
+    sections?: ChecklistSectionUpdateManyWithoutTemplateNestedInput
     weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUpdateManyWithoutTemplateNestedInput
     weeklySlots?: WeeklySlotUpdateManyWithoutTemplateNestedInput
   }
 
@@ -97146,7 +105497,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
+    sections?: ChecklistSectionUncheckedUpdateManyWithoutTemplateNestedInput
     weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutTemplateNestedInput
     weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
@@ -97160,6 +105513,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -97174,6 +105528,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
+    template?: ChecklistTemplateCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     comments?: MessageCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
@@ -97188,6 +105543,7 @@ export namespace Prisma {
     serviceId?: string | null
     statusId?: string | null
     assigneeId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -97195,6 +105551,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -97231,11 +105588,15 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
+    section?: ChecklistSectionCreateNestedOneWithoutItemsInput
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
     requiredBeforeStage?: TaskStatusCreateNestedOneWithoutRequiredBeforeItemsInput
     lockedFromStage?: TaskStatusCreateNestedOneWithoutLockedFromItemsInput
+    titleRates?: TitleFieldRateCreateNestedManyWithoutTemplateItemInput
   }
 
   export type ChecklistTemplateItemUncheckedCreateWithoutTaskItemsInput = {
@@ -97250,13 +105611,17 @@ export namespace Prisma {
     aspectRatio?: string | null
     mandatory?: boolean
     phase?: string
+    sectionId?: string | null
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
+    titleRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput
   }
 
   export type ChecklistTemplateItemCreateOrConnectWithoutTaskItemsInput = {
@@ -97285,6 +105650,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -97299,6 +105665,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
+    template?: ChecklistTemplateUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
@@ -97313,6 +105680,7 @@ export namespace Prisma {
     serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -97320,6 +105688,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -97362,11 +105731,15 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
+    section?: ChecklistSectionUpdateOneWithoutItemsNestedInput
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
     requiredBeforeStage?: TaskStatusUpdateOneWithoutRequiredBeforeItemsNestedInput
     lockedFromStage?: TaskStatusUpdateOneWithoutLockedFromItemsNestedInput
+    titleRates?: TitleFieldRateUpdateManyWithoutTemplateItemNestedInput
   }
 
   export type ChecklistTemplateItemUncheckedUpdateWithoutTaskItemsInput = {
@@ -97381,13 +105754,17 @@ export namespace Prisma {
     aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
+    titleRates?: TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
 
   export type WorkspaceCreateWithoutTaskStatusesInput = {
@@ -97417,6 +105794,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -97452,6 +105830,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -97475,6 +105854,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -97488,6 +105868,7 @@ export namespace Prisma {
     deletedBy?: string | null
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
+    template?: ChecklistTemplateCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
@@ -97502,6 +105883,7 @@ export namespace Prisma {
     taskNumber?: number
     serviceId?: string | null
     assigneeId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -97509,6 +105891,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -97551,11 +105934,15 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
+    section?: ChecklistSectionCreateNestedOneWithoutItemsInput
     requiredBeforeStage?: TaskStatusCreateNestedOneWithoutRequiredBeforeItemsInput
     lockedFromStage?: TaskStatusCreateNestedOneWithoutLockedFromItemsInput
     taskItems?: TaskChecklistItemCreateNestedManyWithoutTemplateItemInput
+    titleRates?: TitleFieldRateCreateNestedManyWithoutTemplateItemInput
   }
 
   export type ChecklistTemplateItemUncheckedCreateWithoutVisibleFromStageInput = {
@@ -97570,13 +105957,17 @@ export namespace Prisma {
     aspectRatio?: string | null
     mandatory?: boolean
     phase?: string
+    sectionId?: string | null
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
+    titleRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput
   }
 
   export type ChecklistTemplateItemCreateOrConnectWithoutVisibleFromStageInput = {
@@ -97603,11 +105994,15 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
+    section?: ChecklistSectionCreateNestedOneWithoutItemsInput
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
     lockedFromStage?: TaskStatusCreateNestedOneWithoutLockedFromItemsInput
     taskItems?: TaskChecklistItemCreateNestedManyWithoutTemplateItemInput
+    titleRates?: TitleFieldRateCreateNestedManyWithoutTemplateItemInput
   }
 
   export type ChecklistTemplateItemUncheckedCreateWithoutRequiredBeforeStageInput = {
@@ -97622,13 +106017,17 @@ export namespace Prisma {
     aspectRatio?: string | null
     mandatory?: boolean
     phase?: string
+    sectionId?: string | null
     visibleFromStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
+    titleRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput
   }
 
   export type ChecklistTemplateItemCreateOrConnectWithoutRequiredBeforeStageInput = {
@@ -97655,11 +106054,15 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
     template: ChecklistTemplateCreateNestedOneWithoutItemsInput
+    section?: ChecklistSectionCreateNestedOneWithoutItemsInput
     visibleFromStage?: TaskStatusCreateNestedOneWithoutVisibleFromItemsInput
     requiredBeforeStage?: TaskStatusCreateNestedOneWithoutRequiredBeforeItemsInput
     taskItems?: TaskChecklistItemCreateNestedManyWithoutTemplateItemInput
+    titleRates?: TitleFieldRateCreateNestedManyWithoutTemplateItemInput
   }
 
   export type ChecklistTemplateItemUncheckedCreateWithoutLockedFromStageInput = {
@@ -97674,13 +106077,17 @@ export namespace Prisma {
     aspectRatio?: string | null
     mandatory?: boolean
     phase?: string
+    sectionId?: string | null
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
     taskItems?: TaskChecklistItemUncheckedCreateNestedManyWithoutTemplateItemInput
+    titleRates?: TitleFieldRateUncheckedCreateNestedManyWithoutTemplateItemInput
   }
 
   export type ChecklistTemplateItemCreateOrConnectWithoutLockedFromStageInput = {
@@ -97707,8 +106114,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
     items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
+    sections?: ChecklistSectionCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
     weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput
+    tasks?: TaskCreateNestedManyWithoutTemplateInput
     weeklySlots?: WeeklySlotCreateNestedManyWithoutTemplateInput
   }
 
@@ -97726,8 +106135,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
+    sections?: ChecklistSectionUncheckedCreateNestedManyWithoutTemplateInput
     projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
     weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutTemplateInput
     weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput
   }
 
@@ -97738,6 +106149,28 @@ export namespace Prisma {
 
   export type ChecklistTemplateCreateManyTitleLockedFromStageInputEnvelope = {
     data: ChecklistTemplateCreateManyTitleLockedFromStageInput | ChecklistTemplateCreateManyTitleLockedFromStageInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TitleStageRateCreateWithoutStatusInput = {
+    id?: string
+    minutesPerPass: number
+    title: TitleCreateNestedOneWithoutStageRatesInput
+  }
+
+  export type TitleStageRateUncheckedCreateWithoutStatusInput = {
+    id?: string
+    titleId: string
+    minutesPerPass: number
+  }
+
+  export type TitleStageRateCreateOrConnectWithoutStatusInput = {
+    where: TitleStageRateWhereUniqueInput
+    create: XOR<TitleStageRateCreateWithoutStatusInput, TitleStageRateUncheckedCreateWithoutStatusInput>
+  }
+
+  export type TitleStageRateCreateManyStatusInputEnvelope = {
+    data: TitleStageRateCreateManyStatusInput | TitleStageRateCreateManyStatusInput[]
     skipDuplicates?: boolean
   }
 
@@ -97779,6 +106212,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -97814,6 +106248,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -97900,6 +106335,22 @@ export namespace Prisma {
   export type ChecklistTemplateUpdateManyWithWhereWithoutTitleLockedFromStageInput = {
     where: ChecklistTemplateScalarWhereInput
     data: XOR<ChecklistTemplateUpdateManyMutationInput, ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageInput>
+  }
+
+  export type TitleStageRateUpsertWithWhereUniqueWithoutStatusInput = {
+    where: TitleStageRateWhereUniqueInput
+    update: XOR<TitleStageRateUpdateWithoutStatusInput, TitleStageRateUncheckedUpdateWithoutStatusInput>
+    create: XOR<TitleStageRateCreateWithoutStatusInput, TitleStageRateUncheckedCreateWithoutStatusInput>
+  }
+
+  export type TitleStageRateUpdateWithWhereUniqueWithoutStatusInput = {
+    where: TitleStageRateWhereUniqueInput
+    data: XOR<TitleStageRateUpdateWithoutStatusInput, TitleStageRateUncheckedUpdateWithoutStatusInput>
+  }
+
+  export type TitleStageRateUpdateManyWithWhereWithoutStatusInput = {
+    where: TitleStageRateScalarWhereInput
+    data: XOR<TitleStageRateUpdateManyMutationInput, TitleStageRateUncheckedUpdateManyWithoutStatusInput>
   }
 
   export type ProjectCreateWithoutTasksInput = {
@@ -98019,6 +106470,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemCreateNestedManyWithoutLockedFromStageInput
     titleLockTemplates?: ChecklistTemplateCreateNestedManyWithoutTitleLockedFromStageInput
+    titleStageRates?: TitleStageRateCreateNestedManyWithoutStatusInput
   }
 
   export type TaskStatusUncheckedCreateWithoutTasksInput = {
@@ -98032,11 +106484,59 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutRequiredBeforeStageInput
     lockedFromItems?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutLockedFromStageInput
     titleLockTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutTitleLockedFromStageInput
+    titleStageRates?: TitleStageRateUncheckedCreateNestedManyWithoutStatusInput
   }
 
   export type TaskStatusCreateOrConnectWithoutTasksInput = {
     where: TaskStatusWhereUniqueInput
     create: XOR<TaskStatusCreateWithoutTasksInput, TaskStatusUncheckedCreateWithoutTasksInput>
+  }
+
+  export type ChecklistTemplateCreateWithoutTasksInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    color?: string | null
+    description?: string | null
+    publishToCalendar?: boolean
+    titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutChecklistTemplatesInput
+    titleLockedFromStage?: TaskStatusCreateNestedOneWithoutTitleLockTemplatesInput
+    items?: ChecklistTemplateItemCreateNestedManyWithoutTemplateInput
+    sections?: ChecklistSectionCreateNestedManyWithoutTemplateInput
+    projects?: ProjectTemplateCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotCreateNestedManyWithoutTemplateInput
+  }
+
+  export type ChecklistTemplateUncheckedCreateWithoutTasksInput = {
+    id?: string
+    workspaceId: string
+    name: string
+    icon?: string | null
+    color?: string | null
+    description?: string | null
+    publishToCalendar?: boolean
+    titleLockedFromStageId?: string | null
+    titleNeverLock?: boolean
+    titleLabel?: string | null
+    titleHelp?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: ChecklistTemplateItemUncheckedCreateNestedManyWithoutTemplateInput
+    sections?: ChecklistSectionUncheckedCreateNestedManyWithoutTemplateInput
+    projects?: ProjectTemplateUncheckedCreateNestedManyWithoutTemplateInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedCreateNestedManyWithoutTemplateInput
+    weeklySlots?: WeeklySlotUncheckedCreateNestedManyWithoutTemplateInput
+  }
+
+  export type ChecklistTemplateCreateOrConnectWithoutTasksInput = {
+    where: ChecklistTemplateWhereUniqueInput
+    create: XOR<ChecklistTemplateCreateWithoutTasksInput, ChecklistTemplateUncheckedCreateWithoutTasksInput>
   }
 
   export type WorkspaceMemberCreateWithoutAssignedTasksInput = {
@@ -98046,9 +106546,11 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
     reactions?: MessageReactionCreateNestedManyWithoutMemberInput
@@ -98071,6 +106573,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
     mentionedIn?: MessageMentionUncheckedCreateNestedManyWithoutMemberInput
@@ -98107,11 +106611,17 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
     completedAt?: Date | string | null
     completedBy?: string | null
+    effortQuantity?: number | null
+    effortRate?: number | null
+    effortMinutes?: number | null
+    effortLockedAt?: Date | string | null
     order?: number
     templateItem?: ChecklistTemplateItemCreateNestedOneWithoutTaskItemsInput
   }
@@ -98134,11 +106644,17 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
     completedAt?: Date | string | null
     completedBy?: string | null
+    effortQuantity?: number | null
+    effortRate?: number | null
+    effortMinutes?: number | null
+    effortLockedAt?: Date | string | null
     order?: number
   }
 
@@ -98420,6 +106936,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
     titleLockTemplates?: ChecklistTemplateUpdateManyWithoutTitleLockedFromStageNestedInput
+    titleStageRates?: TitleStageRateUpdateManyWithoutStatusNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutTasksInput = {
@@ -98433,6 +106950,60 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
     titleLockTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageNestedInput
+    titleStageRates?: TitleStageRateUncheckedUpdateManyWithoutStatusNestedInput
+  }
+
+  export type ChecklistTemplateUpsertWithoutTasksInput = {
+    update: XOR<ChecklistTemplateUpdateWithoutTasksInput, ChecklistTemplateUncheckedUpdateWithoutTasksInput>
+    create: XOR<ChecklistTemplateCreateWithoutTasksInput, ChecklistTemplateUncheckedCreateWithoutTasksInput>
+    where?: ChecklistTemplateWhereInput
+  }
+
+  export type ChecklistTemplateUpdateToOneWithWhereWithoutTasksInput = {
+    where?: ChecklistTemplateWhereInput
+    data: XOR<ChecklistTemplateUpdateWithoutTasksInput, ChecklistTemplateUncheckedUpdateWithoutTasksInput>
+  }
+
+  export type ChecklistTemplateUpdateWithoutTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
+    titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
+    items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
+    sections?: ChecklistSectionUpdateManyWithoutTemplateNestedInput
+    projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUpdateManyWithoutTemplateNestedInput
+  }
+
+  export type ChecklistTemplateUncheckedUpdateWithoutTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    publishToCalendar?: BoolFieldUpdateOperationsInput | boolean
+    titleLockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleNeverLock?: BoolFieldUpdateOperationsInput | boolean
+    titleLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
+    sections?: ChecklistSectionUncheckedUpdateManyWithoutTemplateNestedInput
+    projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput
+    weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
   export type WorkspaceMemberUpsertWithoutAssignedTasksInput = {
@@ -98453,9 +107024,11 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
     reactions?: MessageReactionUpdateManyWithoutMemberNestedInput
@@ -98478,6 +107051,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
     mentionedIn?: MessageMentionUncheckedUpdateManyWithoutMemberNestedInput
@@ -98618,6 +107193,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -98632,6 +107208,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
+    template?: ChecklistTemplateCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
@@ -98646,6 +107223,7 @@ export namespace Prisma {
     serviceId?: string | null
     statusId?: string | null
     assigneeId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -98653,6 +107231,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -98682,9 +107261,11 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
@@ -98707,6 +107288,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -98747,6 +107330,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -98761,6 +107345,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
+    template?: ChecklistTemplateUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
@@ -98775,6 +107360,7 @@ export namespace Prisma {
     serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -98782,6 +107368,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -98817,9 +107404,11 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
@@ -98842,6 +107431,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -98866,6 +107457,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -98880,6 +107472,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
+    template?: ChecklistTemplateCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     publishItem?: PublishItemCreateNestedOneWithoutTaskInput
@@ -98894,6 +107487,7 @@ export namespace Prisma {
     serviceId?: string | null
     statusId?: string | null
     assigneeId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -98901,6 +107495,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -99026,9 +107621,11 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
     reactions?: MessageReactionCreateNestedManyWithoutMemberInput
@@ -99051,6 +107648,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     mentionedIn?: MessageMentionUncheckedCreateNestedManyWithoutMemberInput
@@ -99135,6 +107734,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -99149,6 +107749,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
+    template?: ChecklistTemplateUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
@@ -99163,6 +107764,7 @@ export namespace Prisma {
     serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -99170,6 +107772,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -99313,9 +107916,11 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
     reactions?: MessageReactionUpdateManyWithoutMemberNestedInput
@@ -99338,6 +107943,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     mentionedIn?: MessageMentionUncheckedUpdateManyWithoutMemberNestedInput
@@ -99424,9 +108031,11 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
@@ -99449,6 +108058,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -99525,9 +108136,11 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
@@ -99550,6 +108163,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -99604,9 +108219,11 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     reactions?: MessageReactionCreateNestedManyWithoutMemberInput
@@ -99629,6 +108246,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -99705,9 +108324,11 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     reactions?: MessageReactionUpdateManyWithoutMemberNestedInput
@@ -99730,6 +108351,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -99772,6 +108395,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -99807,6 +108431,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -99920,6 +108545,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -99955,6 +108581,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -100026,9 +108653,11 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
@@ -100051,6 +108680,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -100119,9 +108750,11 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
@@ -100144,6 +108777,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -100165,9 +108800,11 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
@@ -100190,6 +108827,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -100227,9 +108866,11 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
@@ -100252,6 +108893,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -100273,9 +108916,11 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
@@ -100298,6 +108943,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -100335,9 +108982,11 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
@@ -100360,6 +109009,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -100401,6 +109052,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -100436,6 +109088,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -100748,6 +109401,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -100783,6 +109437,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -101071,6 +109726,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -101106,6 +109762,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -101222,6 +109879,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -101257,6 +109915,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -101499,6 +110158,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -101534,6 +110194,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -101585,6 +110246,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -101620,6 +110282,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -101655,6 +110318,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -101690,6 +110354,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -101741,6 +110406,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -101776,6 +110442,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -101923,6 +110590,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -101958,6 +110626,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -102009,6 +110678,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -102044,6 +110714,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -102079,6 +110750,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -102114,6 +110786,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -102165,6 +110838,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -102200,6 +110874,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -102235,6 +110910,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -102270,6 +110946,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -102321,6 +110998,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -102356,6 +111034,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -102391,6 +111070,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -102426,6 +111106,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -102477,6 +111158,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -102512,6 +111194,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -102548,6 +111231,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
@@ -102583,6 +111267,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -102634,6 +111319,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
@@ -102669,6 +111355,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -102704,6 +111391,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
@@ -102739,6 +111427,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -102832,6 +111521,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -102846,6 +111536,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutTasksInput
     service?: ServiceCreateNestedOneWithoutTasksInput
     status?: TaskStatusCreateNestedOneWithoutTasksInput
+    template?: ChecklistTemplateCreateNestedOneWithoutTasksInput
     assignee?: WorkspaceMemberCreateNestedOneWithoutAssignedTasksInput
     checklistItems?: TaskChecklistItemCreateNestedManyWithoutTaskInput
     comments?: MessageCreateNestedManyWithoutTaskInput
@@ -102860,6 +111551,7 @@ export namespace Prisma {
     serviceId?: string | null
     statusId?: string | null
     assigneeId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -102867,6 +111559,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -102896,9 +111589,11 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    weeklyHours?: number
     joinedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     role?: RoleCreateNestedOneWithoutMembersInput
+    capacityTitle?: TitleCreateNestedOneWithoutMembersInput
     assignedTasks?: TaskCreateNestedManyWithoutAssigneeInput
     messages?: MessageCreateNestedManyWithoutAuthorInput
     mentionedIn?: MessageMentionCreateNestedManyWithoutMemberInput
@@ -102921,6 +111616,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
     assignedTasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput
@@ -102979,6 +111676,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
@@ -103014,6 +111712,7 @@ export namespace Prisma {
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -103119,6 +111818,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -103133,6 +111833,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
+    template?: ChecklistTemplateUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
@@ -103147,6 +111848,7 @@ export namespace Prisma {
     serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -103154,6 +111856,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -103189,9 +111892,11 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     role?: RoleUpdateOneWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
@@ -103214,6 +111919,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -103236,6 +111943,8 @@ export namespace Prisma {
     imageUrl?: string | null
     type?: $Enums.MemberType
     roleId?: string | null
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
   }
 
@@ -103466,6 +112175,12 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type TitleCreateManyWorkspaceInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+  }
+
   export type CurrencyCreateManyWorkspaceInput = {
     id?: string
     code: string
@@ -103492,6 +112207,7 @@ export namespace Prisma {
     name: string
     sizeBytes?: number | null
     contentType?: string | null
+    durationSec?: number | null
     r2Key?: string | null
     status?: string
     uploadId?: string | null
@@ -103544,8 +112260,10 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: RoleUpdateOneWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
@@ -103568,6 +112286,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -103591,6 +112311,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -104236,6 +112958,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUpdateManyWithoutLockedFromStageNestedInput
     titleLockTemplates?: ChecklistTemplateUpdateManyWithoutTitleLockedFromStageNestedInput
+    titleStageRates?: TitleStageRateUpdateManyWithoutStatusNestedInput
   }
 
   export type TaskStatusUncheckedUpdateWithoutWorkspaceInput = {
@@ -104249,6 +112972,7 @@ export namespace Prisma {
     requiredBeforeItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageNestedInput
     lockedFromItems?: ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageNestedInput
     titleLockTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutTitleLockedFromStageNestedInput
+    titleStageRates?: TitleStageRateUncheckedUpdateManyWithoutStatusNestedInput
   }
 
   export type TaskStatusUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -104347,6 +113071,30 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TitleUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutCapacityTitleNestedInput
+    fieldRates?: TitleFieldRateUpdateManyWithoutTitleNestedInput
+    stageRates?: TitleStageRateUpdateManyWithoutTitleNestedInput
+  }
+
+  export type TitleUncheckedUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutCapacityTitleNestedInput
+    fieldRates?: TitleFieldRateUncheckedUpdateManyWithoutTitleNestedInput
+    stageRates?: TitleStageRateUncheckedUpdateManyWithoutTitleNestedInput
+  }
+
+  export type TitleUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CurrencyUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
@@ -104411,6 +113159,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
     contentType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSec?: NullableFloatFieldUpdateOperationsInput | number | null
     r2Key?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     uploadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -104427,6 +113176,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
     contentType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSec?: NullableFloatFieldUpdateOperationsInput | number | null
     r2Key?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     uploadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -104443,6 +113193,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
     contentType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSec?: NullableFloatFieldUpdateOperationsInput | number | null
     r2Key?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     uploadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -104466,8 +113217,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     titleLockedFromStage?: TaskStatusUpdateOneWithoutTitleLockTemplatesNestedInput
     items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
+    sections?: ChecklistSectionUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
     weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUpdateManyWithoutTemplateNestedInput
     weeklySlots?: WeeklySlotUpdateManyWithoutTemplateNestedInput
   }
 
@@ -104485,8 +113238,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
+    sections?: ChecklistSectionUncheckedUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
     weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutTemplateNestedInput
     weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
@@ -104578,6 +113333,7 @@ export namespace Prisma {
     taskNumber?: number
     serviceId?: string | null
     statusId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -104585,6 +113341,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -104713,6 +113470,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -104727,6 +113485,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
+    template?: ChecklistTemplateUpdateOneWithoutTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
     publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
@@ -104740,6 +113499,7 @@ export namespace Prisma {
     taskNumber?: IntFieldUpdateOperationsInput | number
     serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -104747,6 +113507,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -104771,6 +113532,7 @@ export namespace Prisma {
     taskNumber?: IntFieldUpdateOperationsInput | number
     serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -104778,6 +113540,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -105118,6 +113881,8 @@ export namespace Prisma {
     name?: string | null
     imageUrl?: string | null
     type?: $Enums.MemberType
+    titleId?: string | null
+    weeklyHours?: number
     joinedAt?: Date | string
   }
 
@@ -105135,8 +113900,10 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
+    capacityTitle?: TitleUpdateOneWithoutMembersNestedInput
     assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUpdateManyWithoutAuthorNestedInput
     mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
@@ -105159,6 +113926,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
@@ -105182,6 +113951,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    titleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -105204,6 +113975,130 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     memberId?: StringFieldUpdateOperationsInput | string
     addedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceMemberCreateManyCapacityTitleInput = {
+    id?: string
+    workspaceId: string
+    userId: string
+    email: string
+    name?: string | null
+    imageUrl?: string | null
+    type?: $Enums.MemberType
+    roleId?: string | null
+    weeklyHours?: number
+    joinedAt?: Date | string
+  }
+
+  export type TitleFieldRateCreateManyTitleInput = {
+    id?: string
+    templateItemId: string
+    minutesPerUnit: number
+  }
+
+  export type TitleStageRateCreateManyTitleInput = {
+    id?: string
+    statusId: string
+    minutesPerPass: number
+  }
+
+  export type WorkspaceMemberUpdateWithoutCapacityTitleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
+    role?: RoleUpdateOneWithoutMembersNestedInput
+    assignedTasks?: TaskUpdateManyWithoutAssigneeNestedInput
+    messages?: MessageUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUpdateManyWithoutMemberNestedInput
+    reactions?: MessageReactionUpdateManyWithoutMemberNestedInput
+    notifications?: NotificationUpdateManyWithoutRecipientNestedInput
+    pushSubscriptions?: PushSubscriptionUpdateManyWithoutMemberNestedInput
+    scheduledItems?: PublishItemUpdateManyWithoutSchedulerNestedInput
+    projectMemberships?: ProjectMemberUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUpdateManyWithoutMemberNestedInput
+    responsibleWeeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutResponsibleMemberNestedInput
+    assignedWeeklySlots?: WeeklySlotUpdateManyWithoutAssigneeNestedInput
+  }
+
+  export type WorkspaceMemberUncheckedUpdateWithoutCapacityTitleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedTasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutAuthorNestedInput
+    mentionedIn?: MessageMentionUncheckedUpdateManyWithoutMemberNestedInput
+    reactions?: MessageReactionUncheckedUpdateManyWithoutMemberNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+    pushSubscriptions?: PushSubscriptionUncheckedUpdateManyWithoutMemberNestedInput
+    scheduledItems?: PublishItemUncheckedUpdateManyWithoutSchedulerNestedInput
+    projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutMemberNestedInput
+    conversations?: ConversationParticipantUncheckedUpdateManyWithoutMemberNestedInput
+    responsibleWeeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutResponsibleMemberNestedInput
+    assignedWeeklySlots?: WeeklySlotUncheckedUpdateManyWithoutAssigneeNestedInput
+  }
+
+  export type WorkspaceMemberUncheckedUpdateManyWithoutCapacityTitleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumMemberTypeFieldUpdateOperationsInput | $Enums.MemberType
+    roleId?: NullableStringFieldUpdateOperationsInput | string | null
+    weeklyHours?: FloatFieldUpdateOperationsInput | number
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TitleFieldRateUpdateWithoutTitleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    minutesPerUnit?: FloatFieldUpdateOperationsInput | number
+    templateItem?: ChecklistTemplateItemUpdateOneRequiredWithoutTitleRatesNestedInput
+  }
+
+  export type TitleFieldRateUncheckedUpdateWithoutTitleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateItemId?: StringFieldUpdateOperationsInput | string
+    minutesPerUnit?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type TitleFieldRateUncheckedUpdateManyWithoutTitleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateItemId?: StringFieldUpdateOperationsInput | string
+    minutesPerUnit?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type TitleStageRateUpdateWithoutTitleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    minutesPerPass?: FloatFieldUpdateOperationsInput | number
+    status?: TaskStatusUpdateOneRequiredWithoutTitleStageRatesNestedInput
+  }
+
+  export type TitleStageRateUncheckedUpdateWithoutTitleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    statusId?: StringFieldUpdateOperationsInput | string
+    minutesPerPass?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type TitleStageRateUncheckedUpdateManyWithoutTitleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    statusId?: StringFieldUpdateOperationsInput | string
+    minutesPerPass?: FloatFieldUpdateOperationsInput | number
   }
 
   export type ContactCompanyCreateManyCompanyInput = {
@@ -105790,6 +114685,7 @@ export namespace Prisma {
     taskNumber?: number
     statusId?: string | null
     assigneeId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -105797,6 +114693,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -105844,6 +114741,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -105857,6 +114755,7 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
+    template?: ChecklistTemplateUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
@@ -105871,6 +114770,7 @@ export namespace Prisma {
     taskNumber?: IntFieldUpdateOperationsInput | number
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -105878,6 +114778,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -105902,6 +114803,7 @@ export namespace Prisma {
     taskNumber?: IntFieldUpdateOperationsInput | number
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -105909,6 +114811,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -106488,6 +115391,7 @@ export namespace Prisma {
     serviceId?: string | null
     statusId?: string | null
     assigneeId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -106495,6 +115399,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -106634,6 +115539,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -106647,6 +115553,7 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     service?: ServiceUpdateOneWithoutTasksNestedInput
     status?: TaskStatusUpdateOneWithoutTasksNestedInput
+    template?: ChecklistTemplateUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
@@ -106661,6 +115568,7 @@ export namespace Prisma {
     serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -106668,6 +115576,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -106692,6 +115601,7 @@ export namespace Prisma {
     serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     statusId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -106699,6 +115609,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -107175,13 +116086,24 @@ export namespace Prisma {
     aspectRatio?: string | null
     mandatory?: boolean
     phase?: string
+    sectionId?: string | null
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
+  }
+
+  export type ChecklistSectionCreateManyTemplateInput = {
+    id?: string
+    name: string
+    phase?: string
+    order?: number
+    createdAt?: Date | string
   }
 
   export type ProjectTemplateCreateManyTemplateInput = {
@@ -107198,6 +116120,34 @@ export namespace Prisma {
     endsOn?: Date | string | null
     neverExpires?: boolean
     responsibleMemberId?: string | null
+  }
+
+  export type TaskCreateManyTemplateInput = {
+    id?: string
+    projectId: string
+    taskNumber?: number
+    serviceId?: string | null
+    statusId?: string | null
+    assigneeId?: string | null
+    title: string
+    description?: string | null
+    billable?: boolean
+    price?: Decimal | DecimalJsLike | number | string | null
+    publish?: boolean
+    priority?: number | null
+    estimateMin?: number | null
+    plannedMinutes?: number | null
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: Date | string | null
+    rejectionCount?: number
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
   }
 
   export type WeeklySlotCreateManyTemplateInput = {
@@ -107224,11 +116174,15 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
+    section?: ChecklistSectionUpdateOneWithoutItemsNestedInput
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
     requiredBeforeStage?: TaskStatusUpdateOneWithoutRequiredBeforeItemsNestedInput
     lockedFromStage?: TaskStatusUpdateOneWithoutLockedFromItemsNestedInput
     taskItems?: TaskChecklistItemUpdateManyWithoutTemplateItemNestedInput
+    titleRates?: TitleFieldRateUpdateManyWithoutTemplateItemNestedInput
   }
 
   export type ChecklistTemplateItemUncheckedUpdateWithoutTemplateInput = {
@@ -107242,14 +116196,18 @@ export namespace Prisma {
     aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
+    titleRates?: TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
 
   export type ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateInput = {
@@ -107263,13 +116221,42 @@ export namespace Prisma {
     aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ChecklistSectionUpdateWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phase?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: ChecklistTemplateItemUpdateManyWithoutSectionNestedInput
+  }
+
+  export type ChecklistSectionUncheckedUpdateWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phase?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: ChecklistTemplateItemUncheckedUpdateManyWithoutSectionNestedInput
+  }
+
+  export type ChecklistSectionUncheckedUpdateManyWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phase?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectTemplateUpdateWithoutTemplateInput = {
@@ -107320,6 +116307,100 @@ export namespace Prisma {
     responsibleMemberId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type TaskUpdateWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskNumber?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
+    priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionCount?: IntFieldUpdateOperationsInput | number
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    service?: ServiceUpdateOneWithoutTasksNestedInput
+    status?: TaskStatusUpdateOneWithoutTasksNestedInput
+    assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
+    checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
+    comments?: MessageUpdateManyWithoutTaskNestedInput
+    publishItem?: PublishItemUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUpdateManyWithoutTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    taskNumber?: IntFieldUpdateOperationsInput | number
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    statusId?: NullableStringFieldUpdateOperationsInput | string | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
+    priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionCount?: IntFieldUpdateOperationsInput | number
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistItems?: TaskChecklistItemUncheckedUpdateManyWithoutTaskNestedInput
+    comments?: MessageUncheckedUpdateManyWithoutTaskNestedInput
+    publishItem?: PublishItemUncheckedUpdateOneWithoutTaskNestedInput
+    weeklySlot?: WeeklySlotUncheckedUpdateOneWithoutTaskNestedInput
+    statusChanges?: TaskStatusChangeUncheckedUpdateManyWithoutTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateManyWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    taskNumber?: IntFieldUpdateOperationsInput | number
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    statusId?: NullableStringFieldUpdateOperationsInput | string | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    publish?: BoolFieldUpdateOperationsInput | boolean
+    priority?: NullableIntFieldUpdateOperationsInput | number | null
+    estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
+    stageTimings?: NullableJsonNullValueInput | InputJsonValue
+    stageEnteredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionCount?: IntFieldUpdateOperationsInput | number
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type WeeklySlotUpdateWithoutTemplateInput = {
     id?: StringFieldUpdateOperationsInput | string
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -107350,6 +116431,102 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ChecklistTemplateItemCreateManySectionInput = {
+    id?: string
+    templateId: string
+    name: string
+    type?: string
+    role?: string
+    options?: string | null
+    allowedFileTypes?: string | null
+    allowedFormats?: string | null
+    aspectRatio?: string | null
+    mandatory?: boolean
+    phase?: string
+    visibleFromStageId?: string | null
+    requiredBeforeStageId?: string | null
+    lockedFromStageId?: string | null
+    neverLock?: boolean
+    publishCard?: string
+    hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
+    order?: number
+  }
+
+  export type ChecklistTemplateItemUpdateWithoutSectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    options?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFileTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFormats?: NullableStringFieldUpdateOperationsInput | string | null
+    aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
+    mandatory?: BoolFieldUpdateOperationsInput | boolean
+    phase?: StringFieldUpdateOperationsInput | string
+    neverLock?: BoolFieldUpdateOperationsInput | boolean
+    publishCard?: StringFieldUpdateOperationsInput | string
+    hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
+    order?: IntFieldUpdateOperationsInput | number
+    template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
+    visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
+    requiredBeforeStage?: TaskStatusUpdateOneWithoutRequiredBeforeItemsNestedInput
+    lockedFromStage?: TaskStatusUpdateOneWithoutLockedFromItemsNestedInput
+    taskItems?: TaskChecklistItemUpdateManyWithoutTemplateItemNestedInput
+    titleRates?: TitleFieldRateUpdateManyWithoutTemplateItemNestedInput
+  }
+
+  export type ChecklistTemplateItemUncheckedUpdateWithoutSectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    options?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFileTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFormats?: NullableStringFieldUpdateOperationsInput | string | null
+    aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
+    mandatory?: BoolFieldUpdateOperationsInput | boolean
+    phase?: StringFieldUpdateOperationsInput | string
+    visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    neverLock?: BoolFieldUpdateOperationsInput | boolean
+    publishCard?: StringFieldUpdateOperationsInput | string
+    hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
+    order?: IntFieldUpdateOperationsInput | number
+    taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
+    titleRates?: TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput
+  }
+
+  export type ChecklistTemplateItemUncheckedUpdateManyWithoutSectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    options?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFileTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedFormats?: NullableStringFieldUpdateOperationsInput | string | null
+    aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
+    mandatory?: BoolFieldUpdateOperationsInput | boolean
+    phase?: StringFieldUpdateOperationsInput | string
+    visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    neverLock?: BoolFieldUpdateOperationsInput | boolean
+    publishCard?: StringFieldUpdateOperationsInput | string
+    hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
+    order?: IntFieldUpdateOperationsInput | number
+  }
+
   export type TaskChecklistItemCreateManyTemplateItemInput = {
     id?: string
     taskId: string
@@ -107368,12 +116545,24 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
     completedAt?: Date | string | null
     completedBy?: string | null
+    effortQuantity?: number | null
+    effortRate?: number | null
+    effortMinutes?: number | null
+    effortLockedAt?: Date | string | null
     order?: number
+  }
+
+  export type TitleFieldRateCreateManyTemplateItemInput = {
+    id?: string
+    titleId: string
+    minutesPerUnit: number
   }
 
   export type TaskChecklistItemUpdateWithoutTemplateItemInput = {
@@ -107393,11 +116582,17 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    effortQuantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortLockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     order?: IntFieldUpdateOperationsInput | number
     task?: TaskUpdateOneRequiredWithoutChecklistItemsNestedInput
   }
@@ -107420,11 +116615,17 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    effortQuantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortLockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -107446,12 +116647,36 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    effortQuantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortLockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     order?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type TitleFieldRateUpdateWithoutTemplateItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    minutesPerUnit?: FloatFieldUpdateOperationsInput | number
+    title?: TitleUpdateOneRequiredWithoutFieldRatesNestedInput
+  }
+
+  export type TitleFieldRateUncheckedUpdateWithoutTemplateItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    titleId?: StringFieldUpdateOperationsInput | string
+    minutesPerUnit?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type TitleFieldRateUncheckedUpdateManyWithoutTemplateItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    titleId?: StringFieldUpdateOperationsInput | string
+    minutesPerUnit?: FloatFieldUpdateOperationsInput | number
   }
 
   export type TaskCreateManyStatusInput = {
@@ -107460,6 +116685,7 @@ export namespace Prisma {
     taskNumber?: number
     serviceId?: string | null
     assigneeId?: string | null
+    templateId?: string | null
     title: string
     description?: string | null
     billable?: boolean
@@ -107467,6 +116693,7 @@ export namespace Prisma {
     publish?: boolean
     priority?: number | null
     estimateMin?: number | null
+    plannedMinutes?: number | null
     dueDate?: Date | string | null
     completedAt?: Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -107492,11 +116719,14 @@ export namespace Prisma {
     aspectRatio?: string | null
     mandatory?: boolean
     phase?: string
+    sectionId?: string | null
     requiredBeforeStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
   }
 
@@ -107512,11 +116742,14 @@ export namespace Prisma {
     aspectRatio?: string | null
     mandatory?: boolean
     phase?: string
+    sectionId?: string | null
     visibleFromStageId?: string | null
     lockedFromStageId?: string | null
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
   }
 
@@ -107532,11 +116765,14 @@ export namespace Prisma {
     aspectRatio?: string | null
     mandatory?: boolean
     phase?: string
+    sectionId?: string | null
     visibleFromStageId?: string | null
     requiredBeforeStageId?: string | null
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     order?: number
   }
 
@@ -107555,6 +116791,12 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type TitleStageRateCreateManyStatusInput = {
+    id?: string
+    titleId: string
+    minutesPerPass: number
+  }
+
   export type TaskUpdateWithoutStatusInput = {
     id?: StringFieldUpdateOperationsInput | string
     taskNumber?: IntFieldUpdateOperationsInput | number
@@ -107565,6 +116807,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -107578,6 +116821,7 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     service?: ServiceUpdateOneWithoutTasksNestedInput
+    template?: ChecklistTemplateUpdateOneWithoutTasksNestedInput
     assignee?: WorkspaceMemberUpdateOneWithoutAssignedTasksNestedInput
     checklistItems?: TaskChecklistItemUpdateManyWithoutTaskNestedInput
     comments?: MessageUpdateManyWithoutTaskNestedInput
@@ -107592,6 +116836,7 @@ export namespace Prisma {
     taskNumber?: IntFieldUpdateOperationsInput | number
     serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -107599,6 +116844,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -107623,6 +116869,7 @@ export namespace Prisma {
     taskNumber?: IntFieldUpdateOperationsInput | number
     serviceId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     billable?: BoolFieldUpdateOperationsInput | boolean
@@ -107630,6 +116877,7 @@ export namespace Prisma {
     publish?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableIntFieldUpdateOperationsInput | number | null
     estimateMin?: NullableIntFieldUpdateOperationsInput | number | null
+    plannedMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignmentHistory?: NullableJsonNullValueInput | InputJsonValue
@@ -107657,11 +116905,15 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
+    section?: ChecklistSectionUpdateOneWithoutItemsNestedInput
     requiredBeforeStage?: TaskStatusUpdateOneWithoutRequiredBeforeItemsNestedInput
     lockedFromStage?: TaskStatusUpdateOneWithoutLockedFromItemsNestedInput
     taskItems?: TaskChecklistItemUpdateManyWithoutTemplateItemNestedInput
+    titleRates?: TitleFieldRateUpdateManyWithoutTemplateItemNestedInput
   }
 
   export type ChecklistTemplateItemUncheckedUpdateWithoutVisibleFromStageInput = {
@@ -107676,13 +116928,17 @@ export namespace Prisma {
     aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
+    titleRates?: TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
 
   export type ChecklistTemplateItemUncheckedUpdateManyWithoutVisibleFromStageInput = {
@@ -107697,11 +116953,14 @@ export namespace Prisma {
     aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -107719,11 +116978,15 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
+    section?: ChecklistSectionUpdateOneWithoutItemsNestedInput
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
     lockedFromStage?: TaskStatusUpdateOneWithoutLockedFromItemsNestedInput
     taskItems?: TaskChecklistItemUpdateManyWithoutTemplateItemNestedInput
+    titleRates?: TitleFieldRateUpdateManyWithoutTemplateItemNestedInput
   }
 
   export type ChecklistTemplateItemUncheckedUpdateWithoutRequiredBeforeStageInput = {
@@ -107738,13 +117001,17 @@ export namespace Prisma {
     aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
+    titleRates?: TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
 
   export type ChecklistTemplateItemUncheckedUpdateManyWithoutRequiredBeforeStageInput = {
@@ -107759,11 +117026,14 @@ export namespace Prisma {
     aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     lockedFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -107781,11 +117051,15 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     template?: ChecklistTemplateUpdateOneRequiredWithoutItemsNestedInput
+    section?: ChecklistSectionUpdateOneWithoutItemsNestedInput
     visibleFromStage?: TaskStatusUpdateOneWithoutVisibleFromItemsNestedInput
     requiredBeforeStage?: TaskStatusUpdateOneWithoutRequiredBeforeItemsNestedInput
     taskItems?: TaskChecklistItemUpdateManyWithoutTemplateItemNestedInput
+    titleRates?: TitleFieldRateUpdateManyWithoutTemplateItemNestedInput
   }
 
   export type ChecklistTemplateItemUncheckedUpdateWithoutLockedFromStageInput = {
@@ -107800,13 +117074,17 @@ export namespace Prisma {
     aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
     taskItems?: TaskChecklistItemUncheckedUpdateManyWithoutTemplateItemNestedInput
+    titleRates?: TitleFieldRateUncheckedUpdateManyWithoutTemplateItemNestedInput
   }
 
   export type ChecklistTemplateItemUncheckedUpdateManyWithoutLockedFromStageInput = {
@@ -107821,11 +117099,14 @@ export namespace Prisma {
     aspectRatio?: NullableStringFieldUpdateOperationsInput | string | null
     mandatory?: BoolFieldUpdateOperationsInput | boolean
     phase?: StringFieldUpdateOperationsInput | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     visibleFromStageId?: NullableStringFieldUpdateOperationsInput | string | null
     requiredBeforeStageId?: NullableStringFieldUpdateOperationsInput | string | null
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -107843,8 +117124,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutChecklistTemplatesNestedInput
     items?: ChecklistTemplateItemUpdateManyWithoutTemplateNestedInput
+    sections?: ChecklistSectionUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUpdateManyWithoutTemplateNestedInput
     weeklyTargets?: ProjectWeeklyTargetUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUpdateManyWithoutTemplateNestedInput
     weeklySlots?: WeeklySlotUpdateManyWithoutTemplateNestedInput
   }
 
@@ -107862,8 +117145,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: ChecklistTemplateItemUncheckedUpdateManyWithoutTemplateNestedInput
+    sections?: ChecklistSectionUncheckedUpdateManyWithoutTemplateNestedInput
     projects?: ProjectTemplateUncheckedUpdateManyWithoutTemplateNestedInput
     weeklyTargets?: ProjectWeeklyTargetUncheckedUpdateManyWithoutTemplateNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutTemplateNestedInput
     weeklySlots?: WeeklySlotUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
@@ -107880,6 +117165,24 @@ export namespace Prisma {
     titleHelp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TitleStageRateUpdateWithoutStatusInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    minutesPerPass?: FloatFieldUpdateOperationsInput | number
+    title?: TitleUpdateOneRequiredWithoutStageRatesNestedInput
+  }
+
+  export type TitleStageRateUncheckedUpdateWithoutStatusInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    titleId?: StringFieldUpdateOperationsInput | string
+    minutesPerPass?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type TitleStageRateUncheckedUpdateManyWithoutStatusInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    titleId?: StringFieldUpdateOperationsInput | string
+    minutesPerPass?: FloatFieldUpdateOperationsInput | number
   }
 
   export type TaskChecklistItemCreateManyTaskInput = {
@@ -107900,11 +117203,17 @@ export namespace Prisma {
     neverLock?: boolean
     publishCard?: string
     hidden?: boolean
+    effortUnit?: string | null
+    qtyPerVideoMinute?: number | null
     completed?: boolean
     attachmentId?: string | null
     textValue?: string | null
     completedAt?: Date | string | null
     completedBy?: string | null
+    effortQuantity?: number | null
+    effortRate?: number | null
+    effortMinutes?: number | null
+    effortLockedAt?: Date | string | null
     order?: number
   }
 
@@ -107949,11 +117258,17 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    effortQuantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortLockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     order?: IntFieldUpdateOperationsInput | number
     templateItem?: ChecklistTemplateItemUpdateOneWithoutTaskItemsNestedInput
   }
@@ -107976,11 +117291,17 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    effortQuantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortLockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -108002,11 +117323,17 @@ export namespace Prisma {
     neverLock?: BoolFieldUpdateOperationsInput | boolean
     publishCard?: StringFieldUpdateOperationsInput | string
     hidden?: BoolFieldUpdateOperationsInput | boolean
+    effortUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    qtyPerVideoMinute?: NullableFloatFieldUpdateOperationsInput | number | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     attachmentId?: NullableStringFieldUpdateOperationsInput | string | null
     textValue?: NullableStringFieldUpdateOperationsInput | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    effortQuantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    effortLockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     order?: IntFieldUpdateOperationsInput | number
   }
 

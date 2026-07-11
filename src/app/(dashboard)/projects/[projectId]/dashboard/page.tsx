@@ -5,6 +5,7 @@ import { getTaskStatuses } from "@/actions/settings";
 import { db } from "@/lib/db";
 import { getProjectAccess } from "@/lib/workspace";
 import { hasCap } from "@/lib/permissions";
+import { isReviewStageName } from "@/lib/checklist-config";
 import { AppHeader } from "@/components/app-header";
 import { ProjectViewMenu } from "@/components/projects/project-view-menu";
 import { cn } from "@/lib/utils";
@@ -37,7 +38,7 @@ export default async function ProjectDashboardPage({
 
   const tasks = project.tasks;
   const inProgress = statuses.find(
-    (s) => s.name.trim().toLowerCase() === "ai generation",
+    (s) => s.name.trim().toLowerCase() === "raw footage",
   );
 
   const stats = computeStats(tasks);
@@ -61,7 +62,7 @@ export default async function ProjectDashboardPage({
           {/* KPI grid */}
           <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
             <KpiCard label="Total tasks" value={stats.total} />
-            <KpiCard label="AI generation" value={stats.inProgress} tone="primary" />
+            <KpiCard label="Raw footage" value={stats.inProgress} tone="primary" />
             <KpiCard label="In review" value={stats.inReview} tone="warning" />
             <KpiCard
               label="Completion"
@@ -84,7 +85,7 @@ export default async function ProjectDashboardPage({
             </div>
             <p className="mb-4 text-xs text-muted-foreground">
               Work time = duration the task spent in{" "}
-              <span className="text-primary">AI Generation</span> under this
+              <span className="text-primary">Raw Footage</span> under this
               assignee.
             </p>
             {performance.length === 0 ? (
@@ -152,10 +153,10 @@ type PerfRow = {
 function computeStats(tasks: TaskRow[]) {
   const total = tasks.length;
   const inProgress = tasks.filter(
-    (t) => (t.status?.name ?? "").trim().toLowerCase() === "ai generation",
+    (t) => (t.status?.name ?? "").trim().toLowerCase() === "raw footage",
   ).length;
   const inReview = tasks.filter((t) =>
-    (t.status?.name ?? "").toLowerCase().includes("review"),
+    isReviewStageName(t.status?.name),
   ).length;
   const completed = tasks.filter((t) => t.completedAt != null).length;
   const completionPct = total === 0 ? 0 : Math.round((completed / total) * 100);
@@ -203,8 +204,8 @@ function computePerformance(
       workedMs += activeMs;
     }
 
-    // Who did the AI Generation work: current assignee if active, else the
-    // assignee recorded when the task moved out of AI Generation.
+    // Who did the Raw Footage work: current assignee if active, else the
+    // assignee recorded when the task moved out of Raw Footage.
     const workerId = isActive
       ? t.assigneeId
       : (history[inProgressId] ?? t.assigneeId);

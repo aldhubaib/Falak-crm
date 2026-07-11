@@ -17,7 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { TypeIcon } from "@/components/task-types/task-type-visuals";
+import { TypeIcon, DEFAULT_TYPE_COLOR } from "@/components/task-types/task-type-visuals";
 import type {
   MyResponsibilityData,
   ResponsibilitySlot,
@@ -25,7 +25,7 @@ import type {
 } from "@/actions/responsibility";
 
 function TaskRow({ task }: { task: ResponsibilityTask }) {
-  const color = task.templateColor ?? "#f59e0b";
+  const color = task.templateColor ?? DEFAULT_TYPE_COLOR;
   return (
     <Link
       href={`/projects/${task.projectId}/tasks/${task.taskId}`}
@@ -88,7 +88,7 @@ function PlannedSlotRow({ slot }: { slot: ResponsibilitySlot }) {
     >
       <span
         className="inline-block h-1.5 w-1.5 shrink-0 rounded-full"
-        style={{ backgroundColor: slot.templateColor ?? "#f59e0b" }}
+        style={{ backgroundColor: slot.templateColor ?? DEFAULT_TYPE_COLOR }}
       />
       <span className="text-xxs font-medium uppercase tracking-[0.15em] text-muted-foreground">
         {slot.templateName}

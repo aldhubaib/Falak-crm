@@ -1105,18 +1105,38 @@ export function ThreadChat({
                       const notice =
                         (!!m.task && !target.taskId) || m.kind === "rejection";
                       const blue = mine && !notice;
+                      const showBubble =
+                        !!(m.task && !target.taskId) || !!m.body || !!bodyUrl;
                       return (
-                      <div className="group relative">
+                      <div className="group relative flex max-w-full flex-col gap-1.5">
+                        {replied && !notice && (
+                          <ReplyQuote
+                            authorName={
+                              replied.authorId === currentMemberId
+                                ? "You"
+                                : replied.authorName
+                            }
+                            body={
+                              replied.body
+                                ? replied.body.length > 120
+                                  ? `${replied.body.slice(0, 120)}…`
+                                  : replied.body
+                                : "Attachment"
+                            }
+                            onClick={() => scrollToMessage(m.replyToId!)}
+                          />
+                        )}
+                        {showBubble && (
                         <div
                           className={cn(
                             "flex max-w-full flex-col gap-1.5 text-sm leading-relaxed",
                             notice
                               ? "min-w-64 rounded-xl border border-border/60 bg-surface-2/80 p-2.5 text-foreground"
-                              : "rounded-2xl px-3.5 py-2",
+                              : "px-4 py-2",
                             !notice &&
                               (blue
-                                ? "rounded-br-md bg-primary text-primary-foreground"
-                                : "rounded-bl-md bg-surface-2 text-foreground"),
+                                ? "rounded-full bg-primary text-primary-foreground"
+                                : "rounded-2xl rounded-bl-md bg-surface-2 text-foreground"),
                           )}
                         >
                           {m.task && !target.taskId && (
@@ -1135,34 +1155,6 @@ export function ThreadChat({
                               </div>
                               <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                             </Link>
-                          )}
-                          {replied && (
-                            <button
-                              type="button"
-                              onClick={() => scrollToMessage(m.replyToId!)}
-                              className={cn(
-                                "-mx-1 flex flex-col gap-0.5 rounded-md border-l-2 px-2 py-1 text-left text-xs",
-                                blue
-                                  ? "border-primary-foreground/60 bg-primary-foreground/10 text-primary-foreground/90"
-                                  : "border-primary/70 bg-primary/10 text-foreground/80",
-                              )}
-                            >
-                              <span
-                                className={cn(
-                                  "text-[11px] font-semibold",
-                                  blue ? "text-primary-foreground" : "text-primary",
-                                )}
-                              >
-                                {replied.authorId === currentMemberId ? "You" : replied.authorName}
-                              </span>
-                              <span className="line-clamp-2 opacity-90">
-                                {replied.body
-                                  ? replied.body.length > 120
-                                    ? `${replied.body.slice(0, 120)}…`
-                                    : replied.body
-                                  : "Attachment"}
-                              </span>
-                            </button>
                           )}
                           {m.body &&
                             (m.kind === "rejection" ? (
@@ -1224,6 +1216,7 @@ export function ThreadChat({
                             ))}
                           {bodyUrl && <BubbleLinkPreview url={bodyUrl} />}
                         </div>
+                        )}
                         {/* Message caret dropdown */}
                         <MessageCaret
                           mine={mine}
@@ -1311,15 +1304,29 @@ export function ThreadChat({
               </div>
             );
           })}
-          {outbox.map((o) => (
+          {outbox.map((o) => {
+            const replied = o.replyToId ? byId.get(o.replyToId) : null;
+            return (
             <OutboxBubble
               key={o.tempId}
               entry={o}
               uploadById={uploadById}
               onRetry={() => retryOutbox(o.tempId)}
               onDiscard={() => discardOutbox(o.tempId)}
+              replyPreview={
+                replied
+                  ? {
+                      authorName:
+                        replied.authorId === currentMemberId
+                          ? "You"
+                          : replied.authorName,
+                      body: replied.body || "Attachment",
+                    }
+                  : null
+              }
             />
-          ))}
+            );
+          })}
           {messages.length === 0 && outbox.length === 0 && (
             <div className="py-16 text-center text-xs text-muted-foreground">
               No messages yet. Say hi!
@@ -1458,20 +1465,19 @@ export function ThreadChat({
             </div>
           )}
           {replyingTo && (
-            <div className="mb-2 flex items-start gap-2 rounded-t-2xl border border-b-0 border-border/60 bg-surface/60 px-3 py-2">
-              <Reply className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-              <div className="min-w-0 flex-1">
-                <div className="text-[11px] font-semibold text-primary">
-                  Replying to {replyingTo.authorId === currentMemberId ? "yourself" : replyingTo.authorName}
-                </div>
-                <div className="line-clamp-1 text-xs text-muted-foreground">
-                  {replyingTo.body || "Attachment"}
-                </div>
-              </div>
+            <div className="relative mb-2">
+              <ReplyQuote
+                authorName={
+                  replyingTo.authorId === currentMemberId
+                    ? "yourself"
+                    : replyingTo.authorName
+                }
+                body={replyingTo.body || "Attachment"}
+              />
               <button
                 type="button"
                 onClick={() => setReplyTo(null)}
-                className="grid size-6 shrink-0 place-items-center rounded-full text-muted-foreground hover:bg-surface hover:text-foreground"
+                className="absolute right-2 top-2 grid size-6 place-items-center rounded-full text-muted-foreground hover:bg-surface hover:text-foreground"
                 aria-label="Cancel reply"
               >
                 <X className="h-3.5 w-3.5" />
@@ -1779,24 +1785,58 @@ export function ThreadChat({
   );
 }
 
-// An optimistically-sent message still uploading/delivering, rendered as a
-// "mine" bubble with per-file progress — the WhatsApp send experience.
+// Quoted message shown above a reply — separate from the reply bubble.
+function ReplyQuote({
+  authorName,
+  body,
+  onClick,
+}: {
+  authorName: string;
+  body: string;
+  onClick?: () => void;
+}) {
+  const inner = (
+    <>
+      <span className="text-sm font-bold text-primary">{authorName}</span>
+      <span className="line-clamp-2 text-sm text-muted-foreground">{body}</span>
+    </>
+  );
+  const className =
+    "flex w-full max-w-full flex-col gap-0.5 rounded-lg border-l-4 border-primary bg-surface-2 px-3 py-2 text-left";
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={className}>
+        {inner}
+      </button>
+    );
+  }
+  return <div className={className}>{inner}</div>;
+}
+
 function OutboxBubble({
   entry,
   uploadById,
   onRetry,
   onDiscard,
+  replyPreview,
 }: {
   entry: OutboxEntry;
   uploadById: Map<string, UploadItem>;
   onRetry: () => void;
   onDiscard: () => void;
+  replyPreview?: { authorName: string; body: string } | null;
 }) {
   const failed = entry.status === "error";
 
   return (
     <div className="flex justify-end gap-2">
-      <div className="flex max-w-[70%] flex-col items-end gap-1">
+      <div className="flex max-w-[70%] flex-col items-end gap-1.5">
+        {replyPreview && (
+          <ReplyQuote
+            authorName={replyPreview.authorName}
+            body={replyPreview.body}
+          />
+        )}
         {entry.files.length > 0 && (
           <div className="flex max-w-full flex-col gap-1.5">
             {entry.files.map((f) => {
@@ -1851,9 +1891,11 @@ function OutboxBubble({
           </div>
         )}
         {entry.body && (
-          <div className="flex max-w-full items-end gap-2 rounded-2xl rounded-br-md bg-primary px-3.5 py-2 text-sm leading-relaxed text-primary-foreground opacity-90">
+          <div className="flex max-w-full items-end gap-2 rounded-full bg-primary px-4 py-2 text-sm leading-relaxed text-primary-foreground opacity-90">
             <span className="whitespace-pre-wrap break-words">{entry.body}</span>
-            <Clock className="ml-1 h-3 w-3 shrink-0 translate-y-0.5 opacity-70" />
+            <span className="ml-1 shrink-0 text-[10px] leading-none text-primary-foreground/70">
+              {formatTime(entry.createdAt)}
+            </span>
           </div>
         )}
         {failed ? (

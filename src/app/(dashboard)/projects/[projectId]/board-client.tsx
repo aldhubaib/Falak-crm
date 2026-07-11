@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/tooltip";
 import { PriorityBadge } from "@/components/priority-badge";
 import { TaskTypeIcon } from "@/components/task-type-chip";
-import { TypeIcon } from "@/components/task-types/task-type-visuals";
+import { TypeIcon, DEFAULT_TYPE_COLOR } from "@/components/task-types/task-type-visuals";
 import {
   Dialog,
   DialogContent,
@@ -39,6 +39,7 @@ import {
 import { ConfirmStatusDialog } from "@/components/board/confirm-status-dialog";
 import { DeclineDialog } from "@/components/board/decline-dialog";
 import { CONFIRM_MESSAGES } from "@/components/board/confirm-messages";
+import { isDeliveryGateStage } from "@/lib/checklist-config";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { assignTaskToMe, updateTaskStatus } from "@/actions/projects";
@@ -120,6 +121,15 @@ function CardBody({
       </p>
 
       <div className="mt-2 flex items-center gap-1.5">
+        {task.templateId && (
+          <span title={task.templateName ?? "Task type"}>
+            <TypeIcon
+              name={task.templateIcon}
+              className="h-3.5 w-3.5 shrink-0"
+              style={{ color: task.templateColor ?? DEFAULT_TYPE_COLOR }}
+            />
+          </span>
+        )}
         {task.serviceName && <TaskTypeIcon name={task.serviceName} />}
         <PriorityBadge value={task.priority} />
         {task.rejectionCount > 0 && (
@@ -174,7 +184,11 @@ function CardBody({
           {task.stageEnteredAt && (
             <span className="flex items-center gap-1" title="Time in current stage">
               <Timer className="h-3 w-3" />
-              {formatSince(task.stageEnteredAt)}
+              {/* Elapsed time drifts between server render and hydration —
+                  don't let React flag the one-minute tick as a mismatch. */}
+              <span suppressHydrationWarning>
+                {formatSince(task.stageEnteredAt)}
+              </span>
             </span>
           )}
         </div>
@@ -189,6 +203,8 @@ function EmptySlotCard({
   slotNumber,
   templateIcon,
   templateColor,
+  dueLabel,
+  dragTarget,
   onSelfAssign,
   canRemove,
   onRemove,
@@ -198,6 +214,9 @@ function EmptySlotCard({
   slotNumber: number;
   templateIcon: string | null;
   templateColor: string | null;
+  dueLabel?: string | null;
+  /** A task of this slot's type is being dragged — light the border up. */
+  dragTarget?: boolean;
   onSelfAssign?: () => void;
   canRemove?: boolean;
   onRemove?: () => void;
@@ -214,8 +233,18 @@ function EmptySlotCard({
     </Avatar>
   );
 
+  // Border in the type's own color: dimmed at rest, full-strength (plus a
+  // soft glow) while a task of this type is being dragged, so the user can
+  // see exactly which placeholders will take the card.
+  const accent = templateColor ?? DEFAULT_TYPE_COLOR;
   return (
-    <div className="group/slot relative rounded-lg border border-dashed border-border/80 bg-surface p-3 text-left">
+    <div
+      className="group/slot relative rounded-lg border border-dashed bg-surface p-3 text-left transition-[border-color,box-shadow] duration-200"
+      style={{
+        borderColor: dragTarget ? accent : `${accent}33`,
+        boxShadow: dragTarget ? `0 0 10px 0 ${accent}40` : undefined,
+      }}
+    >
       <p className="text-[13px] font-medium leading-snug text-muted-foreground/70">
         {templateName}{" "}
         <span className="text-muted-foreground/40">#{slotNumber}</span>
@@ -225,8 +254,13 @@ function EmptySlotCard({
         <TypeIcon
           name={templateIcon}
           className="h-3.5 w-3.5 shrink-0"
-          style={{ color: templateColor ?? "#f59e0b" }}
+          style={{ color: templateColor ?? DEFAULT_TYPE_COLOR }}
         />
+        {dueLabel && (
+          <span className="text-[11px] text-muted-foreground/60">
+            due {dueLabel}
+          </span>
+        )}
         <div className="ml-auto flex items-center gap-1">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -293,6 +327,13 @@ const BoardCard = memo(function BoardCard({
     disabled: dragDisabled || remoteDragger != null,
   });
 
+  // Same dimmed type-color border as the plan placeholders, so a card and
+  // the slots it can fill share one accent. Typeless cards keep the neutral
+  // border; the remote-drag highlight wins over the accent.
+  const accent = task.templateId
+    ? (task.templateColor ?? DEFAULT_TYPE_COLOR)
+    : null;
+
   return (
     <div
       ref={setNodeRef}
@@ -302,13 +343,15 @@ const BoardCard = memo(function BoardCard({
       onClick={() => onOpen(task.id)}
       style={{
         opacity: isDragging ? 0.4 : 1,
+        ...(accent && !remoteDragger ? { borderColor: `${accent}33` } : {}),
         // Virtualization: off-screen cards skip layout/paint entirely; the
         // box keeps its last rendered size so column scrolling stays stable.
         contentVisibility: "auto",
         containIntrinsicSize: "auto 120px",
       }}
       className={cn(
-        "group/card relative block select-none rounded-lg border border-border/60 bg-surface p-3 text-left transition-colors hover:border-muted-foreground/20",
+        "group/card relative block select-none rounded-lg border border-border/60 bg-surface p-3 text-left transition-colors",
+        !accent && "hover:border-muted-foreground/20",
         // touch-none suppresses native scrolling from a touch on the card, so
         // only apply it when the card is actually draggable.
         !dragDisabled && "cursor-grab touch-none active:cursor-grabbing",
@@ -340,6 +383,7 @@ const BoardColumn = memo(function BoardColumn({
   canSelfAssign,
   onSelfAssign,
   weekly,
+  draggingTemplateId,
   canAssignSlot,
   onSlotSelfAssign,
   canRemoveSlot,
@@ -358,6 +402,8 @@ const BoardColumn = memo(function BoardColumn({
   onSelfAssign: (task: BoardTask) => void;
   /** Weekly Plan groups — only passed to the Todo column. */
   weekly?: WeeklyGroup[];
+  /** Type of the task currently being dragged — matching slots light up. */
+  draggingTemplateId?: string | null;
   canAssignSlot?: boolean;
   onSlotSelfAssign?: (slot: WeeklyEmptySlot) => void;
   canRemoveSlot?: boolean;
@@ -453,6 +499,11 @@ const BoardColumn = memo(function BoardColumn({
                   slotNumber={filled + i + 1}
                   templateIcon={g.templateIcon}
                   templateColor={g.templateColor}
+                  dueLabel={g.dueLabel}
+                  dragTarget={
+                    draggingTemplateId != null &&
+                    draggingTemplateId === g.templateId
+                  }
                   onSelfAssign={
                     canAssignSlot && onSlotSelfAssign
                       ? () => onSlotSelfAssign(slot)
@@ -915,11 +966,11 @@ export function ProjectBoardClient({
           }
         };
 
-        // Delivery items are produced during AI Generation and only need to be
-        // complete when submitting for Internal Review — not on earlier forward
-        // moves like Todo → AI Generation.
+        // Delivery items are produced during the work stages and only need to
+        // be complete when submitting for Final Video Check — not on earlier
+        // forward moves like Todo → Raw Footage.
         if (
-          targetName.toLowerCase() === "internal review" &&
+          isDeliveryGateStage(targetName) &&
           task.deliveryIncomplete.length > 0
         ) {
           // The cache may be stale (e.g. an upload finished moments ago and
@@ -1060,6 +1111,7 @@ export function ProjectBoardClient({
               canSelfAssign={canSelfAssign}
               onSelfAssign={openSelfAssign}
               weekly={col.name === "Todo" ? data.weekly : undefined}
+              draggingTemplateId={activeTask?.templateId ?? null}
               canAssignSlot={canAssignSlot}
               onSlotSelfAssign={openSlotSelfAssign}
               canRemoveSlot={movePerms.full}

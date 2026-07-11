@@ -30,7 +30,7 @@ import {
   updateProjectTimezone,
 } from "@/actions/projects";
 import { setWeeklyTargets } from "@/actions/weekly-plan";
-import type { PlanningEligibleMember } from "@/actions/weekly-plan";
+import type { PlanningEligibleMember, WeeklyEffortMatrix } from "@/actions/weekly-plan";
 import type { WeeklyTarget } from "@/lib/weekly-plan";
 import {
   DEFAULT_PROJECT_TIMEZONE,
@@ -64,6 +64,7 @@ export function ProjectSettingsClient({
   templates,
   weeklyTargets: initialWeeklyTargets,
   eligibleMembers,
+  effortMatrix,
   timezone: initialTimezone,
   isOwner,
 }: {
@@ -78,6 +79,7 @@ export function ProjectSettingsClient({
   templates: Template[];
   weeklyTargets: WeeklyTarget[];
   eligibleMembers: PlanningEligibleMember[];
+  effortMatrix: WeeklyEffortMatrix;
   timezone: string;
   isOwner: boolean;
 }) {
@@ -275,6 +277,7 @@ export function ProjectSettingsClient({
               templateIds={templateIds}
               initialTargets={initialWeeklyTargets}
               eligibleMembers={eligibleMembers}
+              effortMatrix={effortMatrix}
               timezone={timezone}
               isOwner={isOwner}
               onTemplateIdsChange={setTemplateIds}

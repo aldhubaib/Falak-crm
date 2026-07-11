@@ -32,18 +32,22 @@ async function invalidateRoleMembersPerms(workspaceId: string, roleId: string) {
 
 export async function getTeamMembers() {
   const { workspace } = await requireWorkspaceWithMember();
-  const [members, roles] = await Promise.all([
+  const [members, roles, titles] = await Promise.all([
     db.workspaceMember.findMany({
       where: { workspaceId: workspace.id },
-      include: { role: true },
+      include: { role: true, capacityTitle: true },
       orderBy: { joinedAt: "asc" },
     }),
     db.role.findMany({
       where: { workspaceId: workspace.id },
       orderBy: { name: "asc" },
     }),
+    db.title.findMany({
+      where: { workspaceId: workspace.id },
+      orderBy: { name: "asc" },
+    }),
   ]);
-  return { members, roles };
+  return { members, roles, titles };
 }
 
 export async function assignRole(memberId: string, roleId: string | null): Promise<ActionResult> {

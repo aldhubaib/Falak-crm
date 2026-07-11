@@ -41,3 +41,4 @@ next-env.d.ts
 
 # generated service worker (built by scripts/generate-sw.mjs)
 /public/sw.js
+.cursor/

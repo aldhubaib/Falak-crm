@@ -33,6 +33,36 @@ const MAX_CONCURRENT_PARTS = 4;
 const PART_SIZE = 10 * 1024 * 1024; // 10 MB — must match server PART_SIZE
 const MULTIPART_THRESHOLD = 20 * 1024 * 1024; // 20 MB
 
+// Read the duration of an audio/video file client-side (used for effort
+// calculations). Best-effort: returns null for non-media files or when the
+// browser can't parse the container.
+function readMediaDurationSec(file: File): Promise<number | null> {
+  const type = file.type || "";
+  if (!type.startsWith("video/") && !type.startsWith("audio/")) {
+    return Promise.resolve(null);
+  }
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const el = document.createElement(type.startsWith("video/") ? "video" : "audio");
+    const cleanup = (value: number | null) => {
+      URL.revokeObjectURL(url);
+      el.removeAttribute("src");
+      resolve(value);
+    };
+    const timer = setTimeout(() => cleanup(null), 10_000);
+    el.preload = "metadata";
+    el.onloadedmetadata = () => {
+      clearTimeout(timer);
+      cleanup(Number.isFinite(el.duration) && el.duration > 0 ? el.duration : null);
+    };
+    el.onerror = () => {
+      clearTimeout(timer);
+      cleanup(null);
+    };
+    el.src = url;
+  });
+}
+
 class UploadManager {
   private queue: UploadItem[] = [];
   private listeners: Set<Listener> = new Set();
@@ -584,6 +614,7 @@ class UploadManager {
               contentType: item.file.type || "application/octet-stream",
               entityType,
               entityId,
+              durationSec: await readMediaDurationSec(item.file),
             }),
           });
           if (!createRes.ok) throw new Error("Failed to re-create upload");
@@ -607,6 +638,7 @@ class UploadManager {
             contentType,
             entityType,
             entityId,
+            durationSec: await readMediaDurationSec(item.file),
           }),
         });
 

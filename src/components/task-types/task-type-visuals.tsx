@@ -14,6 +14,11 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+// Fallback when a task type has no explicit color — must match everywhere a
+// type icon renders (settings, board cards, slots, dashboard) so the same
+// type never shows two different colors.
+export const DEFAULT_TYPE_COLOR = "#22d3ee";
+
 export const TYPE_COLORS = [
   "#22d3ee", // cyan
   "#3b82f6", // blue

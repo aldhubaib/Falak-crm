@@ -30,12 +30,16 @@ export type CreateField = {
 export type FieldAnswer =
   | { kind: "text"; value: string }
   | { kind: "yesno"; value: "yes" | "no" | null; text?: string; file?: File | null }
-  | { kind: "file"; file: File | null };
+  | { kind: "file"; file: File | null }
+  | { kind: "files"; files: File[] };
 
 const YESNO_KINDS = new Set(["yes_no", "mention", "copyright", "checkbox"]);
 
 export function isFileField(type: string) {
   return type === "file_upload";
+}
+export function isMultiFileField(type: string) {
+  return type === "multi_file";
 }
 export function isYesNoField(type: string) {
   return YESNO_KINDS.has(type);
@@ -48,6 +52,9 @@ export function isFieldFilled(
   if (!answer) return false;
   if (isFileField(field.type)) {
     return answer.kind === "file" && answer.file !== null;
+  }
+  if (isMultiFileField(field.type)) {
+    return answer.kind === "files" && answer.files.length > 0;
   }
   if (isYesNoField(field.type)) {
     if (answer.kind !== "yesno" || answer.value === null) return false;
@@ -141,6 +148,10 @@ function FieldControl({
 }) {
   if (isFileField(field.type)) {
     return <FileDrop field={field} answer={answer} onChange={onChange} />;
+  }
+
+  if (isMultiFileField(field.type)) {
+    return <MultiFileDrop field={field} answer={answer} onChange={onChange} />;
   }
 
   if (isYesNoField(field.type)) {
@@ -486,6 +497,148 @@ function YesnoFileDrop({
         }}
       />
     </>
+  );
+}
+
+// Multi-file variant of FileDrop: files accumulate in the answer and upload
+// after the task is created, all bound to the same checklist item.
+function MultiFileDrop({
+  field,
+  answer,
+  onChange,
+}: {
+  field: CreateField;
+  answer: FieldAnswer | undefined;
+  onChange: (v: FieldAnswer) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+
+  const category = field.allowedFileTypes;
+  const formats = normalizeFormats(field.allowedFormats);
+  const Icon = categoryIcon(category);
+  const accepts = allowedExtsFor(category, field.allowedFormats);
+  const accept = accepts.length > 0 ? accepts.join(",") : undefined;
+
+  const files = answer?.kind === "files" ? answer.files : [];
+
+  const handlePick = async (picked: File[]) => {
+    if (picked.length === 0) return;
+    const accepted: File[] = [];
+    const errors: string[] = [];
+    for (const file of picked) {
+      const err = await validateFileFull(
+        file,
+        category,
+        formats,
+        field.aspectRatio,
+      );
+      if (err) errors.push(`${file.name}: ${err}`);
+      else accepted.push(file);
+    }
+    setError(errors.length > 0 ? errors.join(" · ") : null);
+    if (accepted.length > 0) {
+      onChange({ kind: "files", files: [...files, ...accepted] });
+    }
+  };
+
+  const removeAt = (idx: number) => {
+    onChange({ kind: "files", files: files.filter((_, i) => i !== idx) });
+  };
+
+  return (
+    <div className="space-y-2">
+      {files.map((file, idx) => (
+        <div
+          key={`${file.name}-${idx}`}
+          className="flex items-center gap-2 rounded-xl border border-green-500/50 bg-green-500/5 px-3 py-2 text-sm"
+        >
+          <CircleCheck className="h-4 w-4 shrink-0 text-green-400" />
+          <span className="min-w-0 flex-1 truncate text-foreground">
+            {file.name}
+          </span>
+          <button
+            type="button"
+            onClick={() => removeAt(idx)}
+            aria-label={`Remove ${file.name}`}
+            className="grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
+      ))}
+      {files.length > 0 && (
+        <div className="pl-1 text-tiny text-muted-foreground">
+          Ready to upload — starts after the task is created.
+        </div>
+      )}
+
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+          handlePick(Array.from(e.dataTransfer.files ?? []));
+        }}
+        className={cn(
+          "flex w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed text-center transition-colors",
+          files.length > 0 ? "py-4" : "gap-3 py-10",
+          error
+            ? "border-destructive/60 bg-destructive/5"
+            : dragOver
+              ? "border-primary bg-primary/5"
+              : "border-border/70 bg-surface/40 hover:border-border hover:bg-surface",
+        )}
+      >
+        <Icon
+          className={cn(
+            "text-muted-foreground",
+            files.length > 0 ? "h-5 w-5" : "h-8 w-8",
+          )}
+        />
+        <span className="text-xs text-muted-foreground">
+          {files.length > 0
+            ? "Add more files"
+            : `Drop ${category ?? ""} files or click to attach (multiple allowed)`.replace(/\s+/g, " ")}
+        </span>
+        {(formats.length > 0 || field.aspectRatio) && (
+          <div className="flex flex-wrap items-center justify-center gap-1.5">
+            {formats.map((f) => (
+              <span
+                key={f}
+                className="rounded-md bg-muted/40 px-2 py-0.5 text-tiny text-muted-foreground"
+              >
+                {f}
+              </span>
+            ))}
+            {field.aspectRatio && (
+              <span className="rounded-md bg-muted/40 px-2 py-0.5 text-tiny text-muted-foreground">
+                {field.aspectRatio}
+              </span>
+            )}
+          </div>
+        )}
+      </button>
+      {error && <div className="text-xs text-destructive">{error}</div>}
+      <input
+        ref={inputRef}
+        type="file"
+        multiple
+        accept={accept}
+        className="hidden"
+        onChange={(e) => {
+          handlePick(Array.from(e.target.files ?? []));
+          e.target.value = "";
+        }}
+      />
+    </div>
   );
 }
 

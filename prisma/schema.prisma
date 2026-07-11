@@ -39,6 +39,7 @@ model Workspace {
   whatsappConfig     WhatsAppConfig?
   whatsappTemplates  WhatsAppTemplate[]
   roles              Role[]
+  titles             Title[]
   currencies         Currency[]
   exchangeRates      ExchangeRate[]
   attachments          Attachment[]
@@ -89,10 +90,13 @@ model WorkspaceMember {
   imageUrl    String?      // Clerk/Google profile photo
   type        MemberType   @default(MEMBER)
   roleId      String?
+  titleId     String?      // capacity title (Junior A, Senior…) — effort rates, not permissions
+  weeklyHours Float        @default(40) // working-hours capacity per week
   joinedAt    DateTime     @default(now())
 
   workspace   Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   role        Role?        @relation(fields: [roleId], references: [id])
+  capacityTitle Title?     @relation(fields: [titleId], references: [id], onDelete: SetNull)
   assignedTasks Task[]     @relation("TaskAssignee")
   messages      Message[]        @relation("CommentAuthor")
   mentionedIn   MessageMention[] @relation("MentionedIn")
@@ -128,6 +132,53 @@ model Role {
   projectMembers ProjectMember[]
 
   @@unique([workspaceId, name])
+}
+
+// ─── Capacity Titles ───────────────────────────────────────────────────────────
+// A Title (Junior A, Junior B, Senior, Creator…) carries effort rates: how many
+// minutes of work a unit of content costs for people holding that title.
+// Separate from Role, which is permissions only.
+
+model Title {
+  id          String   @id @default(cuid())
+  workspaceId String
+  name        String
+  createdAt   DateTime @default(now())
+
+  workspace   Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  members     WorkspaceMember[]
+  fieldRates  TitleFieldRate[]
+  stageRates  TitleStageRate[]
+
+  @@unique([workspaceId, name])
+}
+
+// Rate for one checklist-template field: minutes per unit of that field's
+// effortUnit (per word, per audio minute, per video minute). For "fixed"
+// fields the quantity is always 1, so this doubles as flat minutes.
+model TitleFieldRate {
+  id             String @id @default(cuid())
+  titleId        String
+  templateItemId String
+  minutesPerUnit Float
+
+  title        Title                 @relation(fields: [titleId], references: [id], onDelete: Cascade)
+  templateItem ChecklistTemplateItem @relation(fields: [templateItemId], references: [id], onDelete: Cascade)
+
+  @@unique([titleId, templateItemId])
+}
+
+// Flat minutes charged each time a task passes through a stage (review stages).
+model TitleStageRate {
+  id             String @id @default(cuid())
+  titleId        String
+  statusId       String
+  minutesPerPass Float
+
+  title  Title      @relation(fields: [titleId], references: [id], onDelete: Cascade)
+  status TaskStatus @relation("TitleStageRates", fields: [statusId], references: [id], onDelete: Cascade)
+
+  @@unique([titleId, statusId])
 }
 
 // ─── Freelancer Access ─────────────────────────────────────────────────────────
@@ -463,6 +514,8 @@ model WeeklySlot {
 
   @@index([projectId, weekStart])
   @@index([assigneeId, weekStart])
+  // Todo gate: free-slot lookup / count by type within the week.
+  @@index([projectId, templateId, weekStart])
 }
 
 model ProjectMember {
@@ -543,9 +596,31 @@ model ChecklistTemplate {
   workspace   Workspace              @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   titleLockedFromStage TaskStatus?   @relation("TitleLockedFromStage", fields: [titleLockedFromStageId], references: [id], onDelete: SetNull)
   items       ChecklistTemplateItem[]
+  sections    ChecklistSection[]
   projects    ProjectTemplate[]
   weeklyTargets ProjectWeeklyTarget[]
+  tasks       Task[]                  @relation("TaskType")
   weeklySlots   WeeklySlot[]
+}
+
+// A named group of checklist fields on a task type (e.g. "Requirements",
+// "Delivery", "Raw Assets"). Sections are renamable, addable, and removable;
+// their `phase` carries the behavior the rest of the app keys on:
+// "create" = filled on the new-task form, locks after Todo (Requirements-like);
+// "delivery" = filled during work, gated behind leaving Todo (Delivery-like).
+// Items mirror their section's phase so all stage-gate logic stays unchanged.
+model ChecklistSection {
+  id         String   @id @default(cuid())
+  templateId String
+  name       String
+  phase      String   @default("delivery") // "create" or "delivery"
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  template ChecklistTemplate       @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  items    ChecklistTemplateItem[]
+
+  @@index([templateId])
 }
 
 model ChecklistTemplateItem {
@@ -559,20 +634,28 @@ model ChecklistTemplateItem {
   allowedFormats        String?  // JSON array e.g. '["mp4","mov"]'
   aspectRatio           String?  // e.g. "16:9", "9:16", "1:1"
   mandatory             Boolean  @default(false)
-  phase                 String   @default("create") // "create" or "delivery"
+  phase                 String   @default("create") // "create" or "delivery" — mirrors the section's phase
+  sectionId             String?  // owning section; null = legacy, grouped by phase
   visibleFromStageId    String?
   requiredBeforeStageId String?
   lockedFromStageId     String?
   neverLock             Boolean  @default(false) // field stays editable at every stage
   publishCard           String   @default("hidden") // placement on the publish card: "hidden" | "expanded" | "always"
   hidden                Boolean  @default(false) // disabled: kept (with task data) but not shown or enforced anywhere
+  // Effort measurement: null = no effort, or "words" | "audio_min" | "video_min" | "fixed"
+  effortUnit            String?
+  // Expected quantity per planned video-minute — used to predict effort before
+  // content exists (e.g. ~206 words per video minute). Fixed fields ignore it.
+  qtyPerVideoMinute     Float?
   order                 Int      @default(0)
 
   template              ChecklistTemplate  @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  section               ChecklistSection?  @relation(fields: [sectionId], references: [id], onDelete: SetNull)
   visibleFromStage      TaskStatus?        @relation("VisibleFromStage", fields: [visibleFromStageId], references: [id], onDelete: SetNull)
   requiredBeforeStage   TaskStatus?        @relation("RequiredBeforeStage", fields: [requiredBeforeStageId], references: [id], onDelete: SetNull)
   lockedFromStage       TaskStatus?        @relation("LockedFromStage", fields: [lockedFromStageId], references: [id], onDelete: SetNull)
   taskItems             TaskChecklistItem[]
+  titleRates            TitleFieldRate[]
 
   @@index([templateId])
 }
@@ -607,17 +690,30 @@ model TaskChecklistItem {
   neverLock             Boolean   @default(false) // field stays editable at every stage
   publishCard           String    @default("hidden") // placement on the publish card: "hidden" | "expanded" | "always"
   hidden                Boolean   @default(false) // disabled: kept (with task data) but not shown or enforced anywhere
+  effortUnit            String?   // snapshot: null | "words" | "audio_min" | "video_min" | "fixed"
+  qtyPerVideoMinute     Float?    // snapshot of prediction ratio
   completed             Boolean   @default(false)
   attachmentId          String?
   textValue             String?
   completedAt           DateTime?
   completedBy           String?
+  // Effort locked at field completion — only changes on explicit Recalculate.
+  effortQuantity        Float?
+  effortRate            Float?
+  effortMinutes         Float?
+  effortLockedAt        DateTime?
   order                 Int       @default(0)
 
   task           Task                   @relation(fields: [taskId], references: [id], onDelete: Cascade)
   templateItem   ChecklistTemplateItem? @relation(fields: [templateItemId], references: [id], onDelete: SetNull)
 
+  // One row per template field per task — concurrent getTask materialisation
+  // can't duplicate fields (NULL templateItemId = custom rows, exempt).
+  @@unique([taskId, templateItemId])
   @@index([taskId])
+  @@index([templateItemId])
+  // Title-wide effort recalculation filters on these.
+  @@index([completedBy, effortLockedAt])
 }
 
 // ─── Tasks ─────────────────────────────────────────────────────────────────────
@@ -636,6 +732,7 @@ model TaskStatus {
   requiredBeforeItems    ChecklistTemplateItem[] @relation("RequiredBeforeStage")
   lockedFromItems        ChecklistTemplateItem[] @relation("LockedFromStage")
   titleLockTemplates     ChecklistTemplate[]     @relation("TitleLockedFromStage")
+  titleStageRates        TitleStageRate[]        @relation("TitleStageRates")
 
   @@unique([workspaceId, order])
 }
@@ -647,6 +744,9 @@ model Task {
   serviceId         String?
   statusId          String?
   assigneeId        String?
+  // Task type (ChecklistTemplate). Stored directly so the type survives even
+  // when the template has no fields (nothing to infer from checklist items).
+  templateId        String?
   title             String
   description       String?
   billable          Boolean  @default(true)
@@ -654,6 +754,7 @@ model Task {
   publish           Boolean  @default(true) // goes to the publish calendar when completed (stamped from task type)
   priority          Int?
   estimateMin       Int?
+  plannedMinutes    Float?   // planned video length in minutes (null = 2-min baseline)
   dueDate           DateTime?
   completedAt       DateTime?
   assignmentHistory Json?
@@ -669,6 +770,7 @@ model Task {
   project        Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
   service        Service?           @relation(fields: [serviceId], references: [id], onDelete: SetNull)
   status         TaskStatus?        @relation(fields: [statusId], references: [id])
+  template       ChecklistTemplate? @relation("TaskType", fields: [templateId], references: [id], onDelete: SetNull)
   assignee       WorkspaceMember?   @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
   checklistItems TaskChecklistItem[]
   comments       Message[]
@@ -682,6 +784,7 @@ model Task {
   @@index([projectId, deletedAt])
   // Board query: live tasks per project grouped by column.
   @@index([projectId, deletedAt, statusId])
+  @@index([projectId, templateId])
   // Publish queue: completed/review tasks with publishing enabled.
   @@index([statusId, publish, deletedAt])
 }
@@ -1062,6 +1165,7 @@ model Attachment {
   name          String
   sizeBytes     Int?
   contentType   String?
+  durationSec   Float?    // media duration captured client-side at upload (audio/video)
   r2Key         String?
   status        String    @default("uploading") // uploading | uploaded | failed
   uploadId      String?   // R2 multipart upload ID
@@ -1073,6 +1177,8 @@ model Attachment {
   workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   @@index([workspaceId, entityType, entityId])
+  // Effort/duration lookups query by entity without workspaceId.
+  @@index([entityType, entityId, status])
   @@index([r2Key])
 }
 

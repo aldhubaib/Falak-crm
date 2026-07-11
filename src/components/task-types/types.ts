@@ -19,6 +19,21 @@ export type TTField = {
   publishCard: string;
   /** Disabled: kept with its task data but not shown or enforced anywhere. */
   hidden: boolean;
+  /** Effort measurement: null = no effort, or "words" | "audio_min" | "video_min" | "fixed". */
+  effortUnit: string | null;
+  /** Expected quantity per planned video-minute — predicts effort before content exists. */
+  qtyPerVideoMinute: number | null;
+};
+
+/** A named, editable group of fields on a task type. The phase drives the
+ * behavior: "create" sections belong to the new-task form and lock after
+ * Todo; "delivery" sections are filled during work. */
+export type TTSection = {
+  id: string;
+  name: string;
+  phase: Section;
+  order: number;
+  fields: TTField[];
 };
 
 export type TaskTypeVM = {
@@ -33,8 +48,7 @@ export type TaskTypeVM = {
   /** Custom display copy for the built-in Title (null = default). */
   titleLabel: string | null;
   titleHelp: string | null;
-  requirementFields: TTField[];
-  deliveryFields: TTField[];
+  sections: TTSection[];
 };
 
 export type TitleLockPatch = {
@@ -61,4 +75,6 @@ export type FieldPatch = {
   lockedFromStageId?: string | null;
   neverLock?: boolean;
   publishCard?: string;
+  effortUnit?: string | null;
+  qtyPerVideoMinute?: number | null;
 };

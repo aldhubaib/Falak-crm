@@ -5,6 +5,11 @@ import { requireProjectWork } from "@/lib/workspace";
 import { weekStartOf } from "@/lib/week";
 import { ensureWeeklySlots } from "@/lib/weekly-slots";
 import { getProjectTimezone } from "@/lib/project-timezone";
+import {
+  cycleEndOf,
+  REPEAT_EVERY_VALUES,
+  type RepeatEvery,
+} from "@/lib/weekly-plan";
 
 export type BoardStatus = {
   id: string;
@@ -37,6 +42,9 @@ export type BoardTask = {
   rejectionCount: number;
   /** Task type (ChecklistTemplate id) — groups the Todo column's weekly slots. */
   templateId: string | null;
+  templateName: string | null;
+  templateIcon: string | null;
+  templateColor: string | null;
 };
 
 // One unfilled weekly plan slot shown as a dashed Todo placeholder.
@@ -56,6 +64,8 @@ export type WeeklyGroup = {
   templateIcon: string | null;
   total: number;
   emptySlots: WeeklyEmptySlot[];
+  /** Deadline of the current plan cycle, e.g. "Jul 13" (project timezone). */
+  dueLabel: string | null;
 };
 
 export type BoardData = {
@@ -77,7 +87,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
 
   const weekStart = weekStartOf(new Date(), timezone);
 
-  const [tasks, statuses, changes, checklistAgg, slots] = await Promise.all([
+  const [tasks, statuses, changes, checklistAgg, slots, targets, templates] = await Promise.all([
     db.task.findMany({
       where: { projectId, deletedAt: null },
       orderBy: { order: "asc" },
@@ -92,6 +102,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         createdAt: true,
         stageTimings: true,
         rejectionCount: true,
+        templateId: true,
         status: { select: { name: true, color: true } },
         assignee: { select: { id: true, name: true, email: true, imageUrl: true } },
         service: { select: { name: true } },
@@ -178,6 +189,14 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         template: { select: { name: true, color: true, icon: true } },
       },
     }),
+    db.projectWeeklyTarget.findMany({
+      where: { projectId },
+      select: { templateId: true, repeatEvery: true, startOn: true },
+    }),
+    db.checklistTemplate.findMany({
+      where: { workspaceId: workspace.id },
+      select: { id: true, name: true, icon: true, color: true },
+    }),
   ]);
 
   // Resolve who to @mention (and cannot be changed) when a task is declined.
@@ -203,6 +222,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
   }
 
   const checklistByTask = new Map(checklistAgg.map((row) => [row.taskId, row]));
+  const templateById = new Map(templates.map((t) => [t.id, t]));
 
   const now = Date.now();
   const mappedTasks: BoardTask[] = tasks.map((t) => {
@@ -213,6 +233,12 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
       ? now - t.stageEnteredAt.getTime()
       : 0;
     const checklist = checklistByTask.get(t.id);
+    // Stored type first; the checklist-derived id covers legacy tasks created
+    // before Task.templateId existed.
+    const taskTemplateId = t.templateId ?? checklist?.templateId ?? null;
+    const template = taskTemplateId
+      ? templateById.get(taskTemplateId)
+      : undefined;
     return {
       id: t.id,
       taskNumber: t.taskNumber,
@@ -235,9 +261,35 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
       submittedById: submittedBy.get(t.id)?.id ?? null,
       submittedByName: submittedBy.get(t.id)?.name ?? null,
       rejectionCount: t.rejectionCount ?? 0,
-      templateId: checklist?.templateId ?? null,
+      templateId: taskTemplateId,
+      templateName: template?.name ?? null,
+      templateIcon: template?.icon ?? null,
+      templateColor: template?.color ?? null,
     };
   });
+
+  // Deadline of the current plan cycle per task type — shown as "due <date>"
+  // on the dashed slot placeholders. The cycle is anchored at the target's
+  // Start On and advances by its Repeat Every (week, month, …).
+  const dueLabelByTemplate = new Map<string, string>();
+  const dueFmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    month: "short",
+    day: "numeric",
+  });
+  for (const t of targets) {
+    const repeat = (
+      REPEAT_EVERY_VALUES.includes(t.repeatEvery as RepeatEvery)
+        ? t.repeatEvery
+        : "week"
+    ) as RepeatEvery;
+    const cycleEnd = cycleEndOf(t.startOn, repeat);
+    // Show the last day of the cycle, not the first day of the next one.
+    dueLabelByTemplate.set(
+      t.templateId,
+      dueFmt.format(new Date(cycleEnd.getTime() - 60_000)),
+    );
+  }
 
   const weekly: WeeklyGroup[] = [];
   for (const s of slots) {
@@ -250,6 +302,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         templateIcon: s.template.icon,
         total: 0,
         emptySlots: [],
+        dueLabel: dueLabelByTemplate.get(s.templateId) ?? null,
       };
       weekly.push(group);
     }
