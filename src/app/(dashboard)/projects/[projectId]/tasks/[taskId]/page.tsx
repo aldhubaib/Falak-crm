@@ -323,6 +323,9 @@ export default async function TaskDetailPage({
               avatar: task.assignee.imageUrl ?? null,
             }
           : null,
+        // Anyone who isn't the assignee sees the ownership banner — including
+        // workspace owners, who can still edit but may want to claim the task.
+        show: !trashed && task.assigneeId != null && !isAssignee,
         readOnly: !trashed && !assigneeGateOpen,
         canTakeOwnership,
       }}

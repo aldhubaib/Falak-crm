@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import {
   getActiveProjectsDashboard,
+  getDashboardStats,
   getThisWeekSchedule,
 } from "@/actions/projects-dashboard";
 import { getMyResponsibility } from "@/actions/responsibility";
@@ -11,10 +12,17 @@ import { AppHeader } from "@/components/app-header";
 import { PageContainer } from "@/components/page-container";
 import { Button } from "@/components/ui/button";
 import { ActiveProjectsStat } from "@/components/dashboard/active-projects-stat";
+import {
+  CompletedTasksStat,
+  PlannedTasksStat,
+  RejectedTasksStat,
+} from "@/components/dashboard/task-stats";
 import { MyResponsibilityModule } from "@/components/dashboard/my-responsibility-module";
 import { WeeklyScheduleModule } from "@/components/dashboard/weekly-schedule-module";
 
 export default async function ProjectsPage() {
+  // getThisWeekSchedule materialises this week's plan slots before
+  // getDashboardStats reads them, so it runs first.
   const [{ member }, activeProjects, responsibility, thisWeek] =
     await Promise.all([
       requireWorkspaceWithMember(),
@@ -22,6 +30,7 @@ export default async function ProjectsPage() {
       getMyResponsibility(),
       getThisWeekSchedule(),
     ]);
+  const stats = await getDashboardStats();
   const editable = canEdit(member, "projects");
 
   return (
@@ -42,6 +51,21 @@ export default async function ProjectsPage() {
         <PageContainer className="mx-auto max-w-[1600px]">
           <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
             <ActiveProjectsStat projects={activeProjects} />
+            <PlannedTasksStat
+              thisWeekCount={stats.planned.thisWeekCount}
+              nextWeekCount={stats.planned.nextWeekCount}
+              thisWeek={stats.planned.thisWeek}
+              nextWeek={stats.planned.nextWeek}
+            />
+            <CompletedTasksStat
+              done={stats.completed.done}
+              total={stats.completed.total}
+              tasks={stats.completed.tasks}
+            />
+            <RejectedTasksStat
+              count={stats.rejected.count}
+              tasks={stats.rejected.tasks}
+            />
           </div>
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

@@ -242,6 +242,8 @@ export type TaskMoveData = {
 // read-only because of it, and whether they may claim it from the banner.
 export type TaskOwnership = {
   assignee: { id: string; name: string; avatar: string | null } | null;
+  /** Render the ownership banner (viewer is not the task's assignee). */
+  show: boolean;
   /** True when the viewer is a non-assignee locked out of the work product. */
   readOnly: boolean;
   /** Forward right on the current stage — allows the banner's self-assign. */
@@ -333,8 +335,10 @@ export function TaskDetailClient({
       router.push(`/projects/${projectId}`);
     });
 
-  // Claim the task from the read-only banner — on success the server render
-  // flips canEditFields and the banner disappears.
+  // Claim the task from the read-only banner — the chip opens a confirmation
+  // dialog first; on success the server render flips canEditFields and the
+  // banner disappears.
+  const [confirmOwnership, setConfirmOwnership] = useState(false);
   const { run: runTakeOwnership, loading: takingOwnership } = useActionHandler();
   const handleTakeOwnership = () =>
     runTakeOwnership("Take Ownership", async () => {
@@ -558,13 +562,16 @@ export function TaskDetailClient({
               </div>
             </div>
           )}
-          {/* Assignee-only editing: non-assignees view read-only and can claim
-              the task here when they hold the Forward right on this stage. */}
-          {!trashed && ownership?.readOnly && (
+          {/* Assignee-only editing: non-assignees see who owns the task and can
+              claim it here when they hold the Forward right on this stage.
+              Non-owners are read-only; workspace owners can still edit. */}
+          {!trashed && ownership?.show && (
             <div className="flex flex-wrap items-center gap-3 rounded-md border border-border/60 bg-surface px-4 py-3">
               <Eye className="h-4 w-4 shrink-0 text-muted-foreground" />
               <div className="min-w-0 flex-1 text-sm text-muted-foreground">
-                Only the assignee can edit — you are viewing in read-only.
+                {ownership.readOnly
+                  ? "Only the assignee can edit — you are viewing in read-only."
+                  : "This task belongs to someone else — as the workspace owner you can still edit."}
               </div>
               <div className="flex shrink-0 items-center gap-2.5">
                 <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
@@ -573,7 +580,7 @@ export function TaskDetailClient({
                 <button
                   type="button"
                   disabled={!ownership.canTakeOwnership || takingOwnership}
-                  onClick={handleTakeOwnership}
+                  onClick={() => setConfirmOwnership(true)}
                   title={
                     ownership.canTakeOwnership
                       ? "Take ownership — assign this task to yourself and edit"
@@ -611,6 +618,25 @@ export function TaskDetailClient({
                 </button>
               </div>
             </div>
+          )}
+          {/* Take-ownership confirmation (assignee chip in the banner). */}
+          {ownership?.show && (
+            <ConfirmStatusDialog
+              open={confirmOwnership}
+              onClose={() => setConfirmOwnership(false)}
+              onConfirm={() => {
+                setConfirmOwnership(false);
+                void handleTakeOwnership();
+              }}
+              title="Assign to me"
+              description="By confirming, this task will be assigned to you and you take ownership of it."
+              confirmLabel="Assign to Me"
+              assignToMe
+              currentAssigneeName={ownership.assignee?.name}
+              currentAssigneeAvatar={ownership.assignee?.avatar}
+              meName={move?.me?.name}
+              meAvatar={move?.me?.avatar}
+            />
           )}
           {/* Task type / title / priority — mirrors the New Task page */}
           <FormSection
