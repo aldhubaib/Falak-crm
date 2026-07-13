@@ -1,6 +1,7 @@
 "use server";
 
 import { clerkClient } from "@clerk/nextjs/server";
+import { addToClerkAllowlist, removeFromClerkAllowlist } from "@/lib/clerk-allowlist";
 import { db } from "@/lib/db";
 import { requireWorkspaceWithMember } from "@/lib/workspace";
 import { canEdit, newRolePermissions, normalizePermissions } from "@/lib/permissions";
@@ -110,9 +111,9 @@ export async function inviteMember(formData: FormData): Promise<ActionResult> {
     const name = (formData.get("name") as string) || undefined;
     const type = (formData.get("type") as string) || "MEMBER";
 
-    // Invite-only is enforced by the app itself: Clerk sign-ups are open, but
-    // accounts whose email doesn't match a member row land on /not-invited.
-    // Adding this row is what grants access — no email is sent.
+    // Invite-only is enforced by the app itself: accounts whose email doesn't
+    // match a member row land on /not-invited. Adding this row is what grants
+    // access — no email is sent.
     await db.workspaceMember.create({
       data: {
         workspaceId: workspace.id,
@@ -122,6 +123,11 @@ export async function inviteMember(formData: FormData): Promise<ActionResult> {
         type: type as "MEMBER" | "FREELANCER",
       },
     });
+
+    // Mirror into Clerk's allowlist so the sign-in form itself accepts the
+    // email (with the allowlist restriction on, unknown emails are rejected
+    // right at sign-in instead of landing on /not-invited).
+    await addToClerkAllowlist(email);
 
     revalidatePath("/settings/team");
   }, { formFields: Object.fromEntries(formData) });
@@ -272,6 +278,9 @@ export async function removeMember(memberId: string): Promise<ActionResult> {
     await db.workspaceMember.delete({
       where: { id: memberId },
     });
+
+    // Revoke sign-in at the Clerk level too.
+    await removeFromClerkAllowlist(target.email);
 
     revalidatePath("/settings/team");
   }, { memberId });

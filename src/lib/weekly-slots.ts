@@ -83,7 +83,61 @@ export async function ensureWeeklySlots(projectId: string): Promise<void> {
   }
 
   await backfillSlotAssignees(projectId, weekStart, targets);
+  await carryOverTodoTasks(projectId, weekStart);
   await adoptTodoTasksIntoSlots(projectId, weekStart);
+}
+
+// Unfinished Todo work rolls into the new week: a task still sitting in Todo
+// whose slot belongs to a previous week takes one of the new week's free
+// slots (same type, oldest first) instead of the plan minting full fresh
+// capacity on top of the carried-over task.
+async function carryOverTodoTasks(
+  projectId: string,
+  weekStart: Date,
+): Promise<void> {
+  const stale = await db.weeklySlot.findMany({
+    where: {
+      projectId,
+      weekStart: { lt: weekStart },
+      removedAt: null,
+      task: { deletedAt: null, status: { name: "Todo" } },
+    },
+    orderBy: { createdAt: "asc" },
+    select: { id: true, templateId: true, taskId: true },
+  });
+  if (stale.length === 0) return;
+
+  const free = await db.weeklySlot.findMany({
+    where: { projectId, weekStart, taskId: null, removedAt: null },
+    orderBy: { createdAt: "asc" },
+    select: { id: true, templateId: true },
+  });
+  if (free.length === 0) return;
+
+  const freeByTemplate = new Map<string, string[]>();
+  for (const s of free) {
+    const ids = freeByTemplate.get(s.templateId) ?? [];
+    ids.push(s.id);
+    freeByTemplate.set(s.templateId, ids);
+  }
+
+  for (const old of stale) {
+    const targetId = freeByTemplate.get(old.templateId)?.shift();
+    if (!targetId || !old.taskId) continue;
+    // taskId is unique across slots — free the old binding before claiming
+    // the new one. The `taskId: null` guard leaves concurrently claimed
+    // slots alone (the task then just keeps last week's slot).
+    await db.$transaction([
+      db.weeklySlot.update({
+        where: { id: old.id },
+        data: { taskId: null },
+      }),
+      db.weeklySlot.updateMany({
+        where: { id: targetId, taskId: null },
+        data: { taskId: old.taskId },
+      }),
+    ]);
+  }
 }
 
 async function backfillSlotAssignees(
