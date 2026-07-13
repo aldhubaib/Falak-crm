@@ -44,6 +44,7 @@ import {
   Pencil,
   Type as TypeIcon,
   Calculator,
+  CalendarClock,
   Eye,
 } from "lucide-react";
 import { VideoPlayer, formatMediaTime } from "@/components/media/video-player";
@@ -84,10 +85,16 @@ import {
   backfillAttachmentDuration,
   deleteTask,
   updateTask,
+  updateTaskDueDate,
   updateTaskStatus,
   assignTaskToMe,
   previewForwardOwnership,
 } from "@/actions/projects";
+import {
+  DEFAULT_PROJECT_TIMEZONE,
+  formatZonedDateInput,
+  parseZonedDateTime,
+} from "@/lib/timezone";
 import { ConfirmStatusDialog } from "@/components/board/confirm-status-dialog";
 import { DeclineDialog } from "@/components/board/decline-dialog";
 import { CONFIRM_MESSAGES } from "@/components/board/confirm-messages";
@@ -256,6 +263,9 @@ export function TaskDetailClient({
   canDelete,
   canEditTitle,
   canEditFields,
+  canChangeDueDate,
+  dueDate,
+  timezone,
   isOwner,
   ownership,
   trashed,
@@ -283,6 +293,12 @@ export function TaskDetailClient({
   canEditTitle: boolean;
   /** Whether the member may edit checklist fields at the current stage. */
   canEditFields: boolean;
+  /** Modify right at the current stage — shows "Change due date" in ⋮. */
+  canChangeDueDate?: boolean;
+  /** Current deadline (ISO), if the task has one. */
+  dueDate?: string | null;
+  /** Project timezone — due dates are end-of-day in this zone. */
+  timezone?: string;
   /** Workspace owner — unlocks the Effort breakdown (audit) dialog. */
   isOwner?: boolean;
   /** Assignee-only editing state (read-only banner + take ownership). */
@@ -314,6 +330,33 @@ export function TaskDetailClient({
   const [historyOpen, setHistoryOpen] = useState(false);
   const [historyTab, setHistoryTab] = useState<"all" | "comments" | "status">("all");
   const [effortOpen, setEffortOpen] = useState(false);
+
+  // Change due date (⋮ menu): date picker seeded with the current deadline;
+  // past dates are blocked here and re-checked on the server.
+  const tz = timezone ?? DEFAULT_PROJECT_TIMEZONE;
+  const todayStr = formatZonedDateInput(new Date(), tz).date;
+  const [dueDateOpen, setDueDateOpen] = useState(false);
+  const [dueDraft, setDueDraft] = useState("");
+  const openDueDialog = () => {
+    setDueDraft(
+      dueDate ? formatZonedDateInput(new Date(dueDate), tz).date : todayStr,
+    );
+    setDueDateOpen(true);
+  };
+  const { run: runDueDate, loading: savingDueDate } = useActionHandler();
+  const handleSaveDueDate = () => {
+    if (!dueDraft || dueDraft < todayStr) return;
+    runDueDate("Change Due Date", async () => {
+      // Deadlines are end-of-day in the project's timezone.
+      await updateTaskDueDate(
+        taskId,
+        parseZonedDateTime(dueDraft, "23:59", tz, new Date()),
+      );
+      setDueDateOpen(false);
+      router.refresh();
+      return true;
+    });
+  };
 
   const queryClient = useQueryClient();
   // Drop the task from the board's React Query cache right away — the board
@@ -462,6 +505,12 @@ export function TaskDetailClient({
                 />
               )}
               {!trashed && move && <DropdownMenuSeparator />}
+              {!trashed && canChangeDueDate && (
+                <DropdownMenuItem onSelect={openDueDialog}>
+                  <CalendarClock className="size-4" />
+                  Change due date
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem onSelect={() => setHistoryOpen(true)}>
                 <History className="size-4" />
                 History
@@ -493,6 +542,64 @@ export function TaskDetailClient({
           onOpenChange={setEffortOpen}
         />
       )}
+
+      {/* Change due date (⋮ menu). */}
+      <Dialog
+        open={dueDateOpen}
+        onOpenChange={(o) => !savingDueDate && setDueDateOpen(o)}
+      >
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <CalendarClock className="size-4" />
+              Change due date
+            </DialogTitle>
+            <DialogDescription>
+              {dueDate
+                ? `Current deadline: ${new Intl.DateTimeFormat("en-US", {
+                    timeZone: tz,
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  }).format(new Date(dueDate))}. `
+                : "This task has no deadline yet. "}
+              Pick a new one — past dates aren&apos;t allowed.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-1.5">
+            <input
+              type="date"
+              value={dueDraft}
+              min={todayStr}
+              onChange={(e) => setDueDraft(e.target.value)}
+              className="h-9 w-full rounded-lg border border-border/60 bg-background/60 px-2 text-xs tabular-nums text-foreground outline-none [color-scheme:dark]"
+            />
+            {dueDraft && dueDraft < todayStr && (
+              <p className="text-tiny text-destructive">
+                The due date can&apos;t be in the past.
+              </p>
+            )}
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="ghost"
+              disabled={savingDueDate}
+              onClick={() => setDueDateOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              disabled={!dueDraft || dueDraft < todayStr || savingDueDate}
+              onClick={handleSaveDueDate}
+            >
+              {savingDueDate && <Loader2 className="size-4 animate-spin" />}
+              Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={confirmDelete} onOpenChange={(o) => !deleting && setConfirmDelete(o)}>
         <DialogContent className="sm:max-w-sm">

@@ -1544,6 +1544,41 @@ export async function updateTask(taskId: string, data: {
   revalidatePath(`/projects/${task.projectId}/tasks/${taskId}`);
 }
 
+// Change a task's deadline from the detail page's ⋮ menu. Same Modify-right
+// gate as updateTask; the new date can't be in the past (the client sends
+// end-of-day in the project's timezone, so "today" is still valid).
+export async function updateTaskDueDate(taskId: string, dueDate: Date) {
+  await requireWorkspaceWithMember();
+
+  const task = await db.task.findUnique({
+    where: { id: taskId },
+    select: { projectId: true, statusId: true, deletedAt: true },
+  });
+  if (!task) throw new Error("Task not found");
+  if (task.deletedAt) throw new Error("Task is in the trash");
+
+  const access = await requireProjectWork(task.projectId);
+  const canModify =
+    access.permissions.projects === "full" ||
+    (task.statusId
+      ? access.permissions.taskPermissions?.stages?.[task.statusId]?.modify === true
+      : false);
+  if (!canModify) {
+    throw new Error("You don't have permission to modify tasks at this stage");
+  }
+
+  const due = new Date(dueDate);
+  if (isNaN(due.getTime())) throw new Error("Pick a valid due date");
+  if (due.getTime() < Date.now()) {
+    throw new Error("The due date can't be in the past");
+  }
+
+  await db.task.update({ where: { id: taskId }, data: { dueDate: due } });
+
+  revalidatePath(`/projects/${task.projectId}`);
+  revalidatePath(`/projects/${task.projectId}/tasks/${taskId}`);
+}
+
 // ─── Checklist Items ──────────────────────────────────────────────────────────
 
 // Server-side write guard: the task page disables locked fields in the UI,

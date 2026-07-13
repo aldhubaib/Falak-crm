@@ -6,6 +6,7 @@ import { getTaskHistory, getTaskComments } from "@/actions/comments";
 import { db } from "@/lib/db";
 import { createPresignedGet } from "@/lib/storage";
 import { getProjectAccess } from "@/lib/workspace";
+import { getProjectTimezone } from "@/lib/project-timezone";
 import { canDeleteTaskAt, canMoveTaskFrom } from "@/lib/permissions";
 import {
   autoLockOrder,
@@ -198,10 +199,11 @@ export default async function TaskDetailPage({
       ?.template?.name ??
     null;
 
-  const [history, comments, access] = await Promise.all([
+  const [history, comments, access, timezone] = await Promise.all([
     getTaskHistory(taskId),
     getTaskComments(taskId),
     getProjectAccess(projectId),
+    getProjectTimezone(projectId),
   ]);
 
   // Who can be @mentioned in comments: the project's team plus workspace
@@ -314,6 +316,9 @@ export default async function TaskDetailPage({
       canDelete={!trashed && canDelete}
       canEditTitle={!trashed && canModify && !titleLocked && assigneeGateOpen}
       canEditFields={!trashed && canModify && assigneeGateOpen}
+      canChangeDueDate={!trashed && canModify}
+      dueDate={task.dueDate?.toISOString() ?? null}
+      timezone={timezone}
       isOwner={isWorkspaceOwner}
       ownership={{
         assignee: task.assignee
