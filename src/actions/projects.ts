@@ -791,8 +791,11 @@ export async function updateTaskStatus(
           : "week"
       ) as RepeatEvery;
       const currentCycleEnd = cycleEndOf(target.startOn, repeat);
+      // A force-added slot carries its own deadline — it beats the cycle end.
+      let claimedSlotDueDate: Date | null = null;
       if (freeSlot) {
         claimSlotId = freeSlot.id;
+        claimedSlotDueDate = freeSlot.dueDate;
       } else if (weekRows < target.perWeek) {
         // This week's slots weren't materialised yet (board not opened since
         // the week rolled over) — the move itself creates the missing slot.
@@ -817,6 +820,7 @@ export async function updateTaskStatus(
         });
         if (nextWeekFreeSlot) {
           claimSlotId = nextWeekFreeSlot.id;
+          claimedSlotDueDate = nextWeekFreeSlot.dueDate;
         } else {
           createExtraSlot = true;
         }
@@ -827,7 +831,7 @@ export async function updateTaskStatus(
       const dueCycleEnd = overflowToNextWeek
         ? cycleEndOf(target.startOn, repeat, currentCycleEnd)
         : currentCycleEnd;
-      slotDueDate = new Date(dueCycleEnd.getTime() - 60_000);
+      slotDueDate = claimedSlotDueDate ?? new Date(dueCycleEnd.getTime() - 60_000);
     }
   }
   // Rolling back OUT of Todo frees the task's slot for someone else this week.

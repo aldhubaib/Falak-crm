@@ -3,6 +3,15 @@
 import { useState, useTransition } from "react";
 import { Check, ChevronDown, Minus, Plus, Zap } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { cn } from "@/lib/utils";
@@ -113,6 +122,24 @@ export function PlanningTemplatesSection({
 }) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [forcePending, startForce] = useTransition();
+  // Force-add flow: pick the extra slot's due date first (never in the past).
+  const [forceAddFor, setForceAddFor] = useState<Template | null>(null);
+  const todayStr = formatZonedDateInput(new Date(), timezone).date;
+  const [forceDate, setForceDate] = useState(todayStr);
+
+  const confirmForceAdd = () => {
+    const target = forceAddFor;
+    if (!target || !forceDate || forceDate < todayStr) return;
+    setForceAddFor(null);
+    startForce(async () => {
+      // Deadlines are end-of-day in the project's timezone.
+      await forceAddWeeklySlot(
+        projectId,
+        target.id,
+        parseZonedDateTime(forceDate, "23:59", timezone, new Date()),
+      );
+    });
+  };
 
   const toggleTemplate = (id: string) => {
     const next = templateIds.includes(id)
@@ -347,11 +374,10 @@ export function PlanningTemplatesSection({
                     <button
                       type="button"
                       disabled={forcePending}
-                      onClick={() =>
-                        startForce(async () => {
-                          await forceAddWeeklySlot(projectId, t.id);
-                        })
-                      }
+                      onClick={() => {
+                        setForceDate(todayStr);
+                        setForceAddFor(t);
+                      }}
                       className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-xxs font-medium text-amber-400 hover:bg-amber-500/15 disabled:opacity-50"
                     >
                       <Zap className="size-3" />
@@ -364,6 +390,57 @@ export function PlanningTemplatesSection({
           </div>
         );
       })}
+
+      {/* Force-add: the extra slot needs its own deadline (today or later). */}
+      <Dialog
+        open={forceAddFor != null}
+        onOpenChange={(open) => !open && setForceAddFor(null)}
+      >
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Force-add a slot</DialogTitle>
+            <DialogDescription>
+              Adds one extra {forceAddFor?.name} slot to this week&apos;s plan.
+              Pick its due date — past dates aren&apos;t allowed.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-1.5">
+            <Label className="text-xxs font-medium text-muted-foreground">
+              Due date<span className="text-rose-400"> *</span>
+            </Label>
+            <input
+              type="date"
+              value={forceDate}
+              min={todayStr}
+              onChange={(e) => setForceDate(e.target.value)}
+              className="h-9 w-full rounded-lg border border-border/60 bg-background/60 px-2 text-xs tabular-nums text-foreground outline-none [color-scheme:dark]"
+            />
+            {forceDate && forceDate < todayStr && (
+              <p className="text-xxs text-rose-400">
+                The due date can&apos;t be in the past.
+              </p>
+            )}
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setForceAddFor(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              disabled={!forceDate || forceDate < todayStr || forcePending}
+              onClick={confirmForceAdd}
+              className="gap-1.5"
+            >
+              <Zap className="size-3.5" />
+              Force add
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

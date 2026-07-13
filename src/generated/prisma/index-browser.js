@@ -389,6 +389,7 @@ exports.Prisma.WeeklySlotScalarFieldEnum = {
   weekStart: 'weekStart',
   taskId: 'taskId',
   assigneeId: 'assigneeId',
+  dueDate: 'dueDate',
   removedAt: 'removedAt',
   createdAt: 'createdAt'
 };

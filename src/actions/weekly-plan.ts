@@ -219,16 +219,25 @@ export async function setWeeklyTargets(
 export async function forceAddWeeklySlot(
   projectId: string,
   templateId: string,
+  dueDate: Date,
 ): Promise<void> {
   const access = await requireProjectSettings(projectId);
   if (access.permissions.projects !== "full") {
     throw new Error("Only an owner can force-add a slot");
   }
 
+  // The client sends end-of-day (23:59) in the project timezone, so picking
+  // today is fine while any earlier day is already behind "now".
+  const due = new Date(dueDate);
+  if (isNaN(due.getTime())) throw new Error("Pick a due date for the slot");
+  if (due.getTime() < Date.now()) {
+    throw new Error("The due date can't be in the past");
+  }
+
   const weekStart = weekStartOf(new Date(), await getProjectTimezone(projectId));
   const assigneeId = await resolveNewSlotAssignee(projectId, templateId);
   await db.weeklySlot.create({
-    data: { projectId, templateId, weekStart, assigneeId },
+    data: { projectId, templateId, weekStart, assigneeId, dueDate: due },
   });
 
   revalidatePath(`/projects/${projectId}`);

@@ -33284,6 +33284,7 @@ export namespace Prisma {
     weekStart: Date | null
     taskId: string | null
     assigneeId: string | null
+    dueDate: Date | null
     removedAt: Date | null
     createdAt: Date | null
   }
@@ -33295,6 +33296,7 @@ export namespace Prisma {
     weekStart: Date | null
     taskId: string | null
     assigneeId: string | null
+    dueDate: Date | null
     removedAt: Date | null
     createdAt: Date | null
   }
@@ -33306,6 +33308,7 @@ export namespace Prisma {
     weekStart: number
     taskId: number
     assigneeId: number
+    dueDate: number
     removedAt: number
     createdAt: number
     _all: number
@@ -33319,6 +33322,7 @@ export namespace Prisma {
     weekStart?: true
     taskId?: true
     assigneeId?: true
+    dueDate?: true
     removedAt?: true
     createdAt?: true
   }
@@ -33330,6 +33334,7 @@ export namespace Prisma {
     weekStart?: true
     taskId?: true
     assigneeId?: true
+    dueDate?: true
     removedAt?: true
     createdAt?: true
   }
@@ -33341,6 +33346,7 @@ export namespace Prisma {
     weekStart?: true
     taskId?: true
     assigneeId?: true
+    dueDate?: true
     removedAt?: true
     createdAt?: true
     _all?: true
@@ -33425,6 +33431,7 @@ export namespace Prisma {
     weekStart: Date
     taskId: string | null
     assigneeId: string | null
+    dueDate: Date | null
     removedAt: Date | null
     createdAt: Date
     _count: WeeklySlotCountAggregateOutputType | null
@@ -33453,6 +33460,7 @@ export namespace Prisma {
     weekStart?: boolean
     taskId?: boolean
     assigneeId?: boolean
+    dueDate?: boolean
     removedAt?: boolean
     createdAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -33468,6 +33476,7 @@ export namespace Prisma {
     weekStart?: boolean
     taskId?: boolean
     assigneeId?: boolean
+    dueDate?: boolean
     removedAt?: boolean
     createdAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -33483,6 +33492,7 @@ export namespace Prisma {
     weekStart?: boolean
     taskId?: boolean
     assigneeId?: boolean
+    dueDate?: boolean
     removedAt?: boolean
     createdAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -33498,11 +33508,12 @@ export namespace Prisma {
     weekStart?: boolean
     taskId?: boolean
     assigneeId?: boolean
+    dueDate?: boolean
     removedAt?: boolean
     createdAt?: boolean
   }
 
-  export type WeeklySlotOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "templateId" | "weekStart" | "taskId" | "assigneeId" | "removedAt" | "createdAt", ExtArgs["result"]["weeklySlot"]>
+  export type WeeklySlotOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "templateId" | "weekStart" | "taskId" | "assigneeId" | "dueDate" | "removedAt" | "createdAt", ExtArgs["result"]["weeklySlot"]>
   export type WeeklySlotInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
@@ -33537,6 +33548,7 @@ export namespace Prisma {
       weekStart: Date
       taskId: string | null
       assigneeId: string | null
+      dueDate: Date | null
       removedAt: Date | null
       createdAt: Date
     }, ExtArgs["result"]["weeklySlot"]>
@@ -33972,6 +33984,7 @@ export namespace Prisma {
     readonly weekStart: FieldRef<"WeeklySlot", 'DateTime'>
     readonly taskId: FieldRef<"WeeklySlot", 'String'>
     readonly assigneeId: FieldRef<"WeeklySlot", 'String'>
+    readonly dueDate: FieldRef<"WeeklySlot", 'DateTime'>
     readonly removedAt: FieldRef<"WeeklySlot", 'DateTime'>
     readonly createdAt: FieldRef<"WeeklySlot", 'DateTime'>
   }
@@ -72911,6 +72924,7 @@ export namespace Prisma {
     weekStart: 'weekStart',
     taskId: 'taskId',
     assigneeId: 'assigneeId',
+    dueDate: 'dueDate',
     removedAt: 'removedAt',
     createdAt: 'createdAt'
   };
@@ -75636,6 +75650,7 @@ export namespace Prisma {
     weekStart?: DateTimeFilter<"WeeklySlot"> | Date | string
     taskId?: StringNullableFilter<"WeeklySlot"> | string | null
     assigneeId?: StringNullableFilter<"WeeklySlot"> | string | null
+    dueDate?: DateTimeNullableFilter<"WeeklySlot"> | Date | string | null
     removedAt?: DateTimeNullableFilter<"WeeklySlot"> | Date | string | null
     createdAt?: DateTimeFilter<"WeeklySlot"> | Date | string
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
@@ -75651,6 +75666,7 @@ export namespace Prisma {
     weekStart?: SortOrder
     taskId?: SortOrderInput | SortOrder
     assigneeId?: SortOrderInput | SortOrder
+    dueDate?: SortOrderInput | SortOrder
     removedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     project?: ProjectOrderByWithRelationInput
@@ -75669,6 +75685,7 @@ export namespace Prisma {
     templateId?: StringFilter<"WeeklySlot"> | string
     weekStart?: DateTimeFilter<"WeeklySlot"> | Date | string
     assigneeId?: StringNullableFilter<"WeeklySlot"> | string | null
+    dueDate?: DateTimeNullableFilter<"WeeklySlot"> | Date | string | null
     removedAt?: DateTimeNullableFilter<"WeeklySlot"> | Date | string | null
     createdAt?: DateTimeFilter<"WeeklySlot"> | Date | string
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
@@ -75684,6 +75701,7 @@ export namespace Prisma {
     weekStart?: SortOrder
     taskId?: SortOrderInput | SortOrder
     assigneeId?: SortOrderInput | SortOrder
+    dueDate?: SortOrderInput | SortOrder
     removedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: WeeklySlotCountOrderByAggregateInput
@@ -75701,6 +75719,7 @@ export namespace Prisma {
     weekStart?: DateTimeWithAggregatesFilter<"WeeklySlot"> | Date | string
     taskId?: StringNullableWithAggregatesFilter<"WeeklySlot"> | string | null
     assigneeId?: StringNullableWithAggregatesFilter<"WeeklySlot"> | string | null
+    dueDate?: DateTimeNullableWithAggregatesFilter<"WeeklySlot"> | Date | string | null
     removedAt?: DateTimeNullableWithAggregatesFilter<"WeeklySlot"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"WeeklySlot"> | Date | string
   }
@@ -80616,6 +80635,7 @@ export namespace Prisma {
   export type WeeklySlotCreateInput = {
     id?: string
     weekStart: Date | string
+    dueDate?: Date | string | null
     removedAt?: Date | string | null
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutWeeklySlotsInput
@@ -80631,6 +80651,7 @@ export namespace Prisma {
     weekStart: Date | string
     taskId?: string | null
     assigneeId?: string | null
+    dueDate?: Date | string | null
     removedAt?: Date | string | null
     createdAt?: Date | string
   }
@@ -80638,6 +80659,7 @@ export namespace Prisma {
   export type WeeklySlotUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutWeeklySlotsNestedInput
@@ -80653,6 +80675,7 @@ export namespace Prisma {
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -80664,6 +80687,7 @@ export namespace Prisma {
     weekStart: Date | string
     taskId?: string | null
     assigneeId?: string | null
+    dueDate?: Date | string | null
     removedAt?: Date | string | null
     createdAt?: Date | string
   }
@@ -80671,6 +80695,7 @@ export namespace Prisma {
   export type WeeklySlotUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -80682,6 +80707,7 @@ export namespace Prisma {
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -85658,6 +85684,7 @@ export namespace Prisma {
     weekStart?: SortOrder
     taskId?: SortOrder
     assigneeId?: SortOrder
+    dueDate?: SortOrder
     removedAt?: SortOrder
     createdAt?: SortOrder
   }
@@ -85669,6 +85696,7 @@ export namespace Prisma {
     weekStart?: SortOrder
     taskId?: SortOrder
     assigneeId?: SortOrder
+    dueDate?: SortOrder
     removedAt?: SortOrder
     createdAt?: SortOrder
   }
@@ -85680,6 +85708,7 @@ export namespace Prisma {
     weekStart?: SortOrder
     taskId?: SortOrder
     assigneeId?: SortOrder
+    dueDate?: SortOrder
     removedAt?: SortOrder
     createdAt?: SortOrder
   }
@@ -96214,6 +96243,7 @@ export namespace Prisma {
   export type WeeklySlotCreateWithoutAssigneeInput = {
     id?: string
     weekStart: Date | string
+    dueDate?: Date | string | null
     removedAt?: Date | string | null
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutWeeklySlotsInput
@@ -96227,6 +96257,7 @@ export namespace Prisma {
     templateId: string
     weekStart: Date | string
     taskId?: string | null
+    dueDate?: Date | string | null
     removedAt?: Date | string | null
     createdAt?: Date | string
   }
@@ -96734,6 +96765,7 @@ export namespace Prisma {
     weekStart?: DateTimeFilter<"WeeklySlot"> | Date | string
     taskId?: StringNullableFilter<"WeeklySlot"> | string | null
     assigneeId?: StringNullableFilter<"WeeklySlot"> | string | null
+    dueDate?: DateTimeNullableFilter<"WeeklySlot"> | Date | string | null
     removedAt?: DateTimeNullableFilter<"WeeklySlot"> | Date | string | null
     createdAt?: DateTimeFilter<"WeeklySlot"> | Date | string
   }
@@ -101652,6 +101684,7 @@ export namespace Prisma {
   export type WeeklySlotCreateWithoutProjectInput = {
     id?: string
     weekStart: Date | string
+    dueDate?: Date | string | null
     removedAt?: Date | string | null
     createdAt?: Date | string
     template: ChecklistTemplateCreateNestedOneWithoutWeeklySlotsInput
@@ -101665,6 +101698,7 @@ export namespace Prisma {
     weekStart: Date | string
     taskId?: string | null
     assigneeId?: string | null
+    dueDate?: Date | string | null
     removedAt?: Date | string | null
     createdAt?: Date | string
   }
@@ -104187,6 +104221,7 @@ export namespace Prisma {
   export type WeeklySlotCreateWithoutTemplateInput = {
     id?: string
     weekStart: Date | string
+    dueDate?: Date | string | null
     removedAt?: Date | string | null
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutWeeklySlotsInput
@@ -104200,6 +104235,7 @@ export namespace Prisma {
     weekStart: Date | string
     taskId?: string | null
     assigneeId?: string | null
+    dueDate?: Date | string | null
     removedAt?: Date | string | null
     createdAt?: Date | string
   }
@@ -106646,6 +106682,7 @@ export namespace Prisma {
   export type WeeklySlotCreateWithoutTaskInput = {
     id?: string
     weekStart: Date | string
+    dueDate?: Date | string | null
     removedAt?: Date | string | null
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutWeeklySlotsInput
@@ -106659,6 +106696,7 @@ export namespace Prisma {
     templateId: string
     weekStart: Date | string
     assigneeId?: string | null
+    dueDate?: Date | string | null
     removedAt?: Date | string | null
     createdAt?: Date | string
   }
@@ -107056,6 +107094,7 @@ export namespace Prisma {
   export type WeeklySlotUpdateWithoutTaskInput = {
     id?: StringFieldUpdateOperationsInput | string
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutWeeklySlotsNestedInput
@@ -107069,6 +107108,7 @@ export namespace Prisma {
     templateId?: StringFieldUpdateOperationsInput | string
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -113362,6 +113402,7 @@ export namespace Prisma {
     templateId: string
     weekStart: Date | string
     taskId?: string | null
+    dueDate?: Date | string | null
     removedAt?: Date | string | null
     createdAt?: Date | string
   }
@@ -113752,6 +113793,7 @@ export namespace Prisma {
   export type WeeklySlotUpdateWithoutAssigneeInput = {
     id?: StringFieldUpdateOperationsInput | string
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutWeeklySlotsNestedInput
@@ -113765,6 +113807,7 @@ export namespace Prisma {
     templateId?: StringFieldUpdateOperationsInput | string
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -113775,6 +113818,7 @@ export namespace Prisma {
     templateId?: StringFieldUpdateOperationsInput | string
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -115431,6 +115475,7 @@ export namespace Prisma {
     weekStart: Date | string
     taskId?: string | null
     assigneeId?: string | null
+    dueDate?: Date | string | null
     removedAt?: Date | string | null
     createdAt?: Date | string
   }
@@ -115862,6 +115907,7 @@ export namespace Prisma {
   export type WeeklySlotUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     template?: ChecklistTemplateUpdateOneRequiredWithoutWeeklySlotsNestedInput
@@ -115875,6 +115921,7 @@ export namespace Prisma {
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -115885,6 +115932,7 @@ export namespace Prisma {
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -116061,6 +116109,7 @@ export namespace Prisma {
     weekStart: Date | string
     taskId?: string | null
     assigneeId?: string | null
+    dueDate?: Date | string | null
     removedAt?: Date | string | null
     createdAt?: Date | string
   }
@@ -116306,6 +116355,7 @@ export namespace Prisma {
   export type WeeklySlotUpdateWithoutTemplateInput = {
     id?: StringFieldUpdateOperationsInput | string
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutWeeklySlotsNestedInput
@@ -116319,6 +116369,7 @@ export namespace Prisma {
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -116329,6 +116380,7 @@ export namespace Prisma {
     weekStart?: DateTimeFieldUpdateOperationsInput | Date | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     removedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

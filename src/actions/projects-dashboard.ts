@@ -297,6 +297,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 
   const [
     slots,
+    carryOverSlots,
     targets,
     completedAgg,
     completedCount,
@@ -311,6 +312,38 @@ export async function getDashboardStats(): Promise<DashboardStats> {
             { projectId: c.projectId, weekStart: c.nextWeek },
           ]),
           removedAt: null,
+        },
+        orderBy: [{ projectId: "asc" }, { templateId: "asc" }, { createdAt: "asc" }],
+        select: {
+          id: true,
+          projectId: true,
+          templateId: true,
+          weekStart: true,
+          project: { select: { name: true } },
+          template: { select: { name: true, color: true, icon: true } },
+          assignee: { select: { name: true, email: true, imageUrl: true } },
+          task: {
+            select: {
+              id: true,
+              title: true,
+              dueDate: true,
+              assignee: { select: { name: true, email: true, imageUrl: true } },
+            },
+          },
+        },
+      }),
+      // In-flight planned work carried from earlier weeks: the task claimed a
+      // past week's slot but hasn't been completed yet, so it still counts as
+      // planned work this week (e.g. a Todo task that rolled over, or one
+      // sitting in a mid-pipeline stage).
+      db.weeklySlot.findMany({
+        where: {
+          OR: weekClauses.map((c) => ({
+            projectId: c.projectId,
+            weekStart: { lt: c.weekStart },
+          })),
+          removedAt: null,
+          task: { deletedAt: null, completedAt: null },
         },
         orderBy: [{ projectId: "asc" }, { templateId: "asc" }, { createdAt: "asc" }],
         select: {
@@ -459,7 +492,9 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   // pad next week's plan up to its target capacity with virtual open slots.
   const nextWeekRowsByKey = new Map<string, number>();
 
-  for (const s of slots) {
+  // Carried-over filled slots surface under "This week" alongside the live
+  // plan — unfinished planned work stays visible until it completes.
+  for (const s of [...slots, ...carryOverSlots]) {
     const isNext = s.weekStart.getTime() === nextWeekByProject.get(s.projectId);
     const key = `${s.projectId}:${s.templateId}`;
     if (isNext) {

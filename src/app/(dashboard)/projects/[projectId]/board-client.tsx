@@ -451,9 +451,12 @@ const BoardColumn = memo(function BoardColumn({
           slotNumber={filled + i + 1}
           templateIcon={g.templateIcon}
           templateColor={g.templateColor}
-          // Next week's placeholders don't repeat the date — the section
-          // header already says when that plan starts.
-          dueLabel={g.weekOffset === 1 ? null : g.dueLabel}
+          // A slot's own deadline (force-added) always shows; otherwise next
+          // week's placeholders don't repeat the date — the section header
+          // already says when that plan starts.
+          dueLabel={
+            slot.dueLabel ?? (g.weekOffset === 1 ? null : g.dueLabel)
+          }
           dragTarget={
             draggingTemplateId != null && draggingTemplateId === g.templateId
           }

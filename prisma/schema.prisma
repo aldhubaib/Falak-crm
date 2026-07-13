@@ -504,6 +504,7 @@ model WeeklySlot {
   weekStart  DateTime // Monday 00:00 in the project's timezone (stored as UTC)
   taskId     String?   @unique
   assigneeId String?   // Member responsible for filling this slot
+  dueDate    DateTime? // Explicit deadline (force-added slots); falls back to the plan cycle end
   removedAt  DateTime?
   createdAt  DateTime  @default(now())
 

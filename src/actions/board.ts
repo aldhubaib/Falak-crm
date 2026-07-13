@@ -53,6 +53,8 @@ export type WeeklyEmptySlot = {
   assigneeId: string | null;
   assigneeName: string | null;
   assigneeAvatar: string | null;
+  /** Slot-specific deadline (force-added slots) — overrides the group label. */
+  dueLabel?: string | null;
 };
 
 // Weekly Plan capacity for one task type in one plan week. `total` counts
@@ -195,6 +197,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         templateId: true,
         taskId: true,
         weekStart: true,
+        dueDate: true,
         assignee: {
           select: { id: true, name: true, email: true, imageUrl: true },
         },
@@ -335,6 +338,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
           ? (s.assignee.name ?? s.assignee.email)
           : null,
         assigneeAvatar: s.assignee?.imageUrl ?? null,
+        dueLabel: s.dueDate ? dueFmt.format(s.dueDate) : null,
       });
     }
   }
