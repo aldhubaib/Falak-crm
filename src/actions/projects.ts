@@ -1623,13 +1623,17 @@ async function assertChecklistItemWritable(itemId: string) {
   }
 
   const access = await getProjectAccess(item.task.projectId);
-  const canModify =
+  // Filling fields IS the stage's work: whoever may move the task onward
+  // (Forward right) gets open fields, same as the broader Modify right.
+  // Stage visibility/locks above and the assignee rule below still apply.
+  const stageFlags = item.task.statusId
+    ? access.permissions.taskPermissions?.stages?.[item.task.statusId]
+    : undefined;
+  const canWork =
     access.permissions.projects === "full" ||
-    (item.task.statusId
-      ? access.permissions.taskPermissions?.stages?.[item.task.statusId]
-          ?.modify === true
-      : false);
-  if (!canModify) {
+    stageFlags?.modify === true ||
+    stageFlags?.forward === true;
+  if (!canWork) {
     throw new Error("You don't have permission to edit fields at this stage");
   }
 

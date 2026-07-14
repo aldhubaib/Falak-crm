@@ -243,6 +243,12 @@ export default async function TaskDetailPage({
         true
       : false);
 
+  // Checklist fields are the stage's WORK, not admin edits: the Forward right
+  // opens them too — doing the work and submitting it go together. Mirrors
+  // assertChecklistItemWritable on the server.
+  const canWorkFields =
+    canModify || canMoveTaskFrom(access.permissions, task.statusId, "forward");
+
   // Assignee-only editing: work product belongs to the task's owner. A
   // non-assignee views read-only and can claim the task from the banner if
   // they hold the Forward right on the current stage. Workspace owners and
@@ -315,7 +321,7 @@ export default async function TaskDetailPage({
       taskId={taskId}
       canDelete={!trashed && canDelete}
       canEditTitle={!trashed && canModify && !titleLocked && assigneeGateOpen}
-      canEditFields={!trashed && canModify && assigneeGateOpen}
+      canEditFields={!trashed && canWorkFields && assigneeGateOpen}
       canChangeDueDate={!trashed && canModify}
       dueDate={task.dueDate?.toISOString() ?? null}
       timezone={timezone}
