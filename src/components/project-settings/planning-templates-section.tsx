@@ -33,6 +33,7 @@ import {
   parseZonedDateTime,
   timezoneLabel,
 } from "@/lib/timezone";
+import { useActionHandler } from "@/hooks/use-action";
 
 type Template = { id: string; name: string; itemCount: number };
 
@@ -127,17 +128,22 @@ export function PlanningTemplatesSection({
   const todayStr = formatZonedDateInput(new Date(), timezone).date;
   const [forceDate, setForceDate] = useState(todayStr);
 
+  // Surface action errors as a toast — an uncaught throw inside the
+  // transition would crash to the error boundary (digest page in prod).
+  const { run: runForceAdd } = useActionHandler();
   const confirmForceAdd = () => {
     const target = forceAddFor;
     if (!target || !forceDate || forceDate < todayStr) return;
     setForceAddFor(null);
     startForce(async () => {
-      // Deadlines are end-of-day in the project's timezone.
-      await forceAddWeeklySlot(
-        projectId,
-        target.id,
-        parseZonedDateTime(forceDate, "23:59", timezone, new Date()),
-      );
+      await runForceAdd("Force Add Slot", async () => {
+        // Deadlines are end-of-day in the project's timezone.
+        await forceAddWeeklySlot(
+          projectId,
+          target.id,
+          parseZonedDateTime(forceDate, "23:59", timezone, new Date()),
+        );
+      });
     });
   };
 

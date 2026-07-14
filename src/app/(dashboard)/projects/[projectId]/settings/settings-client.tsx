@@ -31,6 +31,7 @@ import {
 } from "@/actions/projects";
 import { setWeeklyTargets } from "@/actions/weekly-plan";
 import type { PlanningEligibleMember, WeeklyEffortMatrix } from "@/actions/weekly-plan";
+import { useActionHandler } from "@/hooks/use-action";
 import type { WeeklyTarget } from "@/lib/weekly-plan";
 import {
   DEFAULT_PROJECT_TIMEZONE,
@@ -108,32 +109,51 @@ export function ProjectSettingsClient({
     timezone !== initialTimezone ||
     plansDirty;
 
+  // Action errors (e.g. plan validation) must surface as a toast — an
+  // uncaught throw inside the transition would crash to the error boundary
+  // and production hides the message behind a digest.
+  const { run: runSave } = useActionHandler();
   const save = () => {
     startTransition(async () => {
-      if (statusId !== currentStatusId && statusId) {
-        await updateProjectStatus(projectId, statusId);
-      }
-      if (description !== initialDescription) {
-        await updateProjectDescription(projectId, description);
-      }
-      if (requirePublishing !== initialRequirePublishing) {
-        await updateProjectRequirePublishing(projectId, requirePublishing);
-      }
-      if (templateIds.join(",") !== initialTemplateIds.join(",")) {
-        await updateProjectTemplates(projectId, templateIds);
-      }
-      if (timezone !== initialTimezone) {
-        await updateProjectTimezone(projectId, timezone);
-      }
-      if (plansDirty) {
-        await setWeeklyTargets(
-          projectId,
-          Object.values(plans).filter(
-            (p) => p.perWeek > 0 && templateIds.includes(p.templateId),
-          ),
+      await runSave("Save Project Settings", async () => {
+        // Server re-validates, but catching it here gives a readable message
+        // instead of a round trip that fails.
+        const missingResponsible = Object.values(plans).find(
+          (p) =>
+            p.perWeek > 0 &&
+            templateIds.includes(p.templateId) &&
+            !p.responsibleMemberId,
         );
-      }
-      router.refresh();
+        if (missingResponsible && plansDirty) {
+          throw new Error(
+            "Select a responsible team member for each active plan",
+          );
+        }
+        if (statusId !== currentStatusId && statusId) {
+          await updateProjectStatus(projectId, statusId);
+        }
+        if (description !== initialDescription) {
+          await updateProjectDescription(projectId, description);
+        }
+        if (requirePublishing !== initialRequirePublishing) {
+          await updateProjectRequirePublishing(projectId, requirePublishing);
+        }
+        if (templateIds.join(",") !== initialTemplateIds.join(",")) {
+          await updateProjectTemplates(projectId, templateIds);
+        }
+        if (timezone !== initialTimezone) {
+          await updateProjectTimezone(projectId, timezone);
+        }
+        if (plansDirty) {
+          await setWeeklyTargets(
+            projectId,
+            Object.values(plans).filter(
+              (p) => p.perWeek > 0 && templateIds.includes(p.templateId),
+            ),
+          );
+        }
+        router.refresh();
+      });
     });
   };
 
