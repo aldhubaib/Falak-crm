@@ -649,11 +649,19 @@ export async function updateTaskStatus(
   // detached fields fall back to their own snapshot.
   const blockers: { itemName: string; role: string }[] = [];
   const taskCurrentOrder = task?.status?.order ?? null;
+  // Visibility for GATING is judged at the furthest stage the move touches —
+  // a field that appears between here and the target still gates the move.
+  // Judging at the current stage let a multi-stage drag jump right past
+  // fields it never showed (e.g. Raw Footage Review → Review skipping the
+  // Post Production uploads).
+  const gateVisibilityOrder = targetStatus
+    ? Math.max(taskCurrentOrder ?? 0, targetStatus.order)
+    : taskCurrentOrder;
   if (task && targetStatus) {
     for (const ci of task.checklistItems) {
       const cfg = fieldConfig(ci);
       if (cfg.hidden) continue;
-      if (!isFieldVisible(cfg, taskCurrentOrder, stageOrderById)) continue;
+      if (!isFieldVisible(cfg, gateVisibilityOrder, stageOrderById)) continue;
       if (!fieldAppliesForGate(ci, task.checklistItems)) continue;
       if (isGateComplete(ci, cfg)) continue;
       const gateStageId = cfg.requiredBeforeStageId;
@@ -704,7 +712,7 @@ export async function updateTaskStatus(
       .filter(
         (ci) =>
           !ci.cfg.hidden &&
-          isFieldVisible(ci.cfg, taskCurrentOrder, stageOrderById) &&
+          isFieldVisible(ci.cfg, gateVisibilityOrder, stageOrderById) &&
           ci.cfg.phase === "delivery" &&
           ci.cfg.mandatory &&
           !ci.completed,
