@@ -9,6 +9,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { safeAction, type ActionResult } from "@/lib/action";
 import { invalidateCache } from "@/lib/cache";
+import { refreshWorkspaceBoards } from "@/lib/board-refresh";
 
 // Permission changes must take effect immediately — drop the cached derived
 // permissions of every member who holds this role (workspace-level or via a
@@ -188,6 +189,9 @@ export async function updateRole(roleId: string, data: { name?: string; permissi
 
     if (data.permissions !== undefined) {
       await invalidateRoleMembersPerms(workspace.id, roleId);
+      // Stage flags (create/modify/forward/...) changed — every open kanban
+      // must pick up the new rules without a manual reload.
+      await refreshWorkspaceBoards(workspace.id);
     }
     revalidatePath("/settings/team");
   });

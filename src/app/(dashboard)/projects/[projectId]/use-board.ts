@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { getBoardData, type BoardData, type BoardTask } from "@/actions/board";
 import type {
@@ -263,6 +264,7 @@ export function useBoardStream(
   memberName?: string,
 ) {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const cent = useCentrifugo();
   const enabled = cent?.enabled ?? false;
   const [remoteDrags, setRemoteDrags] = useState<RemoteDrags>({});
@@ -271,6 +273,18 @@ export function useBoardStream(
     const handleEvent = (event: BoardEvent | DragEvent) => {
       if (!event?.type) return;
       if (event.actorClientId && event.actorClientId === clientId) return;
+
+      // Stage rules changed in Settings (role flags, checklist field rules).
+      // Refetch the board data AND re-run the SSR render — movePerms are
+      // computed server-side and frozen into props, so only a router refresh
+      // updates them without a manual reload.
+      if (event.type === "board.refresh") {
+        void queryClient.invalidateQueries({
+          queryKey: boardQueryKey(projectId),
+        });
+        router.refresh();
+        return;
+      }
 
       if (event.type === "board.drag") {
         const d = event as DragEvent;
@@ -321,7 +335,7 @@ export function useBoardStream(
     };
     source.onerror = () => {};
     return () => source.close();
-  }, [enabled, cent, projectId, clientId, queryClient]);
+  }, [enabled, cent, projectId, clientId, queryClient, router]);
 
   // Expire stale remote drag highlights.
   useEffect(() => {

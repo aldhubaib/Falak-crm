@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { requireWorkspace, requireWorkspaceWithMember } from "@/lib/workspace";
 import { canEdit, ROLE_PRESETS } from "@/lib/permissions";
 import { revalidatePath } from "next/cache";
+import { refreshWorkspaceBoards } from "@/lib/board-refresh";
 import { StageType } from "@/generated/prisma";
 
 // ─── Pipelines & Stages ────────────────────────────────────────────────────────
@@ -547,7 +548,7 @@ export async function updateChecklistTemplateItem(
   id: string,
   data: { name?: string; type?: string; role?: string; options?: string | null; allowedFileTypes?: string | null; allowedFormats?: string | null; aspectRatio?: string | null; mandatory?: boolean; phase?: string; visibleFromStageId?: string | null; requiredBeforeStageId?: string | null; lockedFromStageId?: string | null; neverLock?: boolean; publishCard?: string; effortUnit?: string | null }
 ) {
-  const { member } = await requireWorkspaceWithMember();
+  const { workspace, member } = await requireWorkspaceWithMember();
   if (!canEdit(member, "projects")) throw new Error("Permission denied");
 
   const { visibleFromStageId, requiredBeforeStageId, lockedFromStageId, ...rest } = data;
@@ -598,6 +599,11 @@ export async function updateChecklistTemplateItem(
   if (data.publishCard !== undefined) revalidatePath("/publish");
   revalidatePath("/settings/checklists");
   revalidatePath("/settings/task-types");
+
+  // Field rules (Visible From / Required Before / Locked From, mandatory,
+  // hidden, ...) resolve from the live template — open boards and task pages
+  // must re-render with the new rules right away.
+  await refreshWorkspaceBoards(workspace.id);
 }
 
 // Reorder + move items across sections in one transaction. The phase is

@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { requireProjectWork } from "@/lib/workspace";
+import { isGateComplete } from "@/lib/checklist-config";
 import { weekStartOf } from "@/lib/week";
 import { ensureWeeklySlots, nextWeekStartOf } from "@/lib/weekly-slots";
 import { getProjectTimezone } from "@/lib/project-timezone";
@@ -153,12 +154,23 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
     // loading every checklist row (with its template item) for every task.
     // Config precedence matches fieldConfig(): the LIVE template item wins
     // when the field is still linked; the per-task snapshot is the fallback.
+    // Visibility matches isFieldVisible(): fields whose "Visible From" stage
+    // is after the task's current stage don't count at all (vs."order" is
+    // NULL when there's no rule or the stage id is stale — both mean
+    // visible). Delivery candidates come back with their answer fields so
+    // isGateComplete() can be applied in JS — Yes/No semantics don't
+    // translate to SQL.
     db.$queryRaw<
       {
         taskId: string;
         total: number;
         done: number;
-        deliveryIncomplete: string[];
+        deliveryCandidates: {
+          name: string;
+          type: string | null;
+          textValue: string | null;
+          attachmentId: string | null;
+        }[];
         templateId: string | null;
       }[]
     >`
@@ -166,23 +178,38 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         ci."taskId" AS "taskId",
         COUNT(*) FILTER (
           WHERE NOT COALESCE(ti."hidden", ci."hidden")
+            AND (st."order" IS NULL OR vs."order" IS NULL OR st."order" >= vs."order")
         )::int AS "total",
         COUNT(*) FILTER (
-          WHERE NOT COALESCE(ti."hidden", ci."hidden") AND ci."completed"
+          WHERE NOT COALESCE(ti."hidden", ci."hidden")
+            AND (st."order" IS NULL OR vs."order" IS NULL OR st."order" >= vs."order")
+            AND ci."completed"
         )::int AS "done",
         COALESCE(
-          array_agg(COALESCE(ti."name", ci."name")) FILTER (
+          json_agg(
+            json_build_object(
+              'name', COALESCE(ti."name", ci."name"),
+              'type', CASE WHEN ti."id" IS NOT NULL THEN ti."type" ELSE ci."type" END,
+              'textValue', ci."textValue",
+              'attachmentId', ci."attachmentId"
+            )
+          ) FILTER (
             WHERE NOT COALESCE(ti."hidden", ci."hidden")
+              AND (st."order" IS NULL OR vs."order" IS NULL OR st."order" >= vs."order")
               AND COALESCE(ti."phase", ci."phase") = 'delivery'
               AND COALESCE(ti."mandatory", ci."mandatory")
               AND NOT ci."completed"
           ),
-          '{}'
-        ) AS "deliveryIncomplete",
+          '[]'
+        ) AS "deliveryCandidates",
         MAX(ti."templateId") AS "templateId"
       FROM "TaskChecklistItem" ci
       JOIN "Task" t ON t."id" = ci."taskId"
       LEFT JOIN "ChecklistTemplateItem" ti ON ti."id" = ci."templateItemId"
+      LEFT JOIN "TaskStatus" st ON st."id" = t."statusId"
+      LEFT JOIN "TaskStatus" vs ON vs."id" = (
+        CASE WHEN ti."id" IS NOT NULL THEN ti."visibleFromStageId" ELSE ci."visibleFromStageId" END
+      )
       WHERE t."projectId" = ${projectId}
         AND t."deletedAt" IS NULL
       GROUP BY ci."taskId"
@@ -248,6 +275,18 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
       ? now - t.stageEnteredAt.getTime()
       : 0;
     const checklist = checklistByTask.get(t.id);
+    // Same completeness rule as the server's stage gates: Yes/No kinds
+    // (mention, copyright) answered "No" — or "Yes" with their follow-up
+    // satisfied — don't count as missing delivery work.
+    const deliveryIncomplete = (checklist?.deliveryCandidates ?? [])
+      .filter(
+        (c) =>
+          !isGateComplete(
+            { completed: false, textValue: c.textValue, attachmentId: c.attachmentId },
+            { type: c.type ?? undefined },
+          ),
+      )
+      .map((c) => c.name);
     // Stored type first; the checklist-derived id covers legacy tasks created
     // before Task.templateId existed.
     const taskTemplateId = t.templateId ?? checklist?.templateId ?? null;
@@ -272,7 +311,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
       totalTimeMs: pastMs + currentMs,
       checklistTotal: checklist?.total ?? 0,
       checklistDone: checklist?.done ?? 0,
-      deliveryIncomplete: checklist?.deliveryIncomplete ?? [],
+      deliveryIncomplete,
       submittedById: submittedBy.get(t.id)?.id ?? null,
       submittedByName: submittedBy.get(t.id)?.name ?? null,
       rejectionCount: t.rejectionCount ?? 0,

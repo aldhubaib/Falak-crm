@@ -372,6 +372,7 @@ export default async function TaskDetailPage({
               avatar: selfMember.imageUrl ?? null,
             }
           : null,
+        assigneeGateOpen,
       }}
       mentionables={mentionables}
       stageEnteredAt={task.stageEnteredAt?.toISOString() ?? null}

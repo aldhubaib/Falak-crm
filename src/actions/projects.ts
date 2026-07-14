@@ -303,7 +303,20 @@ export async function createFullTask(data: {
   }>
 > {
   return safeAction("Create Task", async () => {
-    const { member, workspace } = await requireProjectWork(data.projectId);
+    const access = await requireProjectWork(data.projectId);
+    const { member, workspace } = access;
+
+    // The Create stage flag gates task creation: the member needs it on the
+    // stage the task starts in (full project access always qualifies).
+    const canCreate =
+      access.permissions.projects === "full" ||
+      access.permissions.taskPermissions?.stages?.[data.statusId]?.create ===
+        true;
+    if (!canCreate) {
+      throw new Error(
+        "You don't have permission to create tasks in this stage",
+      );
+    }
 
     const [lastTask, lastNumber, initialStatus, creator, templates, allStages] = await Promise.all([
       db.task.findFirst({
@@ -502,76 +515,6 @@ export async function createFullTask(data: {
   });
 }
 
-export async function createTask(projectId: string, formData: FormData, dealId?: string) {
-  await requireProjectWork(projectId);
-
-  const title = formData.get("title") as string;
-  const description = (formData.get("description") as string) || undefined;
-  const serviceId = (formData.get("serviceId") as string) || undefined;
-  const billable = formData.get("billable") === "true";
-  const price = formData.get("price") ? parseFloat(formData.get("price") as string) : undefined;
-  const statusId = (formData.get("statusId") as string) || undefined;
-  const assigneeId = (formData.get("assigneeId") as string) || undefined;
-
-  const [lastTask, lastNumber, projectTemplates] = await Promise.all([
-    db.task.findFirst({
-      where: { projectId },
-      orderBy: { order: "desc" },
-      select: { order: true },
-    }),
-    db.task.findFirst({
-      where: { projectId },
-      orderBy: { taskNumber: "desc" },
-      select: { taskNumber: true },
-    }),
-    db.projectTemplate.findMany({
-      where: { projectId },
-      include: { template: { include: { items: { where: { hidden: false }, orderBy: { order: "asc" } } } } },
-    }),
-  ]);
-
-  const task = await db.task.create({
-    data: {
-      projectId,
-      taskNumber: (lastNumber?.taskNumber ?? 0) + 1,
-      title,
-      description,
-      serviceId: serviceId || null,
-      billable,
-      price,
-      statusId: statusId || null,
-      assigneeId: assigneeId || null,
-      templateId: projectTemplates[0]?.template.id ?? null,
-      publish:
-        projectTemplates.length > 0
-          ? projectTemplates.some((pt) => pt.template.publishToCalendar)
-          : true,
-      order: (lastTask?.order ?? 0) + 1,
-    },
-  });
-
-  const allItems = projectTemplates.flatMap((pt) => pt.template.items);
-  if (allItems.length > 0) {
-    await db.taskChecklistItem.createMany({
-      data: allItems.map((item) => ({
-        taskId: task.id,
-        templateItemId: item.id,
-        name: item.name,
-        type: item.type,
-        role: item.role,
-        publishCard: item.publishCard,
-        effortUnit: item.effortUnit,
-        order: item.order,
-      })),
-    });
-  }
-
-  publishTaskEvent(projectId, { type: "task.created", taskId: task.id });
-
-  revalidatePath(`/projects/${projectId}`);
-  if (dealId) revalidatePath(`/deals/${dealId}`);
-}
-
 export type MoveTaskResult =
   | {
       ok: true;
@@ -702,20 +645,40 @@ export async function updateTaskStatus(
     };
   }
 
+  // Forward moves are the assignee's to make: a non-assignee — even with the
+  // Forward right — sees the task read-only until they take ownership. The
+  // same Forward right lets them self-assign (avatar / ownership banner), and
+  // then they can move it. Workspace owners bypass, and unassigned tasks are
+  // claimed by the move itself. Same rule as assertChecklistItemWritable.
+  if (
+    isForward &&
+    member.type !== "OWNER" &&
+    task?.assigneeId != null &&
+    task.assigneeId !== member.id
+  ) {
+    return {
+      ok: false,
+      error:
+        "This task is assigned to someone else. Assign it to yourself first, then move it forward.",
+    };
+  }
+
   // Block submission for Final Video Check if mandatory delivery items are
   // still incomplete. Delivery items only need to be done at this gate —
   // earlier forward moves (e.g. Todo → Raw Footage) must not be blocked.
   // Rules come from the live template config.
   if (task && isForward && isDeliveryGateStage(targetStatus?.name)) {
     const incomplete = task.checklistItems
-      .map((ci) => ({ cfg: fieldConfig(ci), completed: ci.completed }))
+      .map((ci) => ({ ci, cfg: fieldConfig(ci) }))
       .filter(
-        (ci) =>
-          !ci.cfg.hidden &&
-          isFieldVisible(ci.cfg, gateVisibilityOrder, stageOrderById) &&
-          ci.cfg.phase === "delivery" &&
-          ci.cfg.mandatory &&
-          !ci.completed,
+        ({ ci, cfg }) =>
+          !cfg.hidden &&
+          isFieldVisible(cfg, gateVisibilityOrder, stageOrderById) &&
+          cfg.phase === "delivery" &&
+          cfg.mandatory &&
+          // Same completeness rule as the Required Before gate — Yes/No kinds
+          // with their follow-up filled don't block.
+          !isGateComplete(ci, cfg),
       );
     if (incomplete.length > 0) {
       const names = incomplete.map((i) => `"${i.cfg.name}"`).join(", ");
@@ -1626,6 +1589,12 @@ async function assertChecklistItemWritable(itemId: string) {
   const todoOrder = autoLockOrder(statuses);
   const currentOrder = item.task.status?.order ?? null;
 
+  // A field that hasn't reached its "Visible From" stage isn't part of the
+  // work yet — the UI never renders it, and writes are rejected here too.
+  if (!isFieldVisible(cfg, currentOrder, orderById)) {
+    throw new Error(`"${cfg.name}" isn't available at this stage yet`);
+  }
+
   if (isFieldLocked(cfg, currentOrder, orderById, todoOrder)) {
     throw new Error(`"${cfg.name}" is locked at this stage`);
   }
@@ -1716,33 +1685,70 @@ async function publishChecklistProgress(itemId: string, projectId: string) {
   try {
     const item = await db.taskChecklistItem.findUnique({
       where: { id: itemId },
-      select: { taskId: true },
-    });
-    if (!item) return;
-    const rows = await db.taskChecklistItem.findMany({
-      where: { taskId: item.taskId },
       select: {
-        name: true,
-        phase: true,
-        mandatory: true,
-        completed: true,
-        hidden: true,
-        templateItem: {
-          select: { name: true, phase: true, mandatory: true, hidden: true },
+        taskId: true,
+        task: {
+          select: {
+            status: { select: { order: true } },
+            project: { select: { workspaceId: true } },
+          },
         },
       },
     });
+    if (!item) return;
+    const [rows, statuses] = await Promise.all([
+      db.taskChecklistItem.findMany({
+        where: { taskId: item.taskId },
+        select: {
+          name: true,
+          type: true,
+          phase: true,
+          mandatory: true,
+          completed: true,
+          hidden: true,
+          textValue: true,
+          attachmentId: true,
+          visibleFromStageId: true,
+          templateItem: {
+            select: {
+              name: true,
+              type: true,
+              phase: true,
+              mandatory: true,
+              hidden: true,
+              visibleFromStageId: true,
+            },
+          },
+        },
+      }),
+      db.taskStatus.findMany({
+        where: { workspaceId: item.task.project.workspaceId },
+        select: { id: true, order: true },
+      }),
+    ]);
+    // Same rules as the board query and the server gates: fields not yet
+    // visible at the task's current stage don't count, and Yes/No kinds use
+    // gate-complete semantics (a "No" or a satisfied "Yes" doesn't block).
+    const orderById = new Map(statuses.map((s) => [s.id, s.order]));
+    const currentOrder = item.task.status?.order ?? null;
     const checklistItems = rows
-      .map((r) => ({ cfg: fieldConfig(r), completed: r.completed }))
-      .filter((r) => !r.cfg.hidden);
+      .map((r) => ({ cfg: fieldConfig(r), row: r }))
+      .filter(
+        (r) => !r.cfg.hidden && isFieldVisible(r.cfg, currentOrder, orderById),
+      );
     publishTaskEvent(projectId, {
       type: "task.updated",
       taskId: item.taskId,
       checklist: {
         checklistTotal: checklistItems.length,
-        checklistDone: checklistItems.filter((i) => i.completed).length,
+        checklistDone: checklistItems.filter((i) => i.row.completed).length,
         deliveryIncomplete: checklistItems
-          .filter((i) => i.cfg.phase === "delivery" && i.cfg.mandatory && !i.completed)
+          .filter(
+            (i) =>
+              i.cfg.phase === "delivery" &&
+              i.cfg.mandatory &&
+              !isGateComplete(i.row, i.cfg),
+          )
           .map((i) => i.cfg.name),
       },
     });

@@ -77,7 +77,11 @@ export type RealtimeEvent = {
     | "task.created"
     | "task.deleted"
     | "task.updated"
-    | "slot.updated";
+    | "slot.updated"
+    // Stage rules changed in Settings (role flags, checklist field rules) —
+    // open boards refetch their data AND re-run the SSR render so the frozen
+    // movePerms update without a manual reload.
+    | "board.refresh";
   taskId?: string;
   actorClientId?: string | null;
   patch?: BoardTaskMovePatch;

@@ -374,6 +374,7 @@ const BoardColumn = memo(function BoardColumn({
   col,
   projectId,
   isFirst,
+  canCreate,
   showArchived,
   onToggleArchived,
   onOpen,
@@ -394,6 +395,8 @@ const BoardColumn = memo(function BoardColumn({
   col: Column;
   projectId: string;
   isFirst: boolean;
+  /** Viewer holds the Create right for this (first) stage — shows the "+". */
+  canCreate: boolean;
   showArchived: boolean;
   onToggleArchived: () => void;
   onOpen: (taskId: string) => void;
@@ -484,7 +487,7 @@ const BoardColumn = memo(function BoardColumn({
             ? `${col.tasks.length} of ${col.total}`
             : col.tasks.length}
         </span>
-        {isFirst && (
+        {isFirst && canCreate && (
           <Button
             asChild
             size="icon"
@@ -590,7 +593,7 @@ export type BoardMovePerms = {
   full: boolean;
   stages: Record<
     string,
-    { forward: boolean; rollback: boolean; modify: boolean }
+    { forward: boolean; rollback: boolean; modify: boolean; create: boolean }
   >;
 };
 
@@ -601,6 +604,7 @@ export function ProjectBoardClient({
   currentMemberId,
   currentMemberName,
   currentMemberAvatar,
+  isWorkspaceOwner = false,
 }: {
   projectId: string;
   initialData: BoardData;
@@ -608,6 +612,8 @@ export function ProjectBoardClient({
   currentMemberId?: string;
   currentMemberName?: string;
   currentMemberAvatar?: string | null;
+  /** Workspace owners bypass the assignee-only rule on forward moves. */
+  isWorkspaceOwner?: boolean;
 }) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -773,12 +779,14 @@ export function ProjectBoardClient({
   );
 
   // Claim a task by clicking its avatar. Offered only when the viewer holds
-  // the "Modify" right for the task's current stage (server re-checks).
+  // the "Forward" right for the task's current stage — matches the server
+  // rule in assignTaskToMe (only someone who can carry the task onward may
+  // claim its work).
   const canSelfAssign = useCallback(
     (task: BoardTask) => {
       if (movePerms.full) return true;
       if (!task.statusId) return false;
-      return movePerms.stages[task.statusId]?.modify === true;
+      return movePerms.stages[task.statusId]?.forward === true;
     },
     [movePerms],
   );
@@ -1015,6 +1023,22 @@ export function ProjectBoardClient({
         }
       }
 
+      // Forward moves belong to the task's assignee: a non-assignee with the
+      // Forward right must take ownership first (click the card's avatar) —
+      // the same right allows the self-assign. Workspace owners bypass.
+      // Mirrors the server rule in updateTaskStatus.
+      if (
+        toOrder > fromOrder &&
+        !isWorkspaceOwner &&
+        task.assigneeId != null &&
+        task.assigneeId !== currentMemberId
+      ) {
+        setMoveError(
+          "This task is assigned to someone else. Assign it to yourself first (click the card's avatar), then move it forward.",
+        );
+        return;
+      }
+
       if (toOrder > fromOrder) {
         const proceedForward = () => {
           const msg = CONFIRM_MESSAGES[targetName];
@@ -1071,7 +1095,7 @@ export function ProjectBoardClient({
         });
       }
     },
-    [tasks, statuses, statusOrderMap, moveTask, movePerms, queryClient, projectId],
+    [tasks, statuses, statusOrderMap, moveTask, movePerms, queryClient, projectId, isWorkspaceOwner, currentMemberId],
   );
 
   const openTask = useCallback(
@@ -1190,6 +1214,9 @@ export function ProjectBoardClient({
               col={col}
               projectId={projectId}
               isFirst={i === 0}
+              canCreate={
+                movePerms.full || movePerms.stages[col.id]?.create === true
+              }
               showArchived={showArchived}
               onToggleArchived={() => setShowArchived((v) => !v)}
               onOpen={openTask}

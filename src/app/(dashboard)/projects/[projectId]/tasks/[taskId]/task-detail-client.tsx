@@ -76,6 +76,7 @@ import { cn } from "@/lib/utils";
 import {
   fieldAppliesForGate,
   isDeliveryGateStage,
+  isGateComplete,
 } from "@/lib/checklist-config";
 import {
   saveChecklistItemText,
@@ -243,6 +244,10 @@ export type TaskMoveData = {
   assignee?: { id?: string; name: string; avatar: string | null } | null;
   /** Current viewer — the "→ me" side of the ownership chips. */
   me?: { name: string; avatar: string | null } | null;
+  /** False when the viewer is a non-assignee: forward moves are the
+   *  assignee's to make, so "Next" hides until they take ownership
+   *  (the read-only banner's chip). Mirrors the server rule. */
+  assigneeGateOpen?: boolean;
 };
 
 // Assignee-only editing: who owns the task, whether the current viewer is
@@ -924,12 +929,24 @@ function TaskStatusMoveMenu({
       : null;
 
   // Per-stage move rights on the CURRENT stage (mirrors the server check).
+  // Forward additionally requires being the assignee (or workspace owner /
+  // unassigned task): a non-assignee takes ownership first via the banner.
   const stagePerm = move.statusId ? move.perms.stages[move.statusId] : undefined;
-  const canForward = move.perms.full || stagePerm?.forward === true;
+  const canForward =
+    (move.perms.full || stagePerm?.forward === true) &&
+    move.assigneeGateOpen !== false;
   const canBack = move.perms.full || stagePerm?.rollback === true;
 
+  // Pre-check mirror of the server's delivery gate: only fields visible at
+  // the current stage count, and Yes/No kinds use gate-complete semantics.
   const deliveryIncomplete = items
-    .filter((i) => i.phase === "delivery" && i.mandatory && !i.completed)
+    .filter(
+      (i) =>
+        i.visible &&
+        i.phase === "delivery" &&
+        i.mandatory &&
+        !isGateComplete(i, i),
+    )
     .map((i) => i.name);
 
   const showNext = next != null && canForward;

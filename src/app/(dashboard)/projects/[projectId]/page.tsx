@@ -66,6 +66,7 @@ export default async function ProjectDetailPage({
             forward: sp.forward === true,
             rollback: sp.rollback === true,
             modify: sp.modify === true,
+            create: sp.create === true,
           },
         ],
       ),
@@ -96,6 +97,7 @@ export default async function ProjectDetailPage({
           currentMemberId={access.member.id}
           currentMemberName={currentMemberName}
           currentMemberAvatar={currentMemberAvatar}
+          isWorkspaceOwner={access.member.type === "OWNER"}
         />
       </main>
     </>
