@@ -74,6 +74,8 @@ export function ThreadSidebar({ threads: initialThreads }: { threads: InboxThrea
   const pathname = usePathname();
   const onThread = useOnThread();
   const [q, setQ] = useState("");
+  // The search field hides behind the header's magnifier icon until needed.
+  const [searchOpen, setSearchOpen] = useState(false);
   const [tab, setTab] = useState<"all" | "project" | "direct">("all");
   const [composeOpen, setComposeOpen] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
@@ -157,30 +159,49 @@ export function ThreadSidebar({ threads: initialThreads }: { threads: InboxThrea
     >
       <div className="flex h-14 items-center gap-2 border-b border-border/60 px-3">
         <div className="text-sm font-semibold">Inbox</div>
-        {canCompose && (
+        <div className="ml-auto flex items-center gap-1">
           <Button
             variant="ghost"
             size="icon"
-            className="ml-auto rounded-full"
-            aria-label="New message"
-            onClick={() => setComposeOpen(true)}
+            className="rounded-full"
+            aria-label={searchOpen ? "Hide search" : "Search conversations"}
+            onClick={() =>
+              setSearchOpen((open) => {
+                if (open) setQ("");
+                return !open;
+              })
+            }
           >
-            <PenSquare className="h-4 w-4" />
+            <Search className="h-4 w-4" />
           </Button>
-        )}
+          {canCompose && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              aria-label="New message"
+              onClick={() => setComposeOpen(true)}
+            >
+              <PenSquare className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="border-b border-border/60 p-3">
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Search conversations"
-            className="h-9 pl-8 text-sm"
-          />
-        </div>
-        <div className="mt-2 flex items-center gap-1 rounded-md bg-surface/60 p-0.5">
+        {searchOpen && (
+          <div className="relative mb-2">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search conversations"
+              className="h-9 pl-8 text-sm"
+              autoFocus
+            />
+          </div>
+        )}
+        <div className="flex items-center gap-1 rounded-md bg-surface/60 p-0.5">
           {(
             [
               { id: "all" as const, label: "All", icon: Users },
