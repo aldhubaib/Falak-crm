@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { type WeeklyTarget } from "@/lib/weekly-plan";
 import { requireProjectSettings, requireProjectWork } from "@/lib/workspace";
-import { planningWeekStartOf } from "@/lib/week";
+import { planningWeekStartOf, weekDueDate, weekStartOf } from "@/lib/week";
 import {
   resolveNewSlotAssignee,
   syncSlotAssigneesFromTargets,
@@ -135,12 +135,14 @@ export async function getWeeklyTargets(
     select: {
       templateId: true,
       perWeek: true,
+      startsOn: true,
       responsibleMemberId: true,
     },
   });
   return rows.map((r) => ({
     templateId: r.templateId,
     perWeek: r.perWeek,
+    startsOn: r.startsOn,
     responsibleMemberId: r.responsibleMemberId,
   }));
 }
@@ -154,12 +156,21 @@ export async function setWeeklyTargets(
     await getTodoAutoAssignMemberIds(projectId, workspace.id),
   );
 
+  // Snap each plan's start onto the unified grid (Sunday of its week). Any
+  // future week is a valid start, capped at a year out to catch bad input.
+  const planningWeek = planningWeekStartOf();
+  const maxStart = new Date(planningWeek);
+  maxStart.setUTCDate(maxStart.getUTCDate() + 52 * 7);
   const clean = targets
-    .map((t) => ({
-      templateId: t.templateId,
-      perWeek: Math.max(0, Math.min(50, Math.round(t.perWeek))),
-      responsibleMemberId: t.responsibleMemberId || null,
-    }))
+    .map((t) => {
+      const snapped = weekStartOf(new Date(t.startsOn));
+      return {
+        templateId: t.templateId,
+        perWeek: Math.max(0, Math.min(50, Math.round(t.perWeek))),
+        startsOn: snapped.getTime() > maxStart.getTime() ? maxStart : snapped,
+        responsibleMemberId: t.responsibleMemberId || null,
+      };
+    })
     .filter((t) => t.templateId);
 
   for (const t of clean) {
@@ -187,6 +198,28 @@ export async function setWeeklyTargets(
       : []),
   ]);
 
+  // A plan deferred to a later week takes back every untouched placeholder
+  // sitting in the weeks before its start — slots a task already claimed
+  // stay where they are.
+  const deferred = clean.filter(
+    (t) => t.startsOn.getTime() > planningWeek.getTime(),
+  );
+  if (deferred.length > 0) {
+    await Promise.all(
+      deferred.map((t) =>
+        db.weeklySlot.deleteMany({
+          where: {
+            projectId,
+            templateId: t.templateId,
+            weekStart: { gte: planningWeek, lt: t.startsOn },
+            taskId: null,
+            removedAt: null,
+          },
+        }),
+      ),
+    );
+  }
+
   await syncSlotAssigneesFromTargets(projectId, clean);
 
   revalidatePath(`/projects/${projectId}`);
@@ -198,25 +231,31 @@ export async function setWeeklyTargets(
 export async function forceAddWeeklySlot(
   projectId: string,
   templateId: string,
-  dueDate: Date,
+  week: Date,
 ): Promise<void> {
   const access = await requireProjectSettings(projectId);
   if (access.permissions.projects !== "full") {
     throw new Error("Only an owner can force-add a slot");
   }
 
-  // The client sends end-of-day (23:59) in the workspace timezone, so picking
-  // today is fine while any earlier day is already behind "now".
-  const due = new Date(dueDate);
-  if (isNaN(due.getTime())) throw new Error("Pick a due date for the slot");
-  if (due.getTime() < Date.now()) {
-    throw new Error("The due date can't be in the past");
+  // The extra slot books into a week on the unified calendar and is due that
+  // week's Thursday end-of-day — same dropdown as the plan's start week.
+  const picked = new Date(week);
+  if (isNaN(picked.getTime())) throw new Error("Pick a week for the slot");
+  const weekStart = weekStartOf(picked);
+  if (weekStart.getTime() < planningWeekStartOf().getTime()) {
+    throw new Error("That week's plan is already closed — pick this week or later");
   }
 
-  const weekStart = planningWeekStartOf();
   const assigneeId = await resolveNewSlotAssignee(projectId, templateId);
   await db.weeklySlot.create({
-    data: { projectId, templateId, weekStart, assigneeId, dueDate: due },
+    data: {
+      projectId,
+      templateId,
+      weekStart,
+      assigneeId,
+      dueDate: weekDueDate(weekStart),
+    },
   });
 
   revalidatePath(`/projects/${projectId}`);

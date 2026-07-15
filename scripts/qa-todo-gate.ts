@@ -121,6 +121,64 @@ async function main() {
     });
     check("zero-field-type task adopted into a plan slot", !!adopted);
 
+    // ── 2b. Plan starting NEXT week defers its first slots ──────────────────
+    console.log("\n[2b] Deferred plan start");
+    const deferredTemplate = await db.checklistTemplate.create({
+      data: { workspaceId: ws.id, name: "QA Deferred Type" },
+    });
+    const thisWeek = planningWeekStartOf();
+    const followingWeek = new Date(thisWeek);
+    followingWeek.setUTCDate(followingWeek.getUTCDate() + 7);
+    const farWeek = new Date(thisWeek);
+    farWeek.setUTCDate(farWeek.getUTCDate() + 21);
+    const farTemplate = await db.checklistTemplate.create({
+      data: { workspaceId: ws.id, name: "QA Far-Start Type" },
+    });
+    await db.projectWeeklyTarget.createMany({
+      data: [
+        {
+          projectId: project.id,
+          templateId: deferredTemplate.id,
+          perWeek: 2,
+          startsOn: followingWeek,
+          responsibleMemberId: member.id,
+        },
+        {
+          projectId: project.id,
+          templateId: farTemplate.id,
+          perWeek: 3,
+          startsOn: farWeek,
+          responsibleMemberId: member.id,
+        },
+      ],
+    });
+    // ensureWeeklySlots throttles per project (10s) — wait it out so the
+    // second call actually runs.
+    await sleep(10_100);
+    await ensureWeeklySlots(project.id);
+    const [deferredNow, deferredNext] = await Promise.all([
+      db.weeklySlot.count({
+        where: {
+          projectId: project.id,
+          templateId: deferredTemplate.id,
+          weekStart: thisWeek,
+        },
+      }),
+      db.weeklySlot.count({
+        where: {
+          projectId: project.id,
+          templateId: deferredTemplate.id,
+          weekStart: followingWeek,
+        },
+      }),
+    ]);
+    check("no slots in the current week", deferredNow === 0, deferredNow);
+    check("first slots materialise next week", deferredNext === 2, deferredNext);
+    const farRows = await db.weeklySlot.count({
+      where: { projectId: project.id, templateId: farTemplate.id },
+    });
+    check("plan starting weeks out creates nothing yet", farRows === 0, farRows);
+
     // ── 3. Race-safe slot claiming ──────────────────────────────────────────
     console.log("\n[3] Concurrent claim of one slot");
     const weekStart = planningWeekStartOf();

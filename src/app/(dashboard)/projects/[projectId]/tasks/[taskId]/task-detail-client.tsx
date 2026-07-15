@@ -73,11 +73,7 @@ import { AppHeader } from "@/components/app-header";
 import { PageContainer } from "@/components/page-container";
 
 import { cn } from "@/lib/utils";
-import {
-  fieldAppliesForGate,
-  isDeliveryGateStage,
-  isGateComplete,
-} from "@/lib/checklist-config";
+import { fieldAppliesForGate } from "@/lib/checklist-config";
 import {
   saveChecklistItemText,
   removeChecklistItemAttachment,
@@ -89,6 +85,7 @@ import {
   updateTaskDueDate,
   updateTaskStatus,
   assignTaskToMe,
+  checkTaskMoveGates,
   previewForwardOwnership,
 } from "@/actions/projects";
 import {
@@ -98,7 +95,10 @@ import {
 } from "@/lib/timezone";
 import { ConfirmStatusDialog } from "@/components/board/confirm-status-dialog";
 import { DeclineDialog } from "@/components/board/decline-dialog";
-import { CONFIRM_MESSAGES } from "@/components/board/confirm-messages";
+import {
+  CONFIRM_MESSAGES,
+  missingDataMessage,
+} from "@/components/board/confirm-messages";
 import { useActionHandler } from "@/hooks/use-action";
 import { useErrorStore } from "@/lib/error-store";
 import { createAppError } from "@/lib/errors";
@@ -108,7 +108,7 @@ import { sendMessage } from "@/actions/messages";
 import type { MessageAttachment, MessageDTO } from "@/actions/messages";
 import { AttachmentBubble } from "@/components/messages/chat-attachments";
 import { useChannel } from "@/components/realtime/hooks";
-import { taskChannel } from "@/lib/channels";
+import { taskChannel, projectChannel } from "@/lib/channels";
 import {
   categoryIcon,
   validateFileFull,
@@ -471,6 +471,14 @@ export function TaskDetailClient({
   useChannel(taskChannel(taskId), (data) => {
     const d = data as { type?: string; message?: MessageDTO } | null;
     if (d?.type === "message.new" && d.message) appendComment(d.message);
+  });
+
+  // Live stage changes: when THIS task moves (from the board, another tab or
+  // another user), re-render the page so stage-scoped fields (Visible From /
+  // Locked From / gates) reflect the new stage without a manual reload.
+  useChannel(projectChannel(projectId), (data) => {
+    const d = data as { type?: string; taskId?: string } | null;
+    if (d?.type === "task.moved" && d.taskId === taskId) router.refresh();
   });
 
   return (
@@ -937,18 +945,6 @@ function TaskStatusMoveMenu({
     move.assigneeGateOpen !== false;
   const canBack = move.perms.full || stagePerm?.rollback === true;
 
-  // Pre-check mirror of the server's delivery gate: only fields visible at
-  // the current stage count, and Yes/No kinds use gate-complete semantics.
-  const deliveryIncomplete = items
-    .filter(
-      (i) =>
-        i.visible &&
-        i.phase === "delivery" &&
-        i.mandatory &&
-        !isGateComplete(i, i),
-    )
-    .map((i) => i.name);
-
   const showNext = next != null && canForward;
   const showBack = prev != null && canBack;
 
@@ -977,15 +973,21 @@ function TaskStatusMoveMenu({
 
   const handleNext = () => {
     if (!next || moving) return;
-    if (isDeliveryGateStage(next.name) && deliveryIncomplete.length > 0) {
-      const names = deliveryIncomplete.map((n) => `"${n}"`).join(", ");
-      setMoveError(
-        `This task's delivery items aren't complete yet, so it can't be submitted for review. Still missing: ${names}. If you believe this is a mistake, please contact the task creator.`,
-      );
-      return;
-    }
-    if (CONFIRM_MESSAGES[next.name]) setConfirmNext(true);
-    else void doMove(next.id);
+    // Stage-gate dry-run against fresh server data BEFORE the confirm dialog
+    // — missing data surfaces first, same as dragging on the board.
+    void (async () => {
+      try {
+        const gate = await checkTaskMoveGates(taskId, next.id, projectId);
+        if (!gate.ok) {
+          setMoveError(missingDataMessage(gate.missing));
+          return;
+        }
+      } catch {
+        // Dry-run unavailable — the real move still enforces every gate.
+      }
+      if (CONFIRM_MESSAGES[next.name]) setConfirmNext(true);
+      else void doMove(next.id);
+    })();
   };
 
   // Backward move requires a decline reason that @mentions the submitter —
@@ -1130,7 +1132,9 @@ function TaskStatusMoveMenu({
               Cannot move task
             </DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-muted-foreground">{moveError}</p>
+          <p className="text-sm whitespace-pre-line text-muted-foreground">
+            {moveError}
+          </p>
           <DialogFooter>
             <Button onClick={() => setMoveError(null)}>OK</Button>
           </DialogFooter>

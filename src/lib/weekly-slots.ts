@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { claimThrottle } from "@/lib/cache";
-import { planningWeekStartOf } from "@/lib/week";
+import { planningWeekStartOf, weekStartOf } from "@/lib/week";
 
 /** Start of the week after the given week start. */
 export function nextWeekStartOf(weekStart: Date): Date {
@@ -9,19 +9,33 @@ export function nextWeekStartOf(weekStart: Date): Date {
   return next;
 }
 
+type SlotTarget = {
+  templateId: string;
+  perWeek: number;
+  startsOn: Date;
+  responsibleMemberId: string | null;
+};
+
+/** A plan only produces slots from its first planned week onward. */
+export function planActiveForWeek(startsOn: Date, weekStart: Date): boolean {
+  return weekStartOf(startsOn).getTime() <= weekStart.getTime();
+}
+
 // Top one week's Todo slots up to each Weekly Plan target. Counting ALL rows
 // (filled + admin-removed) means removals stay removed and target bumps
-// mid-week add just the difference. Idempotent.
+// mid-week add just the difference. Plans that haven't reached their start
+// week yet produce nothing. Idempotent.
 export async function materialiseWeekSlots(
   projectId: string,
   weekStart: Date,
-  targets?: { templateId: string; perWeek: number; responsibleMemberId: string | null }[],
+  targets?: SlotTarget[],
 ): Promise<void> {
-  const resolvedTargets =
+  const resolvedTargets = (
     targets ??
     (await db.projectWeeklyTarget.findMany({
       where: { projectId, perWeek: { gt: 0 } },
-    }));
+    }))
+  ).filter((t) => planActiveForWeek(t.startsOn, weekStart));
   if (resolvedTargets.length === 0) return;
 
   const existing = await db.weeklySlot.groupBy({
@@ -69,15 +83,32 @@ export async function ensureWeeklySlots(projectId: string): Promise<void> {
 
   await materialiseWeekSlots(projectId, weekStart, targets);
 
-  // Overflow moves materialise next week's plan; keep it in sync with the
-  // targets while it's visible on the board.
+  // Next week's slots materialise in two cases: a task has overflowed into it
+  // (keep the whole next plan in sync with the targets while it's visible),
+  // or a plan STARTS next week — its first slots must show under "Next week"
+  // even though nothing overflowed.
   const nextWeek = nextWeekStartOf(weekStart);
-  const hasNextWeekRows = await db.weeklySlot.findFirst({
+  const startsNextWeek = targets.filter(
+    (t) =>
+      !planActiveForWeek(t.startsOn, weekStart) &&
+      planActiveForWeek(t.startsOn, nextWeek),
+  );
+  const nextWeekRows = await db.weeklySlot.findMany({
     where: { projectId, weekStart: nextWeek },
-    select: { id: true },
+    select: { templateId: true },
   });
-  if (hasNextWeekRows) {
+  // Only rows of plans already running count as overflow — a future-start
+  // plan's own slots shouldn't drag every other plan onto the board early.
+  const activeNow = new Set(
+    targets
+      .filter((t) => planActiveForWeek(t.startsOn, weekStart))
+      .map((t) => t.templateId),
+  );
+  const hasOverflowRows = nextWeekRows.some((r) => activeNow.has(r.templateId));
+  if (hasOverflowRows) {
     await materialiseWeekSlots(projectId, nextWeek, targets);
+  } else if (startsNextWeek.length > 0) {
+    await materialiseWeekSlots(projectId, nextWeek, startsNextWeek);
   }
 
   await backfillSlotAssignees(projectId, weekStart, targets);

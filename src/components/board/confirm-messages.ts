@@ -1,3 +1,13 @@
+/** "Please complete the missing data…" with a numbered field list — the same
+ *  copy whether the gate trips in the pre-drag dry-run or the real move. */
+export function missingDataMessage(missing: string[]): string {
+  return [
+    "Please complete the missing data:",
+    ...missing.map((n, i) => `${i + 1}- ${n}`),
+    "in order to move it.",
+  ].join("\n");
+}
+
 // Stage-specific confirmation copy shown before a forward move, shared by the
 // board's drag-drop flow and the task detail page's Back/Next controls.
 export const CONFIRM_MESSAGES: Record<

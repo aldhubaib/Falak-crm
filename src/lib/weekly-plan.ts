@@ -5,5 +5,8 @@
 export type WeeklyTarget = {
   templateId: string;
   perWeek: number;
+  /** First planned week (Sunday). "Starts next week" defers the first slots
+   *  so the team can stock the backlog first. */
+  startsOn: Date;
   responsibleMemberId: string | null;
 };

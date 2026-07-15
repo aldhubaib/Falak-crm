@@ -20,12 +20,8 @@ import {
   type WeeklyEffortMatrix,
 } from "@/actions/weekly-plan";
 import { type WeeklyTarget } from "@/lib/weekly-plan";
-import { planningWeekStartOf, weekDueDate } from "@/lib/week";
-import {
-  DEFAULT_PROJECT_TIMEZONE,
-  formatZonedDateInput,
-  parseZonedDateTime,
-} from "@/lib/timezone";
+import { planningWeekStartOf, weekDueDate, weekStartOf } from "@/lib/week";
+import { DEFAULT_PROJECT_TIMEZONE } from "@/lib/timezone";
 import { useActionHandler } from "@/hooks/use-action";
 
 type Template = { id: string; name: string; itemCount: number };
@@ -40,6 +36,7 @@ function defaultPlan(templateId: string): WeeklyTarget {
   return {
     templateId,
     perWeek: 0,
+    startsOn: planningWeekStartOf(),
     responsibleMemberId: null,
   };
 }
@@ -48,7 +45,11 @@ function plansFromTargets(targets: WeeklyTarget[]): PlanState {
   return Object.fromEntries(
     targets.map((t) => [
       t.templateId,
-      { ...t, responsibleMemberId: t.responsibleMemberId ?? null },
+      {
+        ...t,
+        startsOn: new Date(t.startsOn),
+        responsibleMemberId: t.responsibleMemberId ?? null,
+      },
     ]),
   );
 }
@@ -57,17 +58,54 @@ export function serializePlans(plans: PlanState): string {
   return Object.values(plans)
     .filter((p) => p.perWeek > 0)
     .sort((a, b) => a.templateId.localeCompare(b.templateId))
-    .map((p) => `${p.templateId}:${p.perWeek}:${p.responsibleMemberId ?? ""}`)
+    .map(
+      (p) =>
+        `${p.templateId}:${p.perWeek}:${p.startsOn.toISOString()}:${p.responsibleMemberId ?? ""}`,
+    )
     .join("|");
 }
 
-// Deadline of the current planning week — Thursday, e.g. "due Jul 16".
-function weekDueLabel(): string {
-  return new Intl.DateTimeFormat("en-US", {
-    timeZone: TIMEZONE,
-    month: "short",
-    day: "numeric",
-  }).format(weekDueDate(planningWeekStartOf()));
+const shortDateFmt = new Intl.DateTimeFormat("en-US", {
+  timeZone: TIMEZONE,
+  month: "short",
+  day: "numeric",
+});
+
+function addWeeks(weekStart: Date, weeks: number): Date {
+  const d = new Date(weekStart);
+  d.setUTCDate(d.getUTCDate() + weeks * 7);
+  return d;
+}
+
+/** The week the plan actually starts producing slots — never in the past. */
+function effectiveStartWeek(plan: WeeklyTarget): Date {
+  const current = planningWeekStartOf();
+  const start = weekStartOf(plan.startsOn);
+  return start.getTime() > current.getTime() ? start : current;
+}
+
+// Dropdown of start weeks: the current planning week plus the next 11. A
+// selection already anchored further out keeps its own week as an extra option.
+function startWeekOptions(selected: Date): { value: string; label: string }[] {
+  const current = planningWeekStartOf();
+  const options = Array.from({ length: 12 }, (_, i) => {
+    const week = addWeeks(current, i);
+    const label =
+      i === 0
+        ? `This week (due ${shortDateFmt.format(weekDueDate(week))})`
+        : i === 1
+          ? `Next week — ${shortDateFmt.format(week)} (due ${shortDateFmt.format(weekDueDate(week))})`
+          : `Week of ${shortDateFmt.format(week)} (due ${shortDateFmt.format(weekDueDate(week))})`;
+    return { value: week.toISOString(), label };
+  });
+  const own = selected.toISOString();
+  if (!options.some((o) => o.value === own)) {
+    options.push({
+      value: own,
+      label: `Week of ${shortDateFmt.format(selected)} (due ${shortDateFmt.format(weekDueDate(selected))})`,
+    });
+  }
+  return options;
 }
 
 // "5/wk ≈ 21h 30m" — hours the target costs the responsible member.
@@ -102,26 +140,23 @@ export function PlanningTemplatesSection({
 }) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [forcePending, startForce] = useTransition();
-  // Force-add flow: pick the extra slot's due date first (never in the past).
+  // Force-add flow: pick the extra slot's week first — same week dropdown as
+  // the plan's start week; the slot is due that week's Thursday.
   const [forceAddFor, setForceAddFor] = useState<Template | null>(null);
-  const todayStr = formatZonedDateInput(new Date(), TIMEZONE).date;
-  const [forceDate, setForceDate] = useState(todayStr);
+  const [forceWeek, setForceWeek] = useState(() =>
+    planningWeekStartOf().toISOString(),
+  );
 
   // Surface action errors as a toast — an uncaught throw inside the
   // transition would crash to the error boundary (digest page in prod).
   const { run: runForceAdd } = useActionHandler();
   const confirmForceAdd = () => {
     const target = forceAddFor;
-    if (!target || !forceDate || forceDate < todayStr) return;
+    if (!target || !forceWeek) return;
     setForceAddFor(null);
     startForce(async () => {
       await runForceAdd("Force Add Slot", async () => {
-        // Deadlines are end-of-day in the workspace timezone.
-        await forceAddWeeklySlot(
-          projectId,
-          target.id,
-          parseZonedDateTime(forceDate, "23:59", TIMEZONE, new Date()),
-        );
+        await forceAddWeeklySlot(projectId, target.id, new Date(forceWeek));
       });
     });
   };
@@ -132,7 +167,8 @@ export function PlanningTemplatesSection({
       : [...templateIds, id];
     onTemplateIdsChange(next);
     if (!templateIds.includes(id) && !plans[id]) {
-      const plan = defaultPlan(id);
+      // New plans join the project's shared start week.
+      const plan = { ...defaultPlan(id), startsOn: sharedStart };
       if (eligibleMembers.length === 1) {
         plan.responsibleMemberId = eligibleMembers[0]!.id;
       }
@@ -150,6 +186,28 @@ export function PlanningTemplatesSection({
     });
   };
 
+  // ONE start week for the whole project — every plan begins the same week,
+  // only the per-week counts differ. Shown value: the earliest start among
+  // active plans (when the first slots appear).
+  const sharedStart = (() => {
+    const starts = templateIds
+      .map((id) => plans[id])
+      .filter((p): p is WeeklyTarget => p != null)
+      .map((p) => effectiveStartWeek(p).getTime());
+    return starts.length > 0
+      ? new Date(Math.min(...starts))
+      : planningWeekStartOf();
+  })();
+
+  const setSharedStart = (v: string) => {
+    const startsOn = new Date(v);
+    const next: PlanState = { ...plans };
+    for (const id of new Set([...Object.keys(plans), ...templateIds])) {
+      next[id] = { ...(next[id] ?? defaultPlan(id)), startsOn };
+    }
+    onPlansChange(next);
+  };
+
   if (templates.length === 0) {
     return (
       <div className="py-4 text-center text-xs text-muted-foreground">
@@ -160,6 +218,24 @@ export function PlanningTemplatesSection({
 
   return (
     <div className="space-y-2">
+      {/* One start week for every plan in the project. */}
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-border/60 bg-surface px-4 py-3">
+        <div className="min-w-0 flex-1">
+          <div className="text-xs font-medium text-foreground">Starts</div>
+          <div className="text-xxs text-muted-foreground">
+            The week all plans begin creating slots — pick a later week to give
+            the team time to prep the backlog first.
+          </div>
+        </div>
+        <SearchableSelect
+          value={sharedStart.toISOString()}
+          onValueChange={setSharedStart}
+          options={startWeekOptions(sharedStart)}
+          placeholder="This week"
+          className="h-9 w-56 shrink-0 text-xs"
+        />
+      </div>
+
       {templates.map((t) => {
         const active = templateIds.includes(t.id);
         const plan = plans[t.id] ?? defaultPlan(t.id);
@@ -219,14 +295,6 @@ export function PlanningTemplatesSection({
                 {active && val > 0 && (
                   <span className="rounded-md border border-border/60 bg-muted/30 px-1.5 py-0.5 text-xxs tabular-nums text-foreground">
                     {val}/wk
-                  </span>
-                )}
-                {active && val > 0 && (
-                  <span
-                    className="rounded-md bg-muted/40 px-1.5 py-0.5 text-xxs text-muted-foreground"
-                    title="This week's deadline — every plan is due Thursday end-of-day"
-                  >
-                    due {weekDueLabel()}
                   </span>
                 )}
                 {active && weekMinutes != null && (
@@ -348,14 +416,14 @@ export function PlanningTemplatesSection({
                 <div className="flex items-center justify-between gap-3 rounded-lg border border-amber-500/30 bg-amber-500/5 px-3 py-2">
                   <div className="min-w-0 text-xxs text-muted-foreground">
                     Users can&apos;t exceed the target. Owner can force-add an
-                    extra one this week.
+                    extra slot into any week.
                   </div>
                   {isOwner && (
                     <button
                       type="button"
                       disabled={forcePending}
                       onClick={() => {
-                        setForceDate(todayStr);
+                        setForceWeek(planningWeekStartOf().toISOString());
                         setForceAddFor(t);
                       }}
                       className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-xxs font-medium text-amber-400 hover:bg-amber-500/15 disabled:opacity-50"
@@ -380,26 +448,21 @@ export function PlanningTemplatesSection({
           <DialogHeader>
             <DialogTitle>Force-add a slot</DialogTitle>
             <DialogDescription>
-              Adds one extra {forceAddFor?.name} slot to this week&apos;s plan.
-              Pick its due date — past dates aren&apos;t allowed.
+              Adds one extra {forceAddFor?.name} slot. Pick the week it books
+              into — it&apos;s due that week&apos;s Thursday end-of-day.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-1.5">
             <Label className="text-xxs font-medium text-muted-foreground">
-              Due date<span className="text-rose-400"> *</span>
+              Week<span className="text-rose-400"> *</span>
             </Label>
-            <input
-              type="date"
-              value={forceDate}
-              min={todayStr}
-              onChange={(e) => setForceDate(e.target.value)}
-              className="h-9 w-full rounded-lg border border-border/60 bg-background/60 px-2 text-xs tabular-nums text-foreground outline-none [color-scheme:dark]"
+            <SearchableSelect
+              value={forceWeek}
+              onValueChange={setForceWeek}
+              options={startWeekOptions(new Date(forceWeek))}
+              placeholder="This week"
+              className="h-9 w-full text-xs"
             />
-            {forceDate && forceDate < todayStr && (
-              <p className="text-xxs text-rose-400">
-                The due date can&apos;t be in the past.
-              </p>
-            )}
           </div>
           <DialogFooter>
             <Button
@@ -411,7 +474,7 @@ export function PlanningTemplatesSection({
             </Button>
             <Button
               type="button"
-              disabled={!forceDate || forceDate < todayStr || forcePending}
+              disabled={!forceWeek || forcePending}
               onClick={confirmForceAdd}
               className="gap-1.5"
             >

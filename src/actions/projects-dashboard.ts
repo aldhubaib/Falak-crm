@@ -4,7 +4,11 @@ import { Prisma } from "@/generated/prisma";
 import { db } from "@/lib/db";
 import { requireWorkspaceWithMember } from "@/lib/workspace";
 import { planningWeekStartOf } from "@/lib/week";
-import { ensureWeeklySlots, nextWeekStartOf } from "@/lib/weekly-slots";
+import {
+  ensureWeeklySlots,
+  nextWeekStartOf,
+  planActiveForWeek,
+} from "@/lib/weekly-slots";
 
 export type DashboardProject = {
   id: string;
@@ -355,6 +359,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
           projectId: true,
           templateId: true,
           perWeek: true,
+          startsOn: true,
           project: { select: { name: true } },
           template: { select: { name: true, color: true, icon: true } },
           responsibleMember: {
@@ -514,7 +519,9 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   }
 
   // Pad next week's plan with the capacity that hasn't materialised yet.
+  // Plans that only start after next week don't count anywhere yet.
   for (const t of targets) {
+    if (!planActiveForWeek(t.startsOn, statsNextWeek)) continue;
     const key = `${t.projectId}:${t.templateId}`;
     const existing = nextWeekRowsByKey.get(key) ?? 0;
     for (let i = existing; i < t.perWeek; i++) {

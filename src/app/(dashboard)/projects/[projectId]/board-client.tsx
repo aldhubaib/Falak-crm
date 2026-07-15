@@ -38,11 +38,18 @@ import {
 } from "@/components/ui/dialog";
 import { ConfirmStatusDialog } from "@/components/board/confirm-status-dialog";
 import { DeclineDialog } from "@/components/board/decline-dialog";
-import { CONFIRM_MESSAGES } from "@/components/board/confirm-messages";
-import { isDeliveryGateStage } from "@/lib/checklist-config";
+import {
+  CONFIRM_MESSAGES,
+  missingDataMessage,
+} from "@/components/board/confirm-messages";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { assignTaskToMe, previewForwardOwnership, updateTaskStatus } from "@/actions/projects";
+import {
+  assignTaskToMe,
+  checkTaskMoveGates,
+  previewForwardOwnership,
+  updateTaskStatus,
+} from "@/actions/projects";
 import { assignWeeklySlotToMe, removeWeeklySlot } from "@/actions/weekly-plan";
 import { addTaskComment } from "@/actions/comments";
 import { uploadManager } from "@/lib/upload-manager";
@@ -1049,38 +1056,26 @@ export function ProjectBoardClient({
           }
         };
 
-        // Delivery items are produced during the work stages and only need to
-        // be complete when submitting for Final Video Check — not on earlier
-        // forward moves like Todo → Raw Footage.
-        if (
-          isDeliveryGateStage(targetName) &&
-          task.deliveryIncomplete.length > 0
-        ) {
-          // The cache may be stale (e.g. an upload finished moments ago and
-          // the broadcast was missed) — never block on cached data alone.
-          // Refetch, re-check against fresh data, and only then show the error.
-          void (async () => {
-            await queryClient.refetchQueries({
-              queryKey: boardQueryKey(projectId),
-            });
-            const fresh = queryClient.getQueryData<BoardData>(
-              boardQueryKey(projectId),
+        // Stage-gate dry-run against fresh server data BEFORE any confirm
+        // dialog: if fields are missing the user sees that first, instead of
+        // confirming a move that was never going to happen.
+        void (async () => {
+          try {
+            const gate = await checkTaskMoveGates(
+              taskId,
+              targetStatusId,
+              projectId,
             );
-            const freshTask = fresh?.tasks.find((t) => t.id === taskId);
-            const incomplete =
-              freshTask?.deliveryIncomplete ?? task.deliveryIncomplete;
-            if (incomplete.length > 0) {
-              const names = incomplete.map((n) => `"${n}"`).join(", ");
-              setMoveError(
-                `This task's delivery items aren't complete yet, so it can't be submitted for review. Still missing: ${names}. If you believe this is a mistake, please contact the task creator.`,
-              );
+            if (!gate.ok) {
+              setMoveError(missingDataMessage(gate.missing));
               return;
             }
-            proceedForward();
-          })();
-          return;
-        }
-        proceedForward();
+          } catch {
+            // Dry-run unavailable (network hiccup) — the real move still
+            // enforces every gate server-side.
+          }
+          proceedForward();
+        })();
       } else if (toOrder < fromOrder) {
         const fromStatus = task.statusId
           ? statuses.find((s) => s.id === task.statusId)
@@ -1095,7 +1090,7 @@ export function ProjectBoardClient({
         });
       }
     },
-    [tasks, statuses, statusOrderMap, moveTask, movePerms, queryClient, projectId, isWorkspaceOwner, currentMemberId],
+    [tasks, statuses, statusOrderMap, moveTask, movePerms, projectId, isWorkspaceOwner, currentMemberId],
   );
 
   const openTask = useCallback(
@@ -1339,7 +1334,9 @@ export function ProjectBoardClient({
               Cannot move task
             </DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-muted-foreground">{moveError}</p>
+          <p className="text-sm whitespace-pre-line text-muted-foreground">
+            {moveError}
+          </p>
           <DialogFooter>
             <Button onClick={() => setMoveError(null)}>OK</Button>
           </DialogFooter>

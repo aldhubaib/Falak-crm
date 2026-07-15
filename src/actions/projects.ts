@@ -16,6 +16,7 @@ import {
   parseYesNoValue,
   titleLockConfig,
 } from "@/lib/checklist-config";
+import { missingDataMessage } from "@/components/board/confirm-messages";
 import { pickReturnWorker } from "@/lib/assignment";
 import { logActivity } from "@/lib/activity";
 import { revalidatePath } from "next/cache";
@@ -26,7 +27,12 @@ import { publishTaskEvent, type BoardWeeklyDelta } from "@/lib/realtime";
 import type { BoardTask } from "@/actions/board";
 import { invalidateCache, claimThrottle } from "@/lib/cache";
 import { planningWeekStartOf, weekDueDate } from "@/lib/week";
-import { materialiseWeekSlots, nextWeekStartOf } from "@/lib/weekly-slots";
+import { getWorkspaceTimezone } from "@/lib/project-timezone";
+import {
+  materialiseWeekSlots,
+  nextWeekStartOf,
+  planActiveForWeek,
+} from "@/lib/weekly-slots";
 import {
   lockChecklistItemEffort,
   lockManyChecklistItemEffort,
@@ -520,6 +526,146 @@ export type MoveTaskResult =
     }
   | { ok: false; error: string };
 
+type GateChecklistItem = {
+  name: string;
+  type: string | null;
+  role: string | null;
+  phase: string | null;
+  mandatory: boolean;
+  completed: boolean;
+  hidden: boolean;
+  textValue: string | null;
+  attachmentId: string | null;
+  visibleFromStageId: string | null;
+  requiredBeforeStageId: string | null;
+  templateItem: {
+    name: string;
+    type: string | null;
+    role: string | null;
+    phase: string | null;
+    mandatory: boolean;
+    hidden: boolean;
+    visibleFromStageId: string | null;
+    requiredBeforeStageId: string | null;
+  } | null;
+};
+
+/**
+ * Field names blocking a move to `targetStatus`: incomplete "Required Before"
+ * fields plus — at a delivery-gate stage on a forward move — incomplete
+ * mandatory delivery items. Shared by the real move and the board's dry-run
+ * (which runs BEFORE the confirm dialog).
+ */
+function taskMoveGateMissing(
+  task: {
+    status: { order: number } | null;
+    checklistItems: GateChecklistItem[];
+  },
+  targetStatus: { name: string; order: number },
+  stageOrderById: Map<string, number>,
+): string[] {
+  const taskCurrentOrder = task.status?.order ?? null;
+  // Visibility for GATING is judged at the furthest stage the move touches —
+  // a field that appears between here and the target still gates the move.
+  // Judging at the current stage let a multi-stage drag jump right past
+  // fields it never showed (e.g. Raw Footage Review → Review skipping the
+  // Post Production uploads).
+  const gateVisibilityOrder = Math.max(
+    taskCurrentOrder ?? 0,
+    targetStatus.order,
+  );
+  const isForward = targetStatus.order > (taskCurrentOrder ?? 0);
+
+  const missing: string[] = [];
+  for (const ci of task.checklistItems) {
+    const cfg = fieldConfig(ci);
+    if (cfg.hidden) continue;
+    if (!isFieldVisible(cfg, gateVisibilityOrder, stageOrderById)) continue;
+    if (!fieldAppliesForGate(ci, task.checklistItems)) continue;
+    if (isGateComplete(ci, { type: cfg.type ?? undefined })) continue;
+
+    // "Required Before" fields must be complete at or before their gate stage.
+    const gateStageId = cfg.requiredBeforeStageId;
+    const gateOrder = gateStageId ? stageOrderById.get(gateStageId) : null;
+    if (gateOrder != null && gateOrder <= targetStatus.order) {
+      missing.push(cfg.name);
+      continue;
+    }
+    // Mandatory delivery items block submission at the delivery-gate stage.
+    if (
+      isForward &&
+      isDeliveryGateStage(targetStatus.name) &&
+      cfg.phase === "delivery" &&
+      cfg.mandatory
+    ) {
+      missing.push(cfg.name);
+    }
+  }
+  return missing;
+}
+
+/**
+ * Dry-run of updateTaskStatus's stage-gate checks against fresh data. The
+ * board calls this BEFORE showing any confirm dialog, so "missing data"
+ * surfaces first instead of after the user already confirmed.
+ */
+export async function checkTaskMoveGates(
+  taskId: string,
+  statusId: string,
+  projectId: string,
+): Promise<{ ok: true } | { ok: false; missing: string[] }> {
+  const { workspace } = await requireProjectWork(projectId);
+  const [task, allStatuses] = await Promise.all([
+    db.task.findFirst({
+      where: { id: taskId, projectId },
+      select: {
+        status: { select: { order: true } },
+        checklistItems: {
+          select: {
+            name: true,
+            type: true,
+            role: true,
+            phase: true,
+            mandatory: true,
+            completed: true,
+            hidden: true,
+            textValue: true,
+            attachmentId: true,
+            visibleFromStageId: true,
+            requiredBeforeStageId: true,
+            templateItem: {
+              select: {
+                name: true,
+                type: true,
+                role: true,
+                phase: true,
+                mandatory: true,
+                hidden: true,
+                visibleFromStageId: true,
+                requiredBeforeStageId: true,
+              },
+            },
+          },
+        },
+      },
+    }),
+    db.taskStatus.findMany({
+      where: { workspaceId: workspace.id },
+      select: { id: true, name: true, order: true },
+    }),
+  ]);
+  const targetStatus = allStatuses.find((s) => s.id === statusId) ?? null;
+  // Missing task/stage isn't the dry-run's problem — the real move reports it.
+  if (!task || !targetStatus) return { ok: true };
+
+  const missing = taskMoveGateMissing(
+    task,
+    targetStatus,
+    new Map(allStatuses.map((s) => [s.id, s.order])),
+  );
+  return missing.length > 0 ? { ok: false, missing } : { ok: true };
+}
+
 export async function updateTaskStatus(
   taskId: string,
   statusId: string,
@@ -579,42 +725,15 @@ export async function updateTaskStatus(
   const targetStatus = allStatuses.find((s) => s.id === statusId) ?? null;
   const stageOrderById = new Map(allStatuses.map((s) => [s.id, s.order]));
 
-  // Stage-gate check: fields with a "Required Before" stage at or before the
-  // target stage must be complete. Rules come from the live template config;
-  // detached fields fall back to their own snapshot.
-  const blockers: { itemName: string; role: string }[] = [];
-  const taskCurrentOrder = task?.status?.order ?? null;
-  // Visibility for GATING is judged at the furthest stage the move touches —
-  // a field that appears between here and the target still gates the move.
-  // Judging at the current stage let a multi-stage drag jump right past
-  // fields it never showed (e.g. Raw Footage Review → Review skipping the
-  // Post Production uploads).
-  const gateVisibilityOrder = targetStatus
-    ? Math.max(taskCurrentOrder ?? 0, targetStatus.order)
-    : taskCurrentOrder;
+  // Stage-gate check: incomplete "Required Before" fields and — when
+  // submitting to a delivery-gate stage — mandatory delivery items block the
+  // move. Rules come from the live template config; detached fields fall back
+  // to their own snapshot. Same helper the board's pre-drag dry-run uses.
   if (task && targetStatus) {
-    for (const ci of task.checklistItems) {
-      const cfg = fieldConfig(ci);
-      if (cfg.hidden) continue;
-      if (!isFieldVisible(cfg, gateVisibilityOrder, stageOrderById)) continue;
-      if (!fieldAppliesForGate(ci, task.checklistItems)) continue;
-      if (isGateComplete(ci, cfg)) continue;
-      const gateStageId = cfg.requiredBeforeStageId;
-      if (!gateStageId) continue;
-      const gateOrder = stageOrderById.get(gateStageId);
-      if (gateOrder == null) continue;
-      if (gateOrder <= targetStatus.order) {
-        blockers.push({ itemName: cfg.name, role: cfg.role });
-      }
+    const missing = taskMoveGateMissing(task, targetStatus, stageOrderById);
+    if (missing.length > 0) {
+      return { ok: false, error: missingDataMessage(missing) };
     }
-  }
-
-  if (blockers.length > 0) {
-    const names = blockers.map((b) => `"${b.itemName}"`).join(", ");
-    return {
-      ok: false,
-      error: `This task's details aren't complete yet, so it can't be moved right now. Still missing: ${names}. If you believe this is a mistake, please contact the task creator.`,
-    };
   }
 
   const fromOrder = task?.status ? allStatuses.find((s) => s.id === task.status!.id)?.order ?? 0 : 0;
@@ -653,32 +772,6 @@ export async function updateTaskStatus(
       error:
         "This task is assigned to someone else. Assign it to yourself first, then move it forward.",
     };
-  }
-
-  // Block submission for Final Video Check if mandatory delivery items are
-  // still incomplete. Delivery items only need to be done at this gate —
-  // earlier forward moves (e.g. Todo → Raw Footage) must not be blocked.
-  // Rules come from the live template config.
-  if (task && isForward && isDeliveryGateStage(targetStatus?.name)) {
-    const incomplete = task.checklistItems
-      .map((ci) => ({ ci, cfg: fieldConfig(ci) }))
-      .filter(
-        ({ ci, cfg }) =>
-          !cfg.hidden &&
-          isFieldVisible(cfg, gateVisibilityOrder, stageOrderById) &&
-          cfg.phase === "delivery" &&
-          cfg.mandatory &&
-          // Same completeness rule as the Required Before gate — Yes/No kinds
-          // with their follow-up filled don't block.
-          !isGateComplete(ci, cfg),
-      );
-    if (incomplete.length > 0) {
-      const names = incomplete.map((i) => `"${i.cfg.name}"`).join(", ");
-      return {
-        ok: false,
-        error: `This task's delivery items aren't complete yet, so it can't be submitted for review. Still missing: ${names}. If you believe this is a mistake, please contact the task creator.`,
-      };
-    }
   }
 
   // Weekly Plan gate: moving forward INTO Todo consumes one of this week's
@@ -748,20 +841,38 @@ export async function updateTaskStatus(
           error: `There are no planned items for ${typeName}, so the task can't move to Todo. Add a weekly plan for it in Project Settings → Planning.`,
         };
       }
+      // A plan that starts NEXT week accepts no work into the current week —
+      // the task books straight into the plan's first week instead. A plan
+      // starting even further out takes no tasks at all until then.
+      const planStartsLater = !planActiveForWeek(target.startsOn, weekStart);
+      if (
+        planStartsLater &&
+        !planActiveForWeek(target.startsOn, nextWeekStartOf(weekStart))
+      ) {
+        const startFmt = new Intl.DateTimeFormat("en-US", {
+          timeZone: getWorkspaceTimezone(),
+          month: "short",
+          day: "numeric",
+        }).format(target.startsOn);
+        return {
+          ok: false,
+          error: `The ${typeName} plan starts the week of ${startFmt} — tasks can't move to Todo before then.`,
+        };
+      }
       // A force-added slot carries its own deadline — it beats the week due.
       let claimedSlotDueDate: Date | null = null;
-      if (freeSlot) {
+      if (!planStartsLater && freeSlot) {
         claimSlotId = freeSlot.id;
         claimedSlotDueDate = freeSlot.dueDate;
-      } else if (weekRows < target.perWeek) {
+      } else if (!planStartsLater && weekRows < target.perWeek) {
         // This week's slots weren't materialised yet (board not opened since
         // the week rolled over) — the move itself creates the missing slot.
         createExtraSlot = true;
       } else {
-        // Plan full — overflow into next week's cycle. Next week's plan
-        // materialises so the board shows it, and the task claims one of its
-        // free slots. Only when next week is full too does the task ride on
-        // top as an extra bound slot.
+        // Plan full (or not started yet) — book into next week. Next week's
+        // plan materialises so the board shows it, and the task claims one of
+        // its free slots. Only when next week is full too does the task ride
+        // on top as an extra bound slot.
         overflowToNextWeek = true;
         planningWeekStart = nextWeekStartOf(weekStart);
         await materialiseWeekSlots(projectId, planningWeekStart);
@@ -1049,6 +1160,10 @@ export async function updateTaskStatus(
   // No revalidatePath for the board here: the mover patches its React Query
   // cache from this result and every other viewer gets the broadcast patch.
   // Invalidating the RSC cache per move caused a server re-render storm.
+  // The task DETAIL page must revalidate though — its field visibility
+  // (Visible From / gates) is computed server-side from the stage, and the
+  // router cache would otherwise serve the old stage's fields.
+  revalidatePath(`/projects/${projectId}/tasks/${taskId}`);
   if (dealId) revalidatePath(`/deals/${dealId}`);
   if (weeklyDelta) revalidatePath("/dashboard");
 

@@ -480,6 +480,9 @@ model ProjectWeeklyTarget {
   // Tasks to deliver per week on the unified calendar (Sunday-start weeks,
   // due Thursday end-of-day). There are no per-plan cycles or anchors.
   perWeek    Int    @default(0)
+  // First planned week (Sunday 00:00 Kuwait). A plan saved with "starts next
+  // week" shows its first slots under "Next week" instead of "Due".
+  startsOn   DateTime @default(now())
   // Project member responsible for filling this template's weekly slots.
   responsibleMemberId String?
 
