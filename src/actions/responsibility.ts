@@ -3,9 +3,8 @@
 import { db } from "@/lib/db";
 import { formatAgeLabel } from "@/lib/format-age";
 import { requireWorkspaceWithMember } from "@/lib/workspace";
-import { weekStartOf } from "@/lib/week";
+import { planningWeekStartOf } from "@/lib/week";
 import { ensureWeeklySlots } from "@/lib/weekly-slots";
-import { getProjectTimezones } from "@/lib/project-timezone";
 
 export type ResponsibilityTask = {
   taskId: string;
@@ -130,18 +129,13 @@ export async function getMyResponsibility(): Promise<MyResponsibilityData> {
 
   await Promise.all(projectIds.map((id) => ensureWeeklySlots(id)));
 
-  const timezoneByProject = await getProjectTimezones(projectIds);
-  const weekStartClauses = projectIds.map((projectId) => ({
-    projectId,
-    weekStart: weekStartOf(new Date(), timezoneByProject.get(projectId)),
-  }));
+  // One unified planning week for every project.
+  const weekStart = planningWeekStartOf();
 
   const rows = await db.weeklySlot.findMany({
     where: {
-      OR: weekStartClauses.map((c) => ({
-        projectId: c.projectId,
-        weekStart: c.weekStart,
-      })),
+      projectId: { in: projectIds },
+      weekStart,
       taskId: null,
       removedAt: null,
       assigneeId: member.id,
@@ -159,10 +153,8 @@ export async function getMyResponsibility(): Promise<MyResponsibilityData> {
   const filledCounts = await db.weeklySlot.groupBy({
     by: ["projectId", "templateId"],
     where: {
-      OR: weekStartClauses.map((c) => ({
-        projectId: c.projectId,
-        weekStart: c.weekStart,
-      })),
+      projectId: { in: projectIds },
+      weekStart,
       taskId: { not: null },
       removedAt: null,
     },

@@ -30458,7 +30458,6 @@ export namespace Prisma {
     thumbnailId: string | null
     description: string | null
     requirePublishing: boolean | null
-    timezone: string | null
     startDate: Date | null
     deadline: Date | null
     createdAt: Date | null
@@ -30481,7 +30480,6 @@ export namespace Prisma {
     thumbnailId: string | null
     description: string | null
     requirePublishing: boolean | null
-    timezone: string | null
     startDate: Date | null
     deadline: Date | null
     createdAt: Date | null
@@ -30504,7 +30502,6 @@ export namespace Prisma {
     thumbnailId: number
     description: number
     requirePublishing: number
-    timezone: number
     startDate: number
     deadline: number
     createdAt: number
@@ -30529,7 +30526,6 @@ export namespace Prisma {
     thumbnailId?: true
     description?: true
     requirePublishing?: true
-    timezone?: true
     startDate?: true
     deadline?: true
     createdAt?: true
@@ -30552,7 +30548,6 @@ export namespace Prisma {
     thumbnailId?: true
     description?: true
     requirePublishing?: true
-    timezone?: true
     startDate?: true
     deadline?: true
     createdAt?: true
@@ -30575,7 +30570,6 @@ export namespace Prisma {
     thumbnailId?: true
     description?: true
     requirePublishing?: true
-    timezone?: true
     startDate?: true
     deadline?: true
     createdAt?: true
@@ -30671,7 +30665,6 @@ export namespace Prisma {
     thumbnailId: string | null
     description: string | null
     requirePublishing: boolean
-    timezone: string
     startDate: Date | null
     deadline: Date | null
     createdAt: Date
@@ -30711,7 +30704,6 @@ export namespace Prisma {
     thumbnailId?: boolean
     description?: boolean
     requirePublishing?: boolean
-    timezone?: boolean
     startDate?: boolean
     deadline?: boolean
     createdAt?: boolean
@@ -30750,7 +30742,6 @@ export namespace Prisma {
     thumbnailId?: boolean
     description?: boolean
     requirePublishing?: boolean
-    timezone?: boolean
     startDate?: boolean
     deadline?: boolean
     createdAt?: boolean
@@ -30777,7 +30768,6 @@ export namespace Prisma {
     thumbnailId?: boolean
     description?: boolean
     requirePublishing?: boolean
-    timezone?: boolean
     startDate?: boolean
     deadline?: boolean
     createdAt?: boolean
@@ -30804,7 +30794,6 @@ export namespace Prisma {
     thumbnailId?: boolean
     description?: boolean
     requirePublishing?: boolean
-    timezone?: boolean
     startDate?: boolean
     deadline?: boolean
     createdAt?: boolean
@@ -30813,7 +30802,7 @@ export namespace Prisma {
     deletedBy?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "dealId" | "companyId" | "contactId" | "ownerId" | "ownerName" | "statusId" | "name" | "type" | "thumbnailId" | "description" | "requirePublishing" | "timezone" | "startDate" | "deadline" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["project"]>
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "dealId" | "companyId" | "contactId" | "ownerId" | "ownerName" | "statusId" | "name" | "type" | "thumbnailId" | "description" | "requirePublishing" | "startDate" | "deadline" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["project"]>
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     deal?: boolean | Project$dealArgs<ExtArgs>
@@ -30878,7 +30867,6 @@ export namespace Prisma {
       thumbnailId: string | null
       description: string | null
       requirePublishing: boolean
-      timezone: string
       startDate: Date | null
       deadline: Date | null
       createdAt: Date
@@ -31336,7 +31324,6 @@ export namespace Prisma {
     readonly thumbnailId: FieldRef<"Project", 'String'>
     readonly description: FieldRef<"Project", 'String'>
     readonly requirePublishing: FieldRef<"Project", 'Boolean'>
-    readonly timezone: FieldRef<"Project", 'String'>
     readonly startDate: FieldRef<"Project", 'DateTime'>
     readonly deadline: FieldRef<"Project", 'DateTime'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
@@ -32108,10 +32095,6 @@ export namespace Prisma {
     projectId: string | null
     templateId: string | null
     perWeek: number | null
-    repeatEvery: string | null
-    startOn: Date | null
-    endsOn: Date | null
-    neverExpires: boolean | null
     responsibleMemberId: string | null
   }
 
@@ -32120,10 +32103,6 @@ export namespace Prisma {
     projectId: string | null
     templateId: string | null
     perWeek: number | null
-    repeatEvery: string | null
-    startOn: Date | null
-    endsOn: Date | null
-    neverExpires: boolean | null
     responsibleMemberId: string | null
   }
 
@@ -32132,10 +32111,6 @@ export namespace Prisma {
     projectId: number
     templateId: number
     perWeek: number
-    repeatEvery: number
-    startOn: number
-    endsOn: number
-    neverExpires: number
     responsibleMemberId: number
     _all: number
   }
@@ -32154,10 +32129,6 @@ export namespace Prisma {
     projectId?: true
     templateId?: true
     perWeek?: true
-    repeatEvery?: true
-    startOn?: true
-    endsOn?: true
-    neverExpires?: true
     responsibleMemberId?: true
   }
 
@@ -32166,10 +32137,6 @@ export namespace Prisma {
     projectId?: true
     templateId?: true
     perWeek?: true
-    repeatEvery?: true
-    startOn?: true
-    endsOn?: true
-    neverExpires?: true
     responsibleMemberId?: true
   }
 
@@ -32178,10 +32145,6 @@ export namespace Prisma {
     projectId?: true
     templateId?: true
     perWeek?: true
-    repeatEvery?: true
-    startOn?: true
-    endsOn?: true
-    neverExpires?: true
     responsibleMemberId?: true
     _all?: true
   }
@@ -32277,10 +32240,6 @@ export namespace Prisma {
     projectId: string
     templateId: string
     perWeek: number
-    repeatEvery: string
-    startOn: Date
-    endsOn: Date | null
-    neverExpires: boolean
     responsibleMemberId: string | null
     _count: ProjectWeeklyTargetCountAggregateOutputType | null
     _avg: ProjectWeeklyTargetAvgAggregateOutputType | null
@@ -32308,10 +32267,6 @@ export namespace Prisma {
     projectId?: boolean
     templateId?: boolean
     perWeek?: boolean
-    repeatEvery?: boolean
-    startOn?: boolean
-    endsOn?: boolean
-    neverExpires?: boolean
     responsibleMemberId?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
@@ -32323,10 +32278,6 @@ export namespace Prisma {
     projectId?: boolean
     templateId?: boolean
     perWeek?: boolean
-    repeatEvery?: boolean
-    startOn?: boolean
-    endsOn?: boolean
-    neverExpires?: boolean
     responsibleMemberId?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
@@ -32338,10 +32289,6 @@ export namespace Prisma {
     projectId?: boolean
     templateId?: boolean
     perWeek?: boolean
-    repeatEvery?: boolean
-    startOn?: boolean
-    endsOn?: boolean
-    neverExpires?: boolean
     responsibleMemberId?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
@@ -32353,14 +32300,10 @@ export namespace Prisma {
     projectId?: boolean
     templateId?: boolean
     perWeek?: boolean
-    repeatEvery?: boolean
-    startOn?: boolean
-    endsOn?: boolean
-    neverExpires?: boolean
     responsibleMemberId?: boolean
   }
 
-  export type ProjectWeeklyTargetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "templateId" | "perWeek" | "repeatEvery" | "startOn" | "endsOn" | "neverExpires" | "responsibleMemberId", ExtArgs["result"]["projectWeeklyTarget"]>
+  export type ProjectWeeklyTargetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "templateId" | "perWeek" | "responsibleMemberId", ExtArgs["result"]["projectWeeklyTarget"]>
   export type ProjectWeeklyTargetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
@@ -32389,10 +32332,6 @@ export namespace Prisma {
       projectId: string
       templateId: string
       perWeek: number
-      repeatEvery: string
-      startOn: Date
-      endsOn: Date | null
-      neverExpires: boolean
       responsibleMemberId: string | null
     }, ExtArgs["result"]["projectWeeklyTarget"]>
     composites: {}
@@ -32824,10 +32763,6 @@ export namespace Prisma {
     readonly projectId: FieldRef<"ProjectWeeklyTarget", 'String'>
     readonly templateId: FieldRef<"ProjectWeeklyTarget", 'String'>
     readonly perWeek: FieldRef<"ProjectWeeklyTarget", 'Int'>
-    readonly repeatEvery: FieldRef<"ProjectWeeklyTarget", 'String'>
-    readonly startOn: FieldRef<"ProjectWeeklyTarget", 'DateTime'>
-    readonly endsOn: FieldRef<"ProjectWeeklyTarget", 'DateTime'>
-    readonly neverExpires: FieldRef<"ProjectWeeklyTarget", 'Boolean'>
     readonly responsibleMemberId: FieldRef<"ProjectWeeklyTarget", 'String'>
   }
     
@@ -72890,7 +72825,6 @@ export namespace Prisma {
     thumbnailId: 'thumbnailId',
     description: 'description',
     requirePublishing: 'requirePublishing',
-    timezone: 'timezone',
     startDate: 'startDate',
     deadline: 'deadline',
     createdAt: 'createdAt',
@@ -72907,10 +72841,6 @@ export namespace Prisma {
     projectId: 'projectId',
     templateId: 'templateId',
     perWeek: 'perWeek',
-    repeatEvery: 'repeatEvery',
-    startOn: 'startOn',
-    endsOn: 'endsOn',
-    neverExpires: 'neverExpires',
     responsibleMemberId: 'responsibleMemberId'
   };
 
@@ -75401,7 +75331,6 @@ export namespace Prisma {
     thumbnailId?: StringNullableFilter<"Project"> | string | null
     description?: StringNullableFilter<"Project"> | string | null
     requirePublishing?: BoolFilter<"Project"> | boolean
-    timezone?: StringFilter<"Project"> | string
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     deadline?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
@@ -75439,7 +75368,6 @@ export namespace Prisma {
     thumbnailId?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     requirePublishing?: SortOrder
-    timezone?: SortOrder
     startDate?: SortOrderInput | SortOrder
     deadline?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -75480,7 +75408,6 @@ export namespace Prisma {
     thumbnailId?: StringNullableFilter<"Project"> | string | null
     description?: StringNullableFilter<"Project"> | string | null
     requirePublishing?: BoolFilter<"Project"> | boolean
-    timezone?: StringFilter<"Project"> | string
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     deadline?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
@@ -75518,7 +75445,6 @@ export namespace Prisma {
     thumbnailId?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     requirePublishing?: SortOrder
-    timezone?: SortOrder
     startDate?: SortOrderInput | SortOrder
     deadline?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -75547,7 +75473,6 @@ export namespace Prisma {
     thumbnailId?: StringNullableWithAggregatesFilter<"Project"> | string | null
     description?: StringNullableWithAggregatesFilter<"Project"> | string | null
     requirePublishing?: BoolWithAggregatesFilter<"Project"> | boolean
-    timezone?: StringWithAggregatesFilter<"Project"> | string
     startDate?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     deadline?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
@@ -75564,10 +75489,6 @@ export namespace Prisma {
     projectId?: StringFilter<"ProjectWeeklyTarget"> | string
     templateId?: StringFilter<"ProjectWeeklyTarget"> | string
     perWeek?: IntFilter<"ProjectWeeklyTarget"> | number
-    repeatEvery?: StringFilter<"ProjectWeeklyTarget"> | string
-    startOn?: DateTimeFilter<"ProjectWeeklyTarget"> | Date | string
-    endsOn?: DateTimeNullableFilter<"ProjectWeeklyTarget"> | Date | string | null
-    neverExpires?: BoolFilter<"ProjectWeeklyTarget"> | boolean
     responsibleMemberId?: StringNullableFilter<"ProjectWeeklyTarget"> | string | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
@@ -75579,10 +75500,6 @@ export namespace Prisma {
     projectId?: SortOrder
     templateId?: SortOrder
     perWeek?: SortOrder
-    repeatEvery?: SortOrder
-    startOn?: SortOrder
-    endsOn?: SortOrderInput | SortOrder
-    neverExpires?: SortOrder
     responsibleMemberId?: SortOrderInput | SortOrder
     project?: ProjectOrderByWithRelationInput
     template?: ChecklistTemplateOrderByWithRelationInput
@@ -75598,10 +75515,6 @@ export namespace Prisma {
     projectId?: StringFilter<"ProjectWeeklyTarget"> | string
     templateId?: StringFilter<"ProjectWeeklyTarget"> | string
     perWeek?: IntFilter<"ProjectWeeklyTarget"> | number
-    repeatEvery?: StringFilter<"ProjectWeeklyTarget"> | string
-    startOn?: DateTimeFilter<"ProjectWeeklyTarget"> | Date | string
-    endsOn?: DateTimeNullableFilter<"ProjectWeeklyTarget"> | Date | string | null
-    neverExpires?: BoolFilter<"ProjectWeeklyTarget"> | boolean
     responsibleMemberId?: StringNullableFilter<"ProjectWeeklyTarget"> | string | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     template?: XOR<ChecklistTemplateScalarRelationFilter, ChecklistTemplateWhereInput>
@@ -75613,10 +75526,6 @@ export namespace Prisma {
     projectId?: SortOrder
     templateId?: SortOrder
     perWeek?: SortOrder
-    repeatEvery?: SortOrder
-    startOn?: SortOrder
-    endsOn?: SortOrderInput | SortOrder
-    neverExpires?: SortOrder
     responsibleMemberId?: SortOrderInput | SortOrder
     _count?: ProjectWeeklyTargetCountOrderByAggregateInput
     _avg?: ProjectWeeklyTargetAvgOrderByAggregateInput
@@ -75633,10 +75542,6 @@ export namespace Prisma {
     projectId?: StringWithAggregatesFilter<"ProjectWeeklyTarget"> | string
     templateId?: StringWithAggregatesFilter<"ProjectWeeklyTarget"> | string
     perWeek?: IntWithAggregatesFilter<"ProjectWeeklyTarget"> | number
-    repeatEvery?: StringWithAggregatesFilter<"ProjectWeeklyTarget"> | string
-    startOn?: DateTimeWithAggregatesFilter<"ProjectWeeklyTarget"> | Date | string
-    endsOn?: DateTimeNullableWithAggregatesFilter<"ProjectWeeklyTarget"> | Date | string | null
-    neverExpires?: BoolWithAggregatesFilter<"ProjectWeeklyTarget"> | boolean
     responsibleMemberId?: StringNullableWithAggregatesFilter<"ProjectWeeklyTarget"> | string | null
   }
 
@@ -80360,7 +80265,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -80398,7 +80302,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -80428,7 +80331,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80466,7 +80368,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80500,7 +80401,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -80519,7 +80419,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80542,7 +80441,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80554,10 +80452,6 @@ export namespace Prisma {
   export type ProjectWeeklyTargetCreateInput = {
     id?: string
     perWeek?: number
-    repeatEvery?: string
-    startOn?: Date | string
-    endsOn?: Date | string | null
-    neverExpires?: boolean
     project: ProjectCreateNestedOneWithoutWeeklyTargetsInput
     template: ChecklistTemplateCreateNestedOneWithoutWeeklyTargetsInput
     responsibleMember?: WorkspaceMemberCreateNestedOneWithoutResponsibleWeeklyTargetsInput
@@ -80568,20 +80462,12 @@ export namespace Prisma {
     projectId: string
     templateId: string
     perWeek?: number
-    repeatEvery?: string
-    startOn?: Date | string
-    endsOn?: Date | string | null
-    neverExpires?: boolean
     responsibleMemberId?: string | null
   }
 
   export type ProjectWeeklyTargetUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
-    repeatEvery?: StringFieldUpdateOperationsInput | string
-    startOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    endsOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    neverExpires?: BoolFieldUpdateOperationsInput | boolean
     project?: ProjectUpdateOneRequiredWithoutWeeklyTargetsNestedInput
     template?: ChecklistTemplateUpdateOneRequiredWithoutWeeklyTargetsNestedInput
     responsibleMember?: WorkspaceMemberUpdateOneWithoutResponsibleWeeklyTargetsNestedInput
@@ -80592,10 +80478,6 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     templateId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
-    repeatEvery?: StringFieldUpdateOperationsInput | string
-    startOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    endsOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    neverExpires?: BoolFieldUpdateOperationsInput | boolean
     responsibleMemberId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -80604,20 +80486,12 @@ export namespace Prisma {
     projectId: string
     templateId: string
     perWeek?: number
-    repeatEvery?: string
-    startOn?: Date | string
-    endsOn?: Date | string | null
-    neverExpires?: boolean
     responsibleMemberId?: string | null
   }
 
   export type ProjectWeeklyTargetUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
-    repeatEvery?: StringFieldUpdateOperationsInput | string
-    startOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    endsOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    neverExpires?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProjectWeeklyTargetUncheckedUpdateManyInput = {
@@ -80625,10 +80499,6 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     templateId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
-    repeatEvery?: StringFieldUpdateOperationsInput | string
-    startOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    endsOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    neverExpires?: BoolFieldUpdateOperationsInput | boolean
     responsibleMemberId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -85558,7 +85428,6 @@ export namespace Prisma {
     thumbnailId?: SortOrder
     description?: SortOrder
     requirePublishing?: SortOrder
-    timezone?: SortOrder
     startDate?: SortOrder
     deadline?: SortOrder
     createdAt?: SortOrder
@@ -85581,7 +85450,6 @@ export namespace Prisma {
     thumbnailId?: SortOrder
     description?: SortOrder
     requirePublishing?: SortOrder
-    timezone?: SortOrder
     startDate?: SortOrder
     deadline?: SortOrder
     createdAt?: SortOrder
@@ -85604,7 +85472,6 @@ export namespace Prisma {
     thumbnailId?: SortOrder
     description?: SortOrder
     requirePublishing?: SortOrder
-    timezone?: SortOrder
     startDate?: SortOrder
     deadline?: SortOrder
     createdAt?: SortOrder
@@ -85633,10 +85500,6 @@ export namespace Prisma {
     projectId?: SortOrder
     templateId?: SortOrder
     perWeek?: SortOrder
-    repeatEvery?: SortOrder
-    startOn?: SortOrder
-    endsOn?: SortOrder
-    neverExpires?: SortOrder
     responsibleMemberId?: SortOrder
   }
 
@@ -85649,10 +85512,6 @@ export namespace Prisma {
     projectId?: SortOrder
     templateId?: SortOrder
     perWeek?: SortOrder
-    repeatEvery?: SortOrder
-    startOn?: SortOrder
-    endsOn?: SortOrder
-    neverExpires?: SortOrder
     responsibleMemberId?: SortOrder
   }
 
@@ -85661,10 +85520,6 @@ export namespace Prisma {
     projectId?: SortOrder
     templateId?: SortOrder
     perWeek?: SortOrder
-    repeatEvery?: SortOrder
-    startOn?: SortOrder
-    endsOn?: SortOrder
-    neverExpires?: SortOrder
     responsibleMemberId?: SortOrder
   }
 
@@ -93959,7 +93814,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -93995,7 +93849,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -94912,7 +94765,6 @@ export namespace Prisma {
     thumbnailId?: StringNullableFilter<"Project"> | string | null
     description?: StringNullableFilter<"Project"> | string | null
     requirePublishing?: BoolFilter<"Project"> | boolean
-    timezone?: StringFilter<"Project"> | string
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     deadline?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
@@ -96211,10 +96063,6 @@ export namespace Prisma {
   export type ProjectWeeklyTargetCreateWithoutResponsibleMemberInput = {
     id?: string
     perWeek?: number
-    repeatEvery?: string
-    startOn?: Date | string
-    endsOn?: Date | string | null
-    neverExpires?: boolean
     project: ProjectCreateNestedOneWithoutWeeklyTargetsInput
     template: ChecklistTemplateCreateNestedOneWithoutWeeklyTargetsInput
   }
@@ -96224,10 +96072,6 @@ export namespace Prisma {
     projectId: string
     templateId: string
     perWeek?: number
-    repeatEvery?: string
-    startOn?: Date | string
-    endsOn?: Date | string | null
-    neverExpires?: boolean
   }
 
   export type ProjectWeeklyTargetCreateOrConnectWithoutResponsibleMemberInput = {
@@ -96732,10 +96576,6 @@ export namespace Prisma {
     projectId?: StringFilter<"ProjectWeeklyTarget"> | string
     templateId?: StringFilter<"ProjectWeeklyTarget"> | string
     perWeek?: IntFilter<"ProjectWeeklyTarget"> | number
-    repeatEvery?: StringFilter<"ProjectWeeklyTarget"> | string
-    startOn?: DateTimeFilter<"ProjectWeeklyTarget"> | Date | string
-    endsOn?: DateTimeNullableFilter<"ProjectWeeklyTarget"> | Date | string | null
-    neverExpires?: BoolFilter<"ProjectWeeklyTarget"> | boolean
     responsibleMemberId?: StringNullableFilter<"ProjectWeeklyTarget"> | string | null
   }
 
@@ -97676,7 +97516,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -97713,7 +97552,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -97758,7 +97596,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -97795,7 +97632,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -97997,7 +97833,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -98033,7 +97868,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -99904,7 +99738,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -99940,7 +99773,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -100367,7 +100199,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -100403,7 +100234,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -100904,7 +100734,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -100940,7 +100769,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -101652,10 +101480,6 @@ export namespace Prisma {
   export type ProjectWeeklyTargetCreateWithoutProjectInput = {
     id?: string
     perWeek?: number
-    repeatEvery?: string
-    startOn?: Date | string
-    endsOn?: Date | string | null
-    neverExpires?: boolean
     template: ChecklistTemplateCreateNestedOneWithoutWeeklyTargetsInput
     responsibleMember?: WorkspaceMemberCreateNestedOneWithoutResponsibleWeeklyTargetsInput
   }
@@ -101664,10 +101488,6 @@ export namespace Prisma {
     id?: string
     templateId: string
     perWeek?: number
-    repeatEvery?: string
-    startOn?: Date | string
-    endsOn?: Date | string | null
-    neverExpires?: boolean
     responsibleMemberId?: string | null
   }
 
@@ -102196,7 +102016,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -102233,7 +102052,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -102380,7 +102198,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102417,7 +102234,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102560,7 +102376,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -102597,7 +102412,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -102815,7 +102629,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102852,7 +102665,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -103072,7 +102884,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -103109,7 +102920,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -103232,7 +103042,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -103269,7 +103078,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -103388,7 +103196,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -103425,7 +103232,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -103565,7 +103371,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -103602,7 +103407,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -103696,7 +103500,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -103733,7 +103536,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -103805,7 +103607,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -103842,7 +103643,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -104113,10 +103913,6 @@ export namespace Prisma {
   export type ProjectWeeklyTargetCreateWithoutTemplateInput = {
     id?: string
     perWeek?: number
-    repeatEvery?: string
-    startOn?: Date | string
-    endsOn?: Date | string | null
-    neverExpires?: boolean
     project: ProjectCreateNestedOneWithoutWeeklyTargetsInput
     responsibleMember?: WorkspaceMemberCreateNestedOneWithoutResponsibleWeeklyTargetsInput
   }
@@ -104125,10 +103921,6 @@ export namespace Prisma {
     id?: string
     projectId: string
     perWeek?: number
-    repeatEvery?: string
-    startOn?: Date | string
-    endsOn?: Date | string | null
-    neverExpires?: boolean
     responsibleMemberId?: string | null
   }
 
@@ -105219,7 +105011,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -105256,7 +105047,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -105348,7 +105138,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -105385,7 +105174,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -106307,7 +106095,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -106344,7 +106131,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -106761,7 +106547,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -106798,7 +106583,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -107474,7 +107258,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -107511,7 +107294,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -107757,7 +107539,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -107794,7 +107575,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -109058,7 +108838,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -109095,7 +108874,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -109413,7 +109191,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -109450,7 +109227,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -111396,7 +111172,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -111433,7 +111208,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -111687,7 +111461,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -111724,7 +111497,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -112017,7 +111789,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -112628,7 +112399,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -112664,7 +112434,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -112697,7 +112466,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -113390,10 +113158,6 @@ export namespace Prisma {
     projectId: string
     templateId: string
     perWeek?: number
-    repeatEvery?: string
-    startOn?: Date | string
-    endsOn?: Date | string | null
-    neverExpires?: boolean
   }
 
   export type WeeklySlotCreateManyAssigneeInput = {
@@ -113760,10 +113524,6 @@ export namespace Prisma {
   export type ProjectWeeklyTargetUpdateWithoutResponsibleMemberInput = {
     id?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
-    repeatEvery?: StringFieldUpdateOperationsInput | string
-    startOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    endsOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    neverExpires?: BoolFieldUpdateOperationsInput | boolean
     project?: ProjectUpdateOneRequiredWithoutWeeklyTargetsNestedInput
     template?: ChecklistTemplateUpdateOneRequiredWithoutWeeklyTargetsNestedInput
   }
@@ -113773,10 +113533,6 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     templateId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
-    repeatEvery?: StringFieldUpdateOperationsInput | string
-    startOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    endsOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    neverExpires?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProjectWeeklyTargetUncheckedUpdateManyWithoutResponsibleMemberInput = {
@@ -113784,10 +113540,6 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     templateId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
-    repeatEvery?: StringFieldUpdateOperationsInput | string
-    startOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    endsOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    neverExpires?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type WeeklySlotUpdateWithoutAssigneeInput = {
@@ -114098,7 +113850,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -114227,7 +113978,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -114263,7 +114013,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -114296,7 +114045,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -115238,7 +114986,6 @@ export namespace Prisma {
     thumbnailId?: string | null
     description?: string | null
     requirePublishing?: boolean
-    timezone?: string
     startDate?: Date | string | null
     deadline?: Date | string | null
     createdAt?: Date | string
@@ -115257,7 +115004,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -115293,7 +115039,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -115326,7 +115071,6 @@ export namespace Prisma {
     thumbnailId?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requirePublishing?: BoolFieldUpdateOperationsInput | boolean
-    timezone?: StringFieldUpdateOperationsInput | string
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -115462,10 +115206,6 @@ export namespace Prisma {
     id?: string
     templateId: string
     perWeek?: number
-    repeatEvery?: string
-    startOn?: Date | string
-    endsOn?: Date | string | null
-    neverExpires?: boolean
     responsibleMemberId?: string | null
   }
 
@@ -115874,10 +115614,6 @@ export namespace Prisma {
   export type ProjectWeeklyTargetUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
-    repeatEvery?: StringFieldUpdateOperationsInput | string
-    startOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    endsOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    neverExpires?: BoolFieldUpdateOperationsInput | boolean
     template?: ChecklistTemplateUpdateOneRequiredWithoutWeeklyTargetsNestedInput
     responsibleMember?: WorkspaceMemberUpdateOneWithoutResponsibleWeeklyTargetsNestedInput
   }
@@ -115886,10 +115622,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     templateId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
-    repeatEvery?: StringFieldUpdateOperationsInput | string
-    startOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    endsOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    neverExpires?: BoolFieldUpdateOperationsInput | boolean
     responsibleMemberId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -115897,10 +115629,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     templateId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
-    repeatEvery?: StringFieldUpdateOperationsInput | string
-    startOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    endsOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    neverExpires?: BoolFieldUpdateOperationsInput | boolean
     responsibleMemberId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -116068,10 +115796,6 @@ export namespace Prisma {
     id?: string
     projectId: string
     perWeek?: number
-    repeatEvery?: string
-    startOn?: Date | string
-    endsOn?: Date | string | null
-    neverExpires?: boolean
     responsibleMemberId?: string | null
   }
 
@@ -116228,10 +115952,6 @@ export namespace Prisma {
   export type ProjectWeeklyTargetUpdateWithoutTemplateInput = {
     id?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
-    repeatEvery?: StringFieldUpdateOperationsInput | string
-    startOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    endsOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    neverExpires?: BoolFieldUpdateOperationsInput | boolean
     project?: ProjectUpdateOneRequiredWithoutWeeklyTargetsNestedInput
     responsibleMember?: WorkspaceMemberUpdateOneWithoutResponsibleWeeklyTargetsNestedInput
   }
@@ -116240,10 +115960,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
-    repeatEvery?: StringFieldUpdateOperationsInput | string
-    startOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    endsOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    neverExpires?: BoolFieldUpdateOperationsInput | boolean
     responsibleMemberId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -116251,10 +115967,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
-    repeatEvery?: StringFieldUpdateOperationsInput | string
-    startOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    endsOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    neverExpires?: BoolFieldUpdateOperationsInput | boolean
     responsibleMemberId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 

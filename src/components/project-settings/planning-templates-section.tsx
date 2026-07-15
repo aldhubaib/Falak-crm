@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from "react";
 import { Check, ChevronDown, Minus, Plus, Zap } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -20,18 +19,12 @@ import {
   type PlanningEligibleMember,
   type WeeklyEffortMatrix,
 } from "@/actions/weekly-plan";
+import { type WeeklyTarget } from "@/lib/weekly-plan";
+import { planningWeekStartOf, weekDueDate } from "@/lib/week";
 import {
-  cycleEndOf,
-  REPEAT_OPTIONS,
-  repeatUnitLabel,
-  type RepeatEvery,
-  type WeeklyTarget,
-} from "@/lib/weekly-plan";
-import { weekStartOf } from "@/lib/week";
-import {
+  DEFAULT_PROJECT_TIMEZONE,
   formatZonedDateInput,
   parseZonedDateTime,
-  timezoneLabel,
 } from "@/lib/timezone";
 import { useActionHandler } from "@/hooks/use-action";
 
@@ -39,14 +32,14 @@ type Template = { id: string; name: string; itemCount: number };
 
 type PlanState = Record<string, WeeklyTarget>;
 
-function defaultPlan(templateId: string, timezone: string): WeeklyTarget {
+// All plans live on the unified calendar (weeks start Sunday, work is due
+// Thursday 23:59 Kuwait) — a plan is just a per-week count plus an owner.
+const TIMEZONE = DEFAULT_PROJECT_TIMEZONE;
+
+function defaultPlan(templateId: string): WeeklyTarget {
   return {
     templateId,
     perWeek: 0,
-    repeatEvery: "week",
-    startOn: weekStartOf(new Date(), timezone),
-    endsOn: null,
-    neverExpires: true,
     responsibleMemberId: null,
   };
 }
@@ -55,12 +48,7 @@ function plansFromTargets(targets: WeeklyTarget[]): PlanState {
   return Object.fromEntries(
     targets.map((t) => [
       t.templateId,
-      {
-        ...t,
-        startOn: new Date(t.startOn),
-        endsOn: t.endsOn ? new Date(t.endsOn) : null,
-        responsibleMemberId: t.responsibleMemberId ?? null,
-      },
+      { ...t, responsibleMemberId: t.responsibleMemberId ?? null },
     ]),
   );
 }
@@ -69,22 +57,17 @@ export function serializePlans(plans: PlanState): string {
   return Object.values(plans)
     .filter((p) => p.perWeek > 0)
     .sort((a, b) => a.templateId.localeCompare(b.templateId))
-    .map(
-      (p) =>
-        `${p.templateId}:${p.perWeek}:${p.repeatEvery}:${p.startOn.toISOString()}:${p.endsOn?.toISOString() ?? ""}:${p.neverExpires}:${p.responsibleMemberId ?? ""}`,
-    )
+    .map((p) => `${p.templateId}:${p.perWeek}:${p.responsibleMemberId ?? ""}`)
     .join("|");
 }
 
-// Deadline of the current plan cycle, e.g. "due Jul 13" (project timezone).
-function cycleDueLabel(plan: WeeklyTarget, timezone: string): string {
-  const cycleEnd = cycleEndOf(plan.startOn, plan.repeatEvery);
-  // Show the last day of the cycle, not the first day of the next one.
+// Deadline of the current planning week — Thursday, e.g. "due Jul 16".
+function weekDueLabel(): string {
   return new Intl.DateTimeFormat("en-US", {
-    timeZone: timezone,
+    timeZone: TIMEZONE,
     month: "short",
     day: "numeric",
-  }).format(new Date(cycleEnd.getTime() - 60_000));
+  }).format(weekDueDate(planningWeekStartOf()));
 }
 
 // "5/wk ≈ 21h 30m" — hours the target costs the responsible member.
@@ -100,10 +83,8 @@ export function PlanningTemplatesSection({
   projectId,
   templates,
   templateIds,
-  initialTargets,
   eligibleMembers,
   effortMatrix,
-  timezone,
   isOwner,
   onTemplateIdsChange,
   onPlansChange,
@@ -112,10 +93,8 @@ export function PlanningTemplatesSection({
   projectId: string;
   templates: Template[];
   templateIds: string[];
-  initialTargets: WeeklyTarget[];
   eligibleMembers: PlanningEligibleMember[];
   effortMatrix?: WeeklyEffortMatrix;
-  timezone: string;
   isOwner: boolean;
   onTemplateIdsChange: (ids: string[]) => void;
   onPlansChange: (plans: PlanState) => void;
@@ -125,7 +104,7 @@ export function PlanningTemplatesSection({
   const [forcePending, startForce] = useTransition();
   // Force-add flow: pick the extra slot's due date first (never in the past).
   const [forceAddFor, setForceAddFor] = useState<Template | null>(null);
-  const todayStr = formatZonedDateInput(new Date(), timezone).date;
+  const todayStr = formatZonedDateInput(new Date(), TIMEZONE).date;
   const [forceDate, setForceDate] = useState(todayStr);
 
   // Surface action errors as a toast — an uncaught throw inside the
@@ -137,11 +116,11 @@ export function PlanningTemplatesSection({
     setForceAddFor(null);
     startForce(async () => {
       await runForceAdd("Force Add Slot", async () => {
-        // Deadlines are end-of-day in the project's timezone.
+        // Deadlines are end-of-day in the workspace timezone.
         await forceAddWeeklySlot(
           projectId,
           target.id,
-          parseZonedDateTime(forceDate, "23:59", timezone, new Date()),
+          parseZonedDateTime(forceDate, "23:59", TIMEZONE, new Date()),
         );
       });
     });
@@ -153,7 +132,7 @@ export function PlanningTemplatesSection({
       : [...templateIds, id];
     onTemplateIdsChange(next);
     if (!templateIds.includes(id) && !plans[id]) {
-      const plan = defaultPlan(id, timezone);
+      const plan = defaultPlan(id);
       if (eligibleMembers.length === 1) {
         plan.responsibleMemberId = eligibleMembers[0]!.id;
       }
@@ -165,7 +144,7 @@ export function PlanningTemplatesSection({
     onPlansChange({
       ...plans,
       [templateId]: {
-        ...(plans[templateId] ?? defaultPlan(templateId, timezone)),
+        ...(plans[templateId] ?? defaultPlan(templateId)),
         ...patch,
       },
     });
@@ -183,17 +162,17 @@ export function PlanningTemplatesSection({
     <div className="space-y-2">
       {templates.map((t) => {
         const active = templateIds.includes(t.id);
-        const plan = plans[t.id] ?? defaultPlan(t.id, timezone);
+        const plan = plans[t.id] ?? defaultPlan(t.id);
         const val = plan.perWeek;
         const isExpanded = active && (expanded[t.id] ?? true);
 
-        // Predicted hours this target costs the responsible member per cycle.
+        // Predicted hours this target costs the responsible member per week.
         const perTaskMin =
           plan.responsibleMemberId != null
             ? (effortMatrix?.perTaskMinutes[t.id]?.[plan.responsibleMemberId] ??
               null)
             : null;
-        const cycleMinutes =
+        const weekMinutes =
           perTaskMin != null && val > 0 ? perTaskMin * val : null;
         const memberHours =
           plan.responsibleMemberId != null
@@ -245,17 +224,17 @@ export function PlanningTemplatesSection({
                 {active && val > 0 && (
                   <span
                     className="rounded-md bg-muted/40 px-1.5 py-0.5 text-xxs text-muted-foreground"
-                    title="Deadline of the current plan cycle"
+                    title="This week's deadline — every plan is due Thursday end-of-day"
                   >
-                    due {cycleDueLabel(plan, timezone)}
+                    due {weekDueLabel()}
                   </span>
                 )}
-                {active && cycleMinutes != null && (
+                {active && weekMinutes != null && (
                   <span
                     className="rounded-md border border-primary/30 bg-primary/10 px-1.5 py-0.5 text-xxs tabular-nums text-primary"
                     title="Predicted effort for the responsible member (2-min video baseline × their title rates)"
                   >
-                    ≈ {formatEffortHours(cycleMinutes)}
+                    ≈ {formatEffortHours(weekMinutes)}
                     {memberHours != null && ` of ${memberHours}h`}
                   </span>
                 )}
@@ -281,19 +260,14 @@ export function PlanningTemplatesSection({
 
             {isExpanded && (
               <div className="space-y-3 border-t border-border/50 px-4 py-3">
-                <RecurrenceForm
-                  value={plan}
-                  timezone={timezone}
-                  onChange={(patch) => patchPlan(t.id, patch)}
-                />
-
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     <div className="text-xs font-medium text-foreground">
                       Target
                     </div>
                     <div className="text-xxs text-muted-foreground">
-                      Tasks to deliver per {repeatUnitLabel(plan.repeatEvery)}.
+                      Tasks to deliver per week (Sunday–Thursday, due Thursday
+                      end-of-day).
                     </div>
                   </div>
                   <div className="inline-flex items-center gap-2">
@@ -333,7 +307,7 @@ export function PlanningTemplatesSection({
                       <Plus className="size-3.5" />
                     </button>
                     <span className="ml-1 text-xs text-muted-foreground">
-                      / {repeatUnitLabel(plan.repeatEvery)}
+                      / week
                     </span>
                   </div>
                 </div>
@@ -374,7 +348,7 @@ export function PlanningTemplatesSection({
                 <div className="flex items-center justify-between gap-3 rounded-lg border border-amber-500/30 bg-amber-500/5 px-3 py-2">
                   <div className="min-w-0 text-xxs text-muted-foreground">
                     Users can&apos;t exceed the target. Owner can force-add an
-                    extra one this cycle.
+                    extra one this week.
                   </div>
                   {isOwner && (
                     <button
@@ -447,146 +421,6 @@ export function PlanningTemplatesSection({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
-  );
-}
-
-function RecurrenceForm({
-  value,
-  timezone,
-  onChange,
-}: {
-  value: WeeklyTarget;
-  timezone: string;
-  onChange: (patch: Partial<WeeklyTarget>) => void;
-}) {
-  return (
-    <div className="space-y-2">
-      <p className="text-xxs text-muted-foreground">
-        Schedule times use {timezoneLabel(timezone)}.
-      </p>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
-      <div className="space-y-1.5">
-        <Label className="text-xxs font-medium text-muted-foreground">
-          Repeat Every<span className="text-rose-400"> *</span>
-        </Label>
-        <SearchableSelect
-          value={value.repeatEvery}
-          onValueChange={(v) =>
-            onChange({ repeatEvery: v as RepeatEvery })
-          }
-          options={REPEAT_OPTIONS.map((o) => ({
-            value: o.value,
-            label: o.label,
-          }))}
-          placeholder="Week"
-          className="h-9 text-xs"
-        />
-      </div>
-
-      <DateTimeField
-        label="Start On"
-        timezone={timezone}
-        value={value.startOn}
-        onChange={(d) => onChange({ startOn: d })}
-      />
-
-      <div className="space-y-1.5">
-        <Label className="text-xxs font-medium text-muted-foreground">
-          Ends On
-        </Label>
-        <div className="flex items-center gap-2">
-          <DateTimeField
-            timezone={timezone}
-            value={value.endsOn ?? undefined}
-            onChange={(d) => onChange({ endsOn: d, neverExpires: false })}
-            disabled={value.neverExpires}
-            className="flex-1"
-          />
-          <label className="inline-flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground">
-            <Checkbox
-              checked={value.neverExpires}
-              onCheckedChange={(c) =>
-                onChange({
-                  neverExpires: Boolean(c),
-                  endsOn: c ? null : value.endsOn,
-                })
-              }
-            />
-            Never Expires
-          </label>
-        </div>
-      </div>
-    </div>
-    </div>
-  );
-}
-
-function DateTimeField({
-  label,
-  value,
-  timezone,
-  onChange,
-  disabled,
-  className,
-}: {
-  label?: string;
-  value?: Date;
-  timezone: string;
-  onChange: (d: Date) => void;
-  disabled?: boolean;
-  className?: string;
-}) {
-  const formatted = value
-    ? formatZonedDateInput(value, timezone)
-    : formatZonedDateInput(new Date(), timezone);
-
-  return (
-    <div className={cn("space-y-1.5", className)}>
-      {label && (
-        <Label className="text-xxs font-medium text-muted-foreground">
-          {label}
-        </Label>
-      )}
-      <div
-        className={cn(
-          "flex h-9 items-center gap-2 rounded-lg border border-border/60 bg-background/60 px-2",
-          disabled && "opacity-50",
-        )}
-      >
-        <input
-          type="date"
-          disabled={disabled}
-          value={value ? formatted.date : ""}
-          onChange={(e) =>
-            onChange(
-              parseZonedDateTime(
-                e.target.value,
-                formatted.time,
-                timezone,
-                value ?? new Date(),
-              ),
-            )
-          }
-          className="min-w-0 flex-1 border-0 bg-transparent text-xs tabular-nums text-foreground outline-none [color-scheme:dark] disabled:cursor-not-allowed"
-        />
-        <input
-          type="time"
-          disabled={disabled}
-          value={value ? formatted.time : "00:00"}
-          onChange={(e) =>
-            onChange(
-              parseZonedDateTime(
-                formatted.date,
-                e.target.value,
-                timezone,
-                value ?? new Date(),
-              ),
-            )
-          }
-          className="w-[5.5rem] shrink-0 border-0 bg-transparent text-xs tabular-nums text-foreground outline-none [color-scheme:dark] disabled:cursor-not-allowed"
-        />
-      </div>
     </div>
   );
 }

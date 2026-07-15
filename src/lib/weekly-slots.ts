@@ -1,7 +1,6 @@
 import { db } from "@/lib/db";
 import { claimThrottle } from "@/lib/cache";
-import { weekStartOf } from "@/lib/week";
-import { getProjectTimezone } from "@/lib/project-timezone";
+import { planningWeekStartOf } from "@/lib/week";
 
 /** Start of the week after the given week start. */
 export function nextWeekStartOf(weekStart: Date): Date {
@@ -55,8 +54,7 @@ export async function materialiseWeekSlots(
 // already booked into next week, next week's plan is topped up too so its
 // placeholders track target changes.
 export async function ensureWeeklySlots(projectId: string): Promise<void> {
-  const timezone = await getProjectTimezone(projectId);
-  const weekStart = weekStartOf(new Date(), timezone);
+  const weekStart = planningWeekStartOf();
 
   const claimed = await claimThrottle(
     `weekslots:${projectId}:${weekStart.toISOString().slice(0, 10)}`,
@@ -248,8 +246,7 @@ export async function syncSlotAssigneesFromTargets(
   projectId: string,
   targets: { templateId: string; responsibleMemberId: string | null }[],
 ): Promise<void> {
-  const timezone = await getProjectTimezone(projectId);
-  const weekStart = weekStartOf(new Date(), timezone);
+  const weekStart = planningWeekStartOf();
   await Promise.all(
     targets.map((t) =>
       db.weeklySlot.updateMany({

@@ -7,10 +7,8 @@ import {
   Check,
   CheckSquare,
   ClipboardCheck,
-  Clock,
   FileText,
 } from "lucide-react";
-import { SearchableSelect } from "@/components/ui/searchable-select";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { AppHeader } from "@/components/app-header";
@@ -27,16 +25,11 @@ import {
   updateProjectRequirePublishing,
   updateProjectStatus,
   updateProjectTemplates,
-  updateProjectTimezone,
 } from "@/actions/projects";
 import { setWeeklyTargets } from "@/actions/weekly-plan";
 import type { PlanningEligibleMember, WeeklyEffortMatrix } from "@/actions/weekly-plan";
 import { useActionHandler } from "@/hooks/use-action";
 import type { WeeklyTarget } from "@/lib/weekly-plan";
-import {
-  DEFAULT_PROJECT_TIMEZONE,
-  PROJECT_TIMEZONE_OPTIONS,
-} from "@/lib/timezone";
 
 type ProjectStatusOption = { id: string; name: string; color: string };
 
@@ -66,7 +59,6 @@ export function ProjectSettingsClient({
   weeklyTargets: initialWeeklyTargets,
   eligibleMembers,
   effortMatrix,
-  timezone: initialTimezone,
   isOwner,
 }: {
   projectId: string;
@@ -81,7 +73,6 @@ export function ProjectSettingsClient({
   weeklyTargets: WeeklyTarget[];
   eligibleMembers: PlanningEligibleMember[];
   effortMatrix: WeeklyEffortMatrix;
-  timezone: string;
   isOwner: boolean;
 }) {
   const router = useRouter();
@@ -93,9 +84,6 @@ export function ProjectSettingsClient({
     initialRequirePublishing,
   );
   const [templateIds, setTemplateIds] = useState(initialTemplateIds);
-  const [timezone, setTimezone] = useState(
-    initialTimezone || DEFAULT_PROJECT_TIMEZONE,
-  );
   const [plans, setPlans] = useState(() => plansFromTargets(initialWeeklyTargets));
 
   const initialPlansKey = serializePlans(plansFromTargets(initialWeeklyTargets));
@@ -106,7 +94,6 @@ export function ProjectSettingsClient({
     description !== initialDescription ||
     requirePublishing !== initialRequirePublishing ||
     templateIds.join(",") !== initialTemplateIds.join(",") ||
-    timezone !== initialTimezone ||
     plansDirty;
 
   // Action errors (e.g. plan validation) must surface as a toast — an
@@ -140,9 +127,6 @@ export function ProjectSettingsClient({
         }
         if (templateIds.join(",") !== initialTemplateIds.join(",")) {
           await updateProjectTemplates(projectId, templateIds);
-        }
-        if (timezone !== initialTimezone) {
-          await updateProjectTimezone(projectId, timezone);
         }
         if (plansDirty) {
           await setWeeklyTargets(
@@ -270,23 +254,6 @@ export function ProjectSettingsClient({
           </Section>
 
           <Section
-            icon={<Clock className="size-4" />}
-            title="Project Timezone"
-            hint="Weekly planning and schedule times use this timezone for the whole team."
-          >
-            <SearchableSelect
-              value={timezone}
-              onValueChange={setTimezone}
-              options={PROJECT_TIMEZONE_OPTIONS.map((o) => ({
-                value: o.value,
-                label: o.label,
-              }))}
-              placeholder="Asia/Kuwait"
-              className="h-9 text-xs"
-            />
-          </Section>
-
-          <Section
             icon={<CheckSquare className="size-4" />}
             title="Checklist Templates"
             hint="Turn on the templates that apply to this project. Expand any active template to set how many tasks it should deliver per week."
@@ -295,10 +262,8 @@ export function ProjectSettingsClient({
               projectId={projectId}
               templates={templates}
               templateIds={templateIds}
-              initialTargets={initialWeeklyTargets}
               eligibleMembers={eligibleMembers}
               effortMatrix={effortMatrix}
-              timezone={timezone}
               isOwner={isOwner}
               onTemplateIdsChange={setTemplateIds}
               onPlansChange={setPlans}

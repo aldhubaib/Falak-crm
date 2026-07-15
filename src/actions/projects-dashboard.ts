@@ -3,9 +3,8 @@
 import { Prisma } from "@/generated/prisma";
 import { db } from "@/lib/db";
 import { requireWorkspaceWithMember } from "@/lib/workspace";
-import { weekStartOf } from "@/lib/week";
+import { planningWeekStartOf } from "@/lib/week";
 import { ensureWeeklySlots, nextWeekStartOf } from "@/lib/weekly-slots";
-import { getProjectTimezones } from "@/lib/project-timezone";
 
 export type DashboardProject = {
   id: string;
@@ -120,18 +119,13 @@ export async function getThisWeekSchedule(): Promise<ThisWeekData> {
 
   await Promise.all(projectIds.map((id) => ensureWeeklySlots(id)));
 
-  const timezoneByProject = await getProjectTimezones(projectIds);
-  const weekClauses = projectIds.map((projectId) => ({
-    projectId,
-    weekStart: weekStartOf(new Date(), timezoneByProject.get(projectId)),
-  }));
+  // One unified planning week for every project.
+  const weekStart = planningWeekStartOf();
 
   const slots = await db.weeklySlot.findMany({
     where: {
-      OR: weekClauses.map((c) => ({
-        projectId: c.projectId,
-        weekStart: c.weekStart,
-      })),
+      projectId: { in: projectIds },
+      weekStart,
       removedAt: null,
     },
     orderBy: [{ projectId: "asc" }, { templateId: "asc" }, { createdAt: "asc" }],
@@ -156,10 +150,8 @@ export async function getThisWeekSchedule(): Promise<ThisWeekData> {
   const filledCounts = await db.weeklySlot.groupBy({
     by: ["projectId", "templateId"],
     where: {
-      OR: weekClauses.map((c) => ({
-        projectId: c.projectId,
-        weekStart: c.weekStart,
-      })),
+      projectId: { in: projectIds },
+      weekStart,
       taskId: { not: null },
       removedAt: null,
     },
@@ -286,14 +278,9 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     };
   }
 
-  const timezoneByProject = await getProjectTimezones(projectIds);
-  const weekClauses = projectIds.map((projectId) => {
-    const weekStart = weekStartOf(new Date(), timezoneByProject.get(projectId));
-    return { projectId, weekStart, nextWeek: nextWeekStartOf(weekStart) };
-  });
-  const nextWeekByProject = new Map(
-    weekClauses.map((c) => [c.projectId, c.nextWeek.getTime()]),
-  );
+  // One unified planning week for every project.
+  const statsWeekStart = planningWeekStartOf();
+  const statsNextWeek = nextWeekStartOf(statsWeekStart);
 
   const [
     slots,
@@ -307,10 +294,8 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       // Live plan slots for the current AND next week across all projects.
       db.weeklySlot.findMany({
         where: {
-          OR: weekClauses.flatMap((c) => [
-            { projectId: c.projectId, weekStart: c.weekStart },
-            { projectId: c.projectId, weekStart: c.nextWeek },
-          ]),
+          projectId: { in: projectIds },
+          weekStart: { in: [statsWeekStart, statsNextWeek] },
           removedAt: null,
         },
         orderBy: [{ projectId: "asc" }, { templateId: "asc" }, { createdAt: "asc" }],
@@ -338,10 +323,8 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       // sitting in a mid-pipeline stage).
       db.weeklySlot.findMany({
         where: {
-          OR: weekClauses.map((c) => ({
-            projectId: c.projectId,
-            weekStart: { lt: c.weekStart },
-          })),
+          projectId: { in: projectIds },
+          weekStart: { lt: statsWeekStart },
           removedAt: null,
           task: { deletedAt: null, completedAt: null },
         },
@@ -495,7 +478,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   // Carried-over filled slots surface under "This week" alongside the live
   // plan — unfinished planned work stays visible until it completes.
   for (const s of [...slots, ...carryOverSlots]) {
-    const isNext = s.weekStart.getTime() === nextWeekByProject.get(s.projectId);
+    const isNext = s.weekStart.getTime() === statsNextWeek.getTime();
     const key = `${s.projectId}:${s.templateId}`;
     if (isNext) {
       nextWeekRowsByKey.set(key, (nextWeekRowsByKey.get(key) ?? 0) + 1);

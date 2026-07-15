@@ -361,7 +361,6 @@ exports.Prisma.ProjectScalarFieldEnum = {
   thumbnailId: 'thumbnailId',
   description: 'description',
   requirePublishing: 'requirePublishing',
-  timezone: 'timezone',
   startDate: 'startDate',
   deadline: 'deadline',
   createdAt: 'createdAt',
@@ -375,10 +374,6 @@ exports.Prisma.ProjectWeeklyTargetScalarFieldEnum = {
   projectId: 'projectId',
   templateId: 'templateId',
   perWeek: 'perWeek',
-  repeatEvery: 'repeatEvery',
-  startOn: 'startOn',
-  endsOn: 'endsOn',
-  neverExpires: 'neverExpires',
   responsibleMemberId: 'responsibleMemberId'
 };
 

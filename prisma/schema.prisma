@@ -443,7 +443,6 @@ model Project {
   thumbnailId   String?   // File ID for project thumbnail
   description       String?
   requirePublishing Boolean   @default(false)
-  timezone          String    @default("Asia/Kuwait")
   startDate         DateTime?
   deadline      DateTime?
   createdAt     DateTime  @default(now())
@@ -478,12 +477,9 @@ model ProjectWeeklyTarget {
   id         String @id @default(cuid())
   projectId  String
   templateId String
+  // Tasks to deliver per week on the unified calendar (Sunday-start weeks,
+  // due Thursday end-of-day). There are no per-plan cycles or anchors.
   perWeek    Int    @default(0)
-  // Recurrence schedule (Lovable project settings → planning).
-  repeatEvery  String    @default("week") // week | 2weeks | month | 2months | 3months | 6months | year
-  startOn      DateTime  @default(now())
-  endsOn       DateTime?
-  neverExpires Boolean   @default(true)
   // Project member responsible for filling this template's weekly slots.
   responsibleMemberId String?
 
@@ -501,10 +497,10 @@ model WeeklySlot {
   id         String    @id @default(cuid())
   projectId  String
   templateId String
-  weekStart  DateTime // Monday 00:00 in the project's timezone (stored as UTC)
+  weekStart  DateTime // Sunday 00:00 Kuwait — the unified week grid (stored as UTC)
   taskId     String?   @unique
   assigneeId String?   // Member responsible for filling this slot
-  dueDate    DateTime? // Explicit deadline (force-added slots); falls back to the plan cycle end
+  dueDate    DateTime? // Explicit deadline (force-added slots); falls back to Thursday 23:59 of the week
   removedAt  DateTime?
   createdAt  DateTime  @default(now())
 

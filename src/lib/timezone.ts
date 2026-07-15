@@ -63,7 +63,14 @@ function zonedKey(parts: Pick<ZonedParts, "year" | "month" | "day" | "hour" | "m
   return `${parts.year}-${parts.month}-${parts.day}-${parts.hour}-${parts.minute}`;
 }
 
-/** UTC instant for a wall-clock time on a calendar day in `timeZone`. */
+/**
+ * UTC instant for a wall-clock time on a calendar day in `timeZone` — exact
+ * to the millisecond (…:00.000), so equality lookups on stored week starts
+ * always match. Iterative offset correction: guess the instant as if the wall
+ * clock were UTC, read back what that instant looks like in the zone, and
+ * shift by the difference (converges immediately for fixed-offset zones like
+ * Asia/Kuwait).
+ */
 export function zonedDateTimeUtc(
   year: number,
   month: number,
@@ -72,23 +79,21 @@ export function zonedDateTimeUtc(
   minute: number,
   timeZone: string,
 ): Date {
-  const target = zonedKey({
-    year: String(year),
-    month: String(month).padStart(2, "0"),
-    day: String(day).padStart(2, "0"),
-    hour: String(hour).padStart(2, "0"),
-    minute: String(minute).padStart(2, "0"),
-  });
-
-  let lo = Date.UTC(year, month - 1, day - 1, 0, 0, 0);
-  let hi = Date.UTC(year, month - 1, day + 1, 23, 59, 0);
-  while (lo < hi) {
-    const mid = Math.floor((lo + hi) / 2);
-    const key = zonedKey(getZonedParts(new Date(mid), timeZone));
-    if (key < target) lo = mid + 60_000;
-    else hi = mid;
+  const want = Date.UTC(year, month - 1, day, hour, minute);
+  let ts = want;
+  for (let i = 0; i < 3; i++) {
+    const p = getZonedParts(new Date(ts), timeZone);
+    const actual = Date.UTC(
+      Number(p.year),
+      Number(p.month) - 1,
+      Number(p.day),
+      Number(p.hour),
+      Number(p.minute),
+    );
+    if (actual === want) break;
+    ts += want - actual;
   }
-  return new Date(lo);
+  return new Date(ts);
 }
 
 export function parseZonedDateTime(

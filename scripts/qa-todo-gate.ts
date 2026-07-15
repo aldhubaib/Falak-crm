@@ -1,13 +1,13 @@
-// QA for the Todo weekly-plan gate mechanics added this cycle: plan-cycle
-// deadlines (cycleEndOf), stored task types on zero-field templates, race-safe
-// slot claiming, and slot adoption via Task.templateId. Isolated throwaway
-// workspace; asserts the rest of the database is untouched.
+// QA for the Todo weekly-plan gate mechanics: the unified calendar helpers
+// (Sunday weeks, Thursday dues, Fri/Sat → next week), stored task types on
+// zero-field templates, race-safe slot claiming, and slot adoption via
+// Task.templateId. Isolated throwaway workspace; asserts the rest of the
+// database is untouched.
 //
 //   npx tsx --env-file=.env scripts/qa-todo-gate.ts
 import { db } from "../src/lib/db";
 import { ensureWeeklySlots } from "../src/lib/weekly-slots";
-import { weekStartOf } from "../src/lib/week";
-import { cycleEndOf } from "../src/lib/weekly-plan";
+import { planningWeekStartOf, weekDueDate, weekStartOf } from "../src/lib/week";
 
 let failures = 0;
 
@@ -46,28 +46,33 @@ async function main() {
   });
 
   try {
-    // ── 1. cycleEndOf: plan-cycle deadlines ─────────────────────────────────
-    console.log("\n[1] cycleEndOf deadlines");
-    const anchor = new Date("2026-07-05T00:00:00Z");
-    const now = new Date("2026-07-11T00:00:00Z");
-    const weekEnd = cycleEndOf(anchor, "week", now);
+    // ── 1. Unified calendar: Sunday weeks, Thursday dues, Fri/Sat rule ──────
+    console.log("\n[1] Unified week grid");
+    // Wednesday Jul 15, 02:00 Kuwait (UTC+3).
+    const wed = new Date("2026-07-14T23:00:00Z");
+    const wedWeek = weekStartOf(wed, "Asia/Kuwait");
     check(
-      "weekly plan started Jul 5 -> cycle ends Jul 12",
-      weekEnd.toISOString().startsWith("2026-07-12"),
-      weekEnd.toISOString(),
+      "weeks start Sunday 00:00 Kuwait",
+      wedWeek.toISOString() === "2026-07-11T21:00:00.000Z",
+      wedWeek.toISOString(),
     );
-    const monthEnd = cycleEndOf(anchor, "month", now);
+    const due = weekDueDate(wedWeek, "Asia/Kuwait");
     check(
-      "monthly plan started Jul 5 -> cycle ends Aug 5",
-      monthEnd.toISOString().startsWith("2026-08-05"),
-      monthEnd.toISOString(),
+      "week due Thursday 23:59 Kuwait",
+      due.toISOString() === "2026-07-16T20:59:00.000Z",
+      due.toISOString(),
     );
-    const oldAnchor = new Date("2020-01-06T00:00:00Z");
-    const oldEnd = cycleEndOf(oldAnchor, "week", now);
     check(
-      "plan started years ago still lands in the current week",
-      oldEnd > now && oldEnd.getTime() - now.getTime() <= 7 * 86_400_000,
-      oldEnd.toISOString(),
+      "midweek work books into the current week",
+      planningWeekStartOf(wed, "Asia/Kuwait").getTime() === wedWeek.getTime(),
+    );
+    // Friday Jul 17, 10:00 Kuwait — the working week closed Thursday night.
+    const fri = new Date("2026-07-17T07:00:00Z");
+    check(
+      "Friday/Saturday work books into NEXT week",
+      planningWeekStartOf(fri, "Asia/Kuwait").toISOString() ===
+        "2026-07-18T21:00:00.000Z",
+      planningWeekStartOf(fri, "Asia/Kuwait").toISOString(),
     );
 
     // ── 2. Zero-field task type adoption via stored Task.templateId ────────
@@ -118,7 +123,7 @@ async function main() {
 
     // ── 3. Race-safe slot claiming ──────────────────────────────────────────
     console.log("\n[3] Concurrent claim of one slot");
-    const weekStart = weekStartOf(new Date(), "Asia/Kuwait");
+    const weekStart = planningWeekStartOf();
     const freeSlot = await db.weeklySlot.findFirst({
       where: {
         projectId: project.id,

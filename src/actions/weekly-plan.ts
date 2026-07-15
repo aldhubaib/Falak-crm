@@ -1,18 +1,13 @@
 "use server";
 
 import { db } from "@/lib/db";
-import {
-  REPEAT_EVERY_VALUES,
-  type RepeatEvery,
-  type WeeklyTarget,
-} from "@/lib/weekly-plan";
+import { type WeeklyTarget } from "@/lib/weekly-plan";
 import { requireProjectSettings, requireProjectWork } from "@/lib/workspace";
-import { weekStartOf } from "@/lib/week";
+import { planningWeekStartOf } from "@/lib/week";
 import {
   resolveNewSlotAssignee,
   syncSlotAssigneesFromTargets,
 } from "@/lib/weekly-slots";
-import { getProjectTimezone } from "@/lib/project-timezone";
 import { getTodoAutoAssignMemberIds } from "@/lib/weekly-assign";
 import { predictEffortMinutesFromItems } from "@/lib/effort";
 import { publishTaskEvent } from "@/lib/realtime";
@@ -140,22 +135,12 @@ export async function getWeeklyTargets(
     select: {
       templateId: true,
       perWeek: true,
-      repeatEvery: true,
-      startOn: true,
-      endsOn: true,
-      neverExpires: true,
       responsibleMemberId: true,
     },
   });
   return rows.map((r) => ({
     templateId: r.templateId,
     perWeek: r.perWeek,
-    repeatEvery: (REPEAT_EVERY_VALUES.includes(r.repeatEvery as RepeatEvery)
-      ? r.repeatEvery
-      : "week") as RepeatEvery,
-    startOn: r.startOn,
-    endsOn: r.endsOn,
-    neverExpires: r.neverExpires,
     responsibleMemberId: r.responsibleMemberId,
   }));
 }
@@ -173,12 +158,6 @@ export async function setWeeklyTargets(
     .map((t) => ({
       templateId: t.templateId,
       perWeek: Math.max(0, Math.min(50, Math.round(t.perWeek))),
-      repeatEvery: REPEAT_EVERY_VALUES.includes(t.repeatEvery)
-        ? t.repeatEvery
-        : "week",
-      startOn: t.startOn,
-      endsOn: t.neverExpires ? null : t.endsOn,
-      neverExpires: t.neverExpires,
       responsibleMemberId: t.responsibleMemberId || null,
     }))
     .filter((t) => t.templateId);
@@ -226,7 +205,7 @@ export async function forceAddWeeklySlot(
     throw new Error("Only an owner can force-add a slot");
   }
 
-  // The client sends end-of-day (23:59) in the project timezone, so picking
+  // The client sends end-of-day (23:59) in the workspace timezone, so picking
   // today is fine while any earlier day is already behind "now".
   const due = new Date(dueDate);
   if (isNaN(due.getTime())) throw new Error("Pick a due date for the slot");
@@ -234,7 +213,7 @@ export async function forceAddWeeklySlot(
     throw new Error("The due date can't be in the past");
   }
 
-  const weekStart = weekStartOf(new Date(), await getProjectTimezone(projectId));
+  const weekStart = planningWeekStartOf();
   const assigneeId = await resolveNewSlotAssignee(projectId, templateId);
   await db.weeklySlot.create({
     data: { projectId, templateId, weekStart, assigneeId, dueDate: due },

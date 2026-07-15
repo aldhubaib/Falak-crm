@@ -6,7 +6,7 @@ import { getTaskHistory, getTaskComments } from "@/actions/comments";
 import { db } from "@/lib/db";
 import { createPresignedGet } from "@/lib/storage";
 import { getProjectAccess } from "@/lib/workspace";
-import { getProjectTimezone } from "@/lib/project-timezone";
+import { getWorkspaceTimezone } from "@/lib/project-timezone";
 import { canDeleteTaskAt, canMoveTaskFrom } from "@/lib/permissions";
 import {
   autoLockOrder,
@@ -199,12 +199,12 @@ export default async function TaskDetailPage({
       ?.template?.name ??
     null;
 
-  const [history, comments, access, timezone] = await Promise.all([
+  const [history, comments, access] = await Promise.all([
     getTaskHistory(taskId),
     getTaskComments(taskId),
     getProjectAccess(projectId),
-    getProjectTimezone(projectId),
   ]);
+  const timezone = getWorkspaceTimezone();
 
   // Who can be @mentioned in comments: the project's team plus workspace
   // owners (owners see every project but aren't project members).

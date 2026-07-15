@@ -5,7 +5,7 @@
 //   npx tsx --env-file=.env scripts/qa-kanban-slots.ts
 import { db } from "../src/lib/db";
 import { ensureWeeklySlots } from "../src/lib/weekly-slots";
-import { weekStartOf } from "../src/lib/week";
+import { planningWeekStartOf } from "../src/lib/week";
 
 let failures = 0;
 
@@ -56,7 +56,7 @@ async function main() {
       },
     });
 
-    const weekStart = weekStartOf(new Date(), "Asia/Kuwait");
+    const weekStart = planningWeekStartOf();
     const slotCount = () =>
       db.weeklySlot.count({ where: { projectId: project.id, weekStart } });
 

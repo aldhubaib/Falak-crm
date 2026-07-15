@@ -3,14 +3,9 @@
 import { db } from "@/lib/db";
 import { requireProjectWork } from "@/lib/workspace";
 import { isGateComplete } from "@/lib/checklist-config";
-import { weekStartOf } from "@/lib/week";
+import { planningWeekStartOf, weekDueDate } from "@/lib/week";
 import { ensureWeeklySlots, nextWeekStartOf } from "@/lib/weekly-slots";
-import { getProjectTimezone } from "@/lib/project-timezone";
-import {
-  cycleEndOf,
-  REPEAT_EVERY_VALUES,
-  type RepeatEvery,
-} from "@/lib/weekly-plan";
+import { getWorkspaceTimezone } from "@/lib/project-timezone";
 
 export type BoardStatus = {
   id: string;
@@ -70,7 +65,7 @@ export type WeeklyGroup = {
   weekOffset: 0 | 1;
   total: number;
   emptySlots: WeeklyEmptySlot[];
-  /** Deadline of the group's plan cycle, e.g. "Jul 13" (project timezone). */
+  /** The week's shared deadline (Thursday), e.g. "Jul 16". */
   dueLabel: string | null;
 };
 
@@ -90,16 +85,18 @@ export type BoardData = {
 // SSR initial render and the client-side React Query cache.
 export async function getBoardData(projectId: string): Promise<BoardData> {
   const { workspace } = await requireProjectWork(projectId);
-  const timezone = await getProjectTimezone(projectId);
+  const timezone = getWorkspaceTimezone();
 
   // Materialise this week's Todo slots from the weekly targets before reading
   // them back — the first board visit of a new week creates the fresh slots.
   await ensureWeeklySlots(projectId);
 
-  const weekStart = weekStartOf(new Date(), timezone);
+  // The unified planning week: Sunday-anchored, and already NEXT week when
+  // it's Friday/Saturday (the working week closed Thursday night).
+  const weekStart = planningWeekStartOf();
   const nextWeek = nextWeekStartOf(weekStart);
 
-  const [tasks, statuses, changes, checklistAgg, slots, targets, templates] = await Promise.all([
+  const [tasks, statuses, changes, checklistAgg, slots, templates] = await Promise.all([
     db.task.findMany({
       where: { projectId, deletedAt: null },
       orderBy: { order: "asc" },
@@ -231,10 +228,6 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         template: { select: { name: true, color: true, icon: true } },
       },
     }),
-    db.projectWeeklyTarget.findMany({
-      where: { projectId },
-      select: { templateId: true, repeatEvery: true, startOn: true },
-    }),
     db.checklistTemplate.findMany({
       where: { workspaceId: workspace.id },
       select: { id: true, name: true, icon: true, color: true },
@@ -322,29 +315,18 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
     };
   });
 
-  // Deadline of the current and next plan cycle per task type — shown as
-  // "due <date>" on the dashed slot placeholders. The cycle is anchored at
-  // the target's Start On and advances by its Repeat Every (week, month, …).
-  const dueLabelByTemplate = new Map<string, [string, string]>();
+  // Every slot in a week shares ONE deadline on the unified calendar:
+  // Thursday 23:59 of that week — shown as "due <date>" on the dashed slot
+  // placeholders regardless of task type.
   const dueFmt = new Intl.DateTimeFormat("en-US", {
     timeZone: timezone,
     month: "short",
     day: "numeric",
   });
-  for (const t of targets) {
-    const repeat = (
-      REPEAT_EVERY_VALUES.includes(t.repeatEvery as RepeatEvery)
-        ? t.repeatEvery
-        : "week"
-    ) as RepeatEvery;
-    const cycleEnd = cycleEndOf(t.startOn, repeat);
-    const nextCycleEnd = cycleEndOf(t.startOn, repeat, cycleEnd);
-    // Show the last day of each cycle, not the first day of the next one.
-    dueLabelByTemplate.set(t.templateId, [
-      dueFmt.format(new Date(cycleEnd.getTime() - 60_000)),
-      dueFmt.format(new Date(nextCycleEnd.getTime() - 60_000)),
-    ]);
-  }
+  const weekDueLabels: [string, string] = [
+    dueFmt.format(weekDueDate(weekStart)),
+    dueFmt.format(weekDueDate(nextWeek)),
+  ];
 
   const weekly: WeeklyGroup[] = [];
   const nextWeekTaskIds: string[] = [];
@@ -364,7 +346,7 @@ export async function getBoardData(projectId: string): Promise<BoardData> {
         weekOffset,
         total: 0,
         emptySlots: [],
-        dueLabel: dueLabelByTemplate.get(s.templateId)?.[weekOffset] ?? null,
+        dueLabel: weekDueLabels[weekOffset],
       };
       weekly.push(group);
     }

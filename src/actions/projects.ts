@@ -25,15 +25,8 @@ import { sendNotification } from "@/lib/push";
 import { publishTaskEvent, type BoardWeeklyDelta } from "@/lib/realtime";
 import type { BoardTask } from "@/actions/board";
 import { invalidateCache, claimThrottle } from "@/lib/cache";
-import { weekStartOf } from "@/lib/week";
+import { planningWeekStartOf, weekDueDate } from "@/lib/week";
 import { materialiseWeekSlots, nextWeekStartOf } from "@/lib/weekly-slots";
-import {
-  cycleEndOf,
-  REPEAT_EVERY_VALUES,
-  type RepeatEvery,
-} from "@/lib/weekly-plan";
-import { getProjectTimezone } from "@/lib/project-timezone";
-import { normalizeTimezone, isValidTimezone } from "@/lib/timezone";
 import {
   lockChecklistItemEffort,
   lockManyChecklistItemEffort,
@@ -86,7 +79,6 @@ export async function getProjectMeta(id: string) {
       thumbnailId: true,
       statusId: true,
       requirePublishing: true,
-      timezone: true,
       workspaceId: true,
       dealId: true,
       companyId: true,
@@ -692,11 +684,12 @@ export async function updateTaskStatus(
   // Weekly Plan gate: moving forward INTO Todo consumes one of this week's
   // slots, and only a slot of the task's OWN type. No plan for the type (or
   // no type at all) blocks the move — Todo only holds planned work. Claiming
-  // a slot also stamps the task's due date from the plan cycle's deadline.
+  // a slot stamps the task's due date: Thursday 23:59 of the slot's week on
+  // the unified calendar (Fri/Sat additions book straight into next week).
   // When this week's plan for the type is FULL the task overflows into next
-  // week's cycle instead of being blocked: it books an extra bound slot with
-  // next week's weekStart, and next week's plan placeholders materialise so
-  // the board can show the whole next plan under "Next week".
+  // week instead of being blocked: it books an extra bound slot with next
+  // week's weekStart, and next week's plan placeholders materialise so the
+  // board can show the whole next plan under "Next week".
   let claimSlotId: string | null = null;
   let createExtraSlot = false;
   let overflowToNextWeek = false;
@@ -722,8 +715,7 @@ export async function updateTaskStatus(
             "There are no planned items this task can fill — it has no task type. Todo only takes tasks from the weekly plan.",
         };
       }
-      const timezone = await getProjectTimezone(projectId);
-      const weekStart = weekStartOf(new Date(), timezone);
+      const weekStart = planningWeekStartOf();
       planningWeekStart = weekStart;
       const [target, freeSlot, weekRows, tpl] = await Promise.all([
         db.projectWeeklyTarget.findUnique({
@@ -756,13 +748,7 @@ export async function updateTaskStatus(
           error: `There are no planned items for ${typeName}, so the task can't move to Todo. Add a weekly plan for it in Project Settings → Planning.`,
         };
       }
-      const repeat = (
-        REPEAT_EVERY_VALUES.includes(target.repeatEvery as RepeatEvery)
-          ? target.repeatEvery
-          : "week"
-      ) as RepeatEvery;
-      const currentCycleEnd = cycleEndOf(target.startOn, repeat);
-      // A force-added slot carries its own deadline — it beats the cycle end.
+      // A force-added slot carries its own deadline — it beats the week due.
       let claimedSlotDueDate: Date | null = null;
       if (freeSlot) {
         claimSlotId = freeSlot.id;
@@ -796,13 +782,10 @@ export async function updateTaskStatus(
           createExtraSlot = true;
         }
       }
-      // The slot's deadline: last day of the plan cycle we're claiming into
-      // (same date the board shows as "due <date>" on the placeholder). An
-      // overflow task adopts the NEXT cycle's deadline.
-      const dueCycleEnd = overflowToNextWeek
-        ? cycleEndOf(target.startOn, repeat, currentCycleEnd)
-        : currentCycleEnd;
-      slotDueDate = claimedSlotDueDate ?? new Date(dueCycleEnd.getTime() - 60_000);
+      // The slot's deadline: Thursday 23:59 of the week it books into (same
+      // date the board shows as "due <date>" on the placeholder). An overflow
+      // task adopts NEXT week's Thursday.
+      slotDueDate = claimedSlotDueDate ?? weekDueDate(planningWeekStart);
     }
   }
   // Rolling back OUT of Todo frees the task's slot for someone else this week.
@@ -1260,8 +1243,7 @@ export async function deleteTask(taskId: string, projectId: string, dealId?: str
     throw new Error("You don't have permission to delete this task");
   }
 
-  const timezone = await getProjectTimezone(projectId);
-  const weekStart = weekStartOf(new Date(), timezone);
+  const weekStart = planningWeekStartOf();
 
   await db.task.update({
     where: { id: taskId },
@@ -2096,22 +2078,6 @@ export async function updateProjectDescription(projectId: string, description: s
   revalidatePath("/projects");
   revalidatePath(`/projects/${projectId}`);
   revalidatePath(`/projects/${projectId}/settings`);
-}
-
-export async function updateProjectTimezone(projectId: string, timezone: string) {
-  const { workspace } = await requireProjectSettings(projectId);
-  if (!isValidTimezone(timezone)) {
-    throw new Error("Invalid timezone");
-  }
-
-  await db.project.update({
-    where: { id: projectId, workspaceId: workspace.id },
-    data: { timezone: normalizeTimezone(timezone) },
-  });
-
-  revalidatePath(`/projects/${projectId}`);
-  revalidatePath(`/projects/${projectId}/settings`);
-  revalidatePath("/dashboard");
 }
 
 export async function updateProjectThumbnail(projectId: string, thumbnailId: string | null) {
