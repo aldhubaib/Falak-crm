@@ -5,21 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useState } from "react";
-import {
-  LayoutGrid,
-  Building2,
-  Users,
-  Handshake,
-  FolderKanban,
-  FileText,
-  Wallet,
-  CalendarDays,
-  Settings,
-  LogOut,
-  UserCog,
-  type LucideIcon,
-} from "lucide-react";
-import { MODULES, type ModuleKey } from "@/lib/permissions";
+import { LogOut, UserCog } from "lucide-react";
+import { MODULES } from "@/lib/permissions";
+import { MODULE_ICONS } from "@/components/module-icons";
 import { usePermissions } from "@/components/permissions-provider";
 
 import {
@@ -50,20 +38,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-
-// Icons are presentation-only; which items exist and who sees them is driven
-// by the module registry in src/lib/permissions.ts.
-const MODULE_ICONS: Partial<Record<ModuleKey, LucideIcon>> = {
-  dashboard: LayoutGrid,
-  companies: Building2,
-  contacts: Users,
-  deals: Handshake,
-  projects: FolderKanban,
-  invoices: FileText,
-  payments: Wallet,
-  publish: CalendarDays,
-  settings: Settings,
-};
 
 export function AppSidebar() {
   const { state, setOpenMobile, isMobile } = useSidebar();

@@ -66,8 +66,7 @@ const MODULES_SOURCE = [
   { key: "invoices", label: "Invoices", description: "View and manage invoices", href: "/invoices", legacyDefault: "none" },
   { key: "payments", label: "Payments", description: "Record and manage payments received against invoices", href: "/payments", legacyDefault: "none" },
   { key: "publish", label: "Publish", description: "Schedule and publish delivery items", href: "/publish", legacyDefault: "full" },
-  // Chat has no sidebar entry — the inbox opens from the notifications bell.
-  { key: "chat", label: "Chat", description: "Message threads and direct messages", href: null, legacyDefault: "full" },
+  { key: "chat", label: "Chat", description: "Message threads and direct messages", href: "/messages", legacyDefault: "full" },
   { key: "settings", label: "Settings", description: "Access workspace settings", href: "/settings", legacyDefault: "none" },
   { key: "team", label: "Team", description: "Manage team members and roles", href: null, legacyDefault: "none" },
 ] as const satisfies readonly ModuleDef[];

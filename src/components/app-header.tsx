@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { NotificationsBell } from "@/components/notifications-bell";
 
 interface AppHeaderProps {
@@ -31,7 +30,9 @@ export function AppHeader({
 }: AppHeaderProps) {
   return (
     <header className="sticky top-0 z-40 flex h-14 items-center gap-2 border-b border-border/60 bg-background/80 px-3 backdrop-blur-md sm:h-16 sm:px-5">
-      {backHref ? (
+      {/* On mobile/tablet navigation lives in the bottom bar (Menu opens the
+          drawer), so plain pages need no leading control. */}
+      {backHref && (
         <Button
           asChild
           variant="ghost"
@@ -43,8 +44,6 @@ export function AppHeader({
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
-      ) : (
-        <SidebarTrigger className="shrink-0 lg:hidden" />
       )}
 
       {leading}
