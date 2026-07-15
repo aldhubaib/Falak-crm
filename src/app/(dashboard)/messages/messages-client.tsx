@@ -9,7 +9,6 @@ import {
   Users,
   Folder,
   MessageSquare,
-  X,
   PenSquare,
   Archive,
   ChevronDown,
@@ -33,7 +32,6 @@ import { useCentrifugo } from "@/components/realtime/centrifugo-provider";
 import { useChannel, usePresence } from "@/components/realtime/hooks";
 import { usePermissions } from "@/components/permissions-provider";
 import { userChannel, workspacePresenceChannel } from "@/lib/channels";
-import { getInboxReturnPath } from "@/lib/inbox-return";
 import { PublishAvatar } from "@/components/publish/publish-avatar";
 
 function formatRelative(iso: string) {
@@ -74,7 +72,6 @@ export function MessagesMain({ children }: { children: React.ReactNode }) {
 
 export function ThreadSidebar({ threads: initialThreads }: { threads: InboxThread[] }) {
   const pathname = usePathname();
-  const router = useRouter();
   const onThread = useOnThread();
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<"all" | "project" | "direct">("all");
@@ -159,15 +156,6 @@ export function ThreadSidebar({ threads: initialThreads }: { threads: InboxThrea
       )}
     >
       <div className="flex h-14 items-center gap-2 border-b border-border/60 px-3">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="rounded-full"
-          aria-label="Close"
-          onClick={() => router.push(getInboxReturnPath())}
-        >
-          <X className="h-4 w-4" />
-        </Button>
         <div className="text-sm font-semibold">Inbox</div>
         {canCompose && (
           <Button
