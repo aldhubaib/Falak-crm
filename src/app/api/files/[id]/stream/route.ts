@@ -28,26 +28,49 @@ export async function GET(
 
   const { id } = await params;
 
+  // The id is either an Attachment (task/chat files) or a ProjectAsset (the
+  // project assets page) — both preview through this same proxy.
   const attachment = await db.attachment.findUnique({
     where: { id },
     select: { r2Key: true, contentType: true, sizeBytes: true },
   });
+  let file: { r2Key: string; contentType: string | null; sizeBytes: number | null } | null =
+    attachment?.r2Key
+      ? {
+          r2Key: attachment.r2Key,
+          contentType: attachment.contentType,
+          sizeBytes: attachment.sizeBytes,
+        }
+      : null;
+  if (!file) {
+    const asset = await db.projectAsset.findUnique({
+      where: { id },
+      select: { r2Key: true, contentType: true, fileSize: true, deletedAt: true },
+    });
+    if (asset?.r2Key && !asset.deletedAt) {
+      file = {
+        r2Key: asset.r2Key,
+        contentType: asset.contentType,
+        sizeBytes: asset.fileSize,
+      };
+    }
+  }
 
-  if (!attachment?.r2Key)
+  if (!file)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const rangeHeader = request.headers.get("range");
-  const contentType = attachment.contentType || "application/octet-stream";
+  const contentType = file.contentType || "application/octet-stream";
   // Tie the R2 request to the browser's: a seek/closed tab aborts the transfer
   // and frees its socket instead of streaming the rest of the file to no one.
   const abortSignal = request.signal;
 
   if (rangeHeader) {
     const head = await s3.send(
-      new HeadObjectCommand({ Bucket: BUCKET, Key: attachment.r2Key }),
+      new HeadObjectCommand({ Bucket: BUCKET, Key: file.r2Key }),
       { abortSignal },
     );
-    const totalSize = head.ContentLength ?? attachment.sizeBytes ?? 0;
+    const totalSize = head.ContentLength ?? file.sizeBytes ?? 0;
     const match = rangeHeader.match(/bytes=(\d+)-(\d*)/);
     const start = match ? parseInt(match[1], 10) : 0;
     const end = match && match[2] ? parseInt(match[2], 10) : totalSize - 1;
@@ -55,7 +78,7 @@ export async function GET(
     const resp = await s3.send(
       new GetObjectCommand({
         Bucket: BUCKET,
-        Key: attachment.r2Key,
+        Key: file.r2Key,
         Range: `bytes=${start}-${end}`,
       }),
       { abortSignal },
@@ -78,7 +101,7 @@ export async function GET(
   }
 
   const resp = await s3.send(
-    new GetObjectCommand({ Bucket: BUCKET, Key: attachment.r2Key }),
+    new GetObjectCommand({ Bucket: BUCKET, Key: file.r2Key }),
     { abortSignal },
   );
 
