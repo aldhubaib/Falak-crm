@@ -1,3 +1,4 @@
+import { Agent as HttpsAgent } from "node:https";
 import {
   S3Client,
   PutObjectCommand,
@@ -27,9 +28,17 @@ const s3 = new S3Client({
     accessKeyId: ACCESS_KEY_ID,
     secretAccessKey: SECRET_ACCESS_KEY,
   },
+  // The media proxy (/api/files/[id]/stream) holds a socket open for the whole
+  // transfer of every playing video. The SDK's default pool of 50 sockets
+  // filled up under normal use and every later request — including tiny chat
+  // images — queued forever and rendered as an empty box. Give R2 a wide
+  // keep-alive pool sized for many concurrent streams.
+  requestHandler: {
+    httpsAgent: new HttpsAgent({ keepAlive: true, maxSockets: 512 }),
+  },
 });
 
-export { BUCKET, PART_SIZE, MULTIPART_THRESHOLD, PRESIGNED_EXPIRY };
+export { s3, BUCKET, PART_SIZE, MULTIPART_THRESHOLD, PRESIGNED_EXPIRY };
 
 export function generateR2Key(prefix: string, filename: string): string {
   const now = new Date();

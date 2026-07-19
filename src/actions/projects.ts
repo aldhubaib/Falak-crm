@@ -1178,6 +1178,13 @@ export async function updateTaskStatus(
     await lockTaskEffortLocks(taskId);
   } else if (leftCompleted) {
     await clearTaskEffortLocks(taskId);
+    // Pulled back for rework — it's no longer ready to publish, so its
+    // scheduled calendar slot is dropped and the date must be set again once
+    // the task completes. Already-published entries stay: they're history.
+    const unscheduled = await db.publishItem.deleteMany({
+      where: { taskId, published: false },
+    });
+    if (unscheduled.count > 0) revalidatePath("/publish");
   }
 
   // Return the resolved assignee so the board can patch its cache immediately

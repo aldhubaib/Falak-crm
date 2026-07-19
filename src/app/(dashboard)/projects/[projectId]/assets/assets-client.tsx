@@ -24,6 +24,7 @@ import {
   FolderInput,
   Pencil,
   Trash2,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -198,6 +199,69 @@ export function AssetsClient({
   const [moveTarget, setMoveTarget] = useState<Target | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Target | null>(null);
   const [previewAsset, setPreviewAsset] = useState<AssetVM | null>(null);
+
+  // Google Drive-style multi-select: cmd/ctrl-click toggles a file, shift-click
+  // selects the range from the last clicked file. While a selection is active,
+  // plain clicks toggle too (instead of opening the preview).
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const anchorRef = useRef<string | null>(null);
+  useEffect(() => {
+    setSelected(new Set());
+    anchorRef.current = null;
+  }, [folderId]);
+  useEffect(() => {
+    if (selected.size === 0) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelected(new Set());
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selected.size]);
+
+  const toggleSelect = (id: string) => {
+    anchorRef.current = id;
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const handleAssetClick = (a: AssetVM, e: React.MouseEvent) => {
+    if (e.shiftKey) {
+      const ids = assets.map((x) => x.id);
+      const from = anchorRef.current ? ids.indexOf(anchorRef.current) : -1;
+      const to = ids.indexOf(a.id);
+      if (from === -1 || to === -1) {
+        toggleSelect(a.id);
+        return;
+      }
+      const [lo, hi] = from < to ? [from, to] : [to, from];
+      setSelected((prev) => {
+        const next = new Set(prev);
+        for (let i = lo; i <= hi; i++) next.add(ids[i]!);
+        return next;
+      });
+      return;
+    }
+    if (e.metaKey || e.ctrlKey || selected.size > 0) {
+      toggleSelect(a.id);
+      return;
+    }
+    if (isPreviewable(a.contentType) && a.url) setPreviewAsset(a);
+  };
+
+  const downloadSelected = () => {
+    const ids = [...selected];
+    if (ids.length === 0) return;
+    if (ids.length === 1) {
+      const one = assets.find((a) => a.id === ids[0]);
+      if (one?.downloadUrl) window.location.href = one.downloadUrl;
+      return;
+    }
+    window.location.href = `/api/assets/download-zip?ids=${ids.join(",")}`;
+  };
 
   useUploadRefresh(projectId);
 
@@ -386,6 +450,27 @@ export function AssetsClient({
           </div>
         </div>
 
+        {/* Selection toolbar — appears once files are selected. */}
+        {selected.size > 0 && (
+          <div className="sticky top-2 z-30 flex items-center gap-2 rounded-lg border border-primary/40 bg-background/95 px-3 py-2 shadow-sm backdrop-blur">
+            <button
+              type="button"
+              aria-label="Clear selection"
+              onClick={() => setSelected(new Set())}
+              className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <span className="text-sm font-medium">
+              {selected.size} selected
+            </span>
+            <Button size="sm" className="ml-auto gap-1.5" onClick={downloadSelected}>
+              <Download className="h-3.5 w-3.5" />
+              Download{selected.size > 1 ? " as .zip" : ""}
+            </Button>
+          </div>
+        )}
+
         {/* File list */}
         {empty ? (
           <button
@@ -432,20 +517,39 @@ export function AssetsClient({
             {assets.map((a) => {
               const Icon = iconFor(a.contentType);
               const canPreview = isPreviewable(a.contentType) && a.url;
+              const isSelected = selected.has(a.id);
               return (
                 <div
                   key={a.id}
                   className={cn(
-                    "group flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-surface/60",
-                    canPreview && "cursor-pointer",
+                    "group flex select-none items-center gap-3 px-4 py-2.5 transition-colors",
+                    isSelected
+                      ? "bg-primary/10 hover:bg-primary/15"
+                      : "hover:bg-surface/60",
+                    (canPreview || selected.size > 0) && "cursor-pointer",
                   )}
-                  onClick={() => canPreview && setPreviewAsset(a)}
+                  // Shift-click must not text-select the rows in between.
+                  onMouseDown={(e) => e.shiftKey && e.preventDefault()}
+                  onClick={(e) => handleAssetClick(a, e)}
                 >
                   <Icon className="h-5 w-5 shrink-0 text-muted-foreground" />
                   <span className="flex-1 truncate text-sm">{a.name}</span>
                   <span className="shrink-0 text-xs text-muted-foreground">
                     {formatBytes(a.fileSize)}
                   </span>
+                  {a.downloadUrl && (
+                    // Direct download — no preview dialog in between.
+                    <a
+                      href={a.downloadUrl}
+                      download
+                      rel="noreferrer"
+                      aria-label={`Download ${a.name}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted-foreground opacity-0 transition-opacity hover:bg-muted/40 hover:text-foreground group-hover:opacity-100 focus:opacity-100"
+                    >
+                      <Download className="h-4 w-4" />
+                    </a>
+                  )}
                   <RowMenu
                     downloadUrl={a.downloadUrl}
                     onMove={() =>
@@ -649,7 +753,11 @@ function RowMenu({
         <button
           type="button"
           aria-label="Actions"
-          className="grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted-foreground opacity-0 transition-opacity hover:bg-muted/40 hover:text-foreground group-hover:opacity-100 focus:opacity-100"
+          // stopPropagation: the row behind opens the preview player on click —
+          // without it the dialog covers this menu. Always visible on touch
+          // devices (no hover to reveal it).
+          onClick={(e) => e.stopPropagation()}
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted-foreground transition-opacity hover:bg-muted/40 hover:text-foreground focus:opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
         >
           <MoreHorizontal className="h-4 w-4" />
         </button>

@@ -1,22 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
-import {
-  S3Client,
-  GetObjectCommand,
-  HeadObjectCommand,
-} from "@aws-sdk/client-s3";
-
-const s3 = new S3Client({
-  region: "auto",
-  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
-  },
-});
-
-const BUCKET = process.env.R2_BUCKET_NAME || "falak-crm";
+import { GetObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
+// Shared client (big keep-alive socket pool). A private client here had its
+// own default 50-socket pool: long-lived video streams filled it and every
+// chat image request queued behind them forever — bubbles rendered empty.
+import { s3, BUCKET } from "@/lib/storage";
 
 export const runtime = "nodejs";
 
@@ -49,10 +38,14 @@ export async function GET(
 
   const rangeHeader = request.headers.get("range");
   const contentType = attachment.contentType || "application/octet-stream";
+  // Tie the R2 request to the browser's: a seek/closed tab aborts the transfer
+  // and frees its socket instead of streaming the rest of the file to no one.
+  const abortSignal = request.signal;
 
   if (rangeHeader) {
     const head = await s3.send(
       new HeadObjectCommand({ Bucket: BUCKET, Key: attachment.r2Key }),
+      { abortSignal },
     );
     const totalSize = head.ContentLength ?? attachment.sizeBytes ?? 0;
     const match = rangeHeader.match(/bytes=(\d+)-(\d*)/);
@@ -65,6 +58,7 @@ export async function GET(
         Key: attachment.r2Key,
         Range: `bytes=${start}-${end}`,
       }),
+      { abortSignal },
     );
 
     const body = resp.Body as SdkBody | undefined;
@@ -85,6 +79,7 @@ export async function GET(
 
   const resp = await s3.send(
     new GetObjectCommand({ Bucket: BUCKET, Key: attachment.r2Key }),
+    { abortSignal },
   );
 
   const body = resp.Body as SdkBody | undefined;
@@ -97,7 +92,9 @@ export async function GET(
       "Content-Type": contentType,
       "Content-Length": String(resp.ContentLength ?? 0),
       "Accept-Ranges": "bytes",
-      "Cache-Control": "private, no-store",
+      // An attachment id's bytes never change — let the browser keep chat
+      // images/media instead of re-proxying them from R2 on every render.
+      "Cache-Control": "private, max-age=31536000, immutable",
     },
   });
 }
