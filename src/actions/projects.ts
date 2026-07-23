@@ -576,6 +576,11 @@ function taskMoveGateMissing(
   );
   const isForward = targetStatus.order > (taskCurrentOrder ?? 0);
 
+  // Gates only guard FORWARD progress. Rolling a task back (e.g. Completed →
+  // In Review) is how work gets sent back for fixing — blocking it on fields
+  // that gate earlier stages would trap the task in place.
+  if (!isForward) return [];
+
   const missing: string[] = [];
   for (const ci of task.checklistItems) {
     const cfg = fieldConfig(ci);
@@ -593,7 +598,6 @@ function taskMoveGateMissing(
     }
     // Mandatory delivery items block submission at the delivery-gate stage.
     if (
-      isForward &&
       isDeliveryGateStage(targetStatus.name) &&
       cfg.phase === "delivery" &&
       cfg.mandatory
