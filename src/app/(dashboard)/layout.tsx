@@ -10,6 +10,7 @@ import { getCurrentPermissions } from "@/actions/permissions";
 import {
   requireWorkspaceWithMember,
   syncCurrentMemberProfile,
+  getViewAsState,
 } from "@/lib/workspace";
 
 export default async function DashboardLayout({
@@ -31,9 +32,10 @@ export default async function DashboardLayout({
     redirect("/sign-in");
   }
 
-  const [permissions, { workspace, member }] = await Promise.all([
+  const [permissions, { workspace, member }, viewAs] = await Promise.all([
     getCurrentPermissions(),
     requireWorkspaceWithMember(),
+    getViewAsState(),
   ]);
 
   // Fire-and-forget: Clerk profile sync is throttled (15 min/user) and must
@@ -43,7 +45,7 @@ export default async function DashboardLayout({
   return (
     <PermissionsProvider permissions={permissions}>
       <CentrifugoProvider memberId={member.id} workspaceId={workspace.id}>
-        <DashboardShell>{children}</DashboardShell>
+        <DashboardShell viewAs={viewAs}>{children}</DashboardShell>
         <ServiceWorkerRegister />
         <OfflineBanner />
       </CentrifugoProvider>

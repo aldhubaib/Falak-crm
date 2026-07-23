@@ -163,6 +163,42 @@ export const syncCurrentMemberProfile = async () => {
   }
 };
 
+// A member's global module access is derived from the role(s) they hold
+// across the projects they're assigned to (merged, most permissive). A
+// legacy workspace-level role, if any, is merged in for backwards compat.
+// The derivation costs two extra queries on every single server action, so
+// it's cached in Redis with a short TTL (invalidated on role changes).
+const deriveMemberPermissions = async (member: {
+  id: string;
+  role: { permissions: unknown } | null;
+}): Promise<Permissions> =>
+  cached(`perms:${member.id}`, 30, async () => {
+    const [projectRoles, assignedCount] = await Promise.all([
+      db.projectMember.findMany({
+        where: { memberId: member.id, roleId: { not: null } },
+        select: { role: { select: { permissions: true } } },
+      }),
+      db.projectMember.count({ where: { memberId: member.id } }),
+    ]);
+    const roleList: unknown[] = projectRoles
+      .map((pr) => pr.role?.permissions)
+      .filter((p) => !!p);
+    if (member.role?.permissions) {
+      roleList.push(member.role.permissions);
+    }
+    let merged = mergePermissions(roleList);
+
+    // Being assigned to a project grants at least read access to the
+    // Projects module so the member can find and open their project(s).
+    if (assignedCount > 0 && merged.projects === "none") {
+      merged = { ...merged, projects: "view" };
+    }
+    return merged;
+  });
+
+export const IMPERSONATE_COOKIE = "impersonate_member_id";
+export const TEST_ROLE_COOKIE = "test_role_id";
+
 export const requireWorkspaceWithMember = cache(async () => {
   const workspace = await requireWorkspace();
   const { userId } = await auth();
@@ -175,42 +211,37 @@ export const requireWorkspaceWithMember = cache(async () => {
 
   if (!dbMember) throw new Error("Not a workspace member");
 
+  const cookieStore = await cookies();
+
+  // Owner impersonation ("Log in as" from Settings → Team): the whole app
+  // resolves as the target member — their id, type, permissions and project
+  // assignments — so what the owner sees is exactly what that member sees.
+  const impersonateId = cookieStore.get(IMPERSONATE_COOKIE)?.value;
+  if (impersonateId && dbMember.type === "OWNER" && impersonateId !== dbMember.id) {
+    const target = await db.workspaceMember.findFirst({
+      where: { id: impersonateId, workspaceId: workspace.id, type: { not: "OWNER" } },
+      include: { role: true },
+    });
+    if (target) {
+      const member: MemberWithPermissions = {
+        id: target.id,
+        userId: target.userId,
+        type: target.type,
+        workspaceId: target.workspaceId,
+        permissions: await deriveMemberPermissions(target),
+      };
+      return { workspace, member };
+    }
+  }
+
   let permissions: Permissions;
   if (dbMember.type === "OWNER") {
     permissions = DEFAULT_PERMISSIONS;
   } else {
-    // A member's global module access is derived from the role(s) they hold
-    // across the projects they're assigned to (merged, most permissive). A
-    // legacy workspace-level role, if any, is merged in for backwards compat.
-    // The derivation costs two extra queries on every single server action, so
-    // it's cached in Redis with a short TTL (invalidated on role changes).
-    permissions = await cached(`perms:${dbMember.id}`, 30, async () => {
-      const [projectRoles, assignedCount] = await Promise.all([
-        db.projectMember.findMany({
-          where: { memberId: dbMember.id, roleId: { not: null } },
-          select: { role: { select: { permissions: true } } },
-        }),
-        db.projectMember.count({ where: { memberId: dbMember.id } }),
-      ]);
-      const roleList: unknown[] = projectRoles
-        .map((pr) => pr.role?.permissions)
-        .filter((p) => !!p);
-      if (dbMember.role?.permissions) {
-        roleList.push(dbMember.role.permissions);
-      }
-      let merged = mergePermissions(roleList);
-
-      // Being assigned to a project grants at least read access to the
-      // Projects module so the member can find and open their project(s).
-      if (assignedCount > 0 && merged.projects === "none") {
-        merged = { ...merged, projects: "view" };
-      }
-      return merged;
-    });
+    permissions = await deriveMemberPermissions(dbMember);
   }
 
-  const cookieStore = await cookies();
-  const testRoleCookie = cookieStore.get("test_role_id")?.value;
+  const testRoleCookie = cookieStore.get(TEST_ROLE_COOKIE)?.value;
   if (testRoleCookie && dbMember.type === "OWNER") {
     const testRole = await db.role.findFirst({
       where: { id: testRoleCookie, workspaceId: workspace.id },
@@ -229,6 +260,58 @@ export const requireWorkspaceWithMember = cache(async () => {
   };
 
   return { workspace, member };
+});
+
+// The signed-in user's REAL membership, ignoring impersonation and test-role
+// cookies. Used by the view-as actions/banner, which must always act on the
+// actual owner even while the rest of the app resolves as someone else.
+export const getRealMember = cache(async () => {
+  const workspace = await requireWorkspace();
+  const { userId } = await auth();
+  if (!userId) throw new Error("Not authenticated");
+
+  const dbMember = await db.workspaceMember.findFirst({
+    where: { workspaceId: workspace.id, userId },
+  });
+  if (!dbMember) throw new Error("Not a workspace member");
+  return { workspace, member: dbMember };
+});
+
+export type ViewAsState =
+  | { kind: "member"; name: string }
+  | { kind: "role"; name: string }
+  | null;
+
+// What the "Viewing as …" banner should show, if anything. Server-driven so
+// the banner appears/disappears on the very next render (router.refresh)
+// after starting or exiting — no client re-fetch involved.
+export const getViewAsState = cache(async (): Promise<ViewAsState> => {
+  const { workspace, member } = await getRealMember();
+  if (member.type !== "OWNER") return null;
+
+  const cookieStore = await cookies();
+
+  const impersonateId = cookieStore.get(IMPERSONATE_COOKIE)?.value;
+  if (impersonateId && impersonateId !== member.id) {
+    const target = await db.workspaceMember.findFirst({
+      where: { id: impersonateId, workspaceId: workspace.id, type: { not: "OWNER" } },
+      select: { name: true, email: true },
+    });
+    if (target) {
+      return { kind: "member", name: target.name || target.email || "member" };
+    }
+  }
+
+  const testRoleId = cookieStore.get(TEST_ROLE_COOKIE)?.value;
+  if (testRoleId) {
+    const role = await db.role.findFirst({
+      where: { id: testRoleId, workspaceId: workspace.id },
+      select: { name: true },
+    });
+    if (role) return { kind: "role", name: role.name };
+  }
+
+  return null;
 });
 
 // Resolves a member's effective permissions *within a specific project*.

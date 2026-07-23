@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { UserPlus, Trash2, Save, AlertTriangle, Pencil, Check, X } from "lucide-react";
+import { UserPlus, Trash2, Save, AlertTriangle, Pencil, Check, X, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SearchableSelect } from "@/components/ui/searchable-select";
@@ -19,7 +19,13 @@ import { PageContainer } from "@/components/page-container";
 import { SurfaceCard } from "@/components/surface-card";
 import { EmptyState } from "@/components/empty-state";
 import { IconButton } from "@/components/icon-button";
-import { inviteMember, assignRole, removeMember, renameMember } from "@/actions/team";
+import {
+  inviteMember,
+  assignRole,
+  removeMember,
+  renameMember,
+  startImpersonation,
+} from "@/actions/team";
 import { assignMemberTitle, setMemberWeeklyHours } from "@/actions/titles";
 import { cn } from "@/lib/utils";
 
@@ -50,10 +56,12 @@ export function TeamClient({
   members,
   roles,
   titles,
+  canImpersonate,
 }: {
   members: Member[];
   roles: Role[];
   titles: Title[];
+  canImpersonate: boolean;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -154,6 +162,18 @@ export function TeamClient({
       await removeMember(toDelete.id);
       setToDelete(null);
       router.refresh();
+    });
+  };
+
+  // "Log in as": the whole app resolves as this member until Exit (banner)
+  // or the browser session ends.
+  const loginAs = (m: Member) => {
+    startTransition(async () => {
+      const result = await startImpersonation(m.id);
+      if (result.ok) {
+        router.push("/dashboard");
+        router.refresh();
+      }
     });
   };
 
@@ -281,12 +301,24 @@ export function TeamClient({
                 </div>
               </div>
               {m.type !== "OWNER" && (
-                <IconButton
-                  aria-label="Remove member"
-                  onClick={() => setToDelete(m)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </IconButton>
+                <div className="flex shrink-0 items-center gap-1">
+                  {canImpersonate && (
+                    <IconButton
+                      aria-label={`Log in as ${m.name || m.email}`}
+                      title="Log in as this member"
+                      onClick={() => loginAs(m)}
+                      disabled={pending}
+                    >
+                      <LogIn className="h-4 w-4" />
+                    </IconButton>
+                  )}
+                  <IconButton
+                    aria-label="Remove member"
+                    onClick={() => setToDelete(m)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </IconButton>
+                </div>
               )}
             </div>
 

@@ -5,10 +5,17 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { UploadIndicator } from "@/components/upload-indicator";
-import { TestRoleBanner } from "@/components/test-role-banner";
+import { ViewAsBanner } from "@/components/view-as-banner";
 import { PullToRefresh } from "@/components/pull-to-refresh";
+import type { ViewAsState } from "@/lib/workspace";
 
-export function DashboardShell({ children }: { children: ReactNode }) {
+export function DashboardShell({
+  children,
+  viewAs = null,
+}: {
+  children: ReactNode;
+  viewAs?: ViewAsState;
+}) {
   return (
     <SidebarProvider defaultOpen={false}>
       <div className="flex h-screen w-full overflow-hidden bg-background">
@@ -19,7 +26,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
         </div>
       </div>
       <UploadIndicator />
-      <TestRoleBanner />
+      {viewAs && <ViewAsBanner viewAs={viewAs} />}
       <PullToRefresh />
     </SidebarProvider>
   );

@@ -3,7 +3,12 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { addToClerkAllowlist, removeFromClerkAllowlist } from "@/lib/clerk-allowlist";
 import { db } from "@/lib/db";
-import { requireWorkspaceWithMember } from "@/lib/workspace";
+import {
+  requireWorkspaceWithMember,
+  getRealMember,
+  IMPERSONATE_COOKIE,
+  TEST_ROLE_COOKIE,
+} from "@/lib/workspace";
 import { canEdit, newRolePermissions, normalizePermissions } from "@/lib/permissions";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -236,7 +241,8 @@ export async function deleteRole(
 
 export async function startTestRole(roleId: string): Promise<ActionResult> {
   return safeAction("Test Role", async () => {
-    const { workspace } = await requireWorkspaceWithMember();
+    const { workspace, member } = await getRealMember();
+    if (member.type !== "OWNER") throw new Error("Permission denied");
 
     const role = await db.role.findFirst({
       where: { id: roleId, workspaceId: workspace.id },
@@ -244,28 +250,66 @@ export async function startTestRole(roleId: string): Promise<ActionResult> {
     if (!role) throw new Error("Role not found");
 
     const cookieStore = await cookies();
-    cookieStore.set("test_role_id", roleId, {
+    // Role test and member impersonation are mutually exclusive.
+    cookieStore.delete(IMPERSONATE_COOKIE);
+    cookieStore.set(TEST_ROLE_COOKIE, roleId, {
       path: "/",
       maxAge: 3600,
       httpOnly: true,
       sameSite: "lax",
     });
 
-    revalidatePath("/");
+    revalidatePath("/", "layout");
   });
 }
 
 export async function stopTestRole(): Promise<ActionResult> {
   return safeAction("Stop Test Role", async () => {
     const cookieStore = await cookies();
-    cookieStore.delete("test_role_id");
-    revalidatePath("/");
+    cookieStore.delete(TEST_ROLE_COOKIE);
+    revalidatePath("/", "layout");
   });
 }
 
 export async function getTestingRole(): Promise<string | null> {
   const cookieStore = await cookies();
-  return cookieStore.get("test_role_id")?.value ?? null;
+  return cookieStore.get(TEST_ROLE_COOKIE)?.value ?? null;
+}
+
+// "Log in as" a team member (Settings → Team). Owner-only. Session cookie —
+// it dies with the browser session, or earlier via Exit on the banner.
+export async function startImpersonation(memberId: string): Promise<ActionResult> {
+  return safeAction("Log In As Member", async () => {
+    const { workspace, member } = await getRealMember();
+    if (member.type !== "OWNER") throw new Error("Permission denied");
+    if (memberId === member.id) throw new Error("You are already this user");
+
+    const target = await db.workspaceMember.findFirst({
+      where: { id: memberId, workspaceId: workspace.id },
+      select: { id: true, type: true },
+    });
+    if (!target) throw new Error("Member not found");
+    if (target.type === "OWNER") throw new Error("Cannot impersonate an owner");
+
+    const cookieStore = await cookies();
+    cookieStore.delete(TEST_ROLE_COOKIE);
+    cookieStore.set(IMPERSONATE_COOKIE, target.id, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      // No maxAge: session cookie — cleared when the browser closes.
+    });
+
+    revalidatePath("/", "layout");
+  });
+}
+
+export async function stopImpersonation(): Promise<ActionResult> {
+  return safeAction("Exit Impersonation", async () => {
+    const cookieStore = await cookies();
+    cookieStore.delete(IMPERSONATE_COOKIE);
+    revalidatePath("/", "layout");
+  });
 }
 
 export async function removeMember(memberId: string): Promise<ActionResult> {
