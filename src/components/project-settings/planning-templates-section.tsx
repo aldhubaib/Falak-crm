@@ -36,10 +36,18 @@ function defaultPlan(templateId: string): WeeklyTarget {
   return {
     templateId,
     perWeek: 0,
+    intervalWeeks: 1,
     startsOn: planningWeekStartOf(),
     responsibleMemberId: null,
   };
 }
+
+const INTERVAL_OPTIONS = [
+  { value: "1", label: "Every week" },
+  { value: "2", label: "Every 2 weeks" },
+  { value: "3", label: "Every 3 weeks" },
+  { value: "4", label: "Every 4 weeks" },
+];
 
 function plansFromTargets(targets: WeeklyTarget[]): PlanState {
   return Object.fromEntries(
@@ -47,6 +55,7 @@ function plansFromTargets(targets: WeeklyTarget[]): PlanState {
       t.templateId,
       {
         ...t,
+        intervalWeeks: t.intervalWeeks || 1,
         startsOn: new Date(t.startsOn),
         responsibleMemberId: t.responsibleMemberId ?? null,
       },
@@ -60,7 +69,7 @@ export function serializePlans(plans: PlanState): string {
     .sort((a, b) => a.templateId.localeCompare(b.templateId))
     .map(
       (p) =>
-        `${p.templateId}:${p.perWeek}:${p.startsOn.toISOString()}:${p.responsibleMemberId ?? ""}`,
+        `${p.templateId}:${p.perWeek}:${p.intervalWeeks || 1}:${p.startsOn.toISOString()}:${p.responsibleMemberId ?? ""}`,
     )
     .join("|");
 }
@@ -240,6 +249,7 @@ export function PlanningTemplatesSection({
         const active = templateIds.includes(t.id);
         const plan = plans[t.id] ?? defaultPlan(t.id);
         const val = plan.perWeek;
+        const interval = plan.intervalWeeks || 1;
         const isExpanded = active && (expanded[t.id] ?? true);
 
         // Predicted hours this target costs the responsible member per week.
@@ -294,7 +304,7 @@ export function PlanningTemplatesSection({
                 </span>
                 {active && val > 0 && (
                   <span className="rounded-md border border-border/60 bg-muted/30 px-1.5 py-0.5 text-xxs tabular-nums text-foreground">
-                    {val}/wk
+                    {interval === 1 ? `${val}/wk` : `${val} / ${interval} wks`}
                   </span>
                 )}
                 {active && weekMinutes != null && (
@@ -334,8 +344,9 @@ export function PlanningTemplatesSection({
                       Target
                     </div>
                     <div className="text-xxs text-muted-foreground">
-                      Tasks to deliver per week (Sunday–Thursday, due Thursday
-                      end-of-day).
+                      {interval === 1
+                        ? "Tasks to deliver per week (Sunday–Thursday, due Thursday end-of-day)."
+                        : `Tasks to deliver on each planned week (due that week's Thursday end-of-day).`}
                     </div>
                   </div>
                   <div className="inline-flex items-center gap-2">
@@ -375,9 +386,32 @@ export function PlanningTemplatesSection({
                       <Plus className="size-3.5" />
                     </button>
                     <span className="ml-1 text-xs text-muted-foreground">
-                      / week
+                      {interval === 1 ? "/ week" : `/ ${interval} weeks`}
                     </span>
                   </div>
+                </div>
+
+                {/* Cadence: how often a planned week comes around. Slots are
+                    only created on active weeks — none in between. */}
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="text-xs font-medium text-foreground">
+                      Frequency
+                    </div>
+                    <div className="text-xxs text-muted-foreground">
+                      How often the tasks are created, counted from the start
+                      week. Off-weeks get no slots.
+                    </div>
+                  </div>
+                  <SearchableSelect
+                    value={String(interval)}
+                    onValueChange={(v) =>
+                      patchPlan(t.id, { intervalWeeks: Number(v) || 1 })
+                    }
+                    options={INTERVAL_OPTIONS}
+                    placeholder="Every week"
+                    className="h-9 w-40 shrink-0 text-xs"
+                  />
                 </div>
 
                 <div className="space-y-2 rounded-lg border border-border/60 bg-surface/40 px-3 py-2.5">

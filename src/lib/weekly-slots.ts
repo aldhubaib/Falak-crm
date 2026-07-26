@@ -13,12 +13,44 @@ type SlotTarget = {
   templateId: string;
   perWeek: number;
   startsOn: Date;
+  intervalWeeks: number;
   responsibleMemberId: string | null;
 };
 
-/** A plan only produces slots from its first planned week onward. */
-export function planActiveForWeek(startsOn: Date, weekStart: Date): boolean {
-  return weekStartOf(startsOn).getTime() <= weekStart.getTime();
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+/**
+ * A plan produces slots on its start week and every `intervalWeeks` after it
+ * (1 = weekly, 2 = biweekly…). Weeks before the start, and off-weeks between
+ * cycles, produce nothing.
+ */
+export function planActiveForWeek(
+  startsOn: Date,
+  weekStart: Date,
+  intervalWeeks = 1,
+): boolean {
+  const start = weekStartOf(startsOn);
+  if (start.getTime() > weekStart.getTime()) return false;
+  const interval = Math.max(1, Math.round(intervalWeeks));
+  if (interval === 1) return true;
+  const diffWeeks = Math.round((weekStart.getTime() - start.getTime()) / WEEK_MS);
+  return diffWeeks % interval === 0;
+}
+
+/** First active week of the plan at or after `fromWeek` (a week start). */
+export function nextActiveWeekStart(
+  startsOn: Date,
+  intervalWeeks: number,
+  fromWeek: Date,
+): Date {
+  const start = weekStartOf(startsOn);
+  if (start.getTime() >= fromWeek.getTime()) return start;
+  const interval = Math.max(1, Math.round(intervalWeeks));
+  const diffWeeks = Math.round((fromWeek.getTime() - start.getTime()) / WEEK_MS);
+  const cyclesUp = Math.ceil(diffWeeks / interval);
+  const next = new Date(start);
+  next.setUTCDate(next.getUTCDate() + cyclesUp * interval * 7);
+  return next;
 }
 
 // Top one week's Todo slots up to each Weekly Plan target. Counting ALL rows
@@ -35,7 +67,7 @@ export async function materialiseWeekSlots(
     (await db.projectWeeklyTarget.findMany({
       where: { projectId, perWeek: { gt: 0 } },
     }))
-  ).filter((t) => planActiveForWeek(t.startsOn, weekStart));
+  ).filter((t) => planActiveForWeek(t.startsOn, weekStart, t.intervalWeeks));
   if (resolvedTargets.length === 0) return;
 
   const existing = await db.weeklySlot.groupBy({
@@ -85,13 +117,14 @@ export async function ensureWeeklySlots(projectId: string): Promise<void> {
 
   // Next week's slots materialise in two cases: a task has overflowed into it
   // (keep the whole next plan in sync with the targets while it's visible),
-  // or a plan STARTS next week — its first slots must show under "Next week"
-  // even though nothing overflowed.
+  // or a plan's next active week is NEXT week (its start, or the next cycle
+  // of an every-N-weeks plan) — those slots must show under "Next week" even
+  // though nothing overflowed.
   const nextWeek = nextWeekStartOf(weekStart);
   const startsNextWeek = targets.filter(
     (t) =>
-      !planActiveForWeek(t.startsOn, weekStart) &&
-      planActiveForWeek(t.startsOn, nextWeek),
+      !planActiveForWeek(t.startsOn, weekStart, t.intervalWeeks) &&
+      planActiveForWeek(t.startsOn, nextWeek, t.intervalWeeks),
   );
   const nextWeekRows = await db.weeklySlot.findMany({
     where: { projectId, weekStart: nextWeek },
@@ -101,7 +134,7 @@ export async function ensureWeeklySlots(projectId: string): Promise<void> {
   // plan's own slots shouldn't drag every other plan onto the board early.
   const activeNow = new Set(
     targets
-      .filter((t) => planActiveForWeek(t.startsOn, weekStart))
+      .filter((t) => planActiveForWeek(t.startsOn, weekStart, t.intervalWeeks))
       .map((t) => t.templateId),
   );
   const hasOverflowRows = nextWeekRows.some((r) => activeNow.has(r.templateId));

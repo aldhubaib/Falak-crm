@@ -359,6 +359,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
           projectId: true,
           templateId: true,
           perWeek: true,
+          intervalWeeks: true,
           startsOn: true,
           project: { select: { name: true } },
           template: { select: { name: true, color: true, icon: true } },
@@ -519,9 +520,9 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   }
 
   // Pad next week's plan with the capacity that hasn't materialised yet.
-  // Plans that only start after next week don't count anywhere yet.
+  // Plans whose cadence skips next week don't count anywhere yet.
   for (const t of targets) {
-    if (!planActiveForWeek(t.startsOn, statsNextWeek)) continue;
+    if (!planActiveForWeek(t.startsOn, statsNextWeek, t.intervalWeeks)) continue;
     const key = `${t.projectId}:${t.templateId}`;
     const existing = nextWeekRowsByKey.get(key) ?? 0;
     for (let i = existing; i < t.perWeek; i++) {

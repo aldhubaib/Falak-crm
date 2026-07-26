@@ -26,10 +26,11 @@ import { sendNotification } from "@/lib/push";
 import { publishTaskEvent, type BoardWeeklyDelta } from "@/lib/realtime";
 import type { BoardTask } from "@/actions/board";
 import { invalidateCache, claimThrottle } from "@/lib/cache";
-import { planningWeekStartOf, weekDueDate } from "@/lib/week";
+import { planningWeekStartOf, weekDueDate, weekStartOf } from "@/lib/week";
 import { getWorkspaceTimezone } from "@/lib/project-timezone";
 import {
   materialiseWeekSlots,
+  nextActiveWeekStart,
   nextWeekStartOf,
   planActiveForWeek,
 } from "@/lib/weekly-slots";
@@ -845,13 +846,22 @@ export async function updateTaskStatus(
           error: `There are no planned items for ${typeName}, so the task can't move to Todo. Add a weekly plan for it in Project Settings → Planning.`,
         };
       }
-      // A plan that starts NEXT week accepts no work into the current week —
-      // the task books straight into the plan's first week instead. A plan
-      // starting even further out takes no tasks at all until then.
-      const planStartsLater = !planActiveForWeek(target.startsOn, weekStart);
+      // The plan only takes work on its active weeks (its start week, then
+      // every intervalWeeks). This week inactive = the task books into the
+      // plan's next active week — unless the plan hasn't started at all and
+      // its first week is beyond next week, which blocks the move outright.
+      const activeThisWeek = planActiveForWeek(
+        target.startsOn,
+        weekStart,
+        target.intervalWeeks,
+      );
+      const notStartedYet =
+        weekStartOf(target.startsOn).getTime() > weekStart.getTime();
       if (
-        planStartsLater &&
-        !planActiveForWeek(target.startsOn, nextWeekStartOf(weekStart))
+        !activeThisWeek &&
+        notStartedYet &&
+        weekStartOf(target.startsOn).getTime() >
+          nextWeekStartOf(weekStart).getTime()
       ) {
         const startFmt = new Intl.DateTimeFormat("en-US", {
           timeZone: getWorkspaceTimezone(),
@@ -865,20 +875,25 @@ export async function updateTaskStatus(
       }
       // A force-added slot carries its own deadline — it beats the week due.
       let claimedSlotDueDate: Date | null = null;
-      if (!planStartsLater && freeSlot) {
+      if (activeThisWeek && freeSlot) {
         claimSlotId = freeSlot.id;
         claimedSlotDueDate = freeSlot.dueDate;
-      } else if (!planStartsLater && weekRows < target.perWeek) {
+      } else if (activeThisWeek && weekRows < target.perWeek) {
         // This week's slots weren't materialised yet (board not opened since
         // the week rolled over) — the move itself creates the missing slot.
         createExtraSlot = true;
       } else {
-        // Plan full (or not started yet) — book into next week. Next week's
-        // plan materialises so the board shows it, and the task claims one of
-        // its free slots. Only when next week is full too does the task ride
-        // on top as an extra bound slot.
+        // Plan full this week, or this is an off-week / pre-start week — book
+        // into the plan's next active week. That week's placeholders
+        // materialise so the board can show them, and the task claims a free
+        // one. Only when that week is full too does the task ride on top as
+        // an extra bound slot.
         overflowToNextWeek = true;
-        planningWeekStart = nextWeekStartOf(weekStart);
+        planningWeekStart = nextActiveWeekStart(
+          target.startsOn,
+          target.intervalWeeks,
+          nextWeekStartOf(weekStart),
+        );
         await materialiseWeekSlots(projectId, planningWeekStart);
         const nextWeekFreeSlot = await db.weeklySlot.findFirst({
           where: {
@@ -940,10 +955,21 @@ export async function updateTaskStatus(
             templateId: releasedSlot.templateId,
           },
         },
-        select: { perWeek: true },
+        select: { perWeek: true, startsOn: true, intervalWeeks: true },
       }),
     ]);
-    deleteReleasedSlot = slotWeekRows > (releasedTarget?.perWeek ?? 0);
+    // The plan's capacity for the slot's week: perWeek on active weeks, zero
+    // on off-weeks of an every-N-weeks plan (any slot there is overflow).
+    const weekCapacity =
+      releasedTarget &&
+      planActiveForWeek(
+        releasedTarget.startsOn,
+        releasedSlot.weekStart,
+        releasedTarget.intervalWeeks,
+      )
+        ? releasedTarget.perWeek
+        : 0;
+    deleteReleasedSlot = slotWeekRows > weekCapacity;
   }
 
   const history: Record<string, string> = (task?.assignmentHistory as Record<string, string>) ?? {};

@@ -32084,10 +32084,12 @@ export namespace Prisma {
 
   export type ProjectWeeklyTargetAvgAggregateOutputType = {
     perWeek: number | null
+    intervalWeeks: number | null
   }
 
   export type ProjectWeeklyTargetSumAggregateOutputType = {
     perWeek: number | null
+    intervalWeeks: number | null
   }
 
   export type ProjectWeeklyTargetMinAggregateOutputType = {
@@ -32095,6 +32097,7 @@ export namespace Prisma {
     projectId: string | null
     templateId: string | null
     perWeek: number | null
+    intervalWeeks: number | null
     startsOn: Date | null
     responsibleMemberId: string | null
   }
@@ -32104,6 +32107,7 @@ export namespace Prisma {
     projectId: string | null
     templateId: string | null
     perWeek: number | null
+    intervalWeeks: number | null
     startsOn: Date | null
     responsibleMemberId: string | null
   }
@@ -32113,6 +32117,7 @@ export namespace Prisma {
     projectId: number
     templateId: number
     perWeek: number
+    intervalWeeks: number
     startsOn: number
     responsibleMemberId: number
     _all: number
@@ -32121,10 +32126,12 @@ export namespace Prisma {
 
   export type ProjectWeeklyTargetAvgAggregateInputType = {
     perWeek?: true
+    intervalWeeks?: true
   }
 
   export type ProjectWeeklyTargetSumAggregateInputType = {
     perWeek?: true
+    intervalWeeks?: true
   }
 
   export type ProjectWeeklyTargetMinAggregateInputType = {
@@ -32132,6 +32139,7 @@ export namespace Prisma {
     projectId?: true
     templateId?: true
     perWeek?: true
+    intervalWeeks?: true
     startsOn?: true
     responsibleMemberId?: true
   }
@@ -32141,6 +32149,7 @@ export namespace Prisma {
     projectId?: true
     templateId?: true
     perWeek?: true
+    intervalWeeks?: true
     startsOn?: true
     responsibleMemberId?: true
   }
@@ -32150,6 +32159,7 @@ export namespace Prisma {
     projectId?: true
     templateId?: true
     perWeek?: true
+    intervalWeeks?: true
     startsOn?: true
     responsibleMemberId?: true
     _all?: true
@@ -32246,6 +32256,7 @@ export namespace Prisma {
     projectId: string
     templateId: string
     perWeek: number
+    intervalWeeks: number
     startsOn: Date
     responsibleMemberId: string | null
     _count: ProjectWeeklyTargetCountAggregateOutputType | null
@@ -32274,6 +32285,7 @@ export namespace Prisma {
     projectId?: boolean
     templateId?: boolean
     perWeek?: boolean
+    intervalWeeks?: boolean
     startsOn?: boolean
     responsibleMemberId?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -32286,6 +32298,7 @@ export namespace Prisma {
     projectId?: boolean
     templateId?: boolean
     perWeek?: boolean
+    intervalWeeks?: boolean
     startsOn?: boolean
     responsibleMemberId?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -32298,6 +32311,7 @@ export namespace Prisma {
     projectId?: boolean
     templateId?: boolean
     perWeek?: boolean
+    intervalWeeks?: boolean
     startsOn?: boolean
     responsibleMemberId?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -32310,11 +32324,12 @@ export namespace Prisma {
     projectId?: boolean
     templateId?: boolean
     perWeek?: boolean
+    intervalWeeks?: boolean
     startsOn?: boolean
     responsibleMemberId?: boolean
   }
 
-  export type ProjectWeeklyTargetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "templateId" | "perWeek" | "startsOn" | "responsibleMemberId", ExtArgs["result"]["projectWeeklyTarget"]>
+  export type ProjectWeeklyTargetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "templateId" | "perWeek" | "intervalWeeks" | "startsOn" | "responsibleMemberId", ExtArgs["result"]["projectWeeklyTarget"]>
   export type ProjectWeeklyTargetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     template?: boolean | ChecklistTemplateDefaultArgs<ExtArgs>
@@ -32343,6 +32358,7 @@ export namespace Prisma {
       projectId: string
       templateId: string
       perWeek: number
+      intervalWeeks: number
       startsOn: Date
       responsibleMemberId: string | null
     }, ExtArgs["result"]["projectWeeklyTarget"]>
@@ -32775,6 +32791,7 @@ export namespace Prisma {
     readonly projectId: FieldRef<"ProjectWeeklyTarget", 'String'>
     readonly templateId: FieldRef<"ProjectWeeklyTarget", 'String'>
     readonly perWeek: FieldRef<"ProjectWeeklyTarget", 'Int'>
+    readonly intervalWeeks: FieldRef<"ProjectWeeklyTarget", 'Int'>
     readonly startsOn: FieldRef<"ProjectWeeklyTarget", 'DateTime'>
     readonly responsibleMemberId: FieldRef<"ProjectWeeklyTarget", 'String'>
   }
@@ -72854,6 +72871,7 @@ export namespace Prisma {
     projectId: 'projectId',
     templateId: 'templateId',
     perWeek: 'perWeek',
+    intervalWeeks: 'intervalWeeks',
     startsOn: 'startsOn',
     responsibleMemberId: 'responsibleMemberId'
   };
@@ -75503,6 +75521,7 @@ export namespace Prisma {
     projectId?: StringFilter<"ProjectWeeklyTarget"> | string
     templateId?: StringFilter<"ProjectWeeklyTarget"> | string
     perWeek?: IntFilter<"ProjectWeeklyTarget"> | number
+    intervalWeeks?: IntFilter<"ProjectWeeklyTarget"> | number
     startsOn?: DateTimeFilter<"ProjectWeeklyTarget"> | Date | string
     responsibleMemberId?: StringNullableFilter<"ProjectWeeklyTarget"> | string | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
@@ -75515,6 +75534,7 @@ export namespace Prisma {
     projectId?: SortOrder
     templateId?: SortOrder
     perWeek?: SortOrder
+    intervalWeeks?: SortOrder
     startsOn?: SortOrder
     responsibleMemberId?: SortOrderInput | SortOrder
     project?: ProjectOrderByWithRelationInput
@@ -75531,6 +75551,7 @@ export namespace Prisma {
     projectId?: StringFilter<"ProjectWeeklyTarget"> | string
     templateId?: StringFilter<"ProjectWeeklyTarget"> | string
     perWeek?: IntFilter<"ProjectWeeklyTarget"> | number
+    intervalWeeks?: IntFilter<"ProjectWeeklyTarget"> | number
     startsOn?: DateTimeFilter<"ProjectWeeklyTarget"> | Date | string
     responsibleMemberId?: StringNullableFilter<"ProjectWeeklyTarget"> | string | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
@@ -75543,6 +75564,7 @@ export namespace Prisma {
     projectId?: SortOrder
     templateId?: SortOrder
     perWeek?: SortOrder
+    intervalWeeks?: SortOrder
     startsOn?: SortOrder
     responsibleMemberId?: SortOrderInput | SortOrder
     _count?: ProjectWeeklyTargetCountOrderByAggregateInput
@@ -75560,6 +75582,7 @@ export namespace Prisma {
     projectId?: StringWithAggregatesFilter<"ProjectWeeklyTarget"> | string
     templateId?: StringWithAggregatesFilter<"ProjectWeeklyTarget"> | string
     perWeek?: IntWithAggregatesFilter<"ProjectWeeklyTarget"> | number
+    intervalWeeks?: IntWithAggregatesFilter<"ProjectWeeklyTarget"> | number
     startsOn?: DateTimeWithAggregatesFilter<"ProjectWeeklyTarget"> | Date | string
     responsibleMemberId?: StringNullableWithAggregatesFilter<"ProjectWeeklyTarget"> | string | null
   }
@@ -80471,6 +80494,7 @@ export namespace Prisma {
   export type ProjectWeeklyTargetCreateInput = {
     id?: string
     perWeek?: number
+    intervalWeeks?: number
     startsOn?: Date | string
     project: ProjectCreateNestedOneWithoutWeeklyTargetsInput
     template: ChecklistTemplateCreateNestedOneWithoutWeeklyTargetsInput
@@ -80482,6 +80506,7 @@ export namespace Prisma {
     projectId: string
     templateId: string
     perWeek?: number
+    intervalWeeks?: number
     startsOn?: Date | string
     responsibleMemberId?: string | null
   }
@@ -80489,6 +80514,7 @@ export namespace Prisma {
   export type ProjectWeeklyTargetUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
+    intervalWeeks?: IntFieldUpdateOperationsInput | number
     startsOn?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutWeeklyTargetsNestedInput
     template?: ChecklistTemplateUpdateOneRequiredWithoutWeeklyTargetsNestedInput
@@ -80500,6 +80526,7 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     templateId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
+    intervalWeeks?: IntFieldUpdateOperationsInput | number
     startsOn?: DateTimeFieldUpdateOperationsInput | Date | string
     responsibleMemberId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -80509,6 +80536,7 @@ export namespace Prisma {
     projectId: string
     templateId: string
     perWeek?: number
+    intervalWeeks?: number
     startsOn?: Date | string
     responsibleMemberId?: string | null
   }
@@ -80516,6 +80544,7 @@ export namespace Prisma {
   export type ProjectWeeklyTargetUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
+    intervalWeeks?: IntFieldUpdateOperationsInput | number
     startsOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -80524,6 +80553,7 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     templateId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
+    intervalWeeks?: IntFieldUpdateOperationsInput | number
     startsOn?: DateTimeFieldUpdateOperationsInput | Date | string
     responsibleMemberId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -85526,12 +85556,14 @@ export namespace Prisma {
     projectId?: SortOrder
     templateId?: SortOrder
     perWeek?: SortOrder
+    intervalWeeks?: SortOrder
     startsOn?: SortOrder
     responsibleMemberId?: SortOrder
   }
 
   export type ProjectWeeklyTargetAvgOrderByAggregateInput = {
     perWeek?: SortOrder
+    intervalWeeks?: SortOrder
   }
 
   export type ProjectWeeklyTargetMaxOrderByAggregateInput = {
@@ -85539,6 +85571,7 @@ export namespace Prisma {
     projectId?: SortOrder
     templateId?: SortOrder
     perWeek?: SortOrder
+    intervalWeeks?: SortOrder
     startsOn?: SortOrder
     responsibleMemberId?: SortOrder
   }
@@ -85548,12 +85581,14 @@ export namespace Prisma {
     projectId?: SortOrder
     templateId?: SortOrder
     perWeek?: SortOrder
+    intervalWeeks?: SortOrder
     startsOn?: SortOrder
     responsibleMemberId?: SortOrder
   }
 
   export type ProjectWeeklyTargetSumOrderByAggregateInput = {
     perWeek?: SortOrder
+    intervalWeeks?: SortOrder
   }
 
   export type TaskNullableScalarRelationFilter = {
@@ -96092,6 +96127,7 @@ export namespace Prisma {
   export type ProjectWeeklyTargetCreateWithoutResponsibleMemberInput = {
     id?: string
     perWeek?: number
+    intervalWeeks?: number
     startsOn?: Date | string
     project: ProjectCreateNestedOneWithoutWeeklyTargetsInput
     template: ChecklistTemplateCreateNestedOneWithoutWeeklyTargetsInput
@@ -96102,6 +96138,7 @@ export namespace Prisma {
     projectId: string
     templateId: string
     perWeek?: number
+    intervalWeeks?: number
     startsOn?: Date | string
   }
 
@@ -96607,6 +96644,7 @@ export namespace Prisma {
     projectId?: StringFilter<"ProjectWeeklyTarget"> | string
     templateId?: StringFilter<"ProjectWeeklyTarget"> | string
     perWeek?: IntFilter<"ProjectWeeklyTarget"> | number
+    intervalWeeks?: IntFilter<"ProjectWeeklyTarget"> | number
     startsOn?: DateTimeFilter<"ProjectWeeklyTarget"> | Date | string
     responsibleMemberId?: StringNullableFilter<"ProjectWeeklyTarget"> | string | null
   }
@@ -101512,6 +101550,7 @@ export namespace Prisma {
   export type ProjectWeeklyTargetCreateWithoutProjectInput = {
     id?: string
     perWeek?: number
+    intervalWeeks?: number
     startsOn?: Date | string
     template: ChecklistTemplateCreateNestedOneWithoutWeeklyTargetsInput
     responsibleMember?: WorkspaceMemberCreateNestedOneWithoutResponsibleWeeklyTargetsInput
@@ -101521,6 +101560,7 @@ export namespace Prisma {
     id?: string
     templateId: string
     perWeek?: number
+    intervalWeeks?: number
     startsOn?: Date | string
     responsibleMemberId?: string | null
   }
@@ -103947,6 +103987,7 @@ export namespace Prisma {
   export type ProjectWeeklyTargetCreateWithoutTemplateInput = {
     id?: string
     perWeek?: number
+    intervalWeeks?: number
     startsOn?: Date | string
     project: ProjectCreateNestedOneWithoutWeeklyTargetsInput
     responsibleMember?: WorkspaceMemberCreateNestedOneWithoutResponsibleWeeklyTargetsInput
@@ -103956,6 +103997,7 @@ export namespace Prisma {
     id?: string
     projectId: string
     perWeek?: number
+    intervalWeeks?: number
     startsOn?: Date | string
     responsibleMemberId?: string | null
   }
@@ -113194,6 +113236,7 @@ export namespace Prisma {
     projectId: string
     templateId: string
     perWeek?: number
+    intervalWeeks?: number
     startsOn?: Date | string
   }
 
@@ -113561,6 +113604,7 @@ export namespace Prisma {
   export type ProjectWeeklyTargetUpdateWithoutResponsibleMemberInput = {
     id?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
+    intervalWeeks?: IntFieldUpdateOperationsInput | number
     startsOn?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutWeeklyTargetsNestedInput
     template?: ChecklistTemplateUpdateOneRequiredWithoutWeeklyTargetsNestedInput
@@ -113571,6 +113615,7 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     templateId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
+    intervalWeeks?: IntFieldUpdateOperationsInput | number
     startsOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -113579,6 +113624,7 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     templateId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
+    intervalWeeks?: IntFieldUpdateOperationsInput | number
     startsOn?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -115246,6 +115292,7 @@ export namespace Prisma {
     id?: string
     templateId: string
     perWeek?: number
+    intervalWeeks?: number
     startsOn?: Date | string
     responsibleMemberId?: string | null
   }
@@ -115655,6 +115702,7 @@ export namespace Prisma {
   export type ProjectWeeklyTargetUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
+    intervalWeeks?: IntFieldUpdateOperationsInput | number
     startsOn?: DateTimeFieldUpdateOperationsInput | Date | string
     template?: ChecklistTemplateUpdateOneRequiredWithoutWeeklyTargetsNestedInput
     responsibleMember?: WorkspaceMemberUpdateOneWithoutResponsibleWeeklyTargetsNestedInput
@@ -115664,6 +115712,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     templateId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
+    intervalWeeks?: IntFieldUpdateOperationsInput | number
     startsOn?: DateTimeFieldUpdateOperationsInput | Date | string
     responsibleMemberId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -115672,6 +115721,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     templateId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
+    intervalWeeks?: IntFieldUpdateOperationsInput | number
     startsOn?: DateTimeFieldUpdateOperationsInput | Date | string
     responsibleMemberId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -115840,6 +115890,7 @@ export namespace Prisma {
     id?: string
     projectId: string
     perWeek?: number
+    intervalWeeks?: number
     startsOn?: Date | string
     responsibleMemberId?: string | null
   }
@@ -115997,6 +116048,7 @@ export namespace Prisma {
   export type ProjectWeeklyTargetUpdateWithoutTemplateInput = {
     id?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
+    intervalWeeks?: IntFieldUpdateOperationsInput | number
     startsOn?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutWeeklyTargetsNestedInput
     responsibleMember?: WorkspaceMemberUpdateOneWithoutResponsibleWeeklyTargetsNestedInput
@@ -116006,6 +116058,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
+    intervalWeeks?: IntFieldUpdateOperationsInput | number
     startsOn?: DateTimeFieldUpdateOperationsInput | Date | string
     responsibleMemberId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -116014,6 +116067,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     perWeek?: IntFieldUpdateOperationsInput | number
+    intervalWeeks?: IntFieldUpdateOperationsInput | number
     startsOn?: DateTimeFieldUpdateOperationsInput | Date | string
     responsibleMemberId?: NullableStringFieldUpdateOperationsInput | string | null
   }

@@ -5,6 +5,7 @@ import { type WeeklyTarget } from "@/lib/weekly-plan";
 import { requireProjectSettings, requireProjectWork } from "@/lib/workspace";
 import { planningWeekStartOf, weekDueDate, weekStartOf } from "@/lib/week";
 import {
+  planActiveForWeek,
   resolveNewSlotAssignee,
   syncSlotAssigneesFromTargets,
 } from "@/lib/weekly-slots";
@@ -135,6 +136,7 @@ export async function getWeeklyTargets(
     select: {
       templateId: true,
       perWeek: true,
+      intervalWeeks: true,
       startsOn: true,
       responsibleMemberId: true,
     },
@@ -142,6 +144,7 @@ export async function getWeeklyTargets(
   return rows.map((r) => ({
     templateId: r.templateId,
     perWeek: r.perWeek,
+    intervalWeeks: r.intervalWeeks,
     startsOn: r.startsOn,
     responsibleMemberId: r.responsibleMemberId,
   }));
@@ -167,6 +170,7 @@ export async function setWeeklyTargets(
       return {
         templateId: t.templateId,
         perWeek: Math.max(0, Math.min(50, Math.round(t.perWeek))),
+        intervalWeeks: Math.max(1, Math.min(4, Math.round(t.intervalWeeks || 1))),
         startsOn: snapped.getTime() > maxStart.getTime() ? maxStart : snapped,
         responsibleMemberId: t.responsibleMemberId || null,
       };
@@ -198,26 +202,33 @@ export async function setWeeklyTargets(
       : []),
   ]);
 
-  // A plan deferred to a later week takes back every untouched placeholder
-  // sitting in the weeks before its start — slots a task already claimed
-  // stay where they are.
-  const deferred = clean.filter(
-    (t) => t.startsOn.getTime() > planningWeek.getTime(),
-  );
-  if (deferred.length > 0) {
-    await Promise.all(
-      deferred.map((t) =>
-        db.weeklySlot.deleteMany({
-          where: {
-            projectId,
-            templateId: t.templateId,
-            weekStart: { gte: planningWeek, lt: t.startsOn },
-            taskId: null,
-            removedAt: null,
-          },
-        }),
-      ),
-    );
+  // The new plan takes back every untouched placeholder sitting in a week it
+  // no longer covers — weeks before a deferred start, and off-weeks of an
+  // every-N-weeks cadence. Slots a task already claimed, and force-added
+  // slots (they carry their own dueDate), stay where they are.
+  const emptySlots = await db.weeklySlot.findMany({
+    where: {
+      projectId,
+      templateId: { in: clean.map((t) => t.templateId) },
+      weekStart: { gte: planningWeek },
+      taskId: null,
+      removedAt: null,
+      dueDate: null,
+    },
+    select: { id: true, templateId: true, weekStart: true },
+  });
+  const planByTemplate = new Map(clean.map((t) => [t.templateId, t]));
+  const staleIds = emptySlots
+    .filter((s) => {
+      const plan = planByTemplate.get(s.templateId);
+      return (
+        !plan ||
+        !planActiveForWeek(plan.startsOn, s.weekStart, plan.intervalWeeks)
+      );
+    })
+    .map((s) => s.id);
+  if (staleIds.length > 0) {
+    await db.weeklySlot.deleteMany({ where: { id: { in: staleIds } } });
   }
 
   await syncSlotAssigneesFromTargets(projectId, clean);

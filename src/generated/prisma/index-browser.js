@@ -374,6 +374,7 @@ exports.Prisma.ProjectWeeklyTargetScalarFieldEnum = {
   projectId: 'projectId',
   templateId: 'templateId',
   perWeek: 'perWeek',
+  intervalWeeks: 'intervalWeeks',
   startsOn: 'startsOn',
   responsibleMemberId: 'responsibleMemberId'
 };
