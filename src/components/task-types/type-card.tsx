@@ -2,14 +2,17 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarCheck2, Layers, Pencil, Trash2, X } from "lucide-react";
+import { CalendarCheck2, Copy, Layers, Pencil, Trash2, X } from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
-import { updateChecklistTemplate } from "@/actions/settings";
+import {
+  updateChecklistTemplate,
+  duplicateChecklistTemplate,
+} from "@/actions/settings";
 import { cn } from "@/lib/utils";
 import { TypeIcon, TYPE_COLORS, TYPE_ICONS, DEFAULT_TYPE_COLOR } from "@/components/task-types/task-type-visuals";
 import type { StatusOpt, TaskTypeVM } from "./types";
@@ -29,13 +32,19 @@ export function TypeCard({
   onDelete: () => void;
 }) {
   const router = useRouter();
-  const [, startTransition] = useTransition();
+  const [pending, startTransition] = useTransition();
   const count = type.sections.reduce((sum, s) => sum + s.fields.length, 0);
   const color = type.color ?? DEFAULT_TYPE_COLOR;
 
   const setVisual = (data: { icon?: string; color?: string }) =>
     startTransition(async () => {
       await updateChecklistTemplate(type.id, data);
+      router.refresh();
+    });
+
+  const duplicate = () =>
+    startTransition(async () => {
+      await duplicateChecklistTemplate(type.id);
       router.refresh();
     });
 
@@ -148,6 +157,17 @@ export function TypeCard({
             }
           />
         </label>
+
+        <button
+          type="button"
+          aria-label="Duplicate type"
+          title="Duplicate this task type with all its fields"
+          onClick={duplicate}
+          disabled={pending}
+          className="grid h-8 w-8 place-items-center rounded-md text-muted-foreground hover:bg-muted/40 hover:text-foreground disabled:opacity-50"
+        >
+          <Copy className="h-4 w-4" />
+        </button>
 
         {expanded ? (
           <>

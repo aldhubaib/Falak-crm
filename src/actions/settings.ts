@@ -200,6 +200,95 @@ export async function createChecklistTemplate(formData: FormData) {
   revalidatePath("/settings/checklists");
   revalidatePath("/settings/task-types");
 }
+
+// Deep copy of a task type: visuals, title rules, sections, every field with
+// its full config, and each field's per-title effort rates. The copy is fully
+// independent — existing tasks and project links stay on the original.
+export async function duplicateChecklistTemplate(templateId: string) {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  if (!canEdit(member, "projects")) throw new Error("Permission denied");
+
+  const source = await db.checklistTemplate.findFirst({
+    where: { id: templateId, workspaceId: workspace.id },
+    include: {
+      sections: { orderBy: { order: "asc" } },
+      items: { orderBy: { order: "asc" }, include: { titleRates: true } },
+    },
+  });
+  if (!source) throw new Error("Task type not found");
+
+  // "X (copy)", then "X (copy 2)", "X (copy 3)"… — first free name wins.
+  const siblings = await db.checklistTemplate.findMany({
+    where: { workspaceId: workspace.id },
+    select: { name: true },
+  });
+  const taken = new Set(siblings.map((t) => t.name.toLowerCase()));
+  let name = `${source.name} (copy)`;
+  for (let n = 2; taken.has(name.toLowerCase()); n++) {
+    name = `${source.name} (copy ${n})`;
+  }
+
+  await db.$transaction(async (tx) => {
+    const copy = await tx.checklistTemplate.create({
+      data: {
+        workspaceId: workspace.id,
+        name,
+        icon: source.icon,
+        color: source.color,
+        description: source.description,
+        publishToCalendar: source.publishToCalendar,
+        titleLockedFromStageId: source.titleLockedFromStageId,
+        titleNeverLock: source.titleNeverLock,
+        titleLabel: source.titleLabel,
+        titleHelp: source.titleHelp,
+      },
+    });
+
+    const sectionIdMap = new Map<string, string>();
+    for (const s of source.sections) {
+      const created = await tx.checklistSection.create({
+        data: { templateId: copy.id, name: s.name, phase: s.phase, order: s.order },
+      });
+      sectionIdMap.set(s.id, created.id);
+    }
+
+    for (const item of source.items) {
+      await tx.checklistTemplateItem.create({
+        data: {
+          templateId: copy.id,
+          name: item.name,
+          type: item.type,
+          role: item.role,
+          options: item.options,
+          allowedFileTypes: item.allowedFileTypes,
+          allowedFormats: item.allowedFormats,
+          aspectRatio: item.aspectRatio,
+          mandatory: item.mandatory,
+          phase: item.phase,
+          sectionId: item.sectionId ? (sectionIdMap.get(item.sectionId) ?? null) : null,
+          visibleFromStageId: item.visibleFromStageId,
+          requiredBeforeStageId: item.requiredBeforeStageId,
+          lockedFromStageId: item.lockedFromStageId,
+          neverLock: item.neverLock,
+          publishCard: item.publishCard,
+          hidden: item.hidden,
+          effortUnit: item.effortUnit,
+          order: item.order,
+          titleRates: {
+            create: item.titleRates.map((r) => ({
+              titleId: r.titleId,
+              minutesPerUnit: r.minutesPerUnit,
+            })),
+          },
+        },
+      });
+    }
+  });
+
+  revalidatePath("/settings/checklists");
+  revalidatePath("/settings/task-types");
+}
+
 // Sections group a task type's fields ("Requirements", "Delivery", or any
 // custom group). Each carries a phase that drives the existing behavior:
 // "create" fields belong to the new-task form and lock after Todo; "delivery"
