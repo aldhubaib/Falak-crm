@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import {
   getActiveProjectsDashboard,
   getDashboardStats,
+  getTasksByStage,
   getThisWeekSchedule,
 } from "@/actions/projects-dashboard";
 import { getMyResponsibility } from "@/actions/responsibility";
@@ -19,16 +20,18 @@ import {
 } from "@/components/dashboard/task-stats";
 import { MyResponsibilityModule } from "@/components/dashboard/my-responsibility-module";
 import { WeeklyScheduleModule } from "@/components/dashboard/weekly-schedule-module";
+import { TasksByStageModule } from "@/components/dashboard/tasks-by-stage-module";
 
 export default async function ProjectsPage() {
   // getThisWeekSchedule materialises this week's plan slots before
   // getDashboardStats reads them, so it runs first.
-  const [{ member }, activeProjects, responsibility, thisWeek] =
+  const [{ member }, activeProjects, responsibility, thisWeek, byStage] =
     await Promise.all([
       requireWorkspaceWithMember(),
       getActiveProjectsDashboard(),
       getMyResponsibility(),
       getThisWeekSchedule(),
+      getTasksByStage(),
     ]);
   const stats = await getDashboardStats();
   const editable = canEdit(member, "projects");
@@ -71,6 +74,10 @@ export default async function ProjectsPage() {
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <MyResponsibilityModule data={responsibility} />
             <WeeklyScheduleModule data={thisWeek} />
+          </div>
+
+          <div className="mt-4">
+            <TasksByStageModule projects={byStage} />
           </div>
         </PageContainer>
       </main>

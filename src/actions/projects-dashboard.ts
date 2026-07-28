@@ -588,3 +588,174 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     },
   };
 }
+
+// ─── Tasks by stage (pipeline module) ───────────────────────────────────────
+
+export type StageSegment = "todo" | "inProgress" | "review";
+
+export type StageTaskRow = {
+  id: string;
+  title: string;
+  taskNumber: number;
+  stageName: string;
+  segment: StageSegment;
+  /** Currently rejected: rejected at least once and its last move was a rollback. */
+  rejected: boolean;
+  assigneeName: string | null;
+  assigneeAvatar: string | null;
+};
+
+export type ProjectStageBreakdown = {
+  id: string;
+  name: string;
+  thumbnailId: string | null;
+  total: number;
+  counts: Record<StageSegment, number>;
+  rejectedCount: number;
+  tasks: StageTaskRow[];
+};
+
+// Pipeline segments, matched by stage name (same convention as
+// isDeliveryGateStage): "internal review" is the legacy name of the
+// delivery-gate stage kept for workspaces that haven't renamed it.
+const SEGMENT_ORDER: StageSegment[] = ["todo", "inProgress", "review"];
+const STAGE_SEGMENTS: Record<string, StageSegment> = {
+  todo: "todo",
+  "raw footage": "inProgress",
+  "raw footage review": "inProgress",
+  "post production": "inProgress",
+  "final video check": "review",
+  "internal review": "review",
+  review: "review",
+};
+
+/**
+ * Open tasks of every active (accessible) project, bucketed into the three
+ * pipeline segments. Powers the "Tasks by stage" dashboard module: one
+ * stacked bar per project, with the per-segment task lists behind a click.
+ */
+export async function getTasksByStage(): Promise<ProjectStageBreakdown[]> {
+  const { workspace, member } = await requireWorkspaceWithMember();
+  const isOwner = member.type === "OWNER";
+
+  const statuses = await db.taskStatus.findMany({
+    where: { workspaceId: workspace.id },
+    select: { id: true, name: true, order: true },
+  });
+  const segmentByStatus = new Map<string, StageSegment>();
+  const orderByStatus = new Map<string, number>();
+  for (const s of statuses) {
+    const segment = STAGE_SEGMENTS[s.name.trim().toLowerCase()];
+    if (segment) {
+      segmentByStatus.set(s.id, segment);
+      orderByStatus.set(s.id, s.order);
+    }
+  }
+  if (segmentByStatus.size === 0) return [];
+
+  const tasks = await db.task.findMany({
+    where: {
+      deletedAt: null,
+      statusId: { in: [...segmentByStatus.keys()] },
+      project: {
+        workspaceId: workspace.id,
+        deletedAt: null,
+        status: { name: "Active" },
+        ...(isOwner
+          ? {}
+          : {
+              OR: [
+                { ownerId: member.userId },
+                { members: { some: { memberId: member.id } } },
+              ],
+            }),
+      },
+    },
+    select: {
+      id: true,
+      title: true,
+      taskNumber: true,
+      statusId: true,
+      rejectionCount: true,
+      projectId: true,
+      project: { select: { id: true, name: true, thumbnailId: true } },
+      status: { select: { name: true } },
+      assignee: { select: { name: true, email: true, imageUrl: true } },
+    },
+  });
+  if (tasks.length === 0) return [];
+
+  // Same "currently rejected" rule as the Rejected stat card: ever rejected
+  // AND the most recent status change moved the task backward.
+  const candidates = tasks.filter((t) => t.rejectionCount > 0);
+  const currentlyRejected = new Set<string>();
+  if (candidates.length > 0) {
+    const latestMoves = await db.$queryRaw<
+      { taskId: string; fromOrder: number | null; toOrder: number | null }[]
+    >`
+      SELECT DISTINCT ON (c."taskId")
+        c."taskId" AS "taskId",
+        sf."order" AS "fromOrder",
+        st."order" AS "toOrder"
+      FROM "TaskStatusChange" c
+      LEFT JOIN "TaskStatus" sf ON sf."id" = c."fromStatusId"
+      LEFT JOIN "TaskStatus" st ON st."id" = c."toStatusId"
+      WHERE c."taskId" IN (${Prisma.join(candidates.map((t) => t.id))})
+        AND c."action" = 'status_change'
+      ORDER BY c."taskId", c."createdAt" DESC
+    `;
+    for (const m of latestMoves) {
+      if (m.fromOrder != null && m.toOrder != null && m.toOrder < m.fromOrder) {
+        currentlyRejected.add(m.taskId);
+      }
+    }
+  }
+
+  const byProject = new Map<string, ProjectStageBreakdown>();
+  const stageOrderByTask = new Map<string, number>();
+  for (const t of tasks) {
+    const segment = segmentByStatus.get(t.statusId!)!;
+    stageOrderByTask.set(t.id, orderByStatus.get(t.statusId!) ?? 0);
+    let entry = byProject.get(t.projectId);
+    if (!entry) {
+      entry = {
+        id: t.project.id,
+        name: t.project.name,
+        thumbnailId: t.project.thumbnailId,
+        total: 0,
+        counts: { todo: 0, inProgress: 0, review: 0 },
+        rejectedCount: 0,
+        tasks: [],
+      };
+      byProject.set(t.projectId, entry);
+    }
+    const rejected = currentlyRejected.has(t.id);
+    entry.total += 1;
+    entry.counts[segment] += 1;
+    if (rejected) entry.rejectedCount += 1;
+    entry.tasks.push({
+      id: t.id,
+      title: t.title,
+      taskNumber: t.taskNumber,
+      stageName: t.status?.name ?? "",
+      segment,
+      rejected,
+      assigneeName: t.assignee ? t.assignee.name || t.assignee.email : null,
+      assigneeAvatar: t.assignee?.imageUrl ?? null,
+    });
+  }
+
+  const projects = [...byProject.values()];
+  for (const p of projects) {
+    p.tasks.sort((a, b) => {
+      const seg =
+        SEGMENT_ORDER.indexOf(a.segment) - SEGMENT_ORDER.indexOf(b.segment);
+      if (seg !== 0) return seg;
+      const stage =
+        (stageOrderByTask.get(a.id) ?? 0) - (stageOrderByTask.get(b.id) ?? 0);
+      if (stage !== 0) return stage;
+      return a.taskNumber - b.taskNumber;
+    });
+  }
+  return projects.sort((a, b) => b.total - a.total);
+}
