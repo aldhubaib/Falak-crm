@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { Download, X, ChevronLeft, ChevronRight } from "lucide-react";
 import type { MessageAttachment } from "@/actions/messages";
 import { formatBytes } from "./file-utils";
+import { useMobileBackClose } from "@/hooks/use-mobile-back-close";
 
 export default function Lightbox({
   images,
@@ -21,6 +22,10 @@ export default function Lightbox({
   onIndex: (i: number) => void;
   renderMenu?: (att: MessageAttachment) => React.ReactNode;
 }) {
+  // Only mounted while open — the phone back button/gesture closes the viewer
+  // instead of leaving the chat.
+  useMobileBackClose(true, onClose);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();

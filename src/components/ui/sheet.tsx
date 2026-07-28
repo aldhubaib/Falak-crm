@@ -6,8 +6,20 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useMobileBackClose } from "@/hooks/use-mobile-back-close";
 
-const Sheet = SheetPrimitive.Root;
+// On phones the system back button closes an open sheet instead of leaving
+// the page (only engages for controlled sheets; desktop/tablet unchanged).
+const Sheet = ({
+  open,
+  onOpenChange,
+  ...props
+}: React.ComponentProps<typeof SheetPrimitive.Root>) => {
+  useMobileBackClose(!!open, () => onOpenChange?.(false));
+  return (
+    <SheetPrimitive.Root open={open} onOpenChange={onOpenChange} {...props} />
+  );
+};
 const SheetTrigger = SheetPrimitive.Trigger;
 const SheetClose = SheetPrimitive.Close;
 const SheetPortal = SheetPrimitive.Portal;

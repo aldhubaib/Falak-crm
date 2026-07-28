@@ -5,8 +5,21 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useMobileBackClose } from "@/hooks/use-mobile-back-close";
 
-const Dialog = DialogPrimitive.Root;
+// On phones the system back button dismisses an open dialog instead of
+// leaving the page (only engages for controlled dialogs; desktop/tablet
+// unchanged).
+const Dialog = ({
+  open,
+  onOpenChange,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Root>) => {
+  useMobileBackClose(!!open, () => onOpenChange?.(false));
+  return (
+    <DialogPrimitive.Root open={open} onOpenChange={onOpenChange} {...props} />
+  );
+};
 const DialogTrigger = DialogPrimitive.Trigger;
 const DialogPortal = DialogPrimitive.Portal;
 const DialogClose = DialogPrimitive.Close;

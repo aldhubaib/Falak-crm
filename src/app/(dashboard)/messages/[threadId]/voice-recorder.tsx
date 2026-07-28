@@ -171,14 +171,20 @@ export default function VoiceRecorderBar({
     })();
 
     return () => {
-      // Don't leave the mic on if the user navigates away mid-recording.
       cancelled = true;
-      discardRef.current = true;
+      // Only a recording still RUNNING at unmount is abandoned (the user
+      // navigated away mid-recording). Tapping Send already stopped the
+      // recorder and nulled the ref — its onstop fires after this cleanup,
+      // and flipping discardRef here would throw away the file it's about
+      // to emit (voice messages would silently never send).
+      if (recorderRef.current) {
+        discardRef.current = true;
+        try {
+          recorderRef.current.stop();
+        } catch {}
+        recorderRef.current = null;
+      }
       cleanupResources();
-      try {
-        recorderRef.current?.stop();
-      } catch {}
-      recorderRef.current = null;
     };
     // Mount-only: callbacks are captured once; the recorder never restarts.
     // eslint-disable-next-line react-hooks/exhaustive-deps
