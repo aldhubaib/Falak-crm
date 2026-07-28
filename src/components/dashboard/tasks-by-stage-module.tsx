@@ -75,19 +75,31 @@ function ProjectBar({
       title={project.name}
       className="group flex w-14 shrink-0 flex-col items-center gap-2"
     >
-      <div className="flex h-32 w-11 flex-col overflow-hidden rounded-xl transition-transform group-hover:scale-[1.04]">
-        {SEGMENTS.map((s) => {
-          const count = project.counts[s.key];
-          if (count === 0) return null;
-          return (
-            <div
-              key={s.key}
-              className={s.bar}
-              style={{ flexGrow: count }}
-              title={`${s.label}: ${count}`}
-            />
-          );
-        })}
+      <div className="relative">
+        <div className="flex h-32 w-11 flex-col overflow-hidden rounded-xl transition-transform group-hover:scale-[1.04]">
+          {SEGMENTS.map((s) => {
+            const count = project.counts[s.key];
+            if (count === 0) return null;
+            return (
+              <div
+                key={s.key}
+                className={s.bar}
+                style={{ flexGrow: count }}
+                title={`${s.label}: ${count}`}
+              />
+            );
+          })}
+        </div>
+        {/* Rejected badge rides the bar so the avatar/count rows below stay
+            aligned across all projects. */}
+        {project.rejectedCount > 0 && (
+          <span
+            className="absolute -right-1.5 -top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-rose-500 px-1 text-xxs font-bold tabular-nums text-white ring-2 ring-card"
+            title={`${project.rejectedCount} rejected ${project.rejectedCount === 1 ? "task" : "tasks"} in these stages`}
+          >
+            {project.rejectedCount}
+          </span>
+        )}
       </div>
       <PublishAvatar
         name={project.name}
@@ -102,19 +114,9 @@ function ProjectBar({
           </div>
         }
       />
-      <div className="flex flex-col items-center leading-tight">
-        <span className="text-xs tabular-nums text-muted-foreground">
-          {project.total}
-        </span>
-        {project.rejectedCount > 0 && (
-          <span
-            className="text-xxs font-semibold tabular-nums text-rose-400"
-            title={`${project.rejectedCount} rejected ${project.rejectedCount === 1 ? "task" : "tasks"} in these stages`}
-          >
-            {project.rejectedCount} rej.
-          </span>
-        )}
-      </div>
+      <span className="text-xs leading-tight tabular-nums text-muted-foreground">
+        {project.total}
+      </span>
     </button>
   );
 }
@@ -183,7 +185,7 @@ export function TasksByStageModule({
           </p>
         ) : (
           <>
-            <div className="flex items-end gap-3 overflow-x-auto pb-1">
+            <div className="flex items-end gap-3 overflow-x-auto pb-1 pt-2">
               {projects.map((p) => (
                 <ProjectBar
                   key={p.id}

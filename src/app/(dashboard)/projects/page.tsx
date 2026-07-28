@@ -21,6 +21,7 @@ import {
 import { MyResponsibilityModule } from "@/components/dashboard/my-responsibility-module";
 import { WeeklyScheduleModule } from "@/components/dashboard/weekly-schedule-module";
 import { TasksByStageModule } from "@/components/dashboard/tasks-by-stage-module";
+import { OverallPipelineModule } from "@/components/dashboard/overall-pipeline-module";
 
 export default async function ProjectsPage() {
   // getThisWeekSchedule materialises this week's plan slots before
@@ -76,7 +77,8 @@ export default async function ProjectsPage() {
             <WeeklyScheduleModule data={thisWeek} />
           </div>
 
-          <div className="mt-4">
+          <div className="mt-4 space-y-4">
+            <OverallPipelineModule projects={byStage} />
             <TasksByStageModule projects={byStage} />
           </div>
         </PageContainer>
