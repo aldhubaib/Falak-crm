@@ -191,7 +191,6 @@ function ProviderCard({
                 type={field.secret ? "password" : "text"}
                 autoComplete="off"
                 spellCheck={false}
-                disabled={disabled}
                 placeholder={hint ?? field.placeholder}
                 value={values[field.key] ?? ""}
                 onChange={(e) =>
@@ -232,13 +231,18 @@ function ProviderCard({
         <p className="mt-3 text-xs text-muted-foreground">{provider.testCost}</p>
       )}
 
+      {disabled && (
+        <div className="mt-4 flex items-start gap-2 rounded-md border border-amber-500/40 bg-amber-500/5 p-3 text-xs text-amber-300">
+          <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+          <span>
+            The server has no SECRETS_KEY, so credentials cannot be encrypted or
+            stored yet. Set it and restart, then save this key.
+          </span>
+        </div>
+      )}
+
       <div className="mt-5 flex flex-wrap items-center gap-2">
-        <SaveButton
-          onClick={save}
-          loading={loading}
-          ready={dirty}
-          disabled={disabled || !dirty}
-        />
+        <SaveButton onClick={save} loading={loading} ready={dirty} disabled={!dirty} />
         {provider.testable && configured && (
           <Button variant="outline" className="rounded-md" onClick={test} disabled={testing}>
             {testing ? (
