@@ -229,6 +229,11 @@ export type Payment = $Result.DefaultSelection<Prisma.$PaymentPayload>
  */
 export type InvoiceItem = $Result.DefaultSelection<Prisma.$InvoiceItemPayload>
 /**
+ * Model IntegrationCredential
+ * 
+ */
+export type IntegrationCredential = $Result.DefaultSelection<Prisma.$IntegrationCredentialPayload>
+/**
  * Model WhatsAppConfig
  * 
  */
@@ -968,6 +973,16 @@ export class PrismaClient<
   get invoiceItem(): Prisma.InvoiceItemDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.integrationCredential`: Exposes CRUD operations for the **IntegrationCredential** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more IntegrationCredentials
+    * const integrationCredentials = await prisma.integrationCredential.findMany()
+    * ```
+    */
+  get integrationCredential(): Prisma.IntegrationCredentialDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.whatsAppConfig`: Exposes CRUD operations for the **WhatsAppConfig** model.
     * Example usage:
     * ```ts
@@ -1553,6 +1568,7 @@ export namespace Prisma {
     Invoice: 'Invoice',
     Payment: 'Payment',
     InvoiceItem: 'InvoiceItem',
+    IntegrationCredential: 'IntegrationCredential',
     WhatsAppConfig: 'WhatsAppConfig',
     WhatsAppTemplate: 'WhatsAppTemplate',
     WhatsAppMessage: 'WhatsAppMessage',
@@ -1579,7 +1595,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "title" | "titleFieldRate" | "titleStageRate" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectWeeklyTarget" | "weeklySlot" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistSection" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "message" | "messageReaction" | "messageMention" | "conversation" | "conversationParticipant" | "notification" | "pushSubscription" | "invoice" | "payment" | "invoiceItem" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "brandingAsset" | "publishItem"
+      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "title" | "titleFieldRate" | "titleStageRate" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectWeeklyTarget" | "weeklySlot" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistSection" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "message" | "messageReaction" | "messageMention" | "conversation" | "conversationParticipant" | "notification" | "pushSubscription" | "invoice" | "payment" | "invoiceItem" | "integrationCredential" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "brandingAsset" | "publishItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4765,6 +4781,80 @@ export namespace Prisma {
           }
         }
       }
+      IntegrationCredential: {
+        payload: Prisma.$IntegrationCredentialPayload<ExtArgs>
+        fields: Prisma.IntegrationCredentialFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IntegrationCredentialFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IntegrationCredentialFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>
+          }
+          findFirst: {
+            args: Prisma.IntegrationCredentialFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IntegrationCredentialFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>
+          }
+          findMany: {
+            args: Prisma.IntegrationCredentialFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>[]
+          }
+          create: {
+            args: Prisma.IntegrationCredentialCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>
+          }
+          createMany: {
+            args: Prisma.IntegrationCredentialCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IntegrationCredentialCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>[]
+          }
+          delete: {
+            args: Prisma.IntegrationCredentialDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>
+          }
+          update: {
+            args: Prisma.IntegrationCredentialUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>
+          }
+          deleteMany: {
+            args: Prisma.IntegrationCredentialDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IntegrationCredentialUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.IntegrationCredentialUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>[]
+          }
+          upsert: {
+            args: Prisma.IntegrationCredentialUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationCredentialPayload>
+          }
+          aggregate: {
+            args: Prisma.IntegrationCredentialAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIntegrationCredential>
+          }
+          groupBy: {
+            args: Prisma.IntegrationCredentialGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IntegrationCredentialGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IntegrationCredentialCountArgs<ExtArgs>
+            result: $Utils.Optional<IntegrationCredentialCountAggregateOutputType> | number
+          }
+        }
+      }
       WhatsAppConfig: {
         payload: Prisma.$WhatsAppConfigPayload<ExtArgs>
         fields: Prisma.WhatsAppConfigFieldRefs
@@ -5730,6 +5820,7 @@ export namespace Prisma {
     invoice?: InvoiceOmit
     payment?: PaymentOmit
     invoiceItem?: InvoiceItemOmit
+    integrationCredential?: IntegrationCredentialOmit
     whatsAppConfig?: WhatsAppConfigOmit
     whatsAppTemplate?: WhatsAppTemplateOmit
     whatsAppMessage?: WhatsAppMessageOmit
@@ -5837,6 +5928,7 @@ export namespace Prisma {
     taskStatuses: number
     customFields: number
     whatsappTemplates: number
+    integrations: number
     roles: number
     titles: number
     currencies: number
@@ -5864,6 +5956,7 @@ export namespace Prisma {
     taskStatuses?: boolean | WorkspaceCountOutputTypeCountTaskStatusesArgs
     customFields?: boolean | WorkspaceCountOutputTypeCountCustomFieldsArgs
     whatsappTemplates?: boolean | WorkspaceCountOutputTypeCountWhatsappTemplatesArgs
+    integrations?: boolean | WorkspaceCountOutputTypeCountIntegrationsArgs
     roles?: boolean | WorkspaceCountOutputTypeCountRolesArgs
     titles?: boolean | WorkspaceCountOutputTypeCountTitlesArgs
     currencies?: boolean | WorkspaceCountOutputTypeCountCurrenciesArgs
@@ -5995,6 +6088,13 @@ export namespace Prisma {
    */
   export type WorkspaceCountOutputTypeCountWhatsappTemplatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WhatsAppTemplateWhereInput
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeCountIntegrationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegrationCredentialWhereInput
   }
 
   /**
@@ -7375,6 +7475,7 @@ export namespace Prisma {
     customFields?: boolean | Workspace$customFieldsArgs<ExtArgs>
     whatsappConfig?: boolean | Workspace$whatsappConfigArgs<ExtArgs>
     whatsappTemplates?: boolean | Workspace$whatsappTemplatesArgs<ExtArgs>
+    integrations?: boolean | Workspace$integrationsArgs<ExtArgs>
     roles?: boolean | Workspace$rolesArgs<ExtArgs>
     titles?: boolean | Workspace$titlesArgs<ExtArgs>
     currencies?: boolean | Workspace$currenciesArgs<ExtArgs>
@@ -7441,6 +7542,7 @@ export namespace Prisma {
     customFields?: boolean | Workspace$customFieldsArgs<ExtArgs>
     whatsappConfig?: boolean | Workspace$whatsappConfigArgs<ExtArgs>
     whatsappTemplates?: boolean | Workspace$whatsappTemplatesArgs<ExtArgs>
+    integrations?: boolean | Workspace$integrationsArgs<ExtArgs>
     roles?: boolean | Workspace$rolesArgs<ExtArgs>
     titles?: boolean | Workspace$titlesArgs<ExtArgs>
     currencies?: boolean | Workspace$currenciesArgs<ExtArgs>
@@ -7474,6 +7576,7 @@ export namespace Prisma {
       customFields: Prisma.$CustomFieldDefPayload<ExtArgs>[]
       whatsappConfig: Prisma.$WhatsAppConfigPayload<ExtArgs> | null
       whatsappTemplates: Prisma.$WhatsAppTemplatePayload<ExtArgs>[]
+      integrations: Prisma.$IntegrationCredentialPayload<ExtArgs>[]
       roles: Prisma.$RolePayload<ExtArgs>[]
       titles: Prisma.$TitlePayload<ExtArgs>[]
       currencies: Prisma.$CurrencyPayload<ExtArgs>[]
@@ -7904,6 +8007,7 @@ export namespace Prisma {
     customFields<T extends Workspace$customFieldsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$customFieldsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomFieldDefPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     whatsappConfig<T extends Workspace$whatsappConfigArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$whatsappConfigArgs<ExtArgs>>): Prisma__WhatsAppConfigClient<$Result.GetResult<Prisma.$WhatsAppConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     whatsappTemplates<T extends Workspace$whatsappTemplatesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$whatsappTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WhatsAppTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    integrations<T extends Workspace$integrationsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$integrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roles<T extends Workspace$rolesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     titles<T extends Workspace$titlesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$titlesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TitlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     currencies<T extends Workspace$currenciesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$currenciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CurrencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -8743,6 +8847,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WhatsAppTemplateScalarFieldEnum | WhatsAppTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * Workspace.integrations
+   */
+  export type Workspace$integrationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationCredential
+     */
+    select?: IntegrationCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationCredential
+     */
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationCredentialInclude<ExtArgs> | null
+    where?: IntegrationCredentialWhereInput
+    orderBy?: IntegrationCredentialOrderByWithRelationInput | IntegrationCredentialOrderByWithRelationInput[]
+    cursor?: IntegrationCredentialWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IntegrationCredentialScalarFieldEnum | IntegrationCredentialScalarFieldEnum[]
   }
 
   /**
@@ -60138,6 +60266,1143 @@ export namespace Prisma {
 
 
   /**
+   * Model IntegrationCredential
+   */
+
+  export type AggregateIntegrationCredential = {
+    _count: IntegrationCredentialCountAggregateOutputType | null
+    _min: IntegrationCredentialMinAggregateOutputType | null
+    _max: IntegrationCredentialMaxAggregateOutputType | null
+  }
+
+  export type IntegrationCredentialMinAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    provider: string | null
+    secrets: string | null
+    enabled: boolean | null
+    lastVerifiedAt: Date | null
+    lastVerifyError: string | null
+    updatedBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type IntegrationCredentialMaxAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    provider: string | null
+    secrets: string | null
+    enabled: boolean | null
+    lastVerifiedAt: Date | null
+    lastVerifyError: string | null
+    updatedBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type IntegrationCredentialCountAggregateOutputType = {
+    id: number
+    workspaceId: number
+    provider: number
+    secrets: number
+    hints: number
+    enabled: number
+    lastVerifiedAt: number
+    lastVerifyError: number
+    updatedBy: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type IntegrationCredentialMinAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    provider?: true
+    secrets?: true
+    enabled?: true
+    lastVerifiedAt?: true
+    lastVerifyError?: true
+    updatedBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type IntegrationCredentialMaxAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    provider?: true
+    secrets?: true
+    enabled?: true
+    lastVerifiedAt?: true
+    lastVerifyError?: true
+    updatedBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type IntegrationCredentialCountAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    provider?: true
+    secrets?: true
+    hints?: true
+    enabled?: true
+    lastVerifiedAt?: true
+    lastVerifyError?: true
+    updatedBy?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type IntegrationCredentialAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntegrationCredential to aggregate.
+     */
+    where?: IntegrationCredentialWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegrationCredentials to fetch.
+     */
+    orderBy?: IntegrationCredentialOrderByWithRelationInput | IntegrationCredentialOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IntegrationCredentialWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegrationCredentials from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegrationCredentials.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned IntegrationCredentials
+    **/
+    _count?: true | IntegrationCredentialCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IntegrationCredentialMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IntegrationCredentialMaxAggregateInputType
+  }
+
+  export type GetIntegrationCredentialAggregateType<T extends IntegrationCredentialAggregateArgs> = {
+        [P in keyof T & keyof AggregateIntegrationCredential]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIntegrationCredential[P]>
+      : GetScalarType<T[P], AggregateIntegrationCredential[P]>
+  }
+
+
+
+
+  export type IntegrationCredentialGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegrationCredentialWhereInput
+    orderBy?: IntegrationCredentialOrderByWithAggregationInput | IntegrationCredentialOrderByWithAggregationInput[]
+    by: IntegrationCredentialScalarFieldEnum[] | IntegrationCredentialScalarFieldEnum
+    having?: IntegrationCredentialScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IntegrationCredentialCountAggregateInputType | true
+    _min?: IntegrationCredentialMinAggregateInputType
+    _max?: IntegrationCredentialMaxAggregateInputType
+  }
+
+  export type IntegrationCredentialGroupByOutputType = {
+    id: string
+    workspaceId: string
+    provider: string
+    secrets: string
+    hints: JsonValue | null
+    enabled: boolean
+    lastVerifiedAt: Date | null
+    lastVerifyError: string | null
+    updatedBy: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: IntegrationCredentialCountAggregateOutputType | null
+    _min: IntegrationCredentialMinAggregateOutputType | null
+    _max: IntegrationCredentialMaxAggregateOutputType | null
+  }
+
+  type GetIntegrationCredentialGroupByPayload<T extends IntegrationCredentialGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IntegrationCredentialGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IntegrationCredentialGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IntegrationCredentialGroupByOutputType[P]>
+            : GetScalarType<T[P], IntegrationCredentialGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IntegrationCredentialSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    provider?: boolean
+    secrets?: boolean
+    hints?: boolean
+    enabled?: boolean
+    lastVerifiedAt?: boolean
+    lastVerifyError?: boolean
+    updatedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integrationCredential"]>
+
+  export type IntegrationCredentialSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    provider?: boolean
+    secrets?: boolean
+    hints?: boolean
+    enabled?: boolean
+    lastVerifiedAt?: boolean
+    lastVerifyError?: boolean
+    updatedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integrationCredential"]>
+
+  export type IntegrationCredentialSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    provider?: boolean
+    secrets?: boolean
+    hints?: boolean
+    enabled?: boolean
+    lastVerifiedAt?: boolean
+    lastVerifyError?: boolean
+    updatedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integrationCredential"]>
+
+  export type IntegrationCredentialSelectScalar = {
+    id?: boolean
+    workspaceId?: boolean
+    provider?: boolean
+    secrets?: boolean
+    hints?: boolean
+    enabled?: boolean
+    lastVerifiedAt?: boolean
+    lastVerifyError?: boolean
+    updatedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type IntegrationCredentialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "provider" | "secrets" | "hints" | "enabled" | "lastVerifiedAt" | "lastVerifyError" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["integrationCredential"]>
+  export type IntegrationCredentialInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+  export type IntegrationCredentialIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+  export type IntegrationCredentialIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+
+  export type $IntegrationCredentialPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "IntegrationCredential"
+    objects: {
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      workspaceId: string
+      provider: string
+      secrets: string
+      hints: Prisma.JsonValue | null
+      enabled: boolean
+      lastVerifiedAt: Date | null
+      lastVerifyError: string | null
+      updatedBy: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["integrationCredential"]>
+    composites: {}
+  }
+
+  type IntegrationCredentialGetPayload<S extends boolean | null | undefined | IntegrationCredentialDefaultArgs> = $Result.GetResult<Prisma.$IntegrationCredentialPayload, S>
+
+  type IntegrationCredentialCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<IntegrationCredentialFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: IntegrationCredentialCountAggregateInputType | true
+    }
+
+  export interface IntegrationCredentialDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IntegrationCredential'], meta: { name: 'IntegrationCredential' } }
+    /**
+     * Find zero or one IntegrationCredential that matches the filter.
+     * @param {IntegrationCredentialFindUniqueArgs} args - Arguments to find a IntegrationCredential
+     * @example
+     * // Get one IntegrationCredential
+     * const integrationCredential = await prisma.integrationCredential.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends IntegrationCredentialFindUniqueArgs>(args: SelectSubset<T, IntegrationCredentialFindUniqueArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one IntegrationCredential that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {IntegrationCredentialFindUniqueOrThrowArgs} args - Arguments to find a IntegrationCredential
+     * @example
+     * // Get one IntegrationCredential
+     * const integrationCredential = await prisma.integrationCredential.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends IntegrationCredentialFindUniqueOrThrowArgs>(args: SelectSubset<T, IntegrationCredentialFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first IntegrationCredential that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationCredentialFindFirstArgs} args - Arguments to find a IntegrationCredential
+     * @example
+     * // Get one IntegrationCredential
+     * const integrationCredential = await prisma.integrationCredential.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends IntegrationCredentialFindFirstArgs>(args?: SelectSubset<T, IntegrationCredentialFindFirstArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first IntegrationCredential that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationCredentialFindFirstOrThrowArgs} args - Arguments to find a IntegrationCredential
+     * @example
+     * // Get one IntegrationCredential
+     * const integrationCredential = await prisma.integrationCredential.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends IntegrationCredentialFindFirstOrThrowArgs>(args?: SelectSubset<T, IntegrationCredentialFindFirstOrThrowArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more IntegrationCredentials that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationCredentialFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all IntegrationCredentials
+     * const integrationCredentials = await prisma.integrationCredential.findMany()
+     * 
+     * // Get first 10 IntegrationCredentials
+     * const integrationCredentials = await prisma.integrationCredential.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const integrationCredentialWithIdOnly = await prisma.integrationCredential.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends IntegrationCredentialFindManyArgs>(args?: SelectSubset<T, IntegrationCredentialFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a IntegrationCredential.
+     * @param {IntegrationCredentialCreateArgs} args - Arguments to create a IntegrationCredential.
+     * @example
+     * // Create one IntegrationCredential
+     * const IntegrationCredential = await prisma.integrationCredential.create({
+     *   data: {
+     *     // ... data to create a IntegrationCredential
+     *   }
+     * })
+     * 
+     */
+    create<T extends IntegrationCredentialCreateArgs>(args: SelectSubset<T, IntegrationCredentialCreateArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many IntegrationCredentials.
+     * @param {IntegrationCredentialCreateManyArgs} args - Arguments to create many IntegrationCredentials.
+     * @example
+     * // Create many IntegrationCredentials
+     * const integrationCredential = await prisma.integrationCredential.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends IntegrationCredentialCreateManyArgs>(args?: SelectSubset<T, IntegrationCredentialCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many IntegrationCredentials and returns the data saved in the database.
+     * @param {IntegrationCredentialCreateManyAndReturnArgs} args - Arguments to create many IntegrationCredentials.
+     * @example
+     * // Create many IntegrationCredentials
+     * const integrationCredential = await prisma.integrationCredential.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many IntegrationCredentials and only return the `id`
+     * const integrationCredentialWithIdOnly = await prisma.integrationCredential.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends IntegrationCredentialCreateManyAndReturnArgs>(args?: SelectSubset<T, IntegrationCredentialCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a IntegrationCredential.
+     * @param {IntegrationCredentialDeleteArgs} args - Arguments to delete one IntegrationCredential.
+     * @example
+     * // Delete one IntegrationCredential
+     * const IntegrationCredential = await prisma.integrationCredential.delete({
+     *   where: {
+     *     // ... filter to delete one IntegrationCredential
+     *   }
+     * })
+     * 
+     */
+    delete<T extends IntegrationCredentialDeleteArgs>(args: SelectSubset<T, IntegrationCredentialDeleteArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one IntegrationCredential.
+     * @param {IntegrationCredentialUpdateArgs} args - Arguments to update one IntegrationCredential.
+     * @example
+     * // Update one IntegrationCredential
+     * const integrationCredential = await prisma.integrationCredential.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends IntegrationCredentialUpdateArgs>(args: SelectSubset<T, IntegrationCredentialUpdateArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more IntegrationCredentials.
+     * @param {IntegrationCredentialDeleteManyArgs} args - Arguments to filter IntegrationCredentials to delete.
+     * @example
+     * // Delete a few IntegrationCredentials
+     * const { count } = await prisma.integrationCredential.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends IntegrationCredentialDeleteManyArgs>(args?: SelectSubset<T, IntegrationCredentialDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IntegrationCredentials.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationCredentialUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many IntegrationCredentials
+     * const integrationCredential = await prisma.integrationCredential.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends IntegrationCredentialUpdateManyArgs>(args: SelectSubset<T, IntegrationCredentialUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IntegrationCredentials and returns the data updated in the database.
+     * @param {IntegrationCredentialUpdateManyAndReturnArgs} args - Arguments to update many IntegrationCredentials.
+     * @example
+     * // Update many IntegrationCredentials
+     * const integrationCredential = await prisma.integrationCredential.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more IntegrationCredentials and only return the `id`
+     * const integrationCredentialWithIdOnly = await prisma.integrationCredential.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends IntegrationCredentialUpdateManyAndReturnArgs>(args: SelectSubset<T, IntegrationCredentialUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one IntegrationCredential.
+     * @param {IntegrationCredentialUpsertArgs} args - Arguments to update or create a IntegrationCredential.
+     * @example
+     * // Update or create a IntegrationCredential
+     * const integrationCredential = await prisma.integrationCredential.upsert({
+     *   create: {
+     *     // ... data to create a IntegrationCredential
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the IntegrationCredential we want to update
+     *   }
+     * })
+     */
+    upsert<T extends IntegrationCredentialUpsertArgs>(args: SelectSubset<T, IntegrationCredentialUpsertArgs<ExtArgs>>): Prisma__IntegrationCredentialClient<$Result.GetResult<Prisma.$IntegrationCredentialPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of IntegrationCredentials.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationCredentialCountArgs} args - Arguments to filter IntegrationCredentials to count.
+     * @example
+     * // Count the number of IntegrationCredentials
+     * const count = await prisma.integrationCredential.count({
+     *   where: {
+     *     // ... the filter for the IntegrationCredentials we want to count
+     *   }
+     * })
+    **/
+    count<T extends IntegrationCredentialCountArgs>(
+      args?: Subset<T, IntegrationCredentialCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IntegrationCredentialCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a IntegrationCredential.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationCredentialAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IntegrationCredentialAggregateArgs>(args: Subset<T, IntegrationCredentialAggregateArgs>): Prisma.PrismaPromise<GetIntegrationCredentialAggregateType<T>>
+
+    /**
+     * Group by IntegrationCredential.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationCredentialGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IntegrationCredentialGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IntegrationCredentialGroupByArgs['orderBy'] }
+        : { orderBy?: IntegrationCredentialGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IntegrationCredentialGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIntegrationCredentialGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the IntegrationCredential model
+   */
+  readonly fields: IntegrationCredentialFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for IntegrationCredential.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IntegrationCredentialClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the IntegrationCredential model
+   */
+  interface IntegrationCredentialFieldRefs {
+    readonly id: FieldRef<"IntegrationCredential", 'String'>
+    readonly workspaceId: FieldRef<"IntegrationCredential", 'String'>
+    readonly provider: FieldRef<"IntegrationCredential", 'String'>
+    readonly secrets: FieldRef<"IntegrationCredential", 'String'>
+    readonly hints: FieldRef<"IntegrationCredential", 'Json'>
+    readonly enabled: FieldRef<"IntegrationCredential", 'Boolean'>
+    readonly lastVerifiedAt: FieldRef<"IntegrationCredential", 'DateTime'>
+    readonly lastVerifyError: FieldRef<"IntegrationCredential", 'String'>
+    readonly updatedBy: FieldRef<"IntegrationCredential", 'String'>
+    readonly createdAt: FieldRef<"IntegrationCredential", 'DateTime'>
+    readonly updatedAt: FieldRef<"IntegrationCredential", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * IntegrationCredential findUnique
+   */
+  export type IntegrationCredentialFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationCredential
+     */
+    select?: IntegrationCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationCredential
+     */
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationCredentialInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationCredential to fetch.
+     */
+    where: IntegrationCredentialWhereUniqueInput
+  }
+
+  /**
+   * IntegrationCredential findUniqueOrThrow
+   */
+  export type IntegrationCredentialFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationCredential
+     */
+    select?: IntegrationCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationCredential
+     */
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationCredentialInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationCredential to fetch.
+     */
+    where: IntegrationCredentialWhereUniqueInput
+  }
+
+  /**
+   * IntegrationCredential findFirst
+   */
+  export type IntegrationCredentialFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationCredential
+     */
+    select?: IntegrationCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationCredential
+     */
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationCredentialInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationCredential to fetch.
+     */
+    where?: IntegrationCredentialWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegrationCredentials to fetch.
+     */
+    orderBy?: IntegrationCredentialOrderByWithRelationInput | IntegrationCredentialOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntegrationCredentials.
+     */
+    cursor?: IntegrationCredentialWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegrationCredentials from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegrationCredentials.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegrationCredentials.
+     */
+    distinct?: IntegrationCredentialScalarFieldEnum | IntegrationCredentialScalarFieldEnum[]
+  }
+
+  /**
+   * IntegrationCredential findFirstOrThrow
+   */
+  export type IntegrationCredentialFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationCredential
+     */
+    select?: IntegrationCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationCredential
+     */
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationCredentialInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationCredential to fetch.
+     */
+    where?: IntegrationCredentialWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegrationCredentials to fetch.
+     */
+    orderBy?: IntegrationCredentialOrderByWithRelationInput | IntegrationCredentialOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntegrationCredentials.
+     */
+    cursor?: IntegrationCredentialWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegrationCredentials from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegrationCredentials.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegrationCredentials.
+     */
+    distinct?: IntegrationCredentialScalarFieldEnum | IntegrationCredentialScalarFieldEnum[]
+  }
+
+  /**
+   * IntegrationCredential findMany
+   */
+  export type IntegrationCredentialFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationCredential
+     */
+    select?: IntegrationCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationCredential
+     */
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationCredentialInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationCredentials to fetch.
+     */
+    where?: IntegrationCredentialWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegrationCredentials to fetch.
+     */
+    orderBy?: IntegrationCredentialOrderByWithRelationInput | IntegrationCredentialOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing IntegrationCredentials.
+     */
+    cursor?: IntegrationCredentialWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegrationCredentials from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegrationCredentials.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegrationCredentials.
+     */
+    distinct?: IntegrationCredentialScalarFieldEnum | IntegrationCredentialScalarFieldEnum[]
+  }
+
+  /**
+   * IntegrationCredential create
+   */
+  export type IntegrationCredentialCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationCredential
+     */
+    select?: IntegrationCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationCredential
+     */
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationCredentialInclude<ExtArgs> | null
+    /**
+     * The data needed to create a IntegrationCredential.
+     */
+    data: XOR<IntegrationCredentialCreateInput, IntegrationCredentialUncheckedCreateInput>
+  }
+
+  /**
+   * IntegrationCredential createMany
+   */
+  export type IntegrationCredentialCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many IntegrationCredentials.
+     */
+    data: IntegrationCredentialCreateManyInput | IntegrationCredentialCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * IntegrationCredential createManyAndReturn
+   */
+  export type IntegrationCredentialCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationCredential
+     */
+    select?: IntegrationCredentialSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationCredential
+     */
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
+    /**
+     * The data used to create many IntegrationCredentials.
+     */
+    data: IntegrationCredentialCreateManyInput | IntegrationCredentialCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationCredentialIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IntegrationCredential update
+   */
+  export type IntegrationCredentialUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationCredential
+     */
+    select?: IntegrationCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationCredential
+     */
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationCredentialInclude<ExtArgs> | null
+    /**
+     * The data needed to update a IntegrationCredential.
+     */
+    data: XOR<IntegrationCredentialUpdateInput, IntegrationCredentialUncheckedUpdateInput>
+    /**
+     * Choose, which IntegrationCredential to update.
+     */
+    where: IntegrationCredentialWhereUniqueInput
+  }
+
+  /**
+   * IntegrationCredential updateMany
+   */
+  export type IntegrationCredentialUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update IntegrationCredentials.
+     */
+    data: XOR<IntegrationCredentialUpdateManyMutationInput, IntegrationCredentialUncheckedUpdateManyInput>
+    /**
+     * Filter which IntegrationCredentials to update
+     */
+    where?: IntegrationCredentialWhereInput
+    /**
+     * Limit how many IntegrationCredentials to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * IntegrationCredential updateManyAndReturn
+   */
+  export type IntegrationCredentialUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationCredential
+     */
+    select?: IntegrationCredentialSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationCredential
+     */
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
+    /**
+     * The data used to update IntegrationCredentials.
+     */
+    data: XOR<IntegrationCredentialUpdateManyMutationInput, IntegrationCredentialUncheckedUpdateManyInput>
+    /**
+     * Filter which IntegrationCredentials to update
+     */
+    where?: IntegrationCredentialWhereInput
+    /**
+     * Limit how many IntegrationCredentials to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationCredentialIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IntegrationCredential upsert
+   */
+  export type IntegrationCredentialUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationCredential
+     */
+    select?: IntegrationCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationCredential
+     */
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationCredentialInclude<ExtArgs> | null
+    /**
+     * The filter to search for the IntegrationCredential to update in case it exists.
+     */
+    where: IntegrationCredentialWhereUniqueInput
+    /**
+     * In case the IntegrationCredential found by the `where` argument doesn't exist, create a new IntegrationCredential with this data.
+     */
+    create: XOR<IntegrationCredentialCreateInput, IntegrationCredentialUncheckedCreateInput>
+    /**
+     * In case the IntegrationCredential was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IntegrationCredentialUpdateInput, IntegrationCredentialUncheckedUpdateInput>
+  }
+
+  /**
+   * IntegrationCredential delete
+   */
+  export type IntegrationCredentialDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationCredential
+     */
+    select?: IntegrationCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationCredential
+     */
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationCredentialInclude<ExtArgs> | null
+    /**
+     * Filter which IntegrationCredential to delete.
+     */
+    where: IntegrationCredentialWhereUniqueInput
+  }
+
+  /**
+   * IntegrationCredential deleteMany
+   */
+  export type IntegrationCredentialDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntegrationCredentials to delete
+     */
+    where?: IntegrationCredentialWhereInput
+    /**
+     * Limit how many IntegrationCredentials to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * IntegrationCredential without action
+   */
+  export type IntegrationCredentialDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationCredential
+     */
+    select?: IntegrationCredentialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationCredential
+     */
+    omit?: IntegrationCredentialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationCredentialInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model WhatsAppConfig
    */
 
@@ -73250,6 +74515,23 @@ export namespace Prisma {
   export type InvoiceItemScalarFieldEnum = (typeof InvoiceItemScalarFieldEnum)[keyof typeof InvoiceItemScalarFieldEnum]
 
 
+  export const IntegrationCredentialScalarFieldEnum: {
+    id: 'id',
+    workspaceId: 'workspaceId',
+    provider: 'provider',
+    secrets: 'secrets',
+    hints: 'hints',
+    enabled: 'enabled',
+    lastVerifiedAt: 'lastVerifiedAt',
+    lastVerifyError: 'lastVerifyError',
+    updatedBy: 'updatedBy',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type IntegrationCredentialScalarFieldEnum = (typeof IntegrationCredentialScalarFieldEnum)[keyof typeof IntegrationCredentialScalarFieldEnum]
+
+
   export const WhatsAppConfigScalarFieldEnum: {
     id: 'id',
     workspaceId: 'workspaceId',
@@ -73721,6 +75003,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefListRelationFilter
     whatsappConfig?: XOR<WhatsAppConfigNullableScalarRelationFilter, WhatsAppConfigWhereInput> | null
     whatsappTemplates?: WhatsAppTemplateListRelationFilter
+    integrations?: IntegrationCredentialListRelationFilter
     roles?: RoleListRelationFilter
     titles?: TitleListRelationFilter
     currencies?: CurrencyListRelationFilter
@@ -73758,6 +75041,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefOrderByRelationAggregateInput
     whatsappConfig?: WhatsAppConfigOrderByWithRelationInput
     whatsappTemplates?: WhatsAppTemplateOrderByRelationAggregateInput
+    integrations?: IntegrationCredentialOrderByRelationAggregateInput
     roles?: RoleOrderByRelationAggregateInput
     titles?: TitleOrderByRelationAggregateInput
     currencies?: CurrencyOrderByRelationAggregateInput
@@ -73798,6 +75082,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefListRelationFilter
     whatsappConfig?: XOR<WhatsAppConfigNullableScalarRelationFilter, WhatsAppConfigWhereInput> | null
     whatsappTemplates?: WhatsAppTemplateListRelationFilter
+    integrations?: IntegrationCredentialListRelationFilter
     roles?: RoleListRelationFilter
     titles?: TitleListRelationFilter
     currencies?: CurrencyListRelationFilter
@@ -77641,6 +78926,92 @@ export namespace Prisma {
     total?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
   }
 
+  export type IntegrationCredentialWhereInput = {
+    AND?: IntegrationCredentialWhereInput | IntegrationCredentialWhereInput[]
+    OR?: IntegrationCredentialWhereInput[]
+    NOT?: IntegrationCredentialWhereInput | IntegrationCredentialWhereInput[]
+    id?: StringFilter<"IntegrationCredential"> | string
+    workspaceId?: StringFilter<"IntegrationCredential"> | string
+    provider?: StringFilter<"IntegrationCredential"> | string
+    secrets?: StringFilter<"IntegrationCredential"> | string
+    hints?: JsonNullableFilter<"IntegrationCredential">
+    enabled?: BoolFilter<"IntegrationCredential"> | boolean
+    lastVerifiedAt?: DateTimeNullableFilter<"IntegrationCredential"> | Date | string | null
+    lastVerifyError?: StringNullableFilter<"IntegrationCredential"> | string | null
+    updatedBy?: StringNullableFilter<"IntegrationCredential"> | string | null
+    createdAt?: DateTimeFilter<"IntegrationCredential"> | Date | string
+    updatedAt?: DateTimeFilter<"IntegrationCredential"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+  }
+
+  export type IntegrationCredentialOrderByWithRelationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    provider?: SortOrder
+    secrets?: SortOrder
+    hints?: SortOrderInput | SortOrder
+    enabled?: SortOrder
+    lastVerifiedAt?: SortOrderInput | SortOrder
+    lastVerifyError?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    workspace?: WorkspaceOrderByWithRelationInput
+  }
+
+  export type IntegrationCredentialWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    workspaceId_provider?: IntegrationCredentialWorkspaceIdProviderCompoundUniqueInput
+    AND?: IntegrationCredentialWhereInput | IntegrationCredentialWhereInput[]
+    OR?: IntegrationCredentialWhereInput[]
+    NOT?: IntegrationCredentialWhereInput | IntegrationCredentialWhereInput[]
+    workspaceId?: StringFilter<"IntegrationCredential"> | string
+    provider?: StringFilter<"IntegrationCredential"> | string
+    secrets?: StringFilter<"IntegrationCredential"> | string
+    hints?: JsonNullableFilter<"IntegrationCredential">
+    enabled?: BoolFilter<"IntegrationCredential"> | boolean
+    lastVerifiedAt?: DateTimeNullableFilter<"IntegrationCredential"> | Date | string | null
+    lastVerifyError?: StringNullableFilter<"IntegrationCredential"> | string | null
+    updatedBy?: StringNullableFilter<"IntegrationCredential"> | string | null
+    createdAt?: DateTimeFilter<"IntegrationCredential"> | Date | string
+    updatedAt?: DateTimeFilter<"IntegrationCredential"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+  }, "id" | "workspaceId_provider">
+
+  export type IntegrationCredentialOrderByWithAggregationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    provider?: SortOrder
+    secrets?: SortOrder
+    hints?: SortOrderInput | SortOrder
+    enabled?: SortOrder
+    lastVerifiedAt?: SortOrderInput | SortOrder
+    lastVerifyError?: SortOrderInput | SortOrder
+    updatedBy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: IntegrationCredentialCountOrderByAggregateInput
+    _max?: IntegrationCredentialMaxOrderByAggregateInput
+    _min?: IntegrationCredentialMinOrderByAggregateInput
+  }
+
+  export type IntegrationCredentialScalarWhereWithAggregatesInput = {
+    AND?: IntegrationCredentialScalarWhereWithAggregatesInput | IntegrationCredentialScalarWhereWithAggregatesInput[]
+    OR?: IntegrationCredentialScalarWhereWithAggregatesInput[]
+    NOT?: IntegrationCredentialScalarWhereWithAggregatesInput | IntegrationCredentialScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"IntegrationCredential"> | string
+    workspaceId?: StringWithAggregatesFilter<"IntegrationCredential"> | string
+    provider?: StringWithAggregatesFilter<"IntegrationCredential"> | string
+    secrets?: StringWithAggregatesFilter<"IntegrationCredential"> | string
+    hints?: JsonNullableWithAggregatesFilter<"IntegrationCredential">
+    enabled?: BoolWithAggregatesFilter<"IntegrationCredential"> | boolean
+    lastVerifiedAt?: DateTimeNullableWithAggregatesFilter<"IntegrationCredential"> | Date | string | null
+    lastVerifyError?: StringNullableWithAggregatesFilter<"IntegrationCredential"> | string | null
+    updatedBy?: StringNullableWithAggregatesFilter<"IntegrationCredential"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"IntegrationCredential"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"IntegrationCredential"> | Date | string
+  }
+
   export type WhatsAppConfigWhereInput = {
     AND?: WhatsAppConfigWhereInput | WhatsAppConfigWhereInput[]
     OR?: WhatsAppConfigWhereInput[]
@@ -78527,6 +79898,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -78564,6 +79936,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -78601,6 +79974,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -78638,6 +80012,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -82754,6 +84129,103 @@ export namespace Prisma {
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
+  export type IntegrationCredentialCreateInput = {
+    id?: string
+    provider: string
+    secrets: string
+    hints?: NullableJsonNullValueInput | InputJsonValue
+    enabled?: boolean
+    lastVerifiedAt?: Date | string | null
+    lastVerifyError?: string | null
+    updatedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutIntegrationsInput
+  }
+
+  export type IntegrationCredentialUncheckedCreateInput = {
+    id?: string
+    workspaceId: string
+    provider: string
+    secrets: string
+    hints?: NullableJsonNullValueInput | InputJsonValue
+    enabled?: boolean
+    lastVerifiedAt?: Date | string | null
+    lastVerifyError?: string | null
+    updatedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegrationCredentialUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    secrets?: StringFieldUpdateOperationsInput | string
+    hints?: NullableJsonNullValueInput | InputJsonValue
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    lastVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVerifyError?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutIntegrationsNestedInput
+  }
+
+  export type IntegrationCredentialUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    secrets?: StringFieldUpdateOperationsInput | string
+    hints?: NullableJsonNullValueInput | InputJsonValue
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    lastVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVerifyError?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegrationCredentialCreateManyInput = {
+    id?: string
+    workspaceId: string
+    provider: string
+    secrets: string
+    hints?: NullableJsonNullValueInput | InputJsonValue
+    enabled?: boolean
+    lastVerifiedAt?: Date | string | null
+    lastVerifyError?: string | null
+    updatedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegrationCredentialUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    secrets?: StringFieldUpdateOperationsInput | string
+    hints?: NullableJsonNullValueInput | InputJsonValue
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    lastVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVerifyError?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegrationCredentialUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    secrets?: StringFieldUpdateOperationsInput | string
+    hints?: NullableJsonNullValueInput | InputJsonValue
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    lastVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVerifyError?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type WhatsAppConfigCreateInput = {
     id?: string
     phoneNumberId: string
@@ -83840,6 +85312,12 @@ export namespace Prisma {
     none?: WhatsAppTemplateWhereInput
   }
 
+  export type IntegrationCredentialListRelationFilter = {
+    every?: IntegrationCredentialWhereInput
+    some?: IntegrationCredentialWhereInput
+    none?: IntegrationCredentialWhereInput
+  }
+
   export type RoleListRelationFilter = {
     every?: RoleWhereInput
     some?: RoleWhereInput
@@ -83954,6 +85432,10 @@ export namespace Prisma {
   }
 
   export type WhatsAppTemplateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type IntegrationCredentialOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -86843,6 +88325,51 @@ export namespace Prisma {
     total?: SortOrder
   }
 
+  export type IntegrationCredentialWorkspaceIdProviderCompoundUniqueInput = {
+    workspaceId: string
+    provider: string
+  }
+
+  export type IntegrationCredentialCountOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    provider?: SortOrder
+    secrets?: SortOrder
+    hints?: SortOrder
+    enabled?: SortOrder
+    lastVerifiedAt?: SortOrder
+    lastVerifyError?: SortOrder
+    updatedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IntegrationCredentialMaxOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    provider?: SortOrder
+    secrets?: SortOrder
+    enabled?: SortOrder
+    lastVerifiedAt?: SortOrder
+    lastVerifyError?: SortOrder
+    updatedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IntegrationCredentialMinOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    provider?: SortOrder
+    secrets?: SortOrder
+    enabled?: SortOrder
+    lastVerifiedAt?: SortOrder
+    lastVerifyError?: SortOrder
+    updatedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type WhatsAppConfigCountOrderByAggregateInput = {
     id?: SortOrder
     workspaceId?: SortOrder
@@ -87503,6 +89030,13 @@ export namespace Prisma {
     connect?: WhatsAppTemplateWhereUniqueInput | WhatsAppTemplateWhereUniqueInput[]
   }
 
+  export type IntegrationCredentialCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<IntegrationCredentialCreateWithoutWorkspaceInput, IntegrationCredentialUncheckedCreateWithoutWorkspaceInput> | IntegrationCredentialCreateWithoutWorkspaceInput[] | IntegrationCredentialUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: IntegrationCredentialCreateOrConnectWithoutWorkspaceInput | IntegrationCredentialCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: IntegrationCredentialCreateManyWorkspaceInputEnvelope
+    connect?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+  }
+
   export type RoleCreateNestedManyWithoutWorkspaceInput = {
     create?: XOR<RoleCreateWithoutWorkspaceInput, RoleUncheckedCreateWithoutWorkspaceInput> | RoleCreateWithoutWorkspaceInput[] | RoleUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: RoleCreateOrConnectWithoutWorkspaceInput | RoleCreateOrConnectWithoutWorkspaceInput[]
@@ -87675,6 +89209,13 @@ export namespace Prisma {
     connectOrCreate?: WhatsAppTemplateCreateOrConnectWithoutWorkspaceInput | WhatsAppTemplateCreateOrConnectWithoutWorkspaceInput[]
     createMany?: WhatsAppTemplateCreateManyWorkspaceInputEnvelope
     connect?: WhatsAppTemplateWhereUniqueInput | WhatsAppTemplateWhereUniqueInput[]
+  }
+
+  export type IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<IntegrationCredentialCreateWithoutWorkspaceInput, IntegrationCredentialUncheckedCreateWithoutWorkspaceInput> | IntegrationCredentialCreateWithoutWorkspaceInput[] | IntegrationCredentialUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: IntegrationCredentialCreateOrConnectWithoutWorkspaceInput | IntegrationCredentialCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: IntegrationCredentialCreateManyWorkspaceInputEnvelope
+    connect?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
   }
 
   export type RoleUncheckedCreateNestedManyWithoutWorkspaceInput = {
@@ -87985,6 +89526,20 @@ export namespace Prisma {
     update?: WhatsAppTemplateUpdateWithWhereUniqueWithoutWorkspaceInput | WhatsAppTemplateUpdateWithWhereUniqueWithoutWorkspaceInput[]
     updateMany?: WhatsAppTemplateUpdateManyWithWhereWithoutWorkspaceInput | WhatsAppTemplateUpdateManyWithWhereWithoutWorkspaceInput[]
     deleteMany?: WhatsAppTemplateScalarWhereInput | WhatsAppTemplateScalarWhereInput[]
+  }
+
+  export type IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<IntegrationCredentialCreateWithoutWorkspaceInput, IntegrationCredentialUncheckedCreateWithoutWorkspaceInput> | IntegrationCredentialCreateWithoutWorkspaceInput[] | IntegrationCredentialUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: IntegrationCredentialCreateOrConnectWithoutWorkspaceInput | IntegrationCredentialCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: IntegrationCredentialUpsertWithWhereUniqueWithoutWorkspaceInput | IntegrationCredentialUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: IntegrationCredentialCreateManyWorkspaceInputEnvelope
+    set?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    disconnect?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    delete?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    connect?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    update?: IntegrationCredentialUpdateWithWhereUniqueWithoutWorkspaceInput | IntegrationCredentialUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: IntegrationCredentialUpdateManyWithWhereWithoutWorkspaceInput | IntegrationCredentialUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: IntegrationCredentialScalarWhereInput | IntegrationCredentialScalarWhereInput[]
   }
 
   export type RoleUpdateManyWithoutWorkspaceNestedInput = {
@@ -88331,6 +89886,20 @@ export namespace Prisma {
     update?: WhatsAppTemplateUpdateWithWhereUniqueWithoutWorkspaceInput | WhatsAppTemplateUpdateWithWhereUniqueWithoutWorkspaceInput[]
     updateMany?: WhatsAppTemplateUpdateManyWithWhereWithoutWorkspaceInput | WhatsAppTemplateUpdateManyWithWhereWithoutWorkspaceInput[]
     deleteMany?: WhatsAppTemplateScalarWhereInput | WhatsAppTemplateScalarWhereInput[]
+  }
+
+  export type IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<IntegrationCredentialCreateWithoutWorkspaceInput, IntegrationCredentialUncheckedCreateWithoutWorkspaceInput> | IntegrationCredentialCreateWithoutWorkspaceInput[] | IntegrationCredentialUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: IntegrationCredentialCreateOrConnectWithoutWorkspaceInput | IntegrationCredentialCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: IntegrationCredentialUpsertWithWhereUniqueWithoutWorkspaceInput | IntegrationCredentialUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: IntegrationCredentialCreateManyWorkspaceInputEnvelope
+    set?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    disconnect?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    delete?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    connect?: IntegrationCredentialWhereUniqueInput | IntegrationCredentialWhereUniqueInput[]
+    update?: IntegrationCredentialUpdateWithWhereUniqueWithoutWorkspaceInput | IntegrationCredentialUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: IntegrationCredentialUpdateManyWithWhereWithoutWorkspaceInput | IntegrationCredentialUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: IntegrationCredentialScalarWhereInput | IntegrationCredentialScalarWhereInput[]
   }
 
   export type RoleUncheckedUpdateManyWithoutWorkspaceNestedInput = {
@@ -92822,6 +94391,20 @@ export namespace Prisma {
     update?: XOR<XOR<InvoiceUpdateToOneWithWhereWithoutItemsInput, InvoiceUpdateWithoutItemsInput>, InvoiceUncheckedUpdateWithoutItemsInput>
   }
 
+  export type WorkspaceCreateNestedOneWithoutIntegrationsInput = {
+    create?: XOR<WorkspaceCreateWithoutIntegrationsInput, WorkspaceUncheckedCreateWithoutIntegrationsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutIntegrationsInput
+    connect?: WorkspaceWhereUniqueInput
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutIntegrationsNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutIntegrationsInput, WorkspaceUncheckedCreateWithoutIntegrationsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutIntegrationsInput
+    upsert?: WorkspaceUpsertWithoutIntegrationsInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutIntegrationsInput, WorkspaceUpdateWithoutIntegrationsInput>, WorkspaceUncheckedUpdateWithoutIntegrationsInput>
+  }
+
   export type WorkspaceCreateNestedOneWithoutWhatsappConfigInput = {
     create?: XOR<WorkspaceCreateWithoutWhatsappConfigInput, WorkspaceUncheckedCreateWithoutWhatsappConfigInput>
     connectOrCreate?: WorkspaceCreateOrConnectWithoutWhatsappConfigInput
@@ -94237,6 +95820,42 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type IntegrationCredentialCreateWithoutWorkspaceInput = {
+    id?: string
+    provider: string
+    secrets: string
+    hints?: NullableJsonNullValueInput | InputJsonValue
+    enabled?: boolean
+    lastVerifiedAt?: Date | string | null
+    lastVerifyError?: string | null
+    updatedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegrationCredentialUncheckedCreateWithoutWorkspaceInput = {
+    id?: string
+    provider: string
+    secrets: string
+    hints?: NullableJsonNullValueInput | InputJsonValue
+    enabled?: boolean
+    lastVerifiedAt?: Date | string | null
+    lastVerifyError?: string | null
+    updatedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegrationCredentialCreateOrConnectWithoutWorkspaceInput = {
+    where: IntegrationCredentialWhereUniqueInput
+    create: XOR<IntegrationCredentialCreateWithoutWorkspaceInput, IntegrationCredentialUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type IntegrationCredentialCreateManyWorkspaceInputEnvelope = {
+    data: IntegrationCredentialCreateManyWorkspaceInput | IntegrationCredentialCreateManyWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
   export type RoleCreateWithoutWorkspaceInput = {
     id?: string
     name: string
@@ -95098,6 +96717,39 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"WhatsAppTemplate"> | Date | string
   }
 
+  export type IntegrationCredentialUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: IntegrationCredentialWhereUniqueInput
+    update: XOR<IntegrationCredentialUpdateWithoutWorkspaceInput, IntegrationCredentialUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<IntegrationCredentialCreateWithoutWorkspaceInput, IntegrationCredentialUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type IntegrationCredentialUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: IntegrationCredentialWhereUniqueInput
+    data: XOR<IntegrationCredentialUpdateWithoutWorkspaceInput, IntegrationCredentialUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type IntegrationCredentialUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: IntegrationCredentialScalarWhereInput
+    data: XOR<IntegrationCredentialUpdateManyMutationInput, IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type IntegrationCredentialScalarWhereInput = {
+    AND?: IntegrationCredentialScalarWhereInput | IntegrationCredentialScalarWhereInput[]
+    OR?: IntegrationCredentialScalarWhereInput[]
+    NOT?: IntegrationCredentialScalarWhereInput | IntegrationCredentialScalarWhereInput[]
+    id?: StringFilter<"IntegrationCredential"> | string
+    workspaceId?: StringFilter<"IntegrationCredential"> | string
+    provider?: StringFilter<"IntegrationCredential"> | string
+    secrets?: StringFilter<"IntegrationCredential"> | string
+    hints?: JsonNullableFilter<"IntegrationCredential">
+    enabled?: BoolFilter<"IntegrationCredential"> | boolean
+    lastVerifiedAt?: DateTimeNullableFilter<"IntegrationCredential"> | Date | string | null
+    lastVerifyError?: StringNullableFilter<"IntegrationCredential"> | string | null
+    updatedBy?: StringNullableFilter<"IntegrationCredential"> | string | null
+    createdAt?: DateTimeFilter<"IntegrationCredential"> | Date | string
+    updatedAt?: DateTimeFilter<"IntegrationCredential"> | Date | string
+  }
+
   export type RoleUpsertWithWhereUniqueWithoutWorkspaceInput = {
     where: RoleWhereUniqueInput
     update: XOR<RoleUpdateWithoutWorkspaceInput, RoleUncheckedUpdateWithoutWorkspaceInput>
@@ -95370,6 +97022,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
@@ -95406,6 +97059,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -95458,6 +97112,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
@@ -95494,6 +97149,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -95530,6 +97186,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -95566,6 +97223,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -95618,6 +97276,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -95654,6 +97313,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -95689,6 +97349,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -95725,6 +97386,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -96221,6 +97883,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -96257,6 +97920,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -96707,6 +98371,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
@@ -96743,6 +98408,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -96879,6 +98545,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
@@ -96915,6 +98582,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -96983,6 +98651,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
@@ -97019,6 +98688,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -97175,6 +98845,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
@@ -97211,6 +98882,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -97746,6 +99418,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -97782,6 +99455,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -98004,6 +99678,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -98040,6 +99715,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -98136,6 +99812,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -98172,6 +99849,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -98428,6 +100106,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -98464,6 +100143,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -98814,6 +100494,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -98850,6 +100531,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -99004,6 +100686,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -99040,6 +100723,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -99120,6 +100804,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -99156,6 +100841,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -99308,6 +100994,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -99344,6 +101031,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -99563,6 +101251,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -99599,6 +101288,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -100004,6 +101694,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -100040,6 +101731,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -100743,6 +102435,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -100779,6 +102472,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -100905,6 +102599,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -100941,6 +102636,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -100993,6 +102689,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -101029,6 +102726,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -101644,6 +103342,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -101680,6 +103379,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -103795,6 +105495,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -103831,6 +105532,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -104158,6 +105860,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -104194,6 +105897,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -105609,6 +107313,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -105645,6 +107350,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -106021,6 +107727,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -106057,6 +107764,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -108198,6 +109906,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -108234,6 +109943,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -108348,6 +110058,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -108384,6 +110095,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -108855,6 +110567,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -108891,6 +110604,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -109202,6 +110916,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -109238,6 +110953,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -109525,6 +111241,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -109561,6 +111278,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -109678,6 +111396,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -109714,6 +111433,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -109931,6 +111651,170 @@ export namespace Prisma {
     payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
+  export type WorkspaceCreateWithoutIntegrationsInput = {
+    id?: string
+    name: string
+    slug: string
+    baseCurrency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    invoiceLogoSlot?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryCreateNestedManyWithoutWorkspaceInput
+    referrals?: ReferralCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceCreateNestedManyWithoutWorkspaceInput
+    deals?: DealCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkspaceInput
+    checklistTemplates?: ChecklistTemplateCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationCreateNestedManyWithoutWorkspaceInput
+    publishItems?: PublishItemCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutIntegrationsInput = {
+    id?: string
+    name: string
+    slug: string
+    baseCurrency?: string
+    taxRate?: Decimal | DecimalJsLike | number | string
+    logo?: string | null
+    invoiceLogoSlot?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutWorkspaceInput
+    industries?: IndustryUncheckedCreateNestedManyWithoutWorkspaceInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutWorkspaceInput
+    services?: ServiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    deals?: DealUncheckedCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutWorkspaceInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
+    projectStatuses?: ProjectStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+    customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
+    whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
+    titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
+    currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutWorkspaceInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkspaceInput
+    checklistTemplates?: ChecklistTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutWorkspaceInput
+    publishItems?: PublishItemUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutIntegrationsInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutIntegrationsInput, WorkspaceUncheckedCreateWithoutIntegrationsInput>
+  }
+
+  export type WorkspaceUpsertWithoutIntegrationsInput = {
+    update: XOR<WorkspaceUpdateWithoutIntegrationsInput, WorkspaceUncheckedUpdateWithoutIntegrationsInput>
+    create: XOR<WorkspaceCreateWithoutIntegrationsInput, WorkspaceUncheckedCreateWithoutIntegrationsInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutIntegrationsInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutIntegrationsInput, WorkspaceUncheckedUpdateWithoutIntegrationsInput>
+  }
+
+  export type WorkspaceUpdateWithoutIntegrationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUpdateManyWithoutWorkspaceNestedInput
+    referrals?: ReferralUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkspaceNestedInput
+    checklistTemplates?: ChecklistTemplateUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUpdateManyWithoutWorkspaceNestedInput
+    publishItems?: PublishItemUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutIntegrationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    baseCurrency?: StringFieldUpdateOperationsInput | string
+    taxRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceLogoSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutWorkspaceNestedInput
+    industries?: IndustryUncheckedUpdateManyWithoutWorkspaceNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutWorkspaceNestedInput
+    services?: ServiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    deals?: DealUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutWorkspaceNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projectStatuses?: ProjectStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+    customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
+    whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
+    whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
+    currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkspaceNestedInput
+    checklistTemplates?: ChecklistTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutWorkspaceNestedInput
+    publishItems?: PublishItemUncheckedUpdateManyWithoutWorkspaceNestedInput
+  }
+
   export type WorkspaceCreateWithoutWhatsappConfigInput = {
     id?: string
     name: string
@@ -109957,6 +111841,7 @@ export namespace Prisma {
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -109993,6 +111878,7 @@ export namespace Prisma {
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -110045,6 +111931,7 @@ export namespace Prisma {
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -110081,6 +111968,7 @@ export namespace Prisma {
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -110117,6 +112005,7 @@ export namespace Prisma {
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -110153,6 +112042,7 @@ export namespace Prisma {
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -110205,6 +112095,7 @@ export namespace Prisma {
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -110241,6 +112132,7 @@ export namespace Prisma {
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -110389,6 +112281,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -110425,6 +112318,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -110477,6 +112371,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -110513,6 +112408,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -110549,6 +112445,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -110585,6 +112482,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -110637,6 +112535,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -110673,6 +112572,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -110709,6 +112609,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -110745,6 +112646,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -110797,6 +112699,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -110833,6 +112736,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -110869,6 +112773,7 @@ export namespace Prisma {
     taskStatuses?: TaskStatusCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -110905,6 +112810,7 @@ export namespace Prisma {
     taskStatuses?: TaskStatusUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -110957,6 +112863,7 @@ export namespace Prisma {
     taskStatuses?: TaskStatusUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -110993,6 +112900,7 @@ export namespace Prisma {
     taskStatuses?: TaskStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -111030,6 +112938,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -111066,6 +112975,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -111118,6 +113028,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -111154,6 +113065,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -111190,6 +113102,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialCreateNestedManyWithoutWorkspaceInput
     roles?: RoleCreateNestedManyWithoutWorkspaceInput
     titles?: TitleCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyCreateNestedManyWithoutWorkspaceInput
@@ -111226,6 +113139,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedCreateNestedManyWithoutWorkspaceInput
     whatsappConfig?: WhatsAppConfigUncheckedCreateNestedOneWithoutWorkspaceInput
     whatsappTemplates?: WhatsAppTemplateUncheckedCreateNestedManyWithoutWorkspaceInput
+    integrations?: IntegrationCredentialUncheckedCreateNestedManyWithoutWorkspaceInput
     roles?: RoleUncheckedCreateNestedManyWithoutWorkspaceInput
     titles?: TitleUncheckedCreateNestedManyWithoutWorkspaceInput
     currencies?: CurrencyUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -111473,6 +113387,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUpdateManyWithoutWorkspaceNestedInput
@@ -111509,6 +113424,7 @@ export namespace Prisma {
     customFields?: CustomFieldDefUncheckedUpdateManyWithoutWorkspaceNestedInput
     whatsappConfig?: WhatsAppConfigUncheckedUpdateOneWithoutWorkspaceNestedInput
     whatsappTemplates?: WhatsAppTemplateUncheckedUpdateManyWithoutWorkspaceNestedInput
+    integrations?: IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceNestedInput
     roles?: RoleUncheckedUpdateManyWithoutWorkspaceNestedInput
     titles?: TitleUncheckedUpdateManyWithoutWorkspaceNestedInput
     currencies?: CurrencyUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -111961,6 +113877,19 @@ export namespace Prisma {
     body: string
     active?: boolean
     createdAt?: Date | string
+  }
+
+  export type IntegrationCredentialCreateManyWorkspaceInput = {
+    id?: string
+    provider: string
+    secrets: string
+    hints?: NullableJsonNullValueInput | InputJsonValue
+    enabled?: boolean
+    lastVerifiedAt?: Date | string | null
+    lastVerifyError?: string | null
+    updatedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type RoleCreateManyWorkspaceInput = {
@@ -112836,6 +114765,45 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegrationCredentialUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    secrets?: StringFieldUpdateOperationsInput | string
+    hints?: NullableJsonNullValueInput | InputJsonValue
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    lastVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVerifyError?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegrationCredentialUncheckedUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    secrets?: StringFieldUpdateOperationsInput | string
+    hints?: NullableJsonNullValueInput | InputJsonValue
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    lastVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVerifyError?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegrationCredentialUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    secrets?: StringFieldUpdateOperationsInput | string
+    hints?: NullableJsonNullValueInput | InputJsonValue
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    lastVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastVerifyError?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RoleUpdateWithoutWorkspaceInput = {

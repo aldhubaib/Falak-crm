@@ -13,6 +13,7 @@ import {
   Coins,
   Receipt,
   MessageCircle,
+  KeyRound,
   LogIn,
   Image as ImageIcon,
 } from "lucide-react";
@@ -132,6 +133,12 @@ export default async function SettingsPage() {
           </Group>
 
           <Group title="Integrations">
+            <Tile
+              href="/settings/integrations"
+              icon={KeyRound}
+              title="API Keys"
+              desc="Connect the services each module needs: OpenAI, transcripts, speech-to-text."
+            />
             <Tile
               href="/settings/integrations/whatsapp"
               icon={MessageCircle}

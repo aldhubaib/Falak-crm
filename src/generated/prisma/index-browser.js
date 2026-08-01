@@ -684,6 +684,20 @@ exports.Prisma.InvoiceItemScalarFieldEnum = {
   total: 'total'
 };
 
+exports.Prisma.IntegrationCredentialScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  provider: 'provider',
+  secrets: 'secrets',
+  hints: 'hints',
+  enabled: 'enabled',
+  lastVerifiedAt: 'lastVerifiedAt',
+  lastVerifyError: 'lastVerifyError',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.WhatsAppConfigScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -956,6 +970,7 @@ exports.Prisma.ModelName = {
   Invoice: 'Invoice',
   Payment: 'Payment',
   InvoiceItem: 'InvoiceItem',
+  IntegrationCredential: 'IntegrationCredential',
   WhatsAppConfig: 'WhatsAppConfig',
   WhatsAppTemplate: 'WhatsAppTemplate',
   WhatsAppMessage: 'WhatsAppMessage',

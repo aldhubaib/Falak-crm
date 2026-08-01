@@ -38,6 +38,7 @@ model Workspace {
   customFields       CustomFieldDef[]
   whatsappConfig     WhatsAppConfig?
   whatsappTemplates  WhatsAppTemplate[]
+  integrations       IntegrationCredential[]
   roles              Role[]
   titles             Title[]
   currencies         Currency[]
@@ -1025,6 +1026,29 @@ model InvoiceItem {
   invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 
   @@index([invoiceId])
+}
+
+// ─── Integrations ─────────────────────────────────────────────────────────────
+
+// Third-party credentials, one row per workspace per provider. `secrets` is an
+// AES-256-GCM blob (see src/lib/secrets.ts) holding every field for the
+// provider; `hints` carries the masked forms that are safe to render.
+model IntegrationCredential {
+  id              String    @id @default(cuid())
+  workspaceId     String
+  provider        String    // IntegrationProvider id, e.g. "openai"
+  secrets         String    // encrypted JSON: { [fieldKey]: value }
+  hints           Json?     // { [fieldKey]: "sk-••••4f2a" } for display only
+  enabled         Boolean   @default(true)
+  lastVerifiedAt  DateTime?
+  lastVerifyError String?
+  updatedBy       String?   // WorkspaceMember ID
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, provider])
 }
 
 // ─── WhatsApp ──────────────────────────────────────────────────────────────────
