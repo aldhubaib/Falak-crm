@@ -528,6 +528,7 @@ export type MoveTaskResult =
   | { ok: false; error: string };
 
 type GateChecklistItem = {
+  id: string;
   name: string;
   type: string | null;
   role: string | null;
@@ -564,6 +565,7 @@ function taskMoveGateMissing(
   },
   targetStatus: { name: string; order: number },
   stageOrderById: Map<string, number>,
+  itemsWithFiles: ReadonlySet<string>,
 ): string[] {
   const taskCurrentOrder = task.status?.order ?? null;
   // Visibility for GATING is judged at the furthest stage the move touches —
@@ -589,6 +591,12 @@ function taskMoveGateMissing(
     if (!isFieldVisible(cfg, gateVisibilityOrder, stageOrderById)) continue;
     if (!fieldAppliesForGate(ci, task.checklistItems)) continue;
     if (isGateComplete(ci, { type: cfg.type ?? undefined })) continue;
+    // Multi-file fields are judged by their actual stored files, not the
+    // completed flag alone: an upload that finishes after the field locked
+    // (e.g. the task moved stages mid-upload) stores and lists the file but
+    // is rejected by the lock when flipping `completed` — without this the
+    // gate would demand a field whose files are visibly there.
+    if (cfg.type === "multi_file" && itemsWithFiles.has(ci.id)) continue;
 
     // "Required Before" fields must be complete at or before their gate stage.
     const gateStageId = cfg.requiredBeforeStageId;
@@ -610,6 +618,29 @@ function taskMoveGateMissing(
 }
 
 /**
+ * Ids of the given multi-file fields that have at least one stored file —
+ * the gate treats those as complete even when the `completed` flag is stale.
+ */
+async function multiFileItemsWithUploads(
+  items: GateChecklistItem[],
+): Promise<Set<string>> {
+  const candidateIds = items
+    .filter((ci) => !ci.completed && fieldConfig(ci).type === "multi_file")
+    .map((ci) => ci.id);
+  if (candidateIds.length === 0) return new Set();
+
+  const rows = await db.attachment.groupBy({
+    by: ["entityId"],
+    where: {
+      entityType: "checklist_item",
+      entityId: { in: candidateIds },
+      status: "uploaded",
+    },
+  });
+  return new Set(rows.map((r) => r.entityId));
+}
+
+/**
  * Dry-run of updateTaskStatus's stage-gate checks against fresh data. The
  * board calls this BEFORE showing any confirm dialog, so "missing data"
  * surfaces first instead of after the user already confirmed.
@@ -627,6 +658,7 @@ export async function checkTaskMoveGates(
         status: { select: { order: true } },
         checklistItems: {
           select: {
+            id: true,
             name: true,
             type: true,
             role: true,
@@ -667,6 +699,7 @@ export async function checkTaskMoveGates(
     task,
     targetStatus,
     new Map(allStatuses.map((s) => [s.id, s.order])),
+    await multiFileItemsWithUploads(task.checklistItems),
   );
   return missing.length > 0 ? { ok: false, missing } : { ok: true };
 }
@@ -691,6 +724,7 @@ export async function updateTaskStatus(
         status: true,
         checklistItems: {
           select: {
+            id: true,
             name: true,
             type: true,
             role: true,
@@ -735,7 +769,12 @@ export async function updateTaskStatus(
   // move. Rules come from the live template config; detached fields fall back
   // to their own snapshot. Same helper the board's pre-drag dry-run uses.
   if (task && targetStatus) {
-    const missing = taskMoveGateMissing(task, targetStatus, stageOrderById);
+    const missing = taskMoveGateMissing(
+      task,
+      targetStatus,
+      stageOrderById,
+      await multiFileItemsWithUploads(task.checklistItems),
+    );
     if (missing.length > 0) {
       return { ok: false, error: missingDataMessage(missing) };
     }
