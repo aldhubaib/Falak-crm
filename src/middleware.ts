@@ -9,6 +9,8 @@ const isPublicRoute = createRouteMatcher([
   "/api/webhooks(.*)",
   "/api/public/(.*)",
   "/api/health",
+  // Offline-banner connectivity probe — must respond even with no session.
+  "/api/ping",
   // SW pushsubscriptionchange can fire with a stale session cookie; the route
   // authenticates via the old endpoint instead.
   "/api/push/resubscribe",

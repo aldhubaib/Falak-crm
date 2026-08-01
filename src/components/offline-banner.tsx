@@ -3,27 +3,57 @@
 import { useEffect, useRef, useState } from "react";
 import { Wifi, WifiOff, X } from "lucide-react";
 
+// navigator.onLine is unreliable: VPNs, virtual adapters, Wi-Fi roaming and
+// sleep/wake all report "offline" while the connection is actually fine. The
+// browser events are therefore only treated as a hint — the banner shows only
+// after the server genuinely can't be reached, and keeps re-probing while
+// down so it clears itself even if the "online" event never fires.
+const PROBE_TIMEOUT_MS = 4000;
+const RETRY_INTERVAL_MS = 5000;
+
+/** Any HTTP response proves connectivity; only a network error counts as
+ * offline. /api/ping is never intercepted by the service worker, so a cached
+ * response can't fake being online. */
+async function serverReachable(): Promise<boolean> {
+  try {
+    await fetch(`/api/ping?_=${Date.now()}`, {
+      method: "HEAD",
+      cache: "no-store",
+      signal:
+        typeof AbortSignal !== "undefined" && "timeout" in AbortSignal
+          ? AbortSignal.timeout(PROBE_TIMEOUT_MS)
+          : undefined,
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /**
- * Connectivity popup: shows a persistent card while the device is offline
- * (browser online/offline events) and a short "Back online" confirmation
- * when the connection returns.
+ * Connectivity popup: shows a persistent card while the server is actually
+ * unreachable and a short "Back online" confirmation when the connection
+ * returns.
  */
 export function OfflineBanner() {
   const [offline, setOffline] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [backOnline, setBackOnline] = useState(false);
   const backOnlineTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Bumping the generation invalidates in-flight probes and scheduled retries.
+  const probeGen = useRef(0);
 
   useEffect(() => {
-    setOffline(!navigator.onLine);
-
-    const onOffline = () => {
-      if (backOnlineTimer.current) clearTimeout(backOnlineTimer.current);
-      setBackOnline(false);
-      setDismissed(false);
-      setOffline(true);
+    let retryTimer: ReturnType<typeof setTimeout> | null = null;
+    const clearRetry = () => {
+      if (retryTimer) {
+        clearTimeout(retryTimer);
+        retryTimer = null;
+      }
     };
-    const onOnline = () => {
+
+    const markOnline = () => {
+      clearRetry();
       setOffline((was) => {
         if (was) {
           setBackOnline(true);
@@ -34,11 +64,38 @@ export function OfflineBanner() {
       });
     };
 
+    const verify = async () => {
+      const gen = ++probeGen.current;
+      const reachable = await serverReachable();
+      if (gen !== probeGen.current) return; // superseded by a newer check
+      if (reachable) {
+        markOnline();
+      } else {
+        setBackOnline(false);
+        setOffline(true);
+        clearRetry();
+        retryTimer = setTimeout(() => void verify(), RETRY_INTERVAL_MS);
+      }
+    };
+
+    const onOffline = () => {
+      setDismissed(false);
+      void verify();
+    };
+    const onOnline = () => {
+      probeGen.current++; // cancel pending retries — the browser says we're back
+      markOnline();
+    };
+
+    if (!navigator.onLine) void verify();
+
     window.addEventListener("offline", onOffline);
     window.addEventListener("online", onOnline);
     return () => {
       window.removeEventListener("offline", onOffline);
       window.removeEventListener("online", onOnline);
+      probeGen.current++;
+      clearRetry();
       if (backOnlineTimer.current) clearTimeout(backOnlineTimer.current);
     };
   }, []);
