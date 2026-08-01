@@ -9,6 +9,7 @@ import {
   CalendarDays,
   MessageSquare,
   Settings,
+  ScrollText,
   type LucideIcon,
 } from "lucide-react";
 import type { ModuleKey } from "@/lib/permissions";
@@ -22,6 +23,7 @@ export const MODULE_ICONS: Partial<Record<ModuleKey, LucideIcon>> = {
   contacts: Users,
   deals: Handshake,
   projects: FolderKanban,
+  scripts: ScrollText,
   invoices: FileText,
   payments: Wallet,
   publish: CalendarDays,

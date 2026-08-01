@@ -229,6 +229,16 @@ export type Payment = $Result.DefaultSelection<Prisma.$PaymentPayload>
  */
 export type InvoiceItem = $Result.DefaultSelection<Prisma.$InvoiceItemPayload>
 /**
+ * Model Script
+ * 
+ */
+export type Script = $Result.DefaultSelection<Prisma.$ScriptPayload>
+/**
+ * Model ScriptSource
+ * 
+ */
+export type ScriptSource = $Result.DefaultSelection<Prisma.$ScriptSourcePayload>
+/**
  * Model IntegrationCredential
  * 
  */
@@ -973,6 +983,26 @@ export class PrismaClient<
   get invoiceItem(): Prisma.InvoiceItemDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.script`: Exposes CRUD operations for the **Script** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Scripts
+    * const scripts = await prisma.script.findMany()
+    * ```
+    */
+  get script(): Prisma.ScriptDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.scriptSource`: Exposes CRUD operations for the **ScriptSource** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ScriptSources
+    * const scriptSources = await prisma.scriptSource.findMany()
+    * ```
+    */
+  get scriptSource(): Prisma.ScriptSourceDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.integrationCredential`: Exposes CRUD operations for the **IntegrationCredential** model.
     * Example usage:
     * ```ts
@@ -1568,6 +1598,8 @@ export namespace Prisma {
     Invoice: 'Invoice',
     Payment: 'Payment',
     InvoiceItem: 'InvoiceItem',
+    Script: 'Script',
+    ScriptSource: 'ScriptSource',
     IntegrationCredential: 'IntegrationCredential',
     WhatsAppConfig: 'WhatsAppConfig',
     WhatsAppTemplate: 'WhatsAppTemplate',
@@ -1595,7 +1627,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "title" | "titleFieldRate" | "titleStageRate" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectWeeklyTarget" | "weeklySlot" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistSection" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "message" | "messageReaction" | "messageMention" | "conversation" | "conversationParticipant" | "notification" | "pushSubscription" | "invoice" | "payment" | "invoiceItem" | "integrationCredential" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "brandingAsset" | "publishItem"
+      modelProps: "workspace" | "currency" | "exchangeRate" | "workspaceMember" | "role" | "title" | "titleFieldRate" | "titleStageRate" | "projectCollaborator" | "company" | "contact" | "contactCompany" | "service" | "pipeline" | "pipelineStage" | "deal" | "dealAccess" | "dealItem" | "projectStatus" | "project" | "projectWeeklyTarget" | "weeklySlot" | "projectMember" | "projectFolder" | "projectAsset" | "checklistTemplate" | "checklistSection" | "checklistTemplateItem" | "projectTemplate" | "taskChecklistItem" | "taskStatus" | "task" | "taskStatusChange" | "message" | "messageReaction" | "messageMention" | "conversation" | "conversationParticipant" | "notification" | "pushSubscription" | "invoice" | "payment" | "invoiceItem" | "script" | "scriptSource" | "integrationCredential" | "whatsAppConfig" | "whatsAppTemplate" | "whatsAppMessage" | "activityLog" | "industry" | "referral" | "customFieldDef" | "attachment" | "loginPhoto" | "brandingAsset" | "publishItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4781,6 +4813,154 @@ export namespace Prisma {
           }
         }
       }
+      Script: {
+        payload: Prisma.$ScriptPayload<ExtArgs>
+        fields: Prisma.ScriptFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ScriptFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ScriptFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptPayload>
+          }
+          findFirst: {
+            args: Prisma.ScriptFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ScriptFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptPayload>
+          }
+          findMany: {
+            args: Prisma.ScriptFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptPayload>[]
+          }
+          create: {
+            args: Prisma.ScriptCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptPayload>
+          }
+          createMany: {
+            args: Prisma.ScriptCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ScriptCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptPayload>[]
+          }
+          delete: {
+            args: Prisma.ScriptDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptPayload>
+          }
+          update: {
+            args: Prisma.ScriptUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptPayload>
+          }
+          deleteMany: {
+            args: Prisma.ScriptDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ScriptUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ScriptUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptPayload>[]
+          }
+          upsert: {
+            args: Prisma.ScriptUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptPayload>
+          }
+          aggregate: {
+            args: Prisma.ScriptAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateScript>
+          }
+          groupBy: {
+            args: Prisma.ScriptGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ScriptGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ScriptCountArgs<ExtArgs>
+            result: $Utils.Optional<ScriptCountAggregateOutputType> | number
+          }
+        }
+      }
+      ScriptSource: {
+        payload: Prisma.$ScriptSourcePayload<ExtArgs>
+        fields: Prisma.ScriptSourceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ScriptSourceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptSourcePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ScriptSourceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptSourcePayload>
+          }
+          findFirst: {
+            args: Prisma.ScriptSourceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptSourcePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ScriptSourceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptSourcePayload>
+          }
+          findMany: {
+            args: Prisma.ScriptSourceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptSourcePayload>[]
+          }
+          create: {
+            args: Prisma.ScriptSourceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptSourcePayload>
+          }
+          createMany: {
+            args: Prisma.ScriptSourceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ScriptSourceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptSourcePayload>[]
+          }
+          delete: {
+            args: Prisma.ScriptSourceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptSourcePayload>
+          }
+          update: {
+            args: Prisma.ScriptSourceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptSourcePayload>
+          }
+          deleteMany: {
+            args: Prisma.ScriptSourceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ScriptSourceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ScriptSourceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptSourcePayload>[]
+          }
+          upsert: {
+            args: Prisma.ScriptSourceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScriptSourcePayload>
+          }
+          aggregate: {
+            args: Prisma.ScriptSourceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateScriptSource>
+          }
+          groupBy: {
+            args: Prisma.ScriptSourceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ScriptSourceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ScriptSourceCountArgs<ExtArgs>
+            result: $Utils.Optional<ScriptSourceCountAggregateOutputType> | number
+          }
+        }
+      }
       IntegrationCredential: {
         payload: Prisma.$IntegrationCredentialPayload<ExtArgs>
         fields: Prisma.IntegrationCredentialFieldRefs
@@ -5820,6 +6000,8 @@ export namespace Prisma {
     invoice?: InvoiceOmit
     payment?: PaymentOmit
     invoiceItem?: InvoiceItemOmit
+    script?: ScriptOmit
+    scriptSource?: ScriptSourceOmit
     integrationCredential?: IntegrationCredentialOmit
     whatsAppConfig?: WhatsAppConfigOmit
     whatsAppTemplate?: WhatsAppTemplateOmit
@@ -7221,6 +7403,37 @@ export namespace Prisma {
    */
   export type InvoiceCountOutputTypeCountPaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PaymentWhereInput
+  }
+
+
+  /**
+   * Count Type ScriptCountOutputType
+   */
+
+  export type ScriptCountOutputType = {
+    sources: number
+  }
+
+  export type ScriptCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sources?: boolean | ScriptCountOutputTypeCountSourcesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ScriptCountOutputType without action
+   */
+  export type ScriptCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScriptCountOutputType
+     */
+    select?: ScriptCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ScriptCountOutputType without action
+   */
+  export type ScriptCountOutputTypeCountSourcesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScriptSourceWhereInput
   }
 
 
@@ -60266,6 +60479,2515 @@ export namespace Prisma {
 
 
   /**
+   * Model Script
+   */
+
+  export type AggregateScript = {
+    _count: ScriptCountAggregateOutputType | null
+    _avg: ScriptAvgAggregateOutputType | null
+    _sum: ScriptSumAggregateOutputType | null
+    _min: ScriptMinAggregateOutputType | null
+    _max: ScriptMaxAggregateOutputType | null
+  }
+
+  export type ScriptAvgAggregateOutputType = {
+    targetMinutes: number | null
+  }
+
+  export type ScriptSumAggregateOutputType = {
+    targetMinutes: number | null
+  }
+
+  export type ScriptMinAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    projectId: string | null
+    taskId: string | null
+    title: string | null
+    status: string | null
+    targetMinutes: number | null
+    dialect: string | null
+    tone: string | null
+    platform: string | null
+    createdBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
+  }
+
+  export type ScriptMaxAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    projectId: string | null
+    taskId: string | null
+    title: string | null
+    status: string | null
+    targetMinutes: number | null
+    dialect: string | null
+    tone: string | null
+    platform: string | null
+    createdBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
+  }
+
+  export type ScriptCountAggregateOutputType = {
+    id: number
+    workspaceId: number
+    projectId: number
+    taskId: number
+    title: number
+    status: number
+    targetMinutes: number
+    dialect: number
+    tone: number
+    platform: number
+    createdBy: number
+    createdAt: number
+    updatedAt: number
+    deletedAt: number
+    _all: number
+  }
+
+
+  export type ScriptAvgAggregateInputType = {
+    targetMinutes?: true
+  }
+
+  export type ScriptSumAggregateInputType = {
+    targetMinutes?: true
+  }
+
+  export type ScriptMinAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    projectId?: true
+    taskId?: true
+    title?: true
+    status?: true
+    targetMinutes?: true
+    dialect?: true
+    tone?: true
+    platform?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+  }
+
+  export type ScriptMaxAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    projectId?: true
+    taskId?: true
+    title?: true
+    status?: true
+    targetMinutes?: true
+    dialect?: true
+    tone?: true
+    platform?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+  }
+
+  export type ScriptCountAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    projectId?: true
+    taskId?: true
+    title?: true
+    status?: true
+    targetMinutes?: true
+    dialect?: true
+    tone?: true
+    platform?: true
+    createdBy?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+    _all?: true
+  }
+
+  export type ScriptAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Script to aggregate.
+     */
+    where?: ScriptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Scripts to fetch.
+     */
+    orderBy?: ScriptOrderByWithRelationInput | ScriptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ScriptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Scripts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Scripts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Scripts
+    **/
+    _count?: true | ScriptCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ScriptAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ScriptSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ScriptMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ScriptMaxAggregateInputType
+  }
+
+  export type GetScriptAggregateType<T extends ScriptAggregateArgs> = {
+        [P in keyof T & keyof AggregateScript]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateScript[P]>
+      : GetScalarType<T[P], AggregateScript[P]>
+  }
+
+
+
+
+  export type ScriptGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScriptWhereInput
+    orderBy?: ScriptOrderByWithAggregationInput | ScriptOrderByWithAggregationInput[]
+    by: ScriptScalarFieldEnum[] | ScriptScalarFieldEnum
+    having?: ScriptScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ScriptCountAggregateInputType | true
+    _avg?: ScriptAvgAggregateInputType
+    _sum?: ScriptSumAggregateInputType
+    _min?: ScriptMinAggregateInputType
+    _max?: ScriptMaxAggregateInputType
+  }
+
+  export type ScriptGroupByOutputType = {
+    id: string
+    workspaceId: string
+    projectId: string
+    taskId: string | null
+    title: string
+    status: string
+    targetMinutes: number | null
+    dialect: string
+    tone: string | null
+    platform: string | null
+    createdBy: string | null
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
+    _count: ScriptCountAggregateOutputType | null
+    _avg: ScriptAvgAggregateOutputType | null
+    _sum: ScriptSumAggregateOutputType | null
+    _min: ScriptMinAggregateOutputType | null
+    _max: ScriptMaxAggregateOutputType | null
+  }
+
+  type GetScriptGroupByPayload<T extends ScriptGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ScriptGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ScriptGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ScriptGroupByOutputType[P]>
+            : GetScalarType<T[P], ScriptGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ScriptSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    projectId?: boolean
+    taskId?: boolean
+    title?: boolean
+    status?: boolean
+    targetMinutes?: boolean
+    dialect?: boolean
+    tone?: boolean
+    platform?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+    sources?: boolean | Script$sourcesArgs<ExtArgs>
+    _count?: boolean | ScriptCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["script"]>
+
+  export type ScriptSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    projectId?: boolean
+    taskId?: boolean
+    title?: boolean
+    status?: boolean
+    targetMinutes?: boolean
+    dialect?: boolean
+    tone?: boolean
+    platform?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+  }, ExtArgs["result"]["script"]>
+
+  export type ScriptSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    projectId?: boolean
+    taskId?: boolean
+    title?: boolean
+    status?: boolean
+    targetMinutes?: boolean
+    dialect?: boolean
+    tone?: boolean
+    platform?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+  }, ExtArgs["result"]["script"]>
+
+  export type ScriptSelectScalar = {
+    id?: boolean
+    workspaceId?: boolean
+    projectId?: boolean
+    taskId?: boolean
+    title?: boolean
+    status?: boolean
+    targetMinutes?: boolean
+    dialect?: boolean
+    tone?: boolean
+    platform?: boolean
+    createdBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+  }
+
+  export type ScriptOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "projectId" | "taskId" | "title" | "status" | "targetMinutes" | "dialect" | "tone" | "platform" | "createdBy" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["script"]>
+  export type ScriptInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sources?: boolean | Script$sourcesArgs<ExtArgs>
+    _count?: boolean | ScriptCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ScriptIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ScriptIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $ScriptPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Script"
+    objects: {
+      sources: Prisma.$ScriptSourcePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      workspaceId: string
+      projectId: string
+      taskId: string | null
+      title: string
+      status: string
+      targetMinutes: number | null
+      dialect: string
+      tone: string | null
+      platform: string | null
+      createdBy: string | null
+      createdAt: Date
+      updatedAt: Date
+      deletedAt: Date | null
+    }, ExtArgs["result"]["script"]>
+    composites: {}
+  }
+
+  type ScriptGetPayload<S extends boolean | null | undefined | ScriptDefaultArgs> = $Result.GetResult<Prisma.$ScriptPayload, S>
+
+  type ScriptCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ScriptFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ScriptCountAggregateInputType | true
+    }
+
+  export interface ScriptDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Script'], meta: { name: 'Script' } }
+    /**
+     * Find zero or one Script that matches the filter.
+     * @param {ScriptFindUniqueArgs} args - Arguments to find a Script
+     * @example
+     * // Get one Script
+     * const script = await prisma.script.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ScriptFindUniqueArgs>(args: SelectSubset<T, ScriptFindUniqueArgs<ExtArgs>>): Prisma__ScriptClient<$Result.GetResult<Prisma.$ScriptPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Script that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ScriptFindUniqueOrThrowArgs} args - Arguments to find a Script
+     * @example
+     * // Get one Script
+     * const script = await prisma.script.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ScriptFindUniqueOrThrowArgs>(args: SelectSubset<T, ScriptFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ScriptClient<$Result.GetResult<Prisma.$ScriptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Script that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScriptFindFirstArgs} args - Arguments to find a Script
+     * @example
+     * // Get one Script
+     * const script = await prisma.script.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ScriptFindFirstArgs>(args?: SelectSubset<T, ScriptFindFirstArgs<ExtArgs>>): Prisma__ScriptClient<$Result.GetResult<Prisma.$ScriptPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Script that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScriptFindFirstOrThrowArgs} args - Arguments to find a Script
+     * @example
+     * // Get one Script
+     * const script = await prisma.script.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ScriptFindFirstOrThrowArgs>(args?: SelectSubset<T, ScriptFindFirstOrThrowArgs<ExtArgs>>): Prisma__ScriptClient<$Result.GetResult<Prisma.$ScriptPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Scripts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScriptFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Scripts
+     * const scripts = await prisma.script.findMany()
+     * 
+     * // Get first 10 Scripts
+     * const scripts = await prisma.script.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const scriptWithIdOnly = await prisma.script.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ScriptFindManyArgs>(args?: SelectSubset<T, ScriptFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScriptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Script.
+     * @param {ScriptCreateArgs} args - Arguments to create a Script.
+     * @example
+     * // Create one Script
+     * const Script = await prisma.script.create({
+     *   data: {
+     *     // ... data to create a Script
+     *   }
+     * })
+     * 
+     */
+    create<T extends ScriptCreateArgs>(args: SelectSubset<T, ScriptCreateArgs<ExtArgs>>): Prisma__ScriptClient<$Result.GetResult<Prisma.$ScriptPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Scripts.
+     * @param {ScriptCreateManyArgs} args - Arguments to create many Scripts.
+     * @example
+     * // Create many Scripts
+     * const script = await prisma.script.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ScriptCreateManyArgs>(args?: SelectSubset<T, ScriptCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Scripts and returns the data saved in the database.
+     * @param {ScriptCreateManyAndReturnArgs} args - Arguments to create many Scripts.
+     * @example
+     * // Create many Scripts
+     * const script = await prisma.script.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Scripts and only return the `id`
+     * const scriptWithIdOnly = await prisma.script.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ScriptCreateManyAndReturnArgs>(args?: SelectSubset<T, ScriptCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScriptPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Script.
+     * @param {ScriptDeleteArgs} args - Arguments to delete one Script.
+     * @example
+     * // Delete one Script
+     * const Script = await prisma.script.delete({
+     *   where: {
+     *     // ... filter to delete one Script
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ScriptDeleteArgs>(args: SelectSubset<T, ScriptDeleteArgs<ExtArgs>>): Prisma__ScriptClient<$Result.GetResult<Prisma.$ScriptPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Script.
+     * @param {ScriptUpdateArgs} args - Arguments to update one Script.
+     * @example
+     * // Update one Script
+     * const script = await prisma.script.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ScriptUpdateArgs>(args: SelectSubset<T, ScriptUpdateArgs<ExtArgs>>): Prisma__ScriptClient<$Result.GetResult<Prisma.$ScriptPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Scripts.
+     * @param {ScriptDeleteManyArgs} args - Arguments to filter Scripts to delete.
+     * @example
+     * // Delete a few Scripts
+     * const { count } = await prisma.script.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ScriptDeleteManyArgs>(args?: SelectSubset<T, ScriptDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Scripts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScriptUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Scripts
+     * const script = await prisma.script.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ScriptUpdateManyArgs>(args: SelectSubset<T, ScriptUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Scripts and returns the data updated in the database.
+     * @param {ScriptUpdateManyAndReturnArgs} args - Arguments to update many Scripts.
+     * @example
+     * // Update many Scripts
+     * const script = await prisma.script.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Scripts and only return the `id`
+     * const scriptWithIdOnly = await prisma.script.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ScriptUpdateManyAndReturnArgs>(args: SelectSubset<T, ScriptUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScriptPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Script.
+     * @param {ScriptUpsertArgs} args - Arguments to update or create a Script.
+     * @example
+     * // Update or create a Script
+     * const script = await prisma.script.upsert({
+     *   create: {
+     *     // ... data to create a Script
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Script we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ScriptUpsertArgs>(args: SelectSubset<T, ScriptUpsertArgs<ExtArgs>>): Prisma__ScriptClient<$Result.GetResult<Prisma.$ScriptPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Scripts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScriptCountArgs} args - Arguments to filter Scripts to count.
+     * @example
+     * // Count the number of Scripts
+     * const count = await prisma.script.count({
+     *   where: {
+     *     // ... the filter for the Scripts we want to count
+     *   }
+     * })
+    **/
+    count<T extends ScriptCountArgs>(
+      args?: Subset<T, ScriptCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ScriptCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Script.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScriptAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ScriptAggregateArgs>(args: Subset<T, ScriptAggregateArgs>): Prisma.PrismaPromise<GetScriptAggregateType<T>>
+
+    /**
+     * Group by Script.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScriptGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ScriptGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ScriptGroupByArgs['orderBy'] }
+        : { orderBy?: ScriptGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ScriptGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetScriptGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Script model
+   */
+  readonly fields: ScriptFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Script.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ScriptClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    sources<T extends Script$sourcesArgs<ExtArgs> = {}>(args?: Subset<T, Script$sourcesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScriptSourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Script model
+   */
+  interface ScriptFieldRefs {
+    readonly id: FieldRef<"Script", 'String'>
+    readonly workspaceId: FieldRef<"Script", 'String'>
+    readonly projectId: FieldRef<"Script", 'String'>
+    readonly taskId: FieldRef<"Script", 'String'>
+    readonly title: FieldRef<"Script", 'String'>
+    readonly status: FieldRef<"Script", 'String'>
+    readonly targetMinutes: FieldRef<"Script", 'Float'>
+    readonly dialect: FieldRef<"Script", 'String'>
+    readonly tone: FieldRef<"Script", 'String'>
+    readonly platform: FieldRef<"Script", 'String'>
+    readonly createdBy: FieldRef<"Script", 'String'>
+    readonly createdAt: FieldRef<"Script", 'DateTime'>
+    readonly updatedAt: FieldRef<"Script", 'DateTime'>
+    readonly deletedAt: FieldRef<"Script", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Script findUnique
+   */
+  export type ScriptFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Script
+     */
+    select?: ScriptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Script
+     */
+    omit?: ScriptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptInclude<ExtArgs> | null
+    /**
+     * Filter, which Script to fetch.
+     */
+    where: ScriptWhereUniqueInput
+  }
+
+  /**
+   * Script findUniqueOrThrow
+   */
+  export type ScriptFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Script
+     */
+    select?: ScriptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Script
+     */
+    omit?: ScriptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptInclude<ExtArgs> | null
+    /**
+     * Filter, which Script to fetch.
+     */
+    where: ScriptWhereUniqueInput
+  }
+
+  /**
+   * Script findFirst
+   */
+  export type ScriptFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Script
+     */
+    select?: ScriptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Script
+     */
+    omit?: ScriptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptInclude<ExtArgs> | null
+    /**
+     * Filter, which Script to fetch.
+     */
+    where?: ScriptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Scripts to fetch.
+     */
+    orderBy?: ScriptOrderByWithRelationInput | ScriptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Scripts.
+     */
+    cursor?: ScriptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Scripts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Scripts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Scripts.
+     */
+    distinct?: ScriptScalarFieldEnum | ScriptScalarFieldEnum[]
+  }
+
+  /**
+   * Script findFirstOrThrow
+   */
+  export type ScriptFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Script
+     */
+    select?: ScriptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Script
+     */
+    omit?: ScriptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptInclude<ExtArgs> | null
+    /**
+     * Filter, which Script to fetch.
+     */
+    where?: ScriptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Scripts to fetch.
+     */
+    orderBy?: ScriptOrderByWithRelationInput | ScriptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Scripts.
+     */
+    cursor?: ScriptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Scripts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Scripts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Scripts.
+     */
+    distinct?: ScriptScalarFieldEnum | ScriptScalarFieldEnum[]
+  }
+
+  /**
+   * Script findMany
+   */
+  export type ScriptFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Script
+     */
+    select?: ScriptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Script
+     */
+    omit?: ScriptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptInclude<ExtArgs> | null
+    /**
+     * Filter, which Scripts to fetch.
+     */
+    where?: ScriptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Scripts to fetch.
+     */
+    orderBy?: ScriptOrderByWithRelationInput | ScriptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Scripts.
+     */
+    cursor?: ScriptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Scripts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Scripts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Scripts.
+     */
+    distinct?: ScriptScalarFieldEnum | ScriptScalarFieldEnum[]
+  }
+
+  /**
+   * Script create
+   */
+  export type ScriptCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Script
+     */
+    select?: ScriptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Script
+     */
+    omit?: ScriptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Script.
+     */
+    data: XOR<ScriptCreateInput, ScriptUncheckedCreateInput>
+  }
+
+  /**
+   * Script createMany
+   */
+  export type ScriptCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Scripts.
+     */
+    data: ScriptCreateManyInput | ScriptCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Script createManyAndReturn
+   */
+  export type ScriptCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Script
+     */
+    select?: ScriptSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Script
+     */
+    omit?: ScriptOmit<ExtArgs> | null
+    /**
+     * The data used to create many Scripts.
+     */
+    data: ScriptCreateManyInput | ScriptCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Script update
+   */
+  export type ScriptUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Script
+     */
+    select?: ScriptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Script
+     */
+    omit?: ScriptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Script.
+     */
+    data: XOR<ScriptUpdateInput, ScriptUncheckedUpdateInput>
+    /**
+     * Choose, which Script to update.
+     */
+    where: ScriptWhereUniqueInput
+  }
+
+  /**
+   * Script updateMany
+   */
+  export type ScriptUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Scripts.
+     */
+    data: XOR<ScriptUpdateManyMutationInput, ScriptUncheckedUpdateManyInput>
+    /**
+     * Filter which Scripts to update
+     */
+    where?: ScriptWhereInput
+    /**
+     * Limit how many Scripts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Script updateManyAndReturn
+   */
+  export type ScriptUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Script
+     */
+    select?: ScriptSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Script
+     */
+    omit?: ScriptOmit<ExtArgs> | null
+    /**
+     * The data used to update Scripts.
+     */
+    data: XOR<ScriptUpdateManyMutationInput, ScriptUncheckedUpdateManyInput>
+    /**
+     * Filter which Scripts to update
+     */
+    where?: ScriptWhereInput
+    /**
+     * Limit how many Scripts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Script upsert
+   */
+  export type ScriptUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Script
+     */
+    select?: ScriptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Script
+     */
+    omit?: ScriptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Script to update in case it exists.
+     */
+    where: ScriptWhereUniqueInput
+    /**
+     * In case the Script found by the `where` argument doesn't exist, create a new Script with this data.
+     */
+    create: XOR<ScriptCreateInput, ScriptUncheckedCreateInput>
+    /**
+     * In case the Script was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ScriptUpdateInput, ScriptUncheckedUpdateInput>
+  }
+
+  /**
+   * Script delete
+   */
+  export type ScriptDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Script
+     */
+    select?: ScriptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Script
+     */
+    omit?: ScriptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptInclude<ExtArgs> | null
+    /**
+     * Filter which Script to delete.
+     */
+    where: ScriptWhereUniqueInput
+  }
+
+  /**
+   * Script deleteMany
+   */
+  export type ScriptDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Scripts to delete
+     */
+    where?: ScriptWhereInput
+    /**
+     * Limit how many Scripts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Script.sources
+   */
+  export type Script$sourcesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScriptSource
+     */
+    select?: ScriptSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScriptSource
+     */
+    omit?: ScriptSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptSourceInclude<ExtArgs> | null
+    where?: ScriptSourceWhereInput
+    orderBy?: ScriptSourceOrderByWithRelationInput | ScriptSourceOrderByWithRelationInput[]
+    cursor?: ScriptSourceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ScriptSourceScalarFieldEnum | ScriptSourceScalarFieldEnum[]
+  }
+
+  /**
+   * Script without action
+   */
+  export type ScriptDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Script
+     */
+    select?: ScriptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Script
+     */
+    omit?: ScriptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ScriptSource
+   */
+
+  export type AggregateScriptSource = {
+    _count: ScriptSourceCountAggregateOutputType | null
+    _avg: ScriptSourceAvgAggregateOutputType | null
+    _sum: ScriptSourceSumAggregateOutputType | null
+    _min: ScriptSourceMinAggregateOutputType | null
+    _max: ScriptSourceMaxAggregateOutputType | null
+  }
+
+  export type ScriptSourceAvgAggregateOutputType = {
+    durationSec: number | null
+    trustLevel: number | null
+    order: number | null
+  }
+
+  export type ScriptSourceSumAggregateOutputType = {
+    durationSec: number | null
+    trustLevel: number | null
+    order: number | null
+  }
+
+  export type ScriptSourceMinAggregateOutputType = {
+    id: string | null
+    scriptId: string | null
+    type: string | null
+    url: string | null
+    title: string | null
+    author: string | null
+    publishedAt: Date | null
+    durationSec: number | null
+    trustLevel: number | null
+    language: string | null
+    captionKind: string | null
+    rawText: string | null
+    cleanedText: string | null
+    status: string | null
+    error: string | null
+    order: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ScriptSourceMaxAggregateOutputType = {
+    id: string | null
+    scriptId: string | null
+    type: string | null
+    url: string | null
+    title: string | null
+    author: string | null
+    publishedAt: Date | null
+    durationSec: number | null
+    trustLevel: number | null
+    language: string | null
+    captionKind: string | null
+    rawText: string | null
+    cleanedText: string | null
+    status: string | null
+    error: string | null
+    order: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ScriptSourceCountAggregateOutputType = {
+    id: number
+    scriptId: number
+    type: number
+    url: number
+    title: number
+    author: number
+    publishedAt: number
+    durationSec: number
+    trustLevel: number
+    language: number
+    captionKind: number
+    rawText: number
+    cleanedText: number
+    segments: number
+    status: number
+    error: number
+    order: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ScriptSourceAvgAggregateInputType = {
+    durationSec?: true
+    trustLevel?: true
+    order?: true
+  }
+
+  export type ScriptSourceSumAggregateInputType = {
+    durationSec?: true
+    trustLevel?: true
+    order?: true
+  }
+
+  export type ScriptSourceMinAggregateInputType = {
+    id?: true
+    scriptId?: true
+    type?: true
+    url?: true
+    title?: true
+    author?: true
+    publishedAt?: true
+    durationSec?: true
+    trustLevel?: true
+    language?: true
+    captionKind?: true
+    rawText?: true
+    cleanedText?: true
+    status?: true
+    error?: true
+    order?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ScriptSourceMaxAggregateInputType = {
+    id?: true
+    scriptId?: true
+    type?: true
+    url?: true
+    title?: true
+    author?: true
+    publishedAt?: true
+    durationSec?: true
+    trustLevel?: true
+    language?: true
+    captionKind?: true
+    rawText?: true
+    cleanedText?: true
+    status?: true
+    error?: true
+    order?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ScriptSourceCountAggregateInputType = {
+    id?: true
+    scriptId?: true
+    type?: true
+    url?: true
+    title?: true
+    author?: true
+    publishedAt?: true
+    durationSec?: true
+    trustLevel?: true
+    language?: true
+    captionKind?: true
+    rawText?: true
+    cleanedText?: true
+    segments?: true
+    status?: true
+    error?: true
+    order?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ScriptSourceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScriptSource to aggregate.
+     */
+    where?: ScriptSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScriptSources to fetch.
+     */
+    orderBy?: ScriptSourceOrderByWithRelationInput | ScriptSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ScriptSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScriptSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScriptSources.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ScriptSources
+    **/
+    _count?: true | ScriptSourceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ScriptSourceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ScriptSourceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ScriptSourceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ScriptSourceMaxAggregateInputType
+  }
+
+  export type GetScriptSourceAggregateType<T extends ScriptSourceAggregateArgs> = {
+        [P in keyof T & keyof AggregateScriptSource]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateScriptSource[P]>
+      : GetScalarType<T[P], AggregateScriptSource[P]>
+  }
+
+
+
+
+  export type ScriptSourceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScriptSourceWhereInput
+    orderBy?: ScriptSourceOrderByWithAggregationInput | ScriptSourceOrderByWithAggregationInput[]
+    by: ScriptSourceScalarFieldEnum[] | ScriptSourceScalarFieldEnum
+    having?: ScriptSourceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ScriptSourceCountAggregateInputType | true
+    _avg?: ScriptSourceAvgAggregateInputType
+    _sum?: ScriptSourceSumAggregateInputType
+    _min?: ScriptSourceMinAggregateInputType
+    _max?: ScriptSourceMaxAggregateInputType
+  }
+
+  export type ScriptSourceGroupByOutputType = {
+    id: string
+    scriptId: string
+    type: string
+    url: string | null
+    title: string | null
+    author: string | null
+    publishedAt: Date | null
+    durationSec: number | null
+    trustLevel: number
+    language: string | null
+    captionKind: string | null
+    rawText: string | null
+    cleanedText: string | null
+    segments: JsonValue | null
+    status: string
+    error: string | null
+    order: number
+    createdAt: Date
+    updatedAt: Date
+    _count: ScriptSourceCountAggregateOutputType | null
+    _avg: ScriptSourceAvgAggregateOutputType | null
+    _sum: ScriptSourceSumAggregateOutputType | null
+    _min: ScriptSourceMinAggregateOutputType | null
+    _max: ScriptSourceMaxAggregateOutputType | null
+  }
+
+  type GetScriptSourceGroupByPayload<T extends ScriptSourceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ScriptSourceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ScriptSourceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ScriptSourceGroupByOutputType[P]>
+            : GetScalarType<T[P], ScriptSourceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ScriptSourceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    scriptId?: boolean
+    type?: boolean
+    url?: boolean
+    title?: boolean
+    author?: boolean
+    publishedAt?: boolean
+    durationSec?: boolean
+    trustLevel?: boolean
+    language?: boolean
+    captionKind?: boolean
+    rawText?: boolean
+    cleanedText?: boolean
+    segments?: boolean
+    status?: boolean
+    error?: boolean
+    order?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    script?: boolean | ScriptDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scriptSource"]>
+
+  export type ScriptSourceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    scriptId?: boolean
+    type?: boolean
+    url?: boolean
+    title?: boolean
+    author?: boolean
+    publishedAt?: boolean
+    durationSec?: boolean
+    trustLevel?: boolean
+    language?: boolean
+    captionKind?: boolean
+    rawText?: boolean
+    cleanedText?: boolean
+    segments?: boolean
+    status?: boolean
+    error?: boolean
+    order?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    script?: boolean | ScriptDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scriptSource"]>
+
+  export type ScriptSourceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    scriptId?: boolean
+    type?: boolean
+    url?: boolean
+    title?: boolean
+    author?: boolean
+    publishedAt?: boolean
+    durationSec?: boolean
+    trustLevel?: boolean
+    language?: boolean
+    captionKind?: boolean
+    rawText?: boolean
+    cleanedText?: boolean
+    segments?: boolean
+    status?: boolean
+    error?: boolean
+    order?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    script?: boolean | ScriptDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["scriptSource"]>
+
+  export type ScriptSourceSelectScalar = {
+    id?: boolean
+    scriptId?: boolean
+    type?: boolean
+    url?: boolean
+    title?: boolean
+    author?: boolean
+    publishedAt?: boolean
+    durationSec?: boolean
+    trustLevel?: boolean
+    language?: boolean
+    captionKind?: boolean
+    rawText?: boolean
+    cleanedText?: boolean
+    segments?: boolean
+    status?: boolean
+    error?: boolean
+    order?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ScriptSourceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "scriptId" | "type" | "url" | "title" | "author" | "publishedAt" | "durationSec" | "trustLevel" | "language" | "captionKind" | "rawText" | "cleanedText" | "segments" | "status" | "error" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["scriptSource"]>
+  export type ScriptSourceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    script?: boolean | ScriptDefaultArgs<ExtArgs>
+  }
+  export type ScriptSourceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    script?: boolean | ScriptDefaultArgs<ExtArgs>
+  }
+  export type ScriptSourceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    script?: boolean | ScriptDefaultArgs<ExtArgs>
+  }
+
+  export type $ScriptSourcePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ScriptSource"
+    objects: {
+      script: Prisma.$ScriptPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      scriptId: string
+      type: string
+      url: string | null
+      title: string | null
+      author: string | null
+      publishedAt: Date | null
+      durationSec: number | null
+      trustLevel: number
+      language: string | null
+      captionKind: string | null
+      rawText: string | null
+      cleanedText: string | null
+      segments: Prisma.JsonValue | null
+      status: string
+      error: string | null
+      order: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["scriptSource"]>
+    composites: {}
+  }
+
+  type ScriptSourceGetPayload<S extends boolean | null | undefined | ScriptSourceDefaultArgs> = $Result.GetResult<Prisma.$ScriptSourcePayload, S>
+
+  type ScriptSourceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ScriptSourceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ScriptSourceCountAggregateInputType | true
+    }
+
+  export interface ScriptSourceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ScriptSource'], meta: { name: 'ScriptSource' } }
+    /**
+     * Find zero or one ScriptSource that matches the filter.
+     * @param {ScriptSourceFindUniqueArgs} args - Arguments to find a ScriptSource
+     * @example
+     * // Get one ScriptSource
+     * const scriptSource = await prisma.scriptSource.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ScriptSourceFindUniqueArgs>(args: SelectSubset<T, ScriptSourceFindUniqueArgs<ExtArgs>>): Prisma__ScriptSourceClient<$Result.GetResult<Prisma.$ScriptSourcePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ScriptSource that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ScriptSourceFindUniqueOrThrowArgs} args - Arguments to find a ScriptSource
+     * @example
+     * // Get one ScriptSource
+     * const scriptSource = await prisma.scriptSource.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ScriptSourceFindUniqueOrThrowArgs>(args: SelectSubset<T, ScriptSourceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ScriptSourceClient<$Result.GetResult<Prisma.$ScriptSourcePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ScriptSource that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScriptSourceFindFirstArgs} args - Arguments to find a ScriptSource
+     * @example
+     * // Get one ScriptSource
+     * const scriptSource = await prisma.scriptSource.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ScriptSourceFindFirstArgs>(args?: SelectSubset<T, ScriptSourceFindFirstArgs<ExtArgs>>): Prisma__ScriptSourceClient<$Result.GetResult<Prisma.$ScriptSourcePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ScriptSource that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScriptSourceFindFirstOrThrowArgs} args - Arguments to find a ScriptSource
+     * @example
+     * // Get one ScriptSource
+     * const scriptSource = await prisma.scriptSource.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ScriptSourceFindFirstOrThrowArgs>(args?: SelectSubset<T, ScriptSourceFindFirstOrThrowArgs<ExtArgs>>): Prisma__ScriptSourceClient<$Result.GetResult<Prisma.$ScriptSourcePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ScriptSources that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScriptSourceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ScriptSources
+     * const scriptSources = await prisma.scriptSource.findMany()
+     * 
+     * // Get first 10 ScriptSources
+     * const scriptSources = await prisma.scriptSource.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const scriptSourceWithIdOnly = await prisma.scriptSource.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ScriptSourceFindManyArgs>(args?: SelectSubset<T, ScriptSourceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScriptSourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ScriptSource.
+     * @param {ScriptSourceCreateArgs} args - Arguments to create a ScriptSource.
+     * @example
+     * // Create one ScriptSource
+     * const ScriptSource = await prisma.scriptSource.create({
+     *   data: {
+     *     // ... data to create a ScriptSource
+     *   }
+     * })
+     * 
+     */
+    create<T extends ScriptSourceCreateArgs>(args: SelectSubset<T, ScriptSourceCreateArgs<ExtArgs>>): Prisma__ScriptSourceClient<$Result.GetResult<Prisma.$ScriptSourcePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ScriptSources.
+     * @param {ScriptSourceCreateManyArgs} args - Arguments to create many ScriptSources.
+     * @example
+     * // Create many ScriptSources
+     * const scriptSource = await prisma.scriptSource.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ScriptSourceCreateManyArgs>(args?: SelectSubset<T, ScriptSourceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ScriptSources and returns the data saved in the database.
+     * @param {ScriptSourceCreateManyAndReturnArgs} args - Arguments to create many ScriptSources.
+     * @example
+     * // Create many ScriptSources
+     * const scriptSource = await prisma.scriptSource.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ScriptSources and only return the `id`
+     * const scriptSourceWithIdOnly = await prisma.scriptSource.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ScriptSourceCreateManyAndReturnArgs>(args?: SelectSubset<T, ScriptSourceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScriptSourcePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ScriptSource.
+     * @param {ScriptSourceDeleteArgs} args - Arguments to delete one ScriptSource.
+     * @example
+     * // Delete one ScriptSource
+     * const ScriptSource = await prisma.scriptSource.delete({
+     *   where: {
+     *     // ... filter to delete one ScriptSource
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ScriptSourceDeleteArgs>(args: SelectSubset<T, ScriptSourceDeleteArgs<ExtArgs>>): Prisma__ScriptSourceClient<$Result.GetResult<Prisma.$ScriptSourcePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ScriptSource.
+     * @param {ScriptSourceUpdateArgs} args - Arguments to update one ScriptSource.
+     * @example
+     * // Update one ScriptSource
+     * const scriptSource = await prisma.scriptSource.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ScriptSourceUpdateArgs>(args: SelectSubset<T, ScriptSourceUpdateArgs<ExtArgs>>): Prisma__ScriptSourceClient<$Result.GetResult<Prisma.$ScriptSourcePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ScriptSources.
+     * @param {ScriptSourceDeleteManyArgs} args - Arguments to filter ScriptSources to delete.
+     * @example
+     * // Delete a few ScriptSources
+     * const { count } = await prisma.scriptSource.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ScriptSourceDeleteManyArgs>(args?: SelectSubset<T, ScriptSourceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScriptSources.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScriptSourceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ScriptSources
+     * const scriptSource = await prisma.scriptSource.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ScriptSourceUpdateManyArgs>(args: SelectSubset<T, ScriptSourceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScriptSources and returns the data updated in the database.
+     * @param {ScriptSourceUpdateManyAndReturnArgs} args - Arguments to update many ScriptSources.
+     * @example
+     * // Update many ScriptSources
+     * const scriptSource = await prisma.scriptSource.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ScriptSources and only return the `id`
+     * const scriptSourceWithIdOnly = await prisma.scriptSource.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ScriptSourceUpdateManyAndReturnArgs>(args: SelectSubset<T, ScriptSourceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScriptSourcePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ScriptSource.
+     * @param {ScriptSourceUpsertArgs} args - Arguments to update or create a ScriptSource.
+     * @example
+     * // Update or create a ScriptSource
+     * const scriptSource = await prisma.scriptSource.upsert({
+     *   create: {
+     *     // ... data to create a ScriptSource
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ScriptSource we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ScriptSourceUpsertArgs>(args: SelectSubset<T, ScriptSourceUpsertArgs<ExtArgs>>): Prisma__ScriptSourceClient<$Result.GetResult<Prisma.$ScriptSourcePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ScriptSources.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScriptSourceCountArgs} args - Arguments to filter ScriptSources to count.
+     * @example
+     * // Count the number of ScriptSources
+     * const count = await prisma.scriptSource.count({
+     *   where: {
+     *     // ... the filter for the ScriptSources we want to count
+     *   }
+     * })
+    **/
+    count<T extends ScriptSourceCountArgs>(
+      args?: Subset<T, ScriptSourceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ScriptSourceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ScriptSource.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScriptSourceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ScriptSourceAggregateArgs>(args: Subset<T, ScriptSourceAggregateArgs>): Prisma.PrismaPromise<GetScriptSourceAggregateType<T>>
+
+    /**
+     * Group by ScriptSource.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScriptSourceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ScriptSourceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ScriptSourceGroupByArgs['orderBy'] }
+        : { orderBy?: ScriptSourceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ScriptSourceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetScriptSourceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ScriptSource model
+   */
+  readonly fields: ScriptSourceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ScriptSource.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ScriptSourceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    script<T extends ScriptDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ScriptDefaultArgs<ExtArgs>>): Prisma__ScriptClient<$Result.GetResult<Prisma.$ScriptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ScriptSource model
+   */
+  interface ScriptSourceFieldRefs {
+    readonly id: FieldRef<"ScriptSource", 'String'>
+    readonly scriptId: FieldRef<"ScriptSource", 'String'>
+    readonly type: FieldRef<"ScriptSource", 'String'>
+    readonly url: FieldRef<"ScriptSource", 'String'>
+    readonly title: FieldRef<"ScriptSource", 'String'>
+    readonly author: FieldRef<"ScriptSource", 'String'>
+    readonly publishedAt: FieldRef<"ScriptSource", 'DateTime'>
+    readonly durationSec: FieldRef<"ScriptSource", 'Int'>
+    readonly trustLevel: FieldRef<"ScriptSource", 'Int'>
+    readonly language: FieldRef<"ScriptSource", 'String'>
+    readonly captionKind: FieldRef<"ScriptSource", 'String'>
+    readonly rawText: FieldRef<"ScriptSource", 'String'>
+    readonly cleanedText: FieldRef<"ScriptSource", 'String'>
+    readonly segments: FieldRef<"ScriptSource", 'Json'>
+    readonly status: FieldRef<"ScriptSource", 'String'>
+    readonly error: FieldRef<"ScriptSource", 'String'>
+    readonly order: FieldRef<"ScriptSource", 'Int'>
+    readonly createdAt: FieldRef<"ScriptSource", 'DateTime'>
+    readonly updatedAt: FieldRef<"ScriptSource", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ScriptSource findUnique
+   */
+  export type ScriptSourceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScriptSource
+     */
+    select?: ScriptSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScriptSource
+     */
+    omit?: ScriptSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which ScriptSource to fetch.
+     */
+    where: ScriptSourceWhereUniqueInput
+  }
+
+  /**
+   * ScriptSource findUniqueOrThrow
+   */
+  export type ScriptSourceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScriptSource
+     */
+    select?: ScriptSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScriptSource
+     */
+    omit?: ScriptSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which ScriptSource to fetch.
+     */
+    where: ScriptSourceWhereUniqueInput
+  }
+
+  /**
+   * ScriptSource findFirst
+   */
+  export type ScriptSourceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScriptSource
+     */
+    select?: ScriptSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScriptSource
+     */
+    omit?: ScriptSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which ScriptSource to fetch.
+     */
+    where?: ScriptSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScriptSources to fetch.
+     */
+    orderBy?: ScriptSourceOrderByWithRelationInput | ScriptSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScriptSources.
+     */
+    cursor?: ScriptSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScriptSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScriptSources.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScriptSources.
+     */
+    distinct?: ScriptSourceScalarFieldEnum | ScriptSourceScalarFieldEnum[]
+  }
+
+  /**
+   * ScriptSource findFirstOrThrow
+   */
+  export type ScriptSourceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScriptSource
+     */
+    select?: ScriptSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScriptSource
+     */
+    omit?: ScriptSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which ScriptSource to fetch.
+     */
+    where?: ScriptSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScriptSources to fetch.
+     */
+    orderBy?: ScriptSourceOrderByWithRelationInput | ScriptSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScriptSources.
+     */
+    cursor?: ScriptSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScriptSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScriptSources.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScriptSources.
+     */
+    distinct?: ScriptSourceScalarFieldEnum | ScriptSourceScalarFieldEnum[]
+  }
+
+  /**
+   * ScriptSource findMany
+   */
+  export type ScriptSourceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScriptSource
+     */
+    select?: ScriptSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScriptSource
+     */
+    omit?: ScriptSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which ScriptSources to fetch.
+     */
+    where?: ScriptSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScriptSources to fetch.
+     */
+    orderBy?: ScriptSourceOrderByWithRelationInput | ScriptSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ScriptSources.
+     */
+    cursor?: ScriptSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScriptSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScriptSources.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScriptSources.
+     */
+    distinct?: ScriptSourceScalarFieldEnum | ScriptSourceScalarFieldEnum[]
+  }
+
+  /**
+   * ScriptSource create
+   */
+  export type ScriptSourceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScriptSource
+     */
+    select?: ScriptSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScriptSource
+     */
+    omit?: ScriptSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptSourceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ScriptSource.
+     */
+    data: XOR<ScriptSourceCreateInput, ScriptSourceUncheckedCreateInput>
+  }
+
+  /**
+   * ScriptSource createMany
+   */
+  export type ScriptSourceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ScriptSources.
+     */
+    data: ScriptSourceCreateManyInput | ScriptSourceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ScriptSource createManyAndReturn
+   */
+  export type ScriptSourceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScriptSource
+     */
+    select?: ScriptSourceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScriptSource
+     */
+    omit?: ScriptSourceOmit<ExtArgs> | null
+    /**
+     * The data used to create many ScriptSources.
+     */
+    data: ScriptSourceCreateManyInput | ScriptSourceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptSourceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ScriptSource update
+   */
+  export type ScriptSourceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScriptSource
+     */
+    select?: ScriptSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScriptSource
+     */
+    omit?: ScriptSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptSourceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ScriptSource.
+     */
+    data: XOR<ScriptSourceUpdateInput, ScriptSourceUncheckedUpdateInput>
+    /**
+     * Choose, which ScriptSource to update.
+     */
+    where: ScriptSourceWhereUniqueInput
+  }
+
+  /**
+   * ScriptSource updateMany
+   */
+  export type ScriptSourceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ScriptSources.
+     */
+    data: XOR<ScriptSourceUpdateManyMutationInput, ScriptSourceUncheckedUpdateManyInput>
+    /**
+     * Filter which ScriptSources to update
+     */
+    where?: ScriptSourceWhereInput
+    /**
+     * Limit how many ScriptSources to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScriptSource updateManyAndReturn
+   */
+  export type ScriptSourceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScriptSource
+     */
+    select?: ScriptSourceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScriptSource
+     */
+    omit?: ScriptSourceOmit<ExtArgs> | null
+    /**
+     * The data used to update ScriptSources.
+     */
+    data: XOR<ScriptSourceUpdateManyMutationInput, ScriptSourceUncheckedUpdateManyInput>
+    /**
+     * Filter which ScriptSources to update
+     */
+    where?: ScriptSourceWhereInput
+    /**
+     * Limit how many ScriptSources to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptSourceIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ScriptSource upsert
+   */
+  export type ScriptSourceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScriptSource
+     */
+    select?: ScriptSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScriptSource
+     */
+    omit?: ScriptSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptSourceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ScriptSource to update in case it exists.
+     */
+    where: ScriptSourceWhereUniqueInput
+    /**
+     * In case the ScriptSource found by the `where` argument doesn't exist, create a new ScriptSource with this data.
+     */
+    create: XOR<ScriptSourceCreateInput, ScriptSourceUncheckedCreateInput>
+    /**
+     * In case the ScriptSource was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ScriptSourceUpdateInput, ScriptSourceUncheckedUpdateInput>
+  }
+
+  /**
+   * ScriptSource delete
+   */
+  export type ScriptSourceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScriptSource
+     */
+    select?: ScriptSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScriptSource
+     */
+    omit?: ScriptSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptSourceInclude<ExtArgs> | null
+    /**
+     * Filter which ScriptSource to delete.
+     */
+    where: ScriptSourceWhereUniqueInput
+  }
+
+  /**
+   * ScriptSource deleteMany
+   */
+  export type ScriptSourceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScriptSources to delete
+     */
+    where?: ScriptSourceWhereInput
+    /**
+     * Limit how many ScriptSources to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScriptSource without action
+   */
+  export type ScriptSourceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScriptSource
+     */
+    select?: ScriptSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScriptSource
+     */
+    omit?: ScriptSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScriptSourceInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model IntegrationCredential
    */
 
@@ -74515,6 +77237,51 @@ export namespace Prisma {
   export type InvoiceItemScalarFieldEnum = (typeof InvoiceItemScalarFieldEnum)[keyof typeof InvoiceItemScalarFieldEnum]
 
 
+  export const ScriptScalarFieldEnum: {
+    id: 'id',
+    workspaceId: 'workspaceId',
+    projectId: 'projectId',
+    taskId: 'taskId',
+    title: 'title',
+    status: 'status',
+    targetMinutes: 'targetMinutes',
+    dialect: 'dialect',
+    tone: 'tone',
+    platform: 'platform',
+    createdBy: 'createdBy',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
+  };
+
+  export type ScriptScalarFieldEnum = (typeof ScriptScalarFieldEnum)[keyof typeof ScriptScalarFieldEnum]
+
+
+  export const ScriptSourceScalarFieldEnum: {
+    id: 'id',
+    scriptId: 'scriptId',
+    type: 'type',
+    url: 'url',
+    title: 'title',
+    author: 'author',
+    publishedAt: 'publishedAt',
+    durationSec: 'durationSec',
+    trustLevel: 'trustLevel',
+    language: 'language',
+    captionKind: 'captionKind',
+    rawText: 'rawText',
+    cleanedText: 'cleanedText',
+    segments: 'segments',
+    status: 'status',
+    error: 'error',
+    order: 'order',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ScriptSourceScalarFieldEnum = (typeof ScriptSourceScalarFieldEnum)[keyof typeof ScriptSourceScalarFieldEnum]
+
+
   export const IntegrationCredentialScalarFieldEnum: {
     id: 'id',
     workspaceId: 'workspaceId',
@@ -78924,6 +81691,235 @@ export namespace Prisma {
     unitPrice?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     taxPct?: DecimalNullableWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string | null
     total?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type ScriptWhereInput = {
+    AND?: ScriptWhereInput | ScriptWhereInput[]
+    OR?: ScriptWhereInput[]
+    NOT?: ScriptWhereInput | ScriptWhereInput[]
+    id?: StringFilter<"Script"> | string
+    workspaceId?: StringFilter<"Script"> | string
+    projectId?: StringFilter<"Script"> | string
+    taskId?: StringNullableFilter<"Script"> | string | null
+    title?: StringFilter<"Script"> | string
+    status?: StringFilter<"Script"> | string
+    targetMinutes?: FloatNullableFilter<"Script"> | number | null
+    dialect?: StringFilter<"Script"> | string
+    tone?: StringNullableFilter<"Script"> | string | null
+    platform?: StringNullableFilter<"Script"> | string | null
+    createdBy?: StringNullableFilter<"Script"> | string | null
+    createdAt?: DateTimeFilter<"Script"> | Date | string
+    updatedAt?: DateTimeFilter<"Script"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Script"> | Date | string | null
+    sources?: ScriptSourceListRelationFilter
+  }
+
+  export type ScriptOrderByWithRelationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    projectId?: SortOrder
+    taskId?: SortOrderInput | SortOrder
+    title?: SortOrder
+    status?: SortOrder
+    targetMinutes?: SortOrderInput | SortOrder
+    dialect?: SortOrder
+    tone?: SortOrderInput | SortOrder
+    platform?: SortOrderInput | SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    sources?: ScriptSourceOrderByRelationAggregateInput
+  }
+
+  export type ScriptWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ScriptWhereInput | ScriptWhereInput[]
+    OR?: ScriptWhereInput[]
+    NOT?: ScriptWhereInput | ScriptWhereInput[]
+    workspaceId?: StringFilter<"Script"> | string
+    projectId?: StringFilter<"Script"> | string
+    taskId?: StringNullableFilter<"Script"> | string | null
+    title?: StringFilter<"Script"> | string
+    status?: StringFilter<"Script"> | string
+    targetMinutes?: FloatNullableFilter<"Script"> | number | null
+    dialect?: StringFilter<"Script"> | string
+    tone?: StringNullableFilter<"Script"> | string | null
+    platform?: StringNullableFilter<"Script"> | string | null
+    createdBy?: StringNullableFilter<"Script"> | string | null
+    createdAt?: DateTimeFilter<"Script"> | Date | string
+    updatedAt?: DateTimeFilter<"Script"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Script"> | Date | string | null
+    sources?: ScriptSourceListRelationFilter
+  }, "id">
+
+  export type ScriptOrderByWithAggregationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    projectId?: SortOrder
+    taskId?: SortOrderInput | SortOrder
+    title?: SortOrder
+    status?: SortOrder
+    targetMinutes?: SortOrderInput | SortOrder
+    dialect?: SortOrder
+    tone?: SortOrderInput | SortOrder
+    platform?: SortOrderInput | SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    _count?: ScriptCountOrderByAggregateInput
+    _avg?: ScriptAvgOrderByAggregateInput
+    _max?: ScriptMaxOrderByAggregateInput
+    _min?: ScriptMinOrderByAggregateInput
+    _sum?: ScriptSumOrderByAggregateInput
+  }
+
+  export type ScriptScalarWhereWithAggregatesInput = {
+    AND?: ScriptScalarWhereWithAggregatesInput | ScriptScalarWhereWithAggregatesInput[]
+    OR?: ScriptScalarWhereWithAggregatesInput[]
+    NOT?: ScriptScalarWhereWithAggregatesInput | ScriptScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Script"> | string
+    workspaceId?: StringWithAggregatesFilter<"Script"> | string
+    projectId?: StringWithAggregatesFilter<"Script"> | string
+    taskId?: StringNullableWithAggregatesFilter<"Script"> | string | null
+    title?: StringWithAggregatesFilter<"Script"> | string
+    status?: StringWithAggregatesFilter<"Script"> | string
+    targetMinutes?: FloatNullableWithAggregatesFilter<"Script"> | number | null
+    dialect?: StringWithAggregatesFilter<"Script"> | string
+    tone?: StringNullableWithAggregatesFilter<"Script"> | string | null
+    platform?: StringNullableWithAggregatesFilter<"Script"> | string | null
+    createdBy?: StringNullableWithAggregatesFilter<"Script"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Script"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Script"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Script"> | Date | string | null
+  }
+
+  export type ScriptSourceWhereInput = {
+    AND?: ScriptSourceWhereInput | ScriptSourceWhereInput[]
+    OR?: ScriptSourceWhereInput[]
+    NOT?: ScriptSourceWhereInput | ScriptSourceWhereInput[]
+    id?: StringFilter<"ScriptSource"> | string
+    scriptId?: StringFilter<"ScriptSource"> | string
+    type?: StringFilter<"ScriptSource"> | string
+    url?: StringNullableFilter<"ScriptSource"> | string | null
+    title?: StringNullableFilter<"ScriptSource"> | string | null
+    author?: StringNullableFilter<"ScriptSource"> | string | null
+    publishedAt?: DateTimeNullableFilter<"ScriptSource"> | Date | string | null
+    durationSec?: IntNullableFilter<"ScriptSource"> | number | null
+    trustLevel?: IntFilter<"ScriptSource"> | number
+    language?: StringNullableFilter<"ScriptSource"> | string | null
+    captionKind?: StringNullableFilter<"ScriptSource"> | string | null
+    rawText?: StringNullableFilter<"ScriptSource"> | string | null
+    cleanedText?: StringNullableFilter<"ScriptSource"> | string | null
+    segments?: JsonNullableFilter<"ScriptSource">
+    status?: StringFilter<"ScriptSource"> | string
+    error?: StringNullableFilter<"ScriptSource"> | string | null
+    order?: IntFilter<"ScriptSource"> | number
+    createdAt?: DateTimeFilter<"ScriptSource"> | Date | string
+    updatedAt?: DateTimeFilter<"ScriptSource"> | Date | string
+    script?: XOR<ScriptScalarRelationFilter, ScriptWhereInput>
+  }
+
+  export type ScriptSourceOrderByWithRelationInput = {
+    id?: SortOrder
+    scriptId?: SortOrder
+    type?: SortOrder
+    url?: SortOrderInput | SortOrder
+    title?: SortOrderInput | SortOrder
+    author?: SortOrderInput | SortOrder
+    publishedAt?: SortOrderInput | SortOrder
+    durationSec?: SortOrderInput | SortOrder
+    trustLevel?: SortOrder
+    language?: SortOrderInput | SortOrder
+    captionKind?: SortOrderInput | SortOrder
+    rawText?: SortOrderInput | SortOrder
+    cleanedText?: SortOrderInput | SortOrder
+    segments?: SortOrderInput | SortOrder
+    status?: SortOrder
+    error?: SortOrderInput | SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    script?: ScriptOrderByWithRelationInput
+  }
+
+  export type ScriptSourceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ScriptSourceWhereInput | ScriptSourceWhereInput[]
+    OR?: ScriptSourceWhereInput[]
+    NOT?: ScriptSourceWhereInput | ScriptSourceWhereInput[]
+    scriptId?: StringFilter<"ScriptSource"> | string
+    type?: StringFilter<"ScriptSource"> | string
+    url?: StringNullableFilter<"ScriptSource"> | string | null
+    title?: StringNullableFilter<"ScriptSource"> | string | null
+    author?: StringNullableFilter<"ScriptSource"> | string | null
+    publishedAt?: DateTimeNullableFilter<"ScriptSource"> | Date | string | null
+    durationSec?: IntNullableFilter<"ScriptSource"> | number | null
+    trustLevel?: IntFilter<"ScriptSource"> | number
+    language?: StringNullableFilter<"ScriptSource"> | string | null
+    captionKind?: StringNullableFilter<"ScriptSource"> | string | null
+    rawText?: StringNullableFilter<"ScriptSource"> | string | null
+    cleanedText?: StringNullableFilter<"ScriptSource"> | string | null
+    segments?: JsonNullableFilter<"ScriptSource">
+    status?: StringFilter<"ScriptSource"> | string
+    error?: StringNullableFilter<"ScriptSource"> | string | null
+    order?: IntFilter<"ScriptSource"> | number
+    createdAt?: DateTimeFilter<"ScriptSource"> | Date | string
+    updatedAt?: DateTimeFilter<"ScriptSource"> | Date | string
+    script?: XOR<ScriptScalarRelationFilter, ScriptWhereInput>
+  }, "id">
+
+  export type ScriptSourceOrderByWithAggregationInput = {
+    id?: SortOrder
+    scriptId?: SortOrder
+    type?: SortOrder
+    url?: SortOrderInput | SortOrder
+    title?: SortOrderInput | SortOrder
+    author?: SortOrderInput | SortOrder
+    publishedAt?: SortOrderInput | SortOrder
+    durationSec?: SortOrderInput | SortOrder
+    trustLevel?: SortOrder
+    language?: SortOrderInput | SortOrder
+    captionKind?: SortOrderInput | SortOrder
+    rawText?: SortOrderInput | SortOrder
+    cleanedText?: SortOrderInput | SortOrder
+    segments?: SortOrderInput | SortOrder
+    status?: SortOrder
+    error?: SortOrderInput | SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ScriptSourceCountOrderByAggregateInput
+    _avg?: ScriptSourceAvgOrderByAggregateInput
+    _max?: ScriptSourceMaxOrderByAggregateInput
+    _min?: ScriptSourceMinOrderByAggregateInput
+    _sum?: ScriptSourceSumOrderByAggregateInput
+  }
+
+  export type ScriptSourceScalarWhereWithAggregatesInput = {
+    AND?: ScriptSourceScalarWhereWithAggregatesInput | ScriptSourceScalarWhereWithAggregatesInput[]
+    OR?: ScriptSourceScalarWhereWithAggregatesInput[]
+    NOT?: ScriptSourceScalarWhereWithAggregatesInput | ScriptSourceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ScriptSource"> | string
+    scriptId?: StringWithAggregatesFilter<"ScriptSource"> | string
+    type?: StringWithAggregatesFilter<"ScriptSource"> | string
+    url?: StringNullableWithAggregatesFilter<"ScriptSource"> | string | null
+    title?: StringNullableWithAggregatesFilter<"ScriptSource"> | string | null
+    author?: StringNullableWithAggregatesFilter<"ScriptSource"> | string | null
+    publishedAt?: DateTimeNullableWithAggregatesFilter<"ScriptSource"> | Date | string | null
+    durationSec?: IntNullableWithAggregatesFilter<"ScriptSource"> | number | null
+    trustLevel?: IntWithAggregatesFilter<"ScriptSource"> | number
+    language?: StringNullableWithAggregatesFilter<"ScriptSource"> | string | null
+    captionKind?: StringNullableWithAggregatesFilter<"ScriptSource"> | string | null
+    rawText?: StringNullableWithAggregatesFilter<"ScriptSource"> | string | null
+    cleanedText?: StringNullableWithAggregatesFilter<"ScriptSource"> | string | null
+    segments?: JsonNullableWithAggregatesFilter<"ScriptSource">
+    status?: StringWithAggregatesFilter<"ScriptSource"> | string
+    error?: StringNullableWithAggregatesFilter<"ScriptSource"> | string | null
+    order?: IntWithAggregatesFilter<"ScriptSource"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"ScriptSource"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ScriptSource"> | Date | string
   }
 
   export type IntegrationCredentialWhereInput = {
@@ -84129,6 +87125,282 @@ export namespace Prisma {
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
+  export type ScriptCreateInput = {
+    id?: string
+    workspaceId: string
+    projectId: string
+    taskId?: string | null
+    title: string
+    status?: string
+    targetMinutes?: number | null
+    dialect?: string
+    tone?: string | null
+    platform?: string | null
+    createdBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    sources?: ScriptSourceCreateNestedManyWithoutScriptInput
+  }
+
+  export type ScriptUncheckedCreateInput = {
+    id?: string
+    workspaceId: string
+    projectId: string
+    taskId?: string | null
+    title: string
+    status?: string
+    targetMinutes?: number | null
+    dialect?: string
+    tone?: string | null
+    platform?: string | null
+    createdBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    sources?: ScriptSourceUncheckedCreateNestedManyWithoutScriptInput
+  }
+
+  export type ScriptUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    targetMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    dialect?: StringFieldUpdateOperationsInput | string
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sources?: ScriptSourceUpdateManyWithoutScriptNestedInput
+  }
+
+  export type ScriptUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    targetMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    dialect?: StringFieldUpdateOperationsInput | string
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sources?: ScriptSourceUncheckedUpdateManyWithoutScriptNestedInput
+  }
+
+  export type ScriptCreateManyInput = {
+    id?: string
+    workspaceId: string
+    projectId: string
+    taskId?: string | null
+    title: string
+    status?: string
+    targetMinutes?: number | null
+    dialect?: string
+    tone?: string | null
+    platform?: string | null
+    createdBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type ScriptUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    targetMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    dialect?: StringFieldUpdateOperationsInput | string
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ScriptUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    targetMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    dialect?: StringFieldUpdateOperationsInput | string
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ScriptSourceCreateInput = {
+    id?: string
+    type: string
+    url?: string | null
+    title?: string | null
+    author?: string | null
+    publishedAt?: Date | string | null
+    durationSec?: number | null
+    trustLevel?: number
+    language?: string | null
+    captionKind?: string | null
+    rawText?: string | null
+    cleanedText?: string | null
+    segments?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    error?: string | null
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    script: ScriptCreateNestedOneWithoutSourcesInput
+  }
+
+  export type ScriptSourceUncheckedCreateInput = {
+    id?: string
+    scriptId: string
+    type: string
+    url?: string | null
+    title?: string | null
+    author?: string | null
+    publishedAt?: Date | string | null
+    durationSec?: number | null
+    trustLevel?: number
+    language?: string | null
+    captionKind?: string | null
+    rawText?: string | null
+    cleanedText?: string | null
+    segments?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    error?: string | null
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ScriptSourceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationSec?: NullableIntFieldUpdateOperationsInput | number | null
+    trustLevel?: IntFieldUpdateOperationsInput | number
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    captionKind?: NullableStringFieldUpdateOperationsInput | string | null
+    rawText?: NullableStringFieldUpdateOperationsInput | string | null
+    cleanedText?: NullableStringFieldUpdateOperationsInput | string | null
+    segments?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    script?: ScriptUpdateOneRequiredWithoutSourcesNestedInput
+  }
+
+  export type ScriptSourceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    scriptId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationSec?: NullableIntFieldUpdateOperationsInput | number | null
+    trustLevel?: IntFieldUpdateOperationsInput | number
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    captionKind?: NullableStringFieldUpdateOperationsInput | string | null
+    rawText?: NullableStringFieldUpdateOperationsInput | string | null
+    cleanedText?: NullableStringFieldUpdateOperationsInput | string | null
+    segments?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScriptSourceCreateManyInput = {
+    id?: string
+    scriptId: string
+    type: string
+    url?: string | null
+    title?: string | null
+    author?: string | null
+    publishedAt?: Date | string | null
+    durationSec?: number | null
+    trustLevel?: number
+    language?: string | null
+    captionKind?: string | null
+    rawText?: string | null
+    cleanedText?: string | null
+    segments?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    error?: string | null
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ScriptSourceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationSec?: NullableIntFieldUpdateOperationsInput | number | null
+    trustLevel?: IntFieldUpdateOperationsInput | number
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    captionKind?: NullableStringFieldUpdateOperationsInput | string | null
+    rawText?: NullableStringFieldUpdateOperationsInput | string | null
+    cleanedText?: NullableStringFieldUpdateOperationsInput | string | null
+    segments?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScriptSourceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    scriptId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationSec?: NullableIntFieldUpdateOperationsInput | number | null
+    trustLevel?: IntFieldUpdateOperationsInput | number
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    captionKind?: NullableStringFieldUpdateOperationsInput | string | null
+    rawText?: NullableStringFieldUpdateOperationsInput | string | null
+    cleanedText?: NullableStringFieldUpdateOperationsInput | string | null
+    segments?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntegrationCredentialCreateInput = {
     id?: string
     provider: string
@@ -88323,6 +91595,156 @@ export namespace Prisma {
     unitPrice?: SortOrder
     taxPct?: SortOrder
     total?: SortOrder
+  }
+
+  export type ScriptSourceListRelationFilter = {
+    every?: ScriptSourceWhereInput
+    some?: ScriptSourceWhereInput
+    none?: ScriptSourceWhereInput
+  }
+
+  export type ScriptSourceOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ScriptCountOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    projectId?: SortOrder
+    taskId?: SortOrder
+    title?: SortOrder
+    status?: SortOrder
+    targetMinutes?: SortOrder
+    dialect?: SortOrder
+    tone?: SortOrder
+    platform?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type ScriptAvgOrderByAggregateInput = {
+    targetMinutes?: SortOrder
+  }
+
+  export type ScriptMaxOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    projectId?: SortOrder
+    taskId?: SortOrder
+    title?: SortOrder
+    status?: SortOrder
+    targetMinutes?: SortOrder
+    dialect?: SortOrder
+    tone?: SortOrder
+    platform?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type ScriptMinOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    projectId?: SortOrder
+    taskId?: SortOrder
+    title?: SortOrder
+    status?: SortOrder
+    targetMinutes?: SortOrder
+    dialect?: SortOrder
+    tone?: SortOrder
+    platform?: SortOrder
+    createdBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type ScriptSumOrderByAggregateInput = {
+    targetMinutes?: SortOrder
+  }
+
+  export type ScriptScalarRelationFilter = {
+    is?: ScriptWhereInput
+    isNot?: ScriptWhereInput
+  }
+
+  export type ScriptSourceCountOrderByAggregateInput = {
+    id?: SortOrder
+    scriptId?: SortOrder
+    type?: SortOrder
+    url?: SortOrder
+    title?: SortOrder
+    author?: SortOrder
+    publishedAt?: SortOrder
+    durationSec?: SortOrder
+    trustLevel?: SortOrder
+    language?: SortOrder
+    captionKind?: SortOrder
+    rawText?: SortOrder
+    cleanedText?: SortOrder
+    segments?: SortOrder
+    status?: SortOrder
+    error?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ScriptSourceAvgOrderByAggregateInput = {
+    durationSec?: SortOrder
+    trustLevel?: SortOrder
+    order?: SortOrder
+  }
+
+  export type ScriptSourceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    scriptId?: SortOrder
+    type?: SortOrder
+    url?: SortOrder
+    title?: SortOrder
+    author?: SortOrder
+    publishedAt?: SortOrder
+    durationSec?: SortOrder
+    trustLevel?: SortOrder
+    language?: SortOrder
+    captionKind?: SortOrder
+    rawText?: SortOrder
+    cleanedText?: SortOrder
+    status?: SortOrder
+    error?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ScriptSourceMinOrderByAggregateInput = {
+    id?: SortOrder
+    scriptId?: SortOrder
+    type?: SortOrder
+    url?: SortOrder
+    title?: SortOrder
+    author?: SortOrder
+    publishedAt?: SortOrder
+    durationSec?: SortOrder
+    trustLevel?: SortOrder
+    language?: SortOrder
+    captionKind?: SortOrder
+    rawText?: SortOrder
+    cleanedText?: SortOrder
+    status?: SortOrder
+    error?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ScriptSourceSumOrderByAggregateInput = {
+    durationSec?: SortOrder
+    trustLevel?: SortOrder
+    order?: SortOrder
   }
 
   export type IntegrationCredentialWorkspaceIdProviderCompoundUniqueInput = {
@@ -94389,6 +97811,62 @@ export namespace Prisma {
     upsert?: InvoiceUpsertWithoutItemsInput
     connect?: InvoiceWhereUniqueInput
     update?: XOR<XOR<InvoiceUpdateToOneWithWhereWithoutItemsInput, InvoiceUpdateWithoutItemsInput>, InvoiceUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type ScriptSourceCreateNestedManyWithoutScriptInput = {
+    create?: XOR<ScriptSourceCreateWithoutScriptInput, ScriptSourceUncheckedCreateWithoutScriptInput> | ScriptSourceCreateWithoutScriptInput[] | ScriptSourceUncheckedCreateWithoutScriptInput[]
+    connectOrCreate?: ScriptSourceCreateOrConnectWithoutScriptInput | ScriptSourceCreateOrConnectWithoutScriptInput[]
+    createMany?: ScriptSourceCreateManyScriptInputEnvelope
+    connect?: ScriptSourceWhereUniqueInput | ScriptSourceWhereUniqueInput[]
+  }
+
+  export type ScriptSourceUncheckedCreateNestedManyWithoutScriptInput = {
+    create?: XOR<ScriptSourceCreateWithoutScriptInput, ScriptSourceUncheckedCreateWithoutScriptInput> | ScriptSourceCreateWithoutScriptInput[] | ScriptSourceUncheckedCreateWithoutScriptInput[]
+    connectOrCreate?: ScriptSourceCreateOrConnectWithoutScriptInput | ScriptSourceCreateOrConnectWithoutScriptInput[]
+    createMany?: ScriptSourceCreateManyScriptInputEnvelope
+    connect?: ScriptSourceWhereUniqueInput | ScriptSourceWhereUniqueInput[]
+  }
+
+  export type ScriptSourceUpdateManyWithoutScriptNestedInput = {
+    create?: XOR<ScriptSourceCreateWithoutScriptInput, ScriptSourceUncheckedCreateWithoutScriptInput> | ScriptSourceCreateWithoutScriptInput[] | ScriptSourceUncheckedCreateWithoutScriptInput[]
+    connectOrCreate?: ScriptSourceCreateOrConnectWithoutScriptInput | ScriptSourceCreateOrConnectWithoutScriptInput[]
+    upsert?: ScriptSourceUpsertWithWhereUniqueWithoutScriptInput | ScriptSourceUpsertWithWhereUniqueWithoutScriptInput[]
+    createMany?: ScriptSourceCreateManyScriptInputEnvelope
+    set?: ScriptSourceWhereUniqueInput | ScriptSourceWhereUniqueInput[]
+    disconnect?: ScriptSourceWhereUniqueInput | ScriptSourceWhereUniqueInput[]
+    delete?: ScriptSourceWhereUniqueInput | ScriptSourceWhereUniqueInput[]
+    connect?: ScriptSourceWhereUniqueInput | ScriptSourceWhereUniqueInput[]
+    update?: ScriptSourceUpdateWithWhereUniqueWithoutScriptInput | ScriptSourceUpdateWithWhereUniqueWithoutScriptInput[]
+    updateMany?: ScriptSourceUpdateManyWithWhereWithoutScriptInput | ScriptSourceUpdateManyWithWhereWithoutScriptInput[]
+    deleteMany?: ScriptSourceScalarWhereInput | ScriptSourceScalarWhereInput[]
+  }
+
+  export type ScriptSourceUncheckedUpdateManyWithoutScriptNestedInput = {
+    create?: XOR<ScriptSourceCreateWithoutScriptInput, ScriptSourceUncheckedCreateWithoutScriptInput> | ScriptSourceCreateWithoutScriptInput[] | ScriptSourceUncheckedCreateWithoutScriptInput[]
+    connectOrCreate?: ScriptSourceCreateOrConnectWithoutScriptInput | ScriptSourceCreateOrConnectWithoutScriptInput[]
+    upsert?: ScriptSourceUpsertWithWhereUniqueWithoutScriptInput | ScriptSourceUpsertWithWhereUniqueWithoutScriptInput[]
+    createMany?: ScriptSourceCreateManyScriptInputEnvelope
+    set?: ScriptSourceWhereUniqueInput | ScriptSourceWhereUniqueInput[]
+    disconnect?: ScriptSourceWhereUniqueInput | ScriptSourceWhereUniqueInput[]
+    delete?: ScriptSourceWhereUniqueInput | ScriptSourceWhereUniqueInput[]
+    connect?: ScriptSourceWhereUniqueInput | ScriptSourceWhereUniqueInput[]
+    update?: ScriptSourceUpdateWithWhereUniqueWithoutScriptInput | ScriptSourceUpdateWithWhereUniqueWithoutScriptInput[]
+    updateMany?: ScriptSourceUpdateManyWithWhereWithoutScriptInput | ScriptSourceUpdateManyWithWhereWithoutScriptInput[]
+    deleteMany?: ScriptSourceScalarWhereInput | ScriptSourceScalarWhereInput[]
+  }
+
+  export type ScriptCreateNestedOneWithoutSourcesInput = {
+    create?: XOR<ScriptCreateWithoutSourcesInput, ScriptUncheckedCreateWithoutSourcesInput>
+    connectOrCreate?: ScriptCreateOrConnectWithoutSourcesInput
+    connect?: ScriptWhereUniqueInput
+  }
+
+  export type ScriptUpdateOneRequiredWithoutSourcesNestedInput = {
+    create?: XOR<ScriptCreateWithoutSourcesInput, ScriptUncheckedCreateWithoutSourcesInput>
+    connectOrCreate?: ScriptCreateOrConnectWithoutSourcesInput
+    upsert?: ScriptUpsertWithoutSourcesInput
+    connect?: ScriptWhereUniqueInput
+    update?: XOR<XOR<ScriptUpdateToOneWithWhereWithoutSourcesInput, ScriptUpdateWithoutSourcesInput>, ScriptUncheckedUpdateWithoutSourcesInput>
   }
 
   export type WorkspaceCreateNestedOneWithoutIntegrationsInput = {
@@ -111651,6 +115129,183 @@ export namespace Prisma {
     payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
+  export type ScriptSourceCreateWithoutScriptInput = {
+    id?: string
+    type: string
+    url?: string | null
+    title?: string | null
+    author?: string | null
+    publishedAt?: Date | string | null
+    durationSec?: number | null
+    trustLevel?: number
+    language?: string | null
+    captionKind?: string | null
+    rawText?: string | null
+    cleanedText?: string | null
+    segments?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    error?: string | null
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ScriptSourceUncheckedCreateWithoutScriptInput = {
+    id?: string
+    type: string
+    url?: string | null
+    title?: string | null
+    author?: string | null
+    publishedAt?: Date | string | null
+    durationSec?: number | null
+    trustLevel?: number
+    language?: string | null
+    captionKind?: string | null
+    rawText?: string | null
+    cleanedText?: string | null
+    segments?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    error?: string | null
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ScriptSourceCreateOrConnectWithoutScriptInput = {
+    where: ScriptSourceWhereUniqueInput
+    create: XOR<ScriptSourceCreateWithoutScriptInput, ScriptSourceUncheckedCreateWithoutScriptInput>
+  }
+
+  export type ScriptSourceCreateManyScriptInputEnvelope = {
+    data: ScriptSourceCreateManyScriptInput | ScriptSourceCreateManyScriptInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ScriptSourceUpsertWithWhereUniqueWithoutScriptInput = {
+    where: ScriptSourceWhereUniqueInput
+    update: XOR<ScriptSourceUpdateWithoutScriptInput, ScriptSourceUncheckedUpdateWithoutScriptInput>
+    create: XOR<ScriptSourceCreateWithoutScriptInput, ScriptSourceUncheckedCreateWithoutScriptInput>
+  }
+
+  export type ScriptSourceUpdateWithWhereUniqueWithoutScriptInput = {
+    where: ScriptSourceWhereUniqueInput
+    data: XOR<ScriptSourceUpdateWithoutScriptInput, ScriptSourceUncheckedUpdateWithoutScriptInput>
+  }
+
+  export type ScriptSourceUpdateManyWithWhereWithoutScriptInput = {
+    where: ScriptSourceScalarWhereInput
+    data: XOR<ScriptSourceUpdateManyMutationInput, ScriptSourceUncheckedUpdateManyWithoutScriptInput>
+  }
+
+  export type ScriptSourceScalarWhereInput = {
+    AND?: ScriptSourceScalarWhereInput | ScriptSourceScalarWhereInput[]
+    OR?: ScriptSourceScalarWhereInput[]
+    NOT?: ScriptSourceScalarWhereInput | ScriptSourceScalarWhereInput[]
+    id?: StringFilter<"ScriptSource"> | string
+    scriptId?: StringFilter<"ScriptSource"> | string
+    type?: StringFilter<"ScriptSource"> | string
+    url?: StringNullableFilter<"ScriptSource"> | string | null
+    title?: StringNullableFilter<"ScriptSource"> | string | null
+    author?: StringNullableFilter<"ScriptSource"> | string | null
+    publishedAt?: DateTimeNullableFilter<"ScriptSource"> | Date | string | null
+    durationSec?: IntNullableFilter<"ScriptSource"> | number | null
+    trustLevel?: IntFilter<"ScriptSource"> | number
+    language?: StringNullableFilter<"ScriptSource"> | string | null
+    captionKind?: StringNullableFilter<"ScriptSource"> | string | null
+    rawText?: StringNullableFilter<"ScriptSource"> | string | null
+    cleanedText?: StringNullableFilter<"ScriptSource"> | string | null
+    segments?: JsonNullableFilter<"ScriptSource">
+    status?: StringFilter<"ScriptSource"> | string
+    error?: StringNullableFilter<"ScriptSource"> | string | null
+    order?: IntFilter<"ScriptSource"> | number
+    createdAt?: DateTimeFilter<"ScriptSource"> | Date | string
+    updatedAt?: DateTimeFilter<"ScriptSource"> | Date | string
+  }
+
+  export type ScriptCreateWithoutSourcesInput = {
+    id?: string
+    workspaceId: string
+    projectId: string
+    taskId?: string | null
+    title: string
+    status?: string
+    targetMinutes?: number | null
+    dialect?: string
+    tone?: string | null
+    platform?: string | null
+    createdBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type ScriptUncheckedCreateWithoutSourcesInput = {
+    id?: string
+    workspaceId: string
+    projectId: string
+    taskId?: string | null
+    title: string
+    status?: string
+    targetMinutes?: number | null
+    dialect?: string
+    tone?: string | null
+    platform?: string | null
+    createdBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type ScriptCreateOrConnectWithoutSourcesInput = {
+    where: ScriptWhereUniqueInput
+    create: XOR<ScriptCreateWithoutSourcesInput, ScriptUncheckedCreateWithoutSourcesInput>
+  }
+
+  export type ScriptUpsertWithoutSourcesInput = {
+    update: XOR<ScriptUpdateWithoutSourcesInput, ScriptUncheckedUpdateWithoutSourcesInput>
+    create: XOR<ScriptCreateWithoutSourcesInput, ScriptUncheckedCreateWithoutSourcesInput>
+    where?: ScriptWhereInput
+  }
+
+  export type ScriptUpdateToOneWithWhereWithoutSourcesInput = {
+    where?: ScriptWhereInput
+    data: XOR<ScriptUpdateWithoutSourcesInput, ScriptUncheckedUpdateWithoutSourcesInput>
+  }
+
+  export type ScriptUpdateWithoutSourcesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    targetMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    dialect?: StringFieldUpdateOperationsInput | string
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ScriptUncheckedUpdateWithoutSourcesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    targetMinutes?: NullableFloatFieldUpdateOperationsInput | number | null
+    dialect?: StringFieldUpdateOperationsInput | string
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type WorkspaceCreateWithoutIntegrationsInput = {
     id?: string
     name: string
@@ -119353,6 +123008,90 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScriptSourceCreateManyScriptInput = {
+    id?: string
+    type: string
+    url?: string | null
+    title?: string | null
+    author?: string | null
+    publishedAt?: Date | string | null
+    durationSec?: number | null
+    trustLevel?: number
+    language?: string | null
+    captionKind?: string | null
+    rawText?: string | null
+    cleanedText?: string | null
+    segments?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    error?: string | null
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ScriptSourceUpdateWithoutScriptInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationSec?: NullableIntFieldUpdateOperationsInput | number | null
+    trustLevel?: IntFieldUpdateOperationsInput | number
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    captionKind?: NullableStringFieldUpdateOperationsInput | string | null
+    rawText?: NullableStringFieldUpdateOperationsInput | string | null
+    cleanedText?: NullableStringFieldUpdateOperationsInput | string | null
+    segments?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScriptSourceUncheckedUpdateWithoutScriptInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationSec?: NullableIntFieldUpdateOperationsInput | number | null
+    trustLevel?: IntFieldUpdateOperationsInput | number
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    captionKind?: NullableStringFieldUpdateOperationsInput | string | null
+    rawText?: NullableStringFieldUpdateOperationsInput | string | null
+    cleanedText?: NullableStringFieldUpdateOperationsInput | string | null
+    segments?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScriptSourceUncheckedUpdateManyWithoutScriptInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationSec?: NullableIntFieldUpdateOperationsInput | number | null
+    trustLevel?: IntFieldUpdateOperationsInput | number
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    captionKind?: NullableStringFieldUpdateOperationsInput | string | null
+    rawText?: NullableStringFieldUpdateOperationsInput | string | null
+    cleanedText?: NullableStringFieldUpdateOperationsInput | string | null
+    segments?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

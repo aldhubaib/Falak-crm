@@ -63,6 +63,7 @@ const MODULES_SOURCE = [
       },
     ],
   },
+  { key: "scripts", label: "Scripts", description: "Research references and write scripts for projects", href: "/scripts", legacyDefault: "none" },
   { key: "invoices", label: "Invoices", description: "View and manage invoices", href: "/invoices", legacyDefault: "none" },
   { key: "payments", label: "Payments", description: "Record and manage payments received against invoices", href: "/payments", legacyDefault: "none" },
   { key: "publish", label: "Publish", description: "Schedule and publish delivery items", href: "/publish", legacyDefault: "full" },

@@ -1028,6 +1028,63 @@ model InvoiceItem {
   @@index([invoiceId])
 }
 
+// ─── Scripts ──────────────────────────────────────────────────────────────────
+//
+// Owned entirely by src/modules/script. workspaceId / projectId / taskId are
+// plain strings on purpose — NOT Prisma relations. A foreign key into Project
+// or Task would weld the two modules together, so that every CRM migration
+// starts risking scripts and vice versa. Referential integrity is enforced in
+// src/modules/script/integration.ts, the one file allowed to read CRM data.
+
+model Script {
+  id            String    @id @default(cuid())
+  workspaceId   String
+  projectId     String
+  taskId        String? // set when an approved script is pushed into a task
+  title         String
+  status        String    @default("draft") // draft|researching|ready|writing|review|approved
+  targetMinutes Float?
+  dialect       String    @default("kuwaiti")
+  tone          String?
+  platform      String?
+  createdBy     String? // WorkspaceMember ID
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  sources ScriptSource[]
+
+  @@index([workspaceId, deletedAt])
+  @@index([projectId])
+}
+
+model ScriptSource {
+  id          String    @id @default(cuid())
+  scriptId    String
+  type        String // youtube|text
+  url         String?
+  title       String?
+  author      String?
+  publishedAt DateTime?
+  durationSec Int?
+  // 3 = documentary/verified, 2 = ordinary, 1 = weak. Breaks conflict ties later.
+  trustLevel  Int       @default(2)
+  language    String? // detected from the raw text
+  captionKind String? // manual|auto|unknown|n/a — feeds the default trust level
+  rawText     String?   @db.Text
+  cleanedText String?   @db.Text
+  segments    Json? // [{ text, startSec }] when the API returns timed cues
+  status      String    @default("queued") // queued|fetching|ready|failed
+  error       String?
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  script Script @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+
+  @@index([scriptId, order])
+}
+
 // ─── Integrations ─────────────────────────────────────────────────────────────
 
 // Third-party credentials, one row per workspace per provider. `secrets` is an
