@@ -11,6 +11,7 @@ import {
   isSecretsKeyConfigured,
   maskSecret,
 } from "@/lib/secrets";
+import { getIntegrationSecrets } from "@/lib/integration-secrets";
 import { getProvider } from "@/lib/integrations";
 
 export type IntegrationDTO = {
@@ -52,26 +53,6 @@ export async function getIntegrations(): Promise<{
       updatedAt: row.updatedAt.getTime(),
     })),
   };
-}
-
-/**
- * Server-only accessor for the rest of the app. Never expose the return value
- * of this to a client component.
- */
-export async function getIntegrationSecrets(
-  workspaceId: string,
-  providerId: string,
-): Promise<Record<string, string> | null> {
-  const row = await db.integrationCredential.findUnique({
-    where: { workspaceId_provider: { workspaceId, provider: providerId } },
-  });
-  if (!row || !row.enabled) return null;
-  try {
-    return JSON.parse(decryptSecret(row.secrets)) as Record<string, string>;
-  } catch {
-    // A failed decrypt means SECRETS_KEY changed or the row was tampered with.
-    return null;
-  }
 }
 
 export async function saveIntegration(
