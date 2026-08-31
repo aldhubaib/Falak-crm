@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import { requireWorkspaceWithMember, getAccessibleProjectScope, getProjectAccess } from "@/lib/workspace";
 import { canEdit } from "@/lib/permissions";
+import { TERMINAL_STATUS_NAMES, isTerminalStatusName } from "@/lib/task-status";
 import { revalidatePath } from "next/cache";
 
 // Publish mutations need module-level edit rights on top of project access —
@@ -46,16 +47,18 @@ export async function getDeliveryTasks(projectId: string | null) {
     if (!project) throw new Error("Project not found or publishing not required");
   }
 
+  // Only finished columns count as publishable. This used to match status names
+  // by substring, which quietly included every mid-pipeline review stage
+  // ("Raw Footage Review", "Review"), so work still in production showed up as
+  // ready to publish.
   const statuses = await db.taskStatus.findMany({
-    where: { workspaceId: scope.workspace.id },
-    orderBy: { order: "asc" },
+    where: {
+      workspaceId: scope.workspace.id,
+      name: { in: [...TERMINAL_STATUS_NAMES] },
+    },
+    select: { id: true },
   });
-  const completedIds = statuses
-    .filter((s) => {
-      const n = s.name.toLowerCase();
-      return n.includes("review") || n.includes("completed");
-    })
-    .map((s) => s.id);
+  const completedIds = statuses.map((s) => s.id);
 
   return db.task.findMany({
     where: {
@@ -69,20 +72,28 @@ export async function getDeliveryTasks(projectId: string | null) {
             },
           }),
       deletedAt: null,
-      // Task-level gate: only tasks whose type has Publish enabled reach the
-      // publish calendar (project-level requirePublishing is checked above).
-      publish: true,
-      statusId: { in: completedIds },
-      checklistItems: {
-        some: {
-          phase: "delivery",
-          hidden: false,
-          OR: [
-            { type: "file_upload", attachmentId: { not: null } },
-            { type: "text_area", textValue: { not: null } },
-          ],
+      OR: [
+        {
+          // Finished and ready to schedule. The task-level `publish` flag comes
+          // from the task type; project-level requirePublishing is checked above.
+          publish: true,
+          statusId: { in: completedIds },
+          checklistItems: {
+            some: {
+              phase: "delivery",
+              hidden: false,
+              OR: [
+                { type: "file_upload", attachmentId: { not: null } },
+                { type: "text_area", textValue: { not: null } },
+              ],
+            },
+          },
         },
-      },
+        // Already went out. It stays on the calendar as a record of what was
+        // published even if the task was later pulled back for rework, which
+        // would otherwise erase it from the only place that history is visible.
+        { publishItem: { published: true } },
+      ],
     },
     include: {
       project: { select: { id: true, name: true, thumbnailId: true } },
@@ -180,6 +191,20 @@ export async function scheduleTask(data: {
   await requirePublishEdit();
   const access = await getProjectAccess(data.projectId);
   if (!access.hasAccess) throw new Error("Permission denied");
+
+  // Re-check the column server-side. The queue only offers finished tasks, but
+  // a tab left open while someone rolled the task back would otherwise still
+  // be able to book it a slot.
+  const task = await db.task.findFirst({
+    where: { id: data.taskId, projectId: data.projectId, deletedAt: null },
+    select: { status: { select: { name: true } } },
+  });
+  if (!task) throw new Error("Task not found");
+  if (!isTerminalStatusName(task.status?.name)) {
+    throw new Error(
+      `Only completed tasks can be scheduled — this one is in ${task.status?.name ?? "no column"}.`,
+    );
+  }
 
   await db.publishItem.upsert({
     where: { taskId: data.taskId },

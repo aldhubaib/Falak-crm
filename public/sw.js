@@ -1,4 +1,4 @@
-const CACHE_NAME = "falak-crm-09a16a5e";
+const CACHE_NAME = "falak-crm-6b936df9";
 // Embedded at generation time (scripts/generate-sw.mjs) so the SW can
 // re-subscribe to push without a page being open.
 const VAPID_PUBLIC_KEY = "";

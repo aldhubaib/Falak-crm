@@ -4,6 +4,7 @@ import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { requireWorkspace, requireWorkspaceWithMember, requireProjectAssign, requireProjectSettings, requireProjectWork, getProjectAccess } from "@/lib/workspace";
 import { canEdit, canDeleteTaskAt, canMoveTaskFrom } from "@/lib/permissions";
+import { isTerminalStatusName } from "@/lib/task-status";
 import {
   autoLockOrder,
   fieldAppliesForGate,
@@ -1086,7 +1087,7 @@ export async function updateTaskStatus(
         stageTimings: timings,
         stageEnteredAt: now,
         rejectionCount: !isForward ? { increment: 1 } : undefined,
-        completedAt: targetStatus?.name === "Completed" || targetStatus?.name === "Published" ? now : null,
+        completedAt: isTerminalStatusName(targetStatus?.name) ? now : null,
         // Claiming a plan slot adopts the plan cycle's deadline.
         ...(slotDueDate ? { dueDate: slotDueDate } : {}),
       },
@@ -1147,10 +1148,7 @@ export async function updateTaskStatus(
   });
   const newAssignee = involved.find((m) => m.id === newAssigneeId) ?? null;
   const mover = involved.find((m) => m.id === member.id) ?? null;
-  const completedAt =
-    targetStatus?.name === "Completed" || targetStatus?.name === "Published"
-      ? now.toISOString()
-      : null;
+  const completedAt = isTerminalStatusName(targetStatus?.name) ? now.toISOString() : null;
 
   // Weekly Plan slot change, if any — carried on the broadcast patch and the
   // action result so every board (the mover's included) can patch its slot
@@ -1236,15 +1234,17 @@ export async function updateTaskStatus(
   if (dealId) revalidatePath(`/deals/${dealId}`);
   if (weeklyDelta) revalidatePath("/dashboard");
 
-  const becameCompleted =
-    (targetStatus?.name === "Completed" || targetStatus?.name === "Published") &&
-    !task?.completedAt;
-  const leftCompleted =
-    task?.completedAt != null &&
-    targetStatus?.name !== "Completed" &&
-    targetStatus?.name !== "Published";
+  // Keyed off the columns the task moved between, not off completedAt: a task
+  // that reached Completed before that stamp existed would otherwise look like
+  // it had never finished, and keep its calendar slot through a rollback.
+  const wasTerminal = isTerminalStatusName(task?.status?.name);
+  const isTerminal = isTerminalStatusName(targetStatus?.name);
+  const becameCompleted = isTerminal && !wasTerminal;
+  const leftCompleted = wasTerminal && !isTerminal;
   if (becameCompleted) {
     await lockTaskEffortLocks(taskId);
+    // It just entered the publish queue, so the calendar's cached pool is stale.
+    revalidatePath("/publish");
   } else if (leftCompleted) {
     await clearTaskEffortLocks(taskId);
     // Pulled back for rework — it's no longer ready to publish, so its
